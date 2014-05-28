@@ -30,12 +30,13 @@ public class DetectionHandler {
 	 * Process a Detection frame
 	 */
 	public void process(SSL_DetectionFrame message) {
+//		System.out.println("DATA.");
+
+		
 		processRobots(message.getRobotsBlueList(), message.getRobotsYellowList(), message.getTCapture(),
 				message.getCameraId());
 		processBalls(message.getBallsList(), message.getTCapture(), message.getCameraId());
 		world.HandlerFinished("detection");
-
-//		System.out.println("DATA...");
 	}
 
 	/**
@@ -111,8 +112,12 @@ public class DetectionHandler {
 		robot = t.getRobotByID(robotMessage.getRobotId());
 		if (robotMessage.hasOrientation()) {
 			int degrees = (int) Math.toDegrees(robotMessage.getOrientation());
+//			System.out.println("UPDATE LISTUPDATE LISTUPDATE LISTUPDATE LISTUPDATE LIST");
+
 			robot.update(new Point(robotMessage.getX(), robotMessage.getY()), updateTime, degrees, camNo);
 		} else {
+//			System.out.println("No Orientation");
+
 			robot.update(new Point(robotMessage.getX(), robotMessage.getY()), updateTime, camNo);
 		}
 

@@ -35,9 +35,11 @@ public class ProtoParser {
 	 * @param data
 	 */
 	public void parseVision(ByteArrayInputStream data) {
+		
 		try {
 			SSL_WrapperPacket wrapper = SSL_WrapperPacket.parseFrom(data);
 			if (wrapper.hasDetection()) {
+				
 				addObject(wrapper.getDetection());
 			} else if (wrapper.hasGeometry()) {
 				addObject(wrapper.getGeometry());

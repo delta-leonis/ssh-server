@@ -29,6 +29,8 @@ public class GotoPosition extends LowLevelBehavior {
 	public void calculate() {
 		if(robot.getLastUpdateTime() + 0.10 < Calendar.getInstance().getTimeInMillis()/1000){
 			//send stop
+//			System.out.println(robot.getLastUpdateTime() - Calendar.getInstance().getTimeInMillis()/1000);
+			
 			if(robot.getRobotID()==11 && robot.isOnSight()){
 				System.out.println("ROBOT LOST ROBOT LOST ROBOT LOST ROBOT LOST ");
 				System.out.println("ROBOT LOST ROBOT LOST ROBOT LOST ROBOT LOST ");

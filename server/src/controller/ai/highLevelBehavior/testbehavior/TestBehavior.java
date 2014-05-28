@@ -26,16 +26,10 @@ public class TestBehavior extends Behavior {
 				e.setLowLevelBehavior(new GotoPosition(robot11, ComInterface.getInstance(RobotCom.class), target));
 				new Thread(e).start();
 				executers.add(e);
-				System.out.println("test");
-			}
-			
-			System.out.println((robot11.getPosition().getX() - target.getX()) + ":::" + (robot11.getPosition().getY() - target.getY())  );
-			
+			}			
 			
 			if( Math.abs(robot11.getPosition().getX() - target.getX()) < 100 && 
 					Math.abs(robot11.getPosition().getY() - target.getY()) < 100){
-//				target.setX(target.getX() * -1);
-//				target.setY(target.getY() * -1);
 				target.setX((float) ((Math.random()*2200) - 1100));
 				target.setY((float) ((Math.random()*1600) - 800));
 				executers.remove(executer);

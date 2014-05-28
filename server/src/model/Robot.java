@@ -38,6 +38,12 @@ public abstract class Robot extends FieldObject {
 
 	public void update(Point p, double updateTime, int orientation, int lastCamUpdateNo) {
 		super.update(p, updateTime, lastCamUpdateNo);
+		if(robotID == 0xb){
+			System.out.println("LastUpdateTime: " + lastUpdateTime);
+			System.out.println("UpdateTime:     " + updateTime);
+			System.out.println();
+		}
+
 		this.orientation = orientation;
 	}
 

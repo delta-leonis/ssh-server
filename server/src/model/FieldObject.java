@@ -1,16 +1,12 @@
 package model;
 
-import java.util.Observable;
-
-import javax.crypto.spec.PSource;
-
 public abstract class FieldObject {
 
 	private Point positionCam0;
 	private Point positionCam1;
 	private Point position;
 	//LastUpdateTime = time off the day in sec
-	private double lastUpdateTime;
+	protected double lastUpdateTime;
 	private int direction;
 	private double speed;
 	private int lastCamUpdateNo;
@@ -33,6 +29,12 @@ public abstract class FieldObject {
 	 * @post Updated position, direction and speed.
 	 */
 	public void update(Point newPosition, double updateTime, int camUpdateNo) {
+		double newTime = updateTime;
+		
+		if(this == World.getInstance().getAlly().getRobotByID(11)){
+			System.out.println("KOM IK HIER?????%$#^%&$&%$^&$&^$*(%^*");
+		}
+		
 		Point tmpPosition;
 		if (!correctCamSide(newPosition.getX(), newPosition.getY(), camUpdateNo)) {
 			if (camUpdateNo == 0 && positionCam1 == null){
@@ -42,7 +44,7 @@ public abstract class FieldObject {
 			} else if (positionCam0 == null && positionCam1 == null){
 				;
 			} else{
-				return;
+				;
 			}
 		}
 		if (camUpdateNo == 0)
@@ -63,14 +65,14 @@ public abstract class FieldObject {
 		} else {
 			tmpPosition = newPosition;
 		}
-		double newTime = updateTime;
+		
 		lastCamUpdateNo = camUpdateNo;
 		if(position != null){
 			setDirection(tmpPosition);
 			setSpeed(newTime, tmpPosition);
 		}
 		position = tmpPosition;
-		lastUpdateTime = newTime;
+		lastUpdateTime = newTime;			
 	}
 
 	public boolean correctCamSide(float x, float y, int camNo) {
