@@ -32,10 +32,10 @@ public class DetectionHandler {
 	public void process(SSL_DetectionFrame message) {
 		processRobots(message.getRobotsBlueList(), message.getRobotsYellowList(), message.getTCapture(),
 				message.getCameraId());
-		processBalls(message.getBallsList(), message.getTCapture());
+		processBalls(message.getBallsList(), message.getTCapture(), message.getCameraId());
 		world.HandlerFinished("detection");
 
-		// System.out.println(message.getTCapture());
+//		System.out.println("DATA...");
 	}
 
 	/**
@@ -43,9 +43,9 @@ public class DetectionHandler {
 	 * 
 	 * @param balls
 	 */
-	public void processBalls(List<SSL_DetectionBall> balls, double time) {
+	public void processBalls(List<SSL_DetectionBall> balls, double time, int camNo) {
 		for (SSL_DetectionBall ball : balls) {
-			updateBall(ball, time);
+			updateBall(ball, time, camNo);
 		}
 	}
 
@@ -54,12 +54,12 @@ public class DetectionHandler {
 	 * 
 	 * @param ball
 	 */
-	public void updateBall(SSL_DetectionBall ball, double time) {
+	public void updateBall(SSL_DetectionBall ball, double time, int camNo) {
 		Point p = new Point((int) ball.getY(), (int) ball.getX());
 		if (ball.hasZ()) {
-			world.getBall().update(time, p, ball.getZ());
+			world.getBall().update(time, p, ball.getZ(), camNo);
 		} else {
-			world.getBall().update(p, time);
+			world.getBall().update(p, time, camNo);
 		}
 	}
 
@@ -101,10 +101,9 @@ public class DetectionHandler {
 			if (world.getOwnTeamColor().equals(color)) {
 				// TODO: How to set/determine channel of robot.
 				// TODO: What to do with diameter.
-				//TODO: diameter in config file
-				t.addRobot(new Ally(robotMessage.getRobotId(), false, robotMessage.getHeight(), 100.0, t, 1));
+				t.addRobot(new Ally(robotMessage.getRobotId(), false, robotMessage.getHeight(), 10.0, t, 1));
 			} else {
-				t.addRobot(new Enemy(robotMessage.getRobotId(), false, robotMessage.getHeight(), 100.0, t));
+				t.addRobot(new Enemy(robotMessage.getRobotId(), false, robotMessage.getHeight(), 10.0, t));
 			}
 			world.RobotAdded();
 		}
@@ -112,9 +111,9 @@ public class DetectionHandler {
 		robot = t.getRobotByID(robotMessage.getRobotId());
 		if (robotMessage.hasOrientation()) {
 			int degrees = (int) Math.toDegrees(robotMessage.getOrientation());
-			robot.update(new Point(robotMessage.getX(), robotMessage.getY()), updateTime, degrees);
+			robot.update(new Point(robotMessage.getX(), robotMessage.getY()), updateTime, degrees, camNo);
 		} else {
-			robot.update(new Point(robotMessage.getX(), robotMessage.getY()), updateTime);
+			robot.update(new Point(robotMessage.getX(), robotMessage.getY()), updateTime, camNo);
 		}
 
 		// Log naar CSV
@@ -126,6 +125,7 @@ public class DetectionHandler {
 		}
 
 	}
+
 
 	public void logToCSV(float x, float y, double speed, float confidence, int degrees, double updateTime, int camNo) {
 		BufferedWriter writer = null;

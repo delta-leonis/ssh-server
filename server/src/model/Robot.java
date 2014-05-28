@@ -10,9 +10,10 @@ public abstract class Robot extends FieldObject {
 	private Team team;
 	private int batteryStatus;
 	private long powerUpTime;
+	private boolean onSight;
 
 	public Robot(int robotID, boolean isKeeper, float height, double diameter, Team team) {
-		super(diameter);
+		super();
 		this.robotID = robotID;
 		this.isKeeper = isKeeper;
 		this.height = height;
@@ -35,13 +36,13 @@ public abstract class Robot extends FieldObject {
 		this.robotID = robotID;
 	}
 
-	public void update(Point p, double updateTime, int orientation) {
-		super.update(p, updateTime);
+	public void update(Point p, double updateTime, int orientation, int lastCamUpdateNo) {
+		super.update(p, updateTime, lastCamUpdateNo);
 		this.orientation = orientation;
 	}
 
-	public void update(Point p, double updateTime) {
-		super.update(p, updateTime);
+	public void update(Point p, double updateTime, int lastCamUpdateNo) {
+		super.update(p, updateTime, lastCamUpdateNo);
 	}
 
 	/**
@@ -49,6 +50,14 @@ public abstract class Robot extends FieldObject {
 	 */
 	public boolean isKeeper() {
 		return isKeeper;
+	}
+
+	public boolean isOnSight() {
+		return onSight;
+	}
+
+	public void setOnSight(boolean onSight) {
+		this.onSight = onSight;
 	}
 
 	/**

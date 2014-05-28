@@ -15,8 +15,7 @@ public class World extends Observable {
 	private Color ownTeamColor;
 
 	private World() {
-		//TODO: diameter in config file
-		ball = new Ball(20);
+		ball = new Ball();
 		referee = new Referee();
 	}
 

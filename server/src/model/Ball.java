@@ -4,23 +4,23 @@ public class Ball extends FieldObject {
 
 	private float posZ;
 
-	public Ball(double diameter){
-		super(diameter);
+	public Ball(){
+		super();
 	}
 
 	/**
 	 *  
 	 */
-	public void update(double newTime, Point p, float posZ) {
-		super.update(p, newTime);
+	public void update(double newTime, Point p, float posZ, int lastCamUpdateNo) {
+		super.update(p, newTime, lastCamUpdateNo);
 		this.posZ = posZ;
 	}
 	
 	/**
 	 *  
 	 */
-	public void update(double newTime, Point p) {
-		super.update(p, newTime);
+	public void update(double newTime, Point p, int lastCamUpdateNo) {
+		super.update(p, newTime, lastCamUpdateNo);
 	}
 
 	public float getPosZ() {

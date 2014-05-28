@@ -1,6 +1,6 @@
 package model;
 
-import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 
 public class Field {
 
@@ -20,15 +20,14 @@ public class Field {
 	private int freeKickFromDefenceDistance;
 	private int penaltySpotFromFieldLineDistance;
 	private int penaltyLineFromSpotDistance;
-	private double goalAreaBoundary;
-	private Goal positiveGoal, negativeGoal;
-	private Rectangle2D positiveGoalArea, negativeGoalArea;
+	private int cameraOverlapZoneWidth;
+	private ArrayList<Goal> goals;
 
 	public Field(int length, int width, int lineWidth, int boundaryWidth, int refereeWidth, int centerCircleRadius,
 			int defenceRadius, int defenceStretch, int freeKickFromDefenceDistance,
 			int penaltySpotFromFieldLineDistance, int penaltyLineFromSpotDistance, int goalWidth, int goalDepth,
-			int goalWallWidth, int goalHeight, double goalAreaBoundary) {
-		this.goalAreaBoundary = goalAreaBoundary;
+			int goalWallWidth, int goalHeight, int cameraOverlapZoneWidth) {
+
 		this.length = length;
 		this.width = width;
 		this.lineWidth = lineWidth;
@@ -44,7 +43,9 @@ public class Field {
 		this.goalDepth = goalDepth;
 		this.goalWallWidth = goalWallWidth;
 		this.goalHeight = goalHeight;
+		this.cameraOverlapZoneWidth = cameraOverlapZoneWidth;
 		createGoals(goalWidth, goalDepth, goalWallWidth, goalHeight);
+
 	}
 
 	public void update(int lineWidth, int fieldLength, int fieldWidth, int boundaryWidth, int refereeWidth,
@@ -94,9 +95,10 @@ public class Field {
 
 	/**
 	 * Calculates goal diamensions and creates them. uses goalWidth, goalDepth,
-	 * goalWallWidth, goalHeigth, length. Also generate goal area's
+	 * goalWallWidth, goalHeigth, length
 	 */
-	private void createGoals(int goalWidth, int goalDepth, int goalWallWidth, int goalHeigth ) {
+	private void createGoals(int goalWidth, int goalDepth, int goalWallWidth, int goalHeigth) {
+		goals = new ArrayList<Goal>();
 
 		Point frontLeft = new Point(length / 2, goalWidth / 2);
 		Point frontRight = new Point(length / 2, goalWidth / -2);
@@ -104,15 +106,11 @@ public class Field {
 		Point backRight = new Point(frontRight.getX() + goalDepth, frontRight.getY());
 
 		// Adding Goal A
-		positiveGoal = (new Goal(frontLeft, frontRight, backLeft, backRight, goalWallWidth, goalHeigth));
+		goals.add(new Goal(frontLeft, frontRight, backLeft, backRight, goalWallWidth, goalHeigth));
 
 		// Adding Goal B
-		negativeGoal = (new Goal(frontLeft.diagMirror(), frontRight.diagMirror(), backLeft.diagMirror(), backRight
+		goals.add(new Goal(frontLeft.diagMirror(), frontRight.diagMirror(), backLeft.diagMirror(), backRight
 				.diagMirror(), goalWallWidth, goalHeigth));
-		
-		// Generating Goal Area's
-		positiveGoalArea = new Rectangle2D.Double(positiveGoal.getFrontLeft().getX()-goalAreaBoundary, positiveGoal.getFrontLeft().getY()+goalAreaBoundary, goalAreaBoundary, goalWallWidth+(2*goalAreaBoundary));
-		negativeGoalArea = new Rectangle2D.Double(negativeGoal.getFrontRight().getX()+goalAreaBoundary, negativeGoal.getFrontRight().getX()+goalAreaBoundary, goalAreaBoundary, goalWallWidth+(2*goalAreaBoundary));
 	}
 
 	/**
@@ -283,25 +281,12 @@ public class Field {
 	/**
 	 * @return the goal
 	 */
-	public Goal getGoal(String side) {
-		side = side.toLowerCase();
-		if (side.equals("negative"))
-			return negativeGoal;
-		if (side.equals("positive"))
-			return positiveGoal;
-		return null;
+	public ArrayList<Goal> getGoal() {
+		return goals;
 	}
-
-	/**
-	 * @return the goal
-	 */
-	public Rectangle2D getGoalArea(String side) {
-		side = side.toLowerCase();
-		if (side.equals("negative"))
-			return negativeGoalArea;
-		if (side.equals("positive"))
-			return positiveGoalArea;
-		return null;
+	
+	public int getCameraOverlapZoneWidth(){
+		return cameraOverlapZoneWidth;
 	}
 
 	/*
@@ -324,8 +309,11 @@ public class Field {
 
 	private String printGoals() {
 		String goalString = "";
-		goalString += positiveGoal.toString() + "\r\n";
-		goalString += negativeGoal.toString() + "\r\n";
+
+		for (int i = 0; i < goals.size(); i++) {
+			goalString += goals.get(i).toString() + "\r\n";
+		}
+		
 		return goalString;
 	}
 

@@ -1,2 +1,4 @@
+server/.classpath
 server/.project
 server/bin/
+server/log/

@@ -47,7 +47,8 @@ public class Main {
 									.parseInt(configFile.getProperty("goalWidth")), Integer.parseInt(configFile
 									.getProperty("goalDepth")), Integer.parseInt(configFile
 									.getProperty("goalWallWidth")), Integer.parseInt(configFile
-									.getProperty("goalHeight")), 500));
+									.getProperty("goalHeight")), Integer.parseInt(configFile
+											.getProperty("cameraOverlapZoneWidth"))));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -62,19 +63,14 @@ public class Main {
 		final Properties configFile = new Properties();
 		Color ownTeamColor = null;
 		Color otherTeamColor = null;
-		String ownTeamSide = "";
-		String otherTeamSide = "";
-		
 		try {
 			configFile.load(new FileInputStream("config/teams.properties"));
 
 			ownTeamColor = Color.valueOf(configFile.getProperty("ownTeamColor").toUpperCase());
 			otherTeamColor = Color.valueOf(configFile.getProperty("otherTeamColor").toUpperCase());
-			ownTeamSide = configFile.getProperty("ownTeamSide").toLowerCase();
-			otherTeamSide = configFile.getProperty("otherTeamSide").toLowerCase();
-			
-			w.setAlly(new Team(configFile.getProperty("ownTeam"), ownTeamColor, ownTeamSide));
-			w.setEnemy(new Team(configFile.getProperty("otherTeam"), otherTeamColor, otherTeamSide));
+
+			w.setAlly(new Team(configFile.getProperty("ownTeam"), ownTeamColor));
+			w.setEnemy(new Team(configFile.getProperty("otherTeam"), otherTeamColor));
 			w.setOwnTeamCollor(ownTeamColor);
 
 		} catch (IllegalArgumentException e) {

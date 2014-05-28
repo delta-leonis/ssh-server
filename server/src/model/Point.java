@@ -5,13 +5,9 @@ public class Point {
 	private float y;
 
 	public Point(float x, float y) {
+		super();
 		this.x = x;
 		this.y = y;
-	}
-
-	public Point(double x, double y) {
-		this.x = (float) x;
-		this.y = (float) y;
 	}
 
 	/**

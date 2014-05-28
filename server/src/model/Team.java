@@ -1,6 +1,8 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import model.enums.Color;
 
@@ -8,7 +10,6 @@ public class Team {
 
 	private String name;
 	private Color color;
-	private String side;
 	private int score;
 	private int timeoutsLeft;
 	private ArrayList<Long> remainingCardTimes;
@@ -16,10 +17,9 @@ public class Team {
 	private int redCards;
 	private ArrayList<Robot> robots;
 
-	public Team(String name, Color color, String side) {
+	public Team(String name, Color color) {
 		this.name = name;
 		this.color = color;
-		this.side = side;
 		remainingCardTimes = new ArrayList<Long>();
 		robots = new ArrayList<Robot>();
 	}
@@ -157,14 +157,6 @@ public class Team {
 
 	public void addRobot(Robot robot) {
 		robots.add(robot);
-	}
-
-	public String getSide() {
-		return side;
-	}
-	
-	public void setSide(String side) {
-		this.side = side;
 	}
 
 	public Robot getRobotByID(int id) {

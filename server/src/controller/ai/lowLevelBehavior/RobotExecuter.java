@@ -15,7 +15,8 @@ public class RobotExecuter implements Runnable{
 	
 	public void run(){
 		while(true){
-			executeBehavior();
+			if(robot.getPosition() != null)
+				executeBehavior();
 			try {
 				Thread.sleep(50);
 			} catch (InterruptedException e) {

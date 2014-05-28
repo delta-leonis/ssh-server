@@ -1,19 +1,26 @@
 package model;
 
-import java.awt.geom.Ellipse2D;
+import java.util.Observable;
+
+import javax.crypto.spec.PSource;
 
 public abstract class FieldObject {
 
+	private Point positionCam0;
+	private Point positionCam1;
 	private Point position;
-	private double diameter;
+	//LastUpdateTime = time off the day in sec
 	private double lastUpdateTime;
 	private int direction;
 	private double speed;
+	private int lastCamUpdateNo;
 
-	public FieldObject(double diameter) {
-		this.diameter = diameter;
+	public FieldObject() {
 		lastUpdateTime = 0;
-		position = new Point(0, 0);
+		position = null;
+		positionCam0 = null;
+		positionCam1 = null;
+		lastCamUpdateNo = -1;
 	}
 
 	/**
@@ -25,12 +32,53 @@ public abstract class FieldObject {
 	 *            New positiont point.
 	 * @post Updated position, direction and speed.
 	 */
-	public void update(Point newPosition, double updateTime) {
+	public void update(Point newPosition, double updateTime, int camUpdateNo) {
+		Point tmpPosition;
+		if (!correctCamSide(newPosition.getX(), newPosition.getY(), camUpdateNo)) {
+			if (camUpdateNo == 0 && positionCam1 == null){
+				;
+			} else if (camUpdateNo == 1 && positionCam0 == null){
+				;
+			} else if (positionCam0 == null && positionCam1 == null){
+				;
+			} else{
+				return;
+			}
+		}
+		if (camUpdateNo == 0)
+			positionCam0 = new Point(newPosition.getX(), newPosition.getY());
+		if (camUpdateNo == 1)
+			positionCam1 = new Point(newPosition.getX(), newPosition.getY());
+
+		if (World.getInstance().getField().getCameraOverlapZoneWidth() > Math.abs(newPosition.getX())) {
+			// We are in the overlapZone DANGER!!
+			if ((positionCam0 != null && positionCam1 != null)) {
+				// We have a position from both cameras
+				float newX = (positionCam0.getX() + positionCam1.getX()) / 2;
+				float newY = (positionCam0.getY() + positionCam1.getY()) / 2;
+				tmpPosition = new Point(newX, newY);
+			} else {
+				tmpPosition = newPosition;
+			}
+		} else {
+			tmpPosition = newPosition;
+		}
 		double newTime = updateTime;
-		setDirection(newPosition);
-		setSpeed(newTime, newPosition);
-		position = newPosition;
+		lastCamUpdateNo = camUpdateNo;
+		if(position != null){
+			setDirection(tmpPosition);
+			setSpeed(newTime, tmpPosition);
+		}
+		position = tmpPosition;
 		lastUpdateTime = newTime;
+	}
+
+	public boolean correctCamSide(float x, float y, int camNo) {
+		if (x > 0 && camNo == 1)
+			return true;
+		if (x < 0 && camNo == 0)
+			return true;
+		return false;
 	}
 
 	/**
@@ -38,10 +86,12 @@ public abstract class FieldObject {
 	 *            the direction to set
 	 */
 	public void setDirection(Point newPosition) {
-		double deltaDistance = position.getDeltaDistance(newPosition);
+		if(position != null){
+			double deltaDistance = position.getDeltaDistance(newPosition);
 
-		if (deltaDistance > 1.5) {
-			direction = position.getAngle(newPosition);
+			if (deltaDistance > 1.5) {
+				direction = position.getAngle(newPosition);
+			}
 		}
 	}
 
@@ -105,11 +155,6 @@ public abstract class FieldObject {
 	 */
 	public void setPosition(Point position) {
 		this.position = position;
-	}
-
-	public Ellipse2D.Double getArea() {
-		return new Ellipse2D.Double(position.getX() - (diameter / 2), position.getY() + (diameter / 2), diameter,
-				diameter);
 	}
 
 	/*

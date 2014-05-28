@@ -15,7 +15,6 @@ import model.enums.Command;
 import controller.ai.highLevelBehavior.Behavior;
 import controller.ai.highLevelBehavior.forcebehavior.forceCalculator.Force;
 import controller.ai.lowLevelBehavior.GotoPosition;
-import controller.ai.lowLevelBehavior.Keeping;
 import controller.ai.lowLevelBehavior.LowLevelBehavior;
 import controller.ai.lowLevelBehavior.RobotExecuter;
 
@@ -64,14 +63,17 @@ public class Main implements Runnable, Observer {
 				RobotExecuter e = new RobotExecuter(r);
 				new Thread(e).start();
 				robotExecuters.add(e);
-//				if (r.getRobotID() == 2) {
-//					Point point = new Point(0, 0);
-//					LowLevelBehavior lowLevelBehavior = new GotoPosition(r, output, point);
-//					e.setLowLevelBehavior(lowLevelBehavior);
-//				}
-				if (r.getRobotID() == 3) {
-					e.setLowLevelBehavior(new Keeping(r, output));
+				if (r.getRobotID() == 0xB) {
+					Point point = new Point(0, 0);
+					LowLevelBehavior lowLevelBehavior = new GotoPosition(r, output, point);
+					e.setLowLevelBehavior(lowLevelBehavior);
 				}
+				if (r.getRobotID() == 0x3) {
+					Point point = new Point(0, 0);
+					LowLevelBehavior lowLevelBehavior = new GotoPosition(r, output, point);
+					e.setLowLevelBehavior(lowLevelBehavior);
+				}
+				System.out.println("ts");
 			}
 		}
 	}
