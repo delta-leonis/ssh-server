@@ -19,6 +19,11 @@ public class Force extends Behavior {
 
 	@Override
 	public void execute(ArrayList<RobotExecuter> executers) {
+		// We zitten bv in defence, alle executers moeten defence dingen doen.
+		
+		
+		
+		
 		// TODO Auto-generated method stub
 		
 	}

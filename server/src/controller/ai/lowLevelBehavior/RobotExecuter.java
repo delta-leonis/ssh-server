@@ -36,6 +36,10 @@ public class RobotExecuter implements Runnable{
 	public void setLowLevelBehavior(LowLevelBehavior lowLevelBehavior) {
 		this.lowLevelBehavior = lowLevelBehavior;
 	}
+	
+	public LowLevelBehavior getLowLevelBehavior(){
+		return lowLevelBehavior;
+	}
 
 	public Robot getRobot(){
 		return robot;

@@ -128,12 +128,12 @@ public class Main {
 		final Properties configFile = new Properties();
 		try {
 			configFile.load(new FileInputStream("config/config.properties"));
-			ComInterface output = new RobotCom(configFile.getProperty("outputAddress"), Integer.parseInt(configFile.getProperty("ownTeamOutputPort")));
-			controller.ai.Main main = new controller.ai.Main(output);
+//			ComInterface output = new RobotCom(configFile.getProperty("outputAddress"), Integer.parseInt(configFile.getProperty("ownTeamOutputPort")));
+			new controller.ai.Main();
 					
 //					configFile.getProperty("outputAddress"),
 //					Integer.parseInt(configFile.getProperty("ownTeamOutputPort")));
-			new Thread(main).start();
+			
 
 		} catch (IOException e) {
 			e.printStackTrace();

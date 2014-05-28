@@ -4,7 +4,21 @@ package output;
  * @author Erik Hubers, Gerbrand Bosch
  *
  */
-public interface ComInterface {
+public abstract class ComInterface {
+	
+	private static ComInterface instance;
+	
+	@SuppressWarnings("rawtypes")
+	public static ComInterface getInstance(Class comInterface) {
+		if(instance == null){
+			try {
+				instance = (ComInterface) comInterface.newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
+		return instance;
+	}
 
 	
 	/**
@@ -18,7 +32,7 @@ public interface ComInterface {
 	 * @param kicker
 	 * @param dribble
 	 */
-	public void send(int messageType, int robotID, int direction, int directionSpeed, int travelDistance,
+	public abstract void send(int messageType, int robotID, int direction, int directionSpeed, int travelDistance,
 			int rotationAngle, int rotationSpeed, int kicker, boolean dribble);
 
 }

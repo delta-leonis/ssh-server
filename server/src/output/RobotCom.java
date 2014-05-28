@@ -1,5 +1,6 @@
 package output;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -8,21 +9,37 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Properties;
 
-public class RobotCom implements ComInterface {
+public class RobotCom extends ComInterface {
 	private DatagramSocket serverSocket;
 	private InetAddress ipAddress;
 	private int port;
 
-	public RobotCom(String ipAddress, int port) throws SocketException {
+	
+	public RobotCom(){
+		
+		final Properties configFile = new Properties();
 		try {
-			this.ipAddress = InetAddress.getByName(ipAddress);
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			configFile.load(new FileInputStream("config/config.properties"));
+			String ipAddress = configFile.getProperty("outputAddress");
+			int port = Integer.parseInt(configFile.getProperty("ownTeamOutputPort"));
+			try {
+				this.ipAddress = InetAddress.getByName(ipAddress);
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			this.port = port;
+			try {
+				serverSocket = new DatagramSocket(port);
+			} catch (SocketException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (IOException e ){
+			;
 		}
-		this.port = port;
-		serverSocket = new DatagramSocket(port);
 	}
 
 	/**

@@ -8,9 +8,6 @@ public abstract class Behavior {
 
 	private RobotExecuter robotExcecuter;
 
-	public void execute(ArrayList<RobotExecuter> executers) {
-		// TODO Auto-generated method stub
-		
-	}
+	public abstract void execute(ArrayList<RobotExecuter> executers);
 
 }
