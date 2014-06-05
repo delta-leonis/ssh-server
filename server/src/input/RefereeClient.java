@@ -19,6 +19,7 @@ public class RefereeClient extends UDPClient{
 	 * @throws IOException 
 	 */
 	public void startListening() throws IOException {
+		System.out.println("referee client starts listening");
 		ByteArrayInputStream input = null;
 		while (true) {
 			input = receive();

@@ -51,22 +51,22 @@ public class RobotCom extends ComInterface {
 	public void send(int messageType, int robotID, int direction, int directionSpeed, int travelDistance,
 			int rotationAngle, int rotationSpeed, int shootKicker, boolean dribble) {
 		
-//		if(robotID == 0xB || robotID == 0x3){
-//		System.out.println("Message:");
-//		System.out.println("Robot: " + robotID);
-//		System.out.println("Direction: " + direction);
-//		System.out.println("DirectionSpeed: " + directionSpeed);
-//		System.out.println("travelDistance: " + travelDistance);
-//		System.out.println("rotationAngle: " + rotationAngle);
-//		System.out.println("rotationSpeed: " + rotationSpeed);
-//		System.out.println("shootKicker: " + shootKicker);
-//		System.out.println("dribble: " + dribble);
-//		}
+		if(robotID == 0xB || robotID == 0x3){
+		System.out.println("Message:");
+		System.out.println("Robot: " + robotID);
+		System.out.println("Direction: " + direction);
+		System.out.println("DirectionSpeed: " + directionSpeed);
+		System.out.println("travelDistance: " + travelDistance);
+		System.out.println("rotationAngle: " + rotationAngle);
+		System.out.println("rotationSpeed: " + rotationSpeed);
+		System.out.println("shootKicker: " + shootKicker);
+		System.out.println("dribble: " + dribble);
+		}
 		
 		byte[] dataPacket = createByteArray(messageType, robotID, direction, directionSpeed, travelDistance,
 				rotationAngle, rotationSpeed, shootKicker, dribble);
 		DatagramPacket sendPacket = new DatagramPacket(dataPacket, dataPacket.length, ipAddress, port);
-
+		
 		try {
 			serverSocket.send(sendPacket);
 			// System.out.println("Send");

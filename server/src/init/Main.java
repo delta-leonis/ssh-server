@@ -1,5 +1,6 @@
 package init;
 
+import input.BaseStationClient;
 import input.RefereeClient;
 import input.SSLVisionClient;
 
@@ -9,8 +10,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
-import output.ComInterface;
-import output.RobotCom;
 import model.Field;
 import model.Team;
 import model.World;
@@ -20,8 +19,7 @@ import controller.handlers.protohandlers.MainHandler;
 public class Main {
 	public static void main(String[] args) {
 		System.out.println("Start Program");
-		@SuppressWarnings("unused")
-		World w = World.getInstance();
+		initBasestationClient();
 		initField();
 		initTeams();
 		initProtoBuffClients();
@@ -100,6 +98,10 @@ public class Main {
 			System.exit(1);
 		}
 	}
+	
+	public static void initBasestationClient(){
+		new Thread(new BaseStationClient()).start();
+	}
 
 	public static void initHandlers() {
 		MainHandler handler = new MainHandler(World.getInstance());
@@ -121,6 +123,10 @@ public class Main {
 				System.out.println(World.getInstance().toString());
 			if (s.toLowerCase().equals("ownteam"))
 				System.out.println(w.getTeamByColor(w.getOwnTeamColor()).getRobots().toString());
+			if (s.toLowerCase().equals("stop"))
+				World.getInstance().getReferee().setStop(true);
+			if (s.toLowerCase().equals("start"))
+				World.getInstance().getReferee().setStop(false);
 		}
 	}
 

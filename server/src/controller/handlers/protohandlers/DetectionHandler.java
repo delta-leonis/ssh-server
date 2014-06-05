@@ -121,36 +121,35 @@ public class DetectionHandler {
 			robot.update(new Point(robotMessage.getX(), robotMessage.getY()), updateTime, camNo);
 		}
 
-		// Log naar CSV
-		if (robot.getRobotID() == 9 && robot.getTeam().getColor().equals(Color.YELLOW)) {
-			int degrees = 666;
-			degrees = (int) Math.toDegrees(robotMessage.getOrientation());
-			logToCSV(robotMessage.getX(), robotMessage.getY(), robot.getSpeed(), robotMessage.getConfidence(), degrees,
-					updateTime, camNo);
-		}
+//		// Log naar CSV
+//		if (robot.getRobotID() == 9 && robot.getTeam().getColor().equals(Color.YELLOW)) {
+//			int degrees = 666;
+//			degrees = (int) Math.toDegrees(robotMessage.getOrientation());
+//			logToCSV(robotMessage.getX(), robotMessage.getY(), robot.getSpeed(), robotMessage.getConfidence(), degrees,
+//					updateTime, camNo);
+//		}
 
 	}
 
 
-	public void logToCSV(float x, float y, double speed, float confidence, int degrees, double updateTime, int camNo) {
-		BufferedWriter writer = null;
-		FileWriter fw;
-		try {
-			File file = new File("log/log.log");
-			if (!file.exists()) {
-				file.createNewFile();
-			}
-			fw = new FileWriter(file, true);
-			writer = new BufferedWriter(fw);
-			writer.write(x + "," + y + "," + speed + "," + confidence + "," + degrees + "," + updateTime + "," + camNo);
-			writer.newLine();
-			writer.flush();
-			writer.close();
-			fw.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println("Deze fout is ontstaan door een falende actie van Gerbrand.");
-			e.printStackTrace();
-		}
-	}
+//	public void logToCSV(float x, float y, double speed, float confidence, int degrees, double updateTime, int camNo) {
+//		BufferedWriter writer = null;
+//		FileWriter fw;
+//		try {
+//			File file = new File("log/log.log");
+//			if (!file.exists()) {
+//				file.createNewFile();
+//			}
+//			fw = new FileWriter(file, true);
+//			writer = new BufferedWriter(fw);
+//			writer.write(x + "," + y + "," + speed + "," + confidence + "," + degrees + "," + updateTime + "," + camNo);
+//			writer.newLine();
+//			writer.flush();
+//			writer.close();
+//			fw.close();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 }

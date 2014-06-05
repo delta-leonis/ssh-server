@@ -42,7 +42,6 @@ public abstract class UDPClient implements Runnable{
 	 */
 	@Override
 	public void run() {
-		System.out.println("Thread UDPClient started.");
 		try {
 			connect();
 			startListening();

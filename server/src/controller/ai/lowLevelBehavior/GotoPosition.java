@@ -27,7 +27,7 @@ public class GotoPosition extends LowLevelBehavior {
 
 	@Override
 	public void calculate() {
-		if(robot.getLastUpdateTime() + 0.10 < Calendar.getInstance().getTimeInMillis()/1000){
+		if(robot.getLastUpdateTime() + 1.10 < Calendar.getInstance().getTimeInMillis()/1000){
 			//send stop
 //			System.out.println(robot.getLastUpdateTime() - Calendar.getInstance().getTimeInMillis()/1000);
 			
@@ -59,7 +59,7 @@ public class GotoPosition extends LowLevelBehavior {
 				if(speed == 0)
 					rotationSpeed = 200;
 				else
-					rotationSpeed = 80;
+					rotationSpeed = 120;
 			} else if( Math.abs(newRotation) > 10){
 				travelDistance = getDistance();
 				speed = getSpeed(travelDistance, newRotation);
@@ -84,18 +84,23 @@ public class GotoPosition extends LowLevelBehavior {
 	}
 	
 	public int getSpeed(int distance, int rotationToDest){
-		int speed = 400;
-		if((distance*20) < speed){
-		speed = (distance*20);
+		int speed = 5000;
+		if( (int)(distance/1.6) < speed){
+			speed = (int)(distance/1.6);
 		}
-		if( rotationToDest > 20 )
-			speed /= 3;
+		if( Math.abs(rotationToDest) > 10 ){
+			speed = 400;
+			if( (int)(distance/2) < speed)
+				speed = (int)(distance/2);
+		}
 		if(speed < 200)
 			speed = 200;
 //		if(distance < 200){
 //			speed = 0;
 //		}
-		
+//		System.out.println("rotationToDest" + rotationToDest);
+//		System.out.println("distance" + distance);
+//		System.out.println("speed" + speed);
 		return speed;
 	}
 }

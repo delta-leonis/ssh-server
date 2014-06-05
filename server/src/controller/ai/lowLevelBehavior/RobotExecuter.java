@@ -1,6 +1,7 @@
 package controller.ai.lowLevelBehavior;
 
 import model.Robot;
+import model.World;
 
 public class RobotExecuter implements Runnable{
 
@@ -15,7 +16,7 @@ public class RobotExecuter implements Runnable{
 	
 	public void run(){
 		while(true){
-			if(robot.getPosition() != null)
+			if(robot.getPosition() != null && !World.getInstance().getReferee().isStop())
 				executeBehavior();
 			try {
 				Thread.sleep(50);

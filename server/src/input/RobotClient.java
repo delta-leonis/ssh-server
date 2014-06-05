@@ -16,6 +16,7 @@ public class RobotClient extends UDPClient {
 
 	public void startListening() throws IOException {
 		ByteArrayInputStream input = null;
+		System.out.println("RobotClient started...");
 		while (true) {
 			input = receive();
 			if (input != null) {

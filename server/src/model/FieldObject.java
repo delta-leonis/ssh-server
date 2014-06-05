@@ -31,9 +31,9 @@ public abstract class FieldObject {
 	public void update(Point newPosition, double updateTime, int camUpdateNo) {
 		double newTime = updateTime;
 		
-		if(this == World.getInstance().getAlly().getRobotByID(11)){
-			System.out.println("KOM IK HIER?????%$#^%&$&%$^&$&^$*(%^*");
-		}
+//		if(this == World.getInstance().getAlly().getRobotByID(11)){
+//			System.out.println("KOM IK HIER?????%$#^%&$&%$^&$&^$*(%^*");
+//		}
 		
 		Point tmpPosition;
 		if (!correctCamSide(newPosition.getX(), newPosition.getY(), camUpdateNo)) {

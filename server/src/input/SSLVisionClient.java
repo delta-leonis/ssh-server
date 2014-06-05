@@ -19,6 +19,7 @@ public class SSLVisionClient extends UDPClient {
 	 * @throws IOException 
 	 */
 	public void startListening() throws IOException {
+		System.out.println("SSLVisionClient starts listening");
 		ByteArrayInputStream data = null;
 		while (true) {
 				data = receive();
