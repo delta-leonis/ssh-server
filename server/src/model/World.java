@@ -7,6 +7,7 @@ import model.enums.Color;
 public class World extends Observable {
 
 	private static World instance;
+	private view.GUI view;
 	private Ball ball;
 	private Referee referee;
 	private Field field;
@@ -24,6 +25,10 @@ public class World extends Observable {
 			instance = new World();
 		}
 		return instance;
+	}
+	
+	public void setView(view.GUI view){
+		this.view = view;
 	}
 	
 	public void HandlerFinished(String message){

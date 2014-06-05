@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
+import view.GUI;
 import model.Field;
 import model.Team;
 import model.World;
@@ -19,6 +20,7 @@ import controller.handlers.protohandlers.MainHandler;
 public class Main {
 	public static void main(String[] args) {
 		System.out.println("Start Program");
+		initView();
 		initBasestationClient();
 		initField();
 		initTeams();
@@ -26,6 +28,35 @@ public class Main {
 		initHandlers();
 		initAi();
 		console();
+	}
+	
+	public static void initView(){
+		
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+		
+		new view.GUI(World.getInstance()).setVisible(true);
 	}
 
 	public static void initField() {
@@ -124,9 +155,9 @@ public class Main {
 			if (s.toLowerCase().equals("ownteam"))
 				System.out.println(w.getTeamByColor(w.getOwnTeamColor()).getRobots().toString());
 			if (s.toLowerCase().equals("stop"))
-				World.getInstance().getReferee().setStop(true);
+				World.getInstance().getReferee().setStart(false);
 			if (s.toLowerCase().equals("start"))
-				World.getInstance().getReferee().setStop(false);
+				World.getInstance().getReferee().setStart(true);
 		}
 	}
 

@@ -11,7 +11,7 @@ public class Referee {
 	private Command command;
 	private int commandCounter;
 	private long lastCommandTimestamp;
-	private boolean stop;
+	private boolean start;
 
 	public Referee() {
 		commandCounter = 0;
@@ -99,12 +99,12 @@ public class Referee {
 		this.lastCommandTimestamp = lastCommandTimestamp;
 	}
 
-	public boolean isStop() {
-		return stop;
+	public boolean isStart() {
+		return start;
 	}
 
-	public void setStop(boolean stop) {
-		this.stop = stop;
+	public void setStart(boolean start) {
+		this.start = start;
 	}
 
 	/* (non-Javadoc)

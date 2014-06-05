@@ -16,7 +16,7 @@ public class RobotExecuter implements Runnable{
 	
 	public void run(){
 		while(true){
-			if(robot.getPosition() != null && !World.getInstance().getReferee().isStop())
+			if(robot.getPosition() != null && World.getInstance().getReferee().isStart())
 				executeBehavior();
 			try {
 				Thread.sleep(50);

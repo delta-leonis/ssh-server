@@ -18,7 +18,7 @@ public class TestBehavior extends Behavior {
 
 	@Override
 	public void execute(ArrayList<RobotExecuter> executers) {
-		if(World.getInstance().getReferee().isStop()){
+		if(!World.getInstance().getReferee().isStart()){
 			ComInterface.getInstance(RobotCom.class).send(1, robot11.getRobotID(), 0, 0, 0, 0, 0, 0, false);
 			executers.remove(findExecuter(robot11.getRobotID(), executers));
 			return;
