@@ -8,7 +8,7 @@ public abstract class Robot extends FieldObject {
 	private float height;
 	private double diameter;
 	private Team team;
-	private int batteryStatus;
+	private float batteryStatus;
 	private long powerUpTime;
 	private boolean onSight;
 
@@ -137,7 +137,7 @@ public abstract class Robot extends FieldObject {
 	/**
 	 * @return the batteryStatus
 	 */
-	public int getBatteryStatus() {
+	public float getBatteryStatus() {
 		return batteryStatus;
 	}
 
@@ -151,7 +151,10 @@ public abstract class Robot extends FieldObject {
 	public void setBatteryStatus(int batteryStatus, long timestamp) {
 		this.batteryStatus = batteryStatus;
 		powerUpTime = timestamp;
-
+	}
+	
+	public void setBatteryStatus(float batteryStatus) {
+		this.batteryStatus = batteryStatus;
 	}
 
 	/*

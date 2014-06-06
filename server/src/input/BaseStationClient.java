@@ -8,9 +8,11 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
+import model.World;
+
 public class BaseStationClient implements Runnable {
 
-	private final static int PACKETSIZE = 4 ;
+	private final static int PACKETSIZE = 16 ;
 	private DatagramSocket socket;
 	
 	public BaseStationClient(){
@@ -35,7 +37,13 @@ public class BaseStationClient implements Runnable {
     			
     			// Print the packet
 //    			System.out.println( packet.getAddress() + " " + packet.getPort() + ": " + new String(packet.getData()) ) ;
-    			logToCSV(new String(packet.getData()));
+    			String input = new String(packet.getData());
+    			if(input.startsWith("V:")){
+    				String floatString = input.substring(2).trim();
+    				if(World.getInstance().getAlly().getRobotByID(11)!=null)
+    					World.getInstance().getAlly().getRobotByID(11).setBatteryStatus(Float.parseFloat(floatString));
+    			} else
+    				logToCSV(new String(packet.getData()));
     		} catch (IOException e) {
     			// TODO Auto-generated catch block
     			e.printStackTrace();

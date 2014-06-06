@@ -18,13 +18,13 @@ public class TestBehavior extends Behavior {
 
 	@Override
 	public void execute(ArrayList<RobotExecuter> executers) {
-		if(!World.getInstance().getReferee().isStart()){
-			ComInterface.getInstance(RobotCom.class).send(1, robot11.getRobotID(), 0, 0, 0, 0, 0, 0, false);
-			executers.remove(findExecuter(robot11.getRobotID(), executers));
-			return;
-		}
 		robot11 = World.getInstance().getAlly().getRobotByID(0xb);
 		if(robot11 != null){
+			if(!World.getInstance().getReferee().isStart()){
+				ComInterface.getInstance(RobotCom.class).send(1, robot11.getRobotID(), 0, 0, 0, 0, 0, 0, false);
+				executers.remove(findExecuter(robot11.getRobotID(), executers));
+				return;
+			}
 			RobotExecuter executer = findExecuter(robot11.getRobotID(), executers);
 			if( executer == null || !(executer.getLowLevelBehavior() instanceof GotoPosition) ){
 				RobotExecuter e = new RobotExecuter(robot11);

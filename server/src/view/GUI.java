@@ -329,19 +329,19 @@ public class GUI extends javax.swing.JFrame implements Observer{
         this.setStart(false);
     }
     
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new GUI().setVisible(true);
-            }
-        });
-    }
+//    /**
+//     * @param args the command line arguments
+//     */
+//    public static void main(String args[]) {
+//
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new GUI().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField batteryVoltage;
@@ -373,7 +373,7 @@ public class GUI extends javax.swing.JFrame implements Observer{
     }
     
     private void setRobotSpeed(int number){
-        robotNumber.setText(Integer.toString(number));
+        robotSpeed.setText(Integer.toString(number));
     }
     
     private void setTeamColor(String color){
@@ -420,17 +420,19 @@ public class GUI extends javax.swing.JFrame implements Observer{
 	public void update(Observable arg0, Object arg1) {
 		if(arg0.equals(world)){
 //			setRobotNumber(int number)
-			robotNumber.setText("11");
-			int number = Integer.parseInt(robotNumber.getText());
+			int number = 11;
+			setRobotNumber(number);
 			Robot robot = world.getAlly().getRobotByID(number);
-			setRobotSpeed((int)robot.getSpeed());
-		    setTeamColor(robot.getTeam().getColor().toString());
-		    setTeamName(robot.getTeam().getName());
-		    setTeamSide(robot.getTeam().getName());
-		    setIsOnline(robot.isOnSight());
-		    setBatteryVoltage(robot.getBatteryStatus());
-		    setGoalsLeft(robot.getTeam().getScore());
-		    setGoalsRight(robot.getTeam().getScore());
+			if(robot != null){
+				setRobotSpeed((int)robot.getSpeed());
+				setTeamColor(robot.getTeam().getColor().toString());
+				setTeamName(robot.getTeam().getName());
+				setTeamSide(robot.getTeam().getName());
+				setIsOnline(robot.isOnSight());
+				setBatteryVoltage(robot.getBatteryStatus());
+				setGoalsLeft(robot.getTeam().getScore());
+				setGoalsRight(robot.getTeam().getScore());
+			}
 		}
 	}
 }
