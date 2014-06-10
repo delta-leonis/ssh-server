@@ -14,6 +14,7 @@ import model.World;
 import model.enums.Command;
 import controller.ai.highLevelBehavior.Behavior;
 import controller.ai.highLevelBehavior.forcebehavior.forceCalculator.Force;
+import controller.ai.highLevelBehavior.testbehavior.DriveSquareBehavior;
 import controller.ai.highLevelBehavior.testbehavior.TestBehavior;
 import controller.ai.lowLevelBehavior.GotoPosition;
 import controller.ai.lowLevelBehavior.LowLevelBehavior;
@@ -31,7 +32,8 @@ public class Main implements Observer {
 		world = World.getInstance();
 		world.addObserver(this);
 //		behavior = new Force();
-		behavior = new TestBehavior();
+//		behavior = new TestBehavior();
+		behavior = new DriveSquareBehavior();
 		robotExecuters = new ArrayList<RobotExecuter>();
 		createExecuters();
 		lowLevelBehaviors = new ArrayList<LowLevelBehavior>();
@@ -82,10 +84,10 @@ public class Main implements Observer {
 		//IF ROBOT OP GOEDE POSITIE
 			//GA NAAR NIEUWE POSITIE
 		
-		if (arg.equals(new String("detectionHandlerFinished"))) {
+		if ("detectionHandlerFinished".equals(arg)) {
 			behavior.execute(robotExecuters);
 			// System.out.println("World updated");
-		} else if (arg.equals("RobotAdded")) {
+		} else if ("RobotAdded".equals(arg)) {
 			createExecuters();
 		}
 	}

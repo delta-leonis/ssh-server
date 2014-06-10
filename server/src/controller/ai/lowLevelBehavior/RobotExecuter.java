@@ -10,7 +10,6 @@ public class RobotExecuter implements Runnable{
 	private LowLevelBehavior lowLevelBehavior;
 
 	public RobotExecuter(Robot robot){
-		System.out.println("New robot executer");
 		this.robot = robot;
 	}
 	

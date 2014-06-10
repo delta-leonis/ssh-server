@@ -20,12 +20,12 @@ public class BaseStationClient implements Runnable {
         // Construct the socket
         try {
 			socket = new DatagramSocket( 10000 ) ;
+			System.out.println( "The server is ready..." ) ;
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-        System.out.println( "The server is ready..." ) ;
 	}
 	public void run(){
         // Create a packet
