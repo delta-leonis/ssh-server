@@ -7,23 +7,24 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.logging.Logger;
 
+import robocup.Main;
 import robocup.model.World;
 
 public class BaseStationClient implements Runnable {
 
 	private final static int PACKETSIZE = 16 ;
 	private DatagramSocket socket;
+	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 	
 	public BaseStationClient(){
 
         // Construct the socket
         try {
 			socket = new DatagramSocket( 10000 ) ;
-			System.out.println( "The server is ready..." ) ;
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.warning(e.toString());
 		}
 
 	}
