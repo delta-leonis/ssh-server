@@ -17,6 +17,7 @@ import robocup.model.enums.Color;
 public class DetectionHandler {
 
 	private World world;
+	
 
 	public DetectionHandler(World world) {
 		this.world = world;
@@ -40,6 +41,7 @@ public class DetectionHandler {
 	public void processBalls(List<SSL_DetectionBall> balls, double time, int camNo) {
 		for (SSL_DetectionBall ball : balls) {
 			updateBall(ball, time, camNo);
+//			System.out.println("test" + balls.indexOf(ball));
 		}
 	}
 
@@ -49,7 +51,7 @@ public class DetectionHandler {
 	 * @param ball
 	 */
 	public void updateBall(SSL_DetectionBall ball, double time, int camNo) {
-		Point p = new Point((int) ball.getY(), (int) ball.getX());
+		Point p = new Point((int) ball.getX(), (int) ball.getY());
 		if (ball.hasZ()) {
 			world.getBall().update(time, p, ball.getZ(), camNo);
 		} else {

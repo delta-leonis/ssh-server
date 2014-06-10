@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-import robocup.model.World;
 import robocup.controller.ai.highLevelBehavior.Behavior;
-import robocup.controller.ai.highLevelBehavior.testbehavior.TestBehavior;
+import robocup.controller.ai.highLevelBehavior.testbehavior.DriveSquareBehavior;
 import robocup.controller.ai.lowLevelBehavior.LowLevelBehavior;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
+import robocup.model.World;
 
 public class Main implements Observer {
 
@@ -23,7 +23,8 @@ public class Main implements Observer {
 		world = World.getInstance();
 		world.addObserver(this);
 //		behavior = new Force();
-		behavior = new TestBehavior();
+//		behavior = new TestBehavior();
+		behavior = new DriveSquareBehavior();
 		robotExecuters = new ArrayList<RobotExecuter>();
 		createExecuters();
 		lowLevelBehaviors = new ArrayList<LowLevelBehavior>();
@@ -74,9 +75,9 @@ public class Main implements Observer {
 		//IF ROBOT OP GOEDE POSITIE
 			//GA NAAR NIEUWE POSITIE
 		
-		if (arg.equals(new String("detectionHandlerFinished"))) {
+		if ("detectionHandlerFinished".equals(arg)) {
 			behavior.execute(robotExecuters);
-		} else if (arg.equals("RobotAdded")) {
+		} else if ("RobotAdded".equals(arg)) {
 			createExecuters();
 		}
 	}

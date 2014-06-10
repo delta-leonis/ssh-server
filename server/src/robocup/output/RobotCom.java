@@ -32,7 +32,7 @@ public class RobotCom extends ComInterface {
 			}
 			this.port = port;
 			try {
-				serverSocket = new DatagramSocket(port);
+				serverSocket = new DatagramSocket();
 			} catch (SocketException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -63,7 +63,6 @@ public class RobotCom extends ComInterface {
 //		System.out.println("shootKicker: " + shootKicker);
 //		System.out.println("dribble: " + dribble);
 //		}
-		
 		byte[] dataPacket = createByteArray(messageType, robotID, direction, directionSpeed, travelDistance,
 				rotationAngle, rotationSpeed, shootKicker, dribble);
 		DatagramPacket sendPacket = new DatagramPacket(dataPacket, dataPacket.length, ipAddress, port);
