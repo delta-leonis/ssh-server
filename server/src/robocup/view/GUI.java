@@ -7,6 +7,8 @@ import java.util.logging.Logger;
 import robocup.Main;
 import robocup.model.Robot;
 import robocup.model.World;
+import robocup.output.ComInterface;
+import robocup.output.RobotCom;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -76,6 +78,7 @@ public class GUI extends javax.swing.JFrame implements Observer{
         robotSpeed = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         startButton = new javax.swing.JButton();
+        kickButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -255,22 +258,35 @@ public class GUI extends javax.swing.JFrame implements Observer{
                 startButtonActionPerformed(evt);
             }
         });
+        
+        kickButton.setText("Kick");
+        kickButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                kickButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(startButton)
-                .addContainerGap())
-        );
+                .addComponent(kickButton)
+//                .addContainerGap())
+        ));
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//            		.addComponent(kickButton)
+//                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(startButton)
-                .addContainerGap())
+//                .addContainerGap())
+        )
+        	.addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+        			.addComponent(kickButton)
+        )
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -322,6 +338,13 @@ public class GUI extends javax.swing.JFrame implements Observer{
             stopPressed();
     }//GEN-LAST:event_startButtonActionPerformed
 
+    private void kickButtonActionPerformed(java.awt.event.ActionEvent evt){
+    	//TODO: remove syso
+    	//FIXME: hardcoded kick
+    	System.out.println("Kick");
+		ComInterface.getInstance(RobotCom.class).send(1, robocup.Main.TEST_ROBOT_ID, 0, 0, 0, 0, 0, 40, false);
+    }
+    
     private void startPressed(){
     	world.getReferee().setStart(true);
         // TODO add start button code here
@@ -367,7 +390,7 @@ public class GUI extends javax.swing.JFrame implements Observer{
     private javax.swing.JPanel jPanel4;
     private javax.swing.JTextField robotNumber;
     private javax.swing.JTextField robotSpeed;
-    private javax.swing.JButton startButton;
+    private javax.swing.JButton startButton, kickButton;
     private javax.swing.JTextField teamColor;
     private javax.swing.JTextField teamName;
     private javax.swing.JTextField teamSide;
@@ -425,18 +448,22 @@ public class GUI extends javax.swing.JFrame implements Observer{
 	public void update(Observable arg0, Object arg1) {
 		if(arg0.equals(world)){
 //			setRobotNumber(int number)
-			int number = 11;
+			int number = Main.TEST_ROBOT_ID;
 			setRobotNumber(number);
 			Robot robot = world.getAlly().getRobotByID(number);
 			if(robot != null){
+				
 				setRobotSpeed((int)robot.getSpeed());
 				setTeamColor(robot.getTeam().getColor().toString());
-				setTeamName(robot.getTeam().getName());
+				//setTeamName(robot.getTeam().getName());
 				setTeamSide(robot.getTeam().getName());
 				setIsOnline(robot.isOnSight());
 				setBatteryVoltage(robot.getBatteryStatus());
 				setGoalsLeft(robot.getTeam().getScore());
 				setGoalsRight(robot.getTeam().getScore());
+				
+				if(robot.getPosition() != null)
+				setTeamName(String.format("pos: %.02f, %.02f", robot.getPosition().getX(), robot.getPosition().getY()));
 			}
 		}
 	}

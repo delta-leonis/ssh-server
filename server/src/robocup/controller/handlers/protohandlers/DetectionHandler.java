@@ -41,7 +41,7 @@ public class DetectionHandler {
 	public void processBalls(List<SSL_DetectionBall> balls, double time, int camNo) {
 		for (SSL_DetectionBall ball : balls) {
 			updateBall(ball, time, camNo);
-//			System.out.println("test" + balls.indexOf(ball));
+			//System.out.println("test" + balls.indexOf(ball));
 		}
 	}
 

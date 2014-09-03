@@ -39,9 +39,9 @@ public class ProtoParser {
 		try {
 			SSL_WrapperPacket wrapper = SSL_WrapperPacket.parseFrom(data);
 			if (wrapper.hasDetection()) {
-				
 				addObject(wrapper.getDetection());
-			} else if (wrapper.hasGeometry()) {
+			}
+			if (wrapper.hasGeometry()) {
 				addObject(wrapper.getGeometry());
 			}
 		} catch (IOException e) {

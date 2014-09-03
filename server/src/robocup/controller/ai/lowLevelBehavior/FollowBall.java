@@ -21,7 +21,7 @@ public class FollowBall extends LowLevelBehavior {
 	@Override
 	public void calculate() {
 		if(robot.getLastUpdateTime() + 0.10 < Calendar.getInstance().getTimeInMillis()/1000){
-			if(robot.getRobotID() == 11 && robot.isOnSight()){
+			if(robot.isOnSight()){
 				System.out.println("ROBOT LOST");
 				System.out.println("ROBOT LOST");
 				System.out.println("ROBOT LOST");

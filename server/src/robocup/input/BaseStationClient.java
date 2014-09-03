@@ -35,13 +35,16 @@ public class BaseStationClient implements Runnable {
     		// Receive a packet (blocking)
     		try {
     			socket.receive( packet ) ;
-    			
+    			System.out.println(new String(packet.getData()));
     			// Print the packet
     			String input = new String(packet.getData());
     			if(input.startsWith("V:")){
     				String floatString = input.substring(2).trim();
-    				if(World.getInstance().getAlly().getRobotByID(11)!=null)
-    					World.getInstance().getAlly().getRobotByID(11).setBatteryStatus(Float.parseFloat(floatString));
+    				try{
+    					World.getInstance().getAlly().getRobotByID(robocup.Main.TEST_ROBOT_ID).setBatteryStatus(Float.parseFloat(floatString));
+    				} catch(NullPointerException | NumberFormatException nle ){
+    					LOGGER.warning(nle.toString());
+    				}
     			} else
     				logToCSV(new String(packet.getData()));
     		} catch (IOException e) {
