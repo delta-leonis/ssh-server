@@ -31,6 +31,7 @@ public abstract class FieldObject {
 	public void update(Point newPosition, double updateTime, int camUpdateNo) {
 		double newTime = updateTime;
 		
+		//System.out.println(newPosition);
 		Point tmpPosition;
 		if (!correctCamSide(newPosition.getX(), newPosition.getY(), camUpdateNo)) {
 			if (camUpdateNo == 0 && positionCam1 == null){
@@ -43,17 +44,28 @@ public abstract class FieldObject {
 				;
 			}
 		}
-		if (camUpdateNo == 0)
+		if (camUpdateNo == 0) {
 			positionCam0 = new Point(newPosition.getX(), newPosition.getY());
-		if (camUpdateNo == 1)
+			//System.out.println(camUpdateNo + "# " + positionCam0.getX());
+		} 
+		if (camUpdateNo == 1) {
 			positionCam1 = new Point(newPosition.getX(), newPosition.getY());
+			//System.out.println(camUpdateNo + "# " + positionCam1.getX());
+		}
+		
+		
 
-		if (World.getInstance().getField().getCameraOverlapZoneWidth() > Math.abs(newPosition.getX())) {
-			// We are in the overlapZone DANGER!!
+//		if(this instanceof Ball){
+		if(World.getInstance().getField().getCameraOverlapZoneWidth() > Math.abs(newPosition.getX())){
 			if ((positionCam0 != null && positionCam1 != null)) {
-				// We have a position from both cameras
-				float newX = (positionCam0.getX() + positionCam1.getX()) / 2;
-				float newY = (positionCam0.getY() + positionCam1.getY()) / 2;
+				
+				float newX = positionCam0.getX();
+				float newY = positionCam0.getY();
+				if(Math.abs(positionCam1.getX()) > Math.abs(newX) && Math.abs(positionCam1.getY()) > Math.abs(newY) )
+				{
+					newX = positionCam1.getX();
+					newY = positionCam1.getY();
+				}
 				tmpPosition = new Point(newX, newY);
 			} else {
 				tmpPosition = newPosition;
@@ -61,13 +73,16 @@ public abstract class FieldObject {
 		} else {
 			tmpPosition = newPosition;
 		}
+
 		
 //		lastCamUpdateNo = camUpdateNo;
 		if(position != null){
 			setDirection(tmpPosition);
 			setSpeed(newTime, tmpPosition);
 		}
+		
 		position = tmpPosition;
+		
 		lastUpdateTime = newTime;			
 	}
 
@@ -89,6 +104,7 @@ public abstract class FieldObject {
 
 			if (deltaDistance > 1.5) {
 				direction = position.getAngle(newPosition);
+				//System.out.println(direction);
 			}
 		}
 	}

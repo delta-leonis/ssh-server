@@ -18,6 +18,9 @@ public class Force extends Behavior {
 
 	@SuppressWarnings("unused")
 	private Mode determineMode(World w) {
+		//calculate the most effective mode to play in, being either attack or defensive playstyles 
+		
+		//why attack and defense
 		throw new NotImplementedException();
 	}
 
