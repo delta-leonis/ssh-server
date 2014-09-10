@@ -4,7 +4,6 @@ import java.util.logging.Logger;
 
 import robocup.Main;
 import robocup.model.Robot;
-import robocup.model.World;
 
 public class RobotExecuter implements Runnable{
 

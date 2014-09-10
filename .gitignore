@@ -1,5 +1,7 @@
 server/.classpath
 server/.project
+server/.settings
 server/bin/
 server/bin1/
 server/log/
+.metadata

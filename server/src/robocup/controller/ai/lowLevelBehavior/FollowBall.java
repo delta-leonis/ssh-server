@@ -1,7 +1,5 @@
 package robocup.controller.ai.lowLevelBehavior;
 
-import java.util.Calendar;
-
 import robocup.model.Ball;
 import robocup.model.Point;
 import robocup.model.Robot;
@@ -20,16 +18,7 @@ public class FollowBall extends LowLevelBehavior {
 
 	@Override
 	public void calculate() {
-		if(robot.getLastUpdateTime() + 0.10 < Calendar.getInstance().getTimeInMillis()/1000){
-			if(robot.isOnSight()){
-				System.out.println("ROBOT LOST");
-				System.out.println("ROBOT LOST");
-				System.out.println("ROBOT LOST");
-				System.out.println("ROBOT LOST");
-				robot.setOnSight(false);
-			}
-			output.send(1,robot.getRobotID(), 0, 0, 0, 0, 0, 0,false);
-		} else {
+		if(!timeOutCheck()) {
 			robot.setOnSight(true);
 			int direction = 0;
 			int rotationSpeed = 0;
@@ -55,7 +44,6 @@ public class FollowBall extends LowLevelBehavior {
 			if(newRotation > 0) rotationSpeed *= -1;
 			output.send(1,robot.getRobotID(), direction, speed, travelDistance, newRotation, rotationSpeed, 0, false);
 		}
-		
 	}
 	
 	public int getDistance(){

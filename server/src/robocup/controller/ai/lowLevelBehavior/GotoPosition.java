@@ -1,21 +1,12 @@
 package robocup.controller.ai.lowLevelBehavior;
 
-
-
-
-import java.util.Calendar;
-import java.util.logging.Logger;
-
-import robocup.Main;
 import robocup.model.FieldObject;
 import robocup.model.Point;
 import robocup.model.Robot;
-import robocup.model.World;
 import robocup.output.ComInterface;
 
 public class GotoPosition extends LowLevelBehavior {
 	
-	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private Point newPosition;
 	
 
@@ -39,19 +30,13 @@ public class GotoPosition extends LowLevelBehavior {
 	
 	@Override
 	public void calculate() {
-		if(robot.getLastUpdateTime() + 0.20 < Calendar.getInstance().getTimeInMillis()/1000 ||
-				!World.getInstance().getReferee().isStart()){
-			robot.setOnSight(false);
-//			LOGGER.warning("Robot " + robot.getRobotID() + " is not on sight");
-//			LOGGER.warning("Time: " + (Calendar.getInstance().getTimeInMillis()/1000));
-//			LOGGER.warning("Robot: " + (robot.getLastUpdateTime()));
-			output.send(1, robot.getRobotID(), 0, 0, 0, 0, 0, 0, false);
+		if(timeOutCheck()) {
+
 		} else if(newPosition == null){
 			robot.setOnSight(true);
 			output.send(1, robot.getRobotID(), 0, 0, 0, 0, 0, 0, false);
 			return;
-		}else
-		{
+		} else {
 			robot.setOnSight(true);
 			int direction = 0;
 			int travelDistance = 0;//getDistance();
