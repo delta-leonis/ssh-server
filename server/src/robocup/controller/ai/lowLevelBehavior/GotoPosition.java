@@ -134,20 +134,20 @@ public class GotoPosition extends LowLevelBehavior {
 	}
 	
 	public int getSpeed(int distance, int rotationToDest){
-		int speed = 5000;
+		int speed = 7000;
 		if( (int)(distance/1.6) < speed){
 			speed = (int)(distance/1.0);
 		}
 		if( Math.abs(rotationToDest) > 10 ){
-			speed = 400;
+			speed = 900;
 				if( (int)(distance/2) < speed)
 					speed = (int)(distance/2);
 		}
 //		if(Math.abs(rotationToDest) >= 1 ){
 //			speed -= (int)((float)speed / ((float)90 / (float)Math.abs(rotationToDest)));
 //		}
-		if(speed < 200)
-			speed = 200;
+		if(speed < 400)
+			speed = 400;
 //		if(Math.abs(rotationToDest) > 30){
 //			speed = 0;
 //		}
