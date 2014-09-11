@@ -12,11 +12,13 @@ public class GotoPosition extends LowLevelBehavior {
 
 	public GotoPosition(Robot robot, ComInterface output, Point newPosition){
 		super(robot, output);
+//		System.out.println("goto 1: " + newPosition);
 		this.newPosition = newPosition;
 	}
 	
 	public GotoPosition(Robot robot, ComInterface output, FieldObject target){
 		super(robot, output);
+//		System.out.println("goto 2: " + target.getPosition());
 		newPosition = target.getPosition();
 	}
 
@@ -25,6 +27,7 @@ public class GotoPosition extends LowLevelBehavior {
 	}
 	
 	public void setTarget(Point p){
+//		System.out.println(" settarget: " + p);
 		newPosition = p;
 	}
 	
@@ -34,12 +37,13 @@ public class GotoPosition extends LowLevelBehavior {
 
 		} else if(newPosition == null){
 			robot.setOnSight(true);
-			output.send(1, robot.getRobotID(), 0, 0, 0, 0, 0, 0, false);
+			output.send(1, robot.getRobotID(), 0, 0, 0, 0, 0, 0, false); 
 			return;
 		} else {
 			robot.setOnSight(true);
 			int direction = 0;
 			int travelDistance = 0;//getDistance();
+//			System.out.println(" Newpost: " + newPosition);
 			int newRotation = rotationToDest(newPosition);
 			int speed = 0;//getSpeed(travelDistance, newRotation); //max 1200
 //			System.out.println("S:" + getSpeed(travelDistance, newRotation) + " RS: " + getRotationSpeed(speed, newRotation, travelDistance) + " TD: " + travelDistance + " NR: " + newRotation);
@@ -80,7 +84,7 @@ public class GotoPosition extends LowLevelBehavior {
 				rotationSpeed *= -1;
 			if(travelDistance < 300 && Math.abs(newRotation) > 10)
 				speed = 0;
-			System.out.println("RID: " + robot.getRobotID() + " S:" + speed + " RS: " + rotationSpeed + " TD: " + travelDistance + " NR: " + newRotation);
+			//System.out.println("RID: " + robot.getRobotID() + " S:" + speed + " RS: " + rotationSpeed + " TD: " + travelDistance + " NR: " + newRotation);
 
 			output.send(1, robot.getRobotID(), direction, speed, travelDistance, newRotation, rotationSpeed, 0, false);
 		}

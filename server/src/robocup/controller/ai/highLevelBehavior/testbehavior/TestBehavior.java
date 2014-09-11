@@ -22,9 +22,9 @@ public class TestBehavior extends Behavior {
 		robots = w.getAlly().getRobots();
 		Robot closest = getClosestToTarget(robots, World.getInstance().getBall().getPosition());
 		for( Robot r  : robots){
-			try{
+			try {
 				RobotExecuter executer = findExecuter(r.getRobotID(), executers);
-				if( executer == null ){
+				if( executer == null ) {
 					executer = new RobotExecuter(r);
 					executer.setLowLevelBehavior(new GotoPosition(r, ComInterface.getInstance(RobotCom.class), w.getBall().getPosition()));
 					new Thread(executer).start();
@@ -44,11 +44,40 @@ public class TestBehavior extends Behavior {
 	}
 	
 	private void goToBall(Robot r, RobotExecuter e){
+		
 		Ball b = World.getInstance().getBall();
+		
+		System.out.println(" Bal pos: " +  b.getPosition());
+	
 		GotoPosition go = null;
-		if(e.getLowLevelBehavior() instanceof GotoPosition)
+		if(e.getLowLevelBehavior() instanceof GotoPosition) {
 			go = (GotoPosition)e.getLowLevelBehavior();
-		go.setTarget(b.getPosition());
+		}
+		
+		
+		// check if new position is within the worlds bounds
+		//System.out.println(b.getPosition());
+		//System.out.println(World.getInstance().getField().getLength() + "  " + World.getInstance().getField().getWidth());
+		
+		//>prutteltje testing temp
+		Point p = null;
+		// Get field params
+		float fieldX = World.getInstance().getField().getLength() / 2;
+		float fieldY = World.getInstance().getField().getWidth() / 2;
+		float targetPositionX = b.getPosition().getX();
+		float targetPositionY = b.getPosition().getY();
+		float borderZoneX = 100f;
+		float borderZoneY = 100f;
+		
+		if(Math.abs(targetPositionX) < (fieldX - borderZoneX) && Math.abs(targetPositionY) < (fieldY - borderZoneY)) {
+			p = new Point(targetPositionX, targetPositionY);
+			
+			go.setTarget(p);
+		}
+		else{
+			go.setTarget(null);
+		}
+		//go.setTarget(b.getPosition());
 	}
 	
 	private Robot getClosestToTarget(ArrayList<Robot> robots, Point p){

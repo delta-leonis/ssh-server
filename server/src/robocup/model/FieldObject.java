@@ -40,7 +40,7 @@ public abstract class FieldObject {
 				;
 			} else if (positionCam0 == null && positionCam1 == null){
 				;
-			} else{
+			} else {
 				;
 			}
 		}
@@ -55,25 +55,37 @@ public abstract class FieldObject {
 		
 		
 
-//		if(this instanceof Ball){
+
 		if(World.getInstance().getField().getCameraOverlapZoneWidth() > Math.abs(newPosition.getX())){
-			if ((positionCam0 != null && positionCam1 != null)) {
-				
-				float newX = positionCam0.getX();
-				float newY = positionCam0.getY();
-				if(Math.abs(positionCam1.getX()) > Math.abs(newX) && Math.abs(positionCam1.getY()) > Math.abs(newY) )
-				{
-					newX = positionCam1.getX();
-					newY = positionCam1.getY();
+			if(this instanceof Ball) {
+				if ((positionCam0 != null && positionCam1 != null)) {
+					
+					float newX = positionCam0.getX();
+					float newY = positionCam0.getY();
+					if(Math.abs(positionCam1.getX()) > Math.abs(newX) && Math.abs(positionCam1.getY()) > Math.abs(newY) )
+					{
+						newX = positionCam1.getX();
+						newY = positionCam1.getY();
+						positionCam1 = null;
+					} else {
+						positionCam0 = null;
+					}
+					
+					//System.out.println("isbal: " + (this instanceof Ball));
+					tmpPosition = new Point(newX, newY); 
+				} else {
+					tmpPosition = newPosition;
 				}
-				tmpPosition = new Point(newX, newY);
 			} else {
 				tmpPosition = newPosition;
 			}
 		} else {
 			tmpPosition = newPosition;
 		}
-
+		
+//		if(this instanceof Robot) {
+//			System.out.println(" Robo loc: " + tmpPosition);
+//		}
 		
 //		lastCamUpdateNo = camUpdateNo;
 		if(position != null){
