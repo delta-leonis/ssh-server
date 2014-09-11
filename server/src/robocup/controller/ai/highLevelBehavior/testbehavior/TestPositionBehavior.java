@@ -12,7 +12,7 @@ import robocup.model.World;
 import robocup.output.ComInterface;
 import robocup.output.RobotCom;
 
-public class TestBehavior extends Behavior {
+public class TestPositionBehavior extends Behavior {
 
 	ArrayList<Robot> robots = new ArrayList<>();
 
