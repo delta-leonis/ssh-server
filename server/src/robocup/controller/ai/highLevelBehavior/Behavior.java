@@ -10,5 +10,12 @@ import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 public abstract class Behavior {
 
 	public abstract void execute(ArrayList<RobotExecuter> executers);
-
+	
+	public RobotExecuter findExecuter(int robotId, ArrayList<RobotExecuter> executers){
+		for(RobotExecuter r : executers){
+			if(r.getRobot().getRobotID() == robotId)
+				return r;
+		}
+		return null;
+	}
 }
