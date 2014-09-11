@@ -21,13 +21,18 @@ public class Keeping extends LowLevelBehavior {
 	@Override
 	public void calculate() {
 		if(!timeOutCheck()) {
-			robot.setOnSight(true);
+			Point dest = getBallDestination();
+			int x = (int) dest.getX();
+			
+			if(x < 350 && x > -350)
+				System.out.println("Ball is rolling towards goal at pos: " + dest);
+			/**robot.setOnSight(true);
 			ballDestination = getNewKeepingDestination();
 			if(ballDestination != null) {
 				int direction = robot.getPosition().getX() < ballDestination.getX() ? 90 : 270;
 				
 				output.send(0, robot.getRobotID(), direction, getSpeed(), 0, 0, 0, 0, false);
-			}
+			}*/
 		}
 	}
 	
@@ -39,43 +44,53 @@ public class Keeping extends LowLevelBehavior {
 	public Point getNewKeepingDestination() {
 		Point dest = null;
 
-		if(ball.getSpeed() < 1) { // ball is slow, determine position based on enemies able to shoot
-			// TODO: adjust ball speed
-			// TODO: determine where the enemy will shoot
-		} else if(isBallRollingToGoal()) { // ball is rolling towards the goal, intercept
+		if(isBallOnSameSide()) {
 			dest = getBallDestination();
-			System.out.println("DANGER, enemies will attack at:\n" + dest);
-		} else { // ball isn't a danger, prepare for enemies
-			// TODO: calculate destination based on enemy forces
+			
+			if(isPointInGoal(dest))
+				System.out.println("Ball is rolling towards the goal");
+			else
+				System.out.println("Ball is not rolling towards the goal");
 		}
+		
+//		if(ball.getSpeed() < 0) { // ball is slow, determine position based on enemies able to shoot
+//			// TODO: adjust ball speed
+//			// TODO: determine where the enemy will shoot
+//		} else if(isBallRollingToGoal()) { // ball is rolling towards the goal, intercept
+//			dest = getBallDestination();
+//			System.out.println("DANGER, enemies will attack at:\n" + dest);
+//		} else { // ball isn't a danger, prepare for enemies
+//			// TODO: calculate destination based on enemy forces
+//		}
 
 		return dest;
 	}
 	
+	private boolean isBallOnSameSide() {
+		return (ball.getPosition().getY() > 0 && robot.getPosition().getY() > 0) ||
+				(ball.getPosition().getY() < 0 && robot.getPosition().getY() < 0);
+	}
+
 	/**
 	 * Calculate the position where the ball will cross the edge of the field
 	 * @return
 	 */
 	private Point getBallDestination() {
 		Point currentPosition = ball.getPosition();
-		int direction = Math.abs((int) ball.getDirection());
-		
-		// get the angle used in the calculation
-		int angle = direction > 90 ? 180 - direction : direction;
+		int direction = (int) ball.getDirection();
 		
 		// get the y value of the edge of the field
 		int maxY = world.getField().getLength() / 2;
 		
-		int x = (int) currentPosition.getX();
-		int y = (int) currentPosition.getY();
+		if(currentPosition.getY() < 0)
+			maxY = -maxY;
 		
-		int dy = maxY - Math.abs(y);
-		// tan(90) is inf, we can assume dx is 0 in this case
-		int dx = angle == 90 ? 0 : (int) (dy / Math.tan(angle));
+		int dy = maxY - (int) currentPosition.getY();
+		// tan(90) or tan(-90) is inf, we can assume dx is 0 in this case
+		int dx = direction == 90 || direction == -90 ? 0 : (int) (dy / Math.tan(direction));
 		
-		int destX = x + (direction > 90 ? dx : -dx);
-		int destY = y > 0 ? maxY : -maxY;
-		
+		int destX = (int) currentPosition.getX() + dx;
+		int destY = maxY;
 		
 		return new Point(destX, destY);
 	}
@@ -88,10 +103,6 @@ public class Keeping extends LowLevelBehavior {
 		
 		return Math.abs(goal.getFrontLeft().getX()) > Math.abs(robot.getPosition().getX())
 				&& Math.abs(goal.getFrontRight().getX()) < Math.abs(robot.getPosition().getX()); 
-	}
-
-	private boolean isBallRollingToGoal() {
-		return isPointInGoal(ballDestination);
 	}
 
 	public int getDistance() {
