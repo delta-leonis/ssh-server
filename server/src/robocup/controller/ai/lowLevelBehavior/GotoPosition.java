@@ -85,7 +85,6 @@ public class GotoPosition extends LowLevelBehavior {
 			if(travelDistance < 300 && Math.abs(newRotation) > 10)
 				speed = 0;
 			//System.out.println("RID: " + robot.getRobotID() + " S:" + speed + " RS: " + rotationSpeed + " TD: " + travelDistance + " NR: " + newRotation);
-
 			output.send(1, robot.getRobotID(), direction, speed, travelDistance, newRotation, rotationSpeed, 0, false);
 		}
 	}

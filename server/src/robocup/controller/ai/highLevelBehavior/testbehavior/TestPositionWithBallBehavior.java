@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import robocup.controller.ai.highLevelBehavior.Behavior;
 import robocup.controller.ai.lowLevelBehavior.GotoPosition;
+import robocup.controller.ai.lowLevelBehavior.GotoPositionWithBall;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Ball;
 import robocup.model.Point;
@@ -26,7 +27,7 @@ public class TestPositionWithBallBehavior extends Behavior {
 				RobotExecuter executer = findExecuter(r.getRobotID(), executers);
 				if( executer == null ) {
 					executer = new RobotExecuter(r);
-					executer.setLowLevelBehavior(new GotoPosition(r, ComInterface.getInstance(RobotCom.class), w.getBall().getPosition()));
+					executer.setLowLevelBehavior(new GotoPositionWithBall(r, ComInterface.getInstance(RobotCom.class), w.getBall().getPosition()));
 					new Thread(executer).start();
 					executers.add(executer);
 				}
@@ -35,7 +36,7 @@ public class TestPositionWithBallBehavior extends Behavior {
 				else if(r.equals(closest)){
 					goToBall(r, executer);
 				} else {
-					((GotoPosition) executer.getLowLevelBehavior()).setTarget(null);
+					((GotoPositionWithBall) executer.getLowLevelBehavior()).setTarget(null);
 				}
 			}catch(NullPointerException e){
 				e.printStackTrace();
@@ -47,11 +48,11 @@ public class TestPositionWithBallBehavior extends Behavior {
 		
 		Ball b = World.getInstance().getBall();
 		
-		System.out.println(" Bal pos: " +  b.getPosition());
+		//System.out.println(" Bal pos: " +  b.getPosition());
 	
-		GotoPosition go = null;
-		if(e.getLowLevelBehavior() instanceof GotoPosition) {
-			go = (GotoPosition)e.getLowLevelBehavior();
+		GotoPositionWithBall go = null;
+		if(e.getLowLevelBehavior() instanceof GotoPositionWithBall) {
+			go = (GotoPositionWithBall)e.getLowLevelBehavior();
 		}
 		
 		
@@ -94,13 +95,5 @@ public class TestPositionWithBallBehavior extends Behavior {
 			}
 		}
 		return closest;
-	}
-	
-	public RobotExecuter findExecuter(int robotId, ArrayList<RobotExecuter> executers){
-		for(RobotExecuter r : executers){
-			if(r.getRobot().getRobotID() == robotId)
-				return r;
-		}
-		return null;
 	}
 }

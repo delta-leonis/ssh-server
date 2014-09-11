@@ -47,7 +47,7 @@ public class TestPositionBehavior extends Behavior {
 		
 		Ball b = World.getInstance().getBall();
 		
-		System.out.println(" Bal pos: " +  b.getPosition());
+//		System.out.println(" Bal pos: " +  b.getPosition());
 	
 		GotoPosition go = null;
 		if(e.getLowLevelBehavior() instanceof GotoPosition) {
