@@ -31,10 +31,10 @@ public class TestPositionWithBallBehavior extends Behavior {
 					new Thread(executer).start();
 					executers.add(executer);
 				}
-				if(w.getBall().getPosition()!= null && r.getPosition().getDeltaDistance(w.getBall().getPosition() )> 700)
-					goToBall(r, executer);
+				if(w.getBall().getPosition()!= null && r.getPosition().getDeltaDistance(w.getBall().getPosition() )> 600)
+					goToBall(r, executer, false);
 				else if(r.equals(closest)){
-					goToBall(r, executer);
+					goToBall(r, executer, true);
 				} else {
 					((GotoPositionWithBall) executer.getLowLevelBehavior()).setTarget(null);
 				}
@@ -44,7 +44,7 @@ public class TestPositionWithBallBehavior extends Behavior {
 		}
 	}
 	
-	private void goToBall(Robot r, RobotExecuter e){
+	private void goToBall(Robot r, RobotExecuter e, Boolean closest){
 		
 		Ball b = World.getInstance().getBall();
 		
@@ -62,6 +62,7 @@ public class TestPositionWithBallBehavior extends Behavior {
 		
 		//>prutteltje testing temp
 		Point p = null;
+		
 		// Get field params
 		float fieldX = World.getInstance().getField().getLength() / 2;
 		float fieldY = World.getInstance().getField().getWidth() / 2;
@@ -69,6 +70,33 @@ public class TestPositionWithBallBehavior extends Behavior {
 		float targetPositionY = b.getPosition().getY();
 		float borderZoneX = 100f;
 		float borderZoneY = 100f;
+		
+		if(closest) {
+			// Kijken of hij richting doel kan
+			if(r.getPosition().getDeltaDistance(b.getPosition()) < 200) {
+				// hardcoded rechtergoal positie (1200, 0)
+				System.out.println(r.getOrientation());
+				System.out.println(b.getDirection());
+				
+				float tOrientation = r.getOrientation(); // 130
+				float bOrientationTarget = 180 - tOrientation;
+				if(tOrientation > 180) {
+					bOrientationTarget = 180 + tOrientation;
+				}
+				
+				Point tRpoint = r.getPosition(); // 50,50
+				Point tBpoint = b.getPosition(); // 60,60
+				
+				
+				//float tOverstaande = tBpoint.getX() - tRpoint.getX();
+				
+				
+				/*p = new Point(1200,0);
+				go.setTarget(p);
+				return;*/
+				//System.out.println(r.getPosition().getDeltaDistance(b.getPosition()) );
+			}
+		}
 		
 		if(Math.abs(targetPositionX) < (fieldX - borderZoneX) && Math.abs(targetPositionY) < (fieldY - borderZoneY)) {
 			p = new Point(targetPositionX, targetPositionY);

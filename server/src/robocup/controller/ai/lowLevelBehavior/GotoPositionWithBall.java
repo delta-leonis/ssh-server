@@ -74,9 +74,9 @@ public class GotoPositionWithBall extends LowLevelBehavior {
 //			output.send(1, robot.getRobotID(), 0, 0, 0, 0, 0, 0, true);
 
 //			System.out.println(getDistance());
-//			if(getDistance() < 250)
-//				output.send(1, robot.getRobotID(), direction, speed, travelDistance, newRotation, rotationSpeed, 0, true);
-//			else
+			if(getDistance() < 250)
+				output.send(1, robot.getRobotID(), direction, speed, travelDistance, newRotation, rotationSpeed, 0, false);
+			else
 				output.send(1, robot.getRobotID(), direction, speed, travelDistance, newRotation, rotationSpeed, 0, false);
 			}
 		
