@@ -1,7 +1,5 @@
 package robocup.controller.ai.lowLevelBehavior;
 
-import java.util.ArrayList;
-
 import robocup.model.Ball;
 import robocup.model.Goal;
 import robocup.model.Point;
@@ -21,11 +19,16 @@ public class Keeping extends LowLevelBehavior {
 	@Override
 	public void calculate() {
 		if(!timeOutCheck()) {
-			Point dest = getBallDestination();
-			int x = (int) dest.getX();
+//			Point dest = getBallDestination();
+//			int x = (int) dest.getX();
 			
-			if(x < 350 && x > -350)
-				System.out.println("Ball is rolling towards goal at pos: " + dest);
+//			if(x < 600 && x > -600)
+//				System.out.println("Ball is rolling towards defenceLine, keeper is intercepting");
+			
+			
+			
+//			if(x < 350 && x > -350)
+//				System.out.println("Ball is rolling towards goal at pos: " + dest);
 			/**robot.setOnSight(true);
 			ballDestination = getNewKeepingDestination();
 			if(ballDestination != null) {
@@ -44,14 +47,14 @@ public class Keeping extends LowLevelBehavior {
 	public Point getNewKeepingDestination() {
 		Point dest = null;
 
-		if(isBallOnSameSide()) {
-			dest = getBallDestination();
-			
-			if(isPointInGoal(dest))
-				System.out.println("Ball is rolling towards the goal");
-			else
-				System.out.println("Ball is not rolling towards the goal");
-		}
+//		if(isBallOnSameSide()) {
+//			dest = getBallDestination();
+//			
+//			if(isPointInGoal(dest))
+//				System.out.println("Ball is rolling towards the goal");
+//			else
+//				System.out.println("Ball is not rolling towards the goal");
+//		}
 		
 //		if(ball.getSpeed() < 0) { // ball is slow, determine position based on enemies able to shoot
 //			// TODO: adjust ball speed
@@ -80,29 +83,27 @@ public class Keeping extends LowLevelBehavior {
 		int direction = (int) ball.getDirection();
 		
 		// get the y value of the edge of the field
-		int maxY = world.getField().getLength() / 2;
+		int defenceLine = world.getField().getLength() / 2 - 200;
 		
 		if(currentPosition.getY() < 0)
-			maxY = -maxY;
+			defenceLine = -defenceLine;
 		
-		int dy = maxY - (int) currentPosition.getY();
+		int dy = defenceLine - (int) currentPosition.getY();
 		// tan(90) or tan(-90) is inf, we can assume dx is 0 in this case
 		int dx = direction == 90 || direction == -90 ? 0 : (int) (dy / Math.tan(direction));
 		
 		int destX = (int) currentPosition.getX() + dx;
-		int destY = maxY;
+		int destY = defenceLine;
 		
 		return new Point(destX, destY);
 	}
 	
 	private boolean isPointInGoal(Point p) {
-		ArrayList<Goal> goals = world.getField().getGoal();
+		Goal goal = world.getField().getGoal().get(0);
 		
-		Goal goal = (goals.get(0).getFrontLeft().getY() > 0 && robot.getPosition().getY() > 0)
-						? goals.get(0) : goals.get(1);
+		int width = (int) (Math.abs(goal.getFrontLeft().getX()) + Math.abs(goal.getFrontRight().getX()));		
 		
-		return Math.abs(goal.getFrontLeft().getX()) > Math.abs(robot.getPosition().getX())
-				&& Math.abs(goal.getFrontRight().getX()) < Math.abs(robot.getPosition().getX()); 
+		return Math.abs(p.getX()) < width / 2; 
 	}
 
 	public int getDistance() {
