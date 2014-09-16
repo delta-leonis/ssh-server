@@ -35,6 +35,8 @@ public class TestKeepingBehavior extends Behavior {
 //				executer.setLowLevelBehavior(new Keeping(keeper, ComInterface.getInstance(RobotCom.class)));
 				new Thread(executer).start();
 				executers.add(executer);
+				
+				((GotoPosition) executer.getLowLevelBehavior()).setTarget(null);
 			}
 			
 			GotoPosition go = null;
@@ -43,16 +45,32 @@ public class TestKeepingBehavior extends Behavior {
 			else
 				return;
 			
-			if(ballDest != null && ballDest.getY() < 60 && ballDest.getY() > -600 && isOnSameSide(ballDest, keeper)) {
+			if(ballDest != null && ballDest.getY() < 300 && ballDest.getY() > -300 && isOnSameSide(ballDest, keeper)) {
 				System.out.println("Ball going towards defence line, intercepting: " + ballDest);
 				go.setTarget(ballDest);
-			} else {
+				ballDest = null;
+				ball.setPosition(null);
+			} else if(ballDest != null) {
+				if(isNearTarget(keeper, ballDest)) {
+					go.setTarget(null);
+					System.out.println("Keeper near target");
+				}
 //				System.out.println("Setting keeper target to null");
 //				go.setTarget(null);
 			}
 		}
 	}
 	
+	private boolean isNearTarget(Robot keeper, Point ballDest) {
+		int keeperY = (int) keeper.getPosition().getY();
+		int ballDestY = (int) ballDest.getY();
+		
+		int dy = ballDestY - keeperY;
+		
+		System.out.println(dy);
+		return dy < 200 && dy > -200;
+	}
+
 	private boolean isOnSameSide(Point ballDest, Robot r) {
 		return ballDest.getX() > 0 && r.getPosition().getX() > 0
 			|| ballDest.getX() < 0 && r.getPosition().getX() < 0;

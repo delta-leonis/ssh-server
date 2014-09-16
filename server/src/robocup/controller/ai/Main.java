@@ -25,9 +25,9 @@ public class Main implements Observer {
 		world = World.getInstance();
 		world.addObserver(this);
 //		behavior = new Force();
-		behavior = new TestPositionBehavior();
+//		behavior = new TestPositionBehavior();
 //		behavior = new DriveSquareBehavior();
-//		behavior = new TestKeepingBehavior();
+		behavior = new TestKeepingBehavior();
 //		behavior = new TestPositionWithBallBehavior();
 		robotExecuters = new ArrayList<RobotExecuter>();
 		createExecuters();
