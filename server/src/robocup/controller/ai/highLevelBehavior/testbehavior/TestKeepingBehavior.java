@@ -43,12 +43,12 @@ public class TestKeepingBehavior extends Behavior {
 			else
 				return;
 			
-			if(ballDest.getY() < 450 && ballDest.getY() > -450 && isOnSameSide(ballDest, keeper)) {
-				System.out.println("Ball going towards defence line, intercepting.");
+			if(ballDest != null && ballDest.getY() < 60 && ballDest.getY() > -600 && isOnSameSide(ballDest, keeper)) {
+				System.out.println("Ball going towards defence line, intercepting: " + ballDest);
 				go.setTarget(ballDest);
 			} else {
-				System.out.println("Setting keeper target to null");
-				go.setTarget(null);
+//				System.out.println("Setting keeper target to null");
+//				go.setTarget(null);
 			}
 		}
 	}
@@ -78,7 +78,7 @@ public class TestKeepingBehavior extends Behavior {
 			int dy = direction == 90 || direction == -90 ? 0 : (int) (dx / Math.tan(direction));
 			
 			int destX = defenceLine;
-			int destY = (int) currentPosition.getX() + dy;
+			int destY = (int) currentPosition.getY() - dy;
 			
 			dest = new Point(destX, destY);
 		}
