@@ -31,7 +31,7 @@ public class TestKeepingBehavior extends Behavior {
 			if(executer == null) {
 				executer = new RobotExecuter(keeper);
 				executer.setLowLevelBehavior(new GotoPosition(keeper, ComInterface.getInstance(RobotCom.class), 
-						ballDest != null ? ballDest : new Point(0, 1000)));
+						ballDest != null ? ballDest : new Point(1000, 0)));
 //				executer.setLowLevelBehavior(new Keeping(keeper, ComInterface.getInstance(RobotCom.class)));
 				new Thread(executer).start();
 				executers.add(executer);
@@ -43,7 +43,7 @@ public class TestKeepingBehavior extends Behavior {
 			else
 				return;
 			
-			if(ballDest.getX() < 450 && ballDest.getX() > -450 && isOnSameSide(ballDest, keeper)) {
+			if(ballDest.getY() < 450 && ballDest.getY() > -450 && isOnSameSide(ballDest, keeper)) {
 				System.out.println("Ball going towards defence line, intercepting.");
 				go.setTarget(ballDest);
 			} else {
@@ -54,8 +54,8 @@ public class TestKeepingBehavior extends Behavior {
 	}
 	
 	private boolean isOnSameSide(Point ballDest, Robot r) {
-		return ballDest.getY() > 0 && r.getPosition().getY() > 0
-			|| ballDest.getY() < 0 && r.getPosition().getY() < 0;
+		return ballDest.getX() > 0 && r.getPosition().getX() > 0
+			|| ballDest.getX() < 0 && r.getPosition().getX() < 0;
 	}
 
 	/**
@@ -70,15 +70,15 @@ public class TestKeepingBehavior extends Behavior {
 			
 			int defenceLine = world.getField().getLength() / 2 - 300;
 			
-			if(currentPosition.getY() < 0)
+			if(currentPosition.getX() < 0)
 				defenceLine = -defenceLine;
 			
-			int dy = defenceLine - (int) currentPosition.getY();
+			int dx = defenceLine - (int) currentPosition.getX();
 			// tan(90) or tan(-90) is inf, we can assume dx is 0 in this case
-			int dx = direction == 90 || direction == -90 ? 0 : (int) (dy / Math.tan(direction));
+			int dy = direction == 90 || direction == -90 ? 0 : (int) (dx / Math.tan(direction));
 			
-			int destX = (int) currentPosition.getX() + dx;
-			int destY = defenceLine;
+			int destX = defenceLine;
+			int destY = (int) currentPosition.getX() + dy;
 			
 			dest = new Point(destX, destY);
 		}
