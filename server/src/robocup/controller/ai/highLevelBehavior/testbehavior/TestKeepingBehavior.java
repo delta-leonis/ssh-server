@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import robocup.Main;
 import robocup.controller.ai.highLevelBehavior.Behavior;
 import robocup.controller.ai.lowLevelBehavior.GotoPosition;
-import robocup.controller.ai.lowLevelBehavior.Keeping;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Ball;
 import robocup.model.Point;
@@ -27,22 +26,29 @@ public class TestKeepingBehavior extends Behavior {
 		
 		if(keeper != null) {
 			RobotExecuter executer = findExecuter(Main.KEEPER_ROBOT_ID, executers);
-			
 			Point ballDest = getBallDestination();
 			
 			if(executer == null) {
 				executer = new RobotExecuter(keeper);
-				executer.setLowLevelBehavior(new GotoPosition(keeper, ComInterface.getInstance(RobotCom.class), new Point(0, 1000)));
+				executer.setLowLevelBehavior(new GotoPosition(keeper, ComInterface.getInstance(RobotCom.class), 
+						ballDest != null ? ballDest : new Point(0, 1000)));
 //				executer.setLowLevelBehavior(new Keeping(keeper, ComInterface.getInstance(RobotCom.class)));
 				new Thread(executer).start();
 				executers.add(executer);
 			}
 			
+			GotoPosition go = null;
+			if(executer.getLowLevelBehavior() instanceof GotoPosition)
+				go = (GotoPosition) executer.getLowLevelBehavior();
+			else
+				return;
+			
 			if(ballDest.getX() < 450 && ballDest.getX() > -450 && isOnSameSide(ballDest, keeper)) {
 				System.out.println("Ball going towards defence line, intercepting.");
-				((GotoPosition) executer.getLowLevelBehavior()).setTarget(ballDest);
+				go.setTarget(ballDest);
 			} else {
-				((GotoPosition) executer.getLowLevelBehavior()).setTarget(null);
+				System.out.println("Setting keeper target to null");
+				go.setTarget(null);
 			}
 		}
 	}
@@ -62,7 +68,6 @@ public class TestKeepingBehavior extends Behavior {
 		if(currentPosition != null) {
 			int direction = (int) ball.getDirection();
 			
-			// get the y value of the edge of the field
 			int defenceLine = world.getField().getLength() / 2 - 300;
 			
 			if(currentPosition.getY() < 0)
