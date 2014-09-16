@@ -29,7 +29,7 @@ import robocup.model.enums.Color;
 public class Main {
 	
 	public static final int TEST_ROBOT_ID = 1;
-	public static final int KEEPER_ROBOT_ID = 3;
+	public static final int KEEPER_ROBOT_ID = 1;
 
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private static Level debugLevel = Level.INFO;

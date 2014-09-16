@@ -49,35 +49,35 @@ public class GotoPosition extends LowLevelBehavior {
 //			System.out.println("S:" + getSpeed(travelDistance, newRotation) + " RS: " + getRotationSpeed(speed, newRotation, travelDistance) + " TD: " + travelDistance + " NR: " + newRotation);
 			int rotationSpeed = 0;//getRotationSpeed(speed, newRotation, travelDistance);
 
-			if(Math.abs(newRotation) > 140){
-				rotationSpeed = 350;
-			} else if(Math.abs(newRotation) > 70){
-				rotationSpeed = 280;
-			} else if( Math.abs(newRotation) > 30){
-				travelDistance = getDistance();
-				speed = getSpeed(travelDistance, newRotation);
-				if(speed == 0)
-					rotationSpeed = 400;
-				else
-					rotationSpeed = 300;
+//			if(Math.abs(newRotation) > 140){
 //				rotationSpeed = 350;
-////				if(speed>1000)
-////					rotationSpeed = 300;
-			} else if( Math.abs(newRotation) > 10){
-				travelDistance = getDistance();
-				speed = getSpeed(travelDistance, newRotation);
-				if(speed == 0)
-					rotationSpeed = 200;
-				else
-					rotationSpeed = 150;
-//				rotationSpeed = 200;
-////				if(travelDistance > 300)
-////					speed = 0;
-			}
-			else {
-				travelDistance = getDistance();
-				speed = getSpeed(travelDistance, newRotation);
-			}
+//			} else if(Math.abs(newRotation) > 70){
+//				rotationSpeed = 280;
+//			} else if( Math.abs(newRotation) > 30){
+//				travelDistance = getDistance();
+//				speed = getSpeed(travelDistance, newRotation);
+//				if(speed == 0)
+//					rotationSpeed = 400;
+//				else
+//					rotationSpeed = 300;
+////				rotationSpeed = 350;
+//////				if(speed>1000)
+//////					rotationSpeed = 300;
+//			} else if( Math.abs(newRotation) > 10){
+//				travelDistance = getDistance();
+//				speed = getSpeed(travelDistance, newRotation);
+//				if(speed == 0)
+//					rotationSpeed = 200;
+//				else
+//					rotationSpeed = 150;
+////				rotationSpeed = 200;
+//////				if(travelDistance > 300)
+//////					speed = 0;
+//			}
+//			else {
+//				travelDistance = getDistance();
+//				speed = getSpeed(travelDistance, newRotation);
+//			}
 //			if(travelDistance < 300 && Math.abs(newRotation) > 10)
 //				speed = 0;
 			if(newRotation < 0)
@@ -85,7 +85,9 @@ public class GotoPosition extends LowLevelBehavior {
 			if(travelDistance < 300 && Math.abs(newRotation) > 10)
 				speed = 0;
 			//System.out.println("RID: " + robot.getRobotID() + " S:" + speed + " RS: " + rotationSpeed + " TD: " + travelDistance + " NR: " + newRotation);
-			output.send(1, robot.getRobotID(), direction, speed, travelDistance, newRotation, rotationSpeed, 0, false);
+			//output.send(1, robot.getRobotID(), direction, speed, travelDistance, newRotation, rotationSpeed, 0, false);
+			System.out.println(newRotation);
+			output.send(1, robot.getRobotID(), newRotation, 500, 500, newRotation, 150, 0, false);
 		}
 	}
 	
