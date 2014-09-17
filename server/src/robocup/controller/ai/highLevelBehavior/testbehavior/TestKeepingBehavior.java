@@ -15,7 +15,7 @@ import robocup.output.RobotCom;
 
 public class TestKeepingBehavior extends Behavior {
 
-	private static final int GOAL_DEFENCE_RADIUS = 400;
+	private static final int GOAL_DEFENCE_RADIUS = 500;
 	// used in calculation later on, prevent calculating it every update by defining it
 	private static final int GOAL_DEFENCE_RADIUS_SQUARE = GOAL_DEFENCE_RADIUS * GOAL_DEFENCE_RADIUS; 
 	private Ball ball;
