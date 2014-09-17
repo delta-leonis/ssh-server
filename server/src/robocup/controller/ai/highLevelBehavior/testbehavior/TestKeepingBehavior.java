@@ -15,24 +15,28 @@ import robocup.output.RobotCom;
 
 public class TestKeepingBehavior extends Behavior {
 
-	private static final int GOAL_DEFENCE_RADIUS = 500;
+	private static final int GOAL_DEFENCE_RADIUS = 400;
 	// used in calculation later on, prevent calculating it every update by defining it
-	private static final int GOAL_DEFENCE_RADIUS_SQUARE = 250000; 
+	private static final int GOAL_DEFENCE_RADIUS_SQUARE = GOAL_DEFENCE_RADIUS * GOAL_DEFENCE_RADIUS; 
 	private Ball ball;
 	private World world;
 	private Robot keeper;
 	
 	public TestKeepingBehavior() {
 		world = World.getInstance();
-		ball = world.getBall();
-		keeper = world.getAlly().getRobotByID(Main.KEEPER_ROBOT_ID);
 	}
 	
 	@Override
 	public void execute(ArrayList<RobotExecuter> executers) {
+		keeper = world.getAlly().getRobotByID(Main.KEEPER_ROBOT_ID);
+		ball = world.getBall();
+		
 		if(keeper != null) {
 			RobotExecuter executer = findExecuter(Main.KEEPER_ROBOT_ID, executers);
 			Point keeperDest = getKeeperPosition();
+			
+//			if(keeperDest != null)
+//				System.out.println("Keeper will defend at: " + keeperDest);
 			
 			if(executer == null) {
 				executer = new RobotExecuter(keeper);
@@ -52,8 +56,6 @@ public class TestKeepingBehavior extends Behavior {
 			
 			if(keeperDest != null && !isNearTarget(keeper, keeperDest)) {
 				go.setTarget(keeperDest);
-				keeperDest = null;
-				ball.setPosition(null);
 			} else {
 				go.setTarget(null);
 			}
@@ -65,9 +67,9 @@ public class TestKeepingBehavior extends Behavior {
 		int destY = (int) dest.getY();
 		
 		int dy = destY - keeperY;
-		
 		System.out.println(dy);
-		return dy < 200 && dy > -200;
+		
+		return dy < 40 && dy > -40;
 	}
 
 	/**
@@ -79,20 +81,22 @@ public class TestKeepingBehavior extends Behavior {
 		Point midGoal = new Point(world.getField().getLength() / 2, 0);
 		Point newPosition = null;
 		
+		
 		if(keeper.getPosition().getX() < 0)
-			midGoal.diagMirror();
+			midGoal.setX(-midGoal.getX());
 		
 		if(ballPosition != null) {
 			int angle = Math.abs(midGoal.getAngle(ballPosition));
+			int realAngle = angle > 90 ? 180 - angle : angle;
 			
-			int dx = (int) Math.sin(angle) * GOAL_DEFENCE_RADIUS;
-			int dy = (int) Math.sqrt(GOAL_DEFENCE_RADIUS_SQUARE - dx * dx);
+			double dx = Math.sin(Math.toRadians(realAngle)) * GOAL_DEFENCE_RADIUS;
+			double dy = Math.sqrt(GOAL_DEFENCE_RADIUS_SQUARE - dx * dx);
 			
 			int midGoalX = (int) midGoal.getX();
-			int destX = midGoalX > 0 ? midGoalX - dx : midGoalX + dx;
+			int destX = (int) (midGoalX > 0 ? midGoalX - dx : midGoalX + dx);
 			
 			int midGoalY = (int) midGoal.getY();
-			int destY = ballPosition.getY() > 0 ?  midGoalY + dy : midGoalY - dy;
+			int destY = (int) (ballPosition.getY() > 0 ?  midGoalY + dy : midGoalY - dy);
 			
 			newPosition = new Point(destX, destY);
 		}
