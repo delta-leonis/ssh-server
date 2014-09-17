@@ -15,24 +15,29 @@ import robocup.output.RobotCom;
 
 public class TestKeepingBehavior extends Behavior {
 
+	private static final int GOAL_DEFENCE_RADIUS = 500;
+	// used in calculation later on, prevent calculating it every update by defining it
+	private static final int GOAL_DEFENCE_RADIUS_SQUARE = 250000; 
 	private Ball ball;
 	private World world;
+	private Robot keeper;
+	
+	public TestKeepingBehavior() {
+		world = World.getInstance();
+		ball = world.getBall();
+		keeper = world.getAlly().getRobotByID(Main.KEEPER_ROBOT_ID);
+	}
 	
 	@Override
 	public void execute(ArrayList<RobotExecuter> executers) {
-		world = World.getInstance();
-		ball = world.getBall();
-		Robot keeper = world.getAlly().getRobotByID(Main.KEEPER_ROBOT_ID);
-		
 		if(keeper != null) {
 			RobotExecuter executer = findExecuter(Main.KEEPER_ROBOT_ID, executers);
-			Point ballDest = getBallDestination();
+			Point keeperDest = getKeeperPosition();
 			
 			if(executer == null) {
 				executer = new RobotExecuter(keeper);
 				executer.setLowLevelBehavior(new GotoPosition(keeper, ComInterface.getInstance(RobotCom.class), 
-						ballDest != null ? ballDest : new Point(1000, 0)));
-//				executer.setLowLevelBehavior(new Keeping(keeper, ComInterface.getInstance(RobotCom.class)));
+						keeperDest != null ? keeperDest : new Point(0, 0)));
 				new Thread(executer).start();
 				executers.add(executer);
 				
@@ -45,62 +50,53 @@ public class TestKeepingBehavior extends Behavior {
 			else
 				return;
 			
-			if(ballDest != null && ballDest.getY() < 300 && ballDest.getY() > -300 && isOnSameSide(ballDest, keeper)) {
-				System.out.println("Ball going towards defence line, intercepting: " + ballDest);
-				go.setTarget(ballDest);
-				ballDest = null;
+			if(keeperDest != null && !isNearTarget(keeper, keeperDest)) {
+				go.setTarget(keeperDest);
+				keeperDest = null;
 				ball.setPosition(null);
-			} else if(ballDest != null) {
-				if(isNearTarget(keeper, ballDest)) {
-					go.setTarget(null);
-					System.out.println("Keeper near target");
-				}
-//				System.out.println("Setting keeper target to null");
-//				go.setTarget(null);
+			} else {
+				go.setTarget(null);
 			}
 		}
 	}
 	
-	private boolean isNearTarget(Robot keeper, Point ballDest) {
+	private boolean isNearTarget(Robot keeper, Point dest) {
 		int keeperY = (int) keeper.getPosition().getY();
-		int ballDestY = (int) ballDest.getY();
+		int destY = (int) dest.getY();
 		
-		int dy = ballDestY - keeperY;
+		int dy = destY - keeperY;
 		
 		System.out.println(dy);
 		return dy < 200 && dy > -200;
 	}
 
-	private boolean isOnSameSide(Point ballDest, Robot r) {
-		return ballDest.getX() > 0 && r.getPosition().getX() > 0
-			|| ballDest.getX() < 0 && r.getPosition().getX() < 0;
-	}
-
 	/**
-	 * Calculate the position where the ball will cross the edge of the field
+	 * Calculate the position between the middle of the goal and the ball, with 500 distance from the goal
 	 * @return
 	 */
-	private Point getBallDestination() {
-		Point currentPosition = ball.getPosition();
-		Point dest = null;
-		if(currentPosition != null) {
-			int direction = (int) ball.getDirection();
+	private Point getKeeperPosition() {
+		Point ballPosition = ball.getPosition();
+		Point midGoal = new Point(world.getField().getLength() / 2, 0);
+		Point newPosition = null;
+		
+		if(keeper.getPosition().getX() < 0)
+			midGoal.diagMirror();
+		
+		if(ballPosition != null) {
+			int angle = Math.abs(midGoal.getAngle(ballPosition));
 			
-			int defenceLine = world.getField().getLength() / 2 - 300;
+			int dx = (int) Math.sin(angle) * GOAL_DEFENCE_RADIUS;
+			int dy = (int) Math.sqrt(GOAL_DEFENCE_RADIUS_SQUARE - dx * dx);
 			
-			if(currentPosition.getX() < 0)
-				defenceLine = -defenceLine;
+			int midGoalX = (int) midGoal.getX();
+			int destX = midGoalX > 0 ? midGoalX - dx : midGoalX + dx;
 			
-			int dx = defenceLine - (int) currentPosition.getX();
-			// tan(90) or tan(-90) is inf, we can assume dx is 0 in this case
-			int dy = direction == 90 || direction == -90 ? 0 : (int) (dx / Math.tan(direction));
+			int midGoalY = (int) midGoal.getY();
+			int destY = ballPosition.getY() > 0 ?  midGoalY + dy : midGoalY - dy;
 			
-			int destX = defenceLine;
-			int destY = (int) currentPosition.getY() - dy;
-			
-			dest = new Point(destX, destY);
+			newPosition = new Point(destX, destY);
 		}
 		
-		return dest;
+		return newPosition;
 	}
 }
