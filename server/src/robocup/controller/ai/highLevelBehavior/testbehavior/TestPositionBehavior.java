@@ -66,8 +66,8 @@ public class TestPositionBehavior extends Behavior {
 		float fieldY = World.getInstance().getField().getWidth() / 2;
 		float targetPositionX = b.getPosition().getX();
 		float targetPositionY = b.getPosition().getY();
-		float borderZoneX = 100f;
-		float borderZoneY = 100f;
+		float borderZoneX = 30f;
+		float borderZoneY = 30;
 		
 		if(Math.abs(targetPositionX) < (fieldX - borderZoneX) && Math.abs(targetPositionY) < (fieldY - borderZoneY)) {
 			p = new Point(targetPositionX, targetPositionY);

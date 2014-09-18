@@ -89,20 +89,30 @@ public class GotoPosition extends LowLevelBehavior {
 			
 			if(newRotation < 0)
 				rotationSpeed *= -1;
-			if(getDistance() < 100) speed = 1;
-			else if(getDistance() < 1000) speed = 600;
-			else if(getDistance() < 3000) speed = 800;
-			else if(getDistance() < 6000) speed = 1500;
-			else speed = 1500;
 			
-			rotationSpeed = (speed * newRotation) / getDistance(); //rotationSpeed = rotatie / afstand / snelheid; oftewel (rotatie * speed) / afstand        //add multiplier to increase slightly e.g. 1.1
+			
+			
+			
+//			System.out.println(newRotation);
+//			if(Math.abs(newRotation) > 10 && getDistance() > 1200){
+//				speed = 600;
+//				rotationSpeed = (speed * newRotation*10) / getDistance();
+//			}
+//			else {
+//				speed = getSpeed2(getDistance());
+//				rotationSpeed = (speed * newRotation) / getDistance();
+//			}
+			rotationSpeed = (speed * newRotation) / getDistance();
 			System.out.println(rotationSpeed);
+			speed = getSpeed2(getDistance());
+			 //rotationSpeed = rotatie / afstand / snelheid; oftewel (rotatie * speed) / afstand        //add multiplier to increase slightly e.g. 1.1
+//			System.out.println(rotationSpeed);
 //			if(travelDistance < 300)
 //				speed = 0;
 			//System.out.println("RID: " + robot.getRobotID() + " S:" + speed + " RS: " + rotationSpeed + " TD: " + travelDistance + " NR: " + newRotation);
 			//output.send(1, robot.getRobotID(), newRotation, 800, 0, 0, 0, 0, false);
 			//System.out.println(newRotation);
-			output.send(1, robot.getRobotID(), newRotation, speed, 500, newRotation, rotationSpeed, 0, false);
+			output.send(1, robot.getRobotID(), newRotation, speed, 500, newRotation, 0, 0, false);
 		}
 	}
 	
@@ -138,35 +148,44 @@ public class GotoPosition extends LowLevelBehavior {
 		return (int)Math.sqrt(dx*dx + dy*dy);
 	}
 	
-	public int getSpeed(int distance, int rotationToDest){
-		int speed = 7000;
-		if( (int)(distance/1.6) < speed){
-			speed = (int)(distance/1.0);
-		}
-		if( Math.abs(rotationToDest) > 10 ){
-			speed = 900;
-				if( (int)(distance/2) < speed)
-					speed = (int)(distance/2);
-		}
-//		if(Math.abs(rotationToDest) >= 1 ){
-//			speed -= (int)((float)speed / ((float)90 / (float)Math.abs(rotationToDest)));
-//		}
-		if(speed < 400)
-			speed = 400;
-//		if(Math.abs(rotationToDest) > 30){
-//			speed = 0;
-//		}
-//		if(Math.abs(rotationToDest) > 10 && distance < 300)
-//			speed = 0;
-
-//		
-//		if( Math.abs(rotationToDest) > 10 ){
-////			speed = 400;
-//			speed /= (Math.abs(rotationToDest)/10);
-//			if( (int)(distance/2) < speed)
-//				speed = (int)(distance/2);
-//		}
-
+	public int getSpeed2(int distance)
+	{
+		int speed = 1500;
+		if(distance < 1200) speed = distance;
+		if(distance < 300) speed = 300;
+//		System.out.println("distance: " + distance + " speed: " + speed);
 		return speed;
 	}
+	
+//	public int getSpeed(int distance, int rotationToDest){
+//		int speed = 7000;
+//		if( (int)(distance/1.6) < speed){
+//			speed = (int)(distance/1.0);
+//		}
+//		if( Math.abs(rotationToDest) > 10 ){
+//			speed = 900;
+//				if( (int)(distance/2) < speed)
+//					speed = (int)(distance/2);
+//		}
+////		if(Math.abs(rotationToDest) >= 1 ){
+////			speed -= (int)((float)speed / ((float)90 / (float)Math.abs(rotationToDest)));
+////		}
+//		if(speed < 400)
+//			speed = 400;
+////		if(Math.abs(rotationToDest) > 30){
+////			speed = 0;
+////		}
+////		if(Math.abs(rotationToDest) > 10 && distance < 300)
+////			speed = 0;
+//
+////		
+////		if( Math.abs(rotationToDest) > 10 ){
+//////			speed = 400;
+////			speed /= (Math.abs(rotationToDest)/10);
+////			if( (int)(distance/2) < speed)
+////				speed = (int)(distance/2);
+////		}
+//
+//		return speed;
+//	}
 }
