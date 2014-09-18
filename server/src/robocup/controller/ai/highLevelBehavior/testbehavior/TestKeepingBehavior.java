@@ -49,17 +49,17 @@ public class TestKeepingBehavior extends Behavior {
 						keeperDest != null ? keeperDest : new Point(0, 0)));
 				new Thread(executer).start();
 				executers.add(executer);
-				
-				((GotoPosition) executer.getLowLevelBehavior()).setTarget(null);
 			}
 			
 			// Border zone of 200, only applies to X for keeper
 			if(keeperDest != null) {
 				if(keeperDest.getX() > 0 && MID_GOAL_POSITIVE.getX() - keeperDest.getX() < BORDER_ZONE_X) {
-					keeperDest.setX(BORDER_ZONE_X);
+					keeperDest.setX(MID_GOAL_POSITIVE.getX() - BORDER_ZONE_X);
 				} else if(keeperDest.getX() < 0 && MID_GOAL_NEGATIVE.getX() - keeperDest.getX() > -BORDER_ZONE_X) {
-					keeperDest.setX(-BORDER_ZONE_X);
+					keeperDest.setX(MID_GOAL_NEGATIVE.getX() + BORDER_ZONE_X);
 				}
+				
+//				System.out.println(keeperDest);
 			}
 			
 			// get the low level behavior of the keeper
@@ -69,12 +69,15 @@ public class TestKeepingBehavior extends Behavior {
 			else
 				return;
 			
-			boolean moveToBall = false;
+			boolean moveToBall = true;
+			if(ball.getPosition() != null 
+					&& Math.abs(ball.getPosition().getX()) > MID_GOAL_POSITIVE.getX() - BORDER_ZONE_X)
+					moveToBall = false;
 			// Move towards the correct position, stop moving if the keeper is within 40 range
 			// Move towards the ball if its close, but not more then 1000 from the goal
 			if(keeperDest != null && moveToBall
 					&& ball.getPosition().getDeltaDistance(keeper.getPosition().getX() > 0 
-							? MID_GOAL_POSITIVE: MID_GOAL_NEGATIVE) < 1000) {
+							? MID_GOAL_POSITIVE: MID_GOAL_NEGATIVE) < GOAL_DEFENCE_RADIUS + 200) {
 				go.setTarget(ball.getPosition());
 			} else if(keeperDest != null && !isWithinRange(keeper, keeperDest, 40)) {
 				go.setTarget(keeperDest);
@@ -95,7 +98,7 @@ public class TestKeepingBehavior extends Behavior {
 		int dy = (int) (target.getY() - object.getPosition().getY());
 		int dx = (int) (target.getX() - object.getPosition().getY());
 		
-		return range > Math.abs(dy) && range > Math.abs(dx);
+		return range > Math.abs(dy) /*&& range > Math.abs(dx)*/;
 	}
 
 	/**
@@ -104,12 +107,11 @@ public class TestKeepingBehavior extends Behavior {
 	 */
 	private Point getKeeperPosition() {
 		Point ballPosition = ball.getPosition();
-		Point midGoal = new Point(world.getField().getLength() / 2, 0);
+		Point midGoal = MID_GOAL_POSITIVE;
 		Point newPosition = null;
-		
-		
+
 		if(keeper.getPosition().getX() < 0)
-			midGoal.setX(-midGoal.getX());
+			midGoal = MID_GOAL_NEGATIVE;
 		
 		if(ballPosition != null) {
 			int angle = Math.abs(midGoal.getAngle(ballPosition));
