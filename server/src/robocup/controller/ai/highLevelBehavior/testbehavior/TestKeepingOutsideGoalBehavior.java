@@ -14,9 +14,9 @@ import robocup.model.World;
 import robocup.output.ComInterface;
 import robocup.output.RobotCom;
 
-public class TestKeepingBehavior extends Behavior {
+public class TestKeepingOutsideGoalBehavior extends Behavior {
 
-	private static final int GOAL_DEFENCE_RADIUS = 400;
+	private static final int GOAL_DEFENCE_RADIUS = 1000;
 	// used in calculation later on, prevent calculating it every update by defining it
 	private static final int GOAL_DEFENCE_RADIUS_SQUARE = GOAL_DEFENCE_RADIUS * GOAL_DEFENCE_RADIUS;
 	private static final int BORDER_ZONE_X = 200;
@@ -30,17 +30,17 @@ public class TestKeepingBehavior extends Behavior {
 	private World world;
 	private Robot keeper;
 	
-	public TestKeepingBehavior() {
+	public TestKeepingOutsideGoalBehavior() {
 		world = World.getInstance();
 	}
 	
 	@Override
 	public void execute(ArrayList<RobotExecuter> executers) {
-		keeper = world.getAlly().getRobotByID(Main.KEEPER_ROBOT_ID);
+		keeper = world.getAlly().getRobotByID(Main.TEST_ROBOT_ID);
 		ball = world.getBall();
 		
 		if(keeper != null) {
-			RobotExecuter executer = findExecuter(Main.KEEPER_ROBOT_ID, executers);
+			RobotExecuter executer = findExecuter(Main.TEST_ROBOT_ID, executers);
 			Point keeperDest = getKeeperPosition();
 			
 			// Initialize executer for this robot

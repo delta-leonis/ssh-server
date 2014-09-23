@@ -6,6 +6,7 @@ import java.util.Observer;
 
 import robocup.controller.ai.highLevelBehavior.Behavior;
 import robocup.controller.ai.highLevelBehavior.testbehavior.TestKeepingBehavior;
+import robocup.controller.ai.highLevelBehavior.testbehavior.TestKeepingOutsideGoalBehavior;
 import robocup.controller.ai.highLevelBehavior.testbehavior.TestPositionBehavior;
 import robocup.controller.ai.highLevelBehavior.testbehavior.TestPositionWithBallBehavior;
 import robocup.controller.ai.lowLevelBehavior.LowLevelBehavior;
@@ -15,7 +16,7 @@ import robocup.model.World;
 public class Main implements Observer {
 
 	private World world;
-	private Behavior behavior;
+	private ArrayList<Behavior> behaviors;
 	private ArrayList<RobotExecuter> robotExecuters;
 	@SuppressWarnings("unused")
 	private ArrayList<LowLevelBehavior> lowLevelBehaviors;
@@ -24,10 +25,12 @@ public class Main implements Observer {
 	public Main() {
 		world = World.getInstance();
 		world.addObserver(this);
+		behaviors = new ArrayList<Behavior>();
 //		behavior = new Force();
 //		behavior = new TestPositionBehavior();
 //		behavior = new DriveSquareBehavior();
-		behavior = new TestKeepingBehavior();
+		behaviors.add(new TestKeepingBehavior());
+		behaviors.add(new TestKeepingOutsideGoalBehavior());
 //		behavior = new TestPositionWithBallBehavior();
 		robotExecuters = new ArrayList<RobotExecuter>();
 		createExecuters();
@@ -80,7 +83,8 @@ public class Main implements Observer {
 			//GA NAAR NIEUWE POSITIE
 		
 		if ("detectionHandlerFinished".equals(arg)) {
-			behavior.execute(robotExecuters);
+			for(Behavior b : behaviors)
+				b.execute(robotExecuters);
 		} else if ("RobotAdded".equals(arg)) {
 			createExecuters();
 		}

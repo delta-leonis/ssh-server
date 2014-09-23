@@ -34,8 +34,6 @@ public class TestKeepingOnLineBehavior extends Behavior {
 						ballDest != null ? ballDest : new Point(1000, 0)));
 				new Thread(executer).start();
 				executers.add(executer);
-				
-				((GotoPosition) executer.getLowLevelBehavior()).setTarget(null);
 			}
 			
 			GotoPosition go = null;
@@ -44,10 +42,8 @@ public class TestKeepingOnLineBehavior extends Behavior {
 			else
 				return;
 			
-			if(ballDest != null && ballDest.getY() < 300 && ballDest.getY() > -300 && isOnSameSide(ballDest, keeper)) {
+			if(ballDest != null && ballDest.getY() < 350 && ballDest.getY() > -350 && isOnSameSide(ballDest, keeper)) {
 				go.setTarget(ballDest);
-				ballDest = null;
-				ball.setPosition(null);
 			} else if(ballDest != null) {
 				if(isNearTarget(keeper, ballDest)) {
 					go.setTarget(null);
