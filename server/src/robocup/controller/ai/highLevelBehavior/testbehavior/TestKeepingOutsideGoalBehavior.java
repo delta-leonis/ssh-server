@@ -20,7 +20,7 @@ public class TestKeepingOutsideGoalBehavior extends Behavior {
 	// used in calculation later on, prevent calculating it every update by defining it
 	private static final int GOAL_DEFENCE_RADIUS_SQUARE = GOAL_DEFENCE_RADIUS * GOAL_DEFENCE_RADIUS;
 	private static final int BORDER_ZONE_X = 200;
-	private static final int BORDER_ZONE_Y = 200;
+	private static final int BORDER_ZONE_Y = 600;
 	
 	// middle of the goal on both sides, negative having x < 0
 	private static final Point MID_GOAL_NEGATIVE = new Point(-(World.getInstance().getField().getLength() / 2), 0);
@@ -29,18 +29,25 @@ public class TestKeepingOutsideGoalBehavior extends Behavior {
 	private Ball ball;
 	private World world;
 	private Robot keeper;
+	private boolean left;
+	private int robotId;
 	
-	public TestKeepingOutsideGoalBehavior() {
+	public TestKeepingOutsideGoalBehavior(boolean left) {
 		world = World.getInstance();
+		this.left = left;
+		if(left)
+			robotId = 1;
+		else
+			robotId = 7;
 	}
 	
 	@Override
 	public void execute(ArrayList<RobotExecuter> executers) {
-		keeper = world.getAlly().getRobotByID(Main.TEST_ROBOT_ID);
+		keeper = world.getAlly().getRobotByID(robotId);
 		ball = world.getBall();
 		
 		if(keeper != null) {
-			RobotExecuter executer = findExecuter(Main.TEST_ROBOT_ID, executers);
+			RobotExecuter executer = findExecuter(robotId, executers);
 			Point keeperDest = getKeeperPosition();
 			
 			// Initialize executer for this robot
@@ -60,7 +67,15 @@ public class TestKeepingOutsideGoalBehavior extends Behavior {
 					keeperDest.setX(MID_GOAL_NEGATIVE.getX() + BORDER_ZONE_X);
 			}
 			
-			// get the low level behavior of the keeper
+			// Border zone of 200, only applies to X for keeper
+			if(keeperDest != null) {
+				if(keeperDest.getY() > 0 && keeperDest.getY() > BORDER_ZONE_Y)
+					keeperDest.setY(world.getField().getWidth() / 2 - 300);
+				else if(keeperDest.getY() < 0 && keeperDest.getY() < -BORDER_ZONE_Y)
+					keeperDest.setY(-(world.getField().getWidth() / 2 - 300));
+			}
+			
+			// get the low level behavior of the keeper - 150
 			GotoPosition go = null;
 			if(executer.getLowLevelBehavior() instanceof GotoPosition)
 				go = (GotoPosition) executer.getLowLevelBehavior();
@@ -68,7 +83,7 @@ public class TestKeepingOutsideGoalBehavior extends Behavior {
 				return;
 			
 			// determine if the keeper should move towards the ball
-			boolean moveToBall = true;
+			boolean moveToBall = false;
 			if(ball.getPosition() != null 
 					&& Math.abs(ball.getPosition().getX()) > MID_GOAL_POSITIVE.getX() - BORDER_ZONE_X
 					&& Math.abs(ball.getPosition().getY()) > world.getField().getWidth() / 2 - BORDER_ZONE_Y)
@@ -96,9 +111,9 @@ public class TestKeepingOutsideGoalBehavior extends Behavior {
 	 */
 	private boolean isWithinRange(FieldObject object, Point target, int range) {		
 		int dy = (int) (target.getY() - object.getPosition().getY());
-		int dx = (int) (target.getX() - object.getPosition().getY());
+//		int dx = (int) (target.getX() - object.getPosition().getY());
 		
-		return range > Math.abs(dy) && range > Math.abs(dx);
+		return range > Math.abs(dy) /*&& range > Math.abs(dx)*/;
 	}
 
 	/**
@@ -124,7 +139,7 @@ public class TestKeepingOutsideGoalBehavior extends Behavior {
 			int destX = (int) (midGoalX > 0 ? midGoalX - dx : midGoalX + dx);
 			
 			int midGoalY = (int) midGoal.getY();
-			int destY = (int) (ballPosition.getY() > 0 ?  midGoalY + dy : midGoalY - dy);
+			int destY = (int) (ballPosition.getY() > 0 ?  midGoalY + dy : midGoalY - dy) + (left ? 150 : -150);
 			
 			newPosition = new Point(destX, destY);
 		}

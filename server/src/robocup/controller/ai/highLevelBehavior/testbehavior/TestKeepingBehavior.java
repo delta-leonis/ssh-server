@@ -16,7 +16,7 @@ import robocup.output.RobotCom;
 
 public class TestKeepingBehavior extends Behavior {
 
-	private static final int GOAL_DEFENCE_RADIUS = 400;
+	private static final int GOAL_DEFENCE_RADIUS = 500;
 	// used in calculation later on, prevent calculating it every update by defining it
 	private static final int GOAL_DEFENCE_RADIUS_SQUARE = GOAL_DEFENCE_RADIUS * GOAL_DEFENCE_RADIUS;
 	private static final int BORDER_ZONE_X = 200;
@@ -68,7 +68,7 @@ public class TestKeepingBehavior extends Behavior {
 				return;
 			
 			// determine if the keeper should move towards the ball
-			boolean moveToBall = true;
+			boolean moveToBall = false;
 			if(ball.getPosition() != null 
 					&& Math.abs(ball.getPosition().getX()) > MID_GOAL_POSITIVE.getX() - BORDER_ZONE_X
 					&& Math.abs(ball.getPosition().getY()) > world.getField().getWidth() / 2 - BORDER_ZONE_Y)
@@ -96,9 +96,9 @@ public class TestKeepingBehavior extends Behavior {
 	 */
 	private boolean isWithinRange(FieldObject object, Point target, int range) {		
 		int dy = (int) (target.getY() - object.getPosition().getY());
-		int dx = (int) (target.getX() - object.getPosition().getY());
+//		int dx = (int) (target.getX() - object.getPosition().getY());
 		
-		return range > Math.abs(dy) && range > Math.abs(dx);
+		return range > Math.abs(dy) /*&& range > Math.abs(dx)*/;
 	}
 
 	/**
