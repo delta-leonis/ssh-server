@@ -29,9 +29,9 @@ public class Main implements Observer {
 //		behavior = new Force();
 //		behavior = new TestPositionBehavior();
 //		behavior = new DriveSquareBehavior();
-		behaviors.add(new TestKeepingBehavior());
-		behaviors.add(new TestKeepingOutsideGoalBehavior(true));
-		behaviors.add(new TestKeepingOutsideGoalBehavior(false));
+		behaviors.add(new TestKeepingOutsideGoalBehavior(3, 500, 0));
+		behaviors.add(new TestKeepingOutsideGoalBehavior(1, 1000, -150));
+		behaviors.add(new TestKeepingOutsideGoalBehavior(7, 1000, 150));
 //		behavior = new TestPositionWithBallBehavior();
 		robotExecuters = new ArrayList<RobotExecuter>();
 		createExecuters();

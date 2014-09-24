@@ -94,7 +94,7 @@ public class TestKeepingBehavior extends Behavior {
 	 * @param range
 	 * @return
 	 */
-	private boolean isWithinRange(FieldObject object, Point target, int range) {		
+	private boolean isWithinRange(FieldObject object, Point target, int range) {
 		int dy = (int) (target.getY() - object.getPosition().getY());
 //		int dx = (int) (target.getX() - object.getPosition().getY());
 		

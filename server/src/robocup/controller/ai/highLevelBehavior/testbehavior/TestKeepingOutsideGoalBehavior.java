@@ -2,7 +2,6 @@ package robocup.controller.ai.highLevelBehavior.testbehavior;
 
 import java.util.ArrayList;
 
-import robocup.Main;
 import robocup.controller.ai.highLevelBehavior.Behavior;
 import robocup.controller.ai.lowLevelBehavior.GotoPosition;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
@@ -16,29 +15,29 @@ import robocup.output.RobotCom;
 
 public class TestKeepingOutsideGoalBehavior extends Behavior {
 
-	private static final int GOAL_DEFENCE_RADIUS = 1000;
-	// used in calculation later on, prevent calculating it every update by defining it
-	private static final int GOAL_DEFENCE_RADIUS_SQUARE = GOAL_DEFENCE_RADIUS * GOAL_DEFENCE_RADIUS;
 	private static final int BORDER_ZONE_X = 200;
-	private static final int BORDER_ZONE_Y = 600;
+	private static final int BORDER_ZONE_Y = 200;
+	private static final int BORDER_Y = World.getInstance().getField().getWidth() / 2;
+	private static final int BORDER_X = World.getInstance().getField().getLength() / 2;
 	
 	// middle of the goal on both sides, negative having x < 0
-	private static final Point MID_GOAL_NEGATIVE = new Point(-(World.getInstance().getField().getLength() / 2), 0);
-	private static final Point MID_GOAL_POSITIVE = new Point(World.getInstance().getField().getLength() / 2, 0);
+	private static final Point MID_GOAL_NEGATIVE = new Point(-BORDER_X, 0);
+	private static final Point MID_GOAL_POSITIVE = new Point(BORDER_X, 0);
 	
 	private Ball ball;
 	private World world;
 	private Robot keeper;
-	private boolean left;
 	private int robotId;
+	private int goalRadius;
+	private int goalRadiusSquare;
+	private int yOffset;
 	
-	public TestKeepingOutsideGoalBehavior(boolean left) {
+	public TestKeepingOutsideGoalBehavior(int robotId, int goalRadius, int yOffset) {
 		world = World.getInstance();
-		this.left = left;
-		if(left)
-			robotId = 1;
-		else
-			robotId = 7;
+		this.robotId = robotId;
+		this.goalRadius = goalRadius;
+		goalRadiusSquare = goalRadius * goalRadius;
+		this.yOffset = yOffset;
 	}
 	
 	@Override
@@ -58,24 +57,24 @@ public class TestKeepingOutsideGoalBehavior extends Behavior {
 				new Thread(executer).start();
 				executers.add(executer);
 			}
-			
-			// Border zone of 200, only applies to X for keeper
+
+			// border zone x
 			if(keeperDest != null) {
-				if(keeperDest.getX() > 0 && MID_GOAL_POSITIVE.getX() - keeperDest.getX() < BORDER_ZONE_X)
-					keeperDest.setX(MID_GOAL_POSITIVE.getX() - BORDER_ZONE_X);
-				else if(keeperDest.getX() < 0 && MID_GOAL_NEGATIVE.getX() - keeperDest.getX() > -BORDER_ZONE_X)
-					keeperDest.setX(MID_GOAL_NEGATIVE.getX() + BORDER_ZONE_X);
+				if(keeperDest.getX() > 0 && BORDER_X - keeperDest.getX() < BORDER_ZONE_X)
+					keeperDest.setX(BORDER_X - BORDER_ZONE_X);
+				else if(keeperDest.getX() < 0 && -BORDER_X - keeperDest.getX() > -BORDER_ZONE_X)
+					keeperDest.setX(-BORDER_X + BORDER_ZONE_X);
 			}
-			
-			// Border zone of 200, only applies to X for keeper
+
+			// border zone y
 			if(keeperDest != null) {
-				if(keeperDest.getY() > 0 && keeperDest.getY() > BORDER_ZONE_Y)
-					keeperDest.setY(world.getField().getWidth() / 2 - 300);
-				else if(keeperDest.getY() < 0 && keeperDest.getY() < -BORDER_ZONE_Y)
-					keeperDest.setY(-(world.getField().getWidth() / 2 - 300));
+				if(keeperDest.getY() > 0 && keeperDest.getY() > BORDER_Y - BORDER_ZONE_Y)
+					keeperDest.setY(BORDER_Y - BORDER_ZONE_Y);
+				else if(keeperDest.getY() < 0 && keeperDest.getY() < -BORDER_Y  + BORDER_ZONE_Y)
+					keeperDest.setY(-(BORDER_Y - BORDER_ZONE_Y));
 			}
-			
-			// get the low level behavior of the keeper - 150
+
+			// get the low level behavior of the keeper
 			GotoPosition go = null;
 			if(executer.getLowLevelBehavior() instanceof GotoPosition)
 				go = (GotoPosition) executer.getLowLevelBehavior();
@@ -86,13 +85,13 @@ public class TestKeepingOutsideGoalBehavior extends Behavior {
 			boolean moveToBall = false;
 			if(ball.getPosition() != null 
 					&& Math.abs(ball.getPosition().getX()) > MID_GOAL_POSITIVE.getX() - BORDER_ZONE_X
-					&& Math.abs(ball.getPosition().getY()) > world.getField().getWidth() / 2 - BORDER_ZONE_Y)
+					&& Math.abs(ball.getPosition().getY()) > BORDER_Y - BORDER_ZONE_Y)
 					moveToBall = false;
 			// Move towards the correct position, stop moving if the keeper is within 40 range
 			// Move towards the ball if its close, but not more then 1000 from the goal
 			if(keeperDest != null && moveToBall
 					&& ball.getPosition().getDeltaDistance(keeper.getPosition().getX() > 0 
-							? MID_GOAL_POSITIVE: MID_GOAL_NEGATIVE) < GOAL_DEFENCE_RADIUS + 200) {
+							? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE) < goalRadius + 200) {
 				go.setTarget(ball.getPosition());
 			} else if(keeperDest != null && !isWithinRange(keeper, keeperDest, 40)) {
 				go.setTarget(keeperDest);
@@ -132,14 +131,14 @@ public class TestKeepingOutsideGoalBehavior extends Behavior {
 			int angle = Math.abs(midGoal.getAngle(ballPosition));
 			int realAngle = angle > 90 ? 180 - angle : angle;
 			
-			double dx = Math.sin(Math.toRadians(realAngle)) * GOAL_DEFENCE_RADIUS;
-			double dy = Math.sqrt(GOAL_DEFENCE_RADIUS_SQUARE - dx * dx);
+			double dx = Math.sin(Math.toRadians(realAngle)) * goalRadius;
+			double dy = Math.sqrt(goalRadiusSquare - dx * dx);
 			
 			int midGoalX = (int) midGoal.getX();
 			int destX = (int) (midGoalX > 0 ? midGoalX - dx : midGoalX + dx);
 			
 			int midGoalY = (int) midGoal.getY();
-			int destY = (int) (ballPosition.getY() > 0 ?  midGoalY + dy : midGoalY - dy) + (left ? 150 : -150);
+			int destY = (int) (ballPosition.getY() > 0 ?  midGoalY + dy : midGoalY - dy) + yOffset;
 			
 			newPosition = new Point(destX, destY);
 		}
