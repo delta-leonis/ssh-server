@@ -44,18 +44,19 @@ public class GotoPosition extends LowLevelBehavior {
 			int travelDistance = 0;// getDistance();
 			// System.out.println(" Newpost: " + newPosition);
 			int newRotation = rotationToDest(newPosition);
+//			System.out.println("NewPos: " + newPosition);
 			int speed = 0;// getSpeed(travelDistance, newRotation); //max 1200
 			// System.out.println("S:" + getSpeed(travelDistance, newRotation) +
 			// " RS: " + getRotationSpeed(speed, newRotation, travelDistance) +
 			// " TD: " + travelDistance + " NR: " + newRotation);
 			int rotationSpeed = 0;
 
-			speed = getSpeed2(getDistance());
+			speed = getSpeed2(getDistance(), newRotation);
 			float rotationSpeedFloat = getRotationSpeed(newRotation, speed);
-			System.out.println("rotationSpeed " + rotationSpeedFloat + " newro: " + newRotation);
+//			System.out.println("rotationSpeed " + rotationSpeedFloat + " newro: " + newRotation);
 
 			float tSpeed = ((45.553093f / 360) * rotationSpeedFloat);
-			System.out.println("speedRaw: " + tSpeed);
+//			System.out.println("speedRaw: " + tSpeed);
 			rotationSpeed = (int) tSpeed;
 
 			/*
@@ -117,16 +118,28 @@ public class GotoPosition extends LowLevelBehavior {
 		return (int) Math.sqrt(dx * dx + dy * dy);
 	}
 
-	public int getSpeed2(int distance) {
-		int speed = 1500;
-		if (distance < 150)
-			speed = 200;
-		else if (distance < 400)
-			speed = 400;
-		else if (distance < 800)
-			speed = 800;
-		else if (distance < 1200)
+	public int getSpeed2(int distance, int rotation) {
+		int speed = 0;
+		int thresholdValue = 800;
+		if(distance < thresholdValue)
+		{
+			speed = (int)(Math.log(distance) / Math.log(1.1)) * 8; //- robotDiameter
+		} else if(Math.abs(rotation) > 10) {
+			speed = (180-Math.abs(rotation)) * 8;
+		} else {
 			speed = 1200;
+		}
+		//System.out.println("speed" + speed);
+		
+//		int speed = 1500;
+//		if (distance < 150)
+//			speed = 200;
+//		else if (distance < 400)
+//			speed = 400;
+//		else if (distance < 800)
+//			speed = 800;
+//		else if (distance < 1200)
+//			speed = 1200;
 		// if(distance < 1200) speed = 1200;
 
 		// if(distance < 1200 && distance > 500) speed = distance;
