@@ -33,7 +33,7 @@ public class TestKeepingOutsideGoalBehavior extends Behavior {
 	private int yOffset;
 	
 	public TestKeepingOutsideGoalBehavior(int robotId, int goalRadius, int yOffset) {
-		world = World.getInstance();
+//		world = World.getInstance();
 		this.robotId = robotId;
 		this.goalRadius = goalRadius;
 		goalRadiusSquare = goalRadius * goalRadius;

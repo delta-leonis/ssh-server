@@ -13,7 +13,7 @@ public class Keeping extends LowLevelBehavior {
 	
 	public Keeping(Robot robot, ComInterface output) {
 		super(robot, output);
-		ball = world.getBall();
+//		ball = world.getBall();
 	}
 
 	@Override
@@ -74,37 +74,37 @@ public class Keeping extends LowLevelBehavior {
 				(ball.getPosition().getY() < 0 && robot.getPosition().getY() < 0);
 	}
 
-	/**
-	 * Calculate the position where the ball will cross the edge of the field
-	 * @return
-	 */
-	private Point getBallDestination() {
-		Point currentPosition = ball.getPosition();
-		int direction = (int) ball.getDirection();
-		
-		// get the y value of the edge of the field
-		int defenceLine = world.getField().getLength() / 2 - 200;
-		
-		if(currentPosition.getY() < 0)
-			defenceLine = -defenceLine;
-		
-		int dy = defenceLine - (int) currentPosition.getY();
-		// tan(90) or tan(-90) is inf, we can assume dx is 0 in this case
-		int dx = direction == 90 || direction == -90 ? 0 : (int) (dy / Math.tan(direction));
-		
-		int destX = (int) currentPosition.getX() + dx;
-		int destY = defenceLine;
-		
-		return new Point(destX, destY);
-	}
-	
-	private boolean isPointInGoal(Point p) {
-		Goal goal = world.getField().getGoal().get(0);
-		
-		int width = (int) (Math.abs(goal.getFrontLeft().getX()) + Math.abs(goal.getFrontRight().getX()));		
-		
-		return Math.abs(p.getX()) < width / 2; 
-	}
+//	/**
+//	 * Calculate the position where the ball will cross the edge of the field
+//	 * @return
+//	 */
+//	private Point getBallDestination() {
+//		Point currentPosition = ball.getPosition();
+//		int direction = (int) ball.getDirection();
+//		
+//		// get the y value of the edge of the field
+//		int defenceLine = world.getField().getLength() / 2 - 200;
+//		
+//		if(currentPosition.getY() < 0)
+//			defenceLine = -defenceLine;
+//		
+//		int dy = defenceLine - (int) currentPosition.getY();
+//		// tan(90) or tan(-90) is inf, we can assume dx is 0 in this case
+//		int dx = direction == 90 || direction == -90 ? 0 : (int) (dy / Math.tan(direction));
+//		
+//		int destX = (int) currentPosition.getX() + dx;
+//		int destY = defenceLine;
+//		
+//		return new Point(destX, destY);
+//	}
+//	
+//	private boolean isPointInGoal(Point p) {
+//		Goal goal = world.getField().getGoal().get(0);
+//		
+//		int width = (int) (Math.abs(goal.getFrontLeft().getX()) + Math.abs(goal.getFrontRight().getX()));		
+//		
+//		return Math.abs(p.getX()) < width / 2; 
+//	}
 
 	public int getDistance() {
 		double dx = (robot.getPosition().getX() - ballDestination.getX());

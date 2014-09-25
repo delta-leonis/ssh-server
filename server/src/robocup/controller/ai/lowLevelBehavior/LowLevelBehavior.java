@@ -10,13 +10,11 @@ import robocup.model.Robot;
 import robocup.model.World;
 
 public abstract class LowLevelBehavior {
-	protected World world;
 	protected Robot robot;
 	protected ComInterface output;
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 	
 	public LowLevelBehavior(Robot robot, ComInterface output){
-		this.world = World.getInstance();
 		this.robot = robot;
 		this.output = output;
 	}
@@ -47,12 +45,12 @@ public abstract class LowLevelBehavior {
 	public boolean timeOutCheck() {
 		boolean failed = robot.getLastUpdateTime() + 0.20 < Calendar.getInstance().getTimeInMillis()/1000 ||
 				!World.getInstance().getReferee().isStart();
-
-		LOGGER.warning("Robot " + robot.getRobotID() + " is not on sight");
-		LOGGER.warning("Time: " + (Calendar.getInstance().getTimeInMillis()/1000));
-		LOGGER.warning("Robot: " + (robot.getLastUpdateTime()));
 		
 		if(failed) {
+			LOGGER.warning("Robot " + robot.getRobotID() + " is not on sight");
+			LOGGER.warning("Time: " + (Calendar.getInstance().getTimeInMillis()/1000));
+			LOGGER.warning("Robot: " + (robot.getLastUpdateTime()));
+
 			robot.setOnSight(false);
 			output.send(1, robot.getRobotID(), 0, 0, 0, 0, 0, 0, false);  // stop moving if the robot timed out
 		}
