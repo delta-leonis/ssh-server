@@ -52,8 +52,8 @@ public class TestKeepingOutsideGoalBehavior extends Behavior {
 			// Initialize executer for this robot
 			if(executer == null) {
 				executer = new RobotExecuter(keeper);
-				executer.setLowLevelBehavior(new GotoPosition(keeper, ComInterface.getInstance(RobotCom.class), 
-						keeperDest != null ? keeperDest : new Point(0, 0)));
+//				executer.setLowLevelBehavior(new GotoPosition(keeper, ComInterface.getInstance(RobotCom.class), 
+//						keeperDest != null ? keeperDest : new Point(0, 0)));
 				new Thread(executer).start();
 				executers.add(executer);
 			}
@@ -76,10 +76,10 @@ public class TestKeepingOutsideGoalBehavior extends Behavior {
 
 			// get the low level behavior of the keeper
 			GotoPosition go = null;
-			if(executer.getLowLevelBehavior() instanceof GotoPosition)
-				go = (GotoPosition) executer.getLowLevelBehavior();
-			else
-				return;
+//			if(executer.getLowLevelBehavior() instanceof GotoPosition)
+//				go = (GotoPosition) executer.getLowLevelBehavior();
+//			else
+//				return;
 			
 			// determine if the keeper should move towards the ball
 			boolean moveToBall = false;

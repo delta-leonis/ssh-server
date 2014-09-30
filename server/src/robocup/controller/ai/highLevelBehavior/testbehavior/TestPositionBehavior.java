@@ -15,6 +15,7 @@ import robocup.output.RobotCom;
 public class TestPositionBehavior extends Behavior {
 
 	ArrayList<Robot> robots = new ArrayList<>();
+	GotoPosition go = null;
 
 	@Override
 	public void execute(ArrayList<RobotExecuter> executers) {
@@ -26,21 +27,24 @@ public class TestPositionBehavior extends Behavior {
 				RobotExecuter executer = findExecuter(r.getRobotID(), executers);
 				if( executer == null ) {
 					executer = new RobotExecuter(r);
-					executer.setLowLevelBehavior(new GotoPosition(r, ComInterface.getInstance(RobotCom.class), w.getBall().getPosition()));
-					new Thread(executer).start();
+//					executer.setLowLevelBehavior(new GotoPosition(r, ComInterface.getInstance(RobotCom.class), new Point(500,500), w.getBall().getPosition()));
+//					new Thread(executer).start();
 					executers.add(executer);
+					go = new GotoPosition(r, ComInterface.getInstance(RobotCom.class), new Point(500,500), w.getBall().getPosition());
 				}
 				if(w.getBall().getPosition()!= null && r.getPosition().getDeltaDistance(w.getBall().getPosition() )> 700)
 					goToBall(r, executer);
 				else if(r.equals(closest)){
 					goToBall(r, executer);
 				} else {
-					((GotoPosition) executer.getLowLevelBehavior()).setTarget(null);
+					go.setTarget(null);
 				}
 			}catch(NullPointerException e){
 				e.printStackTrace();
 			}
 		}
+		
+		go.calculate();
 	}
 	
 	private void goToBall(Robot r, RobotExecuter e){
@@ -48,11 +52,11 @@ public class TestPositionBehavior extends Behavior {
 		Ball b = World.getInstance().getBall();
 		
 //		System.out.println(" Bal pos: " +  b.getPosition());
-	
-		GotoPosition go = null;
-		if(e.getLowLevelBehavior() instanceof GotoPosition) {
-			go = (GotoPosition)e.getLowLevelBehavior();
-		}
+//	
+//		GotoPosition go = null;
+//		if(e.getLowLevelBehavior() instanceof GotoPosition) {
+//			go = (GotoPosition)e.getLowLevelBehavior();
+//		}
 		
 		
 		// check if new position is within the worlds bounds
@@ -73,9 +77,11 @@ public class TestPositionBehavior extends Behavior {
 			p = new Point(targetPositionX, targetPositionY);
 			
 			go.setTarget(p);
+			go.setGoal(new Point(500,500));
 		}
 		else{
 			go.setTarget(null);
+			go.setGoal(null);
 		}
 		//go.setTarget(b.getPosition());
 	}

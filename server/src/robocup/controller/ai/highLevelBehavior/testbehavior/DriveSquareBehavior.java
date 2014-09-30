@@ -40,13 +40,13 @@ public class DriveSquareBehavior extends Behavior {
 			Point target = targets[currentPoint];
 			
 			RobotExecuter executer = findExecuter(specialRobot.getRobotID(), executers);
-			if( executer == null || !(executer.getLowLevelBehavior() instanceof GotoPosition) ){
-				System.out.printf("Driving to new position: %f, %f\n", target.getX(), target.getY());
-				RobotExecuter e = new RobotExecuter(specialRobot);
-				e.setLowLevelBehavior(new GotoPosition(specialRobot, ComInterface.getInstance(RobotCom.class), target));
-				new Thread(e).start();
-				executers.add(e);
-			}
+//			if( executer == null || !(executer.getLowLevelBehavior() instanceof GotoPosition) ){
+//				System.out.printf("Driving to new position: %f, %f\n", target.getX(), target.getY());
+//				RobotExecuter e = new RobotExecuter(specialRobot);
+//				e.setLowLevelBehavior(new GotoPosition(specialRobot, ComInterface.getInstance(RobotCom.class), target));
+//				new Thread(e).start();
+//				executers.add(e);
+//			}
 			
 
 			if( Math.abs(specialRobot.getPosition().getX() - target.getX()) < 100 && 

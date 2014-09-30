@@ -56,9 +56,9 @@ public class Keeper extends LowLevelBehavior {
 			if(newDestination != null) {
 				// TODO: move towards ball when needed or move towards destination
 				if(goToKick)
-					;//GotoPosition(keeperPosition, ballPosition)
+					;//GotoPosition(keeperPosition, ballPosition, ballPosition)
 				else
-					;//GotoPosition(keeperPosition, newDestination
+					;//GotoPosition(keeperPosition, newDestination, ballPosition)
 			}
 		}
 	}

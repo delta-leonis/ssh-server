@@ -30,17 +30,17 @@ public class TestKeepingOnLineBehavior extends Behavior {
 			
 			if(executer == null) {
 				executer = new RobotExecuter(keeper);
-				executer.setLowLevelBehavior(new GotoPosition(keeper, ComInterface.getInstance(RobotCom.class), 
-						ballDest != null ? ballDest : new Point(1000, 0)));
-				new Thread(executer).start();
+//				executer.setLowLevelBehavior(new GotoPosition(keeper, ComInterface.getInstance(RobotCom.class), 
+//						ballDest != null ? ballDest : new Point(1000, 0)));
+//				new Thread(executer).start();
 				executers.add(executer);
 			}
 			
 			GotoPosition go = null;
-			if(executer.getLowLevelBehavior() instanceof GotoPosition)
-				go = (GotoPosition) executer.getLowLevelBehavior();
-			else
-				return;
+//			if(executer.getLowLevelBehavior() instanceof GotoPosition)
+//				go = (GotoPosition) executer.getLowLevelBehavior();
+//			else
+//				return;
 			
 			if(ballDest != null && ballDest.getY() < 350 && ballDest.getY() > -350 && isOnSameSide(ballDest, keeper)) {
 				go.setTarget(ballDest);

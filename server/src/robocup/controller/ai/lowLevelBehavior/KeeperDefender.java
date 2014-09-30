@@ -25,10 +25,7 @@ public class KeeperDefender extends Keeper {
 	 * @param offset the offset Position
 	 */
 	public void update(int distanceToGoal, boolean goToKick, Point ballPosition, Point keeperPosition, Point offset) {
-		this.distanceToGoal = distanceToGoal;
-		this.goToKick = goToKick;
-		this.ballPosition = ballPosition;
-		this.keeperPosition = keeperPosition;
+		super.update(distanceToGoal, goToKick, ballPosition, keeperPosition);
 		this.offset = offset;
 	}
 
