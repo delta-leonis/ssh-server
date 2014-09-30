@@ -12,12 +12,14 @@ import robocup.model.World;
 public abstract class LowLevelBehavior {
 	protected Robot robot;
 	protected ComInterface output;
+	protected GotoPosition go;
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 	
 	public LowLevelBehavior(Robot robot, ComInterface output){
 		this.robot = robot;
 		this.output = output;
 	}
+	
 	public abstract void calculate();
 	
 	/**

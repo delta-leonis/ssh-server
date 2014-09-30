@@ -1,5 +1,6 @@
 package robocup.controller.ai.lowLevelBehavior;
 
+import robocup.model.FieldObject;
 import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.output.ComInterface;
@@ -30,6 +31,7 @@ public class Keeper extends LowLevelBehavior {
 		this.ballPosition = ballPosition;
 		this.keeperPosition = keeperPosition;
 		this.centerGoalPosition = centerGoalPosition;
+		go = new GotoPosition(robot, output, centerGoalPosition, ballPosition);
 	}
 	
 	/**
@@ -54,11 +56,13 @@ public class Keeper extends LowLevelBehavior {
 			Point newDestination = getNewKeeperDestination();
 			
 			if(newDestination != null) {
-				// TODO: move towards ball when needed or move towards destination
 				if(goToKick)
-					;//GotoPosition(keeperPosition, ballPosition, ballPosition)
+					go.setGoal(ballPosition);//GotoPosition(keeperPosition, ballPosition, ballPosition)
 				else
-					;//GotoPosition(keeperPosition, newDestination, ballPosition)
+					go.setGoal(newDestination);//GotoPosition(keeperPosition, newDestination, ballPosition)
+
+				go.setTarget(ballPosition);
+				go.calculate();
 			}
 		}
 	}
