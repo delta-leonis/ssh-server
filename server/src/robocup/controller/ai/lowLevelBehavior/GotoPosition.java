@@ -16,6 +16,7 @@ public class GotoPosition {
 	private Point targetPosition;
 	private Robot robot;
 	private ComInterface output;
+	private int forcedSpeed = 0;
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 
 	public GotoPosition(Robot robot, ComInterface output, Point newPosition) {
@@ -37,6 +38,14 @@ public class GotoPosition {
 		this.output = output;
 		this.goalPosition = goalPosition;
 		this.targetPosition = targetPosition;
+	}
+	
+	public GotoPosition(Robot robot, ComInterface output, Point goalPosition, Point targetPosition, int forcedSpeed) {
+		this.robot = robot;
+		this.output = output;
+		this.goalPosition = goalPosition;
+		this.targetPosition = targetPosition;
+		this.forcedSpeed  = forcedSpeed;
 	}
 
 	public Point getTarget() {
@@ -75,7 +84,7 @@ public class GotoPosition {
 			float tSpeed = ((45.553093f / 360) * rotationSpeedFloat);
 			rotationSpeed = (int) tSpeed;
 
-			output.send(1, robot.getRobotID(), rotationToGoal, speed, travelDistance, targetDirection, rotationSpeed,
+			output.send(1, robot.getRobotID(), rotationToGoal, forcedSpeed > 0 ? forcedSpeed : speed, travelDistance, targetDirection, rotationSpeed,
 					0, false);
 		}
 	}
