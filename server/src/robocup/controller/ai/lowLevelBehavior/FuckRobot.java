@@ -7,118 +7,94 @@ import robocup.output.ComInterface;
 public class FuckRobot extends LowLevelBehavior {
 
 	protected Point ballPosition;
-	protected int distanceToOponent;
-	protected Point oponentPosition;
+	protected Point opponentPosition;
 	protected Point defenderPosition;
+	protected int distanceToOpponent;
 	
 	/**
-	 * Create a defender (stand between "target" enemy and ball)
+	 * Create a defender (stands between "target" enemy and the ball)
 	 * @param robot
 	 * @param output
-	 * @param distanceToOponent defense radius size, 40?? ideal in most situations
-	 * @param goToKick if true, move to ball and kick it away
+	 * @param distanceToOpponent The distance the defender keeps from the enemy (center)
 	 * @param ballPosition current position of the ball
-	 * @param defenderPosition current position of the defender (this)
-	 * @param oponentPosition center position of the oponent
+	 * @param defenderPosition current position of the defender (this robot)
+	 * @param opponentPosition center position of the opponent / enemy
 	 */
-	public FuckRobot(Robot robot, ComInterface output, int distanceToOponent, boolean goToKick, Point ballPosition,
-			Point defenderPosition, Point oponentPosition) {
+	public FuckRobot(Robot robot, ComInterface output, int distanceToOpponent, Point ballPosition,
+			Point defenderPosition, Point opponentPosition) {
 		super(robot, output);
 		
-		this.oponentPosition = oponentPosition;
+		this.opponentPosition = opponentPosition;
 		this.ballPosition = ballPosition;
-		this.distanceToOponent = distanceToOponent;
+		this.distanceToOpponent = distanceToOpponent;
 		this.defenderPosition = defenderPosition;
-		go = new GotoPosition(robot, output, defenderPosition, oponentPosition, 400);
+		go = new GotoPosition(robot, output, defenderPosition, opponentPosition, 400);
 	}
 	
 	
-	public void update(int distanceToOponent, boolean goToKick, Point ballPosition, Point defenderPosition, Point oponentPosition) {
-		this.distanceToOponent = distanceToOponent;
-		//this.goToKick = goToKick;
+	/**
+	 * Update
+	 * @param distanceToOpponent
+	 * @param ballPosition
+	 * @param defenderPosition
+	 * @param opponentPosition
+	 */
+	public void update(int distanceToOpponent, Point ballPosition, Point defenderPosition, Point opponentPosition) {
+		this.distanceToOpponent = distanceToOpponent;
 		this.ballPosition = ballPosition;
 		this.defenderPosition = defenderPosition;
-		this.oponentPosition = oponentPosition;
+		this.opponentPosition = opponentPosition;
 	}
 	
 	@Override
 	public void calculate() {
-		
-		if(timeOutCheck()) {
-			
-		} else {
-			
+		// Only run if the robot isn't timed out
+		if(!timeOutCheck()) {
 			Point newDestination = getNewDestination();
-			
+			// If available, set the new destination
 			if(newDestination != null) {
-				/*if(goToKick)
-					go.setGoal(ballPosition);//GotoPosition(keeperPosition, ballPosition, ballPosition)
-				else
-					go.setGoal(newDestination);//GotoPosition(keeperPosition, newDestination, ballPosition)
-			 	*/
 				go.setGoal(newDestination);
-				//go.setTarget(newDestination);
 				go.setTarget(ballPosition);
 				go.calculate();
 			}
-			
-			
 		}
-
 	}
 
+	/**
+	 * Get the destination
+	 */
 	private Point getNewDestination() {
 		Point newDestination = null;
 		
+		// Ball has to be on the field
 		if(ballPosition != null) {
 			
-			int angle = Math.abs(oponentPosition.getAngle(ballPosition));
+			// Get angles from the opponent towards the ball
+			int angle = Math.abs(opponentPosition.getAngle(ballPosition));
 			int realAngle = angle > 90 ? 180 - angle : angle;
 			
-			//System.out.println(" Angle:" + angle + " Reala: " + realAngle + " disto" + distanceToOponent);
-			double dx = Math.sin(Math.toRadians(realAngle)) * distanceToOponent;
-			double dy = Math.sqrt(distanceToOponent * distanceToOponent - dx * dx);
+			// Calculate DX DY
+			double dx = Math.sin(Math.toRadians(realAngle)) * distanceToOpponent;
+			double dy = Math.sqrt(distanceToOpponent * distanceToOpponent - dx * dx);
 			
-			int oponentX = (int) oponentPosition.getX();
-			int destX = 0;
-			//System.out.println("balX" + ballPosition.getX() + " opX:" + oponentPosition.getX());
+			// Get opponent positions
+			int opponentX = (int) opponentPosition.getX();
+			int opponentY = (int) opponentPosition.getY();
+			
+			// Calculate target position X
+			int destX = (int) (ballPosition.getX() > opponentPosition.getX() ? opponentX + dx : opponentX - dx);
 			if(ballPosition.getX() < 0) {
-				if(ballPosition.getX() < oponentPosition.getX()) {
-					destX = (int) (oponentX - dx);
-				} else {
-					destX = (int) (oponentX + dx);
-				}
-			} else {
-				if(ballPosition.getX() > oponentPosition.getX()) {
-					destX = (int) (oponentX + dx);
-				} else {
-					destX = (int) (oponentX - dx);
-				}
+				destX = (int) (ballPosition.getX() < opponentPosition.getX() ? opponentX - dx : opponentX + dx);
 			}
-			//int destX = (int) (ballPosition.getX() > oponentPosition.getX() ? oponentX - dx : oponentX + dx);
 			
-			int oponentY = (int) oponentPosition.getY();
-			int destY = 0 ;
-			
+			// Calculate target position Y
+			int destY = (int) (ballPosition.getY() > opponentPosition.getY() ? opponentY + dy : opponentY - dy);
 			if(ballPosition.getY() < 0) {
-				if(ballPosition.getY() < oponentPosition.getY()) {
-					destY = (int) (oponentY - dy);
-				} else {
-					destY = (int) (oponentY + dy);
-				}
-			} else {
-				if(ballPosition.getY() > oponentPosition.getY()) {
-					destY = (int) (oponentY + dy);
-				} else {
-					destY = (int) (oponentY - dy);
-				}
+				destY = (int) (ballPosition.getY() < opponentPosition.getY() ? opponentY - dy : opponentY + dy);
 			}
 			
-			
+			// Set destination
 			newDestination = new Point(destX, destY);
-			//System.out.println(" dx:" + dx + " dy: " + dy);
-			//System.out.println(newDestination);
-			//System.out.println(ballPosition + " " +newDestination);
 		}
 
 		return newDestination;
