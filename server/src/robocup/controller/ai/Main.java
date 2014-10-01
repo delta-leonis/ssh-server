@@ -11,6 +11,7 @@ import robocup.controller.ai.highLevelBehavior.testbehavior.TestPositionBehavior
 import robocup.controller.ai.highLevelBehavior.testbehavior.TestPositionWithBallBehavior;
 import robocup.controller.ai.lowLevelBehavior.LowLevelBehavior;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
+import robocup.model.Point;
 import robocup.model.World;
 
 public class Main implements Observer {
@@ -29,10 +30,10 @@ public class Main implements Observer {
 //		behavior = new Force();
 //		behavior = new TestPositionBehavior();
 //		behavior = new DriveSquareBehavior();
-//		behaviors.add(new TestKeepingOutsideGoalBehavior(3, 500, 0));
-//		behaviors.add(new TestKeepingOutsideGoalBehavior(1, 1000, -150));
-//		behaviors.add(new TestKeepingOutsideGoalBehavior(7, 1000, 150));
-		behaviors.add(new TestPositionBehavior());
+		behaviors.add(new TestKeepingBehavior(3, null));
+		behaviors.add(new TestKeepingBehavior(1, new Point(0, -150)));
+		behaviors.add(new TestKeepingBehavior(7, new Point(0, 150)));
+//		behaviors.add(new TestPositionBehavior());
 		robotExecuters = new ArrayList<RobotExecuter>();
 		createExecuters();
 		lowLevelBehaviors = new ArrayList<LowLevelBehavior>();

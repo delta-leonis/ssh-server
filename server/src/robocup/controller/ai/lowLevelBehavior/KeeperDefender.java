@@ -14,6 +14,26 @@ public class KeeperDefender extends Keeper {
 		super(robot, output, distanceToGoal, goToKick, ballPosition, keeperPosition,
 				centerGoalPosition);
 		this.offset = offset;
+		go = new GotoPosition(robot, output, centerGoalPosition, ballPosition, 1200);
+	}
+	
+	@Override
+	public void calculate() {
+		if(timeOutCheck()) {
+			
+		} else {
+			Point newDestination = getNewKeeperDestination();
+			
+			if(newDestination != null) {
+				if(goToKick)
+					go.setGoal(ballPosition);//GotoPosition(keeperPosition, ballPosition, ballPosition)
+				else
+					go.setGoal(newDestination);//GotoPosition(keeperPosition, newDestination, ballPosition)
+
+				go.setTarget(ballPosition);
+				go.calculate();
+			}
+		}
 	}
 	
 	/**
@@ -29,7 +49,7 @@ public class KeeperDefender extends Keeper {
 		this.offset = offset;
 	}
 
-	protected Point getNewKeeperDestination() {
+	private Point getNewKeeperDestination() {
 		Point newDestination = null;
 		
 		if(ballPosition != null) {
