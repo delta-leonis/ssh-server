@@ -81,8 +81,9 @@ public class GotoPosition {
 
 			speed = getSpeed(getDistance(), rotationToGoal);
 			float rotationSpeedFloat = getRotationSpeed(targetDirection);
-			float tSpeed = ((45.553093f / 360) * rotationSpeedFloat);
-			rotationSpeed = (int) tSpeed;
+			//float tSpeed = ((45.553093f / 360) * rotationSpeedFloat);
+			rotationSpeed = (int)rotationSpeedFloat;
+			//rotationSpeed = (int) tSpeed;
 
 			output.send(1, robot.getRobotID(), rotationToGoal, forcedSpeed > 0 ? forcedSpeed : speed, travelDistance, targetDirection, rotationSpeed,
 					0, false);
@@ -90,19 +91,24 @@ public class GotoPosition {
 	}
 
 	public float getRotationSpeed(int rotation) {
+		// 0.0006 * x^3
+		
 		// used natural logarithmic function to determine rotationSpeed;
-		double rotationLog = Math.abs(rotation);
-		rotationLog = Math.log(rotationLog) / Math.log(1.1);
-		rotationLog = rotationLog * 4; // * 4
-
-		float rotationSpeed = (float) rotationLog;
-
+		double rotationCalc = Math.abs(rotation);
+		
+		//rotationLog = Math.log(rotationLog) / Math.log(1.1);
+		//rotationLog = rotationLog * 4; // * 4
+		rotationCalc = rotationCalc * 0.06;
+		
+		float rotationSpeed = (float) rotationCalc;
+		
 		if (rotationSpeed < 0) {
 			rotationSpeed = 0;
 		}
-		if (rotation < 0) {
+		if (rotation > 0) {
 			rotationSpeed *= -1;
 		}
+		System.out.println(" rot speed" + rotationSpeed);
 		return rotationSpeed;
 	}
 
