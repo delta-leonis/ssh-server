@@ -1,5 +1,6 @@
 package robocup.controller.ai.lowLevelBehavior;
 
+import robocup.model.FieldObject;
 import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.output.ComInterface;
@@ -14,26 +15,7 @@ public class KeeperDefender extends Keeper {
 		super(robot, output, distanceToGoal, goToKick, ballPosition, keeperPosition,
 				centerGoalPosition);
 		this.offset = offset;
-		go = new GotoPosition(robot, output, centerGoalPosition, ballPosition, 1200);
-	}
-	
-	@Override
-	public void calculate() {
-		if(timeOutCheck()) {
-			
-		} else {
-			Point newDestination = getNewKeeperDestination();
-			
-			if(newDestination != null) {
-				if(goToKick)
-					go.setGoal(ballPosition);//GotoPosition(keeperPosition, ballPosition, ballPosition)
-				else
-					go.setGoal(newDestination);//GotoPosition(keeperPosition, newDestination, ballPosition)
-
-				go.setTarget(ballPosition);
-				go.calculate();
-			}
-		}
+		go = new GotoPosition(robot, output, centerGoalPosition, ballPosition, 400);
 	}
 	
 	/**
@@ -49,7 +31,8 @@ public class KeeperDefender extends Keeper {
 		this.offset = offset;
 	}
 
-	private Point getNewKeeperDestination() {
+	@Override
+	protected Point getNewKeeperDestination() {
 		Point newDestination = null;
 		
 		if(ballPosition != null) {

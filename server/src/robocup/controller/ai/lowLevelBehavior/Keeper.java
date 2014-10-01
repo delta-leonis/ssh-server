@@ -1,5 +1,6 @@
 package robocup.controller.ai.lowLevelBehavior;
 
+import robocup.model.FieldObject;
 import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.output.ComInterface;
@@ -30,7 +31,7 @@ public class Keeper extends LowLevelBehavior {
 		this.ballPosition = ballPosition;
 		this.keeperPosition = keeperPosition;
 		this.centerGoalPosition = centerGoalPosition;
-		go = new GotoPosition(robot, output, centerGoalPosition, ballPosition, 1200);
+		go = new GotoPosition(robot, output, centerGoalPosition, ballPosition, 400);
 	}
 	
 	/**
@@ -57,6 +58,8 @@ public class Keeper extends LowLevelBehavior {
 			if(newDestination != null) {
 				if(goToKick)
 					go.setGoal(ballPosition);//GotoPosition(keeperPosition, ballPosition, ballPosition)
+				else if(isWithinRange(robot, newDestination, 40))
+					go.setGoal(null);
 				else
 					go.setGoal(newDestination);//GotoPosition(keeperPosition, newDestination, ballPosition)
 
@@ -66,7 +69,7 @@ public class Keeper extends LowLevelBehavior {
 		}
 	}
 	
-	private Point getNewKeeperDestination() {
+	protected Point getNewKeeperDestination() {
 		Point newDestination = null;
 		
 		if(ballPosition != null) {
@@ -86,5 +89,19 @@ public class Keeper extends LowLevelBehavior {
 		}
 
 		return newDestination;
+	}
+	
+	/**
+	 * Calculate if the object is within range of the target
+	 * @param keeper
+	 * @param dest
+	 * @param range
+	 * @return
+	 */
+	protected boolean isWithinRange(FieldObject object, Point target, int range) {
+		int dy = (int) (target.getY() - object.getPosition().getY());
+//		int dx = (int) (target.getX() - object.getPosition().getY());
+		
+		return range > Math.abs(dy) /*&& range > Math.abs(dx)*/;
 	}
 }
