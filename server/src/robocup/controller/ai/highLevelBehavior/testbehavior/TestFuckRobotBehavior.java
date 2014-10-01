@@ -34,7 +34,7 @@ public class TestFuckRobotBehavior extends Behavior {
 		
 		
 		ball = world.getBall();
-		int distanceToOponent = 500;
+		int distanceToOponent = 250;
 		
 		if(defender != null && ball != null) {
 			RobotExecuter executer = findExecuter(Main.TEST_ROBOT_ID, executers);
@@ -47,7 +47,7 @@ public class TestFuckRobotBehavior extends Behavior {
 				new Thread(executer).start();
 				executers.add(executer);
 			} else {
-				((FuckRobot)executer.getLowLevelBehavior()).update(distanceToOponent, false, ball.getPosition(), defender.getPosition());
+				((FuckRobot)executer.getLowLevelBehavior()).update(distanceToOponent, false, ball.getPosition(), defender.getPosition(), oponent.getPosition());
 			}
 		}
 	}

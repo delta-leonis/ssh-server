@@ -29,14 +29,16 @@ public class FuckRobot extends LowLevelBehavior {
 		this.ballPosition = ballPosition;
 		this.distanceToOponent = distanceToOponent;
 		this.defenderPosition = defenderPosition;
+		go = new GotoPosition(robot,  output, defenderPosition, oponentPosition, 400);
 	}
 	
 	
-	public void update(int distanceToOponent, boolean goToKick, Point ballPosition, Point defenderPosition) {
+	public void update(int distanceToOponent, boolean goToKick, Point ballPosition, Point defenderPosition, Point oponentPosition) {
 		this.distanceToOponent = distanceToOponent;
 		//this.goToKick = goToKick;
 		this.ballPosition = ballPosition;
 		this.defenderPosition = defenderPosition;
+		this.oponentPosition = oponentPosition;
 	}
 	
 	@Override
@@ -54,6 +56,7 @@ public class FuckRobot extends LowLevelBehavior {
 				else
 					go.setGoal(newDestination);//GotoPosition(keeperPosition, newDestination, ballPosition)
 			 	*/
+				go.setGoal(newDestination);
 				go.setTarget(ballPosition);
 				go.calculate();
 			}
@@ -75,11 +78,39 @@ public class FuckRobot extends LowLevelBehavior {
 			double dy = Math.sqrt(distanceToOponent * distanceToOponent - dx * dx);
 			
 			int oponentX = (int) oponentPosition.getX();
-			int destX = (int) (oponentX > 0 ? oponentX - dx : oponentX + dx);
+			//int destX = (int) (oponentX > 0 ? oponentX - dx : oponentX + dx);
+			int destX = 0;
+			if(ballPosition.getX() < 0) {
+				if(ballPosition.getX() < oponentPosition.getX()) {
+					destX = (int) (oponentX - dx);
+				} else {
+					destX = (int) (oponentX + dx);
+				}
+			} else {
+				if(ballPosition.getX() > oponentPosition.getX()) {
+					destX = (int) (oponentX + dx);
+				} else {
+					destX = (int) (oponentX - dx);
+				}
+			}
 			
 			int oponentY = (int) oponentPosition.getY();
-			int destY = (int) (ballPosition.getY() > 0 ? oponentY + dy : oponentY - dy);
-		
+			//int destY = (int) (ballPosition.getY() > 0 ? oponentY + dy : oponentY - dy);
+			int destY = 0;
+			if(ballPosition.getY() < 0) {
+				if(ballPosition.getY() < oponentPosition.getY()) {
+					destY = (int) (oponentX - dy);
+				} else {
+					destY = (int) (oponentX + dy);
+				}
+			} else {
+				if(ballPosition.getY() > oponentPosition.getY()) {
+					destY = (int) (oponentX + dy);
+				} else {
+					destY = (int) (oponentX - dy);
+				}
+			}
+			
 			newDestination = new Point(destX, destY);
 		}
 
