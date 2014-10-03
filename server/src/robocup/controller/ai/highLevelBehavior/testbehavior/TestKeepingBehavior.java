@@ -45,10 +45,10 @@ public class TestKeepingBehavior extends Behavior {
 				executer = new RobotExecuter(keeper);
 				if(offset == null)
 					executer.setLowLevelBehavior(new Keeper(keeper, ComInterface.getInstance(RobotCom.class), distanceToGoal, false, 
-						ball.getPosition(), keeper.getPosition(), keeper.getPosition().getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE));
+						ball.getPosition(), keeper.getPosition(), keeper.getPosition().getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE, world.getField().getWidth() / 2));
 				else
 					executer.setLowLevelBehavior(new KeeperDefender(keeper, ComInterface.getInstance(RobotCom.class), distanceToGoal, false,
-							ball.getPosition(), keeper.getPosition(), keeper.getPosition().getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE, offset));
+							ball.getPosition(), keeper.getPosition(), keeper.getPosition().getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE, offset, world.getField().getWidth() / 2));
 				new Thread(executer).start();
 				executers.add(executer);
 			} else {

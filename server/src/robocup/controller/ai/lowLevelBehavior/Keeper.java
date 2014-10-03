@@ -12,6 +12,7 @@ public class Keeper extends LowLevelBehavior {
 	protected Point ballPosition;
 	protected Point keeperPosition;
 	protected Point centerGoalPosition;
+	private int yMax;
 	
 	/**
 	 * Create a keeper
@@ -24,14 +25,15 @@ public class Keeper extends LowLevelBehavior {
 	 * @param centerGoalPosition center of the goal on the correct side of the playing field
 	 */
 	public Keeper(Robot robot, ComInterface output, int distanceToGoal, boolean goToKick, Point ballPosition,
-			Point keeperPosition, Point centerGoalPosition) {
+			Point keeperPosition, Point centerGoalPosition, int yMax) {
 		super(robot, output);
 		this.distanceToGoal = distanceToGoal;
 		this.goToKick = goToKick;
 		this.ballPosition = ballPosition;
 		this.keeperPosition = keeperPosition;
 		this.centerGoalPosition = centerGoalPosition;
-		go = new GotoPosition(robot, output, centerGoalPosition, ballPosition, 400);
+		this.yMax = yMax;
+		go = new GotoPosition(robot, output, centerGoalPosition, ballPosition, 2000);
 	}
 	
 	/**
@@ -55,10 +57,18 @@ public class Keeper extends LowLevelBehavior {
 		} else {
 			Point newDestination = getNewKeeperDestination();
 			
+			if(centerGoalPosition.getX() > 0 && centerGoalPosition.getX() < newDestination.getX())
+				newDestination.setX(centerGoalPosition.getX() > 0 ? centerGoalPosition.getX() - 100 : centerGoalPosition.getX() + 100);
+			
+			if(newDestination.getY() > 0 && newDestination.getY() > yMax - 100)
+				newDestination.setY(yMax - 100);
+			else if(newDestination.getY() < 0 && newDestination.getY() < -yMax + 100)
+				newDestination.setY(-yMax + 100);
+			
 			if(newDestination != null) {
 				if(goToKick)
 					go.setGoal(ballPosition);//GotoPosition(keeperPosition, ballPosition, ballPosition)
-				else if(isWithinRange(robot, newDestination, 40))
+				else if(isWithinRange(robot, newDestination, 15))
 					go.setGoal(null);
 				else
 					go.setGoal(newDestination);//GotoPosition(keeperPosition, newDestination, ballPosition)

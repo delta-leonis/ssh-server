@@ -1,6 +1,5 @@
 package robocup.controller.ai.lowLevelBehavior;
 
-import robocup.model.FieldObject;
 import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.output.ComInterface;
@@ -11,11 +10,11 @@ public class KeeperDefender extends Keeper {
 
 	public KeeperDefender(Robot robot, ComInterface output, int distanceToGoal,
 			boolean goToKick, Point ballPosition, Point keeperPosition,
-			Point centerGoalPosition, Point offset) {
+			Point centerGoalPosition, Point offset, int yMax) {
 		super(robot, output, distanceToGoal, goToKick, ballPosition, keeperPosition,
-				centerGoalPosition);
+				centerGoalPosition, yMax);
 		this.offset = offset;
-		go = new GotoPosition(robot, output, centerGoalPosition, ballPosition, 400);
+		go = new GotoPosition(robot, output, centerGoalPosition, ballPosition, 2000);
 	}
 	
 	/**
