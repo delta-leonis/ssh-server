@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import robocup.Main;
 import robocup.output.ComInterface;
+import robocup.model.FieldObject;
 import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.model.World;
@@ -57,5 +58,19 @@ public abstract class LowLevelBehavior {
 			output.send(1, robot.getRobotID(), 0, 0, 0, 0, 0, 0, false);  // stop moving if the robot timed out
 		}
 		return failed;
+	}
+	
+	/**
+	 * Calculate if the object is within range of the target
+	 * @param keeper
+	 * @param dest
+	 * @param range
+	 * @return
+	 */
+	protected boolean isWithinRange(FieldObject object, Point target, int range) {
+		int dy = (int) (target.getY() - object.getPosition().getY());
+//		int dx = (int) (target.getX() - object.getPosition().getY());
+		
+		return range > Math.abs(dy) /*&& range > Math.abs(dx)*/;
 	}
 }

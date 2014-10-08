@@ -90,18 +90,4 @@ public class Keeper extends LowLevelBehavior {
 
 		return newDestination;
 	}
-	
-	/**
-	 * Calculate if the object is within range of the target
-	 * @param keeper
-	 * @param dest
-	 * @param range
-	 * @return
-	 */
-	protected boolean isWithinRange(FieldObject object, Point target, int range) {
-		int dy = (int) (target.getY() - object.getPosition().getY());
-//		int dx = (int) (target.getX() - object.getPosition().getY());
-		
-		return range > Math.abs(dy) /*&& range > Math.abs(dx)*/;
-	}
 }
