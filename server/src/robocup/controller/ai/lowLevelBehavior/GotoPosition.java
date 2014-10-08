@@ -12,123 +12,217 @@ import robocup.output.ComInterface;
 
 public class GotoPosition {
 
-	private Point goalPosition;
-	private Point targetPosition;
+	private Point destination;
+	private Point target;
 	private Robot robot;
 	private ComInterface output;
 	private int forcedSpeed = 0;
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 
-	public GotoPosition(Robot robot, ComInterface output, Point newPosition) {
+	/**
+	 * Go to target position
+	 * 
+	 * @param robot				RobotObject
+	 * @param output			Output Connection
+	 * @param destination 		Destination Position
+	 */
+	public GotoPosition(Robot robot, ComInterface output, Point destination) {
 		this.robot = robot;
 		this.output = output;
-		this.goalPosition = newPosition;
-		this.targetPosition = newPosition;
+		this.destination = destination;
+		this.target = destination;
 	}
-
+	
+	/**
+	 * Go to target object
+	 * 
+	 * @param robot				RobotObject
+	 * @param output			Output Connection
+	 * @param target 			Target Object (position)
+	 */
 	public GotoPosition(Robot robot, ComInterface output, FieldObject target) {
 		this.robot = robot;
 		this.output = output;
-		goalPosition = target.getPosition();
-		this.targetPosition = goalPosition;
+		this.destination= target.getPosition();
+		this.target = this.destination;
 	}
 
-	public GotoPosition(Robot robot, ComInterface output, Point goalPosition, Point targetPosition) {
+	/**
+	 * Go to goalPosition and `look` towards the destination
+	 * 
+	 * @param robot				RobotObject
+	 * @param output			Output Connection
+	 * @param destination		Position to drive to
+	 * @param target			Position to look at
+	 */
+	public GotoPosition(Robot robot, ComInterface output, Point destination, Point target) {
 		this.robot = robot;
 		this.output = output;
-		this.goalPosition = goalPosition;
-		this.targetPosition = targetPosition;
+		this.destination = destination;
+		this.target = target;
 	}
 	
-	public GotoPosition(Robot robot, ComInterface output, Point goalPosition, Point targetPosition, int forcedSpeed) {
+	/**
+	 * Go to goalPosition with a `forced` speed and `look` towards the destination
+	 * 
+	 * @param robot				RobotObject
+	 * @param output			Output Connection
+	 * @param destination		Position to drive to
+	 * @param target			Position to look at
+	 * @param forcedSpeed		Speed to drive with
+	 */
+	public GotoPosition(Robot robot, ComInterface output, Point destination, Point target, int forcedSpeed) {
 		this.robot = robot;
 		this.output = output;
-		this.goalPosition = goalPosition;
-		this.targetPosition = targetPosition;
+		this.destination = destination;
+		this.target = target;
 		this.forcedSpeed  = forcedSpeed;
 	}
 
+	/**
+	 * Get Target
+	 * @return	TargetPoint
+	 */
 	public Point getTarget() {
-		return targetPosition;
+		return target;
 	}
 
+	/**
+	 * Set Target
+	 * @param TargetPoint
+	 */
 	public void setTarget(Point p) {
-		targetPosition = p;
+		target = p;
 	}
 
+	/**
+	 * Set Goal
+	 * @param GoalPoint
+	 * @deprecated replaced by setDestination
+	 */
 	public void setGoal(Point p) {
-		goalPosition = p;
+		destination = p;
 	}
 	
+	/**
+	 * Set Destination
+	 * @param destination
+	 */
+	public void setDestination(Point destination) {
+		this.destination = destination;
+	}
+	
+	/**
+	 * Get Goal position
+	 * @return GoalPoint
+	 * @deprecated replaced by getDestination
+	 */
 	public Point getGoal(){
-		return goalPosition;
+		return destination;
+	}
+	
+	/**
+	 * Get Destination
+	 * @return
+	 */
+	public Point getDestination() {
+		return destination;
 	}
 
+	/**
+	 * Calulate 
+	 */
 	public void calculate() {
+		// Check for timeout
 		if (timeOutCheck()) {
-
-		} else if (goalPosition == null || targetPosition == null) {
+		
+			/* Todo */
+		
+		// Both destination and target are required, if not set, default position to idle
+		} else if (destination == null || target == null) {
 			robot.setOnSight(true);
 			output.send(1, robot.getRobotID(), 0, 0, 0, 0, 0, 0, false);
 			return;
+			
+		// Calculate parameters
 		} else {
 			robot.setOnSight(true);
-			int targetDirection = rotationToDest(this.targetPosition);
+			
+			int targetDirection = rotationToDest(this.target);
 			int travelDistance = getDistance();
-			int rotationToGoal = rotationToDest(goalPosition);
-			int speed = 0;
-			int rotationSpeed = 0;
-
-			speed = getSpeed(getDistance(), rotationToGoal);
+			int rotationToGoal = rotationToDest(destination);
+			int speed = getSpeed(getDistance(), rotationToGoal);
 			float rotationSpeedFloat = getRotationSpeed(targetDirection);
-			//float tSpeed = ((45.553093f / 360) * rotationSpeedFloat);
-			rotationSpeed = (int)rotationSpeedFloat;
-			//rotationSpeed = (int) tSpeed;
-
-			output.send(1, robot.getRobotID(), rotationToGoal, forcedSpeed > 0 ? forcedSpeed : speed, travelDistance, targetDirection, rotationSpeed,
-					0, false);
+			int rotationSpeed = (int)rotationSpeedFloat;
+			
+			// Overrule speed
+			if(forcedSpeed > 0) {
+				speed = forcedSpeed;
+			}
+			
+			// Send commands to robot
+			output.send(1, robot.getRobotID(), rotationToGoal, speed, travelDistance, targetDirection, rotationSpeed, 0, false);
 		}
 	}
 
+	/**
+	 * Get rotationSpeed, calculates the speed at which to rotate based on degrees left to rotate
+	 * 
+	 * @param rotation
+	 * @return
+	 */
 	public float getRotationSpeed(int rotation) {
-		// 0.0006 * x^3
-		
 		// used natural logarithmic function to determine rotationSpeed;
 		double rotationCalc = Math.abs(rotation);
+		float rotationSpeed = (float) (rotationCalc * 0.06);
 		
-		//rotationLog = Math.log(rotationLog) / Math.log(1.1);
-		//rotationLog = rotationLog * 4; // * 4
-		rotationCalc = rotationCalc * 0.06;
-		
-		float rotationSpeed = (float) rotationCalc;
-		
+		// Enforce minimum speed
 		if (rotationSpeed < 0) {
 			rotationSpeed = 0;
 		}
 		if (rotation > 0) {
 			rotationSpeed *= -1;
 		}
-		System.out.println(" rot speed" + rotationSpeed);
+		
+		// Return calculated speed
 		return rotationSpeed;
 	}
 
+	/**
+	 * Get travel distance
+	 * @return
+	 */
 	public int getDistance() {
-		double dx = (robot.getPosition().getX() - goalPosition.getX());
-		double dy = (robot.getPosition().getY() - goalPosition.getY());
-		return (int) Math.sqrt(dx * dx + dy * dy);
+		// Calculate delta values
+		double dx = (robot.getPosition().getX() - destination.getX());
+		double dy = (robot.getPosition().getY() - destination.getY());
+		
+		// Calculate distance
+		int distance = (int) Math.sqrt(dx * dx + dy * dy);
+		
+		return distance;
 	}
 
+	/**
+	 * Get speed based on travel distance and rotation
+	 * @param distance
+	 * @param rotation
+	 * @return
+	 */
 	public int getSpeed(int distance, int rotation) {
+		// Defaults
 		int speed = 0;
 		int thresholdValue = 800;
+		
+		// If distance to travel is less then the `threshold`, use a logarithmic formula for speed
 		if (distance < thresholdValue) {
-			speed = (int) (Math.log(distance) / Math.log(1.1)) * 8; // -
-																	// robotDiameter
+			speed = (int) (Math.log(distance) / Math.log(1.1)) * 8; // - robotDiameter
 		} else if (Math.abs(rotation) > 10) {
 			speed = (180 - Math.abs(rotation)) * 8;
 		} else {
 			speed = 1200;
 		}
+		
 		return speed;
 	}
 	
@@ -143,10 +237,14 @@ public class GotoPosition {
 		double dx = newPoint.getX() - robot.getPosition().getX();
 		double newRad = Math.atan2(dy, dx);
 		int rot = (int)(Math.toDegrees(newRad) - robot.getOrientation());
-		if( rot > 180 )
+		
+		if( rot > 180 ) {
 			rot -= 360;
-		if (rot <= -180 )
+		}
+		
+		if (rot <= -180 ) {
 			rot += 360;
+		}
 		return  rot;
 	}
 	
@@ -155,8 +253,14 @@ public class GotoPosition {
 	 * @return true if the robot timed out
 	 */
 	public boolean timeOutCheck() {
-		boolean failed = robot.getLastUpdateTime() + 0.20 < Calendar.getInstance().getTimeInMillis()/1000 ||
-				!World.getInstance().getReferee().isStart();
+		boolean failed = false;
+		
+		if((robot.getLastUpdateTime() + 0.20) < (Calendar.getInstance().getTimeInMillis() / 1000)) {
+			failed = true;
+		}
+		if(!World.getInstance().getReferee().isStart()) {
+			failed = true;
+		}
 		
 		if(failed) {
 			LOGGER.warning("Robot " + robot.getRobotID() + " is not on sight");
