@@ -7,7 +7,6 @@ import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Ball;
-import robocup.model.FieldObject;
 import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.model.World;
@@ -46,29 +45,18 @@ public class TestKeepingBehavior extends Behavior {
 				executer = new RobotExecuter(keeper);
 				if(offset == null)
 					executer.setLowLevelBehavior(new Keeper(keeper, ComInterface.getInstance(RobotCom.class), distanceToGoal, false, 
-						ball.getPosition(), keeper.getPosition(), keeper.getPosition().getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE));
+						ball.getPosition(), keeper.getPosition(), keeper.getPosition().getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE, world.getField().getWidth() / 2));
 				else
 					executer.setLowLevelBehavior(new KeeperDefender(keeper, ComInterface.getInstance(RobotCom.class), distanceToGoal, false,
-							ball.getPosition(), keeper.getPosition(), keeper.getPosition().getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE, offset));
+							ball.getPosition(), keeper.getPosition(), keeper.getPosition().getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE, offset, world.getField().getWidth() / 2));
 				new Thread(executer).start();
 				executers.add(executer);
 			} else {
-				((Keeper)executer.getLowLevelBehavior()).update(distanceToGoal, false, ball.getPosition(), keeper.getPosition());
+				if(executer.getLowLevelBehavior() instanceof Keeper)
+					((Keeper)executer.getLowLevelBehavior()).update(distanceToGoal, false, ball.getPosition(), keeper.getPosition());
+				else
+					((KeeperDefender)executer.getLowLevelBehavior()).update(distanceToGoal, false, ball.getPosition(), keeper.getPosition());
 			}
 		}
-	}
-	
-	/**
-	 * Calculate if the object is within range of the target
-	 * @param keeper
-	 * @param dest
-	 * @param range
-	 * @return
-	 */
-	private boolean isWithinRange(FieldObject object, Point target, int range) {
-		int dy = (int) (target.getY() - object.getPosition().getY());
-//		int dx = (int) (target.getX() - object.getPosition().getY());
-		
-		return range > Math.abs(dy) /*&& range > Math.abs(dx)*/;
 	}
 }

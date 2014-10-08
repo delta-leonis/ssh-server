@@ -30,7 +30,7 @@ public class Main {
 	
 	public static final int TEST_ROBOT_ID = 1;
 	public static final int KEEPER_ROBOT_ID = 3;
-	public static final int TEST_FUCK_ROBOT_ID = 2;
+	public static final int TEST_FUCK_ROBOT_ID = 4;
 
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private static Level debugLevel = Level.INFO;

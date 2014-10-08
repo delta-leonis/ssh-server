@@ -21,7 +21,7 @@ public class TestFuckRobotBehavior extends Behavior {
 	private Ball ball;
 	private World world;
 	private Robot defender;
-	private Robot oponent;
+	private Robot opponent;
 	
 	public TestFuckRobotBehavior() {
 		world = World.getInstance();
@@ -30,11 +30,11 @@ public class TestFuckRobotBehavior extends Behavior {
 	@Override
 	public void execute(ArrayList<RobotExecuter> executers) {
 		defender = world.getAlly().getRobotByID(Main.TEST_ROBOT_ID);
-		oponent = world.getEnemy().getRobotByID(Main.TEST_FUCK_ROBOT_ID);
+		opponent = world.getEnemy().getRobotByID(Main.TEST_FUCK_ROBOT_ID);
 		
 		
 		ball = world.getBall();
-		int distanceToOponent = 500;
+		int distanceToOpponent = 250;
 		
 		if(defender != null && ball != null) {
 			RobotExecuter executer = findExecuter(Main.TEST_ROBOT_ID, executers);
@@ -42,12 +42,12 @@ public class TestFuckRobotBehavior extends Behavior {
 			// Initialize executer for this robot
 			if(executer == null) {
 				executer = new RobotExecuter(defender);
-				executer.setLowLevelBehavior(new FuckRobot(defender, ComInterface.getInstance(RobotCom.class), distanceToOponent, false, 
-						ball.getPosition(), defender.getPosition(), oponent.getPosition()));
+				executer.setLowLevelBehavior(new FuckRobot(defender, ComInterface.getInstance(RobotCom.class), distanceToOpponent, 
+						ball.getPosition(), defender.getPosition(), opponent.getPosition()));
 				new Thread(executer).start();
 				executers.add(executer);
 			} else {
-				((FuckRobot)executer.getLowLevelBehavior()).update(distanceToOponent, false, ball.getPosition(), defender.getPosition());
+				((FuckRobot)executer.getLowLevelBehavior()).update(distanceToOpponent, ball.getPosition(), defender.getPosition(), opponent.getPosition());
 			}
 		}
 	}
