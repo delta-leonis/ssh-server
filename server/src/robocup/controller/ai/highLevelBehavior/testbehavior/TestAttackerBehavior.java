@@ -40,6 +40,7 @@ public class TestAttackerBehavior extends Behavior {
 						ball.getPosition(), 0, 0, shootDirection));
 				new Thread(executer).start();
 				executers.add(executer);
+				System.out.println("executer created");
 			} else {
 				((Attacker)executer.getLowLevelBehavior()).update(attacker.getPosition(), ball.getPosition(), 0, 0, shootDirection);
 			}

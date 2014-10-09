@@ -22,7 +22,7 @@ public class RobotExecuter implements Runnable{
 			if(robot.getPosition() != null)
 				executeBehavior();
 			try {
-				Thread.sleep(25);
+				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
