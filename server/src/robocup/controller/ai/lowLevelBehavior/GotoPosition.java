@@ -173,16 +173,17 @@ public class GotoPosition {
 	 */
 	public float getRotationSpeed(int rotation) {
 		// used natural logarithmic function to determine rotationSpeed;
-		double rotationCalc = Math.abs(rotation);
-		float rotationSpeed = (float) (rotationCalc * 0.06);
+		//double rotationCalc = Math.abs(rotation);
+		
+		float rotationSpeed = (float) Math.toRadians(rotation);//(rotationCalc * 0.06);
 		
 		// Enforce minimum speed
-		if (rotationSpeed < 0) {
-			rotationSpeed = 0;
-		}
-		if (rotation > 0) {
-			rotationSpeed *= -1;
-		}
+//		if (rotationSpeed < 0) {
+//			rotationSpeed = 0;
+//		}
+//		if (rotation > 0) {
+//			rotationSpeed *= -1;
+//		}
 		
 		// Return calculated speed
 		return rotationSpeed;
