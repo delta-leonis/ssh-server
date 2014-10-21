@@ -6,15 +6,15 @@ import robocup.output.ComInterface;
 
 public class Attacker extends LowLevelBehavior {
 
-	private Point currentPosition;
+	private Point freePosition;
 	private Point ballPosition;
 	private int kick;
 	private int chip;
 	private int shootDirection;
 
-	public Attacker(Robot robot, ComInterface output, Point currentPosition, Point ballPosition, int kick, int chip, int shootDirection) {
+	public Attacker(Robot robot, ComInterface output, Point freePosition, Point ballPosition, int kick, int chip, int shootDirection) {
 		super(robot, output);
-		this.currentPosition = currentPosition;
+		this.freePosition = freePosition;
 		this.ballPosition = ballPosition;
 		this.kick = kick;
 		this.chip = chip;
@@ -22,8 +22,8 @@ public class Attacker extends LowLevelBehavior {
 		go = new GotoPosition(robot, output, null, ballPosition);
 	}
 	
-	public void update(Point currentPosition, Point ballPosition, int kick, int chip, int shootDirection) {
-		this.currentPosition = currentPosition;
+	public void update(Point freePosition, Point ballPosition, int kick, int chip, int shootDirection) {
+		this.freePosition = freePosition;
 		this.ballPosition = ballPosition;
 		this.kick = kick;
 		this.chip = chip;
@@ -42,22 +42,14 @@ public class Attacker extends LowLevelBehavior {
 			else if(chip > 0)
 				go.setKick(-chip);
 			else {
-				if(isClosestToBall())
-					newDestination = getShootingPosition(shootDirection, ballPosition);
+				if(freePosition != null)
+					newDestination = freePosition;
 				else
-					newDestination = getFreePosition();
+					newDestination = getShootingPosition(shootDirection, ballPosition);
 			}
 
 			changeDestination(newDestination);
 		}
-	}
-	
-	private Point getFreePosition() {
-		return null;
-	}
-
-	private boolean isClosestToBall() {
-		return true;
 	}
 	
 	/**

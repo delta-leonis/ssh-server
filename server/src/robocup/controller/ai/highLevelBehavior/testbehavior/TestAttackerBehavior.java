@@ -6,6 +6,7 @@ import robocup.controller.ai.highLevelBehavior.Behavior;
 import robocup.controller.ai.lowLevelBehavior.Attacker;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Ball;
+import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.model.World;
 import robocup.output.ComInterface;
@@ -32,18 +33,46 @@ public class TestAttackerBehavior extends Behavior {
 		
 		if(attacker != null && ball != null) {
 			RobotExecuter executer = findExecuter(robotId, executers);
+			Point freePosition = getClosestRobotToBall() == attacker ? null : getFreePosition();
 			
 			// Initialize executer for this robot
 			if(executer == null) {
 				executer = new RobotExecuter(attacker);
-				executer.setLowLevelBehavior(new Attacker(attacker, ComInterface.getInstance(RobotCom.class), attacker.getPosition(), 
+				executer.setLowLevelBehavior(new Attacker(attacker, ComInterface.getInstance(RobotCom.class), freePosition, 
 						ball.getPosition(), 0, 0, shootDirection));
 				new Thread(executer).start();
 				executers.add(executer);
 				System.out.println("executer created");
 			} else {
-				((Attacker)executer.getLowLevelBehavior()).update(attacker.getPosition(), ball.getPosition(), 0, 0, shootDirection);
+				((Attacker)executer.getLowLevelBehavior()).update(freePosition, ball.getPosition(), 0, 0, shootDirection);
 			}
 		}
+	}
+	
+	private Point getFreePosition() {
+		return new Point(0, 0);
+	}
+
+	private Robot getClosestRobotToBall() {
+		ArrayList<Robot> robots = world.getAlly().getRobots();
+		
+		int minDistance = -1;
+		Robot closestRobot = null;
+		
+		for(Robot r : robots) {
+			if(minDistance == -1) {
+				closestRobot = r;
+				minDistance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
+			} else {
+				int distance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
+				
+				if(distance < minDistance) {
+					closestRobot = r;
+					minDistance = distance;
+				}
+			}
+		}
+		
+		return closestRobot;
 	}
 }
