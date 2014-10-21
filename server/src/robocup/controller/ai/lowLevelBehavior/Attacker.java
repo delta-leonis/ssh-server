@@ -35,17 +35,44 @@ public class Attacker extends LowLevelBehavior {
 		if(timeOutCheck()) {
 			
 		} else {
-			Point newDestination = getShootingPosition(shootDirection, ballPosition);
-			System.out.println(newDestination);
-			if(newDestination != null) {
-				if(isWithinRange(robot, newDestination, 10))
-					go.setDestination(null);
-				else
-					go.setDestination(newDestination);
+			Point newDestination = null;
 
-				go.setTarget(ballPosition);
-				go.calculate();
+			if(kick > 0)
+				go.setKick(kick);
+			else if(chip > 0)
+				go.setKick(-chip);
+			else {
+				if(isClosestToBall())
+					newDestination = getShootingPosition(shootDirection, ballPosition);
+				else
+					newDestination = getFreePosition();
 			}
+
+			changeDestination(newDestination);
+		}
+	}
+	
+	private Point getFreePosition() {
+		return null;
+	}
+
+	private boolean isClosestToBall() {
+		return true;
+	}
+	
+	/**
+	 * Change the destination of the robot
+	 * @param newDestination the new destination
+	 */
+	private void changeDestination(Point newDestination) {
+		if(newDestination != null) {
+			if(isWithinRange(robot, newDestination, 10))
+				go.setDestination(null);
+			else
+				go.setDestination(newDestination);
+
+			go.setTarget(ballPosition);
+			go.calculate();
 		}
 	}
 }

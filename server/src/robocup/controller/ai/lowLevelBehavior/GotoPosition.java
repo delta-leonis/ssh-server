@@ -17,6 +17,7 @@ public class GotoPosition {
 	private Robot robot;
 	private ComInterface output;
 	private int forcedSpeed = 0;
+	private int kick = 0;
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 
 	/**
@@ -128,6 +129,14 @@ public class GotoPosition {
 	public Point getDestination() {
 		return destination;
 	}
+	
+	/**
+	 * Set the kicking or chipping power for the next message, resets to 0 after using it
+	 * @param kick ranges 1-100 for kicking, -1 to -100 for chipping power in percentages
+	 */
+	public void setKick(int kick) {
+		this.kick = kick;
+	}
 
 	/**
 	 * Calulate 
@@ -161,7 +170,10 @@ public class GotoPosition {
 			}
 			
 			// Send commands to robot
-			output.send(1, robot.getRobotID(), rotationToGoal, speed, travelDistance, targetDirection, rotationSpeed, 0, false);
+			output.send(1, robot.getRobotID(), rotationToGoal, speed, travelDistance, targetDirection, rotationSpeed, kick, false);
+			
+			// Set kick back to 0 to prevent kicking twice in a row
+			kick = 0;
 		}
 	}
 
