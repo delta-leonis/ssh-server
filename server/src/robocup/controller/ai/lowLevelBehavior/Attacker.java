@@ -6,7 +6,6 @@ import robocup.output.ComInterface;
 
 public class Attacker extends LowLevelBehavior {
 
-	private static final int ROBOT_SIZE = 100;
 	private Point currentPosition;
 	private Point ballPosition;
 	private int kick;
@@ -36,29 +35,17 @@ public class Attacker extends LowLevelBehavior {
 		if(timeOutCheck()) {
 			
 		} else {
-			Point newDestination = getShootingPosition();
+			Point newDestination = getShootingPosition(shootDirection, ballPosition);
 			System.out.println(newDestination);
 			if(newDestination != null) {
 				if(isWithinRange(robot, newDestination, 10))
-					go.setGoal(null);
+					go.setDestination(null);
 				else
-					go.setGoal(newDestination);//GotoPosition(keeperPosition, newDestination, ballPosition)
+					go.setDestination(newDestination);
 
 				go.setTarget(ballPosition);
 				go.calculate();
 			}
 		}
-	}
-	
-	public Point getShootingPosition() {
-		int angle = shootDirection + 180;
-		
-		int dx = (int) (Math.sin(Math.toRadians(angle)) * ROBOT_SIZE);
-		int dy = (int) (Math.cos(Math.toRadians(angle)) * ROBOT_SIZE);
-		
-		int destX = (int) (ballPosition.getX() + dx);
-		int destY = (int) (ballPosition.getY() + dy);
-
-		return new Point(destX, destY);
 	}
 }

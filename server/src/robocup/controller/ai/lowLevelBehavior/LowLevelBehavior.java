@@ -73,4 +73,22 @@ public abstract class LowLevelBehavior {
 		
 		return range > Math.abs(dy) /*&& range > Math.abs(dx)*/;
 	}
+
+	/**
+	 * Calculate the position where the robot will be able to shoot
+	 * @param shootDirection
+	 * @param ballPosition
+	 * @return
+	 */
+	public Point getShootingPosition(int shootDirection, Point ballPosition) {
+		int angle = shootDirection + 180;
+		
+		int dx = (int) (Math.sin(Math.toRadians(angle)) * (robot.getDiameter() / 2));
+		int dy = (int) (Math.cos(Math.toRadians(angle)) * (robot.getDiameter() / 2));
+		
+		int destX = (int) (ballPosition.getX() + dx);
+		int destY = (int) (ballPosition.getY() + dy);
+
+		return new Point(destX, destY);
+	}
 }
