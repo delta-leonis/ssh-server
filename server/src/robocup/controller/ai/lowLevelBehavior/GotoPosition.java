@@ -168,9 +168,9 @@ public class GotoPosition {
 			if(forcedSpeed > 0) {
 				speed = forcedSpeed;
 			}
-			
+
 			// Send commands to robot
-			output.send(1, robot.getRobotID(), rotationToGoal, speed, travelDistance, targetDirection, rotationSpeed, kick, false);
+			output.send(1, robot.getRobotID(), rotationToGoal, speed, travelDistance, targetDirection, -targetDirection, kick, false);
 			
 			// Set kick back to 0 to prevent kicking twice in a row
 			kick = 0;
@@ -185,7 +185,7 @@ public class GotoPosition {
 	 */
 	public float getRotationSpeed(int rotation) {
 		// used natural logarithmic function to determine rotationSpeed;
-		//double rotationCalc = Math.abs(rotation);
+//		double rotationCalc = Math.abs(rotation);
 		
 		float rotationSpeed = (float) Math.toRadians(rotation);//(rotationCalc * 0.06);
 		
@@ -198,7 +198,7 @@ public class GotoPosition {
 //		}
 		
 		// Return calculated speed
-		return rotationSpeed;
+		return rotationSpeed * 5;
 	}
 
 	/**
