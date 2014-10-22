@@ -12,6 +12,16 @@ public class Attacker extends LowLevelBehavior {
 	private int chip;
 	private int shootDirection;
 
+	/**
+	 * Create an attacker
+	 * @param robot the attacker
+	 * @param output 
+	 * @param freePosition a free position on the field
+	 * @param ballPosition the position of the ball
+	 * @param kick kick strength in percentages
+	 * @param chip chip strength in percentages
+	 * @param shootDirection direction where the attacker needs to shoot
+	 */
 	public Attacker(Robot robot, ComInterface output, Point freePosition, Point ballPosition, int kick, int chip, int shootDirection) {
 		super(robot, output);
 		this.freePosition = freePosition;
@@ -22,6 +32,14 @@ public class Attacker extends LowLevelBehavior {
 		go = new GotoPosition(robot, output, null, ballPosition);
 	}
 	
+	/**
+	 * Update
+	 * @param freePosition
+	 * @param ballPosition
+	 * @param kick
+	 * @param chip
+	 * @param shootDirection
+	 */
 	public void update(Point freePosition, Point ballPosition, int kick, int chip, int shootDirection) {
 		this.freePosition = freePosition;
 		this.ballPosition = ballPosition;
@@ -37,13 +55,16 @@ public class Attacker extends LowLevelBehavior {
 		} else {
 			Point newDestination = null;
 
+			// Kick or chip if the values are higher than 0
 			if(kick > 0)
 				go.setKick(kick);
 			else if(chip > 0)
 				go.setKick(-chip);
 			else {
+				// Move towards a free position when given
 				if(freePosition != null)
 					newDestination = freePosition;
+				// Move towards a shooting position behind the ball
 				else
 					newDestination = getShootingPosition(shootDirection, ballPosition);
 			}

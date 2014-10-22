@@ -20,6 +20,11 @@ public class TestAttackerBehavior extends Behavior {
 	private Ball ball;
 	private int shootDirection;
 
+	/**
+	 * Create a TestAttackerBehavior
+	 * @param robotId id of the attacker
+	 * @param shootDirection direction where the attacker will shoot
+	 */
 	public TestAttackerBehavior(int robotId, int shootDirection) {
 		world = World.getInstance();
 		this.robotId = robotId;
@@ -33,7 +38,7 @@ public class TestAttackerBehavior extends Behavior {
 		
 		if(attacker != null && ball != null) {
 			RobotExecuter executer = findExecuter(robotId, executers);
-			Point freePosition = getClosestRobotToBall() == attacker ? null : getFreePosition();
+			Point freePosition = getClosestRobotToBall() == attacker ? null : getFreePosition(null);
 			
 			// Initialize executer for this robot
 			if(executer == null) {
@@ -49,10 +54,20 @@ public class TestAttackerBehavior extends Behavior {
 		}
 	}
 	
-	private Point getFreePosition() {
+	/**
+	 * Find a free position for the robot
+	 * A position is free when the robot can get the ball passed
+	 * @param robot the robot who needs a free position
+	 * @return a free position
+	 */
+	private Point getFreePosition(Robot robot) {
 		return new Point(0, 0);
 	}
 
+	/**
+	 * Get the closest robot to the ball on our team
+	 * @return closest robot
+	 */
 	private Robot getClosestRobotToBall() {
 		ArrayList<Robot> robots = world.getAlly().getRobots();
 		
