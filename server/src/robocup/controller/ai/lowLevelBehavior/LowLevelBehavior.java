@@ -28,7 +28,7 @@ public abstract class LowLevelBehavior {
 	 * @param newPoint
 	 * @return
 	 */
-	public int rotationToDest(Point newPoint){
+	public int rotationToDest(Point newPoint) {
 		//angle vector between old and new
 		double dy = newPoint.getY() - robot.getPosition().getY();
 		double dx = newPoint.getX() - robot.getPosition().getX();
@@ -46,7 +46,7 @@ public abstract class LowLevelBehavior {
 	 * @return true if the robot timed out
 	 */
 	public boolean timeOutCheck() {
-		boolean failed = robot.getLastUpdateTime() + 0.20 < Calendar.getInstance().getTimeInMillis()/1000 ||
+		boolean failed = robot.getLastUpdateTime() + 0.20 < Calendar.getInstance().getTimeInMillis() / 1000 ||
 				!World.getInstance().getReferee().isStart();
 		
 		if(failed) {
@@ -69,9 +69,9 @@ public abstract class LowLevelBehavior {
 	 */
 	protected boolean isWithinRange(FieldObject object, Point target, int range) {
 		int dy = (int) (target.getY() - object.getPosition().getY());
-//		int dx = (int) (target.getX() - object.getPosition().getY());
+		int dx = (int) (target.getX() - object.getPosition().getX());
 		
-		return range > Math.abs(dy) /*&& range > Math.abs(dx)*/;
+		return range > Math.abs(dy) && range > Math.abs(dx);
 	}
 
 	/**

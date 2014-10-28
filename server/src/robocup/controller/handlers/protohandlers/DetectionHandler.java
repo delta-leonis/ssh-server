@@ -97,9 +97,9 @@ public class DetectionHandler {
 			if (world.getOwnTeamColor().equals(color)) {
 				// TODO: How to set/determine channel of robot.
 				// TODO: What to do with diameter.
-				t.addRobot(new Ally(robotMessage.getRobotId(), false, robotMessage.getHeight(), 10.0, t, 1));
+				t.addRobot(new Ally(robotMessage.getRobotId(), false, robotMessage.getHeight(), 18.0, t, 1));
 			} else {
-				t.addRobot(new Enemy(robotMessage.getRobotId(), false, robotMessage.getHeight(), 10.0, t));
+				t.addRobot(new Enemy(robotMessage.getRobotId(), false, robotMessage.getHeight(), 18.0, t));
 			}
 			world.RobotAdded();
 		}

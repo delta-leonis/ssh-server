@@ -38,7 +38,7 @@ public class TestAttackerBehavior extends Behavior {
 		
 		if(attacker != null && ball != null) {
 			RobotExecuter executer = findExecuter(robotId, executers);
-			Point freePosition = getClosestRobotToBall() == attacker ? null : getFreePosition(null);
+			Point freePosition = getClosestAllyRobotToBall() == attacker ? null : getFreePosition(null);
 			
 			// Initialize executer for this robot
 			if(executer == null) {
@@ -68,7 +68,7 @@ public class TestAttackerBehavior extends Behavior {
 	 * Get the closest robot to the ball on our team
 	 * @return closest robot
 	 */
-	private Robot getClosestRobotToBall() {
+	private Robot getClosestAllyRobotToBall() {
 		ArrayList<Robot> robots = world.getAlly().getRobots();
 		
 		int minDistance = -1;
@@ -89,5 +89,42 @@ public class TestAttackerBehavior extends Behavior {
 		}
 		
 		return closestRobot;
+	}
+
+	/**
+	 * Calculate if ally team is closer to the ball
+	 * @return true when the ally team is closer
+	 */
+	private boolean allyHasBall() {
+		ArrayList<Robot> allies = world.getAlly().getRobots();
+		ArrayList<Robot> enemies = world.getEnemy().getRobots();
+		
+		int distanceAlly = getTeamDistanceToBall(allies);
+		int distanceEnemy = getTeamDistanceToBall(enemies);
+
+		return distanceAlly < distanceEnemy;
+	}
+
+	/**
+	 * Get the distance from the closest robot in one team to the ball
+	 * @param robots the team of robots
+	 * @return the distance of the closest robot
+	 */
+	private int getTeamDistanceToBall(ArrayList<Robot> robots) {
+		int minDistance = -1;
+		
+		for(Robot r : robots) {
+			if(minDistance == -1)
+				minDistance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
+			else {
+				int distance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
+				
+				if(distance < minDistance) {
+					minDistance = distance;
+				}
+			}
+		}
+		
+		return minDistance;
 	}
 }
