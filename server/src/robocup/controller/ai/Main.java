@@ -85,17 +85,21 @@ public class Main implements Observer {
 //		}
 	}
 
+	/**
+	 * Remove all inactive robots from the team
+	 * @param team 
+	 */
 	private void removeMissingRobots(Team team) {
 		for(Robot r : team.getRobots())
 			if(r.getLastUpdateTime() + 0.20 < Calendar.getInstance().getTimeInMillis() / 1000) {
-				team.removeRobot(r.getRobotID());
+				team.removeRobot(r.getRobotID()); // TODO make thread-safe or find other solution
 				System.out.println("Robot with id: " + r.getRobotID() + " removed from team.");
 			}
 	}
 
 	public void update(Observable o, Object arg) {
-		removeMissingRobots(world.getAlly());
-		removeMissingRobots(world.getEnemy());
+//		removeMissingRobots(world.getAlly());
+//		removeMissingRobots(world.getEnemy());
 		
 		if ("detectionHandlerFinished".equals(arg)) {
 			for(Behavior b : behaviors)
