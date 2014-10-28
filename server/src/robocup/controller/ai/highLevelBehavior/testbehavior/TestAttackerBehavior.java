@@ -61,7 +61,7 @@ public class TestAttackerBehavior extends Behavior {
 	 * @return a free position
 	 */
 	private Point getFreePosition(Robot robot) {
-		return new Point(0, 0);
+		return new Point(-500, 0);
 	}
 
 	/**
@@ -70,6 +70,7 @@ public class TestAttackerBehavior extends Behavior {
 	 */
 	private Robot getClosestAllyRobotToBall() {
 		ArrayList<Robot> robots = world.getAlly().getRobots();
+		System.out.println(robots.size());
 		
 		int minDistance = -1;
 		Robot closestRobot = null;

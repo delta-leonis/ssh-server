@@ -5,6 +5,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import robocup.controller.ai.highLevelBehavior.Behavior;
+import robocup.controller.ai.highLevelBehavior.testbehavior.TestAttackerBehavior;
 import robocup.controller.ai.highLevelBehavior.testbehavior.TestKeepingBehavior;
 import robocup.controller.ai.highLevelBehavior.testbehavior.TestKeepingOutsideGoalBehavior;
 import robocup.controller.ai.highLevelBehavior.testbehavior.TestPositionBehavior;
@@ -30,10 +31,12 @@ public class Main implements Observer {
 //		behavior = new Force();
 //		behavior = new TestPositionBehavior();
 //		behavior = new DriveSquareBehavior();
-		behaviors.add(new TestKeepingBehavior(3, null));
-		behaviors.add(new TestKeepingBehavior(1, new Point(0, -150)));
-		behaviors.add(new TestKeepingBehavior(7, new Point(0, 150)));
+//		behaviors.add(new TestKeepingBehavior(1, null));
+//		behaviors.add(new TestKeepingBehavior(1, new Point(0, 0)));
+//		behaviors.add(new TestKeepingBehavior(1, new Point(0, 100)));
 //		behaviors.add(new TestPositionBehavior());
+		behaviors.add(new TestAttackerBehavior(1, -100));
+		//behaviors.add(new TestAttackerBehavior(3, 0));
 		robotExecuters = new ArrayList<RobotExecuter>();
 		createExecuters();
 		lowLevelBehaviors = new ArrayList<LowLevelBehavior>();

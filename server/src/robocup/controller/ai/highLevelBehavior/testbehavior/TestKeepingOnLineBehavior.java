@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import robocup.Main;
 import robocup.controller.ai.highLevelBehavior.Behavior;
-import robocup.controller.ai.lowLevelBehavior.GotoPosition;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
+import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.Ball;
 import robocup.model.Point;
 import robocup.model.Robot;

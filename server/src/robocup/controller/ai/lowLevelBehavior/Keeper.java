@@ -1,5 +1,6 @@
 package robocup.controller.ai.lowLevelBehavior;
 
+import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.FieldObject;
 import robocup.model.Point;
 import robocup.model.Robot;
