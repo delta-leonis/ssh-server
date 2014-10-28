@@ -1,4 +1,4 @@
-package robocup.controller.ai.lowLevelBehavior;
+package robocup.controller.ai.movement;
 
 import java.util.Calendar;
 import java.util.logging.Logger;
@@ -19,6 +19,7 @@ public class GotoPosition {
 	private int forcedSpeed = 0;
 	private int kick = 0;
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
+	private PathPlanner planner = new PathPlanner();
 
 	/**
 	 * Go to target position
@@ -132,7 +133,7 @@ public class GotoPosition {
 	
 	/**
 	 * Set the kicking or chipping power for the next message, resets to 0 after using it
-	 * @param kick ranges 1-100 for kicking, -1 to -100 for chipping power in percentages
+	 * @param kick ranges 1-100 3for kicking, -1 to -100 for chipping power in percentages
 	 */
 	public void setKick(int kick) {
 		this.kick = kick;
@@ -157,6 +158,9 @@ public class GotoPosition {
 		} else {
 			robot.setOnSight(true);
 			
+			//destination = planner.getNextRoutePoint(robot.getPosition(), destination, robot.getRobotID());
+//			System.out.println("destionation: "+destination);
+			
 			int targetDirection = rotationToDest(this.target);
 			int travelDistance = getDistance();
 			int rotationToGoal = rotationToDest(destination);
@@ -170,7 +174,7 @@ public class GotoPosition {
 			}
 
 			// Send commands to robot
-			output.send(1, robot.getRobotID(), rotationToGoal, speed, travelDistance, targetDirection, -targetDirection, kick, false);
+			output.send(1, robot.getRobotID(), rotationToGoal, speed, travelDistance, targetDirection, 0, kick, false);
 			
 			// Set kick back to 0 to prevent kicking twice in a row
 			kick = 0;

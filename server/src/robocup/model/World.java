@@ -16,6 +16,7 @@ public class World extends Observable {
 
 	private World() {
 		ball = new Ball();
+		ball.setPosition(new Point(400,200));	//added starting point for ball to remove nullpointer errors
 		referee = new Referee();
 	}
 

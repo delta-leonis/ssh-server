@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import robocup.Main;
 import robocup.output.ComInterface;
+import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.FieldObject;
 import robocup.model.Point;
 import robocup.model.Robot;
