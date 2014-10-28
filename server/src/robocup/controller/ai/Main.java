@@ -1,6 +1,7 @@
 package robocup.controller.ai;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -13,6 +14,8 @@ import robocup.controller.ai.highLevelBehavior.testbehavior.TestPositionWithBall
 import robocup.controller.ai.lowLevelBehavior.LowLevelBehavior;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Point;
+import robocup.model.Robot;
+import robocup.model.Team;
 import robocup.model.World;
 
 public class Main implements Observer {
@@ -82,10 +85,17 @@ public class Main implements Observer {
 //		}
 	}
 
+	private void removeMissingRobots(Team team) {
+		for(Robot r : team.getRobots())
+			if(r.getLastUpdateTime() + 0.20 < Calendar.getInstance().getTimeInMillis() / 1000) {
+				team.removeRobot(r.getRobotID());
+				System.out.println("Robot with id: " + r.getRobotID() + " removed from team.");
+			}
+	}
+
 	public void update(Observable o, Object arg) {
-		// CHECK 
-		//IF ROBOT OP GOEDE POSITIE
-			//GA NAAR NIEUWE POSITIE
+		removeMissingRobots(world.getAlly());
+		removeMissingRobots(world.getEnemy());
 		
 		if ("detectionHandlerFinished".equals(arg)) {
 			for(Behavior b : behaviors)

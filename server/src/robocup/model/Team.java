@@ -157,6 +157,15 @@ public class Team {
 		robots.add(robot);
 	}
 
+	public void removeRobot(int robotId) {
+		for(int i = 0; i < robots.size(); i++) {
+			if(robots.get(i).getRobotID() == robotId) {
+				robots.remove(i);
+				return;
+			}
+		}
+	}
+
 	public Robot getRobotByID(int id) {
 		Robot r = null;
 		for (int i = 0; i < robots.size(); i++) {
