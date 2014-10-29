@@ -18,5 +18,9 @@ public abstract class Mode {
 
 	public abstract void setFieldForce();
 
-	public abstract ArrayList<LowLevelBehavior> generateLowLevelBehaviors();
+	public abstract void execute(ArrayList<RobotExecuter> executers);
+	
+	public abstract void updateLowLevelBehavior(RobotExecuter executer, String type);
+	
+	public abstract void generateLowLevelBehavior(RobotExecuter executer, String type);
 }

@@ -28,6 +28,9 @@ public class Main implements Observer {
 //	private ComInterface output;
 
 	public Main() {
+		// TODO high level initialize executers
+		// TODO high level create new Force
+		
 		world = World.getInstance();
 		world.addObserver(this);
 		behaviors = new ArrayList<Behavior>();
@@ -62,9 +65,19 @@ public class Main implements Observer {
 //	}
 
 	private void createExecuters() {
+		// TODO high level create executers
 		
-		
-		
+//		Team team = world.getAlly();
+			/* 	Zet teamrollen
+			   	1 keeper
+			   	2 defenders
+			   	3 attackers
+			   
+			   	Kan dynamisch gewisseld worden
+		   		
+		   		
+		   		
+		   */
 //		Team t = world.getTeamByColor(world.getOwnTeamColor());
 //		for (Robot r : t.getRobots()) {
 //			if (!checkIfExecuterExist(r)) {
@@ -100,6 +113,7 @@ public class Main implements Observer {
 	public void update(Observable o, Object arg) {
 //		removeMissingRobots(world.getAlly());
 //		removeMissingRobots(world.getEnemy());
+
 		
 		if ("detectionHandlerFinished".equals(arg)) {
 			for(Behavior b : behaviors)
