@@ -15,7 +15,9 @@ public class Force extends Behavior {
 	
 	private World world;
 	
-	private ArrayList<Mode> modes;
+	private AttackMode attackMode;
+	private DefenceMode defenceMode;
+	
 	private Mode currentMode;
 
 //	private Mode[] forceBehaviors;
@@ -26,13 +28,19 @@ public class Force extends Behavior {
 		world = World.getInstance();
 		ball = world.getBall();
 		
-		modes.add(new DefenceMode());
-		modes.add(new AttackMode());
+		defenceMode = new DefenceMode();
+		attackMode = new AttackMode();
 	}
 	
 	private Mode determineMode() {
-		//						defence			attack
-		return allyHasBall() ? modes.get(0) : modes.get(1);
+
+		if(allyHasBall()) {
+			// Attack
+			return attackMode;
+		} else {
+			// Defence
+			return defenceMode;
+		}
 		
 		
 		//calculate the most effective mode to play in, being either attack or defensive playstyles 

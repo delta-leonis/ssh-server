@@ -1,5 +1,6 @@
 package robocup.controller.ai.lowLevelBehavior;
 
+import robocup.controller.ai.highLevelBehavior.forcebehavior.Mode;
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.Point;
 import robocup.model.Robot;
@@ -29,6 +30,7 @@ public class FuckRobot extends LowLevelBehavior {
 		this.ballPosition = ballPosition;
 		this.distanceToOpponent = distanceToOpponent;
 		this.defenderPosition = defenderPosition;
+		this.role = Mode.roles.BLOCKER;
 		go = new GotoPosition(robot, output, defenderPosition, opponentPosition, 400);
 	}
 	

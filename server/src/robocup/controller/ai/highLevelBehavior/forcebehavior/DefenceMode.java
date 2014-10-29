@@ -22,14 +22,11 @@ public class DefenceMode extends Mode {
 	}
 
 	@Override
-	public void updateLowLevelBehavior(RobotExecuter executer, String type) {
+	public void updateExecuter(RobotExecuter executer, roles type,
+			boolean isUpdate) {
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public void generateLowLevelBehavior(RobotExecuter executer, String type) {
-		// TODO Auto-generated method stub
-		
-	}
+	
+	
 }

@@ -14,6 +14,8 @@ public abstract class Mode {
 
 	@SuppressWarnings("unused")
 	private RobotExecuter[] robotExcecuter;
+	
+	public enum roles { KEEPER, DEFENDER, ATTACKER, BLOCKER };
 
 	/**
 	 * Let the calculator recalculate all forces
@@ -28,16 +30,10 @@ public abstract class Mode {
 	public abstract void execute(ArrayList<RobotExecuter> executers);
 	
 	/**
-	 * Update the values of the low level behavior from the executer
-	 * @param executer the executer
+	 * Generate or Update a low level behavior for this executer
+	 * @param executer execute the executer
 	 * @param type type of the low level behavior
+	 * @param isUpdate false if a new behavior should be created, true if update is requred
 	 */
-	public abstract void updateLowLevelBehavior(RobotExecuter executer, String type);
-	
-	/**
-	 * Generate a new low level behavior for this executer
-	 * @param executer the executer
-	 * @param type type of the low level behavior
-	 */
-	public abstract void generateLowLevelBehavior(RobotExecuter executer, String type);
+	public abstract void updateExecuter(RobotExecuter executer, roles type, boolean isUpdate);
 }

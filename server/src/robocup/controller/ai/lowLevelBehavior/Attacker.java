@@ -1,5 +1,6 @@
 package robocup.controller.ai.lowLevelBehavior;
 
+import robocup.controller.ai.highLevelBehavior.forcebehavior.Mode;
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.Point;
 import robocup.model.Robot;
@@ -30,6 +31,7 @@ public class Attacker extends LowLevelBehavior {
 		this.kick = kick;
 		this.chip = chip;
 		this.shootDirection = shootDirection;
+		this.role = Mode.roles.ATTACKER;
 		go = new GotoPosition(robot, output, null, ballPosition);
 	}
 	

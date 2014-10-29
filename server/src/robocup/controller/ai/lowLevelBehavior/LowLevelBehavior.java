@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import robocup.Main;
 import robocup.output.ComInterface;
+import robocup.controller.ai.highLevelBehavior.forcebehavior.Mode;
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.FieldObject;
 import robocup.model.Point;
@@ -16,6 +17,7 @@ public abstract class LowLevelBehavior {
 	protected ComInterface output;
 	protected GotoPosition go;
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
+	protected Mode.roles role;
 	
 	public LowLevelBehavior(Robot robot, ComInterface output){
 		this.robot = robot;
@@ -40,6 +42,14 @@ public abstract class LowLevelBehavior {
 		if (rot <= -180 )
 			rot += 360;
 		return  rot;
+	}
+	
+	/**
+	 * Returns the role assigned to this behaviour
+	 * @return
+	 */
+	public Mode.roles getRole() {
+		return role;
 	}
 	
 	/**
