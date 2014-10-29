@@ -5,7 +5,6 @@ package robocup.controller.ai.highLevelBehavior.forcebehavior;
 
 import java.util.ArrayList;
 
-import robocup.controller.ai.lowLevelBehavior.LowLevelBehavior;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
