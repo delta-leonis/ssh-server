@@ -11,12 +11,16 @@ import robocup.controller.ai.highLevelBehavior.testbehavior.TestKeepingBehavior;
 import robocup.controller.ai.highLevelBehavior.testbehavior.TestKeepingOutsideGoalBehavior;
 import robocup.controller.ai.highLevelBehavior.testbehavior.TestPositionBehavior;
 import robocup.controller.ai.highLevelBehavior.testbehavior.TestPositionWithBallBehavior;
+import robocup.controller.ai.lowLevelBehavior.Keeper;
+import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.LowLevelBehavior;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.model.Team;
 import robocup.model.World;
+import robocup.output.ComInterface;
+import robocup.output.RobotCom;
 
 public class Main implements Observer {
 
@@ -67,35 +71,17 @@ public class Main implements Observer {
 	private void createExecuters() {
 		// TODO high level create executers
 		
-//		Team team = world.getAlly();
-			/* 	Zet teamrollen
-			   	1 keeper
-			   	2 defenders
-			   	3 attackers
-			   
-			   	Kan dynamisch gewisseld worden
-		   		
-		   		
-		   		
-		   */
-//		Team t = world.getTeamByColor(world.getOwnTeamColor());
-//		for (Robot r : t.getRobots()) {
-//			if (!checkIfExecuterExist(r)) {
-//				RobotExecuter e = new RobotExecuter(r);
-//				new Thread(e).start();
-//				robotExecuters.add(e);
-//				if (r.getRobotID() == 0xB) {
-//					Point point = new Point(0, 0);
-//					LowLevelBehavior lowLevelBehavior = new GotoPosition(r, output, point);
-//					e.setLowLevelBehavior(lowLevelBehavior);
-//				}
-//				if (r.getRobotID() == 0x3) {
-//					Point point = new Point(0, 0);
-//					LowLevelBehavior lowLevelBehavior = new GotoPosition(r, output, point);
-//					e.setLowLevelBehavior(lowLevelBehavior);
-//				}
-//			}
-//		}
+		// Clear current executers
+		robotExecuters = new ArrayList<RobotExecuter>();
+		
+		// Create executer for each robot
+		Team team = world.getAlly();
+		for(Robot robot : team.getRobots()) {
+			RobotExecuter executer = new RobotExecuter(robot);
+			new Thread(executer).start();
+			robotExecuters.add(executer);
+		}
+		
 	}
 
 	/**
