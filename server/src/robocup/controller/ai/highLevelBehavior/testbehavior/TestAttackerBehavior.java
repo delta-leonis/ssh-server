@@ -1,10 +1,13 @@
 package robocup.controller.ai.highLevelBehavior.testbehavior;
 
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import robocup.controller.ai.highLevelBehavior.Behavior;
 import robocup.controller.ai.lowLevelBehavior.Attacker;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
+import robocup.controller.ai.movement.PathPlanner;
 import robocup.model.Ball;
 import robocup.model.Point;
 import robocup.model.Robot;
@@ -49,9 +52,83 @@ public class TestAttackerBehavior extends Behavior {
 				executers.add(executer);
 				System.out.println("executer created");
 			} else {
+				getShootDirection(attacker);
 				((Attacker)executer.getLowLevelBehavior()).update(freePosition, ball.getPosition(), 0, 0, shootDirection);
 			}
 		}
+	}
+	
+	/**
+	 * Get a shoot direction for a robot
+	 * @param robot
+	 * @return
+	 */
+	private int getShootDirection(Robot robot) {
+		int[] shootDirections = getPossibleShotsAtGoal(robot);
+		
+		System.out.println(shootDirections.length + " possible shooting directions located at:");
+		for(int i = 0; i < shootDirections.length; i++)
+			System.out.print(shootDirections[i] + ", ");
+		System.out.print("\n");
+		
+		if(shootDirections.length >= 4)
+			return shootDirections[shootDirections.length / 2];
+		
+		return 0;
+	}
+	
+	/**
+	 * Calculate possible shot count at the goal for a robot
+	 * @param robot the robot
+	 * @return possible shot count for the robot
+	 */
+	private int[] getPossibleShotsAtGoal(Robot robot) {
+		int possibleShotCount = 0;
+		int possibleShots[] = new int[10];
+		
+		// check at 10 different points in the goal, 60 mm from each other
+		for(int i = 0; i < 10; i++) {
+			Point goalPoint = new Point(world.getField().getLength() / 2, -300 + i*60);
+			Point currentPosition = robot.getPosition();
+			
+			Line2D line = new Line2D.Float(currentPosition.getX(), currentPosition.getY(), goalPoint.getX(), goalPoint.getY());
+			
+			if(lineIntersectsObject(line, robot.getRobotID())) {
+				possibleShots[possibleShotCount] = -300 + i*60;
+				possibleShotCount++;
+			}
+		}
+		
+		int[] toRet = new int[possibleShotCount];
+		for(int i = 0; i < possibleShotCount; i++)
+			toRet[i] = possibleShots[i];
+		
+		return toRet;
+	}
+	
+	/**
+	 * Check if one of the robots intersects the line on which the robot is
+	 * going to travel
+	 * 
+	 * @param lineline
+	 *            A Line2D is needed to check if there is an intersection with a
+	 *            robot object
+	 * @return true if the line intersects an object
+	 */
+	public boolean lineIntersectsObject(Line2D line, int robotId) {
+		Rectangle2D rect = null;
+		ArrayList<Robot> objects = new ArrayList<Robot>();
+		objects.addAll(world.getEnemy().getRobots());
+		objects.addAll(world.getAlly().getRobots());
+		
+		for (Robot r : objects) {
+			rect = new Rectangle2D.Float(r.getPosition().getX(), r.getPosition().getY(), 300, 300);
+			if (line.intersects(rect) && r.getRobotID() != robotId) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	/**
@@ -90,42 +167,5 @@ public class TestAttackerBehavior extends Behavior {
 		}
 		
 		return closestRobot;
-	}
-
-	/**
-	 * Calculate if ally team is closer to the ball
-	 * @return true when the ally team is closer
-	 */
-	private boolean allyHasBall() {
-		ArrayList<Robot> allies = world.getAlly().getRobots();
-		ArrayList<Robot> enemies = world.getEnemy().getRobots();
-		
-		int distanceAlly = getTeamDistanceToBall(allies);
-		int distanceEnemy = getTeamDistanceToBall(enemies);
-
-		return distanceAlly < distanceEnemy;
-	}
-
-	/**
-	 * Get the distance from the closest robot in one team to the ball
-	 * @param robots the team of robots
-	 * @return the distance of the closest robot
-	 */
-	private int getTeamDistanceToBall(ArrayList<Robot> robots) {
-		int minDistance = -1;
-		
-		for(Robot r : robots) {
-			if(minDistance == -1)
-				minDistance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
-			else {
-				int distance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
-				
-				if(distance < minDistance) {
-					minDistance = distance;
-				}
-			}
-		}
-		
-		return minDistance;
 	}
 }
