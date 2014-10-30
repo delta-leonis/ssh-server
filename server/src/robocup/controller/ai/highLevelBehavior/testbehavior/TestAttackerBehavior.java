@@ -93,7 +93,7 @@ public class TestAttackerBehavior extends Behavior {
 			
 			Line2D line = new Line2D.Float(currentPosition.getX(), currentPosition.getY(), goalPoint.getX(), goalPoint.getY());
 			
-			if(lineIntersectsObject(line, robot.getRobotID())) {
+			if(!lineIntersectsObject(line, robot.getRobotID())) {
 				possibleShots[possibleShotCount] = -300 + i*60;
 				possibleShotCount++;
 			}
