@@ -1,7 +1,6 @@
 package robocup.controller.ai;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -19,8 +18,6 @@ import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.model.Team;
 import robocup.model.World;
-import robocup.output.ComInterface;
-import robocup.output.RobotCom;
 
 public class Main implements Observer {
 
@@ -82,18 +79,6 @@ public class Main implements Observer {
 			robotExecuters.add(executer);
 		}
 		
-	}
-
-	/**
-	 * Remove all inactive robots from the team
-	 * @param team 
-	 */
-	private void removeMissingRobots(Team team) {
-		for(Robot r : team.getRobots())
-			if(r.getLastUpdateTime() + 0.20 < Calendar.getInstance().getTimeInMillis() / 1000) {
-				team.removeRobot(r.getRobotID()); // TODO make thread-safe or find other solution
-				System.out.println("Robot with id: " + r.getRobotID() + " removed from team.");
-			}
 	}
 
 	public void update(Observable o, Object arg) {

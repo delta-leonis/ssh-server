@@ -4,6 +4,7 @@ import robocup.input.protobuf.MessagesRobocupSslDetection.SSL_DetectionBall;
 import robocup.input.protobuf.MessagesRobocupSslDetection.SSL_DetectionFrame;
 import robocup.input.protobuf.MessagesRobocupSslDetection.SSL_DetectionRobot;
 
+import java.util.Calendar;
 import java.util.List;
 
 import robocup.model.Ally;
@@ -76,6 +77,18 @@ public class DetectionHandler {
 	}
 
 	/**
+	 * Remove all inactive robots from the team
+	 * @param team 
+	 */
+	private void removeMissingRobots(Team team) {
+		for(Robot r : team.getRobots())
+			if(r.getLastUpdateTime() + 0.20 < Calendar.getInstance().getTimeInMillis() / 1000) {
+				team.removeRobot(r.getRobotID());
+				System.out.println("Robot with id: " + r.getRobotID() + " removed from team.");
+			}
+	}
+
+	/**
 	 * Updates position of existing robot or creates it.
 	 * 
 	 * @param color
@@ -113,6 +126,10 @@ public class DetectionHandler {
 			robot.update(new Point(robotMessage.getX(), robotMessage.getY()), updateTime, camNo);
 		}
 
+		// remove missing robots from teams, needs to be done here to prevent accessing the same list in two threads
+		// adding locks for the list would be too slow
+		removeMissingRobots(world.getAlly());
+		removeMissingRobots(world.getEnemy());
 	}
 
 
