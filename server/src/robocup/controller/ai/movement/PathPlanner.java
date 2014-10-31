@@ -3,6 +3,7 @@ package robocup.controller.ai.movement;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import robocup.model.Point;
 import robocup.model.Robot;
@@ -31,6 +32,7 @@ public class PathPlanner {
 	 * @return next free node on route
 	 */
 	public Point getNextRoutePoint(Point beginNode, Point endNode, int robotId) {
+//		long time =  System.nanoTime();
 
 		// make new line with given start and endpoints
 		Line2D line = new Line2D.Float(beginNode.getX(), beginNode.getY(), endNode.getX(), endNode.getY());
@@ -41,17 +43,22 @@ public class PathPlanner {
 		// new subNodes
 		while (obstacle != null) {
 			
-			//TODO: fix issue where robot ends up in endless while loop when robot enters obstacle / drives against it 
-			
-			
-			
 			// create new subPoint
 			subNode = getNewSubPoint(obstacle, beginNode, subNode);
 			// create new line with calculated subNode
 			line = new Line2D.Float(beginNode.getX(), beginNode.getY(), subNode.getX(), subNode.getY());
 			// check if new line intersects an object
 			obstacle = lineIntersectsObject(line, robotId);
+			
+
+			//check if startnode is inside the obstacle avoid box and create new subpoint to move outside of it. also a really basic version of object avoidance
+			if(obstacle != null && obstacle.contains(beginNode.getX(), beginNode.getY())){
+				subNode = getNewSubPoint(obstacle, beginNode, subNode);
+				break;
+			}
+			
 		}
+//		System.out.println("passed time: " + (System.nanoTime() - time));
 		if (subNode != null) {
 			return subNode;
 		} else {
@@ -73,8 +80,10 @@ public class PathPlanner {
 		Rectangle2D rect = null;
 		// check all robots/objects if they are on the path
 		for (Robot r : objects) {
+
 			rect = new Rectangle2D.Float(r.getPosition().getX(), r.getPosition().getY(), 300, 300);
-			if (line.intersects(rect) && r.getRobotID() != robotId) {
+			
+			if (line.intersects(rect) && r.getRobotID() != robotId ) { 
 				break;
 			}
 			rect = null;

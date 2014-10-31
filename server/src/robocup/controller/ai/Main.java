@@ -76,7 +76,6 @@ public class Main implements Observer {
 	public void update(Observable o, Object arg) {
 //		removeMissingRobots(world.getAlly());
 //		removeMissingRobots(world.getEnemy());
-
 		
 		if ("detectionHandlerFinished".equals(arg)) {
 			for(Behavior b : behaviors)
