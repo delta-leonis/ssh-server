@@ -24,12 +24,12 @@ public class Force extends Behavior {
 
 	private Ball ball;
 	
-	public Force() {
+	public Force(ArrayList<RobotExecuter> executers) {
 		world = World.getInstance();
 		ball = world.getBall();
 		
 		defenceMode = new DefenceMode();
-		attackMode = new AttackMode();
+		attackMode = new AttackMode(executers);
 	}
 	
 	private Mode determineMode() {

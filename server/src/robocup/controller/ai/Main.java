@@ -35,6 +35,12 @@ public class Main implements Observer {
 		world = World.getInstance();
 		world.addObserver(this);
 		behaviors = new ArrayList<Behavior>();
+		
+		/*// 'Robs mode test init'
+		 * createExecuters();
+		 * behavior = new Force(robotExecuters);
+		 */
+		
 //		behavior = new Force();
 //		behavior = new TestPositionBehavior();
 //		behavior = new DriveSquareBehavior();

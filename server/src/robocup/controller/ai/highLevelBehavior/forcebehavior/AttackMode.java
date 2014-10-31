@@ -26,9 +26,32 @@ public class AttackMode extends Mode {
 	private Point offset = new Point(0, 0);
 	private World world;
 	private int shootDirection = -100;
+	private ArrayList<RobotExecuter> executers; 
 	
-	public AttackMode() {
+	public AttackMode(ArrayList<RobotExecuter> executers) {
 		world = World.getInstance();
+		
+		// Set all behaviors / assign
+		
+		// 1e executer = keeper
+		// 2e + 3e = defender
+		// rest is attacker
+		int executerCounter = 0;
+		this.executers = executers;
+		for(RobotExecuter executer : executers) {
+			// Keeper
+			if(executerCounter == 0) {
+				updateExecuter(executer, roles.KEEPER, false);
+			// Defender
+			} else if(executerCounter <= 2) {
+				updateExecuter(executer, roles.DEFENDER, false);
+			// Attacker
+			} else {
+				updateExecuter(executer, roles.ATTACKER, false);
+			}
+			
+			executerCounter++;
+		}
 	}
 	
 	@Override
@@ -41,14 +64,12 @@ public class AttackMode extends Mode {
 		for(RobotExecuter executer : executers) {
 			updateExecuter(executer, executer.getLowLevelBehavior().getRole(), true);
 		}
-
 	}
 
 	@Override
 	// Genereert EN update een executer met een lowlevel behaviour
 	public void updateExecuter(RobotExecuter executer, roles type, boolean isUpdate) {
-		//	Todo Assign behaviour
-		
+
 		Robot robot = executer.getRobot();
 		Ball ball = world.getBall();
 		int distanceToGoal = offset != null ? 1000 : 500;
@@ -112,13 +133,13 @@ public class AttackMode extends Mode {
 				if(isUpdate) {
 					((FuckRobot)executer.getLowLevelBehavior()).update(
 						distanceToOpponent, ball.getPosition(), 
-						robot.getPosition(), opponent.getPosition()
+						robot.getPosition(), opponent.getPosition(), opponent.getRobotID()
 					);
 				} else {
 					executer.setLowLevelBehavior(
 						new FuckRobot( robot, ComInterface.getInstance(RobotCom.class), 
 							distanceToOpponent, ball.getPosition(), 
-							robot.getPosition(), opponent.getPosition())
+							robot.getPosition(), opponent.getPosition(), opponent.getRobotID())
 					);
 				}
 				break;
@@ -217,6 +238,7 @@ public class AttackMode extends Mode {
 		World world = World.getInstance();
 		ArrayList<Robot> robots = world.getEnemy().getRobots();
 
+		
 		int minDistance = -1;
 		Robot closestRobot = null;
 		
@@ -229,15 +251,11 @@ public class AttackMode extends Mode {
 				
 				if(distance < minDistance) {
 					if(withoutBlocker) {
-						// If robot already has a blocker, search for another one
-						
-						
-						//!TODO check if enemy has blocker, if not, asign him
-						/*
-						 * closestRobot = r;
-						minDistance = distance;
-						 */
-						
+						// Only continue of the robot has no blocker assigned
+						if(!robotHasBlocker(r)) {
+							closestRobot = r;
+							minDistance = distance;
+						}
 					} else {
 						closestRobot = r;
 						minDistance = distance;
@@ -247,5 +265,26 @@ public class AttackMode extends Mode {
 		}
 		
 		return closestRobot;
+	}
+	
+	
+	/**
+	 * Find out if the robot has a blocker assigned to it
+	 * @param robot
+	 * @return bool
+	 * 	if true, a blocker is assigned
+	 */
+	private boolean robotHasBlocker(Robot robot) {
+		
+		for(RobotExecuter executer : executers) {
+			if(executer.getLowLevelBehavior().getRole() == roles.BLOCKER) {
+				
+				if(robot.getRobotID() == ((FuckRobot)executer.getLowLevelBehavior()).getOpponentId()) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 }

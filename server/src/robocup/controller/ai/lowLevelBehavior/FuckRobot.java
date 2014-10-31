@@ -12,6 +12,7 @@ public class FuckRobot extends LowLevelBehavior {
 	protected Point opponentPosition;
 	protected Point defenderPosition;
 	protected int distanceToOpponent;
+	protected int opponentId;
 	
 	/**
 	 * Create a defender (stands between "target" enemy and the ball)
@@ -23,7 +24,7 @@ public class FuckRobot extends LowLevelBehavior {
 	 * @param opponentPosition center position of the opponent / enemy
 	 */
 	public FuckRobot(Robot robot, ComInterface output, int distanceToOpponent, Point ballPosition,
-			Point defenderPosition, Point opponentPosition) {
+			Point defenderPosition, Point opponentPosition, int opponentId) {
 		super(robot, output);
 		
 		this.opponentPosition = opponentPosition;
@@ -31,6 +32,7 @@ public class FuckRobot extends LowLevelBehavior {
 		this.distanceToOpponent = distanceToOpponent;
 		this.defenderPosition = defenderPosition;
 		this.role = Mode.roles.BLOCKER;
+		this.opponentId = opponentId;
 		go = new GotoPosition(robot, output, defenderPosition, opponentPosition, 400);
 	}
 	
@@ -42,11 +44,14 @@ public class FuckRobot extends LowLevelBehavior {
 	 * @param defenderPosition
 	 * @param opponentPosition
 	 */
-	public void update(int distanceToOpponent, Point ballPosition, Point defenderPosition, Point opponentPosition) {
+	public void update(
+			int distanceToOpponent, Point ballPosition, Point defenderPosition, 
+			Point opponentPosition, int opponentId) {
 		this.distanceToOpponent = distanceToOpponent;
 		this.ballPosition = ballPosition;
 		this.defenderPosition = defenderPosition;
 		this.opponentPosition = opponentPosition;
+		this.opponentId = opponentId;
 	}
 	
 	@Override
@@ -61,6 +66,14 @@ public class FuckRobot extends LowLevelBehavior {
 				go.calculate();
 			}
 		}
+	}
+	
+	/**
+	 * Returns the opponent id
+	 * @return
+	 */
+	public int getOpponentId() {
+		return opponentId;
 	}
 
 	/**
