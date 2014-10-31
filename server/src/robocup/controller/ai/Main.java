@@ -42,11 +42,16 @@ public class Main implements Observer {
 //		behaviors.add(new TestKeepingBehavior(1, new Point(0, 0)));
 //		behaviors.add(new TestKeepingBehavior(1, new Point(0, 100)));
 //		behaviors.add(new TestPositionBehavior());
-		behaviors.add(new TestAttackerBehavior(1, -100));
+	behaviors.add(new TestAttackerBehavior(1, -100));
 		//behaviors.add(new TestAttackerBehavior(3, 0));
 		robotExecuters = new ArrayList<RobotExecuter>();
-		createExecuters();
+//		createExecuters();
 		lowLevelBehaviors = new ArrayList<LowLevelBehavior>();
+		
+		
+//		Point robot = new Point(0,0);
+//		Point enemy = new Point(-1,0);
+//		System.out.println(robot.getAngle(enemy));
 	}
 
 //	private void determineBehavior() {
@@ -90,7 +95,7 @@ public class Main implements Observer {
 			for(Behavior b : behaviors)
 				b.execute(robotExecuters);
 		} else if ("RobotAdded".equals(arg)) {
-			createExecuters();
+//			createExecuters();
 		}
 	}
 }

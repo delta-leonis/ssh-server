@@ -17,7 +17,8 @@ public class Point {
 	 * @return Angle in degrees (int) between this and target
 	 */
 	public int getAngle(Point target) {
-		return (int) Math.toDegrees(Math.atan2(target.getX() - x, target.getY() - y));
+		return (int) Math.toDegrees(Math.atan2(target.getX() - x, target.getY() - y)); //TODO fix x, y fuck-up
+//		return (int) Math.toDegrees(Math.atan2(target.getY() - y, target.getX() - x));
 	}
 
 	/**

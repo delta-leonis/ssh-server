@@ -158,8 +158,7 @@ public class GotoPosition {
 		} else {
 			robot.setOnSight(true);
 			
-			//destination = planner.getNextRoutePoint(robot.getPosition(), destination, robot.getRobotID());
-//			System.out.println("destionation: "+destination);
+			destination = planner.getNextRoutePoint(robot.getPosition(), destination, robot.getRobotID());
 			
 			int targetDirection = rotationToDest(this.target);
 			int travelDistance = getDistance();

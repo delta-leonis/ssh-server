@@ -66,10 +66,10 @@ public class TestAttackerBehavior extends Behavior {
 	private int getShootDirection(Robot robot) {
 		int[] shootDirections = getPossibleShotsAtGoal(robot);
 		
-		System.out.println(shootDirections.length + " possible shooting directions located at:");
-		for(int i = 0; i < shootDirections.length; i++)
-			System.out.print(shootDirections[i] + ", ");
-		System.out.print("\n");
+//		System.out.println(shootDirections.length + " possible shooting directions located at:");
+//		for(int i = 0; i < shootDirections.length; i++)
+//			System.out.print(shootDirections[i] + ", ");
+//		System.out.print("\n");
 		
 		if(shootDirections.length >= 4)
 			return shootDirections[shootDirections.length / 2];
@@ -122,7 +122,7 @@ public class TestAttackerBehavior extends Behavior {
 		objects.addAll(world.getAlly().getRobots());
 		
 		for (Robot r : objects) {
-			rect = new Rectangle2D.Float(r.getPosition().getX(), r.getPosition().getY(), 300, 300);
+			rect = new Rectangle2D.Float(r.getPosition().getX(), r.getPosition().getY(), 180, 180);
 			if (line.intersects(rect) && r.getRobotID() != robotId) {
 				return true;
 			}
@@ -147,7 +147,7 @@ public class TestAttackerBehavior extends Behavior {
 	 */
 	private Robot getClosestAllyRobotToBall() {
 		ArrayList<Robot> robots = world.getAlly().getRobots();
-		System.out.println(robots.size());
+//		System.out.println(robots.size());
 		
 		int minDistance = -1;
 		Robot closestRobot = null;

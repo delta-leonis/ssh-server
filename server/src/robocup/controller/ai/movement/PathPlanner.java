@@ -24,33 +24,37 @@ public class PathPlanner {
 	 * get the next free node on the route to the endNode
 	 * 
 	 * @param beginNode
-	 *            to calculate the best possible route a beginNode is needed
+	 *            starting point of route
 	 * @param endNode
-	 *            to calculate the best possible route a endNode is needed
-	 * @return next available free node on the route
+	 *            end point of route
+	 * @param robotId
+	 * @return next free node on route
 	 */
 	public Point getNextRoutePoint(Point beginNode, Point endNode, int robotId) {
 
-		//create new line
+		// make new line with given start and endpoints
 		Line2D line = new Line2D.Float(beginNode.getX(), beginNode.getY(), endNode.getX(), endNode.getY());
-		//get intersecting object(rectangle)
-		Rectangle2D temp = lineIntersectsObject(line, robotId);
-		//init subNode to null
+		// get intersecting obstacle
+		Rectangle2D obstacle = lineIntersectsObject(line, robotId);
 		Point subNode = null;
-		//while there are intersecting objects keep inside the loop
-		while (temp != null) {
-			//make new subNode
-			subNode = getNewSubPoint(temp, beginNode, subNode);
+		// as long as there is an obstacle on the calculated path keep adding
+		// new subNodes
+		while (obstacle != null) {
+			
+			//TODO: fix issue where robot ends up in endless while loop when robot enters obstacle / drives against it 
+			
+			
+			
+			// create new subPoint
+			subNode = getNewSubPoint(obstacle, beginNode, subNode);
+			// create new line with calculated subNode
 			line = new Line2D.Float(beginNode.getX(), beginNode.getY(), subNode.getX(), subNode.getY());
-			temp = lineIntersectsObject(line, robotId);
-			System.out.println(subNode);
-
+			// check if new line intersects an object
+			obstacle = lineIntersectsObject(line, robotId);
 		}
 		if (subNode != null) {
-			System.out.println("returned subNode");
 			return subNode;
 		} else {
-			System.out.println("returned endNode");
 			return endNode;
 		}
 	}
@@ -59,13 +63,15 @@ public class PathPlanner {
 	 * Check if one of the robots intersects the line on which the robot is
 	 * going to travel
 	 * 
-	 * @param lineline
-	 *            A Line2D is needed to check if there is an intersection with a
-	 *            robot object
-	 * @return return the object
+	 * @param line
+	 *            line2D line which needs to be checked for intersections
+	 * @param robotId
+	 * 
+	 * @return return intersecting object
 	 */
 	private Rectangle2D lineIntersectsObject(Line2D line, int robotId) {
 		Rectangle2D rect = null;
+		// check all robots/objects if they are on the path
 		for (Robot r : objects) {
 			rect = new Rectangle2D.Float(r.getPosition().getX(), r.getPosition().getY(), 300, 300);
 			if (line.intersects(rect) && r.getRobotID() != robotId) {
@@ -76,21 +82,32 @@ public class PathPlanner {
 		return rect;
 	}
 
-	private Point getNewSubPoint(Rectangle2D object, Point beginNode, Point subNode) {
+	/**
+	 * calculate new subPoint on route
+	 * @param obstacle 
+	 * @param beginNode start Point
+	 * @param subNode subNode Point
+	 * @return next subNode Point
+	 */
+	private Point getNewSubPoint(Rectangle2D obstacle, Point beginNode, Point subNode) {
 		// get new random Point away from obstacle
-		
-		//dx = sin(gamma) * z
-		//dy = cos(gamma) * z
-		//gamma = Math.atan2(target.getX() - x, target.getY() - y)
-
 		if (subNode != null) {
-			
-			
-			
-			//implement method to calculate new points
-			subNode = new Point(subNode.getX() + 200, subNode.getY() );
+
+			int offset = 200;
+			double angle = Math.atan2(subNode.getY() - beginNode.getY(), subNode.getX() - beginNode.getX());
+
+			// if using left side of object
+			double dx = Math.sin(angle) * offset * -1;
+			double dy = Math.cos(angle) * offset;
+
+			// if using right side
+			// double dx = Math.sin(angle) * offset;
+			// double dy = Math.cos(angle) * offset *-1;
+
+			// implement method to calculate new points
+			subNode = new Point(subNode.getX() + (float) dx, subNode.getY() + (float) dy);
 		} else {
-			subNode = new Point((float) object.getX(), (float) object.getY());
+			subNode = new Point((float) obstacle.getX(), (float) obstacle.getY());
 		}
 
 		return subNode;

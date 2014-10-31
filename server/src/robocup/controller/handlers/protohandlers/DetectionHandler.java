@@ -5,6 +5,7 @@ import robocup.input.protobuf.MessagesRobocupSslDetection.SSL_DetectionFrame;
 import robocup.input.protobuf.MessagesRobocupSslDetection.SSL_DetectionRobot;
 
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 
 import robocup.model.Ally;
@@ -81,11 +82,11 @@ public class DetectionHandler {
 	 * @param team 
 	 */
 	private void removeMissingRobots(Team team) {
-		for(Robot r : team.getRobots())
-			if(r.getLastUpdateTime() + 0.20 < Calendar.getInstance().getTimeInMillis() / 1000) {
-				team.removeRobot(r.getRobotID());
-				System.out.println("Robot with id: " + r.getRobotID() + " removed from team.");
-			}
+		Iterator<Robot> it = team.getRobots().iterator();
+		
+		while(it.hasNext())
+			if(it.next().getLastUpdateTime() + 0.05 < Calendar.getInstance().getTimeInMillis() / 1000) 
+				it.remove();
 	}
 
 	/**
