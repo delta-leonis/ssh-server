@@ -48,27 +48,8 @@ public class Main implements Observer {
 //		createExecuters();
 		lowLevelBehaviors = new ArrayList<LowLevelBehavior>();
 		
-		
-//		Point robot = new Point(0,0);
-//		Point enemy = new Point(-1,0);
-//		System.out.println(robot.getAngle(enemy));
 	}
 
-//	private void determineBehavior() {
-//		behavior.execute(robotExecuters);
-//	}
-//
-//	private boolean isBallWithEnemy() {
-//		return false;
-//	}
-//
-//	private boolean checkIfExecuterExist(Robot r) {
-//		for (RobotExecuter e : robotExecuters) {
-//			if (e.getRobot().equals(r))
-//				return true;
-//		}
-//		return false;
-//	}
 
 	private void createExecuters() {
 		// TODO high level create executers
