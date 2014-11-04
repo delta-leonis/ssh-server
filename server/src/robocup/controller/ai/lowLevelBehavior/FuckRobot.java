@@ -61,7 +61,7 @@ public class FuckRobot extends LowLevelBehavior {
 			Point newDestination = getNewDestination();
 			// If available, set the new destination
 			if(newDestination != null) {
-				go.setGoal(newDestination);
+				go.setDestination(newDestination);
 				go.setTarget(ballPosition);
 				go.calculate();
 			}
@@ -85,32 +85,12 @@ public class FuckRobot extends LowLevelBehavior {
 		// Ball has to be on the field
 		if(ballPosition != null) {
 			
-			// Get angles from the opponent towards the ball
-			int angle = Math.abs(opponentPosition.getAngle(ballPosition));
-			int realAngle = angle > 90 ? 180 - angle : angle;
+			int angle = opponentPosition.getAngle(ballPosition);
 			
-			// Calculate DX DY
-			double dx = Math.sin(Math.toRadians(realAngle)) * distanceToOpponent;
-			double dy = Math.sqrt(distanceToOpponent * distanceToOpponent - dx * dx);
+			int dx = (int) (Math.sin(angle) * distanceToOpponent);
+			int dy = (int) (Math.cos(angle) * distanceToOpponent);
 			
-			// Get opponent positions
-			int opponentX = (int) opponentPosition.getX();
-			int opponentY = (int) opponentPosition.getY();
-			
-			// Calculate target position X
-			int destX = (int) (ballPosition.getX() > opponentPosition.getX() ? opponentX + dx : opponentX - dx);
-			if(ballPosition.getX() < 0) {
-				destX = (int) (ballPosition.getX() < opponentPosition.getX() ? opponentX - dx : opponentX + dx);
-			}
-			
-			// Calculate target position Y
-			int destY = (int) (ballPosition.getY() > opponentPosition.getY() ? opponentY + dy : opponentY - dy);
-			if(ballPosition.getY() < 0) {
-				destY = (int) (ballPosition.getY() < opponentPosition.getY() ? opponentY - dy : opponentY + dy);
-			}
-			
-			// Set destination
-			newDestination = new Point(destX, destY);
+			newDestination = new Point(opponentPosition.getX() + dx, opponentPosition.getY() + dy);
 		}
 
 		return newDestination;
