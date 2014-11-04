@@ -35,22 +35,11 @@ public class KeeperDefender extends Keeper {
 
 	@Override
 	protected Point getNewKeeperDestination() {
-		Point newDestination = null;
+		Point newDestination = super.getNewKeeperDestination();
 		
-		if(ballPosition != null) {
-			int angle = Math.abs(centerGoalPosition.getAngle(ballPosition));
-			int realAngle = angle > 90 ? 180 - angle : angle;
-			
-			double dx = Math.sin(Math.toRadians(realAngle)) * distanceToGoal;
-			double dy = Math.sqrt(distanceToGoal * distanceToGoal - dx * dx);
-			
-			int centerGoalX = (int) centerGoalPosition.getX();
-			int destX = (int) ((centerGoalX > 0 ? centerGoalX - dx : centerGoalX + dx) + offset.getX());
-			
-			int centerGoalY = (int) centerGoalPosition.getY();
-			int destY = (int) ((ballPosition.getY() > 0 ? centerGoalY + dy : centerGoalY - dy) + offset.getY());
-		
-			newDestination = new Point(destX, destY);
+		if(newDestination != null) {
+			newDestination.setX(newDestination.getX() + offset.getX());
+			newDestination.setY(newDestination.getY() + offset.getY());
 		}
 
 		return newDestination;
