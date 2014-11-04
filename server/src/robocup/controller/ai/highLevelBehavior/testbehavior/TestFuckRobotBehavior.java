@@ -43,11 +43,11 @@ public class TestFuckRobotBehavior extends Behavior {
 			if(executer == null) {
 				executer = new RobotExecuter(defender);
 				executer.setLowLevelBehavior(new FuckRobot(defender, ComInterface.getInstance(RobotCom.class), distanceToOpponent, 
-						ball.getPosition(), defender.getPosition(), opponent.getPosition()));
+						ball.getPosition(), defender.getPosition(), opponent.getPosition(), opponent.getRobotID()));
 				new Thread(executer).start();
 				executers.add(executer);
 			} else {
-				((FuckRobot)executer.getLowLevelBehavior()).update(distanceToOpponent, ball.getPosition(), defender.getPosition(), opponent.getPosition());
+				((FuckRobot)executer.getLowLevelBehavior()).update(distanceToOpponent, ball.getPosition(), defender.getPosition(), opponent.getPosition(),opponent.getRobotID());
 			}
 		}
 	}
