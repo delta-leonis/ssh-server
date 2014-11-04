@@ -9,8 +9,10 @@ import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.model.World;
 
+
 public class PathPlanner {
 	ArrayList<Robot> objects;
+	private static int  robotObjectWidth = 270;
 
 	/**
 	 * Create A Path planner
@@ -51,6 +53,9 @@ public class PathPlanner {
 			obstacle = lineIntersectsObject(line, robotId);
 			
 
+			/*
+			 * object avoidance when robot is inside a objection detection box of another robot.
+			 */
 			//check if startnode is inside the obstacle avoid box and create new subpoint to move outside of it. also a really basic version of object avoidance
 			if(obstacle != null && obstacle.contains(beginNode.getX(), beginNode.getY())){
 				subNode = getNewSubPoint(obstacle, beginNode, subNode);
@@ -80,9 +85,7 @@ public class PathPlanner {
 		Rectangle2D rect = null;
 		// check all robots/objects if they are on the path
 		for (Robot r : objects) {
-
-			rect = new Rectangle2D.Float(r.getPosition().getX(), r.getPosition().getY(), 300, 300);
-			
+			rect = new Rectangle2D.Float(r.getPosition().getX(), r.getPosition().getY(), robotObjectWidth, robotObjectWidth);
 			if (line.intersects(rect) && r.getRobotID() != robotId ) { 
 				break;
 			}

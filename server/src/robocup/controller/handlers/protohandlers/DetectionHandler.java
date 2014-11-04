@@ -107,6 +107,8 @@ public class DetectionHandler {
 		}
 
 		Robot robot = t.getRobotByID(robotMessage.getRobotId());
+		boolean robotAddedPending = false;
+		
 		if (robot == null) { // Create robot object
 			if (world.getOwnTeamColor().equals(color)) {
 				// TODO: How to set/determine channel of robot.
@@ -115,7 +117,8 @@ public class DetectionHandler {
 			} else {
 				t.addRobot(new Enemy(robotMessage.getRobotId(), false, robotMessage.getHeight(), 18.0, t));
 			}
-			world.RobotAdded();
+			
+			robotAddedPending = true;
 		}
 
 		robot = t.getRobotByID(robotMessage.getRobotId());
@@ -127,6 +130,11 @@ public class DetectionHandler {
 			robot.update(new Point(robotMessage.getX(), robotMessage.getY()), updateTime, camNo);
 		}
 
+		//!TODO nettere uitwerking van dit, mbv andere notify
+		if(robotAddedPending) {
+			world.RobotAdded();
+		}
+		
 		// remove missing robots from teams, needs to be done here to prevent accessing the same list in two threads
 		// adding locks for the list would be too slow
 		removeMissingRobots(world.getAlly());

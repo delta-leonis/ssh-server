@@ -18,4 +18,6 @@ public abstract class Behavior {
 		}
 		return null;
 	}
+	
+	public abstract void updateExecuters(ArrayList<RobotExecuter> executers);
 }

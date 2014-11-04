@@ -36,17 +36,27 @@ public class AttackMode extends Mode {
 		// 1e executer = keeper
 		// 2e + 3e = defender
 		// rest is attacker
-		int executerCounter = 0;
+		updateExecuters(executers);
+	}
+	
+	public void updateExecuters(ArrayList<RobotExecuter> executers) {
 		this.executers = executers;
+		int executerCounter = 0;
+		
+		System.out.println("attackmode: updateExecuters");
 		for(RobotExecuter executer : executers) {
 			// Keeper
 			if(executerCounter == 0) {
+				System.out.println(" assign keepert");
 				updateExecuter(executer, roles.KEEPER, false);
 			// Defender
 			} else if(executerCounter <= 2) {
+				
+				System.out.println(" assign defender");
 				updateExecuter(executer, roles.DEFENDER, false);
 			// Attacker
 			} else {
+				System.out.println(" assign attacker");
 				updateExecuter(executer, roles.ATTACKER, false);
 			}
 			
@@ -61,8 +71,18 @@ public class AttackMode extends Mode {
 
 	@Override
 	public void execute(ArrayList<RobotExecuter> executers) {
-		for(RobotExecuter executer : executers) {
-			updateExecuter(executer, executer.getLowLevelBehavior().getRole(), true);
+
+		try {
+			for(RobotExecuter executer : executers) {
+
+				if(executer.getLowLevelBehavior() != null) {
+					
+					updateExecuter(executer, executer.getLowLevelBehavior().getRole(), true);
+				}
+			}
+		} catch(Exception e) {
+			System.out.println("Ik ben dood in attackmode");
+			e.printStackTrace();
 		}
 	}
 
@@ -73,17 +93,20 @@ public class AttackMode extends Mode {
 		Robot robot = executer.getRobot();
 		Ball ball = world.getBall();
 		int distanceToGoal = offset != null ? 1000 : 500;
-		
+		int keeperDistanceToGoal = 500;
+
 		switch(type) {
 			case KEEPER:
+
 				if(isUpdate) {
 					((Keeper)executer.getLowLevelBehavior()).update(
-						distanceToGoal, false, ball.getPosition(), robot.getPosition()
+							keeperDistanceToGoal, false, ball.getPosition(), robot.getPosition()
 					);
 				} else {
+					
 					executer.setLowLevelBehavior(
 						new Keeper( robot, ComInterface.getInstance(RobotCom.class), 
-							distanceToGoal, false, 
+								keeperDistanceToGoal, false, 
 							ball.getPosition(), robot.getPosition(), 
 							robot.getPosition().getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE, 
 							world.getField().getWidth() / 2)

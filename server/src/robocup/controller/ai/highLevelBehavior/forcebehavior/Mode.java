@@ -36,4 +36,7 @@ public abstract class Mode {
 	 * @param isUpdate false if a new behavior should be created, true if update is requred
 	 */
 	public abstract void updateExecuter(RobotExecuter executer, roles type, boolean isUpdate);
+	
+	
+	public abstract void updateExecuters(ArrayList<RobotExecuter> executers) ;
 }

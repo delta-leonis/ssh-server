@@ -12,40 +12,40 @@ import robocup.controller.ai.highLevelBehavior.forcebehavior.Mode;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 
 public class Force extends Behavior {
-	
+
 	private World world;
-	
+
 	private AttackMode attackMode;
 	private DefenceMode defenceMode;
-	
+
 	private Mode currentMode;
 
-//	private Mode[] forceBehaviors;
+	// private Mode[] forceBehaviors;
 
 	private Ball ball;
-	
+
 	public Force(ArrayList<RobotExecuter> executers) {
 		world = World.getInstance();
 		ball = world.getBall();
-		
+
 		defenceMode = new DefenceMode();
 		attackMode = new AttackMode(executers);
 	}
-	
+
 	private Mode determineMode() {
 
-		if(allyHasBall()) {
-			// Attack
-			return attackMode;
-		} else {
-			// Defence
-			return defenceMode;
-		}
-		
-		
-		//calculate the most effective mode to play in, being either attack or defensive playstyles 
-		
-		//why attack and defense
+		// !TODO smerige test hack totdat defence ook bestaat
+		return attackMode;
+
+		/*
+		 * if(allyHasBall()) { // Attack return attackMode; } else { // Defence
+		 * return defenceMode; }
+		 */
+
+		// calculate the most effective mode to play in, being either attack or
+		// defensive playstyles
+
+		// why attack and defense
 	}
 
 	@Override
@@ -54,15 +54,22 @@ public class Force extends Behavior {
 		currentMode = determineMode();
 		currentMode.execute(executers);
 	}
-	
+
+	// !TODO smerige test hack
+	public void updateExecuters(ArrayList<RobotExecuter> executers) {
+		currentMode = determineMode();
+		currentMode.updateExecuters(executers);
+	}
+
 	/**
 	 * Calculate if ally team is closer to the ball
+	 * 
 	 * @return true when the ally team is closer
 	 */
 	private boolean allyHasBall() {
 		ArrayList<Robot> allies = world.getAlly().getRobots();
 		ArrayList<Robot> enemies = world.getEnemy().getRobots();
-		
+
 		int distanceAlly = getTeamDistanceToBall(allies);
 		int distanceEnemy = getTeamDistanceToBall(enemies);
 
@@ -71,24 +78,26 @@ public class Force extends Behavior {
 
 	/**
 	 * Get the distance from the closest robot in one team to the ball
-	 * @param robots the team of robots
+	 * 
+	 * @param robots
+	 *            the team of robots
 	 * @return the distance of the closest robot
 	 */
 	private int getTeamDistanceToBall(ArrayList<Robot> robots) {
 		int minDistance = -1;
-		
-		for(Robot r : robots) {
-			if(minDistance == -1)
+
+		for (Robot r : robots) {
+			if (minDistance == -1)
 				minDistance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
 			else {
 				int distance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
-				
-				if(distance < minDistance) {
+
+				if (distance < minDistance) {
 					minDistance = distance;
 				}
 			}
 		}
-		
+
 		return minDistance;
 	}
 }
