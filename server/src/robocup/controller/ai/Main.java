@@ -29,28 +29,20 @@ public class Main implements Observer {
 	@SuppressWarnings("unused")
 	private ArrayList<LowLevelBehavior> lowLevelBehaviors;
 
-	// private ComInterface output;
 
 	public Main() {
-		// TODO high level initialize executers
-		// TODO high level create new Force
-
 		world = World.getInstance();
 		world.addObserver(this);
-		// behaviors = new ArrayList<Behavior>();
 
-		// 'Robs mode test init'
-		createExecuters();
+
+		initExecutors();
 		behavior = new Force(robotExecuters);
 
-		// behavior = new Force();
-		// behavior = new TestPositionBehavior();
-		// behavior = new DriveSquareBehavior();
+
+		// behaviors = new ArrayList<Behavior>();
 		// behaviors.add(new TestKeepingBehavior(1, null));
 		// behaviors.add(new TestKeepingBehavior(1, new Point(0, 0)));
 		// behaviors.add(new TestKeepingBehavior(1, new Point(0, 100)));
-		// behaviors.add(new TestPositionBehavior());
-
 		// behaviors.add(new TestAttackerBehavior(1, -100));
 		// behaviors.add(new TestAttackerBehavior(3, 0));
 		// robotExecuters = new ArrayList<RobotExecuter>();
@@ -59,17 +51,21 @@ public class Main implements Observer {
 
 	}
 
-	private void createExecuters() {
-		// TODO high level create executers
+	public void update(Observable o, Object arg) {
+		if ("detectionHandlerFinished".equals(arg)) {
+			behavior.execute(robotExecuters);
+		} else if ("RobotAdded".equals(arg)) {
+			initExecutors();
+			behavior.updateExecuters(robotExecuters);
+		}
+	}
 
-		// Clear current executers
-		// robotExecuters = new ArrayList<RobotExecuter>();
+	private void initExecutors() {
 
 		ArrayList<RobotExecuter> updatedRobotExecuters = new ArrayList<RobotExecuter>();
 
 		Team team = world.getAlly();
 		for (Robot robot : team.getRobots()) {
-
 			boolean executerFound = false;
 			for (RobotExecuter exec : robotExecuters) {
 				if (exec.getRobot().getRobotID() == robot.getRobotID()) {
@@ -77,31 +73,13 @@ public class Main implements Observer {
 					executerFound = true;
 				}
 			}
-
+			
 			if (!executerFound) {
 				RobotExecuter executer = new RobotExecuter(robot);
 				new Thread(executer).start();
 				updatedRobotExecuters.add(executer);
 			}
 		}
-
 		robotExecuters = updatedRobotExecuters;
-	}
-
-	public void update(Observable o, Object arg) {
-		// removeMissingRobots(world.getAlly());
-		// removeMissingRobots(world.getEnemy());
-
-		if ("detectionHandlerFinished".equals(arg)) {
-			behavior.execute(robotExecuters);
-
-			// for(Behavior b : behaviors)
-			// b.execute(robotExecuters);
-		} else if ("RobotAdded".equals(arg)) {
-
-			createExecuters();
-			behavior.updateExecuters(robotExecuters);
-			// behavior.
-		}
 	}
 }

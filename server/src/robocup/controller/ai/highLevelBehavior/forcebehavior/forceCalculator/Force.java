@@ -28,7 +28,7 @@ public class Force extends Behavior {
 		world = World.getInstance();
 		ball = world.getBall();
 
-		defenceMode = new DefenceMode();
+		defenceMode = new DefenceMode(executers);
 		attackMode = new AttackMode(executers);
 	}
 
@@ -55,7 +55,7 @@ public class Force extends Behavior {
 		currentMode.execute(executers);
 	}
 
-	// !TODO smerige test hack
+	// !TODO Mooiere manier verzinnen
 	public void updateExecuters(ArrayList<RobotExecuter> executers) {
 		currentMode = determineMode();
 		currentMode.updateExecuters(executers);
