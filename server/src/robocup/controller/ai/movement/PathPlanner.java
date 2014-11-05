@@ -3,8 +3,6 @@ package robocup.controller.ai.movement;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.Calendar;
-
 import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.model.World;
@@ -21,105 +19,103 @@ public class PathPlanner {
 		objects.addAll(World.getInstance().getAlly().getRobots());
 	}
 
-	/**
-	 * get the next free node on the route to the endNode
-	 * 
-	 * @param beginNode
-	 *            starting point of route
-	 * @param endNode
-	 *            end point of route
-	 * @param robotId
-	 * @return next free node on route
-	 */
+	public enum Direction {
+		LEFT,
+		RIGHT
+	}
+	
 	public Point getNextRoutePoint(Point beginNode, Point endNode, int robotId) {
-//		long time =  System.nanoTime();
-
-		// make new line with given start and endpoints
-		Line2D line = new Line2D.Float(beginNode.getX(), beginNode.getY(), endNode.getX(), endNode.getY());
-		// get intersecting obstacle
-		Rectangle2D obstacle = lineIntersectsObject(line, robotId);
-		Point subNode = null;
-		// as long as there is an obstacle on the calculated path keep adding
-		// new subNodes
-		while (obstacle != null) {
-			
-			// create new subPoint
-			subNode = getNewSubPoint(obstacle, beginNode, subNode);
-			// create new line with calculated subNode
-			line = new Line2D.Float(beginNode.getX(), beginNode.getY(), subNode.getX(), subNode.getY());
-			// check if new line intersects an object
-			obstacle = lineIntersectsObject(line, robotId);
-			
-
-			//check if startnode is inside the obstacle avoid box and create new subpoint to move outside of it. also a really basic version of object avoidance
-			if(obstacle != null && obstacle.contains(beginNode.getX(), beginNode.getY())){
-				subNode = getNewSubPoint(obstacle, beginNode, subNode);
-				break;
-			}
-			
-		}
-//		System.out.println("passed time: " + (System.nanoTime() - time));
-		if (subNode != null) {
-			return subNode;
-		} else {
+		Point collisionPoint = getCollision(beginNode, endNode, robotId);
+		
+		// no collision, all okay
+		if(collisionPoint == null)
 			return endNode;
-		}
-	}
+		
+		SubPoint left = getNextRouteSubPoint(beginNode, new SubPoint(0, getNewSubPoint(collisionPoint, beginNode, Direction.LEFT)), 
+																		Direction.LEFT, robotId);
+		SubPoint right = getNextRouteSubPoint(beginNode, new SubPoint(0, getNewSubPoint(collisionPoint, beginNode, Direction.RIGHT)), 
+																		Direction.RIGHT, robotId);
 
-	/**
-	 * Check if one of the robots intersects the line on which the robot is
-	 * going to travel
-	 * 
-	 * @param line
-	 *            line2D line which needs to be checked for intersections
-	 * @param robotId
-	 * 
-	 * @return return intersecting object
-	 */
-	private Rectangle2D lineIntersectsObject(Line2D line, int robotId) {
-		Rectangle2D rect = null;
-		// check all robots/objects if they are on the path
+		if(left != null && right != null)
+			return left.iteration() <= right.iteration() ? left.subPoint() : right.subPoint();
+		if(left != null)
+			return left.subPoint();
+		if(right != null)
+			return right.subPoint();
+		
+		// left and right subpoints too far, lets wreck some enemies
+//		if(left == null && right == null)
+			return endNode;
+	}
+	
+	private Point getCollision(Point beginNode, Point endNode, int robotId) {
+		Line2D line = new Line2D.Float(beginNode.getX(), beginNode.getY(), endNode.getX(), endNode.getY());
+
 		for (Robot r : objects) {
-
-			rect = new Rectangle2D.Float(r.getPosition().getX(), r.getPosition().getY(), 300, 300);
+			Rectangle2D rect = new Rectangle2D.Float(r.getPosition().getX(), r.getPosition().getY(), 300, 300);
 			
-			if (line.intersects(rect) && r.getRobotID() != robotId ) { 
-				break;
-			}
-			rect = null;
+			if(line.intersects(rect) && r.getRobotID() != robotId)
+				return r.getPosition();
 		}
-		return rect;
+
+		return null;
 	}
 
+	private SubPoint getNextRouteSubPoint(Point beginNode, SubPoint subPoint, Direction direction, int robotId) {
+		// base-case, return null when iteration is 4
+		if(subPoint.iteration() == 4)
+			return null;
+
+		// calculate if there's collision with subpoint
+		// return subpoint when no collision
+		Point collisionPoint = getCollision(beginNode, subPoint.subPoint(), robotId);
+		if(collisionPoint == null)
+			return subPoint;
+
+		// calculate new subpoint, call self with new subpoint and higher iteration, going either left or right
+		// return new subpoint
+		Point newPosition = getNewSubPoint(collisionPoint, beginNode, direction);
+		return getNextRouteSubPoint(beginNode, new SubPoint(subPoint.iteration() + 1, newPosition), direction, robotId);
+	}
+	
 	/**
-	 * calculate new subPoint on route
-	 * @param obstacle 
-	 * @param beginNode start Point
-	 * @param subNode subNode Point
-	 * @return next subNode Point
+	 * Helper class to return 2 different objects at once
+	 * Pair with iteration as first, subPoint as second
 	 */
-	private Point getNewSubPoint(Rectangle2D obstacle, Point beginNode, Point subNode) {
-		// get new random Point away from obstacle
-		if (subNode != null) {
+	private class SubPoint {
+		private int iteration;
+		private Point subPoint;
 
-			int offset = 200;
-			double angle = Math.atan2(subNode.getY() - beginNode.getY(), subNode.getX() - beginNode.getX());
-
-			// if using left side of object
-			double dx = Math.sin(angle) * offset * -1;
-			double dy = Math.cos(angle) * offset;
-
-			// if using right side
-			// double dx = Math.sin(angle) * offset;
-			// double dy = Math.cos(angle) * offset *-1;
-
-			// implement method to calculate new points
-			subNode = new Point(subNode.getX() + (float) dx, subNode.getY() + (float) dy);
-		} else {
-			subNode = new Point((float) obstacle.getX(), (float) obstacle.getY());
+		public SubPoint(int iteration, Point subPoint) {
+			this.iteration = iteration;
+			this.subPoint = subPoint;
 		}
 
-		return subNode;
-
+		public int iteration() { return iteration; }
+		public Point subPoint() { return subPoint; }
+	}
+	
+	/**
+	 * calculate a new subpoint to the left or right of the object to avoid
+	 * @return
+	 */
+	public Point getNewSubPoint(Point collisionPoint, Point beginNode, Direction direction) {
+		int offset = 200;
+		int angle = (int) Math.atan2(collisionPoint.getY() - beginNode.getY(), collisionPoint.getX() - beginNode.getX());
+		int dx = 0;
+		int dy = 0;
+		
+		switch(direction) {
+			case LEFT:
+				dx = (int) -Math.sin(angle) * offset;
+				dy = (int) Math.cos(angle) * offset;
+				break;
+			case RIGHT:
+				dx = (int) Math.sin(angle) * offset;
+				dy = (int) -Math.cos(angle) * offset;
+				break;
+		}
+		
+		return new Point(collisionPoint.getX() + dx, collisionPoint.getY() + dy);
 	}
 }
