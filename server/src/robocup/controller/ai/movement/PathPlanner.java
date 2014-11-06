@@ -24,6 +24,13 @@ public class PathPlanner {
 		RIGHT
 	}
 	
+	/**
+	 * Get the next point on the route to the endNode
+	 * @param beginNode position of the robot
+	 * @param endNode destination
+	 * @param robotId id of the robot
+	 * @return returns the next point on the route towards the destination
+	 */
 	public Point getNextRoutePoint(Point beginNode, Point endNode, int robotId) {
 		Point collisionPoint = getCollision(beginNode, endNode, robotId);
 		
@@ -48,6 +55,13 @@ public class PathPlanner {
 			return endNode;
 	}
 	
+	/**
+	 * Calculate the point where collision will occur
+	 * @param beginNode current position of the robot
+	 * @param endNode destination
+	 * @param robotId id of the robot
+	 * @return returns the point where collision will occur, null when no collision detected
+	 */
 	private Point getCollision(Point beginNode, Point endNode, int robotId) {
 		Line2D line = new Line2D.Float(beginNode.getX(), beginNode.getY(), endNode.getX(), endNode.getY());
 
@@ -61,6 +75,14 @@ public class PathPlanner {
 		return null;
 	}
 
+	/**
+	 * Calculate the next sub point to the left or right
+	 * @param beginNode position of the robot
+	 * @param subPoint previous subpoint
+	 * @param direction direction where the subpoint needs to go, either LEFT or RIGHT
+	 * @param robotId id of the robot
+	 * @return a new subpoint in the given direction
+	 */
 	private SubPoint getNextRouteSubPoint(Point beginNode, SubPoint subPoint, Direction direction, int robotId) {
 		// base-case, return null when iteration is 4
 		if(subPoint.iteration() == 4)
@@ -94,10 +116,13 @@ public class PathPlanner {
 		public int iteration() { return iteration; }
 		public Point subPoint() { return subPoint; }
 	}
-	
+
 	/**
 	 * calculate a new subpoint to the left or right of the object to avoid
-	 * @return
+	 * @param collisionPoint point where the collision will occur
+	 * @param beginNode position of the robot
+	 * @param direction direction where the new subpoint will be, either LEFT or RIGHT
+	 * @return returns a new subpoint
 	 */
 	public Point getNewSubPoint(Point collisionPoint, Point beginNode, Direction direction) {
 		int offset = 200;
