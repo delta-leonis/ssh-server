@@ -14,9 +14,6 @@ public class PathPlanner {
 	 * Create A Path planner
 	 */
 	public PathPlanner() {
-		objects = new ArrayList<Robot>();
-		objects.addAll(World.getInstance().getEnemy().getRobots());
-		objects.addAll(World.getInstance().getAlly().getRobots());
 	}
 
 	public enum Direction {
@@ -32,19 +29,27 @@ public class PathPlanner {
 	 * @return returns the next point on the route towards the destination
 	 */
 	public Point getNextRoutePoint(Point beginNode, Point endNode, int robotId) {
+		objects = new ArrayList<Robot>();
+		objects.addAll(World.getInstance().getEnemy().getRobots());
+		objects.addAll(World.getInstance().getAlly().getRobots());
+		
 		Point collisionPoint = getCollision(beginNode, endNode, robotId);
 		
 		// no collision, all okay
 		if(collisionPoint == null)
 			return endNode;
-		
+
 		SubPoint left = getNextRouteSubPoint(beginNode, new SubPoint(0, getNewSubPoint(collisionPoint, beginNode, Direction.LEFT)), 
 																		Direction.LEFT, robotId);
 		SubPoint right = getNextRouteSubPoint(beginNode, new SubPoint(0, getNewSubPoint(collisionPoint, beginNode, Direction.RIGHT)), 
 																		Direction.RIGHT, robotId);
 
-		if(left != null && right != null)
-			return left.iteration() <= right.iteration() ? left.subPoint() : right.subPoint();
+//		System.out.println("Left: " + left.subPoint());
+//		System.out.println("Right: " + right.subPoint());
+
+		if(left != null && right != null) {
+			return right.iteration() <= left.iteration() ? right.subPoint() : left.subPoint();
+		}
 		if(left != null)
 			return left.subPoint();
 		if(right != null)
@@ -93,12 +98,14 @@ public class PathPlanner {
 		// calculate if there's collision with subpoint
 		// return subpoint when no collision
 		Point collisionPoint = getCollision(beginNode, subPoint.subPoint(), robotId);
+
 		if(collisionPoint == null)
 			return subPoint;
 
 		// calculate new subpoint, call self with new subpoint and higher iteration, going either left or right
 		// return new subpoint
 		Point newPosition = getNewSubPoint(collisionPoint, beginNode, direction);
+
 		return getNextRouteSubPoint(beginNode, new SubPoint(subPoint.iteration() + 1, newPosition), direction, robotId);
 	}
 	
@@ -128,21 +135,21 @@ public class PathPlanner {
 	 */
 	public Point getNewSubPoint(Point collisionPoint, Point beginNode, Direction direction) {
 		int offset = 200;
-		int angle = (int) Math.atan2(collisionPoint.getY() - beginNode.getY(), collisionPoint.getX() - beginNode.getX());
-		int dx = 0;
-		int dy = 0;
+		double angle = Math.atan2(collisionPoint.getY() - beginNode.getY(), collisionPoint.getX() - beginNode.getX());
+		double dx = 0;
+		double dy = 0;
 		
 		switch(direction) {
 			case LEFT:
-				dx = (int) -Math.sin(angle) * offset;
-				dy = (int) Math.cos(angle) * offset;
+				dx = -Math.sin(angle) * offset;
+				dy = Math.cos(angle) * offset;
 				break;
 			case RIGHT:
-				dx = (int) Math.sin(angle) * offset;
-				dy = (int) -Math.cos(angle) * offset;
+				dx = Math.sin(angle) * offset;
+				dy = -Math.cos(angle) * offset;
 				break;
 		}
-		
-		return new Point(collisionPoint.getX() + dx, collisionPoint.getY() + dy);
+	
+		return new Point(collisionPoint.getX() + (int) dx, collisionPoint.getY() + (int) dy);
 	}
 }
