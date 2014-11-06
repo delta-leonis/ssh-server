@@ -66,10 +66,12 @@ public class PathPlanner {
 		Line2D line = new Line2D.Float(beginNode.getX(), beginNode.getY(), endNode.getX(), endNode.getY());
 
 		for (Robot r : objects) {
-			Rectangle2D rect = new Rectangle2D.Float(r.getPosition().getX(), r.getPosition().getY(), 300, 300);
-			
-			if(line.intersects(rect) && r.getRobotID() != robotId)
-				return r.getPosition();
+			if(r.getPosition() != null) {
+				Rectangle2D rect = new Rectangle2D.Float(r.getPosition().getX(), r.getPosition().getY(), 300, 300);
+				
+				if(line.intersects(rect) && r.getRobotID() != robotId)
+					return r.getPosition();
+			}
 		}
 
 		return null;
