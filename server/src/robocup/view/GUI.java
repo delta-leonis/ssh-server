@@ -90,26 +90,8 @@ public class GUI extends javax.swing.JFrame implements Observer{
         startButton = new javax.swing.JButton();
         terminateButton = new javax.swing.JButton();
         kickButton = new javax.swing.JButton();
-        
-        
-        // 12 panels aanmaken
         robotPanels = new RobotPanel[12];
         
-        
-        /*
-        robotPanel0 = new RobotPanel(0);
-        robotPanel1 = new RobotPanel(1);
-        robotPanel2 = new RobotPanel(2);
-        robotPanel3 = new RobotPanel(3);
-        robotPanel4 = new RobotPanel(4);
-        robotPanel5 = new RobotPanel(5);
-        robotPanel6 = new RobotPanel(6);
-        robotPanel7 = new RobotPanel(7);
-        robotPanel8 = new RobotPanel(8);
-        robotPanel9 = new RobotPanel(9);
-        robotPanel10 = new RobotPanel(10);
-        robotPanel11 = new RobotPanel(11);
-        */
 
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -123,81 +105,25 @@ public class GUI extends javax.swing.JFrame implements Observer{
         
         GroupLayout.SequentialGroup hGroup = robotDataPanelLayout.createSequentialGroup();
         ParallelGroup phGroup =  robotDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING);
+       
+        
+        GroupLayout.SequentialGroup vGroup = robotDataPanelLayout.createSequentialGroup(); 
         hGroup.addGroup(phGroup);
-        
-        GroupLayout.SequentialGroup vGroup = robotDataPanelLayout.createSequentialGroup();
-        ParallelGroup pvGroup =  robotDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING);
-        vGroup.addGroup(pvGroup);
-        
         phGroup.addGap(0, 0, Short.MAX_VALUE);
-        //phGroup.addGroup(robotDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING));
         
-      
-        
-       //for
         for(int i = 0; i < robotPanels.length; i++) {
         	robotPanels[i] = new RobotPanel(i);
 	        phGroup.addComponent(robotPanels[i], javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE);
-	        pvGroup.addComponent(robotPanels[i], javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE);
-	        pvGroup.addGap(2, 2, 2);
+	        vGroup.addComponent(robotPanels[i], javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE);
+	        vGroup.addGap(2, 2, 2);
         }
         phGroup.addGap(0, 0, Short.MAX_VALUE);
-        pvGroup .addGap(0, 0, Short.MAX_VALUE);
+        vGroup .addGap(0, 0, Short.MAX_VALUE);
         
        
         robotDataPanelLayout.setHorizontalGroup( robotDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(hGroup));
         robotDataPanelLayout.setVerticalGroup( robotDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(vGroup));
 
-/*
-        robotDataPanelLayout.setHorizontalGroup(
-                robotDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(robotDataPanelLayout.createSequentialGroup()
-                	.addGap(0, 0, Short.MAX_VALUE)
-                	.addGroup(robotDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(robotPanel0, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(robotPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(robotPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(robotPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(robotPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(robotPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(robotPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(robotPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(robotPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(robotPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(robotPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(robotPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
-        );
-        robotDataPanelLayout.
-        robotDataPanelLayout.setVerticalGroup(
-            robotDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(robotDataPanelLayout.createSequentialGroup()
-            		.addComponent(robotPanel0, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            		.addGap(2, 2, 2)
-                    .addComponent(robotPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(2, 2, 2)
-                    .addComponent(robotPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(2, 2, 2)
-                    .addComponent(robotPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(2, 2, 2)
-                    .addComponent(robotPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(2, 2, 2)
-                    .addComponent(robotPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(2, 2, 2)
-                    .addComponent(robotPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(2, 2, 2)
-                    .addComponent(robotPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(2, 2, 2)
-                    .addComponent(robotPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(2, 2, 2)
-                    .addComponent(robotPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(2, 2, 2)
-                    .addComponent(robotPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(2, 2, 2)
-                    .addComponent(robotPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE))
-        );
-*/
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Game Status"));
 
         timePlayedField.setEditable(false);
@@ -473,20 +399,6 @@ public class GUI extends javax.swing.JFrame implements Observer{
     private javax.swing.JButton startButton;
     private javax.swing.JButton terminateButton;
     private javax.swing.JTextPane timePlayedField;
-    /*
-    private RobotPanel robotPanel0;
-    private RobotPanel robotPanel1;
-    private RobotPanel robotPanel2;
-    private RobotPanel robotPanel3;
-    private RobotPanel robotPanel4;
-    private RobotPanel robotPanel5;
-    private RobotPanel robotPanel6;
-    private RobotPanel robotPanel7;
-    private RobotPanel robotPanel8;
-    private RobotPanel robotPanel9;
-    private RobotPanel robotPanel10;
-    private RobotPanel robotPanel11;*/
-
     private RobotPanel[] robotPanels;
     	
     // End of variables declaration//GEN-END:variables
