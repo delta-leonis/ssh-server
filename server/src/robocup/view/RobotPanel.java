@@ -26,7 +26,10 @@ public class RobotPanel extends JPanel{
     
     public void setToDefault(){
     	status = "offline";
+    	robotStatusField.setText(status);
+    	robotPositionField.setText("null");
     	role = "unavailable";
+    	robotBehaviorField.setText(role);
     }
     
     public void setrobotId(int id){
@@ -43,11 +46,15 @@ public class RobotPanel extends JPanel{
     	this.status = status;
     }
     
-    private void setPoint(Point point){
+    public void setPoint(Point point){
     	robotPositionField.setText(point.toString());
     	this.point = point;
     }
     
+    public void setRole(String role){
+    	this.role = role;
+    	robotBehaviorField.setText(role);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
