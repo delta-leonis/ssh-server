@@ -72,8 +72,8 @@ public class PathPlanner {
 
 		for (Robot r : objects) {
 			if(r.getPosition() != null) {
-				Rectangle2D rect = new Rectangle2D.Float(r.getPosition().getX(), r.getPosition().getY(), 300, 300);
-				
+				Rectangle2D rect = new Rectangle2D.Float(r.getPosition().getX(), r.getPosition().getY(), 360, 360);
+
 				if(line.intersects(rect) && r.getRobotID() != robotId)
 					return r.getPosition();
 			}
