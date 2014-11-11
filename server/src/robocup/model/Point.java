@@ -80,4 +80,9 @@ public class Point {
 		return "Point [x=" + x + ", y=" + y + "]";
 	}
 
+	@Override
+	public boolean equals(Object point) {
+		Point p = (Point) point;
+		return p.getX() == x && p.getY() == y;
+	}
 }
