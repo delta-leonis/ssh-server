@@ -174,10 +174,18 @@ public class DijkstraPathPlanner {
 	private void generateObjectList(int robotId) {
 		for(Robot r : world.getAlly().getRobots())
 			if(r.getRobotID() != robotId)
-				objects.add(new Rectangle2D.Float(r.getPosition().getX() - 199, r.getPosition().getY() - 199, 398, 398));
+				objects.add(new Rectangle2D.Float(
+						r.getPosition().getX() - (DISTANCE_TO_ROBOT - 1), 
+						r.getPosition().getY() - (DISTANCE_TO_ROBOT - 1), 
+						DISTANCE_TO_ROBOT * 2 - 2, 
+						DISTANCE_TO_ROBOT * 2 - 2));
 
 		for(Robot r : world.getEnemy().getRobots())
-			objects.add(new Rectangle2D.Float(r.getPosition().getX() - 199, r.getPosition().getY() - 199, 398, 398));
+			objects.add(new Rectangle2D.Float(
+					r.getPosition().getX() - (DISTANCE_TO_ROBOT - 1), 
+					r.getPosition().getY() - (DISTANCE_TO_ROBOT - 1), 
+					DISTANCE_TO_ROBOT * 2 - 2, 
+					DISTANCE_TO_ROBOT * 2 - 2));
 	}
 
 	/**
