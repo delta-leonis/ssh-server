@@ -1,6 +1,7 @@
 package robocup.view;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.TimeUnit;
@@ -64,7 +65,7 @@ public class GUI extends javax.swing.JFrame implements Observer {
 	// <editor-fold defaultstate="collapsed"
 	// desc="Generated Code">//GEN-BEGIN:initComponents
 	private void initComponents() {
-		
+
 		startTime = System.currentTimeMillis();
 
 		robotDataPanel = new javax.swing.JPanel();
@@ -98,47 +99,35 @@ public class GUI extends javax.swing.JFrame implements Observer {
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-		robotDataPanel.setBorder(javax.swing.BorderFactory
-				.createTitledBorder("Robot Data"));
+		robotDataPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Robot Data"));
 
-		javax.swing.GroupLayout robotDataPanelLayout = new javax.swing.GroupLayout(
-				robotDataPanel);
+		javax.swing.GroupLayout robotDataPanelLayout = new javax.swing.GroupLayout(robotDataPanel);
 		robotDataPanel.setLayout(robotDataPanelLayout);
 
-		GroupLayout.SequentialGroup hGroup = robotDataPanelLayout
-				.createSequentialGroup();
-		ParallelGroup phGroup = robotDataPanelLayout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING);
+		GroupLayout.SequentialGroup hGroup = robotDataPanelLayout.createSequentialGroup();
+		ParallelGroup phGroup = robotDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING);
 
-		GroupLayout.SequentialGroup vGroup = robotDataPanelLayout
-				.createSequentialGroup();
+		GroupLayout.SequentialGroup vGroup = robotDataPanelLayout.createSequentialGroup();
 		hGroup.addGroup(phGroup);
 		phGroup.addGap(0, 0, Short.MAX_VALUE);
 
 		for (int i = 0; i < robotPanels.length; i++) {
 			robotPanels[i] = new RobotPanel(i);
-			phGroup.addComponent(robotPanels[i],
-					javax.swing.GroupLayout.PREFERRED_SIZE,
-					javax.swing.GroupLayout.DEFAULT_SIZE,
-					javax.swing.GroupLayout.PREFERRED_SIZE);
-			vGroup.addComponent(robotPanels[i],
-					javax.swing.GroupLayout.PREFERRED_SIZE,
-					javax.swing.GroupLayout.DEFAULT_SIZE,
-					javax.swing.GroupLayout.PREFERRED_SIZE);
+			phGroup.addComponent(robotPanels[i], javax.swing.GroupLayout.PREFERRED_SIZE,
+					javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE);
+			vGroup.addComponent(robotPanels[i], javax.swing.GroupLayout.PREFERRED_SIZE,
+					javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE);
 			vGroup.addGap(2, 2, 2);
 		}
 		phGroup.addGap(0, 0, Short.MAX_VALUE);
 		vGroup.addGap(0, 0, Short.MAX_VALUE);
 
-		robotDataPanelLayout.setHorizontalGroup(robotDataPanelLayout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(hGroup));
-		robotDataPanelLayout.setVerticalGroup(robotDataPanelLayout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(vGroup));
+		robotDataPanelLayout.setHorizontalGroup(robotDataPanelLayout.createParallelGroup(
+				javax.swing.GroupLayout.Alignment.LEADING).addGroup(hGroup));
+		robotDataPanelLayout.setVerticalGroup(robotDataPanelLayout.createParallelGroup(
+				javax.swing.GroupLayout.Alignment.LEADING).addGroup(vGroup));
 
-		jPanel2.setBorder(javax.swing.BorderFactory
-				.createTitledBorder("Game Status"));
+		jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Game Status"));
 
 		timePlayedField.setEditable(false);
 		jScrollPane1.setViewportView(timePlayedField);
@@ -165,69 +154,42 @@ public class GUI extends javax.swing.JFrame implements Observer {
 
 		jLabel7.setText("Field Half");
 
-		javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(
-				jPanel2);
+		javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
 		jPanel2.setLayout(jPanel2Layout);
+		jPanel2Layout.setHorizontalGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(
+						jPanel2Layout
+								.createSequentialGroup()
+								.addContainerGap()
+								.addGroup(
+										jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+												.addComponent(jLabel1).addComponent(jLabel2).addComponent(jLabel3)
+												.addComponent(jLabel4).addComponent(jLabel7))
+								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+								.addGroup(
+										jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+												.addComponent(jScrollPane2).addComponent(jScrollPane1)
+												.addComponent(jScrollPane3).addComponent(jScrollPane4)
+												.addComponent(jScrollPane5)).addContainerGap()));
 		jPanel2Layout
-				.setHorizontalGroup(jPanel2Layout
-						.createParallelGroup(
-								javax.swing.GroupLayout.Alignment.LEADING)
-						.addGroup(
-								jPanel2Layout
-										.createSequentialGroup()
-										.addContainerGap()
-										.addGroup(
-												jPanel2Layout
-														.createParallelGroup(
-																javax.swing.GroupLayout.Alignment.LEADING)
-														.addComponent(jLabel1)
-														.addComponent(jLabel2)
-														.addComponent(jLabel3)
-														.addComponent(jLabel4)
-														.addComponent(jLabel7))
-										.addPreferredGap(
-												javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-										.addGroup(
-												jPanel2Layout
-														.createParallelGroup(
-																javax.swing.GroupLayout.Alignment.LEADING)
-														.addComponent(
-																jScrollPane2)
-														.addComponent(
-																jScrollPane1)
-														.addComponent(
-																jScrollPane3)
-														.addComponent(
-																jScrollPane4)
-														.addComponent(
-																jScrollPane5))
-										.addContainerGap()));
-		jPanel2Layout
-				.setVerticalGroup(jPanel2Layout
-						.createParallelGroup(
-								javax.swing.GroupLayout.Alignment.LEADING)
+				.setVerticalGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jPanel2Layout
 										.createSequentialGroup()
 										.addGap(0, 11, Short.MAX_VALUE)
 										.addGroup(
 												jPanel2Layout
-														.createParallelGroup(
-																javax.swing.GroupLayout.Alignment.LEADING)
+														.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 														.addComponent(jLabel7)
-														.addComponent(
-																jScrollPane5,
+														.addComponent(jScrollPane5,
 																javax.swing.GroupLayout.PREFERRED_SIZE,
 																javax.swing.GroupLayout.DEFAULT_SIZE,
 																javax.swing.GroupLayout.PREFERRED_SIZE))
-										.addPreferredGap(
-												javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
 										.addGroup(
 												jPanel2Layout
-														.createParallelGroup(
-																javax.swing.GroupLayout.Alignment.LEADING)
-														.addComponent(
-																jScrollPane1,
+														.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+														.addComponent(jScrollPane1,
 																javax.swing.GroupLayout.PREFERRED_SIZE,
 																javax.swing.GroupLayout.DEFAULT_SIZE,
 																javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -235,46 +197,36 @@ public class GUI extends javax.swing.JFrame implements Observer {
 										.addGap(10, 10, 10)
 										.addGroup(
 												jPanel2Layout
-														.createParallelGroup(
-																javax.swing.GroupLayout.Alignment.LEADING)
-														.addComponent(
-																jScrollPane2,
+														.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+														.addComponent(jScrollPane2,
 																javax.swing.GroupLayout.PREFERRED_SIZE,
 																javax.swing.GroupLayout.DEFAULT_SIZE,
 																javax.swing.GroupLayout.PREFERRED_SIZE)
 														.addComponent(jLabel2))
-										.addPreferredGap(
-												javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
 										.addGroup(
 												jPanel2Layout
-														.createParallelGroup(
-																javax.swing.GroupLayout.Alignment.LEADING)
-														.addComponent(
-																jScrollPane3,
+														.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+														.addComponent(jScrollPane3,
 																javax.swing.GroupLayout.PREFERRED_SIZE,
 																javax.swing.GroupLayout.DEFAULT_SIZE,
 																javax.swing.GroupLayout.PREFERRED_SIZE)
 														.addComponent(jLabel3))
-										.addPreferredGap(
-												javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
 										.addGroup(
 												jPanel2Layout
-														.createParallelGroup(
-																javax.swing.GroupLayout.Alignment.LEADING)
-														.addComponent(
-																jScrollPane4,
+														.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+														.addComponent(jScrollPane4,
 																javax.swing.GroupLayout.PREFERRED_SIZE,
 																javax.swing.GroupLayout.DEFAULT_SIZE,
 																javax.swing.GroupLayout.PREFERRED_SIZE)
 														.addComponent(jLabel4))));
 
-		jPanel3.setBorder(javax.swing.BorderFactory
-				.createTitledBorder("Settings"));
+		jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Settings"));
 
 		jLabel5.setText("Keeper Id");
 
-		fieldHalfSpinner.setModel(new javax.swing.SpinnerListModel(
-				new String[] { "Left", "Right" }));
+		fieldHalfSpinner.setModel(new javax.swing.SpinnerListModel(new String[] { "Left", "Right" }));
 
 		jLabel6.setText("Field Half");
 
@@ -286,32 +238,24 @@ public class GUI extends javax.swing.JFrame implements Observer {
 			}
 		});
 
-		keeperIdSpinner
-				.setModel(new javax.swing.SpinnerNumberModel(0, 0, 12, 1));
+		keeperIdSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, 12, 1));
 
-		javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(
-				jPanel3);
+		javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
 		jPanel3.setLayout(jPanel3Layout);
 		jPanel3Layout
 				.setHorizontalGroup(jPanel3Layout
-						.createParallelGroup(
-								javax.swing.GroupLayout.Alignment.LEADING)
+						.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jPanel3Layout
 										.createSequentialGroup()
 										.addContainerGap()
 										.addGroup(
 												jPanel3Layout
-														.createParallelGroup(
-																javax.swing.GroupLayout.Alignment.LEADING)
+														.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 														.addGroup(
-																jPanel3Layout
-																		.createSequentialGroup()
-																		.addGap(0,
-																				0,
-																				Short.MAX_VALUE)
-																		.addComponent(
-																				setButton))
+																jPanel3Layout.createSequentialGroup()
+																		.addGap(0, 0, Short.MAX_VALUE)
+																		.addComponent(setButton))
 														.addGroup(
 																jPanel3Layout
 																		.createSequentialGroup()
@@ -319,57 +263,39 @@ public class GUI extends javax.swing.JFrame implements Observer {
 																				jPanel3Layout
 																						.createParallelGroup(
 																								javax.swing.GroupLayout.Alignment.LEADING)
-																						.addComponent(
-																								jLabel5)
-																						.addComponent(
-																								jLabel6))
-																		.addGap(36,
-																				36,
-																				36)
+																						.addComponent(jLabel5)
+																						.addComponent(jLabel6))
+																		.addGap(36, 36, 36)
 																		.addGroup(
 																				jPanel3Layout
 																						.createParallelGroup(
 																								javax.swing.GroupLayout.Alignment.LEADING)
-																						.addComponent(
-																								fieldHalfSpinner)
-																						.addComponent(
-																								keeperIdSpinner))))
+																						.addComponent(fieldHalfSpinner)
+																						.addComponent(keeperIdSpinner))))
 										.addContainerGap()));
-		jPanel3Layout
-				.setVerticalGroup(jPanel3Layout
-						.createParallelGroup(
-								javax.swing.GroupLayout.Alignment.LEADING)
-						.addGroup(
-								jPanel3Layout
-										.createSequentialGroup()
-										.addContainerGap(17, Short.MAX_VALUE)
-										.addGroup(
-												jPanel3Layout
-														.createParallelGroup(
-																javax.swing.GroupLayout.Alignment.LEADING)
-														.addComponent(jLabel5)
-														.addComponent(
-																keeperIdSpinner,
-																javax.swing.GroupLayout.PREFERRED_SIZE,
-																javax.swing.GroupLayout.DEFAULT_SIZE,
-																javax.swing.GroupLayout.PREFERRED_SIZE))
-										.addGap(13, 13, 13)
-										.addGroup(
-												jPanel3Layout
-														.createParallelGroup(
-																javax.swing.GroupLayout.Alignment.LEADING)
-														.addComponent(
-																fieldHalfSpinner,
-																javax.swing.GroupLayout.PREFERRED_SIZE,
-																javax.swing.GroupLayout.DEFAULT_SIZE,
-																javax.swing.GroupLayout.PREFERRED_SIZE)
-														.addComponent(jLabel6))
-										.addPreferredGap(
-												javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-										.addComponent(setButton)));
+		jPanel3Layout.setVerticalGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(
+						jPanel3Layout
+								.createSequentialGroup()
+								.addContainerGap(17, Short.MAX_VALUE)
+								.addGroup(
+										jPanel3Layout
+												.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+												.addComponent(jLabel5)
+												.addComponent(keeperIdSpinner, javax.swing.GroupLayout.PREFERRED_SIZE,
+														javax.swing.GroupLayout.DEFAULT_SIZE,
+														javax.swing.GroupLayout.PREFERRED_SIZE))
+								.addGap(13, 13, 13)
+								.addGroup(
+										jPanel3Layout
+												.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+												.addComponent(fieldHalfSpinner, javax.swing.GroupLayout.PREFERRED_SIZE,
+														javax.swing.GroupLayout.DEFAULT_SIZE,
+														javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jLabel6))
+								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+								.addComponent(setButton)));
 
-		jPanel4.setBorder(javax.swing.BorderFactory
-				.createTitledBorder("Controls"));
+		jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Controls"));
 
 		startButton.setText("Start");
 		startButton.addActionListener(new java.awt.event.ActionListener() {
@@ -392,132 +318,76 @@ public class GUI extends javax.swing.JFrame implements Observer {
 			}
 		});
 
-		javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(
-				jPanel4);
+		javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
 		jPanel4.setLayout(jPanel4Layout);
-		jPanel4Layout
-				.setHorizontalGroup(jPanel4Layout
-						.createParallelGroup(
-								javax.swing.GroupLayout.Alignment.LEADING)
-						.addGroup(
-								jPanel4Layout
-										.createSequentialGroup()
-										.addGroup(
-												jPanel4Layout
-														.createParallelGroup(
-																javax.swing.GroupLayout.Alignment.LEADING)
-														.addGroup(
-																jPanel4Layout
-																		.createSequentialGroup()
-																		.addGap(8,
-																				8,
-																				8)
-																		.addComponent(
-																				startButton)
-																		.addGap(18,
-																				18,
-																				18)
-																		.addComponent(
-																				terminateButton))
-														.addGroup(
-																jPanel4Layout
-																		.createSequentialGroup()
-																		.addContainerGap()
-																		.addComponent(
-																				kickButton)))
-										.addGap(0, 0, Short.MAX_VALUE)));
-		jPanel4Layout
-				.setVerticalGroup(jPanel4Layout
-						.createParallelGroup(
-								javax.swing.GroupLayout.Alignment.LEADING)
-						.addGroup(
-								jPanel4Layout
-										.createSequentialGroup()
-										.addContainerGap(15, Short.MAX_VALUE)
-										.addComponent(kickButton)
-										.addPreferredGap(
-												javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-										.addGroup(
-												jPanel4Layout
-														.createParallelGroup(
-																javax.swing.GroupLayout.Alignment.BASELINE)
-														.addComponent(
-																startButton)
-														.addComponent(
-																terminateButton))
-										.addContainerGap()));
-
-		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(
-				getContentPane());
-		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(layout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+		jPanel4Layout.setHorizontalGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 				.addGroup(
-						layout.createSequentialGroup()
-								.addContainerGap(35, Short.MAX_VALUE)
-								.addComponent(robotDataPanel,
-										javax.swing.GroupLayout.PREFERRED_SIZE,
-										javax.swing.GroupLayout.DEFAULT_SIZE,
-										javax.swing.GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(
-										javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+						jPanel4Layout
+								.createSequentialGroup()
 								.addGroup(
-										layout.createParallelGroup(
-												javax.swing.GroupLayout.Alignment.LEADING,
-												false)
-												.addComponent(
-														jPanel2,
-														javax.swing.GroupLayout.DEFAULT_SIZE,
-														javax.swing.GroupLayout.DEFAULT_SIZE,
-														Short.MAX_VALUE)
-												.addComponent(
-														jPanel3,
-														javax.swing.GroupLayout.DEFAULT_SIZE,
-														javax.swing.GroupLayout.DEFAULT_SIZE,
-														Short.MAX_VALUE)
-												.addComponent(
-														jPanel4,
-														javax.swing.GroupLayout.DEFAULT_SIZE,
-														javax.swing.GroupLayout.DEFAULT_SIZE,
-														Short.MAX_VALUE))
-								.addContainerGap()));
-		layout.setVerticalGroup(layout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(
-						layout.createSequentialGroup()
-								.addContainerGap()
-								.addGroup(
-										layout.createParallelGroup(
-												javax.swing.GroupLayout.Alignment.LEADING)
+										jPanel4Layout
+												.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 												.addGroup(
-														layout.createSequentialGroup()
-																.addComponent(
-																		jPanel2,
-																		javax.swing.GroupLayout.PREFERRED_SIZE,
-																		javax.swing.GroupLayout.DEFAULT_SIZE,
-																		javax.swing.GroupLayout.PREFERRED_SIZE)
-																.addPreferredGap(
-																		javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-																.addComponent(
-																		jPanel3,
-																		javax.swing.GroupLayout.PREFERRED_SIZE,
-																		javax.swing.GroupLayout.DEFAULT_SIZE,
-																		javax.swing.GroupLayout.PREFERRED_SIZE)
-																.addPreferredGap(
-																		javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-																		javax.swing.GroupLayout.DEFAULT_SIZE,
-																		Short.MAX_VALUE)
-																.addComponent(
-																		jPanel4,
-																		javax.swing.GroupLayout.PREFERRED_SIZE,
-																		javax.swing.GroupLayout.DEFAULT_SIZE,
-																		javax.swing.GroupLayout.PREFERRED_SIZE))
-												.addComponent(
-														robotDataPanel,
-														javax.swing.GroupLayout.DEFAULT_SIZE,
-														javax.swing.GroupLayout.DEFAULT_SIZE,
-														Short.MAX_VALUE))
+														jPanel4Layout.createSequentialGroup().addGap(8, 8, 8)
+																.addComponent(startButton).addGap(18, 18, 18)
+																.addComponent(terminateButton))
+												.addGroup(
+														jPanel4Layout.createSequentialGroup().addContainerGap()
+																.addComponent(kickButton)))
+								.addGap(0, 0, Short.MAX_VALUE)));
+		jPanel4Layout.setVerticalGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(
+						jPanel4Layout
+								.createSequentialGroup()
+								.addContainerGap(15, Short.MAX_VALUE)
+								.addComponent(kickButton)
+								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+								.addGroup(
+										jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+												.addComponent(startButton).addComponent(terminateButton))
 								.addContainerGap()));
+
+		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+				layout.createSequentialGroup()
+						.addContainerGap(35, Short.MAX_VALUE)
+						.addComponent(robotDataPanel, javax.swing.GroupLayout.PREFERRED_SIZE,
+								javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+						.addGroup(
+								layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+										.addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE,
+												javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+										.addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE,
+												javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+										.addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE,
+												javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addContainerGap()));
+		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+				layout.createSequentialGroup()
+						.addContainerGap()
+						.addGroup(
+								layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+										.addGroup(
+												layout.createSequentialGroup()
+														.addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE,
+																javax.swing.GroupLayout.DEFAULT_SIZE,
+																javax.swing.GroupLayout.PREFERRED_SIZE)
+														.addPreferredGap(
+																javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+														.addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE,
+																javax.swing.GroupLayout.DEFAULT_SIZE,
+																javax.swing.GroupLayout.PREFERRED_SIZE)
+														.addPreferredGap(
+																javax.swing.LayoutStyle.ComponentPlacement.RELATED,
+																javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+														.addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE,
+																javax.swing.GroupLayout.DEFAULT_SIZE,
+																javax.swing.GroupLayout.PREFERRED_SIZE))
+										.addComponent(robotDataPanel, javax.swing.GroupLayout.DEFAULT_SIZE,
+												javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addContainerGap()));
 
 		// TODO: generate full list of robots in gui with their respective Id,
 		// state, position and assigned behavior
@@ -544,8 +414,7 @@ public class GUI extends javax.swing.JFrame implements Observer {
 
 	private void kickButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_kickButtonActionPerformed
 		System.out.println("Kick");
-		ComInterface.getInstance(RobotCom.class).send(1,
-				robocup.Main.TEST_ROBOT_ID, 0, 0, 0, 0, 0, 40, false);
+		ComInterface.getInstance(RobotCom.class).send(1, robocup.Main.TEST_ROBOT_ID, 0, 0, 0, 0, 0, 40, false);
 	}// GEN-LAST:event_kickButtonActionPerformed
 
 	private void startPressed() {
@@ -642,26 +511,51 @@ public class GUI extends javax.swing.JFrame implements Observer {
 	public void update(Observable arg0, Object arg1) {
 		if (arg0.equals(world)) {
 
-			ArrayList<Robot> robots = world.getAlly().getRobots();
-			for(RobotPanel robotPanel : robotPanels){
-				robotPanel.setToDefault();
+			//
+			long timePassed = ((System.currentTimeMillis() - startTime));
+
+			boolean[] robotUpdated = new boolean[12];
+
+			Arrays.fill(robotUpdated, false);
+			for (Robot robot : world.getAlly().getRobots()) {
+				System.out.println(robot.getRobotID() + "    pos:" + robot.getPosition());
+				robotUpdated[robot.getRobotID()] = true;
 			}
-			for (Robot robot : robots) {
-				int id = robot.getRobotID();
-				robotPanels[id].setPoint(robot.getPosition());
-				robotPanels[id].setStatus("online");
-				robotPanels[id].setRole("temp unavailable");
+
+			if (timePassed % 25 == 0) {
+				for (int i = 0; i < robotPanels.length; i++) {
+					// if robotpanelid also in list of robot id's then set their
+					// status else set to default
+
+					if (robotUpdated[i]) {
+						// update goed
+						Robot robot = world.getAlly().getRobotByID(i);
+						robotPanels[i].setPoint(robot.getPosition());
+						robotPanels[i].setStatus("online");
+						robotPanels[i].setRole("unavailable");
+					} else {
+						// update is niet langer verbonden
+						robotPanels[i].setToDefault();
+					}
+
+				}
+
 			}
-			
-			
-			timePlayedField.setText("" + (System.currentTimeMillis() - startTime));
+			timePlayedField.setText("" + ((System.currentTimeMillis() - startTime) / 1000));
 			fieldHalfField.setText("null");
-			goalsField.setText(""+world.getAlly().getScore());
-			refereeStateField.setText(""+ world.getReferee().getStage().name());
+			goalsField.setText("" + world.getAlly().getScore());
+			
+			
+		//	System.out.println(world.getReferee().);;
+			// refereeStateField.setText(""+
+			// world.getReferee().getStage().name());
 
 			// setRobotNumber(int number)
 			// TODO set the game status data
 			// TODO set the status for all robots
+			//System.out.println(" hoi," + world.getReferee().getl .getYellow().getGoalie() + " command: " + message.getYellow().getRedCards());
+			
+			
 
 		}
 	}
