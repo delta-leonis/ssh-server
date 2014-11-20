@@ -50,6 +50,7 @@ public class Keeper extends LowLevelBehavior {
 		this.goToKick = goToKick;
 		this.ballPosition = ballPosition;
 		this.keeperPosition = keeperPosition;
+		;
 	}
 
 	@Override

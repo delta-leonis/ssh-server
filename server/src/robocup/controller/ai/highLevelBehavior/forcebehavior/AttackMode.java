@@ -44,7 +44,7 @@ public class AttackMode extends Mode {
 		System.out.println("attackmode: updateExecuters");
 		for (RobotExecuter executer : executers) {
 			
-			if(executer.getRobot().getRobotID() == 3) {
+			if(executer.getRobot().getRobotID() == 1) {
 				System.out.println(executer.getRobot().getRobotID() + "  is nu keeper");
 				updateExecuter(executer, roles.KEEPER, false);
 			}

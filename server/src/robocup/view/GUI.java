@@ -406,28 +406,24 @@ public class GUI extends javax.swing.JFrame implements Observer {
 	}// GEN-LAST:event_terminateButtonActionPerformed
 
 	private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_startButtonActionPerformed
-		if (startButton.getText().equals("Start"))
-			startPressed();
-		else
-			stopPressed();
+		boolean startAction = false;
+		if (startButton.getText().equals("Start")) {
+			startAction = true;
+		}
+		
+		if(startAction){
+			startButton.setText("Stop");
+		 } else {
+			 startButton.setText("Start");
+		 }
+		
+		world.getReferee().setStart(startAction);
 	}// GEN-LAST:event_startButtonActionPerformed
 
 	private void kickButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_kickButtonActionPerformed
 		System.out.println("Kick");
 		ComInterface.getInstance(RobotCom.class).send(1, robocup.Main.TEST_ROBOT_ID, 0, 0, 0, 0, 0, 40, false);
 	}// GEN-LAST:event_kickButtonActionPerformed
-
-	private void startPressed() {
-		world.getReferee().setStart(true);
-		// TODO add start button code here
-		this.setStart(true);
-	}
-
-	private void stopPressed() {
-		world.getReferee().setStart(false);
-		// TODO add stop button code here
-		this.setStart(false);
-	}
 
 	// Variables declaration - do not modify//GEN-BEGIN:variables
 	private javax.swing.JTextPane fieldHalfField;
@@ -495,18 +491,6 @@ public class GUI extends javax.swing.JFrame implements Observer {
 		goalsField.setText(Integer.toString(number));
 	}
 
-	/**
-	 * isStart true if program is started and can be stopped
-	 * 
-	 * @param isStart
-	 */
-	private void setStart(boolean isStart) {
-		// if(isStart){
-		// startButton.setText("Stop");
-		// } else
-		// startButton.setText("Start");
-	}
-
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		if (arg0.equals(world)) {
@@ -518,7 +502,7 @@ public class GUI extends javax.swing.JFrame implements Observer {
 
 			Arrays.fill(robotUpdated, false);
 			for (Robot robot : world.getAlly().getRobots()) {
-				System.out.println(robot.getRobotID() + "    pos:" + robot.getPosition());
+				//System.out.println(robot.getRobotID() + "    pos:" + robot.getPosition());
 				robotUpdated[robot.getRobotID()] = true;
 			}
 
@@ -533,6 +517,7 @@ public class GUI extends javax.swing.JFrame implements Observer {
 						robotPanels[i].setPoint(robot.getPosition());
 						robotPanels[i].setStatus("online");
 						robotPanels[i].setRole("unavailable");
+						
 					} else {
 						// update is niet langer verbonden
 						robotPanels[i].setToDefault();
