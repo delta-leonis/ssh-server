@@ -27,8 +27,12 @@ public class RefereeHandler {
 		// Update Teams
 		world.getTeamByColor(Color.valueOf("BLUE")).update(message.getBlue().getName(), message.getBlue().getScore(),
 				message.getBlue().getRedCards(), message.getBlue().getYellowCards(), message.getBlue().getTimeouts());
-		world.getTeamByColor(Color.valueOf("BLUE")).update(message.getYellow().getName(),
+		world.getTeamByColor(Color.valueOf("YELLOW")).update(message.getYellow().getName(),
 				message.getYellow().getScore(), message.getYellow().getRedCards(),
 				message.getYellow().getYellowCards(), message.getYellow().getTimeouts());
+		
+
+		
+		//System.out.println(" hoi," + world.getReferee().getl .getYellow().getGoalie() + " command: " + message.getYellow().getRedCards());
 	}
 }
