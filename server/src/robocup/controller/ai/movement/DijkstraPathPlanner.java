@@ -10,7 +10,7 @@ import robocup.model.World;
 
 public class DijkstraPathPlanner {
 	
-	private static final int DISTANCE_TO_ROBOT = 200;
+	private static final int DISTANCE_TO_ROBOT = 180;
 	private World world;
 	private ArrayList<Rectangle2D> objects;
 	private ArrayList<Vertex> vertices;
@@ -44,7 +44,7 @@ public class DijkstraPathPlanner {
 		public Vertex getPrevious() { return previous; }
 	    @Override
 	    public boolean equals(Object vertex) {
-	        return ((Vertex)vertex).getPosition().getX() == position.getX() && ((Vertex)vertex).getPosition().getY() == position.getY();
+	        return position.equals(((Vertex) vertex).getPosition());
 	    }
 	    @Override
 	    public String toString() {
@@ -235,9 +235,7 @@ public class DijkstraPathPlanner {
 	 * @return square distance
 	 */
 	private int getDistance(Vertex vertex1, Vertex vertex2) {
-        float dx = vertex1.getPosition().getX() - vertex2.getPosition().getX();
-        float dy = vertex1.getPosition().getY() - vertex2.getPosition().getY();
-        return (int) Math.sqrt(dx*dx + dy*dy);
+        return (int) vertex1.getPosition().getDeltaDistance(vertex2.getPosition());
 	}
 
 	/**
