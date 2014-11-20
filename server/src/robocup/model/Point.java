@@ -77,7 +77,7 @@ public class Point {
 	 */
 	@Override
 	public String toString() {
-		return "Point [x=" + x + ", y=" + y + "]";
+		return "Point [x=" + Math.round(x) + ", y=" +Math.round(y) + "]";
 	}
 
 }
