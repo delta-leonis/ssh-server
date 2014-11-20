@@ -151,7 +151,7 @@ public class DetectionHandler {
 		//Arrays.fill(robotUpdated, false);
 		
 		
-		
+	
 		for (SSL_DetectionRobot robot : yellowList) {
 			
 			// Robot valid?
@@ -227,12 +227,24 @@ public class DetectionHandler {
 			*/
 		}
 		
+		
+		//!TODO, zorgen dat straks op alle 4 de camera's een gemeenschappelijk check zit, zodat een robot zichtbaar op cam 1 niet door cam 3
+		// uit het team gegooid wordt
+		Team team = world.getTeamByColor(Color.YELLOW);
 		if(camNo == 1) {
 			//als na de loop robot niet geupdate is, reset de timeout naar 5 en de update flag terug naar false
 			for (Entry<Integer, Boolean> cursor : robotUpdatedCamera1.entrySet()) {
 				if(cursor.getValue() == false) {
 					robotTimeoutCamera1.put(cursor.getKey(), 5);
-					System.out.println("Robot: " + cursor.getKey() + "  is kwijt" );
+//					System.out.println("Robot: " + cursor.getKey() + "  is kwijt" );
+					
+					Iterator<Robot> it = team.getRobots().iterator();
+					while(it.hasNext()) {
+						if(it.next().getRobotID() == cursor.getKey()) {
+							it.remove();
+						}
+					}
+
 				}
 				
 				robotUpdatedCamera1.put(cursor.getKey(), false);
@@ -276,17 +288,17 @@ public class DetectionHandler {
 		Robot robot = t.getRobotByID(robotMessage.getRobotId());
 		boolean robotAddedPending = false;
 		
-		
+		//TODO change hardcoded values
 		if(robotMessage.getRobotId() != 1 && robotMessage.getRobotId() != 3) {
-			System.out.println("id: "  + robotMessage.getRobotId() + " strength: "  +robotMessage.getConfidence());
-			System.out.println(robotMessage);
+//			System.out.println("id: "  + robotMessage.getRobotId() + " strength: "  +robotMessage.getConfidence());
+//			System.out.println(robotMessage);
 		}
 		
 
 		
 		
 		if (robot == null) { // Create robot object
-			System.out.println(robotMessage.getRobotId() + " bestaat niet??");
+//			System.out.println(robotMessage.getRobotId() + " bestaat niet??");
 			if (world.getOwnTeamColor().equals(color)) {
 				// TODO: How to set/determine channel of robot.
 				// TODO: What to do with diameter.
