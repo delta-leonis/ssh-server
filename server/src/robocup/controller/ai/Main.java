@@ -15,6 +15,7 @@ import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.LowLevelBehavior;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
+import robocup.filter.Kalman;
 import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.model.Team;
@@ -33,6 +34,7 @@ public class Main implements Observer {
 	public Main() {
 		world = World.getInstance();
 		world.addObserver(this);
+		//Kalman k = new Kalman();
 
 
 		initExecutors();
