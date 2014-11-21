@@ -20,6 +20,7 @@ public class GotoPosition {
 	private int kick = 0;
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private PathPlanner planner = new PathPlanner();
+	private DijkstraPathPlanner dplanner = new DijkstraPathPlanner();
 
 	/**
 	 * Go to target position
@@ -159,6 +160,8 @@ public class GotoPosition {
 			robot.setOnSight(true);
 			
 			//destination = planner.getNextRoutePoint(robot.getPosition(), destination, robot.getRobotID());
+			// TO-DO add null check for route
+//			destination = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotID()).get(0);
 			
 			int targetDirection = rotationToDest(this.target);
 			int travelDistance = getDistance();
