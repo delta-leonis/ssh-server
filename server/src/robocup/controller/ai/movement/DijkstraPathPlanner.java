@@ -69,9 +69,6 @@ public class DijkstraPathPlanner {
 			route.push(destination);
 			return route;
 		}
-
-		generateVertices();
-		removeCollidingVertices();
 		
 		Vertex source = new Vertex(beginNode);
 		source.setDist(0);
@@ -79,6 +76,10 @@ public class DijkstraPathPlanner {
 		
 		Vertex dest = new Vertex(destination);
 		vertices.add(dest);
+
+		generateVertices();
+
+		removeCollidingVertices();
 		
 		generateNeighbours();
 		
@@ -113,7 +114,7 @@ public class DijkstraPathPlanner {
 	 * @param dest
 	 */
 	private void calculatePath(Vertex source, Vertex u, Vertex dest) {
-		while(vertices.size() > 0) {
+		for(int i = 0; i < 50 && vertices.size() > 0; i++) {
 			if(!vertices.contains(source)) {
 				u = getMinDistNeighbour(u);
 			}
