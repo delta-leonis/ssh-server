@@ -8,6 +8,10 @@ import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.model.World;
 
+/**
+ * Pathplanner class based on Dijkstra's algorithm
+ * Converts model to a graph, find shortest path between two vertices using getRoute
+ */
 public class DijkstraPathPlanner {
 	
 	private static final int DISTANCE_TO_ROBOT = 180;
@@ -25,6 +29,7 @@ public class DijkstraPathPlanner {
 	
 	/**
 	 * Class representing a vertex in a graph
+	 * Contains position, neighbours and previous vertex on the route
 	 */
 	private class Vertex {
 		private Point position;
@@ -123,6 +128,7 @@ public class DijkstraPathPlanner {
 	private void calculatePath(Vertex source, Vertex u, Vertex dest) {
 		for(int i = 0; i < 50 && vertices.size() > 0; i++) {
 			if(!vertices.contains(source)) {
+				// get closest neighbour
 				u = getMinDistNeighbour(u);
 			}
 			
@@ -131,6 +137,7 @@ public class DijkstraPathPlanner {
 			
 			vertices.remove(u);
 			
+			// calculate new costs for neighbours
 			for(Vertex v : u.getNeighbours()) {
 				int alt = u.getDist() + getDistance(u, v);
 				
