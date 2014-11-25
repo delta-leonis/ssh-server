@@ -23,6 +23,9 @@ public class DijkstraPathPlanner {
 		reset();
 	}
 	
+	/**
+	 * Class representing a vertex in a graph
+	 */
 	private class Vertex {
 		private Point position;
 		private int distance;
@@ -70,29 +73,33 @@ public class DijkstraPathPlanner {
 			return route;
 		}
 		
+		// add source and dest to vertices list
 		Vertex source = new Vertex(beginNode);
 		source.setDist(0);
 		vertices.add(source);
-		
 		Vertex dest = new Vertex(destination);
 		vertices.add(dest);
 
+		// generate vertices around robots and remove vertices colliding with robots
 		generateVertices();
-
 		removeCollidingVertices();
 		
+		// calculate neighbours for every vertex
 		generateNeighbours();
 		
+		// calculate the shortest path through the graph
 		Vertex u = source;
 		calculatePath(source, u, dest);
 		
+		// add positions to the route list
 		u = dest;
 		while(u.getPrevious() != null) {
 			route.push(u.getPosition());
 			u = u.getPrevious();
 		}
 		
-		this.reset();
+		// reset lists so we can use the same pathplanner object multiple times
+		reset();
 		
 		return route;
 	}
@@ -127,6 +134,7 @@ public class DijkstraPathPlanner {
 			for(Vertex v : u.getNeighbours()) {
 				int alt = u.getDist() + getDistance(u, v);
 				
+				// alternate path is shorter than the previous path to v
 				if(alt < v.getDist()) {
 					v.setDist(alt);
 					v.setPrevious(u);
