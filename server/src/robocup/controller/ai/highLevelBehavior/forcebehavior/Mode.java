@@ -5,6 +5,7 @@ package robocup.controller.ai.highLevelBehavior.forcebehavior;
 
 import java.util.ArrayList;
 
+import robocup.controller.ai.highLevelBehavior.forcebehavior.forceCalculator.FieldForces;
 import robocup.controller.ai.lowLevelBehavior.FuckRobot;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Ball;

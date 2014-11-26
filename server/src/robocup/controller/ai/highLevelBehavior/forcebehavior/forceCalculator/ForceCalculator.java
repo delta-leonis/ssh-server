@@ -1,8 +1,5 @@
 package robocup.controller.ai.highLevelBehavior.forcebehavior.forceCalculator;
 
-import robocup.controller.ai.highLevelBehavior.forcebehavior.FieldForces;
-import robocup.controller.ai.highLevelBehavior.forcebehavior.RobotForces;
-import robocup.controller.ai.highLevelBehavior.forcebehavior.StubForces;
 
 public abstract class ForceCalculator {
 
