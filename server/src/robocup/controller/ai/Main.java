@@ -34,7 +34,6 @@ public class Main implements Observer {
 	public Main() {
 		world = World.getInstance();
 		world.addObserver(this);
-		//Kalman k = new Kalman();
 
 
 		initExecutors();
