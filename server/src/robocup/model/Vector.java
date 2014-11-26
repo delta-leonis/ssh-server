@@ -1,5 +1,9 @@
 package robocup.model;
 
+/**
+ * Not needed anymore, just use org.apache.commons.math3.geometry.euclidean.twod.Vector2D
+ * @deprecated
+ */
 public class Vector {
 	
 	private int x;

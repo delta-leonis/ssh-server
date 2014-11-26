@@ -3,13 +3,17 @@
  */
 package robocup.controller.ai.highLevelBehavior.forcebehavior.forceCalculator;
 
-import robocup.model.World;
-import robocup.controller.ai.highLevelBehavior.forcebehavior.FieldForces;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+public class DefenceCalculator extends ForceCalculator {
 
-public class DefenceCalculator {
+	public DefenceCalculator() {
+		super();
+	}
 
-	public FieldForces calculate(World w) {
-		throw new NotImplementedException();
+	protected void calculateStubForces() {
+		// TODO Auto-generated method stub
+	}
+
+	protected void calculateRobotForces() {
+		// TODO Auto-generated method stub
 	}
 }

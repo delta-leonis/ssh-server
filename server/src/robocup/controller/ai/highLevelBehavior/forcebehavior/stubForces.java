@@ -3,6 +3,9 @@
  */
 package robocup.controller.ai.highLevelBehavior.forcebehavior;
 
-public class stubForces extends ObjectForces {
+public class StubForces extends ObjectForces {
 
+	public void calculate() {
+		// TODO Auto-generated method stub
+	}
 }

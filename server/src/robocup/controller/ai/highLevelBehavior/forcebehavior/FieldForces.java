@@ -5,9 +5,28 @@ package robocup.controller.ai.highLevelBehavior.forcebehavior;
 
 public class FieldForces {
 
-	@SuppressWarnings("unused")
-	private RobotForces[] robotForces;
+	private RobotForces robotForces;
+	private StubForces stubForces;
 
-	@SuppressWarnings("unused")
-	private stubForces[] stubForces;
+	public void addRobotForces(RobotForces rForces) {
+		robotForces = rForces;
+	}
+
+	public void addStubForces(StubForces sForces) {
+		stubForces = sForces;
+	}
+
+	/**
+	 * @return the robotForces
+	 */
+	public RobotForces getRobotForces() {
+		return robotForces;
+	}
+
+	/**
+	 * @return the stubForces
+	 */
+	public StubForces getStubForces() {
+		return stubForces;
+	}
 }

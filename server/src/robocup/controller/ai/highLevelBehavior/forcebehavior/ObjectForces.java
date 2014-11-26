@@ -11,4 +11,5 @@ public abstract class ObjectForces {
 
 	@SuppressWarnings("unused")
 	private ArrayList<Vector> vectoren;
+	public abstract void calculate();
 }
