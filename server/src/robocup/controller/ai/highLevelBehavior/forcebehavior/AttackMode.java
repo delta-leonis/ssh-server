@@ -25,6 +25,7 @@ public class AttackMode extends Mode {
 	private World world;
 	private int shootDirection = -100;
 	private ArrayList<RobotExecuter> executers;
+	private int lastCommandCounter = 0;
 
 	public AttackMode(ArrayList<RobotExecuter> executers) {
 		world = World.getInstance();
@@ -95,11 +96,76 @@ public class AttackMode extends Mode {
 	// Genereert EN update een executer met een lowlevel behaviour
 	public void updateExecuter(RobotExecuter executer, roles type, boolean isUpdate) {
 
+		
 		Robot robot = executer.getRobot();
 		Ball ball = world.getBall();
 		int distanceToGoal = offset != null ? 1000 : 500;
 		int keeperDistanceToGoal = 500;
 
+		// new assigment, asign to robot
+		//if(!isUpdate) {
+			robot.setRole(type);
+		//}
+			
+			
+			
+			
+			// Check for referee-updates / commands
+			Referee ref = world.getReferee();
+
+			// A new referee command was issued
+			if(ref.getCommandCounter() > lastCommandCounter) {
+				
+				String refCommand = ref.getCommand().toString();
+				System.out.println(refCommand);
+				
+				if(refCommand.equals("GO")) {
+					
+				}
+				
+				switch(refCommand) {
+					case "NORMAL_FIRST_HALF":
+					case "NORMAL_HALF_TIME":
+					case "NORMAL_SECOND_HALF":
+					case "EXTRA_TIME_BREAK":
+					case "EXTRA_FIRST_HALF":
+					case "EXTRA_HALF_TIME":
+					case "EXTRA_SECOND_HALF":
+					case "PENALTY_SHOOTOUT_BREAK":
+						break;
+						
+					default:
+						//
+				}
+				/*
+				 
+				
+				 */
+				
+				lastCommandCounter = ref.getCommandCounter() ;
+			}
+
+			//getStageTimeLeft
+			
+			/*
+			switch(stage.name()) {
+				case "NORMAL_FIRST_HALF":
+				case "NORMAL_HALF_TIME":
+				case "NORMAL_SECOND_HALF":
+				case "EXTRA_TIME_BREAK":
+				case "EXTRA_FIRST_HALF":
+				case "EXTRA_HALF_TIME":
+				case "EXTRA_SECOND_HALF":
+				case "PENALTY_SHOOTOUT_BREAK":
+					break;
+			}*/
+			
+			
+			
+			
+			
+			
+		
 		switch (type) {
 		case KEEPER:
 

@@ -1,5 +1,7 @@
 package robocup.view;
 
+import java.awt.Color;
+
 import javax.swing.JPanel;
 
 import robocup.model.Point;
@@ -20,15 +22,16 @@ public class RobotPanel extends JPanel{
     public RobotPanel(int robotId) {
     	id = robotId;
     	status = "offline";
-    	role = "unavailable";
+    	role = "#";
         initComponents();
     }
     
     public void setToDefault(){
     	status = "offline";
+    	robotStatusField.setForeground(new Color(0xFF, 0, 0));
     	robotStatusField.setText(status);
-    	robotPositionField.setText("null");
-    	role = "unavailable";
+    	robotPositionField.setText("#");
+    	role = "#";
     	robotBehaviorField.setText(role);
     }
     
@@ -43,11 +46,21 @@ public class RobotPanel extends JPanel{
     
     public void setStatus(String status){
     	robotStatusField.setText(status);
+    	if(status.equals("online")) {
+    		robotStatusField.setForeground(new Color(0, 0xFF, 0));
+    	} else {
+    		robotStatusField.setForeground(new Color(0xFF,0, 0));
+    	}
     	this.status = status;
     }
     
     public void setPoint(Point point){
-    	robotPositionField.setText(""+ Math.round(point.getX()) + "," + Math.round(point.getY()));
+    	//System.out.println(point);
+    	if(point == null) {
+    		robotPositionField.setText("#");
+    	} else {
+    		robotPositionField.setText(""+ Math.round(point.getX()) + "," + Math.round(point.getY()));
+    	}
     	this.point = point;
     }
     
@@ -79,6 +92,7 @@ public class RobotPanel extends JPanel{
         robotId.setText("Id: "+Integer.toString(id));
 
         robotStatusField.setEditable(false);
+        robotStatusField.setForeground(new Color(0xFF, 0, 0));
         robotStatusField.setText("offline");
         jScrollPane1.setViewportView(robotStatusField);
 

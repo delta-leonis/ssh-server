@@ -19,10 +19,11 @@ public class Referee {
 		lastCommandTimestamp = 0;
 	}
 
-	public void update(Command command, int commandCounter, long commandTimeStamp, Stage stage) {
+	public void update(Command command, int commandCounter, long commandTimeStamp, Stage stage, int stageTimeLeft) {
 		this.command = command;
 		this.commandCounter = commandCounter;
 		this.lastCommandTimestamp = commandTimeStamp;
+		this.stagetimeLeft = stageTimeLeft;
 		this.stage = stage;
 	}
 
@@ -39,6 +40,7 @@ public class Referee {
 	public long getTimeoutTimeLeft() {
 		return timeoutTimeLeft;
 	}
+	
 
 	/**
 	 * @param timeoutTimeLeft

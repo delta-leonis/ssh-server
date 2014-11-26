@@ -11,6 +11,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.ParallelGroup;
 
 import robocup.Main;
+import robocup.controller.ai.highLevelBehavior.forcebehavior.Mode;
 import robocup.model.Robot;
 import robocup.model.World;
 import robocup.output.ComInterface;
@@ -516,8 +517,14 @@ public class GUI extends javax.swing.JFrame implements Observer {
 						Robot robot = world.getAlly().getRobotByID(i);
 						robotPanels[i].setPoint(robot.getPosition());
 						robotPanels[i].setStatus("online");
-						robotPanels[i].setRole("unavailable");
-						
+						Mode.roles role = robot.getRole();
+						//System.out.println(role);
+						//System.out.println( " So" + robot.getRole());
+						if(role != null) {
+							robotPanels[i].setRole(role.toString());
+						} else {
+							robotPanels[i].setRole("#");
+						}
 					} else {
 						// update is niet langer verbonden
 						robotPanels[i].setToDefault();
@@ -526,16 +533,28 @@ public class GUI extends javax.swing.JFrame implements Observer {
 				}
 
 			}
-			timePlayedField.setText("" + ((System.currentTimeMillis() - startTime) / 1000));
+			
+			// Game has not started yet
+			if( world.getReferee().getStagetimeLeft() == 0) {
+				timePlayedField.setText("0:00");
+			} else {
+				int timePlayed = 600000000 - world.getReferee().getStagetimeLeft();
+				timePlayedField.setText("" + java.util.concurrent.TimeUnit.MICROSECONDS.toMinutes(timePlayed) % 60 + 
+																":" + java.util.concurrent.TimeUnit.MICROSECONDS.toSeconds(timePlayed) % 60);
+			}
+			
+			//System.out.println(timePlayedField.getText());
+			//System.out.println( world.getReferee().getStagetimeLeft() / 1000000);
 			fieldHalfField.setText("null");
 			goalsField.setText("" + world.getAlly().getScore());
+			
 			
 			
 		//	System.out.println(world.getReferee().);;
 			// refereeStateField.setText(""+
 			// world.getReferee().getStage().name());
 
-			// setRobotNumber(int number)
+			// setRobotNumber(int number) 
 			// TODO set the game status data
 			// TODO set the status for all robots
 			//System.out.println(" hoi," + world.getReferee().getl .getYellow().getGoalie() + " command: " + message.getYellow().getRedCards());

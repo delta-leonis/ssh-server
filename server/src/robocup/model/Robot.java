@@ -1,5 +1,8 @@
 package robocup.model;
 
+import robocup.controller.ai.highLevelBehavior.forcebehavior.Mode;
+import robocup.controller.ai.highLevelBehavior.forcebehavior.Mode.roles;
+
 public abstract class Robot extends FieldObject {
 
 	private int robotID;
@@ -11,6 +14,7 @@ public abstract class Robot extends FieldObject {
 	private float batteryStatus;
 	private long powerUpTime;
 	private boolean onSight;
+	private  Mode.roles role;
 
 	public Robot(int robotID, boolean isKeeper, float height, double diameter, Team team) {
 		super();
@@ -19,6 +23,8 @@ public abstract class Robot extends FieldObject {
 		this.height = height;
 		this.diameter = diameter;
 		this.team = team;
+		System.out.println(" contructor role null");
+		this.role = null;
 	}
 
 	/**
@@ -43,6 +49,23 @@ public abstract class Robot extends FieldObject {
 
 	public void update(Point p, double updateTime, int lastCamUpdateNo) {
 		super.update(p, updateTime, lastCamUpdateNo);
+	}
+	
+	/** 
+	 * Set a role (keeper/defender/attacker/etc)
+	 * @param role
+	 */
+	public void setRole( Mode.roles role) {
+		//System.out.println(" set role " + role);
+		this.role = role;
+	}
+	
+	/**
+	 * Get the assigned role (keeper/defender/attacker/null/etc)
+	 * @return
+	 */
+	public Mode.roles getRole() {
+		return role;
 	}
 
 	/**
