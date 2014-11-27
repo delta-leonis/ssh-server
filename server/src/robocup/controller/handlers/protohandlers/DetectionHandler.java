@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import robocup.model.Ally;
+import robocup.model.Ball;
 import robocup.model.Enemy;
 import robocup.model.Point;
 import robocup.model.Robot;
@@ -28,10 +29,14 @@ public class DetectionHandler {
 	private World world;
 	// TODO: read in validRobotId's from somewhere else / no more hardcoded id's
 	int validRobotIDs[] = { 1, 3 };
-	Kalman kalman[] = new Kalman[12];
+	Kalman allyFilter[] = new Kalman[12];
+	Kalman enemyFilter[] = new Kalman[12];
+	Kalman ballFilter;
 
 	public DetectionHandler(World world) {
 		this.world = world;
+		Ball b = world.getBall();
+		ballFilter = new Kalman(new Point(b.getPosition().getX(),b.getPosition().getY()),0,0);
 	}
 
 	/**
@@ -60,11 +65,15 @@ public class DetectionHandler {
 	 * @param ball
 	 */
 	public void updateBall(SSL_DetectionBall ball, double time, int camNo) {
-		Point p = new Point((int) ball.getX(), (int) ball.getY());
+		Point filterPoint = new Point(ball.getX(), ball.getY());
+		int xSpeed = (int) (ball.getX() - ballFilter.getLastX());
+		int ySpeed = (int) (ball.getY() - ballFilter.getLastY());
+		Point filteredPoint = ballFilter.filterPoint(filterPoint, xSpeed, ySpeed);
+		
 		if (ball.hasZ()) {
-			world.getBall().update(time, p, ball.getZ(), camNo);
+			world.getBall().update(time, filteredPoint, ball.getZ(), camNo);
 		} else {
-			world.getBall().update(p, time, camNo);
+			world.getBall().update(filteredPoint, time, camNo);
 		}
 	}
 
@@ -132,33 +141,35 @@ public class DetectionHandler {
 					if (robotMessage.getRobotId() == id) {
 						// if the robot is validated add it to the ally's list
 						t.addRobot(new Ally(robotMessage.getRobotId(), false, robotMessage.getHeight(), 18.0, t, 1));
-						kalman[id] = new Kalman(new Point(robotMessage.getX(), robotMessage.getY()), 0, 0);
+						allyFilter[id] = new Kalman(new Point(robotMessage.getX(), robotMessage.getY()), 0, 0);
 						robotAdded = true;
 					}
 				}
 			} else {
+				enemyFilter[robotMessage.getRobotId()] = new Kalman(new Point(robotMessage.getX(), robotMessage.getY()), 0, 0);
 				t.addRobot(new Enemy(robotMessage.getRobotId(), false, robotMessage.getHeight(), 18.0, t));
 				robotAdded = true;
 			}
-
 		}
 
 		robot = t.getRobotByID(robotMessage.getRobotId());
 		if (robot != null) {
+			Point filterPoint = new Point(robotMessage.getX(), robotMessage.getY());
+			Kalman filter;
+			if(world.getOwnTeamColor().equals(color)){
+				filter = allyFilter[robot.getRobotID()];
+			}
+			else{
+				filter = enemyFilter[robot.getRobotID()];
+			}
+			int xSpeed = (int) (robotMessage.getX() - filter.getLastX());
+			int ySpeed = (int) (robotMessage.getY() - filter.getLastY());
+			Point filteredPoint = filter.filterPoint(filterPoint, xSpeed, ySpeed);
 			if (robotMessage.hasOrientation()) {
 				int degrees = (int) Math.toDegrees(robotMessage.getOrientation());
-//				System.out.println("no filter x: " + robotMessage.getX() + " y: " + robotMessage.getY());
-
-				Point filterPoint = new Point(robotMessage.getX(), robotMessage.getY());
-				Kalman filter = kalman[robot.getRobotID()];
-				int xSpeed = (int) (robotMessage.getX() - filter.getLastX());
-				int ySpeed = (int) (robotMessage.getY() - filter.getLastY());
-				Point filteredPoint = filter.filterPoint(filterPoint, xSpeed, ySpeed);
-//				System.out.println("filtered Point: " + filteredPoint);
-
 				robot.update(new Point(filteredPoint.getX(), filteredPoint.getY()), updateTime, degrees, camNo);
 			} else {
-				robot.update(new Point(robotMessage.getX(), robotMessage.getY()), updateTime, camNo);
+				robot.update(new Point(filteredPoint.getX(), filteredPoint.getY()), updateTime, camNo);
 			}
 		}
 
@@ -166,58 +177,6 @@ public class DetectionHandler {
 			world.RobotAdded();
 		}
 
-		// //////////////////////////////////////////////////////
-
-		/*
-		 * // if robots in our team, update only the robots from the list. Else
-		 * // update all robots. if (world.getOwnTeamColor().equals(color)) {
-		 * for (int id : validRobotIDs) { if (robotMessage.getRobotId() == id) {
-		 * if (kalman[id] == null) { kalman[id] = new Kalman(new
-		 * Point(robotMessage.getX(), robotMessage.getY()), 0, 0); }
-		 * 
-		 * Point filterPoint = new Point(robotMessage.getX(),
-		 * robotMessage.getY()); // int timePassed = kalman[id].getTimePassed();
-		 * int xSpeed = (int) (robotMessage.getX() - kalman[id] .getLastX());
-		 * int ySpeed = (int) (robotMessage.getY() - kalman[id] .getLastY());
-		 * kalman[id].filterPoint(filterPoint, xSpeed, ySpeed);
-		 * 
-		 * Robot robot = t.getRobotByID(robotMessage.getRobotId());
-		 * 
-		 * if (robot == null) { // Create robot object if
-		 * (world.getOwnTeamColor().equals(color)) { // TODO: How to
-		 * set/determine channel of robot. // TODO: What to do with diameter.
-		 * t.addRobot(new Ally(robotMessage.getRobotId(), false,
-		 * robotMessage.getHeight(), 18.0, t, 1)); } else { t.addRobot(new
-		 * Enemy(robotMessage.getRobotId(), false, robotMessage.getHeight(),
-		 * 18.0, t)); } world.RobotAdded(); }
-		 * 
-		 * robot = t.getRobotByID(robotMessage.getRobotId()); if
-		 * (robotMessage.hasOrientation()) { int degrees = (int)
-		 * Math.toDegrees(robotMessage .getOrientation());
-		 * 
-		 * robot.update(new Point(robotMessage.getX(), robotMessage.getY()),
-		 * updateTime, degrees, camNo); } else { robot.update(new
-		 * Point(robotMessage.getX(), robotMessage.getY()), updateTime, camNo);
-		 * } } } } else { Robot robot =
-		 * t.getRobotByID(robotMessage.getRobotId());
-		 * 
-		 * if (robot == null) { // Create robot object if
-		 * (world.getOwnTeamColor().equals(color)) { // TODO: How to
-		 * set/determine channel of robot. // TODO: What to do with diameter.
-		 * t.addRobot(new Ally(robotMessage.getRobotId(), false,
-		 * robotMessage.getHeight(), 18.0, t, 1)); } else { t.addRobot(new
-		 * Enemy(robotMessage.getRobotId(), false, robotMessage.getHeight(),
-		 * 18.0, t)); } world.RobotAdded(); }
-		 * 
-		 * robot = t.getRobotByID(robotMessage.getRobotId()); if
-		 * (robotMessage.hasOrientation()) { int degrees = (int)
-		 * Math.toDegrees(robotMessage .getOrientation());
-		 * 
-		 * robot.update( new Point(robotMessage.getX(), robotMessage.getY()),
-		 * updateTime, degrees, camNo); } else { robot.update( new
-		 * Point(robotMessage.getX(), robotMessage.getY()), updateTime, camNo);
-		 * } }
-		 */
 
 		/*
 		 * TODO: every once in a while remove all robots from the model,
