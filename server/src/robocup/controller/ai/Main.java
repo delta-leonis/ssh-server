@@ -26,7 +26,7 @@ public class Main implements Observer {
 	private World world;
 	private ArrayList<Behavior> behaviors;
 	private Behavior behavior;
-	private ArrayList<RobotExecuter> robotExecuters;
+	private ArrayList<RobotExecuter> robotExecuters =  new ArrayList<RobotExecuter>();
 	@SuppressWarnings("unused")
 	private ArrayList<LowLevelBehavior> lowLevelBehaviors;
 
@@ -37,7 +37,10 @@ public class Main implements Observer {
 
 
 		initExecutors();
+		
 		behavior = new Force(robotExecuters);
+
+
 
 
 		// behaviors = new ArrayList<Behavior>();
@@ -53,6 +56,10 @@ public class Main implements Observer {
 	}
 
 	public void update(Observable o, Object arg) {
+		//check if behavior isnt null, else program crash
+		if(behavior == null) {
+			return;
+		}
 		if ("detectionHandlerFinished".equals(arg)) {
 			behavior.execute(robotExecuters);
 		} else if ("RobotAdded".equals(arg)) {
@@ -68,10 +75,13 @@ public class Main implements Observer {
 		Team team = world.getAlly();
 		for (Robot robot : team.getRobots()) {
 			boolean executerFound = false;
-			for (RobotExecuter exec : robotExecuters) {
-				if (exec.getRobot().getRobotID() == robot.getRobotID()) {
-					updatedRobotExecuters.add(exec);
-					executerFound = true;
+
+			if(robotExecuters != null) {
+				for (RobotExecuter exec : robotExecuters) {
+					if (exec.getRobot().getRobotID() == robot.getRobotID()) {
+						updatedRobotExecuters.add(exec);
+						executerFound = true;
+					}
 				}
 			}
 			

@@ -165,6 +165,7 @@ public class DetectionHandler {
 			int xSpeed = (int) (robotMessage.getX() - filter.getLastX());
 			int ySpeed = (int) (robotMessage.getY() - filter.getLastY());
 			Point filteredPoint = filter.filterPoint(filterPoint, xSpeed, ySpeed);
+
 			if (robotMessage.hasOrientation()) {
 				int degrees = (int) Math.toDegrees(robotMessage.getOrientation());
 				robot.update(new Point(filteredPoint.getX(), filteredPoint.getY()), updateTime, degrees, camNo);
