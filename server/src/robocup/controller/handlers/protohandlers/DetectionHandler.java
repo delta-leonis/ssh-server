@@ -36,14 +36,15 @@ public class DetectionHandler {
 	public DetectionHandler(World world) {
 		this.world = world;
 		Ball b = world.getBall();
-		ballFilter = new Kalman(new Point(b.getPosition().getX(),b.getPosition().getY()),0,0);
+		ballFilter = new Kalman(new Point(b.getPosition().getX(), b.getPosition().getY()), 0, 0);
 	}
 
 	/**
 	 * Process a Detection frame
 	 */
 	public void process(SSL_DetectionFrame message) {
-		processRobots(message.getRobotsBlueList(), message.getRobotsYellowList(), message.getTCapture(), message.getCameraId());
+		processRobots(message.getRobotsBlueList(), message.getRobotsYellowList(), message.getTCapture(),
+				message.getCameraId());
 		processBalls(message.getBallsList(), message.getTCapture(), message.getCameraId());
 		world.HandlerFinished("detection");
 	}
@@ -69,7 +70,7 @@ public class DetectionHandler {
 		int xSpeed = (int) (ball.getX() - ballFilter.getLastX());
 		int ySpeed = (int) (ball.getY() - ballFilter.getLastY());
 		Point filteredPoint = ballFilter.filterPoint(filterPoint, xSpeed, ySpeed);
-		
+
 		if (ball.hasZ()) {
 			world.getBall().update(time, filteredPoint, ball.getZ(), camNo);
 		} else {
@@ -83,7 +84,8 @@ public class DetectionHandler {
 	 * @param blueList
 	 * @param yellowList
 	 */
-	public void processRobots(List<SSL_DetectionRobot> blueList, List<SSL_DetectionRobot> yellowList, double time, int camNo) {
+	public void processRobots(List<SSL_DetectionRobot> blueList, List<SSL_DetectionRobot> yellowList, double time,
+			int camNo) {
 
 		for (SSL_DetectionRobot robot : blueList) {
 			updateRobot(Color.BLUE, robot, time, camNo);
@@ -130,8 +132,6 @@ public class DetectionHandler {
 
 		boolean robotAdded = false;
 
-		// TODO: make this method better/more efficient.
-
 		Robot robot = t.getRobotByID(robotMessage.getRobotId());
 
 		if (robot == null) { // Create robot object
@@ -141,12 +141,14 @@ public class DetectionHandler {
 					if (robotMessage.getRobotId() == id) {
 						// if the robot is validated add it to the ally's list
 						t.addRobot(new Ally(robotMessage.getRobotId(), false, robotMessage.getHeight(), 18.0, t, 1));
-						allyFilter[id] = new Kalman(new Point(robotMessage.getX(), robotMessage.getY()), 0, 0);
+						Point p = new Point(robotMessage.getX(), robotMessage.getY());
+						allyFilter[id] = new Kalman(p, 0, 0);
 						robotAdded = true;
 					}
 				}
 			} else {
-				enemyFilter[robotMessage.getRobotId()] = new Kalman(new Point(robotMessage.getX(), robotMessage.getY()), 0, 0);
+				enemyFilter[robotMessage.getRobotId()] = new Kalman(
+						new Point(robotMessage.getX(), robotMessage.getY()), 0, 0);
 				t.addRobot(new Enemy(robotMessage.getRobotId(), false, robotMessage.getHeight(), 18.0, t));
 				robotAdded = true;
 			}
@@ -154,30 +156,38 @@ public class DetectionHandler {
 
 		robot = t.getRobotByID(robotMessage.getRobotId());
 		if (robot != null) {
-			Point filterPoint = new Point(robotMessage.getX(), robotMessage.getY());
 			Kalman filter;
-			if(world.getOwnTeamColor().equals(color)){
+			if (world.getOwnTeamColor().equals(color)) {
 				filter = allyFilter[robot.getRobotID()];
-			}
-			else{
+			} else {
 				filter = enemyFilter[robot.getRobotID()];
 			}
+
+			Point filterPoint = new Point(robotMessage.getX(), robotMessage.getY());
+
+			// deltadistance between predicted and measured point
+			double deltaDistance = filter.getPredictPoint().getDeltaDistance(filterPoint);
 			int xSpeed = (int) (robotMessage.getX() - filter.getLastX());
 			int ySpeed = (int) (robotMessage.getY() - filter.getLastY());
+			
+			//Point data after Kalman filtering
 			Point filteredPoint = filter.filterPoint(filterPoint, xSpeed, ySpeed);
+			filter.predictPoint(); // predict new point for next iteration
 
-			if (robotMessage.hasOrientation()) {
-				int degrees = (int) Math.toDegrees(robotMessage.getOrientation());
-				robot.update(new Point(filteredPoint.getX(), filteredPoint.getY()), updateTime, degrees, camNo);
-			} else {
-				robot.update(new Point(filteredPoint.getX(), filteredPoint.getY()), updateTime, camNo);
+			//if predicted and measured points are close update position data
+			if (deltaDistance < 20) {
+				if (robotMessage.hasOrientation()) {
+					int degrees = (int) Math.toDegrees(robotMessage.getOrientation());
+					robot.update(new Point(filteredPoint.getX(), filteredPoint.getY()), updateTime, degrees, camNo);
+				} else {
+					robot.update(new Point(filteredPoint.getX(), filteredPoint.getY()), updateTime, camNo);
+				}
 			}
 		}
 
 		if (robotAdded) {
 			world.RobotAdded();
 		}
-
 
 		/*
 		 * TODO: every once in a while remove all robots from the model,

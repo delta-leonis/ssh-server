@@ -28,7 +28,7 @@ public class Point {
 	 * @return Distance between this and target
 	 */
 	public double getDeltaDistance(Point target) {
-		return Math.sqrt(((target.getX() - x) * (target.getX() - x)) + ((target.getY() - y) * (target.getY() - y)));
+		return Math.sqrt(  Math.abs(((target.getX() - x) * (target.getX() - x))) + Math.abs(((target.getY() - y) * (target.getY() - y))));
 	}
 
 	/**
