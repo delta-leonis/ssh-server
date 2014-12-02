@@ -8,7 +8,7 @@ import robocup.model.World;
 import robocup.controller.ai.highLevelBehavior.Behavior;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 
-public class Force extends Behavior {
+public class ForceBehavior extends Behavior {
 
 	private World world;
 
@@ -21,7 +21,7 @@ public class Force extends Behavior {
 
 	private Ball ball;
 
-	public Force(ArrayList<RobotExecuter> executers) {
+	public ForceBehavior(ArrayList<RobotExecuter> executers) {
 		world = World.getInstance();
 		ball = world.getBall();
 
