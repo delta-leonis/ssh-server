@@ -5,7 +5,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import robocup.controller.ai.highLevelBehavior.Behavior;
-import robocup.controller.ai.highLevelBehavior.forcebehavior.Force;
+import robocup.controller.ai.highLevelBehavior.forcebehavior.ForceBehavior;
 import robocup.controller.ai.highLevelBehavior.testbehavior.TestAttackerBehavior;
 import robocup.controller.ai.highLevelBehavior.testbehavior.TestKeepingBehavior;
 import robocup.controller.ai.highLevelBehavior.testbehavior.TestKeepingOutsideGoalBehavior;
@@ -38,7 +38,7 @@ public class Main implements Observer {
 
 		initExecutors();
 		
-		behavior = new Force(robotExecuters);
+		behavior = new ForceBehavior(robotExecuters);
 
 
 
