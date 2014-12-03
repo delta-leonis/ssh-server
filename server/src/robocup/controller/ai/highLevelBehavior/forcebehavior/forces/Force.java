@@ -1,16 +1,19 @@
 package robocup.controller.ai.highLevelBehavior.forcebehavior.forces;
 
 import robocup.model.Point;
+import robocup.model.World;
 
 public abstract class Force {
 	private Point origin;
 	private int power;
-	private int scope;
+	protected int scope;
+	protected World world;
 
 	protected Force(Point origin, int power, int scope) {
 		this.origin = origin;
 		this.power = power;
 		this.scope = scope;
+		world = World.getInstance();
 	}
 
 	public Point getOrigin() {
