@@ -10,7 +10,6 @@ public class RobotForce extends Force {
 	}
 
 	public boolean affectsPoint(Point position) {
-		
-		return false;
+		return super.affectsPoint(position);
 	}
 }

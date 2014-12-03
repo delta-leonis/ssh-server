@@ -24,6 +24,13 @@ public abstract class Force {
 	public int getScope() {
 		return scope;
 	}
-	
-	public abstract boolean affectsPoint(Point position);
+
+	/**
+	 * Calculate if a point is affected by this force
+	 * @param position the point
+	 * @return true when the point is affected by this force
+	 */
+	public boolean affectsPoint(Point position) {
+		return origin.getDeltaDistance(position) < scope;
+	}
 }

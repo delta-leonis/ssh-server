@@ -9,7 +9,7 @@ public class GoalForce extends Force {
 	}
 
 	public boolean affectsPoint(Point position) {
-		
+		// TODO calculate if point is inside goal area
 		return false;
 	}
 }
