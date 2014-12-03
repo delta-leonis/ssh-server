@@ -1,16 +1,16 @@
 package robocup.controller.ai.highLevelBehavior.forcebehavior.forceCalculator;
 
+import robocup.model.World;
+
 
 public abstract class ForceCalculator {
 
 	protected FieldForces fieldForces;
-	protected RobotForces rForces;
-	protected StubForces sForces;
+	protected World world;
 	
 	protected ForceCalculator() {
 		fieldForces = new FieldForces();
-		rForces = new RobotForces();
-		sForces = new StubForces();
+		world = World.getInstance();
 	}
 	
 	/**
@@ -18,9 +18,6 @@ public abstract class ForceCalculator {
 	 * @return all fieldforces
 	 */
 	protected FieldForces calculate() {
-		fieldForces.addRobotForces(rForces);
-		fieldForces.addStubForces(sForces);
-
 		calculateStubForces();
 		calculateRobotForces();
 
