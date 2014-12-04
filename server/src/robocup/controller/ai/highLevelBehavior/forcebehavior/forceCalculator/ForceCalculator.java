@@ -7,6 +7,9 @@ public abstract class ForceCalculator {
 	protected FieldForces fieldForces;
 	protected World world;
 
+	/**
+	 * Initialize the ForceCalculator, only used by subclasses
+	 */
 	protected ForceCalculator() {
 		fieldForces = new FieldForces();
 		world = World.getInstance();
@@ -29,7 +32,7 @@ public abstract class ForceCalculator {
 	protected abstract void calculateStubForces();
 
 	/**
-	 * Calculate forces on every robot
+	 * Calculate forces from every robot
 	 */
 	protected abstract void calculateRobotForces();
 }

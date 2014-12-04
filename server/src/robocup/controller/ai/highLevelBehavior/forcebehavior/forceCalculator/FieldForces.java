@@ -15,14 +15,26 @@ public class FieldForces {
 
 	private ArrayList<Force> forces;
 
+	/**
+	 * Create FieldForces, a class which contains all forces on the field
+	 */
 	public FieldForces() {
 		forces = new ArrayList<Force>();
 	}
 
+	/**
+	 * Add a force to the list of all forces
+	 * @param force the force to add
+	 */
 	public void addForce(Force force) {
 		forces.add(force);
 	}
 
+	/**
+	 * Get the sum of all forces working on a robot
+	 * @param robot the robot
+	 * @return the sum of all forces working on the robot
+	 */
 	public Vector2D getTotalForceOnRobot(Robot robot) {
 		Vector2D vector = new Vector2D(0, 0);
 
