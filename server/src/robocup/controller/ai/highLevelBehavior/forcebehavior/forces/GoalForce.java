@@ -15,4 +15,8 @@ public class GoalForce extends Force {
 		int dist4 = (int) position.getDeltaDistance(world.getField().getGoal().get(1).getFrontRight());
 		return dist1 < scope && dist2 < scope || dist3 < scope && dist4 < scope;
 	}
+
+	public int getDirection(Point position) {
+		return position.getX() > 0 ? 180 : 0;
+	}
 }

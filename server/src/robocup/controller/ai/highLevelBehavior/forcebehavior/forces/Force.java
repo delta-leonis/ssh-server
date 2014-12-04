@@ -5,7 +5,7 @@ import robocup.model.World;
 
 public abstract class Force {
 	private Point origin;
-	private int power;
+	protected int power;
 	protected int scope;
 	protected World world;
 
@@ -36,4 +36,6 @@ public abstract class Force {
 	public boolean affectsPoint(Point position) {
 		return origin.getDeltaDistance(position) < scope;
 	}
+
+	public abstract int getDirection(Point position);
 }
