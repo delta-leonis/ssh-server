@@ -32,7 +32,7 @@ public class Kalman {
 	RealVector predicted_x;
 
 	/**
-	 * Kalman filter
+	 * Kalman filter constructor, init begin values of filter
 	 * @param position
 	 * @param xSpeed
 	 * @param ySpeed
@@ -43,11 +43,11 @@ public class Kalman {
 	}
 
 	/**
-	 * Filter location data
+	 * Filter noise out of robot location data by comparing measured data with prediction data with added measurement and process errors
 	 * @param measuredPoint
 	 * @param xSpeed
 	 * @param ySpeed
-	 * @return
+	 * @return filtered point of robot
 	 */
 	public Point filterPoint(Point measuredPoint, int xSpeed, int ySpeed) {
 		/* see
@@ -98,10 +98,17 @@ public class Kalman {
 		return last_x.getEntry(0);
 	}
 
+	/**
+	 * get predicted robot location
+	 * @return Point robotLocation
+	 */
 	public Point getPredictPoint() {
 		return predictedPoint;
 	}
 
+	/**
+	 * predict future Point for robotLocation 
+	 */
 	public void predictPoint() {
 		RealVector pred_x = stateMatrix.operate(last_x).add(controlMatrix.operate(control));
 		predictedPoint = new Point((float) pred_x.getEntry(0), (float) pred_x.getEntry(1));
