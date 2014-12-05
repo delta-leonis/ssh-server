@@ -6,17 +6,8 @@ import java.util.Observer;
 
 import robocup.controller.ai.highLevelBehavior.Behavior;
 import robocup.controller.ai.highLevelBehavior.forcebehavior.ForceBehavior;
-import robocup.controller.ai.highLevelBehavior.testbehavior.TestAttackerBehavior;
-import robocup.controller.ai.highLevelBehavior.testbehavior.TestKeepingBehavior;
-import robocup.controller.ai.highLevelBehavior.testbehavior.TestKeepingOutsideGoalBehavior;
-import robocup.controller.ai.highLevelBehavior.testbehavior.TestPositionBehavior;
-import robocup.controller.ai.highLevelBehavior.testbehavior.TestPositionWithBallBehavior;
-import robocup.controller.ai.lowLevelBehavior.Keeper;
-import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.LowLevelBehavior;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
-import robocup.filter.Kalman;
-import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.model.Team;
 import robocup.model.World;
@@ -24,6 +15,7 @@ import robocup.model.World;
 public class Main implements Observer {
 
 	private World world;
+	@SuppressWarnings("unused")
 	private ArrayList<Behavior> behaviors;
 	private Behavior behavior;
 	private ArrayList<RobotExecuter> robotExecuters =  new ArrayList<RobotExecuter>();

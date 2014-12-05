@@ -6,7 +6,6 @@ package robocup.controller.ai.highLevelBehavior.forcebehavior;
 import java.util.ArrayList;
 
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
-import robocup.model.World;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class DefenceMode extends Mode {

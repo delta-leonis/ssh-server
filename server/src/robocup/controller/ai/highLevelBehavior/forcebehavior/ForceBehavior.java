@@ -13,6 +13,7 @@ public class ForceBehavior extends Behavior {
 	private World world;
 
 	private AttackMode attackMode;
+	@SuppressWarnings("unused")
 	private DefenceMode defenceMode;
 
 	private Mode currentMode;
@@ -63,6 +64,7 @@ public class ForceBehavior extends Behavior {
 	 * 
 	 * @return true when the ally team is closer
 	 */
+	@SuppressWarnings("unused")
 	private boolean allyHasBall() {
 		ArrayList<Robot> allies = world.getAlly().getRobots();
 		ArrayList<Robot> enemies = world.getEnemy().getRobots();

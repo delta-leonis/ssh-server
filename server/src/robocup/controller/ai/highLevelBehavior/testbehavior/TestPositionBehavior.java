@@ -77,11 +77,11 @@ public class TestPositionBehavior extends Behavior {
 			p = new Point(targetPositionX, targetPositionY);
 			
 			go.setTarget(p);
-			go.setGoal(new Point(500,500));
+			go.setDestination(new Point(500,500));
 		}
 		else{
 			go.setTarget(null);
-			go.setGoal(null);
+			go.setDestination(null);
 		}
 		//go.setTarget(b.getPosition());
 	}

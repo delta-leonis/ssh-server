@@ -202,6 +202,7 @@ public abstract class Mode {
 		// Get last command
 		Referee ref = world.getReferee();
 		String refCommand = "";
+		@SuppressWarnings("unused")
 		String refStage = "";
 		if(ref != null) {
 			if(ref.getCommand() != null) { 

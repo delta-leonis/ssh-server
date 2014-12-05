@@ -5,7 +5,6 @@ package robocup.controller.ai.highLevelBehavior.forcebehavior;
 
 import java.util.ArrayList;
 
-import robocup.Main;
 import robocup.controller.ai.lowLevelBehavior.Attacker;
 import robocup.controller.ai.lowLevelBehavior.FuckRobot;
 import robocup.controller.ai.lowLevelBehavior.Keeper;

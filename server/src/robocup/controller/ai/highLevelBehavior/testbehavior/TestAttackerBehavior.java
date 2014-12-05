@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import robocup.controller.ai.highLevelBehavior.Behavior;
 import robocup.controller.ai.lowLevelBehavior.Attacker;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
-import robocup.controller.ai.movement.PathPlanner;
 import robocup.model.Ball;
 import robocup.model.Point;
 import robocup.model.Robot;

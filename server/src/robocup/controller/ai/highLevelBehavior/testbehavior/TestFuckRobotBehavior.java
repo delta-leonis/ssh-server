@@ -7,8 +7,6 @@ import robocup.controller.ai.highLevelBehavior.Behavior;
 import robocup.controller.ai.lowLevelBehavior.FuckRobot;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Ball;
-import robocup.model.FieldObject;
-import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.model.World;
 import robocup.output.ComInterface;

@@ -19,7 +19,7 @@ public class GotoPosition {
 	private int forcedSpeed = 0;
 	private int kick = 0;
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
-	private PathPlanner planner = new PathPlanner();
+	@SuppressWarnings("unused")
 	private DijkstraPathPlanner dplanner = new DijkstraPathPlanner();
 
 	/**
@@ -168,6 +168,7 @@ public class GotoPosition {
 			int rotationToGoal = rotationToDest(destination);
 			int speed = getSpeed(getDistance(), rotationToGoal);
 			float rotationSpeedFloat = getRotationSpeed(targetDirection);
+			@SuppressWarnings("unused")
 			int rotationSpeed = (int)rotationSpeedFloat;
 			
 			// Overrule speed
