@@ -1,20 +1,11 @@
 package robocup.controller.handlers.protohandlers;
 
-import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.filter.Kalman;
 import robocup.input.protobuf.MessagesRobocupSslDetection.SSL_DetectionBall;
 import robocup.input.protobuf.MessagesRobocupSslDetection.SSL_DetectionFrame;
 import robocup.input.protobuf.MessagesRobocupSslDetection.SSL_DetectionRobot;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import robocup.model.Ally;
 import robocup.model.Ball;
 import robocup.model.Enemy;
@@ -97,23 +88,6 @@ public class DetectionHandler {
 	}
 
 	/**
-	 * Remove all inactive robots from the team
-	 * 
-	 * @param team
-	 */
-	private void removeMissingRobots(Team team) {
-		Iterator<Robot> it = team.getRobots().iterator();
-
-		while (it.hasNext())
-			// if(it.next().getLastUpdateTime() + 0.05 <
-			// Calendar.getInstance().getTimeInMillis() / 1000)
-			// it.remove();
-
-			if (it.next().getLastUpdateTime() + 0.02 < Calendar.getInstance().getTimeInMillis() / 1000)
-				it.remove();
-	}
-
-	/**
 	 * Updates position of existing robot or creates it.
 	 * 
 	 * @param color
@@ -188,38 +162,5 @@ public class DetectionHandler {
 		if (robotAdded) {
 			world.RobotAdded();
 		}
-
-		/*
-		 * TODO: every once in a while remove all robots from the model,
-		 */
-		// remove missing robots from teams, needs to be done here to prevent
-		// accessing the same list in two threads
-		// adding locks for the list would be too slow
-
-		// removeMissingRobots(world.getAlly());
-		// removeMissingRobots(world.getEnemy());
 	}
-
-	// public void logToCSV(float x, float y, double speed, float confidence,
-	// int degrees, double updateTime, int camNo) {
-	// BufferedWriter writer = null;
-	// FileWriter fw;
-	// try {
-	// File file = new File("log/log.log");
-	// if (!file.exists()) {
-	// file.createNewFile();
-	// }
-	// fw = new FileWriter(file, true);
-	// writer = new BufferedWriter(fw);
-	// writer.write(x + "," + y + "," + speed + "," + confidence + "," + degrees
-	// + "," + updateTime + "," + camNo);
-	// writer.newLine();
-	// writer.flush();
-	// writer.close();
-	// fw.close();
-	// } catch (IOException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// }
 }

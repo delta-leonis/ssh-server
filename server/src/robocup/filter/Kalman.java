@@ -33,7 +33,6 @@ public class Kalman {
 
 	/**
 	 * Kalman filter
-	 * 
 	 * @param position
 	 * @param xSpeed
 	 * @param ySpeed
@@ -45,20 +44,17 @@ public class Kalman {
 
 	/**
 	 * Filter location data
-	 * 
 	 * @param measuredPoint
 	 * @param xSpeed
 	 * @param ySpeed
 	 * @return
 	 */
 	public Point filterPoint(Point measuredPoint, int xSpeed, int ySpeed) {
-		/*
-		 * see
+		/* see
 		 * http://commons.apache.org/proper/commons-math/javadocs/api-3.3/index
 		 * .html -- kalmanfilter
 		 * https://www.cs.utexas.edu/~teammco/misc/kalman_filter/
-		 * http://en.wikipedia.org/wiki/Kalman_filter
-		 */
+		 * http://en.wikipedia.org/wiki/Kalman_filter */
 
 		RealVector measurement = new ArrayRealVector(new double[] { measuredPoint.getX(), measuredPoint.getY(), xSpeed,
 				ySpeed });
@@ -82,13 +78,12 @@ public class Kalman {
 
 		last_x = cur_x;
 		last_P = cur_P;
-		
+
 		return new Point((float) cur_x.getEntry(0), (float) cur_x.getEntry(1));
 	}
 
 	/**
 	 * Get last Y position
-	 * 
 	 * @return Ypos
 	 */
 	public double getLastY() {
@@ -97,7 +92,6 @@ public class Kalman {
 
 	/**
 	 * get last X position
-	 * 
 	 * @return Xpos
 	 */
 	public double getLastX() {
@@ -107,11 +101,9 @@ public class Kalman {
 	public Point getPredictPoint() {
 		return predictedPoint;
 	}
-	
-	public void predictPoint(){
-		RealVector pred_x  = stateMatrix.operate(last_x).add(controlMatrix.operate(control));
-		predictedPoint = new Point((float) pred_x.getEntry(0), (float) pred_x.getEntry(1));
-		
-	}
 
+	public void predictPoint() {
+		RealVector pred_x = stateMatrix.operate(last_x).add(controlMatrix.operate(control));
+		predictedPoint = new Point((float) pred_x.getEntry(0), (float) pred_x.getEntry(1));
+	}
 }
