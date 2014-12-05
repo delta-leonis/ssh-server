@@ -16,7 +16,8 @@ public class World extends Observable {
 
 	private World() {
 		ball = new Ball();
-		ball.setPosition(new Point(400,200));	//added starting point for ball to remove nullpointer errors
+		ball.setPosition(new Point(400, 200)); // added starting point for ball
+												// to remove nullpointer errors
 		referee = new Referee();
 	}
 
@@ -26,13 +27,13 @@ public class World extends Observable {
 		}
 		return instance;
 	}
-	
-	public void HandlerFinished(String message){
+
+	public void HandlerFinished(String message) {
 		setChanged();
 		notifyObservers(message + "HandlerFinished");
 	}
-	
-	public void RobotAdded(){
+
+	public void RobotAdded() {
 		setChanged();
 		notifyObservers("RobotAdded");
 	}
@@ -66,18 +67,15 @@ public class World extends Observable {
 		return field;
 	}
 
-	public Team getTeamByColor(Color color){
-		if(color.equals(this.getAlly().getColor()))
-		{
+	public Team getTeamByColor(Color color) {
+		if (color.equals(this.getAlly().getColor())) {
 			return this.getAlly();
-		}
-		else if(color.equals(this.getEnemy().getColor()))
-		{
+		} else if (color.equals(this.getEnemy().getColor())) {
 			return this.getEnemy();
 		}
 		return null;
 	}
-	
+
 	public Team getAlly() {
 		return ally;
 	}
@@ -95,16 +93,15 @@ public class World extends Observable {
 	}
 
 	/**
-	 * @param field
-	 *            the field to set
+	 * @param field the field to set
 	 */
 	public void setField(Field field) {
 		this.field = field;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "World \r\n[ball=" + ball + "\r\nreferee=" + referee +  "\r\nownTeamColor=" + ownTeamColor + "\r\n" + field + "\r\n" + enemy + "\r\n"
-				+ ally + "]";
+		return "World \r\n[ball=" + ball + "\r\nreferee=" + referee + "\r\nownTeamColor=" + ownTeamColor + "\r\n"
+				+ field + "\r\n" + enemy + "\r\n" + ally + "]";
 	}
 }

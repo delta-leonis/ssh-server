@@ -6,8 +6,7 @@ public class Ally extends Robot {
 	private boolean dribble;
 	private long lastKicked;
 
-	public Ally(int robotID, boolean isKeeper, float height, double diameter,
-			Team team, int channel) {
+	public Ally(int robotID, boolean isKeeper, float height, double diameter, Team team, int channel) {
 		super(robotID, isKeeper, height, diameter, team);
 		this.channel = channel;
 	}
@@ -55,14 +54,9 @@ public class Ally extends Robot {
 		this.lastKicked = lastKicked;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		return "Ally [channel=" + channel + ", dribble=" + dribble + ", lastKicked=" + lastKicked + ", " + super.toString();
+		return "Ally [channel=" + channel + ", dribble=" + dribble + ", lastKicked=" + lastKicked + ", "
+				+ super.toString();
 	}
-	
-	
-	
 }

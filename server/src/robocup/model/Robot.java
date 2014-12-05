@@ -1,7 +1,6 @@
 package robocup.model;
 
 import robocup.controller.ai.highLevelBehavior.forcebehavior.Mode;
-import robocup.controller.ai.highLevelBehavior.forcebehavior.Mode.roles;
 
 public abstract class Robot extends FieldObject {
 
@@ -14,7 +13,7 @@ public abstract class Robot extends FieldObject {
 	private float batteryStatus;
 	private long powerUpTime;
 	private boolean onSight;
-	private  Mode.roles role;
+	private Mode.roles role;
 
 	public Robot(int robotID, boolean isKeeper, float height, double diameter, Team team) {
 		super();
@@ -35,8 +34,7 @@ public abstract class Robot extends FieldObject {
 	}
 
 	/**
-	 * @param robotID
-	 *            the robotID to set
+	 * @param robotID the robotID to set
 	 */
 	public void setRobotID(int robotID) {
 		this.robotID = robotID;
@@ -50,16 +48,16 @@ public abstract class Robot extends FieldObject {
 	public void update(Point p, double updateTime, int lastCamUpdateNo) {
 		super.update(p, updateTime, lastCamUpdateNo);
 	}
-	
+
 	/** 
 	 * Set a role (keeper/defender/attacker/etc)
 	 * @param role
 	 */
-	public void setRole( Mode.roles role) {
-		//System.out.println(" set role " + role);
+	public void setRole(Mode.roles role) {
+		// System.out.println(" set role " + role);
 		this.role = role;
 	}
-	
+
 	/**
 	 * Get the assigned role (keeper/defender/attacker/null/etc)
 	 * @return
@@ -84,8 +82,7 @@ public abstract class Robot extends FieldObject {
 	}
 
 	/**
-	 * @param isKeeper
-	 *            the isKeeper to set
+	 * @param isKeeper the isKeeper to set
 	 */
 	public void setKeeper(boolean isKeeper) {
 		this.isKeeper = isKeeper;
@@ -99,8 +96,7 @@ public abstract class Robot extends FieldObject {
 	}
 
 	/**
-	 * @param orientation
-	 *            the orientation to set
+	 * @param orientation the orientation to set
 	 */
 	public void setOrientation(int orientation) {
 		this.orientation = orientation;
@@ -114,8 +110,7 @@ public abstract class Robot extends FieldObject {
 	}
 
 	/**
-	 * @param height
-	 *            the height to set
+	 * @param height the height to set
 	 */
 	public void setHeight(float height) {
 		this.height = height;
@@ -129,8 +124,7 @@ public abstract class Robot extends FieldObject {
 	}
 
 	/**
-	 * @param diameter
-	 *            the diameter to set
+	 * @param diameter the diameter to set
 	 */
 	public void setDiameter(double diameter) {
 		this.diameter = diameter;
@@ -144,8 +138,7 @@ public abstract class Robot extends FieldObject {
 	}
 
 	/**
-	 * @param team
-	 *            the team to set
+	 * @param team the team to set
 	 */
 	public void setTeam(Team team) {
 		this.team = team;
@@ -169,20 +162,14 @@ public abstract class Robot extends FieldObject {
 		this.batteryStatus = batteryStatus;
 		powerUpTime = timestamp;
 	}
-	
+
 	public void setBatteryStatus(float batteryStatus) {
 		this.batteryStatus = batteryStatus;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "robotID=" + robotID + ", isKeeper=" + isKeeper + ", orientation=" + orientation + ", height=" + height
 				+ ", diameter=" + diameter + ", " + super.toString() + "\r\n";
 	}
-
 }

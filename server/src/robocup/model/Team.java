@@ -49,8 +49,7 @@ public class Team {
 	}
 
 	/**
-	 * @param name
-	 *            the name to set
+	 * @param name the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -64,8 +63,7 @@ public class Team {
 	}
 
 	/**
-	 * @param teamColor
-	 *            the teamColor to set
+	 * @param teamColor the teamColor to set
 	 */
 	public void setColor(Color color) {
 		this.color = color;
@@ -79,8 +77,7 @@ public class Team {
 	}
 
 	/**
-	 * @param score
-	 *            the score to set
+	 * @param score the score to set
 	 */
 	public void setScore(int score) {
 		this.score = score;
@@ -94,8 +91,7 @@ public class Team {
 	}
 
 	/**
-	 * @param timeoutsLeft
-	 *            the timeoutsLeft to set
+	 * @param timeoutsLeft the timeoutsLeft to set
 	 */
 	public void setTimeoutsLeft(int timeoutsLeft) {
 		this.timeoutsLeft = timeoutsLeft;
@@ -109,8 +105,7 @@ public class Team {
 	}
 
 	/**
-	 * @param remainingCardTimes
-	 *            the remainingCardTimes to set
+	 * @param remainingCardTimes the remainingCardTimes to set
 	 */
 	public void setRemainingCardTimes(ArrayList<Long> remainingCardTimes) {
 		this.remainingCardTimes = remainingCardTimes;
@@ -124,8 +119,7 @@ public class Team {
 	}
 
 	/**
-	 * @param yellowcards
-	 *            the yellowcards to set
+	 * @param yellowcards the yellowcards to set
 	 */
 	public void setYellowCards(int yellowCards) {
 		this.yellowCards = yellowCards;
@@ -139,8 +133,7 @@ public class Team {
 	}
 
 	/**
-	 * @param redcards
-	 *            the redcards to set
+	 * @param redcards the redcards to set
 	 */
 	public void setRedCards(int redCards) {
 		this.redCards = redCards;
@@ -158,8 +151,8 @@ public class Team {
 	}
 
 	public void removeRobot(int robotId) {
-		for(int i = 0; i < robots.size(); i++) {
-			if(robots.get(i).getRobotID() == robotId) {
+		for (int i = 0; i < robots.size(); i++) {
+			if (robots.get(i).getRobotID() == robotId) {
 				robots.remove(i);
 				return;
 			}
@@ -178,11 +171,6 @@ public class Team {
 		return r;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "Team [name=" + name + ", color=" + color + ", score=" + score + ", timeoutsLeft=" + timeoutsLeft
@@ -195,7 +183,7 @@ public class Team {
 		for (int i = 0; i < robots.size(); i++) {
 			robotString += "\t" + robots.get(i).toString();
 		}
-		
+
 		return robotString;
 	}
 }

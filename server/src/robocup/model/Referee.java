@@ -3,7 +3,6 @@ package robocup.model;
 import robocup.model.enums.Command;
 import robocup.model.enums.Stage;
 
-
 public class Referee {
 
 	private long timeoutTimeLeft;
@@ -40,11 +39,9 @@ public class Referee {
 	public long getTimeoutTimeLeft() {
 		return timeoutTimeLeft;
 	}
-	
 
 	/**
-	 * @param timeoutTimeLeft
-	 *            the timeoutTimeLeft to set
+	 * @param timeoutTimeLeft the timeoutTimeLeft to set
 	 */
 	public void setTimeoutTimeLeft(long timeoutTimeLeft) {
 		this.timeoutTimeLeft = timeoutTimeLeft;
@@ -58,8 +55,7 @@ public class Referee {
 	}
 
 	/**
-	 * @param stagetimeLeft
-	 *            the stagetimeLeft to set
+	 * @param stagetimeLeft the stagetimeLeft to set
 	 */
 	public void setStagetimeLeft(int stagetimeLeft) {
 		this.stagetimeLeft = stagetimeLeft;
@@ -80,8 +76,7 @@ public class Referee {
 	}
 
 	/**
-	 * @param commandCounter
-	 *            the commandCounter to set
+	 * @param commandCounter the commandCounter to set
 	 */
 	public void setCommandCounter(int commandCounter) {
 		this.commandCounter = commandCounter;
@@ -95,8 +90,7 @@ public class Referee {
 	}
 
 	/**
-	 * @param lastCommandTimestamp
-	 *            the lastCommandTimestamp to set
+	 * @param lastCommandTimestamp the lastCommandTimestamp to set
 	 */
 	public void setLastCommandTimestamp(long lastCommandTimestamp) {
 		this.lastCommandTimestamp = lastCommandTimestamp;
@@ -110,16 +104,10 @@ public class Referee {
 		this.start = start;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "Referee [timeoutTimeLeft=" + timeoutTimeLeft + ", stagetimeLeft=" + stagetimeLeft + ", stage=" + stage
 				+ ", command=" + command + ", commandCounter=" + commandCounter + ", lastCommandTimestamp="
 				+ lastCommandTimestamp + "]" + "\r\n";
 	}
-	
-	
-
 }

@@ -94,7 +94,7 @@ public class Field {
 	}
 
 	/**
-	 * Calculates goal diamensions and creates them. uses goalWidth, goalDepth,
+	 * Calculates goal dimensions and creates them. uses goalWidth, goalDepth,
 	 * goalWallWidth, goalHeigth, length
 	 */
 	private void createGoals(int goalWidth, int goalDepth, int goalWallWidth, int goalHeigth) {
@@ -121,8 +121,7 @@ public class Field {
 	}
 
 	/**
-	 * @param length
-	 *            the length to set
+	 * @param length the length to set
 	 */
 	public void setLength(int length) {
 		this.length = length;
@@ -136,8 +135,7 @@ public class Field {
 	}
 
 	/**
-	 * @param width
-	 *            the width to set
+	 * @param width the width to set
 	 */
 	public void setWidth(int width) {
 		this.width = width;
@@ -151,8 +149,7 @@ public class Field {
 	}
 
 	/**
-	 * @param lineWidth
-	 *            the lineWidth to set
+	 * @param lineWidth the lineWidth to set
 	 */
 	public void setLineWidth(int lineWidth) {
 		this.lineWidth = lineWidth;
@@ -166,8 +163,7 @@ public class Field {
 	}
 
 	/**
-	 * @param boundaryWidth
-	 *            the boundaryWidth to set
+	 * @param boundaryWidth the boundaryWidth to set
 	 */
 	public void setBoundaryWidth(int boundaryWidth) {
 		this.boundaryWidth = boundaryWidth;
@@ -181,8 +177,7 @@ public class Field {
 	}
 
 	/**
-	 * @param refereeWidth
-	 *            the refereeWidth to set
+	 * @param refereeWidth the refereeWidth to set
 	 */
 	public void setRefereeWidth(int refereeWidth) {
 		this.refereeWidth = refereeWidth;
@@ -196,8 +191,7 @@ public class Field {
 	}
 
 	/**
-	 * @param centerCircleRadius
-	 *            the centerCircleRadius to set
+	 * @param centerCircleRadius the centerCircleRadius to set
 	 */
 	public void setCenterCircleRadius(int centerCircleRadius) {
 		this.centerCircleRadius = centerCircleRadius;
@@ -211,8 +205,7 @@ public class Field {
 	}
 
 	/**
-	 * @param defenceRadius
-	 *            the defenceRadius to set
+	 * @param defenceRadius the defenceRadius to set
 	 */
 	public void setDefenceRadius(int defenceRadius) {
 		this.defenceRadius = defenceRadius;
@@ -226,8 +219,7 @@ public class Field {
 	}
 
 	/**
-	 * @param defenceStretch
-	 *            the defenceStretch to set
+	 * @param defenceStretch the defenceStretch to set
 	 */
 	public void setDefenceStretch(int defenceStretch) {
 		this.defenceStretch = defenceStretch;
@@ -241,8 +233,7 @@ public class Field {
 	}
 
 	/**
-	 * @param freeKickFromDefenceDistance
-	 *            the freeKickFromDefenceDistance to set
+	 * @param freeKickFromDefenceDistance the freeKickFromDefenceDistance to set
 	 */
 	public void setFreeKickFromDefenceDistance(int freeKickFromDefenceDistance) {
 		this.freeKickFromDefenceDistance = freeKickFromDefenceDistance;
@@ -256,8 +247,7 @@ public class Field {
 	}
 
 	/**
-	 * @param penaltySpotFromFieldLineDistance
-	 *            the penaltySpotFromFieldLineDistance to set
+	 * @param penaltySpotFromFieldLineDistance the penaltySpotFromFieldLineDistance to set
 	 */
 	public void setPenaltySpotFromFieldLineDistance(int penaltySpotFromFieldLineDistance) {
 		this.penaltySpotFromFieldLineDistance = penaltySpotFromFieldLineDistance;
@@ -271,8 +261,7 @@ public class Field {
 	}
 
 	/**
-	 * @param penaltyLineFromSpotDistance
-	 *            the penaltyLineFromSpotDistance to set
+	 * @param penaltyLineFromSpotDistance the penaltyLineFromSpotDistance to set
 	 */
 	public void setPenaltyLineFromSpotDistance(int penaltyLineFromSpotDistance) {
 		this.penaltyLineFromSpotDistance = penaltyLineFromSpotDistance;
@@ -284,16 +273,11 @@ public class Field {
 	public ArrayList<Goal> getGoal() {
 		return goals;
 	}
-	
-	public int getCameraOverlapZoneWidth(){
+
+	public int getCameraOverlapZoneWidth() {
 		return cameraOverlapZoneWidth;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "Field [length=" + length + "\r\n width=" + width + "\r\n lineWidth=" + lineWidth
@@ -313,8 +297,7 @@ public class Field {
 		for (int i = 0; i < goals.size(); i++) {
 			goalString += goals.get(i).toString() + "\r\n";
 		}
-		
+
 		return goalString;
 	}
-
 }

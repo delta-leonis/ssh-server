@@ -1,19 +1,19 @@
 package robocup.model;
 
-public class Goal{
+public class Goal {
 	private Point frontLeft;
 	private Point frontRight;
 	private Point backLeft;
 	private Point backRight;
-	private int wallWidth; //Width of goal post. Goal post is outside the defined goal area
+	private int wallWidth; // Width of goal post. Goal post is outside the
+							// defined goal area
 	private int height;
 
-	//_______________
-	//|W|<<<<>>>>|W|
-	//(W = wallWidth)
+	// _______________
+	// |W|<<<<>>>>|W|
+	// (W = wallWidth)
 
-    public Goal(Point frontLeft, Point frontRight, Point backLeft,
-			Point backRight, int wallWidth, int height) {
+	public Goal(Point frontLeft, Point frontRight, Point backLeft, Point backRight, int wallWidth, int height) {
 		this.frontLeft = frontLeft;
 		this.frontRight = frontRight;
 		this.backLeft = backLeft;
@@ -106,16 +106,10 @@ public class Goal{
 		this.backRight = backRight;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "Goal [frontLeft=" + frontLeft + ", frontRight=" + frontRight + ", backLeft=" + backLeft
-				+ ", backRight=" + backRight + ", wallWidth=" + wallWidth + ", height=" + height + "]"  + "\r\n";
+				+ ", backRight=" + backRight + ", wallWidth=" + wallWidth + ", height=" + height + "]" + "\r\n";
 	}
-	
-	
-	
-	
+
 }
