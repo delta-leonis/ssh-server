@@ -10,6 +10,7 @@ import robocup.controller.ai.lowLevelBehavior.FuckRobot;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Ball;
 import robocup.model.Point;
+import robocup.model.Referee;
 import robocup.model.Robot;
 import robocup.model.World;
 
@@ -20,6 +21,8 @@ public abstract class Mode {
 
 	@SuppressWarnings("unused")
 	private RobotExecuter[] robotExcecuter;
+	
+	protected World world;
 	
 	public enum roles { KEEPER, DEFENDER, ATTACKER, BLOCKER };
 
@@ -186,5 +189,50 @@ public abstract class Mode {
 		}
 
 		return false;
+	}
+	
+	
+	/**
+	 * Helper function for referee commands, checks last command issued 
+	 * 
+	 * @param robotID
+	 * @return bool indicating if movement is allowed
+	 */
+	protected boolean isAllowedToMove(World world, int robotID) {
+		// Get last command
+		Referee ref = world.getReferee();
+		String refCommand = "";
+		String refStage = "";
+		if(ref != null) {
+			if(ref.getCommand() != null) { 
+				refCommand = ref.getCommand().toString();
+				
+			}
+			if(ref.getStage() != null) {
+				refStage = ref.getStage().toString();
+			}
+		}
+ 
+		// Halt = all robots stop
+		if(refCommand.equals("HALT")) return false;
+		
+		// Stop = keep 50cm from ball
+		if(refCommand == "STOP") {
+			//System.out.println("STOP!, HAMERZEIT. 50cm buffer zone from the ball");
+			
+			// if the distance to ball is less then 50cm, is so return false
+			if((int) world.getAlly().getRobotByID(robotID).getPosition().getDeltaDistance(world.getBall().getPosition()) < 500) {
+				//System.out.println("To close to the ball, access revoked");
+				return false;
+			}
+
+		// Goal = Should be treated the same as STOP
+		} else if(refCommand == "GOAL_YELLOW" || refCommand == "GOAL_BLUE") {
+			//System.out.println("STOP! GOALZEIT!. A team has scored, should be treated as a STOP");
+			return false;
+		}
+
+		//System.out.println("Movement approved based on command:" + refCommand + " and during stage: " + refStage);
+		return true;
 	}
 }
