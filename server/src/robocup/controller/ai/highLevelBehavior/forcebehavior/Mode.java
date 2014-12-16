@@ -50,8 +50,6 @@ public abstract class Mode {
 	public abstract void updateExecuters(ArrayList<RobotExecuter> executers) ;
 	
 	
-	
-	
 	/**
 	 * Find a free position for the robot A position is free when the robot can
 	 * get the ball passed
@@ -86,6 +84,37 @@ public abstract class Mode {
 				if (distance < minDistance) {
 					closestRobot = r;
 					minDistance = distance;
+				}
+			}
+		}
+
+		return closestRobot;
+	}
+	
+	/**
+	 * Get the closest attacker to the ball on our team
+	 * 
+	 * @return closest robot
+	 */
+	protected Robot getClosestAttackerRobotToBall(World world) {
+		Ball ball = world.getBall();
+		ArrayList<Robot> robots = world.getAlly().getRobots();
+
+		int minDistance = -1;
+		Robot closestRobot = null;
+
+		for (Robot r : robots) {
+			if(r.getRole().equals("ATTACKER")) {
+				if (minDistance == -1) {
+					closestRobot = r;
+					minDistance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
+				} else {
+					int distance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
+	
+					if (distance < minDistance) {
+						closestRobot = r;
+						minDistance = distance;
+					}
 				}
 			}
 		}
@@ -224,6 +253,9 @@ public abstract class Mode {
 			// if the distance to ball is less then 50cm, is so return false
 			if((int) world.getAlly().getRobotByID(robotID).getPosition().getDeltaDistance(world.getBall().getPosition()) < 500) {
 				//System.out.println("To close to the ball, access revoked");
+				
+				//!TODO zorgen met de pathplanner dat er een "obstakel" van 50cm om de bal zit waardoor
+				// nog wel gereden kan worden, maar de 50cm clearence word gerespecteerd.
 				return false;
 			}
 

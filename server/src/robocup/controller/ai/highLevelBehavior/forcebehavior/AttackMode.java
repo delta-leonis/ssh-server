@@ -84,6 +84,8 @@ public class AttackMode extends Mode {
 	@Override
 	public void execute(ArrayList<RobotExecuter> executers) {
 
+		//System.out.println("Update");
+		
 		try {
 			for (RobotExecuter executer : executers) {
 				updateExecuter(executer, executer.getLowLevelBehavior()
@@ -111,26 +113,22 @@ public class AttackMode extends Mode {
 		// }
 
 		// Can I move?
-		if (isAllowedToMove(world, robot.getRobotID()) && isUpdate) {
-
-			// Allowed to move
-			//System.out.println(robot.getRobotID() + " is allowed to move");
-
-		} else if (!isUpdate) {
-
-			//System.out.println("assignment, no update");
-
+		if (isAllowedToMove(world, robot.getRobotID())) {
+			executer.stop(false);
 		} else {
-			//System.out.println(robot.getRobotID()
-			//		+ " is forbidden to move an Inch");
-
-			// !!TODO implement break and/or holding patterns for robots
-			// If it time for a penalty? getClosestAllyRobotToBall() and send him to the ball
-			
-			// ! TODO implement a free-pass for the robot doing the kickoff or
-			// penalty
-
+			executer.stop(true);
 		}
+		
+		//System.out.println(robot.getRobotID()
+		//		+ " is forbidden to move an Inch");
+		
+		// !!TODO implement break and/or holding patterns for robots
+		// If it time for a penalty? getClosestAttackerRobotToBall() and send him to the ball
+			
+		
+		
+		// ! TODO implement a free-pass for the robot doing the kickoff or
+		// penalty
 
 		Referee ref = world.getReferee();
 		String refCommand = "";
@@ -142,7 +140,7 @@ public class AttackMode extends Mode {
 				if(refCommand.equals(("PREPARE_KICKOFF_" + world.getAlly().getColor().toString()))) {
 
 					// Find robot closest to the ball, is it "me"?
-					Robot kickoffRobot = getClosestAllyRobotToBall(world);
+					Robot kickoffRobot = getClosestAttackerRobotToBall(world);
 					if(kickoffRobot.getRobotID() == robot.getRobotID()) {
 						
 						// Grab attacker???? and to ball position

@@ -5,21 +5,24 @@ import java.util.logging.Logger;
 import robocup.Main;
 import robocup.model.Robot;
 
-public class RobotExecuter implements Runnable{
+public class RobotExecuter implements Runnable {
 
 	private Robot robot;
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
-	
-	private LowLevelBehavior lowLevelBehavior;
 
-	public RobotExecuter(Robot robot){
+	private LowLevelBehavior lowLevelBehavior;
+	private boolean stop;
+
+	public RobotExecuter(Robot robot) {
 		LOGGER.info("new robot executer");
 		this.robot = robot;
 	}
-	
-	public void run(){
-		while(true){
-			if(robot.getPosition() != null)
+
+	public void run() {
+		while (true) {
+			if (stop) {
+				lowLevelBehavior.go.setDestination(null);
+			} else if (robot.getPosition() != null)
 				executeBehavior();
 			try {
 				Thread.sleep(10);
@@ -29,9 +32,9 @@ public class RobotExecuter implements Runnable{
 			}
 		}
 	}
-	
+
 	public void executeBehavior() {
-		if(lowLevelBehavior == null){
+		if (lowLevelBehavior == null) {
 			return;
 		}
 		lowLevelBehavior.calculate();
@@ -40,12 +43,16 @@ public class RobotExecuter implements Runnable{
 	public void setLowLevelBehavior(LowLevelBehavior lowLevelBehavior) {
 		this.lowLevelBehavior = lowLevelBehavior;
 	}
-	
-	public LowLevelBehavior getLowLevelBehavior(){
+
+	public LowLevelBehavior getLowLevelBehavior() {
 		return lowLevelBehavior;
 	}
 
-	public Robot getRobot(){
+	public Robot getRobot() {
 		return robot;
+	}
+
+	public void stop(boolean stop) {
+		this.stop = stop;
 	}
 }
