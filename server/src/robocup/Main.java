@@ -27,7 +27,7 @@ import robocup.model.World;
 import robocup.model.enums.Color;
 
 public class Main {
-	
+
 	public static final int TEST_ROBOT_ID = 1;
 	public static final int KEEPER_ROBOT_ID = 3;
 	public static final int TEST_FUCK_ROBOT_ID = 4;
@@ -56,7 +56,7 @@ public class Main {
 		LOGGER.info("AI initialized");
 		initAi();
 		LOGGER.info("Console disabled");
-		//console();
+		// console();
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class Main {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
 					javax.swing.UIManager.setLookAndFeel(info.getClassName());
-						break;
+					break;
 				}
 			}
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException

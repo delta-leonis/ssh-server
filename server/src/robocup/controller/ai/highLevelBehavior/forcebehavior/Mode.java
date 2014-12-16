@@ -21,10 +21,12 @@ public abstract class Mode {
 
 	@SuppressWarnings("unused")
 	private RobotExecuter[] robotExcecuter;
-	
+
 	protected World world;
-	
-	public enum roles { KEEPER, DEFENDER, ATTACKER, BLOCKER };
+
+	public enum roles {
+		KEEPER, DEFENDER, ATTACKER, BLOCKER
+	};
 
 	/**
 	 * Let the calculator recalculate all forces
@@ -37,7 +39,7 @@ public abstract class Mode {
 	 * @param executers
 	 */
 	public abstract void execute(ArrayList<RobotExecuter> executers);
-	
+
 	/**
 	 * Generate or Update a low level behavior for this executer
 	 * @param executer execute the executer
@@ -45,11 +47,9 @@ public abstract class Mode {
 	 * @param isUpdate false if a new behavior should be created, true if update is requred
 	 */
 	public abstract void updateExecuter(RobotExecuter executer, roles type, boolean isUpdate);
-	
-	
-	public abstract void updateExecuters(ArrayList<RobotExecuter> executers) ;
-	
-	
+
+	public abstract void updateExecuters(ArrayList<RobotExecuter> executers);
+
 	/**
 	 * Find a free position for the robot A position is free when the robot can
 	 * get the ball passed
@@ -90,7 +90,7 @@ public abstract class Mode {
 
 		return closestRobot;
 	}
-	
+
 	/**
 	 * Get the closest attacker to the ball on our team
 	 * 
@@ -104,13 +104,13 @@ public abstract class Mode {
 		Robot closestRobot = null;
 
 		for (Robot r : robots) {
-			if(r.getRole().equals("ATTACKER")) {
+			if (r.getRole().equals("ATTACKER")) {
 				if (minDistance == -1) {
 					closestRobot = r;
 					minDistance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
 				} else {
 					int distance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
-	
+
 					if (distance < minDistance) {
 						closestRobot = r;
 						minDistance = distance;
@@ -219,8 +219,7 @@ public abstract class Mode {
 
 		return false;
 	}
-	
-	
+
 	/**
 	 * Helper function for referee commands, checks last command issued 
 	 * 
@@ -233,39 +232,44 @@ public abstract class Mode {
 		String refCommand = "";
 		@SuppressWarnings("unused")
 		String refStage = "";
-		if(ref != null) {
-			if(ref.getCommand() != null) { 
+		if (ref != null) {
+			if (ref.getCommand() != null) {
 				refCommand = ref.getCommand().toString();
-				
+
 			}
-			if(ref.getStage() != null) {
+			if (ref.getStage() != null) {
 				refStage = ref.getStage().toString();
 			}
 		}
- 
+
 		// Halt = all robots stop
-		if(refCommand.equals("HALT")) return false;
-		
+		if (refCommand.equals("HALT"))
+			return false;
+
 		// Stop = keep 50cm from ball
-		if(refCommand == "STOP") {
-			//System.out.println("STOP!, HAMERZEIT. 50cm buffer zone from the ball");
-			
+		if (refCommand == "STOP") {
+			// System.out.println("STOP!, HAMERZEIT. 50cm buffer zone from the ball");
+
 			// if the distance to ball is less then 50cm, is so return false
-			if((int) world.getAlly().getRobotByID(robotID).getPosition().getDeltaDistance(world.getBall().getPosition()) < 500) {
-				//System.out.println("To close to the ball, access revoked");
-				
-				//!TODO zorgen met de pathplanner dat er een "obstakel" van 50cm om de bal zit waardoor
-				// nog wel gereden kan worden, maar de 50cm clearence word gerespecteerd.
+			if ((int) world.getAlly().getRobotByID(robotID).getPosition()
+					.getDeltaDistance(world.getBall().getPosition()) < 500) {
+				// System.out.println("To close to the ball, access revoked");
+
+				// !TODO zorgen met de pathplanner dat er een "obstakel" van
+				// 50cm om de bal zit waardoor
+				// nog wel gereden kan worden, maar de 50cm clearence word
+				// gerespecteerd.
 				return false;
 			}
 
-		// Goal = Should be treated the same as STOP
-		} else if(refCommand == "GOAL_YELLOW" || refCommand == "GOAL_BLUE") {
-			//System.out.println("STOP! GOALZEIT!. A team has scored, should be treated as a STOP");
+			// Goal = Should be treated the same as STOP
+		} else if (refCommand == "GOAL_YELLOW" || refCommand == "GOAL_BLUE") {
+			// System.out.println("STOP! GOALZEIT!. A team has scored, should be treated as a STOP");
 			return false;
 		}
 
-		//System.out.println("Movement approved based on command:" + refCommand + " and during stage: " + refStage);
+		// System.out.println("Movement approved based on command:" + refCommand
+		// + " and during stage: " + refStage);
 		return true;
 	}
 }

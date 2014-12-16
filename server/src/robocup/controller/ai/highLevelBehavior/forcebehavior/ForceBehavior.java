@@ -35,10 +35,8 @@ public class ForceBehavior extends Behavior {
 		// !TODO smerige test hack totdat defence ook bestaat
 		return attackMode;
 
-		/*
-		 * if(allyHasBall()) { // Attack return attackMode; } else { // Defence
-		 * return defenceMode; }
-		 */
+		/* if(allyHasBall()) { // Attack return attackMode; } else { // Defence
+		 * return defenceMode; } */
 
 		// calculate the most effective mode to play in, being either attack or
 		// defensive playstyles

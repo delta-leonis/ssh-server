@@ -18,22 +18,17 @@ public class Main implements Observer {
 	@SuppressWarnings("unused")
 	private ArrayList<Behavior> behaviors;
 	private Behavior behavior;
-	private ArrayList<RobotExecuter> robotExecuters =  new ArrayList<RobotExecuter>();
+	private ArrayList<RobotExecuter> robotExecuters = new ArrayList<RobotExecuter>();
 	@SuppressWarnings("unused")
 	private ArrayList<LowLevelBehavior> lowLevelBehaviors;
-
 
 	public Main() {
 		world = World.getInstance();
 		world.addObserver(this);
 
-
 		initExecutors();
-		
+
 		behavior = new ForceBehavior(robotExecuters);
-
-
-
 
 		// behaviors = new ArrayList<Behavior>();
 		// behaviors.add(new TestKeepingBehavior(1, null));
@@ -48,8 +43,8 @@ public class Main implements Observer {
 	}
 
 	public void update(Observable o, Object arg) {
-		//check if behavior isnt null, else program crash
-		if(behavior == null) {
+		// check if behavior isnt null, else program crash
+		if (behavior == null) {
 			return;
 		}
 		if ("detectionHandlerFinished".equals(arg)) {
@@ -68,7 +63,7 @@ public class Main implements Observer {
 		for (Robot robot : team.getRobots()) {
 			boolean executerFound = false;
 
-			if(robotExecuters != null) {
+			if (robotExecuters != null) {
 				for (RobotExecuter exec : robotExecuters) {
 					if (exec.getRobot().getRobotID() == robot.getRobotID()) {
 						updatedRobotExecuters.add(exec);
@@ -76,7 +71,7 @@ public class Main implements Observer {
 					}
 				}
 			}
-			
+
 			if (!executerFound) {
 				RobotExecuter executer = new RobotExecuter(robot);
 				new Thread(executer).start();

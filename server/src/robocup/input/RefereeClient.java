@@ -8,7 +8,7 @@ import java.io.IOException;
  * @author Erik Hubers, Gerbrand Bosch
  *
  */
-public class RefereeClient extends UDPClient{
+public class RefereeClient extends UDPClient {
 
 	public RefereeClient(String host, int port) {
 		super(host, port);

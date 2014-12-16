@@ -10,13 +10,13 @@ public class RobotInputHandler {
 	public RobotInputHandler(World world) {
 		this.world = world;
 	}
-	
-	public void process(int robotID, int batteryStatus, long timestamp){
+
+	public void process(int robotID, int batteryStatus, long timestamp) {
 		Robot r = world.getAlly().getRobotByID(robotID);
-		
-		if(r != null){
-			r.setBatteryStatus(batteryStatus,timestamp);
+
+		if (r != null) {
+			r.setBatteryStatus(batteryStatus, timestamp);
 		}
-		
+
 	}
 }

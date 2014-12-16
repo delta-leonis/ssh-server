@@ -9,12 +9,10 @@ import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class DefenceMode extends Mode {
-	
-	
+
 	public DefenceMode(ArrayList<RobotExecuter> executers) {
-		
+
 	}
-	
 
 	@Override
 	public void setFieldForce() {
@@ -24,21 +22,19 @@ public class DefenceMode extends Mode {
 	@Override
 	public void execute(ArrayList<RobotExecuter> executers) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
-	public void updateExecuter(RobotExecuter executer, roles type,
-			boolean isUpdate) {
+	public void updateExecuter(RobotExecuter executer, roles type, boolean isUpdate) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void updateExecuters(ArrayList<RobotExecuter> executers) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	
+
 }

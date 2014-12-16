@@ -22,48 +22,52 @@ public class TestPositionBehavior extends Behavior {
 		World w = World.getInstance();
 		robots = w.getAlly().getRobots();
 		Robot closest = getClosestToTarget(robots, World.getInstance().getBall().getPosition());
-		for( Robot r  : robots){
+		for (Robot r : robots) {
 			try {
 				RobotExecuter executer = findExecuter(r.getRobotID(), executers);
-				if( executer == null ) {
+				if (executer == null) {
 					executer = new RobotExecuter(r);
-//					executer.setLowLevelBehavior(new GotoPosition(r, ComInterface.getInstance(RobotCom.class), new Point(500,500), w.getBall().getPosition()));
-//					new Thread(executer).start();
+					// executer.setLowLevelBehavior(new GotoPosition(r,
+					// ComInterface.getInstance(RobotCom.class), new
+					// Point(500,500), w.getBall().getPosition()));
+					// new Thread(executer).start();
 					executers.add(executer);
-					go = new GotoPosition(r, ComInterface.getInstance(RobotCom.class), new Point(500,500), w.getBall().getPosition());
+					go = new GotoPosition(r, ComInterface.getInstance(RobotCom.class), new Point(500, 500), w.getBall()
+							.getPosition());
 				}
-				if(w.getBall().getPosition()!= null && r.getPosition().getDeltaDistance(w.getBall().getPosition() )> 700)
+				if (w.getBall().getPosition() != null
+						&& r.getPosition().getDeltaDistance(w.getBall().getPosition()) > 700)
 					goToBall(r, executer);
-				else if(r.equals(closest)){
+				else if (r.equals(closest)) {
 					goToBall(r, executer);
 				} else {
 					go.setTarget(null);
 				}
-			}catch(NullPointerException e){
+			} catch (NullPointerException e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 		go.calculate();
 	}
-	
-	private void goToBall(Robot r, RobotExecuter e){
-		
+
+	private void goToBall(Robot r, RobotExecuter e) {
+
 		Ball b = World.getInstance().getBall();
-		
-//		System.out.println(" Bal pos: " +  b.getPosition());
-//	
-//		GotoPosition go = null;
-//		if(e.getLowLevelBehavior() instanceof GotoPosition) {
-//			go = (GotoPosition)e.getLowLevelBehavior();
-//		}
-		
-		
+
+		// System.out.println(" Bal pos: " + b.getPosition());
+		//
+		// GotoPosition go = null;
+		// if(e.getLowLevelBehavior() instanceof GotoPosition) {
+		// go = (GotoPosition)e.getLowLevelBehavior();
+		// }
+
 		// check if new position is within the worlds bounds
-		//System.out.println(b.getPosition());
-		//System.out.println(World.getInstance().getField().getLength() + "  " + World.getInstance().getField().getWidth());
-		
-		//>prutteltje testing temp
+		// System.out.println(b.getPosition());
+		// System.out.println(World.getInstance().getField().getLength() + "  "
+		// + World.getInstance().getField().getWidth());
+
+		// >prutteltje testing temp
 		Point p = null;
 		// Get field params
 		float fieldX = World.getInstance().getField().getLength() / 2;
@@ -72,28 +76,27 @@ public class TestPositionBehavior extends Behavior {
 		float targetPositionY = b.getPosition().getY();
 		float borderZoneX = 30f;
 		float borderZoneY = 30;
-		
-		if(Math.abs(targetPositionX) < (fieldX - borderZoneX) && Math.abs(targetPositionY) < (fieldY - borderZoneY)) {
+
+		if (Math.abs(targetPositionX) < (fieldX - borderZoneX) && Math.abs(targetPositionY) < (fieldY - borderZoneY)) {
 			p = new Point(targetPositionX, targetPositionY);
-			
+
 			go.setTarget(p);
-			go.setDestination(new Point(500,500));
-		}
-		else{
+			go.setDestination(new Point(500, 500));
+		} else {
 			go.setTarget(null);
 			go.setDestination(null);
 		}
-		//go.setTarget(b.getPosition());
+		// go.setTarget(b.getPosition());
 	}
-	
-	private Robot getClosestToTarget(ArrayList<Robot> robots, Point p){
+
+	private Robot getClosestToTarget(ArrayList<Robot> robots, Point p) {
 		Robot closest = null;
 		double distance = Double.MAX_VALUE;
-		for( Robot r : robots){
+		for (Robot r : robots) {
 			Point robotPosition = r.getPosition();
-//			System.out.println(r.isOnSight());
-			if(robotPosition != null && p != null && r.isOnSight()){
-				if( r.getPosition().getDeltaDistance(p) < distance ){
+			// System.out.println(r.isOnSight());
+			if (robotPosition != null && p != null && r.isOnSight()) {
+				if (r.getPosition().getDeltaDistance(p) < distance) {
 					closest = r;
 					distance = r.getPosition().getDeltaDistance(p);
 				}
@@ -105,6 +108,6 @@ public class TestPositionBehavior extends Behavior {
 	@Override
 	public void updateExecuters(ArrayList<RobotExecuter> executers) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

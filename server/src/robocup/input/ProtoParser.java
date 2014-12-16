@@ -35,7 +35,7 @@ public class ProtoParser {
 	 * @param data
 	 */
 	public void parseVision(ByteArrayInputStream data) {
-		
+
 		try {
 			SSL_WrapperPacket wrapper = SSL_WrapperPacket.parseFrom(data);
 			if (wrapper.hasDetection()) {
@@ -76,7 +76,7 @@ public class ProtoParser {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+
 		return retValue;
 	}
 

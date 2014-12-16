@@ -27,7 +27,7 @@ public class MainHandler implements Runnable {
 	@Override
 	public void run() {
 		while (true) {
-			//Method blocks until Object available
+			// Method blocks until Object available
 			Object message = protoParser.getHeadObject();
 
 			if (message instanceof SSL_DetectionFrame) {

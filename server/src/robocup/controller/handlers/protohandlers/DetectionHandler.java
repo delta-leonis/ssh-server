@@ -143,12 +143,12 @@ public class DetectionHandler {
 			double deltaDistance = filter.getPredictPoint().getDeltaDistance(filterPoint);
 			int xSpeed = (int) (robotMessage.getX() - filter.getLastX());
 			int ySpeed = (int) (robotMessage.getY() - filter.getLastY());
-			
-			//Point data after Kalman filtering
+
+			// Point data after Kalman filtering
 			Point filteredPoint = filter.filterPoint(filterPoint, xSpeed, ySpeed);
 			filter.predictPoint(); // predict new point for next iteration
 
-			//if predicted and measured points are close update position data
+			// if predicted and measured points are close update position data
 			if (deltaDistance < 20) {
 				if (robotMessage.hasOrientation()) {
 					int degrees = (int) Math.toDegrees(robotMessage.getOrientation());

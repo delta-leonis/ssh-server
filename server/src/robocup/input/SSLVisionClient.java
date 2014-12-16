@@ -21,7 +21,7 @@ public class SSLVisionClient extends UDPClient {
 	public void startListening() throws IOException {
 		ByteArrayInputStream data = null;
 		while (true) {
-				data = receive();
+			data = receive();
 			if (data != null) {
 				protoParser.parseVision(data);
 			}

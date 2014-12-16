@@ -17,10 +17,8 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class AttackMode extends Mode {
 
-	private static final Point MID_GOAL_NEGATIVE = new Point(-(World
-			.getInstance().getField().getLength() / 2), 0);
-	private static final Point MID_GOAL_POSITIVE = new Point(World
-			.getInstance().getField().getLength() / 2, 0);
+	private static final Point MID_GOAL_NEGATIVE = new Point(-(World.getInstance().getField().getLength() / 2), 0);
+	private static final Point MID_GOAL_POSITIVE = new Point(World.getInstance().getField().getLength() / 2, 0);
 
 	private Point offset = new Point(0, 0);
 	private int shootDirection = -100;
@@ -42,16 +40,16 @@ public class AttackMode extends Mode {
 		this.executers = executers;
 		// int executerCounter = 0;
 
-		//System.out.println("attackmode: updateExecuters");
+		// System.out.println("attackmode: updateExecuters");
 		for (RobotExecuter executer : executers) {
 
 			if (executer.getRobot().getRobotID() == 1) {
-				//System.out.println(executer.getRobot().getRobotID()
-				//		+ "  is nu keeper");
+				// System.out.println(executer.getRobot().getRobotID()
+				// + "  is nu keeper");
 				updateExecuter(executer, roles.KEEPER, false);
 			} else {
-				//System.out.println(executer.getRobot().getRobotID()
-				//		+ "  is nu defender");
+				// System.out.println(executer.getRobot().getRobotID()
+				// + "  is nu defender");
 				updateExecuter(executer, roles.DEFENDER, false);
 			}
 
@@ -84,23 +82,21 @@ public class AttackMode extends Mode {
 	@Override
 	public void execute(ArrayList<RobotExecuter> executers) {
 
-		//System.out.println("Update");
-		
+		// System.out.println("Update");
+
 		try {
 			for (RobotExecuter executer : executers) {
-				updateExecuter(executer, executer.getLowLevelBehavior()
-						.getRole(), true);
+				updateExecuter(executer, executer.getLowLevelBehavior().getRole(), true);
 			}
 		} catch (Exception e) {
-			//System.out.println("Ik ben dood in attackmode");
+			// System.out.println("Ik ben dood in attackmode");
 			e.printStackTrace();
 		}
 	}
 
 	@Override
 	// Genereert EN update een executer met een lowlevel behaviour
-	public void updateExecuter(RobotExecuter executer, roles type,
-			boolean isUpdate) {
+	public void updateExecuter(RobotExecuter executer, roles type, boolean isUpdate) {
 
 		Robot robot = executer.getRobot();
 		Ball ball = world.getBall();
@@ -118,50 +114,43 @@ public class AttackMode extends Mode {
 		} else {
 			executer.stop(true);
 		}
-		
-		//System.out.println(robot.getRobotID()
-		//		+ " is forbidden to move an Inch");
-		
+
+		// System.out.println(robot.getRobotID()
+		// + " is forbidden to move an Inch");
+
 		// !!TODO implement break and/or holding patterns for robots
-		// If it time for a penalty? getClosestAttackerRobotToBall() and send him to the ball
-			
-		
-		
+		// If it time for a penalty? getClosestAttackerRobotToBall() and send
+		// him to the ball
+
 		// ! TODO implement a free-pass for the robot doing the kickoff or
 		// penalty
 
 		Referee ref = world.getReferee();
 		String refCommand = "";
-		if(ref != null) {
-			if(ref.getCommand() != null) {
+		if (ref != null) {
+			if (ref.getCommand() != null) {
 				refCommand = ref.getCommand().toString();
-				
+
 				// Does our team have to prepare for kickoff?
-				if(refCommand.equals(("PREPARE_KICKOFF_" + world.getAlly().getColor().toString()))) {
+				if (refCommand.equals(("PREPARE_KICKOFF_" + world.getAlly().getColor().toString()))) {
 
 					// Find robot closest to the ball, is it "me"?
 					Robot kickoffRobot = getClosestAttackerRobotToBall(world);
-					if(kickoffRobot.getRobotID() == robot.getRobotID()) {
-						
+					if (kickoffRobot.getRobotID() == robot.getRobotID()) {
+
 						// Grab attacker???? and to ball position
-						
+
 					}
 				}
 			}
-			
-			
+
 			// A new referee command was issued
-			if(ref.getCommandCounter() > lastCommandCounter) {
-				//System.out.println("Command received: " + refCommand);
+			if (ref.getCommandCounter() > lastCommandCounter) {
+				// System.out.println("Command received: " + refCommand);
 			}
 		}
-		
-		
 
-		
-		
-		/* 
-		 * // Check for referee-updates / commands Referee ref =
+		/* // Check for referee-updates / commands Referee ref =
 		 * world.getReferee();
 		 * 
 		 * // A new referee command was issued if(ref.getCommandCounter() >
@@ -176,54 +165,43 @@ public class AttackMode extends Mode {
 		 * 
 		 * }
 		 * 
-		 * lastCommandCounter = ref.getCommandCounter() ; }
-		 */
+		 * lastCommandCounter = ref.getCommandCounter() ; } */
 
 		switch (type) {
 		case KEEPER:
- 
+
 			if (isUpdate) {
-				((Keeper) executer.getLowLevelBehavior()).update(
-						keeperDistanceToGoal, false, ball.getPosition(),
+				((Keeper) executer.getLowLevelBehavior()).update(keeperDistanceToGoal, false, ball.getPosition(),
 						robot.getPosition());
 			} else {
 
-				executer.setLowLevelBehavior(new Keeper(robot, ComInterface
-						.getInstance(RobotCom.class), keeperDistanceToGoal,
-						false, ball.getPosition(), robot.getPosition(), robot
-								.getPosition().getX() > 0 ? MID_GOAL_POSITIVE
-								: MID_GOAL_NEGATIVE, world.getField()
-								.getWidth() / 2));
+				executer.setLowLevelBehavior(new Keeper(robot, ComInterface.getInstance(RobotCom.class),
+						keeperDistanceToGoal, false, ball.getPosition(), robot.getPosition(), robot.getPosition()
+								.getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE, world.getField().getWidth() / 2));
 			}
 			break;
 
 		case DEFENDER:
 			if (isUpdate) {
-				((KeeperDefender) executer.getLowLevelBehavior()).update(
-						distanceToGoal, false, ball.getPosition(),
+				((KeeperDefender) executer.getLowLevelBehavior()).update(distanceToGoal, false, ball.getPosition(),
 						robot.getPosition());
 			} else {
-				executer.setLowLevelBehavior(new KeeperDefender(robot,
-						ComInterface.getInstance(RobotCom.class),
-						distanceToGoal, false, ball.getPosition(), robot
-								.getPosition(),
-						robot.getPosition().getX() > 0 ? MID_GOAL_POSITIVE
-								: MID_GOAL_NEGATIVE, offset, world.getField()
-								.getWidth() / 2));
+				executer.setLowLevelBehavior(new KeeperDefender(robot, ComInterface.getInstance(RobotCom.class),
+						distanceToGoal, false, ball.getPosition(), robot.getPosition(),
+						robot.getPosition().getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE, offset, world
+								.getField().getWidth() / 2));
 			}
 			break;
 
 		case ATTACKER:
-			Point freePosition = getClosestAllyRobotToBall(world) == robot ? null
-					: getFreePosition(null);
+			Point freePosition = getClosestAllyRobotToBall(world) == robot ? null : getFreePosition(null);
 
 			if (isUpdate) {
-				((Attacker) executer.getLowLevelBehavior()).update(
-						freePosition, ball.getPosition(), 0, 0, shootDirection);
+				((Attacker) executer.getLowLevelBehavior()).update(freePosition, ball.getPosition(), 0, 0,
+						shootDirection);
 			} else {
-				executer.setLowLevelBehavior(new Attacker(robot, ComInterface
-						.getInstance(RobotCom.class), freePosition, ball
-						.getPosition(), 0, 0, shootDirection));
+				executer.setLowLevelBehavior(new Attacker(robot, ComInterface.getInstance(RobotCom.class),
+						freePosition, ball.getPosition(), 0, 0, shootDirection));
 			}
 
 			break;
@@ -235,15 +213,12 @@ public class AttackMode extends Mode {
 			int distanceToOpponent = 250;
 
 			if (isUpdate) {
-				((Blocker) executer.getLowLevelBehavior()).update(
-						distanceToOpponent, ball.getPosition(),
-						robot.getPosition(), opponent.getPosition(),
-						opponent.getRobotID());
+				((Blocker) executer.getLowLevelBehavior()).update(distanceToOpponent, ball.getPosition(),
+						robot.getPosition(), opponent.getPosition(), opponent.getRobotID());
 			} else {
-				executer.setLowLevelBehavior(new Blocker(robot, ComInterface
-						.getInstance(RobotCom.class), distanceToOpponent, ball
-						.getPosition(), robot.getPosition(), opponent
-						.getPosition(), opponent.getRobotID()));
+				executer.setLowLevelBehavior(new Blocker(robot, ComInterface.getInstance(RobotCom.class),
+						distanceToOpponent, ball.getPosition(), robot.getPosition(), opponent.getPosition(), opponent
+								.getRobotID()));
 			}
 			break;
 		}

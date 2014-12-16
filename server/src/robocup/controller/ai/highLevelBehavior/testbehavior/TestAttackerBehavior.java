@@ -37,26 +37,27 @@ public class TestAttackerBehavior extends Behavior {
 	public void execute(ArrayList<RobotExecuter> executers) {
 		attacker = world.getAlly().getRobotByID(robotId);
 		ball = world.getBall();
-		
-		if(attacker != null && ball != null) {
+
+		if (attacker != null && ball != null) {
 			RobotExecuter executer = findExecuter(robotId, executers);
 			Point freePosition = getClosestAllyRobotToBall() == attacker ? null : getFreePosition(null);
-			
+
 			// Initialize executer for this robot
-			if(executer == null) {
+			if (executer == null) {
 				executer = new RobotExecuter(attacker);
-				executer.setLowLevelBehavior(new Attacker(attacker, ComInterface.getInstance(RobotCom.class), freePosition, 
-						ball.getPosition(), 0, 0, shootDirection));
+				executer.setLowLevelBehavior(new Attacker(attacker, ComInterface.getInstance(RobotCom.class),
+						freePosition, ball.getPosition(), 0, 0, shootDirection));
 				new Thread(executer).start();
 				executers.add(executer);
 				System.out.println("executer created");
 			} else {
 				getShootDirection(attacker);
-				((Attacker)executer.getLowLevelBehavior()).update(freePosition, ball.getPosition(), 0, 0, shootDirection);
+				((Attacker) executer.getLowLevelBehavior()).update(freePosition, ball.getPosition(), 0, 0,
+						shootDirection);
 			}
 		}
 	}
-	
+
 	/**
 	 * Get a shoot direction for a robot
 	 * @param robot
@@ -64,18 +65,19 @@ public class TestAttackerBehavior extends Behavior {
 	 */
 	private int getShootDirection(Robot robot) {
 		int[] shootDirections = getPossibleShotsAtGoal(robot);
-		
-//		System.out.println(shootDirections.length + " possible shooting directions located at:");
-//		for(int i = 0; i < shootDirections.length; i++)
-//			System.out.print(shootDirections[i] + ", ");
-//		System.out.print("\n");
-		
-		if(shootDirections.length >= 4)
+
+		// System.out.println(shootDirections.length +
+		// " possible shooting directions located at:");
+		// for(int i = 0; i < shootDirections.length; i++)
+		// System.out.print(shootDirections[i] + ", ");
+		// System.out.print("\n");
+
+		if (shootDirections.length >= 4)
 			return shootDirections[shootDirections.length / 2];
-		
+
 		return 0;
 	}
-	
+
 	/**
 	 * Calculate possible shot count at the goal for a robot
 	 * @param robot the robot
@@ -84,27 +86,28 @@ public class TestAttackerBehavior extends Behavior {
 	private int[] getPossibleShotsAtGoal(Robot robot) {
 		int possibleShotCount = 0;
 		int possibleShots[] = new int[10];
-		
+
 		// check at 10 different points in the goal, 60 mm from each other
-		for(int i = 0; i < 10; i++) {
-			Point goalPoint = new Point(world.getField().getLength() / 2, -300 + i*60);
+		for (int i = 0; i < 10; i++) {
+			Point goalPoint = new Point(world.getField().getLength() / 2, -300 + i * 60);
 			Point currentPosition = robot.getPosition();
-			
-			Line2D line = new Line2D.Float(currentPosition.getX(), currentPosition.getY(), goalPoint.getX(), goalPoint.getY());
-			
-			if(!lineIntersectsObject(line, robot.getRobotID())) {
-				possibleShots[possibleShotCount] = -300 + i*60;
+
+			Line2D line = new Line2D.Float(currentPosition.getX(), currentPosition.getY(), goalPoint.getX(),
+					goalPoint.getY());
+
+			if (!lineIntersectsObject(line, robot.getRobotID())) {
+				possibleShots[possibleShotCount] = -300 + i * 60;
 				possibleShotCount++;
 			}
 		}
-		
+
 		int[] toRet = new int[possibleShotCount];
-		for(int i = 0; i < possibleShotCount; i++)
+		for (int i = 0; i < possibleShotCount; i++)
 			toRet[i] = possibleShots[i];
-		
+
 		return toRet;
 	}
-	
+
 	/**
 	 * Check if one of the robots intersects the line on which the robot is
 	 * going to travel
@@ -119,17 +122,17 @@ public class TestAttackerBehavior extends Behavior {
 		ArrayList<Robot> objects = new ArrayList<Robot>();
 		objects.addAll(world.getEnemy().getRobots());
 		objects.addAll(world.getAlly().getRobots());
-		
+
 		for (Robot r : objects) {
 			rect = new Rectangle2D.Float(r.getPosition().getX(), r.getPosition().getY(), 180, 180);
 			if (line.intersects(rect) && r.getRobotID() != robotId) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Find a free position for the robot
 	 * A position is free when the robot can get the ball passed
@@ -146,31 +149,31 @@ public class TestAttackerBehavior extends Behavior {
 	 */
 	private Robot getClosestAllyRobotToBall() {
 		ArrayList<Robot> robots = world.getAlly().getRobots();
-//		System.out.println(robots.size());
-		
+		// System.out.println(robots.size());
+
 		int minDistance = -1;
 		Robot closestRobot = null;
-		
-		for(Robot r : robots) {
-			if(minDistance == -1) {
+
+		for (Robot r : robots) {
+			if (minDistance == -1) {
 				closestRobot = r;
 				minDistance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
 			} else {
 				int distance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
-				
-				if(distance < minDistance) {
+
+				if (distance < minDistance) {
 					closestRobot = r;
 					minDistance = distance;
 				}
 			}
 		}
-		
+
 		return closestRobot;
 	}
 
 	@Override
 	public void updateExecuters(ArrayList<RobotExecuter> executers) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

@@ -16,9 +16,8 @@ public class RobotCom extends ComInterface {
 	private InetAddress ipAddress;
 	private int port;
 
-	
-	public RobotCom(){
-		
+	public RobotCom() {
+
 		final Properties configFile = new Properties();
 		try {
 			configFile.load(new FileInputStream("config/config.properties"));
@@ -37,7 +36,7 @@ public class RobotCom extends ComInterface {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} catch (IOException e ){
+		} catch (IOException e) {
 			;
 		}
 	}
@@ -50,23 +49,23 @@ public class RobotCom extends ComInterface {
 	 */
 	public void send(int messageType, int robotID, int direction, int directionSpeed, int travelDistance,
 			int rotationAngle, int rotationSpeed, int shootKicker, boolean dribble) {
-		
+
 		// use LOGGER instead of this
-//		if(robotID == 0xB || robotID == 0x3){
-//		System.out.println("Message:");
-//		System.out.println("Robot: " + robotID);
-//		System.out.println("Direction: " + direction);
-//		System.out.println("DirectionSpeed: " + directionSpeed);
-//		System.out.println("travelDistance: " + travelDistance);
-//		System.out.println("rotationAngle: " + rotationAngle);
-//		System.out.println("rotationSpeed: " + rotationSpeed);
-//		System.out.println("shootKicker: " + shootKicker);
-//		System.out.println("dribble: " + dribble);
-//		}
+		// if(robotID == 0xB || robotID == 0x3){
+		// System.out.println("Message:");
+		// System.out.println("Robot: " + robotID);
+		// System.out.println("Direction: " + direction);
+		// System.out.println("DirectionSpeed: " + directionSpeed);
+		// System.out.println("travelDistance: " + travelDistance);
+		// System.out.println("rotationAngle: " + rotationAngle);
+		// System.out.println("rotationSpeed: " + rotationSpeed);
+		// System.out.println("shootKicker: " + shootKicker);
+		// System.out.println("dribble: " + dribble);
+		// }
 		byte[] dataPacket = createByteArray(messageType, robotID, direction, directionSpeed, travelDistance,
 				rotationAngle, rotationSpeed, shootKicker, dribble);
 		DatagramPacket sendPacket = new DatagramPacket(dataPacket, dataPacket.length, ipAddress, port);
-		
+
 		try {
 			serverSocket.send(sendPacket);
 			// System.out.println("Send");
@@ -80,23 +79,22 @@ public class RobotCom extends ComInterface {
 			int rotationAngle, int rotationSpeed, int shootKicker, boolean dribble) {
 		ByteBuffer dataBuffer = ByteBuffer.allocate(15);
 		dataBuffer.order(ByteOrder.LITTLE_ENDIAN);
-		dataBuffer.put((byte)messageType);
+		dataBuffer.put((byte) messageType);
 		dataBuffer.put((byte) robotID);
-		dataBuffer.putShort((short)direction);
-		dataBuffer.putShort((short)directionSpeed);
-		dataBuffer.putShort((short)travelDistance);
-		dataBuffer.putShort((short)rotationAngle);
-		dataBuffer.putShort((short)rotationSpeed);
-		dataBuffer.put((byte)shootKicker);
-		if(dribble){
-			dataBuffer.put((byte)1);
+		dataBuffer.putShort((short) direction);
+		dataBuffer.putShort((short) directionSpeed);
+		dataBuffer.putShort((short) travelDistance);
+		dataBuffer.putShort((short) rotationAngle);
+		dataBuffer.putShort((short) rotationSpeed);
+		dataBuffer.put((byte) shootKicker);
+		if (dribble) {
+			dataBuffer.put((byte) 1);
 		} else {
-			dataBuffer.put((byte)0);
+			dataBuffer.put((byte) 0);
 		}
 		addChecksum(dataBuffer);
 		return dataBuffer.array();
 	}
-
 
 	/**
 	 * calculate checksum and add to array

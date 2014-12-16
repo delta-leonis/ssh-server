@@ -16,7 +16,7 @@ import robocup.Main;
  * @author Erik Hubers, Gerbrand Bosch
  *
  */
-public abstract class UDPClient implements Runnable{
+public abstract class UDPClient implements Runnable {
 
 	protected ProtoParser protoParser;
 	private String host;
@@ -60,17 +60,17 @@ public abstract class UDPClient implements Runnable{
 	 * @throws IOException 
 	 */
 	public abstract void startListening() throws IOException;
-	
+
 	public void connect() throws IOException {
 		group = InetAddress.getByName(host);
 		multicastSocket = new MulticastSocket(port);
 		multicastSocket.joinGroup(group);
 	}
-	
+
 	/**
 	 * Leave the multicast group
 	 */
-	public void disconnect(){
+	public void disconnect() {
 		try {
 			multicastSocket.leaveGroup(group);
 		} catch (IOException e) {

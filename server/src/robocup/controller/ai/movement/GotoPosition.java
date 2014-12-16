@@ -35,7 +35,7 @@ public class GotoPosition {
 		this.destination = destination;
 		this.target = destination;
 	}
-	
+
 	/**
 	 * Go to target object
 	 * 
@@ -46,7 +46,7 @@ public class GotoPosition {
 	public GotoPosition(Robot robot, ComInterface output, FieldObject target) {
 		this.robot = robot;
 		this.output = output;
-		this.destination= target.getPosition();
+		this.destination = target.getPosition();
 		this.target = this.destination;
 	}
 
@@ -64,7 +64,7 @@ public class GotoPosition {
 		this.destination = destination;
 		this.target = target;
 	}
-	
+
 	/**
 	 * Go to goalPosition with a `forced` speed and `look` towards the destination
 	 * 
@@ -79,7 +79,7 @@ public class GotoPosition {
 		this.output = output;
 		this.destination = destination;
 		this.target = target;
-		this.forcedSpeed  = forcedSpeed;
+		this.forcedSpeed = forcedSpeed;
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class GotoPosition {
 	public void setGoal(Point p) {
 		destination = p;
 	}
-	
+
 	/**
 	 * Set Destination
 	 * @param destination
@@ -114,16 +114,16 @@ public class GotoPosition {
 	public void setDestination(Point destination) {
 		this.destination = destination;
 	}
-	
+
 	/**
 	 * Get Goal position
 	 * @return GoalPoint
 	 * @deprecated replaced by getDestination
 	 */
-	public Point getGoal(){
+	public Point getGoal() {
 		return destination;
 	}
-	
+
 	/**
 	 * Get Destination
 	 * @return
@@ -131,7 +131,7 @@ public class GotoPosition {
 	public Point getDestination() {
 		return destination;
 	}
-	
+
 	/**
 	 * Set the kicking or chipping power for the next message, resets to 0 after using it
 	 * @param kick ranges 1-100 3for kicking, -1 to -100 for chipping power in percentages
@@ -146,39 +146,42 @@ public class GotoPosition {
 	public void calculate() {
 		// Check for timeout
 		if (timeOutCheck()) {
-		
+
 			/* Todo */
-		
-		// Both destination and target are required, if not set, default position to idle
+
+			// Both destination and target are required, if not set, default
+			// position to idle
 		} else if (destination == null || target == null) {
 			robot.setOnSight(true);
 			output.send(1, robot.getRobotID(), 0, 0, 0, 0, 0, 0, false);
 			return;
-			
-		// Calculate parameters
+
+			// Calculate parameters
 		} else {
 			robot.setOnSight(true);
-			
-			//destination = planner.getNextRoutePoint(robot.getPosition(), destination, robot.getRobotID());
+
+			// destination = planner.getNextRoutePoint(robot.getPosition(),
+			// destination, robot.getRobotID());
 			// TO-DO add null check for route
-//			destination = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotID()).get(0);
-			
+			// destination = dplanner.getRoute(robot.getPosition(), destination,
+			// robot.getRobotID()).get(0);
+
 			int targetDirection = rotationToDest(this.target);
 			int travelDistance = getDistance();
 			int rotationToGoal = rotationToDest(destination);
 			int speed = getSpeed(getDistance(), rotationToGoal);
 			float rotationSpeedFloat = getRotationSpeed(targetDirection);
 			@SuppressWarnings("unused")
-			int rotationSpeed = (int)rotationSpeedFloat;
-			
+			int rotationSpeed = (int) rotationSpeedFloat;
+
 			// Overrule speed
-			if(forcedSpeed > 0) {
+			if (forcedSpeed > 0) {
 				speed = forcedSpeed;
 			}
 
 			// Send commands to robot
 			output.send(1, robot.getRobotID(), rotationToGoal, speed, travelDistance, targetDirection, 0, kick, false);
-			
+
 			// Set kick back to 0 to prevent kicking twice in a row
 			kick = 0;
 		}
@@ -192,18 +195,19 @@ public class GotoPosition {
 	 */
 	public float getRotationSpeed(int rotation) {
 		// used natural logarithmic function to determine rotationSpeed;
-//		double rotationCalc = Math.abs(rotation);
-		
-		float rotationSpeed = (float) Math.toRadians(rotation);//(rotationCalc * 0.06);
-		
+		// double rotationCalc = Math.abs(rotation);
+
+		float rotationSpeed = (float) Math.toRadians(rotation);// (rotationCalc
+																// * 0.06);
+
 		// Enforce minimum speed
-//		if (rotationSpeed < 0) {
-//			rotationSpeed = 0;
-//		}
-//		if (rotation > 0) {
-//			rotationSpeed *= -1;
-//		}
-		
+		// if (rotationSpeed < 0) {
+		// rotationSpeed = 0;
+		// }
+		// if (rotation > 0) {
+		// rotationSpeed *= -1;
+		// }
+
 		// Return calculated speed
 		return rotationSpeed * 5;
 	}
@@ -216,10 +220,10 @@ public class GotoPosition {
 		// Calculate delta values
 		double dx = (robot.getPosition().getX() - destination.getX());
 		double dy = (robot.getPosition().getY() - destination.getY());
-		
+
 		// Calculate distance
 		int distance = (int) Math.sqrt(dx * dx + dy * dy);
-		
+
 		return distance;
 	}
 
@@ -233,62 +237,70 @@ public class GotoPosition {
 		// Defaults
 		int speed = 0;
 		int thresholdValue = 800;
-		
-		// If distance to travel is less then the `threshold`, use a logarithmic formula for speed
+
+		// If distance to travel is less then the `threshold`, use a logarithmic
+		// formula for speed
 		if (distance < thresholdValue) {
-			speed = (int) (Math.log(distance) / Math.log(1.1)) * 8; // - robotDiameter
+			speed = (int) (Math.log(distance) / Math.log(1.1)) * 8; // -
+																	// robotDiameter
 		} else if (Math.abs(rotation) > 10) {
 			speed = (180 - Math.abs(rotation)) * 8;
 		} else {
 			speed = 1200;
 		}
-		
+
 		return speed;
 	}
-	
+
 	/**
 	 * Calculate the needed rotation to destination
 	 * @param newPoint
 	 * @return
 	 */
-	public int rotationToDest(Point newPoint){
-		//angle vector between old and new
+	public int rotationToDest(Point newPoint) {
+		// angle vector between old and new
 		double dy = newPoint.getY() - robot.getPosition().getY();
 		double dx = newPoint.getX() - robot.getPosition().getX();
 		double newRad = Math.atan2(dy, dx);
-		int rot = (int)(Math.toDegrees(newRad) - robot.getOrientation());
-		
-		if( rot > 180 ) {
+		int rot = (int) (Math.toDegrees(newRad) - robot.getOrientation());
+
+		if (rot > 180) {
 			rot -= 360;
 		}
-		
-		if (rot <= -180 ) {
+
+		if (rot <= -180) {
 			rot += 360;
 		}
-		return  rot;
+		return rot;
 	}
-	
+
 	/**
 	 * Check if the robot timed out, should be used at the start of calculate in every low level behavior
 	 * @return true if the robot timed out
 	 */
 	public boolean timeOutCheck() {
 		boolean failed = false;
-		
-		if((robot.getLastUpdateTime() + 0.20) < (Calendar.getInstance().getTimeInMillis() / 1000)) {
+
+		if ((robot.getLastUpdateTime() + 0.20) < (Calendar.getInstance().getTimeInMillis() / 1000)) {
 			failed = true;
 		}
-		if(!World.getInstance().getReferee().isStart()) {
+		if (!World.getInstance().getReferee().isStart()) {
 			failed = true;
 		}
-		
-		if(failed) {
+
+		if (failed) {
 			LOGGER.warning("Robot " + robot.getRobotID() + " is not on sight");
-			LOGGER.warning("Time: " + (Calendar.getInstance().getTimeInMillis()/1000));
+			LOGGER.warning("Time: " + (Calendar.getInstance().getTimeInMillis() / 1000));
 			LOGGER.warning("Robot: " + (robot.getLastUpdateTime()));
 
 			robot.setOnSight(false);
-			output.send(1, robot.getRobotID(), 0, 0, 0, 0, 0, 0, false);  // stop moving if the robot timed out
+			output.send(1, robot.getRobotID(), 0, 0, 0, 0, 0, 0, false); // stop
+																			// moving
+																			// if
+																			// the
+																			// robot
+																			// timed
+																			// out
 		}
 		return failed;
 	}

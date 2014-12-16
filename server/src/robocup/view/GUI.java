@@ -408,13 +408,13 @@ public class GUI extends javax.swing.JFrame implements Observer {
 		if (startButton.getText().equals("Start")) {
 			startAction = true;
 		}
-		
-		if(startAction){
+
+		if (startAction) {
 			startButton.setText("Stop");
-		 } else {
-			 startButton.setText("Start");
-		 }
-		
+		} else {
+			startButton.setText("Start");
+		}
+
 		world.getReferee().setStart(startAction);
 	}// GEN-LAST:event_startButtonActionPerformed
 
@@ -508,7 +508,8 @@ public class GUI extends javax.swing.JFrame implements Observer {
 
 			Arrays.fill(robotUpdated, false);
 			for (Robot robot : world.getAlly().getRobots()) {
-				//System.out.println(robot.getRobotID() + "    pos:" + robot.getPosition());
+				// System.out.println(robot.getRobotID() + "    pos:" +
+				// robot.getPosition());
 				robotUpdated[robot.getRobotID()] = true;
 			}
 
@@ -523,9 +524,9 @@ public class GUI extends javax.swing.JFrame implements Observer {
 						robotPanels[i].setPoint(robot.getPosition());
 						robotPanels[i].setStatus("online");
 						Mode.roles role = robot.getRole();
-						//System.out.println(role);
-						//System.out.println( " So" + robot.getRole());
-						if(role != null) {
+						// System.out.println(role);
+						// System.out.println( " So" + robot.getRole());
+						if (role != null) {
 							robotPanels[i].setRole(role.toString());
 						} else {
 							robotPanels[i].setRole("#");
@@ -538,33 +539,32 @@ public class GUI extends javax.swing.JFrame implements Observer {
 				}
 
 			}
-			
+
 			// Game has not started yet
-			if( world.getReferee().getStagetimeLeft() == 0) {
+			if (world.getReferee().getStagetimeLeft() == 0) {
 				timePlayedField.setText("0:00");
 			} else {
 				int timePlayed = 600000000 - world.getReferee().getStagetimeLeft();
-				timePlayedField.setText("" + java.util.concurrent.TimeUnit.MICROSECONDS.toMinutes(timePlayed) % 60 + 
-																":" + java.util.concurrent.TimeUnit.MICROSECONDS.toSeconds(timePlayed) % 60);
+				timePlayedField.setText("" + java.util.concurrent.TimeUnit.MICROSECONDS.toMinutes(timePlayed) % 60
+						+ ":" + java.util.concurrent.TimeUnit.MICROSECONDS.toSeconds(timePlayed) % 60);
 			}
-			
-			//System.out.println(timePlayedField.getText());
-			//System.out.println( world.getReferee().getStagetimeLeft() / 1000000);
+
+			// System.out.println(timePlayedField.getText());
+			// System.out.println( world.getReferee().getStagetimeLeft() /
+			// 1000000);
 			fieldHalfField.setText("null");
 			goalsField.setText("" + world.getAlly().getScore());
-			
-			
-			
-		//	System.out.println(world.getReferee().);;
+
+			// System.out.println(world.getReferee().);;
 			// refereeStateField.setText(""+
 			// world.getReferee().getStage().name());
 
-			// setRobotNumber(int number) 
+			// setRobotNumber(int number)
 			// TODO set the game status data
 			// TODO set the status for all robots
-			//System.out.println(" hoi," + world.getReferee().getl .getYellow().getGoalie() + " command: " + message.getYellow().getRedCards());
-			
-			
+			// System.out.println(" hoi," + world.getReferee().getl
+			// .getYellow().getGoalie() + " command: " +
+			// message.getYellow().getRedCards());
 
 		}
 	}

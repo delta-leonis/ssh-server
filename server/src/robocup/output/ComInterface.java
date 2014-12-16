@@ -5,12 +5,12 @@ package robocup.output;
  *
  */
 public abstract class ComInterface {
-	
+
 	private static ComInterface instance;
-	
+
 	@SuppressWarnings("rawtypes")
 	public static ComInterface getInstance(Class comInterface) {
-		if(instance == null){
+		if (instance == null) {
 			try {
 				instance = (ComInterface) comInterface.newInstance();
 			} catch (InstantiationException | IllegalAccessException e) {
@@ -20,7 +20,6 @@ public abstract class ComInterface {
 		return instance;
 	}
 
-	
 	/**
 	 * @param messageType, MessageType 0 => robot instructie
 	 * @param robotID
