@@ -10,16 +10,14 @@ public class KeeperDefender extends Keeper {
 
 	private Point offset;
 
-	public KeeperDefender(Robot robot, ComInterface output, int distanceToGoal,
-			boolean goToKick, Point ballPosition, Point keeperPosition,
-			Point centerGoalPosition, Point offset, int yMax) {
-		super(robot, output, distanceToGoal, goToKick, ballPosition, keeperPosition,
-				centerGoalPosition, yMax);
+	public KeeperDefender(Robot robot, ComInterface output, int distanceToGoal, boolean goToKick, Point ballPosition,
+			Point keeperPosition, Point centerGoalPosition, Point offset, int yMax) {
+		super(robot, output, distanceToGoal, goToKick, ballPosition, keeperPosition, centerGoalPosition, yMax);
 		this.offset = offset;
 		this.role = Mode.roles.DEFENDER;
 		go = new GotoPosition(robot, output, centerGoalPosition, ballPosition, 2000);
 	}
-	
+
 	/**
 	 * Update the values for the keeper
 	 * @param distanceToGoal
@@ -36,8 +34,8 @@ public class KeeperDefender extends Keeper {
 	@Override
 	protected Point getNewKeeperDestination() {
 		Point newDestination = super.getNewKeeperDestination();
-		
-		if(newDestination != null) {
+
+		if (newDestination != null) {
 			newDestination.setX(newDestination.getX() + offset.getX());
 			newDestination.setY(newDestination.getY() + offset.getY());
 		}

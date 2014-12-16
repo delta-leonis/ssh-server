@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import robocup.Main;
 import robocup.controller.ai.highLevelBehavior.Behavior;
-import robocup.controller.ai.lowLevelBehavior.FuckRobot;
+import robocup.controller.ai.lowLevelBehavior.Blocker;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Ball;
 import robocup.model.Robot;
@@ -40,12 +40,12 @@ public class TestFuckRobotBehavior extends Behavior {
 			// Initialize executer for this robot
 			if(executer == null) {
 				executer = new RobotExecuter(defender);
-				executer.setLowLevelBehavior(new FuckRobot(defender, ComInterface.getInstance(RobotCom.class), distanceToOpponent, 
+				executer.setLowLevelBehavior(new Blocker(defender, ComInterface.getInstance(RobotCom.class), distanceToOpponent, 
 						ball.getPosition(), defender.getPosition(), opponent.getPosition(), opponent.getRobotID()));
 				new Thread(executer).start();
 				executers.add(executer);
 			} else {
-				((FuckRobot)executer.getLowLevelBehavior()).update(distanceToOpponent, ball.getPosition(), defender.getPosition(), opponent.getPosition(),opponent.getRobotID());
+				((Blocker)executer.getLowLevelBehavior()).update(distanceToOpponent, ball.getPosition(), defender.getPosition(), opponent.getPosition(),opponent.getRobotID());
 			}
 		}
 	}

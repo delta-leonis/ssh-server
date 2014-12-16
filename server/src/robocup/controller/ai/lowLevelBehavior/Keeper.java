@@ -14,7 +14,7 @@ public class Keeper extends LowLevelBehavior {
 	protected Point keeperPosition;
 	protected Point centerGoalPosition;
 	private int yMax;
-	
+
 	/**
 	 * Create a keeper
 	 * @param robot
@@ -37,7 +37,7 @@ public class Keeper extends LowLevelBehavior {
 		this.role = Mode.roles.KEEPER;
 		go = new GotoPosition(robot, output, centerGoalPosition, ballPosition, 2000);
 	}
-	
+
 	/**
 	 * Update the values for the keeper
 	 * @param distanceToGoal
@@ -55,41 +55,46 @@ public class Keeper extends LowLevelBehavior {
 
 	@Override
 	public void calculate() {
-		if(timeOutCheck()) {
-			
+		if (timeOutCheck()) {
+
 		} else {
 			Point newDestination = getNewKeeperDestination();
-			
-			if(centerGoalPosition.getX() > 0 && centerGoalPosition.getX() < newDestination.getX())
-				newDestination.setX(centerGoalPosition.getX() > 0 ? centerGoalPosition.getX() - 100 : centerGoalPosition.getX() + 100);
-			
-			if(newDestination.getY() > 0 && newDestination.getY() > yMax - 100)
+
+			if (centerGoalPosition.getX() > 0 && centerGoalPosition.getX() < newDestination.getX())
+				newDestination.setX(centerGoalPosition.getX() > 0 ? centerGoalPosition.getX() - 100
+						: centerGoalPosition.getX() + 100);
+
+			if (newDestination.getY() > 0 && newDestination.getY() > yMax - 100)
 				newDestination.setY(yMax - 100);
-			else if(newDestination.getY() < 0 && newDestination.getY() < -yMax + 100)
+			else if (newDestination.getY() < 0 && newDestination.getY() < -yMax + 100)
 				newDestination.setY(-yMax + 100);
-			
-			if(newDestination != null) {
-				if(goToKick)
-					go.setDestination(ballPosition);//GotoPosition(keeperPosition, ballPosition, ballPosition)
-				else if(isWithinRange(robot, newDestination, 15))
+
+			if (newDestination != null) {
+				if (goToKick)
+					go.setDestination(ballPosition);// GotoPosition(keeperPosition,
+													// ballPosition,
+													// ballPosition)
+				else if (isWithinRange(robot, newDestination, 15))
 					go.setDestination(null);
 				else
-					go.setDestination(newDestination);//GotoPosition(keeperPosition, newDestination, ballPosition)
+					go.setDestination(newDestination);// GotoPosition(keeperPosition,
+														// newDestination,
+														// ballPosition)
 
 				go.setTarget(ballPosition);
 				go.calculate();
 			}
 		}
 	}
-	
+
 	protected Point getNewKeeperDestination() {
 		Point newDestination = null;
-		
-		if(ballPosition != null) {
+
+		if (ballPosition != null) {
 			int angle = centerGoalPosition.getAngle(ballPosition);
 			double dx = Math.cos(Math.toRadians(angle)) * distanceToGoal;
 			double dy = Math.sin(Math.toRadians(angle)) * distanceToGoal;
-			
+
 			int destX = (int) (centerGoalPosition.getX() + dx);
 			int destY = (int) (centerGoalPosition.getY() + dy);
 			newDestination = new Point(destX, destY);

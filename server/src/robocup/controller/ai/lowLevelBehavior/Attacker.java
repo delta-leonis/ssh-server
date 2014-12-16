@@ -24,7 +24,8 @@ public class Attacker extends LowLevelBehavior {
 	 * @param chip chip strength in percentages
 	 * @param shootDirection direction where the attacker needs to shoot
 	 */
-	public Attacker(Robot robot, ComInterface output, Point freePosition, Point ballPosition, int kick, int chip, int shootDirection) {
+	public Attacker(Robot robot, ComInterface output, Point freePosition, Point ballPosition, int kick, int chip,
+			int shootDirection) {
 		super(robot, output);
 		this.freePosition = freePosition;
 		this.ballPosition = ballPosition;
@@ -34,7 +35,7 @@ public class Attacker extends LowLevelBehavior {
 		this.role = Mode.roles.ATTACKER;
 		go = new GotoPosition(robot, output, null, ballPosition);
 	}
-	
+
 	/**
 	 * Update
 	 * @param freePosition
@@ -53,19 +54,19 @@ public class Attacker extends LowLevelBehavior {
 
 	@Override
 	public void calculate() {
-		if(timeOutCheck()) {
-			
+		if (timeOutCheck()) {
+
 		} else {
 			Point newDestination = null;
 
 			// Kick or chip if the values are higher than 0
-			if(kick > 0)
+			if (kick > 0)
 				go.setKick(kick);
-			else if(chip > 0)
+			else if (chip > 0)
 				go.setKick(-chip);
 			else {
 				// Move towards a free position when given
-				if(freePosition != null)
+				if (freePosition != null)
 					newDestination = freePosition;
 				// Move towards a shooting position behind the ball
 				else
@@ -75,14 +76,14 @@ public class Attacker extends LowLevelBehavior {
 			changeDestination(newDestination);
 		}
 	}
-	
+
 	/**
 	 * Change the destination of the robot
 	 * @param newDestination the new destination
 	 */
 	private void changeDestination(Point newDestination) {
-		if(newDestination != null) {
-			if(isWithinRange(robot, newDestination, 10))
+		if (newDestination != null) {
+			if (isWithinRange(robot, newDestination, 10))
 				go.setDestination(null);
 			else
 				go.setDestination(newDestination);

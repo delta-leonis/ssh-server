@@ -6,7 +6,7 @@ package robocup.controller.ai.highLevelBehavior.forcebehavior;
 import java.util.ArrayList;
 
 import robocup.controller.ai.lowLevelBehavior.Attacker;
-import robocup.controller.ai.lowLevelBehavior.FuckRobot;
+import robocup.controller.ai.lowLevelBehavior.Blocker;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
@@ -235,12 +235,12 @@ public class AttackMode extends Mode {
 			int distanceToOpponent = 250;
 
 			if (isUpdate) {
-				((FuckRobot) executer.getLowLevelBehavior()).update(
+				((Blocker) executer.getLowLevelBehavior()).update(
 						distanceToOpponent, ball.getPosition(),
 						robot.getPosition(), opponent.getPosition(),
 						opponent.getRobotID());
 			} else {
-				executer.setLowLevelBehavior(new FuckRobot(robot, ComInterface
+				executer.setLowLevelBehavior(new Blocker(robot, ComInterface
 						.getInstance(RobotCom.class), distanceToOpponent, ball
 						.getPosition(), robot.getPosition(), opponent
 						.getPosition(), opponent.getRobotID()));
