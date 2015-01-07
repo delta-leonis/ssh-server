@@ -221,7 +221,7 @@ public class AttackMode extends Mode {
 			int shootDirection = 0;
 
 			// penalty mode
-			if (penaltyRobot != null) {
+			if (penaltyRobot != null && penaltyRobot == robot) {
 				// move to penalty area to get in range with the ball
 				if (penaltyRobot.getPosition().getDeltaDistance(ball.getPosition()) > 100) {
 					freePosition = ball.getPosition();
