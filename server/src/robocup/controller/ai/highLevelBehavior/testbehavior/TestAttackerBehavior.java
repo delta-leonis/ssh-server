@@ -46,13 +46,13 @@ public class TestAttackerBehavior extends Behavior {
 			if (executer == null) {
 				executer = new RobotExecuter(attacker);
 				executer.setLowLevelBehavior(new Attacker(attacker, ComInterface.getInstance(RobotCom.class),
-						freePosition, ball.getPosition(), 0, 0, shootDirection));
+						freePosition, ball.getPosition(), 0, false, shootDirection));
 				new Thread(executer).start();
 				executers.add(executer);
 				System.out.println("executer created");
 			} else {
 				getShootDirection(attacker);
-				((Attacker) executer.getLowLevelBehavior()).update(freePosition, ball.getPosition(), 0, 0,
+				((Attacker) executer.getLowLevelBehavior()).update(freePosition, ball.getPosition(), 0, false,
 						shootDirection);
 			}
 		}

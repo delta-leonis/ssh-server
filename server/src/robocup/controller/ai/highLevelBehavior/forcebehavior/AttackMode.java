@@ -216,9 +216,9 @@ public class AttackMode extends Mode {
 
 		case ATTACKER:
 			Point freePosition = getClosestAllyRobotToBall(world) == robot ? null : getFreePosition(null);
-			int kick = 0;
-			int chip = 0;
+			int chipKick = 0;
 			int shootDirection = 0;
+			boolean dribble = false;
 
 			// penalty mode
 			if (penaltyRobot != null && penaltyRobot == robot) {
@@ -240,15 +240,34 @@ public class AttackMode extends Mode {
 				// ball is correct, shoot when possible
 				if (robot.getPosition().getDeltaDistance(ball.getPosition()) < 100
 						&& robot.getOrientation() + 10 > shootDirection && robot.getOrientation() - 10 < shootDirection)
-					kick = 100;
+					chipKick = 100;
+			}else{
+
+				if (freePosition == null) { // if robot has no freeposition then it
+											// is closest.
+					double dDistance = ball.getPosition().getDeltaDistance(robot.getPosition());
+					if (dDistance < 150) {
+						dribble = true;
+					}
+					else if(dDistance < 100){
+						chipKick = -100;
+					}
+//					robot.getPosition()
+					//calculate best tactic, shoot, chip or pass
+					//if robot has place free to shoot
+
+					// determine if the robot has the ball, then determine if the
+					// robot has a good chance to chip or kick the ball to the goal,
+					// else to an ally
+				}
 			}
 
 			if (isUpdate) {
-				((Attacker) executer.getLowLevelBehavior()).update(freePosition, ball.getPosition(), kick, chip,
+				((Attacker) executer.getLowLevelBehavior()).update(freePosition, ball.getPosition(), chipKick, dribble,
 						shootDirection);
 			} else {
 				executer.setLowLevelBehavior(new Attacker(robot, ComInterface.getInstance(RobotCom.class),
-						freePosition, ball.getPosition(), kick, chip, shootDirection));
+						freePosition, ball.getPosition(), chipKick, dribble, shootDirection));
 			}
 
 			break;

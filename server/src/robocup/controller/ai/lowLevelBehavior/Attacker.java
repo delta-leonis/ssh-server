@@ -10,9 +10,9 @@ public class Attacker extends LowLevelBehavior {
 
 	private Point freePosition;
 	private Point ballPosition;
-	private int kick;
-	private int chip;
+	private int chipKick;
 	private int shootDirection;
+	private boolean dribble;
 
 	/**
 	 * Create an attacker
@@ -20,17 +20,17 @@ public class Attacker extends LowLevelBehavior {
 	 * @param output 
 	 * @param freePosition a free position on the field
 	 * @param ballPosition the position of the ball
-	 * @param kick kick strength in percentages
-	 * @param chip chip strength in percentages
+	 * @param chipKick kick and chip strength in percentages
+	 * @param dribble enable dribbler
 	 * @param shootDirection direction where the attacker needs to shoot
 	 */
-	public Attacker(Robot robot, ComInterface output, Point freePosition, Point ballPosition, int kick, int chip,
+	public Attacker(Robot robot, ComInterface output, Point freePosition, Point ballPosition, int chipKick, boolean dribble,
 			int shootDirection) {
 		super(robot, output);
 		this.freePosition = freePosition;
 		this.ballPosition = ballPosition;
-		this.kick = kick;
-		this.chip = chip;
+		this.chipKick = chipKick;
+		this.dribble = dribble;
 		this.shootDirection = shootDirection;
 		this.role = Mode.roles.ATTACKER;
 		go = new GotoPosition(robot, output, null, ballPosition);
@@ -40,15 +40,15 @@ public class Attacker extends LowLevelBehavior {
 	 * Update
 	 * @param freePosition
 	 * @param ballPosition
-	 * @param kick
-	 * @param chip
+	 * @param chipKick
+	 * @param dribble
 	 * @param shootDirection
 	 */
-	public void update(Point freePosition, Point ballPosition, int kick, int chip, int shootDirection) {
+	public void update(Point freePosition, Point ballPosition, int chipKick, boolean dribble, int shootDirection) {
 		this.freePosition = freePosition;
 		this.ballPosition = ballPosition;
-		this.kick = kick;
-		this.chip = chip;
+		this.chipKick = chipKick;
+		this.dribble = dribble;
 		this.shootDirection = shootDirection;
 	}
 
@@ -60,10 +60,8 @@ public class Attacker extends LowLevelBehavior {
 			Point newDestination = null;
 
 			// Kick or chip if the values are higher than 0
-			if (kick > 0)
-				go.setKick(kick);
-			else if (chip > 0)
-				go.setKick(-chip);
+			if (chipKick != 0)
+				go.setKick(chipKick);
 			else {
 				// Move towards a free position when given
 				if (freePosition != null)
