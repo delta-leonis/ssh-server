@@ -42,7 +42,7 @@ public abstract class Robot extends FieldObject {
 
 	public void update(Point p, double updateTime, int orientation, int lastCamUpdateNo) {
 		super.update(p, updateTime, lastCamUpdateNo);
-		this.orientation = orientation;
+		this.orientation = orientation; // setOrientation(orientation)
 	}
 
 	public void update(Point p, double updateTime, int lastCamUpdateNo) {

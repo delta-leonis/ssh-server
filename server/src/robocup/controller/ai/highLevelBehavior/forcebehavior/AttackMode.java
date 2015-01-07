@@ -21,9 +21,10 @@ public class AttackMode extends Mode {
 	private static final Point MID_GOAL_POSITIVE = new Point(World.getInstance().getField().getLength() / 2, 0);
 
 	private Point offset = new Point(0, 0);
-	private int shootDirection = -100;
 	private ArrayList<RobotExecuter> executers;
 	private int lastCommandCounter = 0;
+
+	private Robot penaltyRobot = null;
 
 	public AttackMode(ArrayList<RobotExecuter> executers) {
 		world = World.getInstance();
@@ -131,6 +132,27 @@ public class AttackMode extends Mode {
 			if (ref.getCommand() != null) {
 				refCommand = ref.getCommand().toString();
 
+				switch (refCommand) {
+				case "PREPARE_KICKOFF_BLUE":
+				case "PREPARE_KICKOFF_YELLOW":
+					break;
+				case "PREPARE_PENALTY_BLUE":
+				case "PREPARE_PENALTY_YELLOW":
+					if (penaltyRobot == null) {
+						penaltyRobot = getClosestAllyRobotToBall(world);
+					}
+
+					if (robot != penaltyRobot) {
+						return;
+					}
+
+					break;
+				case "NORMAL_START":
+					penaltyRobot = null;
+					break;
+				default:
+					break;
+				}
 				// Does our team have to prepare for kickoff?
 				if (refCommand.equals(("PREPARE_KICKOFF_" + world.getAlly().getColor().toString()))) {
 
@@ -169,7 +191,6 @@ public class AttackMode extends Mode {
 
 		switch (type) {
 		case KEEPER:
-
 			if (isUpdate) {
 				((Keeper) executer.getLowLevelBehavior()).update(keeperDistanceToGoal, false, ball.getPosition(),
 						robot.getPosition());
@@ -195,13 +216,39 @@ public class AttackMode extends Mode {
 
 		case ATTACKER:
 			Point freePosition = getClosestAllyRobotToBall(world) == robot ? null : getFreePosition(null);
+			int kick = 0;
+			int chip = 0;
+			int shootDirection = 0;
+
+			// penalty mode
+			if (penaltyRobot != null) {
+				// move to penalty area to get in range with the ball
+				if (penaltyRobot.getPosition().getDeltaDistance(ball.getPosition()) > 100) {
+					freePosition = ball.getPosition();
+				} else {
+					freePosition = null;
+				}
+
+				// TODO calculate a possible shooting direction, just using
+				// straight shots for now
+				if (ball.getPosition().getX() > 0)
+					shootDirection = 0;
+				else
+					shootDirection = 180;
+
+				// check if robot is able to shoot and if the angle towards the
+				// ball is correct, shoot when possible
+				if (robot.getPosition().getDeltaDistance(ball.getPosition()) < 100
+						&& robot.getOrientation() + 10 > shootDirection && robot.getOrientation() - 10 < shootDirection)
+					kick = 100;
+			}
 
 			if (isUpdate) {
-				((Attacker) executer.getLowLevelBehavior()).update(freePosition, ball.getPosition(), 0, 0,
+				((Attacker) executer.getLowLevelBehavior()).update(freePosition, ball.getPosition(), kick, chip,
 						shootDirection);
 			} else {
 				executer.setLowLevelBehavior(new Attacker(robot, ComInterface.getInstance(RobotCom.class),
-						freePosition, ball.getPosition(), 0, 0, shootDirection));
+						freePosition, ball.getPosition(), kick, chip, shootDirection));
 			}
 
 			break;
