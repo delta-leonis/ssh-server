@@ -191,102 +191,117 @@ public class AttackMode extends Mode {
 
 		switch (type) {
 		case KEEPER:
-			if (isUpdate) {
-				((Keeper) executer.getLowLevelBehavior()).update(keeperDistanceToGoal, false, ball.getPosition(),
-						robot.getPosition());
-			} else {
-
-				executer.setLowLevelBehavior(new Keeper(robot, ComInterface.getInstance(RobotCom.class),
-						keeperDistanceToGoal, false, ball.getPosition(), robot.getPosition(), robot.getPosition()
-								.getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE, world.getField().getWidth() / 2));
-			}
+			handleKeeper(robot, ball, executer, isUpdate, keeperDistanceToGoal);
 			break;
-
 		case DEFENDER:
-			if (isUpdate) {
-				((KeeperDefender) executer.getLowLevelBehavior()).update(distanceToGoal, false, ball.getPosition(),
-						robot.getPosition());
-			} else {
-				executer.setLowLevelBehavior(new KeeperDefender(robot, ComInterface.getInstance(RobotCom.class),
-						distanceToGoal, false, ball.getPosition(), robot.getPosition(),
-						robot.getPosition().getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE, offset, world
-								.getField().getWidth() / 2));
-			}
+			handleDefender(robot, ball, executer, isUpdate, distanceToGoal);
 			break;
-
 		case ATTACKER:
-			Point freePosition = getClosestAllyRobotToBall(world) == robot ? null : getFreePosition(null);
-			int chipKick = 0;
-			int shootDirection = 0;
-			boolean dribble = false;
-
-			// penalty mode
-			if (penaltyRobot != null && penaltyRobot == robot) {
-				// move to penalty area to get in range with the ball
-				if (penaltyRobot.getPosition().getDeltaDistance(ball.getPosition()) > 100) {
-					freePosition = ball.getPosition();
-				} else {
-					freePosition = null;
-				}
-
-				// TODO calculate a possible shooting direction, just using
-				// straight shots for now
-				if (ball.getPosition().getX() > 0)
-					shootDirection = 0;
-				else
-					shootDirection = 180;
-
-				// check if robot is able to shoot and if the angle towards the
-				// ball is correct, shoot when possible
-				if (robot.getPosition().getDeltaDistance(ball.getPosition()) < 100
-						&& robot.getOrientation() + 10 > shootDirection && robot.getOrientation() - 10 < shootDirection)
-					chipKick = 100;
-			}else{
-
-				if (freePosition == null) { // if robot has no freeposition then it
-											// is closest.
-					double dDistance = ball.getPosition().getDeltaDistance(robot.getPosition());
-					if (dDistance < 150) {
-						dribble = true;
-					}
-					else if(dDistance < 100){
-						chipKick = -100;
-					}
-//					robot.getPosition()
-					//calculate best tactic, shoot, chip or pass
-					//if robot has place free to shoot
-
-					// determine if the robot has the ball, then determine if the
-					// robot has a good chance to chip or kick the ball to the goal,
-					// else to an ally
-				}
-			}
-
-			if (isUpdate) {
-				((Attacker) executer.getLowLevelBehavior()).update(freePosition, ball.getPosition(), chipKick, dribble,
-						shootDirection);
-			} else {
-				executer.setLowLevelBehavior(new Attacker(robot, ComInterface.getInstance(RobotCom.class),
-						freePosition, ball.getPosition(), chipKick, dribble, shootDirection));
-			}
-
+			handleAttacker(robot, ball, executer, isUpdate);
 			break;
-
 		case BLOCKER: // fuckrobot
-			// Determine closest robot who does not yet have a blocker
-			Robot opponent = getClosestEnemyToRobot(robot, true, executers);
-
-			int distanceToOpponent = 250;
-
-			if (isUpdate) {
-				((Blocker) executer.getLowLevelBehavior()).update(distanceToOpponent, ball.getPosition(),
-						robot.getPosition(), opponent.getPosition(), opponent.getRobotID());
-			} else {
-				executer.setLowLevelBehavior(new Blocker(robot, ComInterface.getInstance(RobotCom.class),
-						distanceToOpponent, ball.getPosition(), robot.getPosition(), opponent.getPosition(), opponent
-								.getRobotID()));
-			}
+			handleBlocker(robot, ball, executer, isUpdate);
 			break;
+		}
+	}
+
+	private void handleAttacker(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate) {
+		Point freePosition = getClosestAllyRobotToBall(world) == robot ? null : getFreePosition(null);
+		int chipKick = 0;
+		int shootDirection = 0;
+		boolean dribble = false;
+
+		// penalty mode
+		if (penaltyRobot != null && penaltyRobot == robot) {
+			// move to penalty area to get in range with the ball
+			if (penaltyRobot.getPosition().getDeltaDistance(ball.getPosition()) > 100) {
+				freePosition = ball.getPosition();
+			} else {
+				freePosition = null;
+			}
+
+			// TODO calculate a possible shooting direction, just using
+			// straight shots for now
+			if (ball.getPosition().getX() > 0)
+				shootDirection = 0;
+			else
+				shootDirection = 180;
+
+			// check if robot is able to shoot and if the angle towards the
+			// ball is correct, shoot when possible
+			if (robot.getPosition().getDeltaDistance(ball.getPosition()) < 100
+					&& robot.getOrientation() + 10 > shootDirection && robot.getOrientation() - 10 < shootDirection)
+				chipKick = 100;
+		} else {
+
+			if (freePosition == null) { // if robot has no freeposition then
+										// it
+										// is closest.
+				double dDistance = ball.getPosition().getDeltaDistance(robot.getPosition());
+				if (dDistance < 150) {
+					dribble = true;
+				} else if (dDistance < 100) {
+					chipKick = -100;
+				}
+				// robot.getPosition()
+				// calculate best tactic, shoot, chip or pass
+				// if robot has place free to shoot
+
+				// determine if the robot has the ball, then determine if
+				// the
+				// robot has a good chance to chip or kick the ball to the
+				// goal,
+				// else to an ally
+			}
+		}
+
+		if (isUpdate) {
+			((Attacker) executer.getLowLevelBehavior()).update(freePosition, ball.getPosition(), chipKick, dribble,
+					shootDirection);
+		} else {
+			executer.setLowLevelBehavior(new Attacker(robot, ComInterface.getInstance(RobotCom.class), freePosition,
+					ball.getPosition(), chipKick, dribble, shootDirection));
+		}
+	}
+
+	private void handleBlocker(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate) {
+		// Determine closest robot who does not yet have a blocker
+		Robot opponent = getClosestEnemyToRobot(robot, true, executers);
+
+		int distanceToOpponent = 250;
+
+		if (isUpdate) {
+			((Blocker) executer.getLowLevelBehavior()).update(distanceToOpponent, ball.getPosition(),
+					robot.getPosition(), opponent.getPosition(), opponent.getRobotID());
+		} else {
+			executer.setLowLevelBehavior(new Blocker(robot, ComInterface.getInstance(RobotCom.class),
+					distanceToOpponent, ball.getPosition(), robot.getPosition(), opponent.getPosition(), opponent
+							.getRobotID()));
+		}
+	}
+
+	private void handleDefender(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate, int distanceToGoal) {
+		if (isUpdate) {
+			((KeeperDefender) executer.getLowLevelBehavior()).update(distanceToGoal, false, ball.getPosition(),
+					robot.getPosition());
+		} else {
+			executer.setLowLevelBehavior(new KeeperDefender(robot, ComInterface.getInstance(RobotCom.class),
+					distanceToGoal, false, ball.getPosition(), robot.getPosition(),
+					robot.getPosition().getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE, offset, world.getField()
+							.getWidth() / 2));
+		}
+	}
+
+	private void handleKeeper(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate, int keeperDistanceToGoal) {
+		if (isUpdate) {
+			((Keeper) executer.getLowLevelBehavior()).update(keeperDistanceToGoal, false, ball.getPosition(),
+					robot.getPosition());
+		} else {
+
+			executer.setLowLevelBehavior(new Keeper(robot, ComInterface.getInstance(RobotCom.class),
+					keeperDistanceToGoal, false, ball.getPosition(), robot.getPosition(),
+					robot.getPosition().getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE,
+					world.getField().getWidth() / 2));
 		}
 	}
 }
