@@ -183,7 +183,7 @@ public class AttackMode extends Mode {
 		 * System.out.println(refStage);
 		 * 
 		 * if(refCommand.equals("STOP")) { // About to receive another command,
-		 * set fag for the next iteration
+		 * set flag for the next iteration
 		 * 
 		 * }
 		 * 
@@ -220,12 +220,9 @@ public class AttackMode extends Mode {
 				freePosition = null;
 			}
 
-			// TODO calculate a possible shooting direction, just using
-			// straight shots for now
-			if (ball.getPosition().getX() > 0)
-				shootDirection = 0;
-			else
-				shootDirection = 180;
+			// TODO who's the keeper?
+			Robot keeper = null;
+			shootDirection = getPenaltyDirection(penaltyRobot, keeper, ball);
 
 			// check if robot is able to shoot and if the angle towards the
 			// ball is correct, shoot when possible

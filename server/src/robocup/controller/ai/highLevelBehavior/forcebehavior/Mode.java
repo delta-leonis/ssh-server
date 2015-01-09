@@ -272,4 +272,22 @@ public abstract class Mode {
 		// + " and during stage: " + refStage);
 		return true;
 	}
+	
+	public int getPenaltyDirection(Robot penaltyRobot, Robot keeper, Ball ball) {
+		if(ball.getPosition().getX() > 0) {
+			// right side of the field
+			if(keeper.getPosition().getY() > 0) {
+				return ball.getPosition().getAngle(new Point(world.getField().getLength() / 2, -300));
+			} else {
+				return ball.getPosition().getAngle(new Point(world.getField().getLength() / 2, 300));
+			}
+		} else {
+			// left side of the field
+			if(keeper.getPosition().getY() > 0) {
+				return ball.getPosition().getAngle(new Point(-world.getField().getLength() / 2, -300));
+			} else {
+				return ball.getPosition().getAngle(new Point(-world.getField().getLength() / 2, 300));
+			}
+		}
+	}
 }
