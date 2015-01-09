@@ -138,7 +138,8 @@ public class AttackMode extends Mode {
 					break;
 				case "PREPARE_PENALTY_BLUE":
 				case "PREPARE_PENALTY_YELLOW":
-					if (penaltyRobot == null) {
+					if (refCommand.equals(("PREPARE_KICKOFF_" + world.getAlly().getColor().toString()))
+							&& penaltyRobot == null) {
 						penaltyRobot = getClosestAllyRobotToBall(world);
 					}
 
