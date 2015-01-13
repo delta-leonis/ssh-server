@@ -17,7 +17,8 @@ public class GotoPosition {
 	private Robot robot;
 	private ComInterface output;
 	private int forcedSpeed = 0;
-	private int kick = 0;
+	private int chipKick = 0;
+	private boolean dribble = false;
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 	@SuppressWarnings("unused")
 	private DijkstraPathPlanner dplanner = new DijkstraPathPlanner();
@@ -136,8 +137,8 @@ public class GotoPosition {
 	 * Set the kicking or chipping power for the next message, resets to 0 after using it
 	 * @param kick ranges 1-100 3for kicking, -1 to -100 for chipping power in percentages
 	 */
-	public void setKick(int kick) {
-		this.kick = kick;
+	public void setKick(int chipKick) {
+		this.chipKick = chipKick;
 	}
 
 	/**
@@ -180,10 +181,10 @@ public class GotoPosition {
 			}
 
 			// Send commands to robot
-			output.send(1, robot.getRobotID(), rotationToGoal, speed, travelDistance, targetDirection, 0, kick, false);
+			output.send(1, robot.getRobotID(), rotationToGoal, speed, travelDistance, targetDirection, 0, chipKick, dribble);
 
 			// Set kick back to 0 to prevent kicking twice in a row
-			kick = 0;
+			chipKick = 0;
 		}
 	}
 
@@ -303,5 +304,19 @@ public class GotoPosition {
 																			// out
 		}
 		return failed;
+	}
+
+	/**
+	 * @return the dribble
+	 */
+	public boolean getDribble() {
+		return dribble;
+	}
+
+	/**
+	 * @param dribble the dribble to set
+	 */
+	public void setDribble(boolean dribble) {
+		this.dribble = dribble;
 	}
 }

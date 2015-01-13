@@ -24,8 +24,8 @@ public class Attacker extends LowLevelBehavior {
 	 * @param dribble enable dribbler
 	 * @param shootDirection direction where the attacker needs to shoot
 	 */
-	public Attacker(Robot robot, ComInterface output, Point freePosition, Point ballPosition, int chipKick, boolean dribble,
-			int shootDirection) {
+	public Attacker(Robot robot, ComInterface output, Point freePosition, Point ballPosition, int chipKick,
+			boolean dribble, int shootDirection) {
 		super(robot, output);
 		this.freePosition = freePosition;
 		this.ballPosition = ballPosition;
@@ -58,6 +58,8 @@ public class Attacker extends LowLevelBehavior {
 
 		} else {
 			Point newDestination = null;
+
+			go.setDribble(dribble);
 
 			// Kick or chip if the values are higher than 0
 			if (chipKick != 0)
