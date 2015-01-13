@@ -14,6 +14,7 @@ public class Team {
 	private int yellowCards;
 	private int redCards;
 	private ArrayList<Robot> robots;
+	private int goalie;
 
 	public Team(String name, Color color) {
 		this.name = name;
@@ -22,23 +23,39 @@ public class Team {
 		robots = new ArrayList<Robot>();
 	}
 
-	public Team(String name, Color color, int yellowCards, int redCards, int score, int timeoutsLeft) {
+	public Team(String name, Color color, int yellowCards, int redCards, int score, int timeoutsLeft, int goalie) {
 		this.name = name;
 		this.color = color;
 		this.yellowCards = yellowCards;
 		this.redCards = redCards;
 		this.score = score;
 		this.timeoutsLeft = timeoutsLeft;
+		this.goalie = goalie;
 		remainingCardTimes = new ArrayList<Long>();
 		robots = new ArrayList<Robot>();
 	}
 
-	public void update(String name, int score, int redCards, int yellowCards, int timeoutsLeft) {
+	public void update(String name, int score, int redCards, int yellowCards, int timeoutsLeft, int goalie) {
 		this.name = name;
 		this.score = score;
 		this.redCards = redCards;
 		this.yellowCards = yellowCards;
 		this.timeoutsLeft = timeoutsLeft;
+		this.goalie = goalie;
+	}
+
+	/**
+	 * @return the goalie
+	 */
+	public int getGoalie() {
+		return goalie;
+	}
+
+	/**
+	 * @param goalie the goalie to set
+	 */
+	public void setGoalie(int goalie) {
+		this.goalie = goalie;
 	}
 
 	/**

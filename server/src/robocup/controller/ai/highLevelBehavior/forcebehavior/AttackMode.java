@@ -221,8 +221,7 @@ public class AttackMode extends Mode {
 				freePosition = null;
 			}
 
-			// TODO who's the keeper?
-			Robot keeper = null;
+			Robot keeper = world.getEnemy().getRobotByID(world.getEnemy().getGoalie());
 			shootDirection = getPenaltyDirection(penaltyRobot, keeper, ball);
 
 			// check if robot is able to shoot and if the angle towards the

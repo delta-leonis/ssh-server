@@ -181,7 +181,8 @@ public class GotoPosition {
 			}
 
 			// Send commands to robot
-			output.send(1, robot.getRobotID(), rotationToGoal, speed, travelDistance, targetDirection, 0, chipKick, dribble);
+			output.send(1, robot.getRobotID(), rotationToGoal, speed, travelDistance, targetDirection, 0, chipKick,
+					dribble);
 
 			// Set kick back to 0 to prevent kicking twice in a row
 			chipKick = 0;
