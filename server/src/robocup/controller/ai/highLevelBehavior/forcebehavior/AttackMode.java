@@ -232,8 +232,7 @@ public class AttackMode extends Mode {
 				chipKick = 100;
 		} else {
 
-			if (freePosition == null) { // if robot has no freeposition then
-										// it
+			if (freePosition == null) { // if robot has no free position then it
 										// is closest.
 				double dDistance = ball.getPosition().getDeltaDistance(robot.getPosition());
 				if (dDistance < 150) {
