@@ -1,6 +1,7 @@
 package robocup.controller.ai.movement;
 
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.logging.Logger;
 
 import robocup.Main;
@@ -20,8 +21,8 @@ public class GotoPosition {
 	private int chipKick = 0;
 	private boolean dribble = false;
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
-	@SuppressWarnings("unused")
 	private DijkstraPathPlanner dplanner = new DijkstraPathPlanner();
+	private LinkedList<Point> route;
 
 	/**
 	 * Go to target position
@@ -161,30 +162,26 @@ public class GotoPosition {
 		} else {
 			robot.setOnSight(true);
 
-			// destination = planner.getNextRoutePoint(robot.getPosition(),
-			// destination, robot.getRobotID());
-			// TO-DO add null check for route
-			// destination = dplanner.getRoute(robot.getPosition(), destination,
-			// robot.getRobotID()).get(0);
+			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotID());
+
+			if (route != null)
+				destination = route.get(0);
 
 			int targetDirection = rotationToDest(this.target);
 			int travelDistance = getDistance();
 			int rotationToGoal = rotationToDest(destination);
 			int speed = getSpeed(getDistance(), rotationToGoal);
 			float rotationSpeedFloat = getRotationSpeed(targetDirection);
-			@SuppressWarnings("unused")
 			int rotationSpeed = (int) rotationSpeedFloat;
 
 			// Overrule speed
 			if (forcedSpeed > 0) {
 				speed = forcedSpeed;
 			}
-			System.out.println("rotationToGaol: " + rotationToGoal + " speed: " +speed + " targetDirection: " + targetDirection + " rotationSpeed: " + rotationSpeed + " dribble: " + dribble);
 
 			// Send commands to robot
-			output.send(1, robot.getRobotID(), rotationToGoal, speed, travelDistance, targetDirection, rotationSpeed, chipKick,
-					dribble);
-//			System.out.println("dribble: " + dribble);
+			output.send(1, robot.getRobotID(), rotationToGoal, speed, travelDistance, targetDirection, rotationSpeed,
+					chipKick, dribble);
 
 			// Set kick back to 0 to prevent kicking twice in a row
 			chipKick = 0;
@@ -221,12 +218,19 @@ public class GotoPosition {
 	 * @return
 	 */
 	public int getDistance() {
-		// Calculate delta values
-		double dx = (robot.getPosition().getX() - destination.getX());
-		double dy = (robot.getPosition().getY() - destination.getY());
+		int distance = 0;
 
-		// Calculate distance
-		int distance = (int) Math.sqrt(dx * dx + dy * dy);
+		if (route != null) {
+			for (int i = -1; i < route.size() - 1; i++) {
+				if (i == -1) {
+					distance += robot.getPosition().getDeltaDistance(route.get(0));
+				} else {
+					distance += route.get(i).getDeltaDistance(route.get(i + 1));
+				}
+			}
+		} else {
+			distance = (int) robot.getPosition().getDeltaDistance(destination);
+		}
 
 		return distance;
 	}
