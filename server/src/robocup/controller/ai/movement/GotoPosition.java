@@ -179,10 +179,12 @@ public class GotoPosition {
 			if (forcedSpeed > 0) {
 				speed = forcedSpeed;
 			}
+			System.out.println("rotationToGaol: " + rotationToGoal + " speed: " +speed + " targetDirection: " + targetDirection + " rotationSpeed: " + rotationSpeed + " dribble: " + dribble);
 
 			// Send commands to robot
-			output.send(1, robot.getRobotID(), rotationToGoal, speed, travelDistance, targetDirection, 0, chipKick,
+			output.send(1, robot.getRobotID(), rotationToGoal, speed, travelDistance, targetDirection, rotationSpeed, chipKick,
 					dribble);
+//			System.out.println("dribble: " + dribble);
 
 			// Set kick back to 0 to prevent kicking twice in a row
 			chipKick = 0;
