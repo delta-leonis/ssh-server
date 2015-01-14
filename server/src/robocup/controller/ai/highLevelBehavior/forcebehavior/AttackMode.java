@@ -44,7 +44,7 @@ public class AttackMode extends Mode {
 		// System.out.println("attackmode: updateExecuters");
 		for (RobotExecuter executer : executers) {
 
-			if (executer.getRobot().getRobotID() == 1) {
+			if (executer.getRobot().getRobotID() == world.getAlly().getGoalie()) {
 				// System.out.println(executer.getRobot().getRobotID()
 				// + "  is nu keeper");
 				updateExecuter(executer, roles.KEEPER, false);
@@ -153,17 +153,6 @@ public class AttackMode extends Mode {
 					break;
 				default:
 					break;
-				}
-				// Does our team have to prepare for kickoff?
-				if (refCommand.equals(("PREPARE_KICKOFF_" + world.getAlly().getColor().toString()))) {
-
-					// Find robot closest to the ball, is it "me"?
-					Robot kickoffRobot = getClosestAttackerRobotToBall(world);
-					if (kickoffRobot.getRobotID() == robot.getRobotID()) {
-
-						// Grab attacker???? and to ball position
-
-					}
 				}
 			}
 
