@@ -144,7 +144,6 @@ public class AttackMode extends Mode {
 			}
 		}
 
-		// TODO cleanup comments
 		/* // Check for referee-updates / commands Referee ref =
 		 * world.getReferee();
 		 * 
@@ -178,7 +177,8 @@ public class AttackMode extends Mode {
 		}
 	}
 
-	private void handleAttacker(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate) {
+	@Override
+	public void handleAttacker(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate) {
 		Point freePosition = getClosestAllyRobotToBall(world) == robot ? null : getFreePosition(null);
 		int chipKick = 0;
 		int shootDirection = 0;
@@ -230,7 +230,8 @@ public class AttackMode extends Mode {
 		}
 	}
 
-	private void handleBlocker(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate) {
+	@Override
+	public void handleBlocker(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate) {
 		// Determine closest robot who does not yet have a blocker
 		Robot opponent = getClosestEnemyToRobot(robot, true, executers);
 		int distanceToOpponent = 250;
@@ -245,7 +246,8 @@ public class AttackMode extends Mode {
 		}
 	}
 
-	private void handleDefender(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate, int distanceToGoal) {
+	@Override
+	public void handleDefender(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate, int distanceToGoal) {
 		if (isUpdate) {
 			((KeeperDefender) executer.getLowLevelBehavior()).update(distanceToGoal, false, ball.getPosition(),
 					robot.getPosition());
@@ -257,7 +259,8 @@ public class AttackMode extends Mode {
 		}
 	}
 
-	private void handleKeeper(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate, int distanceToGoal) {
+	@Override
+	public void handleKeeper(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate, int distanceToGoal) {
 		if (isUpdate) {
 			((Keeper) executer.getLowLevelBehavior()).update(distanceToGoal, false, ball.getPosition(),
 					robot.getPosition());

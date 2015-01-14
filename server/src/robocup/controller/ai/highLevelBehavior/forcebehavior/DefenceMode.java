@@ -6,6 +6,8 @@ package robocup.controller.ai.highLevelBehavior.forcebehavior;
 import java.util.ArrayList;
 
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
+import robocup.model.Ball;
+import robocup.model.Robot;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class DefenceMode extends Mode {
@@ -37,4 +39,27 @@ public class DefenceMode extends Mode {
 
 	}
 
+	@Override
+	public void handleAttacker(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void handleBlocker(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void handleDefender(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate, int distanceToGoal) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void handleKeeper(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate, int distanceToGoal) {
+		// TODO Auto-generated method stub
+
+	}
 }

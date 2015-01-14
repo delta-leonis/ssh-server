@@ -50,6 +50,16 @@ public abstract class Mode {
 
 	public abstract void updateExecuters(ArrayList<RobotExecuter> executers);
 
+	public abstract void handleAttacker(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate);
+
+	public abstract void handleBlocker(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate);
+
+	public abstract void handleDefender(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate,
+			int distanceToGoal);
+
+	public abstract void handleKeeper(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate,
+			int distanceToGoal);
+
 	/**
 	 * Find a free position for the robot A position is free when the robot can
 	 * get the ball passed
@@ -272,18 +282,18 @@ public abstract class Mode {
 		// + " and during stage: " + refStage);
 		return true;
 	}
-	
+
 	public int getPenaltyDirection(Robot penaltyRobot, Robot keeper, Ball ball) {
-		if(ball.getPosition().getX() > 0) {
+		if (ball.getPosition().getX() > 0) {
 			// right side of the field
-			if(keeper.getPosition().getY() > 0) {
+			if (keeper.getPosition().getY() > 0) {
 				return ball.getPosition().getAngle(new Point(world.getField().getLength() / 2, -300));
 			} else {
 				return ball.getPosition().getAngle(new Point(world.getField().getLength() / 2, 300));
 			}
 		} else {
 			// left side of the field
-			if(keeper.getPosition().getY() > 0) {
+			if (keeper.getPosition().getY() > 0) {
 				return ball.getPosition().getAngle(new Point(-world.getField().getLength() / 2, -300));
 			} else {
 				return ball.getPosition().getAngle(new Point(-world.getField().getLength() / 2, 300));
