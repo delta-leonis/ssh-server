@@ -30,48 +30,35 @@ public class AttackMode extends Mode {
 		world = World.getInstance();
 
 		// Set all behaviors / assign
-
-		// 1e executer = keeper
-		// 2e + 3e = defender
-		// rest is attacker
 		updateExecuters(executers);
 	}
 
 	public void updateExecuters(ArrayList<RobotExecuter> executers) {
 		this.executers = executers;
-		// int executerCounter = 0;
 
-		// System.out.println("attackmode: updateExecuters");
+		// Go through executer lists and update / create the lowlevel behaviors
 		for (RobotExecuter executer : executers) {
-
 			if (executer.getRobot().getRobotID() == world.getAlly().getGoalie()) {
-				// System.out.println(executer.getRobot().getRobotID()
-				// + "  is nu keeper");
-				updateExecuter(executer, roles.KEEPER, false);
+				if (executer.getLowLevelBehavior() instanceof Keeper) {
+					// lowlevel behavior already keeper, update values
+					updateExecuter(executer, roles.KEEPER, true);
+				} else {
+					// lowlevel behavior not a keeper yet,
+					// create lowlevel behavior and update
+					updateExecuter(executer, roles.KEEPER, false);
+				}
 			} else {
-				// System.out.println(executer.getRobot().getRobotID()
-				// + "  is nu defender");
-				updateExecuter(executer, roles.DEFENDER, false);
+				if (executer.getLowLevelBehavior() instanceof KeeperDefender) {
+					// lowlevel behavior already defender, update values
+					updateExecuter(executer, roles.DEFENDER, true);
+				} else {
+					// lowlevel behavior not a defender yet,
+					// create lowlevel behavior and update
+					updateExecuter(executer, roles.DEFENDER, false);
+				}
 			}
-
-			// // Keeper
-			// System.out.println("rowid:  " +
-			// executer.getRobot().getRobotID());
-			// if (executerCounter == 0) {
-			// System.out.println(" assign keepert");
-			// updateExecuter(executer, roles.KEEPER, false);
-			// // Defender
-			// } else if (executerCounter <= 2) {
-			//
-			// System.out.println(" assign defender");
-			// updateExecuter(executer, roles.DEFENDER, false);
-			// // Attacker
-			// } else {
-			// System.out.println(" assign attacker");
-			// updateExecuter(executer, roles.ATTACKER, false);
-			// }
-			//
-			// executerCounter++;
+			// TODO update executer with attacker
+			// and blocker roles when necessary
 		}
 	}
 
@@ -82,9 +69,6 @@ public class AttackMode extends Mode {
 
 	@Override
 	public void execute(ArrayList<RobotExecuter> executers) {
-
-		// System.out.println("Update");
-
 		try {
 			for (RobotExecuter executer : executers) {
 				updateExecuter(executer, executer.getLowLevelBehavior().getRole(), true);
@@ -98,11 +82,9 @@ public class AttackMode extends Mode {
 	@Override
 	// Genereert EN update een executer met een lowlevel behaviour
 	public void updateExecuter(RobotExecuter executer, roles type, boolean isUpdate) {
-
 		Robot robot = executer.getRobot();
 		Ball ball = world.getBall();
 		int distanceToGoal = offset != null ? 1000 : 500;
-		int keeperDistanceToGoal = 500;
 
 		// new assigment, assign to robot
 		// if(!isUpdate) {
@@ -162,6 +144,7 @@ public class AttackMode extends Mode {
 			}
 		}
 
+		// TODO cleanup comments
 		/* // Check for referee-updates / commands Referee ref =
 		 * world.getReferee();
 		 * 
@@ -181,7 +164,7 @@ public class AttackMode extends Mode {
 
 		switch (type) {
 		case KEEPER:
-			handleKeeper(robot, ball, executer, isUpdate, keeperDistanceToGoal);
+			handleKeeper(robot, ball, executer, isUpdate, distanceToGoal);
 			break;
 		case DEFENDER:
 			handleDefender(robot, ball, executer, isUpdate, distanceToGoal);
@@ -233,10 +216,8 @@ public class AttackMode extends Mode {
 				// if robot has place free to shoot
 
 				// determine if the robot has the ball, then determine if
-				// the
-				// robot has a good chance to chip or kick the ball to the
-				// goal,
-				// else to an ally
+				// the robot has a good chance to chip or kick the ball to
+				// the goal, else to an ally
 			}
 		}
 
@@ -252,7 +233,6 @@ public class AttackMode extends Mode {
 	private void handleBlocker(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate) {
 		// Determine closest robot who does not yet have a blocker
 		Robot opponent = getClosestEnemyToRobot(robot, true, executers);
-
 		int distanceToOpponent = 250;
 
 		if (isUpdate) {
@@ -277,16 +257,14 @@ public class AttackMode extends Mode {
 		}
 	}
 
-	private void handleKeeper(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate, int keeperDistanceToGoal) {
+	private void handleKeeper(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate, int distanceToGoal) {
 		if (isUpdate) {
-			((Keeper) executer.getLowLevelBehavior()).update(keeperDistanceToGoal, false, ball.getPosition(),
+			((Keeper) executer.getLowLevelBehavior()).update(distanceToGoal, false, ball.getPosition(),
 					robot.getPosition());
 		} else {
-
-			executer.setLowLevelBehavior(new Keeper(robot, ComInterface.getInstance(RobotCom.class),
-					keeperDistanceToGoal, false, ball.getPosition(), robot.getPosition(),
-					robot.getPosition().getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE,
-					world.getField().getWidth() / 2));
+			executer.setLowLevelBehavior(new Keeper(robot, ComInterface.getInstance(RobotCom.class), distanceToGoal,
+					false, ball.getPosition(), robot.getPosition(), robot.getPosition().getX() > 0 ? MID_GOAL_POSITIVE
+							: MID_GOAL_NEGATIVE, world.getField().getWidth() / 2));
 		}
 	}
 }
