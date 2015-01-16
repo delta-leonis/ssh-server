@@ -8,6 +8,8 @@ import robocup.output.ComInterface;
 
 public class GotoPosition {
 
+	// TODO find a better solution
+	private static final int DISTANCE_ROTATIONSPEED_COEFFICIENT = 35;
 	private Point destination;
 	private Point target;
 	private Robot robot;
@@ -182,32 +184,22 @@ public class GotoPosition {
 
 	/**
 	 * Get rotationSpeed, calculates the speed at which to rotate based on degrees left to rotate
-	 * 
+	 * Precondition: -180 <= rotation <= 180
 	 * @param rotation
 	 * @return
 	 */
 	public float getRotationSpeed(int rotation) {
-		// used natural logarithmic function to determine rotationSpeed;
-		// double rotationCalc = Math.abs(rotation);
+		// calculate total circumference of robot
+		int circumference = (int) (robot.getDiameter() * Math.PI);
 
-		float rotationSpeed = (float) Math.toRadians(rotation);
-		rotationSpeed = rotationSpeed * 45;
+		// must be between 0 and 50 percent, if it's higher than 50% rotating to
+		// the other direction is faster
+		int rotationPercent = (rotation) / 360;
 
-		// if(rotation < 10) {
-		// rotationSpeed *= 0;
-		// }
-		// else if(rotation < 40){
-		// rotationSpeed *= 20;
-		// }
-		// else{
-		// rotationSpeed = (float) Math.toRadians(rotation);
-		// rotationSpeed = rotationSpeed * 40;
-		// }
-		// // Return calculated speed
-		// System.out.println("rotationSpeed: "+ rotationSpeed * 10);
-		// System.out.println("rotation: " + rotation);
+		// distance needed to rotate in mm
+		int rotationDistance = circumference * rotationPercent;
 
-		return rotationSpeed;
+		return rotationDistance * DISTANCE_ROTATIONSPEED_COEFFICIENT;
 	}
 
 	/**
