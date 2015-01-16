@@ -102,6 +102,7 @@ public class AttackMode extends Mode {
 		// + " is forbidden to move an Inch");
 
 		// !!TODO implement break and/or holding patterns for robots
+		// TODO ^ done? robots only allowed to move when penaltyRobot != null
 		// If it time for a penalty? getClosestAttackerRobotToBall() and send
 		// him to the ball
 
@@ -144,6 +145,7 @@ public class AttackMode extends Mode {
 			}
 		}
 
+		// TODO cleanup comments
 		/* // Check for referee-updates / commands Referee ref =
 		 * world.getReferee();
 		 * 

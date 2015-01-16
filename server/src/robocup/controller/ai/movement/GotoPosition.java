@@ -1,14 +1,9 @@
 package robocup.controller.ai.movement;
 
-import java.util.Calendar;
 import java.util.LinkedList;
-import java.util.logging.Logger;
-
-import robocup.Main;
 import robocup.model.FieldObject;
 import robocup.model.Point;
 import robocup.model.Robot;
-import robocup.model.World;
 import robocup.output.ComInterface;
 
 public class GotoPosition {
@@ -20,7 +15,6 @@ public class GotoPosition {
 	private int forcedSpeed = 0;
 	private int chipKick = 0;
 	private boolean dribble = false;
-	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private DijkstraPathPlanner dplanner = new DijkstraPathPlanner();
 	private LinkedList<Point> route;
 
@@ -146,14 +140,7 @@ public class GotoPosition {
 	 * Calulate 
 	 */
 	public void calculate() {
-		// Check for timeout
-		if (timeOutCheck()) {
-
-			/* Todo */
-
-			// Both destination and target are required, if not set, default
-			// position to idle
-		} else if (destination == null || target == null) {
+		if (destination == null || target == null) {
 			robot.setOnSight(true);
 			output.send(1, robot.getRobotID(), 0, 0, 0, 0, 0, 0, false);
 			return;
@@ -221,16 +208,12 @@ public class GotoPosition {
 		int distance = 0;
 
 		if (route != null) {
-			for (int i = -1; i < route.size() - 1; i++) {
-				if (i == -1) {
-					distance += robot.getPosition().getDeltaDistance(route.get(0));
-				} else {
-					distance += route.get(i).getDeltaDistance(route.get(i + 1));
-				}
-			}
-		} else {
+			distance += robot.getPosition().getDeltaDistance(route.get(0));
+
+			for (int i = 0; i < route.size() - 1; i++)
+				distance += route.get(i).getDeltaDistance(route.get(i + 1));
+		} else
 			distance = (int) robot.getPosition().getDeltaDistance(destination);
-		}
 
 		return distance;
 	}
@@ -280,37 +263,6 @@ public class GotoPosition {
 			rot += 360;
 		}
 		return rot;
-	}
-
-	/**
-	 * Check if the robot timed out, should be used at the start of calculate in every low level behavior
-	 * @return true if the robot timed out
-	 */
-	public boolean timeOutCheck() {
-		boolean failed = false;
-
-		if ((robot.getLastUpdateTime() + 0.20) < (Calendar.getInstance().getTimeInMillis() / 1000)) {
-			failed = true;
-		}
-		if (!World.getInstance().getReferee().isStart()) {
-			failed = true;
-		}
-
-		if (failed) {
-			LOGGER.warning("Robot " + robot.getRobotID() + " is not on sight");
-			LOGGER.warning("Time: " + (Calendar.getInstance().getTimeInMillis() / 1000));
-			LOGGER.warning("Robot: " + (robot.getLastUpdateTime()));
-
-			robot.setOnSight(false);
-			output.send(1, robot.getRobotID(), 0, 0, 0, 0, 0, 0, false); // stop
-																			// moving
-																			// if
-																			// the
-																			// robot
-																			// timed
-																			// out
-		}
-		return failed;
 	}
 
 	/**
