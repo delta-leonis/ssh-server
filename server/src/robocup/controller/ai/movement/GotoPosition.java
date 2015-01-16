@@ -1,15 +1,17 @@
 package robocup.controller.ai.movement;
 
 import java.util.LinkedList;
+
 import robocup.model.FieldObject;
 import robocup.model.Point;
 import robocup.model.Robot;
+import robocup.model.World;
 import robocup.output.ComInterface;
 
 public class GotoPosition {
 
 	// TODO find a better solution
-	private static final int DISTANCE_ROTATIONSPEED_COEFFICIENT = 35;
+	private static final double DISTANCE_ROTATIONSPEED_COEFFICIENT = 3;
 	private Point destination;
 	private Point target;
 	private Robot robot;
@@ -23,9 +25,12 @@ public class GotoPosition {
 	/**
 	 * Go to target position
 	 * 
-	 * @param robot				RobotObject
-	 * @param output			Output Connection
-	 * @param destination 		Destination Position
+	 * @param robot
+	 *            RobotObject
+	 * @param output
+	 *            Output Connection
+	 * @param destination
+	 *            Destination Position
 	 */
 	public GotoPosition(Robot robot, ComInterface output, Point destination) {
 		this.robot = robot;
@@ -37,9 +42,12 @@ public class GotoPosition {
 	/**
 	 * Go to target object
 	 * 
-	 * @param robot				RobotObject
-	 * @param output			Output Connection
-	 * @param target 			Target Object (position)
+	 * @param robot
+	 *            RobotObject
+	 * @param output
+	 *            Output Connection
+	 * @param target
+	 *            Target Object (position)
 	 */
 	public GotoPosition(Robot robot, ComInterface output, FieldObject target) {
 		this.robot = robot;
@@ -51,10 +59,14 @@ public class GotoPosition {
 	/**
 	 * Go to goalPosition and `look` towards the destination
 	 * 
-	 * @param robot				RobotObject
-	 * @param output			Output Connection
-	 * @param destination		Position to drive to
-	 * @param target			Position to look at
+	 * @param robot
+	 *            RobotObject
+	 * @param output
+	 *            Output Connection
+	 * @param destination
+	 *            Position to drive to
+	 * @param target
+	 *            Position to look at
 	 */
 	public GotoPosition(Robot robot, ComInterface output, Point destination, Point target) {
 		this.robot = robot;
@@ -64,13 +76,19 @@ public class GotoPosition {
 	}
 
 	/**
-	 * Go to goalPosition with a `forced` speed and `look` towards the destination
+	 * Go to goalPosition with a `forced` speed and `look` towards the
+	 * destination
 	 * 
-	 * @param robot				RobotObject
-	 * @param output			Output Connection
-	 * @param destination		Position to drive to
-	 * @param target			Position to look at
-	 * @param forcedSpeed		Speed to drive with
+	 * @param robot
+	 *            RobotObject
+	 * @param output
+	 *            Output Connection
+	 * @param destination
+	 *            Position to drive to
+	 * @param target
+	 *            Position to look at
+	 * @param forcedSpeed
+	 *            Speed to drive with
 	 */
 	public GotoPosition(Robot robot, ComInterface output, Point destination, Point target, int forcedSpeed) {
 		this.robot = robot;
@@ -82,7 +100,8 @@ public class GotoPosition {
 
 	/**
 	 * Get Target
-	 * @return	TargetPoint
+	 * 
+	 * @return TargetPoint
 	 */
 	public Point getTarget() {
 		return target;
@@ -90,6 +109,7 @@ public class GotoPosition {
 
 	/**
 	 * Set Target
+	 * 
 	 * @param TargetPoint
 	 */
 	public void setTarget(Point p) {
@@ -98,6 +118,7 @@ public class GotoPosition {
 
 	/**
 	 * Set Goal
+	 * 
 	 * @param GoalPoint
 	 * @deprecated replaced by setDestination
 	 */
@@ -107,6 +128,7 @@ public class GotoPosition {
 
 	/**
 	 * Set Destination
+	 * 
 	 * @param destination
 	 */
 	public void setDestination(Point destination) {
@@ -115,6 +137,7 @@ public class GotoPosition {
 
 	/**
 	 * Get Goal position
+	 * 
 	 * @return GoalPoint
 	 * @deprecated replaced by getDestination
 	 */
@@ -124,6 +147,7 @@ public class GotoPosition {
 
 	/**
 	 * Get Destination
+	 * 
 	 * @return
 	 */
 	public Point getDestination() {
@@ -131,18 +155,23 @@ public class GotoPosition {
 	}
 
 	/**
-	 * Set the kicking or chipping power for the next message, resets to 0 after using it
-	 * @param kick ranges 1-100 3for kicking, -1 to -100 for chipping power in percentages
+	 * Set the kicking or chipping power for the next message, resets to 0 after
+	 * using it
+	 * 
+	 * @param kick
+	 *            ranges 1-100 3for kicking, -1 to -100 for chipping power in
+	 *            percentages
 	 */
 	public void setKick(int chipKick) {
 		this.chipKick = chipKick;
 	}
 
 	/**
-	 * Calulate 
+	 * Calulate
 	 */
 	public void calculate() {
 		if (destination == null || target == null) {
+			System.out.println("dest or target is null");
 			robot.setOnSight(true);
 			output.send(1, robot.getRobotID(), 0, 0, 0, 0, 0, 0, false);
 			return;
@@ -156,17 +185,12 @@ public class GotoPosition {
 			if (route.size() > 0 && route.get(0) != null)
 				destination = route.get(0);
 
-			int targetDirection = rotationToDest(this.target);
+			// TODO make robot stop when distance is reached, should be handled in robot code
 			int travelDistance = getDistance();
-			int rotationToGoal = rotationToDest(destination);
-
-			targetDirection += 180;
-			if (targetDirection > 180)
-				targetDirection -= 360;
+			int rotationToGoal = rotationToDest(target);
 
 			int speed = getSpeed(getDistance(), rotationToGoal);
-			float rotationSpeedFloat = getRotationSpeed(targetDirection);
-			int rotationSpeed = (int) rotationSpeedFloat;
+			int rotationSpeed = (int) getRotationSpeed(rotationToGoal);
 
 			// Overrule speed
 			if (forcedSpeed > 0) {
@@ -174,8 +198,9 @@ public class GotoPosition {
 			}
 
 			// Send commands to robot
-			output.send(1, robot.getRobotID(), rotationToGoal, speed, travelDistance, targetDirection, rotationSpeed,
-					chipKick, dribble);
+			// direction and rotationAngle do nothing, set to 0
+			// rotationSpeed inverted because the motors spin in opposite direction
+			output.send(1, robot.getRobotID(), 0, speed, travelDistance, 0, -rotationSpeed, chipKick, dribble);
 
 			// Set kick back to 0 to prevent kicking twice in a row
 			chipKick = 0;
@@ -183,27 +208,29 @@ public class GotoPosition {
 	}
 
 	/**
-	 * Get rotationSpeed, calculates the speed at which to rotate based on degrees left to rotate
-	 * Precondition: -180 <= rotation <= 180
+	 * Get rotationSpeed, calculates the speed at which to rotate based on
+	 * degrees left to rotate Precondition: -180 <= rotation <= 180
+	 * 
 	 * @param rotation
 	 * @return
 	 */
-	public float getRotationSpeed(int rotation) {
+	public float getRotationSpeed(float rotation) {
 		// calculate total circumference of robot
-		int circumference = (int) (robot.getDiameter() * Math.PI);
+		float circumference = (float) (robot.getDiameter() * Math.PI);
 
 		// must be between 0 and 50 percent, if it's higher than 50% rotating to
 		// the other direction is faster
-		int rotationPercent = (rotation) / 360;
+		float rotationPercent = rotation / 360;
 
 		// distance needed to rotate in mm
-		int rotationDistance = circumference * rotationPercent;
+		float rotationDistance = circumference * rotationPercent;
 
-		return rotationDistance * DISTANCE_ROTATIONSPEED_COEFFICIENT;
+		return (float) (rotationDistance * DISTANCE_ROTATIONSPEED_COEFFICIENT);
 	}
 
 	/**
 	 * Get travel distance
+	 * 
 	 * @return
 	 */
 	public int getDistance() {
@@ -222,6 +249,7 @@ public class GotoPosition {
 
 	/**
 	 * Get speed based on travel distance and rotation
+	 * 
 	 * @param distance
 	 * @param rotation
 	 * @return
@@ -247,15 +275,14 @@ public class GotoPosition {
 
 	/**
 	 * Calculate the needed rotation to destination
+	 * 
 	 * @param newPoint
 	 * @return
 	 */
 	public int rotationToDest(Point newPoint) {
 		// angle vector between old and new
-		double dy = newPoint.getY() - robot.getPosition().getY();
-		double dx = newPoint.getX() - robot.getPosition().getX();
-		double newRad = Math.atan2(dy, dx);
-		int rot = (int) (Math.toDegrees(newRad) - robot.getOrientation());
+		int newangle = robot.getPosition().getAngle(newPoint);
+		int rot = (int) (newangle - robot.getOrientation());
 
 		if (rot > 180) {
 			rot -= 360;
@@ -275,7 +302,8 @@ public class GotoPosition {
 	}
 
 	/**
-	 * @param dribble the dribble to set
+	 * @param dribble
+	 *            the dribble to set
 	 */
 	public void setDribble(boolean dribble) {
 		this.dribble = dribble;
