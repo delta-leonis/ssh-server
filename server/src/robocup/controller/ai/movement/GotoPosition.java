@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import robocup.model.FieldObject;
 import robocup.model.Point;
 import robocup.model.Robot;
-import robocup.model.World;
 import robocup.output.ComInterface;
 
 public class GotoPosition {
@@ -24,13 +23,9 @@ public class GotoPosition {
 
 	/**
 	 * Go to target position
-	 * 
-	 * @param robot
-	 *            RobotObject
-	 * @param output
-	 *            Output Connection
-	 * @param destination
-	 *            Destination Position
+	 * @param robot RobotObject
+	 * @param output Output Connection
+	 * @param destination Destination Position
 	 */
 	public GotoPosition(Robot robot, ComInterface output, Point destination) {
 		this.robot = robot;
@@ -41,13 +36,9 @@ public class GotoPosition {
 
 	/**
 	 * Go to target object
-	 * 
-	 * @param robot
-	 *            RobotObject
-	 * @param output
-	 *            Output Connection
-	 * @param target
-	 *            Target Object (position)
+	 * @param robot RobotObject
+	 * @param output Output Connection
+	 * @param target Target Object (position)
 	 */
 	public GotoPosition(Robot robot, ComInterface output, FieldObject target) {
 		this.robot = robot;
@@ -58,15 +49,10 @@ public class GotoPosition {
 
 	/**
 	 * Go to goalPosition and `look` towards the destination
-	 * 
-	 * @param robot
-	 *            RobotObject
-	 * @param output
-	 *            Output Connection
-	 * @param destination
-	 *            Position to drive to
-	 * @param target
-	 *            Position to look at
+	 * @param robot RobotObject
+	 * @param output Output Connection
+	 * @param destination Position to drive to
+	 * @param target Position to look at
 	 */
 	public GotoPosition(Robot robot, ComInterface output, Point destination, Point target) {
 		this.robot = robot;
@@ -76,19 +62,12 @@ public class GotoPosition {
 	}
 
 	/**
-	 * Go to goalPosition with a `forced` speed and `look` towards the
-	 * destination
-	 * 
-	 * @param robot
-	 *            RobotObject
-	 * @param output
-	 *            Output Connection
-	 * @param destination
-	 *            Position to drive to
-	 * @param target
-	 *            Position to look at
-	 * @param forcedSpeed
-	 *            Speed to drive with
+	 * Go to goalPosition with a `forced` speed and `look` towards the destination
+	 * @param robot RobotObject
+	 * @param output Output Connection
+	 * @param destination Position to drive to
+	 * @param target Position to look at
+	 * @param forcedSpeed Speed to drive with
 	 */
 	public GotoPosition(Robot robot, ComInterface output, Point destination, Point target, int forcedSpeed) {
 		this.robot = robot;
@@ -100,7 +79,6 @@ public class GotoPosition {
 
 	/**
 	 * Get Target
-	 * 
 	 * @return TargetPoint
 	 */
 	public Point getTarget() {
@@ -109,7 +87,6 @@ public class GotoPosition {
 
 	/**
 	 * Set Target
-	 * 
 	 * @param TargetPoint
 	 */
 	public void setTarget(Point p) {
@@ -118,7 +95,6 @@ public class GotoPosition {
 
 	/**
 	 * Set Goal
-	 * 
 	 * @param GoalPoint
 	 * @deprecated replaced by setDestination
 	 */
@@ -128,7 +104,6 @@ public class GotoPosition {
 
 	/**
 	 * Set Destination
-	 * 
 	 * @param destination
 	 */
 	public void setDestination(Point destination) {
@@ -137,7 +112,6 @@ public class GotoPosition {
 
 	/**
 	 * Get Goal position
-	 * 
 	 * @return GoalPoint
 	 * @deprecated replaced by getDestination
 	 */
@@ -147,7 +121,6 @@ public class GotoPosition {
 
 	/**
 	 * Get Destination
-	 * 
 	 * @return
 	 */
 	public Point getDestination() {
@@ -157,10 +130,7 @@ public class GotoPosition {
 	/**
 	 * Set the kicking or chipping power for the next message, resets to 0 after
 	 * using it
-	 * 
-	 * @param kick
-	 *            ranges 1-100 3for kicking, -1 to -100 for chipping power in
-	 *            percentages
+	 * @param kick ranges 1-100 3for kicking, -1 to -100 for chipping power in percentages
 	 */
 	public void setKick(int chipKick) {
 		this.chipKick = chipKick;
@@ -185,7 +155,8 @@ public class GotoPosition {
 			if (route.size() > 0 && route.get(0) != null)
 				destination = route.get(0);
 
-			// TODO make robot stop when distance is reached, should be handled in robot code
+			// TODO make robot stop when distance is reached, should be handled
+			// in robot code
 			int travelDistance = getDistance();
 			int rotationToGoal = rotationToDest(target);
 
@@ -199,7 +170,8 @@ public class GotoPosition {
 
 			// Send commands to robot
 			// direction and rotationAngle do nothing, set to 0
-			// rotationSpeed inverted because the motors spin in opposite direction
+			// rotationSpeed inverted because the motors spin in opposite
+			// direction
 			output.send(1, robot.getRobotID(), 0, speed, travelDistance, 0, -rotationSpeed, chipKick, dribble);
 
 			// Set kick back to 0 to prevent kicking twice in a row
@@ -208,9 +180,8 @@ public class GotoPosition {
 	}
 
 	/**
-	 * Get rotationSpeed, calculates the speed at which to rotate based on
-	 * degrees left to rotate Precondition: -180 <= rotation <= 180
-	 * 
+	 * Get rotationSpeed, calculates the speed at which to rotate based on degrees left to rotate
+	 * Precondition: -180 <= rotation <= 180
 	 * @param rotation
 	 * @return
 	 */
@@ -230,7 +201,6 @@ public class GotoPosition {
 
 	/**
 	 * Get travel distance
-	 * 
 	 * @return
 	 */
 	public int getDistance() {
@@ -249,7 +219,6 @@ public class GotoPosition {
 
 	/**
 	 * Get speed based on travel distance and rotation
-	 * 
 	 * @param distance
 	 * @param rotation
 	 * @return
@@ -275,7 +244,6 @@ public class GotoPosition {
 
 	/**
 	 * Calculate the needed rotation to destination
-	 * 
 	 * @param newPoint
 	 * @return
 	 */
@@ -302,8 +270,7 @@ public class GotoPosition {
 	}
 
 	/**
-	 * @param dribble
-	 *            the dribble to set
+	 * @param dribble the dribble to set
 	 */
 	public void setDribble(boolean dribble) {
 		this.dribble = dribble;
