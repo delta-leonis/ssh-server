@@ -151,12 +151,17 @@ public class GotoPosition {
 
 			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotID());
 
-			if (route != null)
+			if (route.size()  > 0 && route.get(0) != null)
 				destination = route.get(0);
 
 			int targetDirection = rotationToDest(this.target);
 			int travelDistance = getDistance();
 			int rotationToGoal = rotationToDest(destination);
+			targetDirection += 180;
+			if(targetDirection > 180) targetDirection-= 360;
+			
+			
+			
 			int speed = getSpeed(getDistance(), rotationToGoal);
 			float rotationSpeedFloat = getRotationSpeed(targetDirection);
 			int rotationSpeed = (int) rotationSpeedFloat;
@@ -166,6 +171,7 @@ public class GotoPosition {
 				speed = forcedSpeed;
 			}
 
+//			System.out.println(robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition()));
 			// Send commands to robot
 			output.send(1, robot.getRobotID(), rotationToGoal, speed, travelDistance, targetDirection, rotationSpeed,
 					chipKick, dribble);
@@ -185,19 +191,24 @@ public class GotoPosition {
 		// used natural logarithmic function to determine rotationSpeed;
 		// double rotationCalc = Math.abs(rotation);
 
-		float rotationSpeed = (float) Math.toRadians(rotation);// (rotationCalc
-																// * 0.06);
-
-		// Enforce minimum speed
-		// if (rotationSpeed < 0) {
-		// rotationSpeed = 0;
-		// }
-		// if (rotation > 0) {
-		// rotationSpeed *= -1;
-		// }
-
+		float rotationSpeed = (float) Math.toRadians(rotation);
+		rotationSpeed = rotationSpeed * 45;
+		/*
+		if(rotation < 10) {
+			rotationSpeed *= 0;
+		}
+		else if(rotation < 40){
+			rotationSpeed *= 20;
+		}
+		else{
+			rotationSpeed = (float) Math.toRadians(rotation);
+			rotationSpeed = rotationSpeed * 40;
+		}
 		// Return calculated speed
-		return rotationSpeed * 5;
+//		System.out.println("rotationSpeed: "+ rotationSpeed * 10);
+		System.out.println("rotation: " + rotation);
+		*/
+		return rotationSpeed;
 	}
 
 	/**
@@ -235,12 +246,12 @@ public class GotoPosition {
 			speed = (int) (Math.log(distance) / Math.log(1.1)) * 8; // -
 																	// robotDiameter
 		} else if (Math.abs(rotation) > 10) {
-			speed = (180 - Math.abs(rotation)) * 8;
+			speed = (180 - Math.abs(rotation)) * 16;
 		} else {
-			speed = 1200;
+			speed = 2400;
 		}
 
-		return speed;
+		return 800;
 	}
 
 	/**
