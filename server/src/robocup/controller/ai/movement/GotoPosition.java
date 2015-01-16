@@ -158,10 +158,11 @@ public class GotoPosition {
 			// TODO make robot stop when distance is reached, should be handled
 			// in robot code
 			int travelDistance = getDistance();
-			int rotationToGoal = rotationToDest(target);
+			int rotationToTarget = rotationToDest(target);
+			int rotationToGoal = rotationToDest(destination);
 
 			int speed = getSpeed(getDistance(), rotationToGoal);
-			int rotationSpeed = (int) getRotationSpeed(rotationToGoal);
+			int rotationSpeed = (int) getRotationSpeed(rotationToTarget);
 
 			// Overrule speed
 			if (forcedSpeed > 0) {
@@ -172,7 +173,7 @@ public class GotoPosition {
 			// direction and rotationAngle do nothing, set to 0
 			// rotationSpeed inverted because the motors spin in opposite
 			// direction
-			output.send(1, robot.getRobotID(), 0, speed, travelDistance, 0, -rotationSpeed, chipKick, dribble);
+			output.send(1, robot.getRobotID(), rotationToGoal, speed, travelDistance, 0, -rotationSpeed, chipKick, dribble);
 
 			// Set kick back to 0 to prevent kicking twice in a row
 			chipKick = 0;

@@ -98,10 +98,10 @@ public abstract class LowLevelBehavior {
 	 * @return
 	 */
 	public Point getShootingPosition(int shootDirection, Point ballPosition) {
-		int angle = shootDirection + 180;
+		int angle = -shootDirection + 270;
 
-		int dx = (int) (Math.sin(Math.toRadians(angle)) * (robot.getDiameter() / 2));
-		int dy = (int) (Math.cos(Math.toRadians(angle)) * (robot.getDiameter() / 2));
+		int dx = (int) (Math.sin(Math.toRadians(angle)) * (robot.getDiameter() / 2 + 10));
+		int dy = (int) (Math.cos(Math.toRadians(angle)) * (robot.getDiameter() / 2 + 10));
 
 		int destX = (int) (ballPosition.getX() + dx);
 		int destY = (int) (ballPosition.getY() + dy);
