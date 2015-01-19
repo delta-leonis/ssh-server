@@ -12,7 +12,7 @@ public class Attacker extends LowLevelBehavior {
 	private Point ballPosition;
 	private int chipKick;
 	private int shootDirection;
-	private boolean dribble;
+	private boolean dribble = false;
 
 	/**
 	 * Create an attacker
