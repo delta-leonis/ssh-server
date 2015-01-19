@@ -11,6 +11,8 @@ public abstract class Behavior {
 
 	public abstract void execute(ArrayList<RobotExecuter> executers);
 
+	public abstract void updateExecuters(ArrayList<RobotExecuter> executers);
+
 	public RobotExecuter findExecuter(int robotId, ArrayList<RobotExecuter> executers) {
 		for (RobotExecuter r : executers) {
 			if (r.getRobot().getRobotID() == robotId)
@@ -18,6 +20,4 @@ public abstract class Behavior {
 		}
 		return null;
 	}
-
-	public abstract void updateExecuters(ArrayList<RobotExecuter> executers);
 }

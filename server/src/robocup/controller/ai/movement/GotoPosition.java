@@ -186,7 +186,7 @@ public class GotoPosition {
 	 * @param rotation
 	 * @return
 	 */
-	public float getRotationSpeed(float rotation) {
+	private float getRotationSpeed(float rotation) {
 		// calculate total circumference of robot
 		float circumference = (float) (robot.getDiameter() * Math.PI);
 
@@ -204,7 +204,7 @@ public class GotoPosition {
 	 * Get travel distance
 	 * @return
 	 */
-	public int getDistance() {
+	private int getDistance() {
 		int distance = 0;
 
 		if (route != null) {
@@ -224,7 +224,7 @@ public class GotoPosition {
 	 * @param rotation
 	 * @return
 	 */
-	public int getSpeed(int distance, int rotation) {
+	private int getSpeed(int distance, int rotation) {
 		// Defaults
 		int speed = 0;
 		int thresholdValue = 800;
@@ -248,7 +248,7 @@ public class GotoPosition {
 	 * @param newPoint
 	 * @return
 	 */
-	public int rotationToDest(Point newPoint) {
+	private int rotationToDest(Point newPoint) {
 		// angle vector between old and new
 		int newangle = robot.getPosition().getAngle(newPoint);
 		int rot = (int) (newangle - robot.getOrientation());

@@ -50,14 +50,14 @@ public abstract class Mode {
 
 	public abstract void updateExecuters(ArrayList<RobotExecuter> executers);
 
-	public abstract void handleAttacker(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate);
+	protected abstract void handleAttacker(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate);
 
-	public abstract void handleBlocker(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate);
+	protected abstract void handleBlocker(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate);
 
-	public abstract void handleDefender(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate,
+	protected abstract void handleDefender(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate,
 			int distanceToGoal);
 
-	public abstract void handleKeeper(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate,
+	protected abstract void handleKeeper(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate,
 			int distanceToGoal);
 
 	/**

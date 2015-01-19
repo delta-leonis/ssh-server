@@ -27,24 +27,6 @@ public abstract class LowLevelBehavior {
 	public abstract void calculate();
 
 	/**
-	 * Calculate the needed rotation to destination
-	 * @param newPoint
-	 * @return
-	 */
-	public int rotationToDest(Point newPoint) {
-		// angle vector between old and new
-		double dy = newPoint.getY() - robot.getPosition().getY();
-		double dx = newPoint.getX() - robot.getPosition().getX();
-		double newRad = Math.atan2(dy, dx);
-		int rot = (int) (Math.toDegrees(newRad) - robot.getOrientation());
-		if (rot > 180)
-			rot -= 360;
-		if (rot <= -180)
-			rot += 360;
-		return rot;
-	}
-
-	/**
 	 * Returns the role assigned to this behaviour
 	 * @return
 	 */
@@ -98,6 +80,7 @@ public abstract class LowLevelBehavior {
 	 * @return
 	 */
 	public Point getShootingPosition(int shootDirection, Point ballPosition) {
+		// TODO find out why direction on robot is inverted / twisted
 		int angle = -shootDirection + 270;
 
 		int dx = (int) (Math.sin(Math.toRadians(angle)) * (robot.getDiameter() / 2 + 10));
