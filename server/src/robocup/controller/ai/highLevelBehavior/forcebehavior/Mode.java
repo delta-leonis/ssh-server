@@ -85,7 +85,7 @@ public abstract class Mode {
 		Robot closestRobot = null;
 
 		for (Robot r : robots) {
-			if (minDistance == -1) {
+			if (minDistance == -1 && r.getPosition() != null) {
 				closestRobot = r;
 				minDistance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
 			} else {
