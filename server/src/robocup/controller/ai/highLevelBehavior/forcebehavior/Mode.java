@@ -300,4 +300,10 @@ public abstract class Mode {
 			}
 		}
 	}
+	
+	public int getShootingDirection(Robot target, Ball ball){
+		return ball.getPosition().getAngle(target.getPosition());
+		
+//		return 0;
+	}
 }

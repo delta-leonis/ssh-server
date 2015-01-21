@@ -205,6 +205,8 @@ public class AttackMode extends Mode {
 				chipKick = 100;
 		} else {
 
+//			shootingDirection
+			
 			if (freePosition == null) { // if robot has no free position then it
 										// is closest.
 				double dDistance = ball.getPosition().getDeltaDistance(robot.getPosition());
@@ -213,6 +215,7 @@ public class AttackMode extends Mode {
 				} else if (dDistance < 100) {
 					chipKick = -100;
 				}
+				shootDirection = getShootingDirection(world.getEnemy().getRobotByID(world.getEnemy().getGoalie()), ball);
 				// robot.getPosition()
 				// calculate best tactic, shoot, chip or pass
 				// if robot has place free to shoot
