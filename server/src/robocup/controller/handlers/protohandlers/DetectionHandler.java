@@ -20,6 +20,7 @@ public class DetectionHandler {
 	private World world;
 	// TODO: read in validRobotId's from somewhere else / no more hardcoded id's
 	int validRobotIDs[] = { 1, 3 };
+	int validEnemyRobotIDs[] = { 2 };
 	Kalman allyFilter[] = new Kalman[12];
 	Kalman enemyFilter[] = new Kalman[12];
 	Kalman ballFilter;
@@ -79,11 +80,19 @@ public class DetectionHandler {
 			int camNo) {
 
 		for (SSL_DetectionRobot robot : blueList) {
-			updateRobot(Color.BLUE, robot, time, camNo);
+			for (int id : validEnemyRobotIDs) {
+				if (robot.getRobotId() == id) {
+					updateRobot(Color.BLUE, robot, time, camNo);
+				}
+			}
 		}
 
 		for (SSL_DetectionRobot robot : yellowList) {
-			updateRobot(Color.YELLOW, robot, time, camNo);
+			for (int id : validRobotIDs) {
+				if (robot.getRobotId() == id) {
+					updateRobot(Color.YELLOW, robot, time, camNo);
+				}
+			}
 		}
 	}
 
