@@ -171,9 +171,9 @@ public class DijkstraPathPlanner {
 	 */
 	private void reset() {
 		world = World.getInstance();
-		objects = new ArrayList<Rectangle2D>();
-		vertices = new ArrayList<Vertex>();
-		filteredVertices = new ArrayList<Vertex>();
+		objects.clear();
+		vertices.clear();
+		filteredVertices.clear();
 	}
 
 	/**
