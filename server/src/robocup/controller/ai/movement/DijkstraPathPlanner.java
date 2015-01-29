@@ -15,7 +15,8 @@ import robocup.model.World;
 public class DijkstraPathPlanner {
 
 	// distance from the middle of the robot to the vertices around it
-	private static final int DISTANCE_TO_ROBOT = 180;
+	private static final int DISTANCE_TO_ROBOT = 130;
+	private static final int VERTEX_DISTANCE_TO_ROBOT = 400;
 	private World world;
 	private ArrayList<Rectangle2D> objects;
 	private ArrayList<Vertex> vertices;
@@ -133,6 +134,7 @@ public class DijkstraPathPlanner {
 
 		// no object on route
 		if (!intersectsObject(new Vertex(beginNode), new Vertex(destination))) {
+			reset();
 			route.push(destination);
 			return route;
 		}
@@ -158,6 +160,7 @@ public class DijkstraPathPlanner {
 
 		// add positions to the route list
 		u = dest;
+//		for(int i = 0; i < 50 && u.getPrevious() != null; i++) {
 		while (u.getPrevious() != null) {
 			route.push(u.getPosition());
 			u = u.getPrevious();
@@ -247,16 +250,18 @@ public class DijkstraPathPlanner {
 	 * @param robotId the robot id of the robot who needs a path, no rectangle will be created for this robot
 	 */
 	private void generateObjectList(int robotId) {
+		// WARNING: documentation for Rectangle2D.Double states the upper left corner should be specified,
+		// use lower left corner instead
 		for (Robot r : world.getAlly().getRobots())
 			if (r.getPosition() != null)
 				if (r.getRobotID() != robotId)
-					objects.add(new Rectangle2D.Float(r.getPosition().getX() - (DISTANCE_TO_ROBOT - 1), r.getPosition()
-							.getY() - (DISTANCE_TO_ROBOT - 1), DISTANCE_TO_ROBOT * 2 - 2, DISTANCE_TO_ROBOT * 2 - 2));
+					objects.add(new Rectangle2D.Double(r.getPosition().getX() - DISTANCE_TO_ROBOT, r.getPosition()
+							.getY() - DISTANCE_TO_ROBOT, DISTANCE_TO_ROBOT*2, DISTANCE_TO_ROBOT*2));
 
 		for (Robot r : world.getEnemy().getRobots())
 			if (r.getPosition() != null)
-				objects.add(new Rectangle2D.Float(r.getPosition().getX() - (DISTANCE_TO_ROBOT - 1), r.getPosition()
-						.getY() - (DISTANCE_TO_ROBOT - 1), DISTANCE_TO_ROBOT * 2 - 2, DISTANCE_TO_ROBOT * 2 - 2));
+				objects.add(new Rectangle2D.Double(r.getPosition().getX() - DISTANCE_TO_ROBOT, r.getPosition()
+						.getY() - DISTANCE_TO_ROBOT, DISTANCE_TO_ROBOT*2, DISTANCE_TO_ROBOT*2));
 	}
 
 	/**
@@ -267,10 +272,10 @@ public class DijkstraPathPlanner {
 			int x = (int) rect.getCenterX();
 			int y = (int) rect.getCenterY();
 
-			vertices.add(new Vertex(new Point(x + DISTANCE_TO_ROBOT, y + DISTANCE_TO_ROBOT)));
-			vertices.add(new Vertex(new Point(x + DISTANCE_TO_ROBOT, y - DISTANCE_TO_ROBOT)));
-			vertices.add(new Vertex(new Point(x - DISTANCE_TO_ROBOT, y + DISTANCE_TO_ROBOT)));
-			vertices.add(new Vertex(new Point(x - DISTANCE_TO_ROBOT, y - DISTANCE_TO_ROBOT)));
+			vertices.add(new Vertex(new Point(x + VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT)));
+			vertices.add(new Vertex(new Point(x + VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT)));
+			vertices.add(new Vertex(new Point(x - VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT)));
+			vertices.add(new Vertex(new Point(x - VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT)));
 		}
 	}
 

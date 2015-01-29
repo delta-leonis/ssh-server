@@ -83,7 +83,7 @@ public class Attacker extends LowLevelBehavior {
 	 */
 	private void changeDestination(Point newDestination) {
 		if (newDestination != null) {
-			if (isWithinRange(robot, newDestination, 10))
+			if (isWithinRange(robot, newDestination, 10) && Math.abs(shootDirection - (int)robot.getOrientation()) <2)
 				go.setDestination(null);
 			else
 				go.setDestination(newDestination);

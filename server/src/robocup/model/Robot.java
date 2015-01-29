@@ -22,7 +22,7 @@ public abstract class Robot extends FieldObject {
 		this.height = height;
 		this.diameter = diameter;
 		this.team = team;
-		System.out.println(" contructor role null");
+//		System.out.println(" contructor role null");
 		this.role = null;
 	}
 
@@ -70,7 +70,8 @@ public abstract class Robot extends FieldObject {
 	 * @return the isKeeper
 	 */
 	public boolean isKeeper() {
-		return isKeeper;
+		if(World.getInstance().getAlly().getGoalie() == this.robotID) return true;
+		return false;
 	}
 
 	public boolean isOnSight() {

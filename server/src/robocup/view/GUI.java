@@ -401,6 +401,8 @@ public class GUI extends javax.swing.JFrame implements Observer {
 
 	private void terminateButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_terminateButtonActionPerformed
 		// TODO add your handling code here:
+		System.out.println("chip");
+		ComInterface.getInstance(RobotCom.class).send(1, robocup.Main.TEST_ROBOT_ID, 0, 0, 0, 0, 0, 100, false);
 	}// GEN-LAST:event_terminateButtonActionPerformed
 
 	private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_startButtonActionPerformed
@@ -420,7 +422,7 @@ public class GUI extends javax.swing.JFrame implements Observer {
 
 	private void kickButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_kickButtonActionPerformed
 		System.out.println("Kick");
-		ComInterface.getInstance(RobotCom.class).send(1, robocup.Main.TEST_ROBOT_ID, 0, 0, 0, 0, 0, 40, false);
+		ComInterface.getInstance(RobotCom.class).send(1, robocup.Main.TEST_ROBOT_ID, 0, 0, 0, 0, 0, -100, false);
 	}// GEN-LAST:event_kickButtonActionPerformed
 
 	// Variables declaration - do not modify//GEN-BEGIN:variables
