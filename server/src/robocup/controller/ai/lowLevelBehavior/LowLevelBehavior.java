@@ -83,8 +83,8 @@ public abstract class LowLevelBehavior {
 		// TODO find out why direction on robot is inverted / twisted
 		int angle = -shootDirection + 270;
 
-		int dx = (int) (Math.sin(Math.toRadians(angle)) * (robot.getDiameter() / 2 + 10));
-		int dy = (int) (Math.cos(Math.toRadians(angle)) * (robot.getDiameter() / 2 + 10));
+		int dx = (int) (Math.sin(Math.toRadians(angle)) * (robot.getDiameter() / 2));
+		int dy = (int) (Math.cos(Math.toRadians(angle)) * (robot.getDiameter() / 2));
 
 		int destX = (int) (ballPosition.getX() + dx);
 		int destY = (int) (ballPosition.getY() + dy);

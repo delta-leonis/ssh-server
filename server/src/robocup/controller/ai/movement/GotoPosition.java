@@ -141,7 +141,6 @@ public class GotoPosition {
 	 */
 	public void calculate() {
 		if (destination == null || target == null) {
-			System.out.println("dest or target is null");
 			robot.setOnSight(true);
 			output.send(1, robot.getRobotID(), 0, 0, 0, 0, 0, 0, false);
 			return;
@@ -151,9 +150,13 @@ public class GotoPosition {
 			robot.setOnSight(true);
 
 			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotID());
-
-			if (route.size() > 0 && route.get(0) != null)
+			
+			if (route.size() > 0 && route.get(0) != null) {
 				destination = route.get(0);
+			} else {
+					output.send(1, robot.getRobotID(), 0, 0, 0, 0, 0, 0, false);
+					return;
+			}
 
 			// TODO make robot stop when distance is reached, should be handled
 			// in robot code
@@ -174,6 +177,7 @@ public class GotoPosition {
 			// rotationSpeed inverted because the motors spin in opposite
 			// direction
 			output.send(1, robot.getRobotID(), rotationToGoal, speed, travelDistance, 0, -rotationSpeed, chipKick, dribble);
+			
 
 			// Set kick back to 0 to prevent kicking twice in a row
 			chipKick = 0;
@@ -207,13 +211,14 @@ public class GotoPosition {
 	private int getDistance() {
 		int distance = 0;
 
-		if (route != null) {
-			distance += robot.getPosition().getDeltaDistance(route.get(0));
-
-			for (int i = 0; i < route.size() - 1; i++)
-				distance += route.get(i).getDeltaDistance(route.get(i + 1));
-		} else
-			distance = (int) robot.getPosition().getDeltaDistance(destination);
+		distance = (int) robot.getPosition().getDeltaDistance(route.get(0));
+//		if (route != null && !route.isEmpty()) {
+//			distance += robot.getPosition().getDeltaDistance(route.get(0));
+//
+//			for (int i = 0; i < route.size() - 1; i++)
+//				distance += route.get(i).getDeltaDistance(route.get(i + 1));
+//		} else
+//			distance = (int) robot.getPosition().getDeltaDistance(destination);
 
 		return distance;
 	}

@@ -48,16 +48,16 @@ public class AttackMode extends Mode {
 					updateExecuter(executer, roles.KEEPER, false);
 				}
 			} else {
-				if (executer.getLowLevelBehavior() instanceof KeeperDefender) {
-					// lowlevel behavior already defender, update values
-					updateExecuter(executer, roles.DEFENDER, true);
+				if (executer.getLowLevelBehavior() instanceof Attacker) {
+					// lowlevel behavior already attacker, update values
+					updateExecuter(executer, roles.ATTACKER, true);
 				} else {
-					// lowlevel behavior not a defender yet,
+					// lowlevel behavior not a attacker yet,
 					// create lowlevel behavior and update
-					updateExecuter(executer, roles.DEFENDER, false);
+					updateExecuter(executer, roles.ATTACKER, false);
 				}
 			}
-			// TODO update executer with attacker
+			// TODO update executer with defender
 			// and blocker roles when necessary
 		}
 	}
@@ -84,7 +84,7 @@ public class AttackMode extends Mode {
 	public void updateExecuter(RobotExecuter executer, roles type, boolean isUpdate) {
 		Robot robot = executer.getRobot();
 		Ball ball = world.getBall();
-		int distanceToGoal = offset != null ? 1000 : 500;
+		int distanceToGoal = offset != null ? 500 : 500;
 
 		// new assigment, assign to robot
 		// if(!isUpdate) {
@@ -181,7 +181,7 @@ public class AttackMode extends Mode {
 
 	@Override
 	public void handleAttacker(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate) {
-		Point freePosition = getClosestAllyRobotToBall(world) == robot ? null : getFreePosition(null);
+		Point freePosition = getClosestAllyRobotToBall(world) == robot ? null : getFreePosition(robot); //robot was null
 		int chipKick = 0;
 		int shootDirection = 0;
 		boolean dribble = false;
@@ -202,20 +202,23 @@ public class AttackMode extends Mode {
 			// ball is correct, shoot when possible
 			if (robot.getPosition().getDeltaDistance(ball.getPosition()) < 100
 					&& robot.getOrientation() + 10 > shootDirection && robot.getOrientation() - 10 < shootDirection)
-				chipKick = 100;
+				chipKick = -100;
 		} else {
-
-//			shootingDirection
-			
 			if (freePosition == null) { // if robot has no free position then it
 										// is closest.
 				double dDistance = ball.getPosition().getDeltaDistance(robot.getPosition());
 				if (dDistance < 150) {
 					dribble = true;
-				} else if (dDistance < 100) {
+				}
+				
+				if (robot.getRobotID() == 1)
+					shootDirection = getShootingDirection(world.getAlly().getRobotByID(3), ball);
+				else
+					shootDirection = getShootingDirection(world.getAlly().getRobotByID(1), ball);
+				
+				if (dDistance < 150 && dribble && Math.abs(shootDirection - (int)robot.getOrientation()) <2){
 					chipKick = -100;
 				}
-				shootDirection = getShootingDirection(world.getEnemy().getRobotByID(world.getEnemy().getGoalie()), ball);
 				// robot.getPosition()
 				// calculate best tactic, shoot, chip or pass
 				// if robot has place free to shoot

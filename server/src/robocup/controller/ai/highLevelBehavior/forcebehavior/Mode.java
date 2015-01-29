@@ -44,7 +44,7 @@ public abstract class Mode {
 	 * Generate or Update a low level behavior for this executer
 	 * @param executer execute the executer
 	 * @param type type of the low level behavior
-	 * @param isUpdate false if a new behavior should be created, true if update is requred
+	 * @param isUpdate false if a new behavior should be created, true if update is required
 	 */
 	public abstract void updateExecuter(RobotExecuter executer, roles type, boolean isUpdate);
 
@@ -63,13 +63,14 @@ public abstract class Mode {
 	/**
 	 * Find a free position for the robot A position is free when the robot can
 	 * get the ball passed
-	 * 
-	 * @param robot
-	 *            the robot who needs a free position
+	 * @param robot the robot who needs a free position
 	 * @return a free position
 	 */
 	protected Point getFreePosition(Robot robot) {
-		return new Point(-500, 0);
+		if (robot.getRobotID() == 1)
+			return new Point(-500, -500);
+		else
+			return new Point(500, 500);
 	}
 
 	/**
@@ -85,15 +86,17 @@ public abstract class Mode {
 		Robot closestRobot = null;
 
 		for (Robot r : robots) {
-			if (minDistance == -1 && r.getPosition() != null) {
-				closestRobot = r;
-				minDistance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
-			} else {
-				int distance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
-
-				if (distance < minDistance) {
+			if (!r.isKeeper()) {
+				if (minDistance == -1 && r.getPosition() != null) {
 					closestRobot = r;
-					minDistance = distance;
+					minDistance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
+				} else if (r.getPosition() != null) {
+					int distance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
+
+					if (distance < minDistance) {
+						closestRobot = r;
+						minDistance = distance;
+					}
 				}
 			}
 		}
@@ -134,7 +137,6 @@ public abstract class Mode {
 
 	/**
 	 * Calculate if ally team is closer to the ball
-	 * 
 	 * @return true when the ally team is closer
 	 */
 	protected boolean allyHasBall(World world) {
@@ -149,9 +151,7 @@ public abstract class Mode {
 
 	/**
 	 * Get the distance from the closest robot in one team to the ball
-	 * 
-	 * @param robots
-	 *            the team of robots
+	 * @param robots the team of robots
 	 * @return the distance of the closest robot
 	 */
 	protected int getTeamDistanceToBall(World world, ArrayList<Robot> robots) {
@@ -175,7 +175,6 @@ public abstract class Mode {
 
 	/**
 	 * Get the closest enemy robot to robot
-	 * 
 	 * @return closest robot
 	 */
 	protected Robot getClosestEnemyToRobot(Robot robot, boolean withoutBlocker, ArrayList<RobotExecuter> executers) {
@@ -212,12 +211,10 @@ public abstract class Mode {
 
 	/**
 	 * Find out if the robot has a blocker assigned to it
-	 * 
 	 * @param robot
 	 * @return bool if true, a blocker is assigned
 	 */
 	protected boolean robotHasBlocker(Robot robot, ArrayList<RobotExecuter> executers) {
-
 		for (RobotExecuter executer : executers) {
 			if (executer.getLowLevelBehavior().getRole() == roles.BLOCKER) {
 
@@ -231,8 +228,7 @@ public abstract class Mode {
 	}
 
 	/**
-	 * Helper function for referee commands, checks last command issued 
-	 * 
+	 * Helper function for referee commands, checks last command issued
 	 * @param robotID
 	 * @return bool indicating if movement is allowed
 	 */
@@ -245,7 +241,6 @@ public abstract class Mode {
 		if (ref != null) {
 			if (ref.getCommand() != null) {
 				refCommand = ref.getCommand().toString();
-
 			}
 			if (ref.getStage() != null) {
 				refStage = ref.getStage().toString();
@@ -300,10 +295,12 @@ public abstract class Mode {
 			}
 		}
 	}
-	
-	public int getShootingDirection(Robot target, Ball ball){
-		return ball.getPosition().getAngle(target.getPosition());
-		
-//		return 0;
+
+	public int getShootingDirection(Robot target, Ball ball) {
+		if (target != null && ball != null) {
+			return ball.getPosition().getAngle(target.getPosition());
+		} else {
+			return 0;
+		}
 	}
 }
