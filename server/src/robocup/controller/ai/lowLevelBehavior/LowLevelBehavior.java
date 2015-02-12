@@ -12,6 +12,13 @@ import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.model.World;
 
+/**
+ * Describes the LowLevelBahaviour each role builds upon.
+ * @see {@link Blocker}
+ * @see {@link Attacker}
+ * @see {@link Keeper}
+ * @see {@link KeeperDefender}
+ */
 public abstract class LowLevelBehavior {
 	protected Robot robot;
 	protected ComInterface output;
@@ -27,8 +34,8 @@ public abstract class LowLevelBehavior {
 	public abstract void calculate();
 
 	/**
-	 * Returns the role assigned to this behaviour
-	 * @return
+	 * @see {@link Mode.roles}
+	 * @return the {@link Mode.roles} assigned to this behaviour.
 	 */
 	public Mode.roles getRole() {
 		return role;
@@ -61,10 +68,10 @@ public abstract class LowLevelBehavior {
 
 	/**
 	 * Calculate if the object is within range of the target
-	 * @param keeper
-	 * @param dest
-	 * @param range
-	 * @return
+	 * @param object The {@link FieldObject object} we want to know whether the given {@link Point} is in the given range.
+	 * @param target The {@link Point} we want to know whether it's in range of the given {@link FieldObject object}
+	 * @param range The range between the {@link FieldObject object} and the {@link Point target}. TODO: Range is in millimeters?
+	 * @return true if the {@link Point target} is within the given range of the {@link FieldObject object}, false otherwise.
 	 */
 	protected boolean isWithinRange(FieldObject object, Point target, int range) {
 		int dy = (int) (target.getY() - object.getPosition().getY());
@@ -75,16 +82,19 @@ public abstract class LowLevelBehavior {
 
 	/**
 	 * Calculate the position where the robot will be able to shoot
-	 * @param shootDirection
-	 * @param ballPosition
-	 * @return
+	 * Basically makes sure your {@link Robot} is half-diameter away from the ball.
+	 * 
+	 * @param shootDirection The direction you want your {@link Robot} to shoot the {@link Ball}. 
+	 * 						 This direction is in degrees, with a value between -180 and 180. 0 being east and 90 being north.
+	 * @param ballPosition 	 The position of the Ball. See {@link Point} for further documentation. 
+	 * @return The position we want our {@link Robot} to be at when before we chip or kick.
 	 */
 	public Point getShootingPosition(int shootDirection, Point ballPosition) {
-		// TODO find out why direction on robot is inverted / twisted
-		int angle = -shootDirection + 270;
+		// TODO find out why direction on robot is inverted / twisted. Problem probably lies in the code within the physical Robot.
+		int angle = -shootDirection + 270;			// Angle needs to be the inverse of the shootDirection, to position the Robot behind the ball.
 
-		int dx = (int) (Math.sin(Math.toRadians(angle)) * (robot.getDiameter() / 2));
-		int dy = (int) (Math.cos(Math.toRadians(angle)) * (robot.getDiameter() / 2));
+		double dx = Math.sin(Math.toRadians(angle)) * (robot.getDiameter() / 2);
+		double dy = Math.cos(Math.toRadians(angle)) * (robot.getDiameter() / 2);
 
 		int destX = (int) (ballPosition.getX() + dx);
 		int destY = (int) (ballPosition.getY() + dy);

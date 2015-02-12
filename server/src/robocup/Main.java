@@ -93,6 +93,7 @@ public class Main {
 					break;
 				}
 			}
+//			javax.swing.UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");  <-- TODO: Suggestion
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 				| UnsupportedLookAndFeelException e) {
 			LOGGER.warning("view lookAndFeel can't started");
@@ -110,20 +111,22 @@ public class Main {
 		try {
 			configFile.load(new FileInputStream(fieldConfigName));
 			World.getInstance().setField(
-					new Field(Integer.parseInt(configFile.getProperty("length")), Integer.parseInt(configFile
-							.getProperty("width")), Integer.parseInt(configFile.getProperty("lineWidth")), Integer
-							.parseInt(configFile.getProperty("boundaryWidth")), Integer.parseInt(configFile
-							.getProperty("refereeWidth")), Integer.parseInt(configFile
-							.getProperty("centerCircleRadius")), Integer.parseInt(configFile
-							.getProperty("defenceRadius")), Integer.parseInt(configFile.getProperty("defenceStretch")),
-							Integer.parseInt(configFile.getProperty("freeKickFromDefenceDistance")), Integer
-									.parseInt(configFile.getProperty("penaltySpotFromFieldLineDistance")), Integer
-									.parseInt(configFile.getProperty("penaltyLineFromSpotDistance")), Integer
-									.parseInt(configFile.getProperty("goalWidth")), Integer.parseInt(configFile
-									.getProperty("goalDepth")), Integer.parseInt(configFile
-									.getProperty("goalWallWidth")), Integer.parseInt(configFile
-									.getProperty("goalHeight")), Integer.parseInt(configFile
-									.getProperty("cameraOverlapZoneWidth"))));
+					new Field(	Integer.parseInt(configFile.getProperty("length")),
+								Integer.parseInt(configFile.getProperty("width")), 
+								Integer.parseInt(configFile.getProperty("lineWidth")), 
+								Integer.parseInt(configFile.getProperty("boundaryWidth")), 
+								Integer.parseInt(configFile.getProperty("refereeWidth")), 
+								Integer.parseInt(configFile.getProperty("centerCircleRadius")), 
+								Integer.parseInt(configFile.getProperty("defenceRadius")),
+								Integer.parseInt(configFile.getProperty("defenceStretch")),
+								Integer.parseInt(configFile.getProperty("freeKickFromDefenceDistance")),
+								Integer.parseInt(configFile.getProperty("penaltySpotFromFieldLineDistance")), 
+								Integer.parseInt(configFile.getProperty("penaltyLineFromSpotDistance")), 
+								Integer.parseInt(configFile.getProperty("goalWidth")),
+								Integer.parseInt(configFile.getProperty("goalDepth")), 
+								Integer.parseInt(configFile.getProperty("goalWallWidth")), 
+								Integer.parseInt(configFile.getProperty("goalHeight")), 
+								Integer.parseInt(configFile.getProperty("cameraOverlapZoneWidth"))));
 		} catch (IOException e) {
 			LOGGER.severe("Field config cannot be read, please make sure the fieldConfig file exist and is correctly set");
 			System.exit(1);
@@ -148,7 +151,7 @@ public class Main {
 
 			w.setAlly(new Team(configFile.getProperty("ownTeam"), ownTeamColor));
 			w.setEnemy(new Team(configFile.getProperty("otherTeam"), otherTeamColor));
-			w.setOwnTeamCollor(ownTeamColor);
+			w.setOwnTeamColor(ownTeamColor);
 
 		} catch (IllegalArgumentException e) {
 			LOGGER.severe("Please check the config file for type errors");

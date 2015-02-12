@@ -2,7 +2,7 @@ package robocup.output;
 
 /**
  * @author Erik Hubers, Gerbrand Bosch
- *
+ * TODO: Suggestion: Turn into Interface (instead of abstract class) and move singleton to {@link RobotCom}
  */
 public abstract class ComInterface {
 

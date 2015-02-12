@@ -6,6 +6,10 @@ import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.output.ComInterface;
 
+/**
+ * Describes the low-level behaviour for a Blocker Robot.
+ * These Robots attempt to interrupt the enemy by getting in between the enemy {@link Robot} and the {@link Ball}
+ */
 public class Blocker extends LowLevelBehavior {
 
 	protected Point ballPosition;
@@ -16,12 +20,13 @@ public class Blocker extends LowLevelBehavior {
 
 	/**
 	 * Create a defender (stands between "target" enemy and the ball)
-	 * @param robot
-	 * @param output
-	 * @param distanceToOpponent The distance the defender keeps from the enemy (center)
-	 * @param ballPosition current position of the ball
-	 * @param defenderPosition current position of the defender (this robot)
-	 * @param opponentPosition center position of the opponent / enemy
+	 * @param robot The {@link Robot} that describes the blocker.
+	 * @param output The {@link RobotCom} that sends the commands to the physical Robot.
+	 * @param distanceToOpponent The distance the defender keeps from the enemy (center) in millimeters
+	 * @param ballPosition current position of the ball. See {@link Point}
+	 * @param defenderPosition current position of the defender (this robot). See {@link Point}
+	 * @param opponentPosition center position of the opponent / enemy. See {@link Point}
+	 * @param opponentId The Id of the opponent this Robot is trying to interrupt.
 	 */
 	public Blocker(Robot robot, ComInterface output, int distanceToOpponent, Point ballPosition,
 			Point defenderPosition, Point opponentPosition, int opponentId) {
@@ -38,10 +43,11 @@ public class Blocker extends LowLevelBehavior {
 
 	/**
 	 * Update
-	 * @param distanceToOpponent
-	 * @param ballPosition
-	 * @param defenderPosition
-	 * @param opponentPosition
+	 * @param distanceToOpponent The distance the defender keeps from the enemy (center) in millimeters
+	 * @param ballPosition current position of the ball. See {@link Point}
+	 * @param defenderPosition current position of the defender (this robot). See {@link Point}
+	 * @param opponentPosition center position of the opponent / enemy. See {@link Point}
+	 * @param opponentId The Id of the opponent this Robot is trying to interrupt.
 	 */
 	public void update(int distanceToOpponent, Point ballPosition, Point defenderPosition, Point opponentPosition,
 			int opponentId) {
@@ -52,6 +58,9 @@ public class Blocker extends LowLevelBehavior {
 		this.opponentId = opponentId;
 	}
 
+	/**
+	 * Calculates the new position to go to and attempts to make the Robot move in that direction.
+	 */
 	@Override
 	public void calculate() {
 		// Only run if the robot isn't timed out
@@ -67,15 +76,15 @@ public class Blocker extends LowLevelBehavior {
 	}
 
 	/**
-	 * Returns the opponent id
-	 * @return
+	 * @returns the id of the Opponent this Robot is trying to block.
 	 */
 	public int getOpponentId() {
 		return opponentId;
 	}
 
 	/**
-	 * Get the destination
+	 * @returns the new destination we want this robot to move to. 
+	 * 			The function attempts to pick a point in between the opponent we are blocking and the ball.
 	 */
 	private Point getNewDestination() {
 		Point newDestination = null;

@@ -2,6 +2,10 @@ package robocup.model;
 
 import robocup.controller.ai.highLevelBehavior.forcebehavior.Mode;
 
+/**
+ * Represents a Robot on the {@link Field}.
+ * This class is abstract, so make sure your Robot is either from the {@link Ally} or {@link Enemy} class.
+ */
 public abstract class Robot extends FieldObject {
 
 	private int robotID;
@@ -22,7 +26,6 @@ public abstract class Robot extends FieldObject {
 		this.height = height;
 		this.diameter = diameter;
 		this.team = team;
-//		System.out.println(" contructor role null");
 		this.role = null;
 	}
 
@@ -40,18 +43,25 @@ public abstract class Robot extends FieldObject {
 		this.robotID = robotID;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @param orientation 
+	 */
 	public void update(Point p, double updateTime, int orientation, int lastCamUpdateNo) {
 		super.update(p, updateTime, lastCamUpdateNo);
 		this.orientation = orientation; // setOrientation(orientation)
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void update(Point p, double updateTime, int lastCamUpdateNo) {
 		super.update(p, updateTime, lastCamUpdateNo);
 	}
 
 	/** 
 	 * Set a role (keeper/defender/attacker/etc)
-	 * @param role
+	 * @param role A role from the enumaration Mode.roles
 	 */
 	public void setRole(Mode.roles role) {
 		// System.out.println(" set role " + role);
@@ -60,36 +70,46 @@ public abstract class Robot extends FieldObject {
 
 	/**
 	 * Get the assigned role (keeper/defender/attacker/null/etc)
-	 * @return
+	 * @return A role from the enumaration Mode.roles
 	 */
 	public Mode.roles getRole() {
 		return role;
 	}
 
 	/**
-	 * @return the isKeeper
+	 * @return whether this Robot is a keeper or not.
 	 */
 	public boolean isKeeper() {
 		if(World.getInstance().getAlly().getGoalie() == this.robotID) return true;
-		return false;
+			return false;
 	}
 
+	/**
+	 * TODO: what the hell is this
+	 * @return
+	 */
 	public boolean isOnSight() {
 		return onSight;
 	}
 
+	/**
+	 * TODO: Document
+	 * @param onSight
+	 */
 	public void setOnSight(boolean onSight) {
 		this.onSight = onSight;
 	}
 
 	/**
 	 * @param isKeeper the isKeeper to set
+	 * @deprecated use {@link #setRole()}
 	 */
 	public void setKeeper(boolean isKeeper) {
 		this.isKeeper = isKeeper;
 	}
 
 	/**
+	 * TODO: Document. What is the orientation? The direction the Robot is looking at? If so, is this value in degrees or radians?
 	 * @return the orientation
 	 */
 	public float getOrientation() {
@@ -97,6 +117,7 @@ public abstract class Robot extends FieldObject {
 	}
 
 	/**
+	 * TODO: Document. What is the orientation? The direction the Robot is looking at? If so, is this value in degrees or radians?
 	 * @param orientation the orientation to set
 	 */
 	public void setOrientation(int orientation) {
@@ -104,6 +125,7 @@ public abstract class Robot extends FieldObject {
 	}
 
 	/**
+	 * TODO: Document. Is this the height of the Robot? If so, is this value in centimeters or millimeters? Maybe change to double or int?
 	 * @return the height
 	 */
 	public float getHeight() {
@@ -111,6 +133,7 @@ public abstract class Robot extends FieldObject {
 	}
 
 	/**
+	 * TODO: Document. Is this the height of the Robot? If so, is this value in centimeters or millimeters? Maybe change to double or int?
 	 * @param height the height to set
 	 */
 	public void setHeight(float height) {
@@ -118,6 +141,7 @@ public abstract class Robot extends FieldObject {
 	}
 
 	/**
+	 * TODO: Document. Is this the diameter of the Robot? If so, is this value in centimeters or millimeters?
 	 * @return the diameter
 	 */
 	public double getDiameter() {
@@ -125,6 +149,7 @@ public abstract class Robot extends FieldObject {
 	}
 
 	/**
+	 * TODO: Document. Is this the diameter of the Robot? If so, is this value in centimeters or millimeters?
 	 * @param diameter the diameter to set
 	 */
 	public void setDiameter(double diameter) {
@@ -132,20 +157,22 @@ public abstract class Robot extends FieldObject {
 	}
 
 	/**
-	 * @return the team
+	 * @return the team this {@link Robot} belongs to.
 	 */
 	public Team getTeam() {
 		return team;
 	}
 
 	/**
-	 * @param team the team to set
+	 * Sets what {@link Team} this {@link Robot} belongs to.
+	 * @param team: The {@link Team} this {@link Robot} belongs to.
 	 */
 	public void setTeam(Team team) {
 		this.team = team;
 	}
 
 	/**
+	 * TODO: Document. Is this the percentage of battery left on the Robot?
 	 * @return the batteryStatus
 	 */
 	public float getBatteryStatus() {
@@ -153,17 +180,26 @@ public abstract class Robot extends FieldObject {
 	}
 
 	/**
+	 * TODO: Document. Is this the time it takes to fully charge the Robot? If so, is the value in seconds or milliseconds?
 	 * @return the powerUpTime
 	 */
 	public long getPowerUpTime() {
 		return powerUpTime;
 	}
 
+	/**
+	 * @param batteryStatus TODO: Document. Is this the percentage of battery left on the Robot?
+	 * @param timestamp TODO: Document. Is this the time it takes to fully charge the Robot? If so, is the value in seconds or milliseconds?
+	 */
 	public void setBatteryStatus(int batteryStatus, long timestamp) {
 		this.batteryStatus = batteryStatus;
 		powerUpTime = timestamp;
 	}
 
+	/**
+	 * TODO: Document. Is the batteryStatus supposed to be in integers like in {@link Robot#setBatteryStatus(int, long)} or is it supposed to be a long?
+	 * @param batteryStatus
+	 */
 	public void setBatteryStatus(float batteryStatus) {
 		this.batteryStatus = batteryStatus;
 	}

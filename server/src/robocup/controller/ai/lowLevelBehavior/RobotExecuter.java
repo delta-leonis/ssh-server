@@ -40,18 +40,32 @@ public class RobotExecuter implements Runnable {
 		lowLevelBehavior.calculate();
 	}
 
+	/**
+	 * Sets the {@link LowLevelBehavior} for this class.
+	 * @param lowLevelBehavior TODO: description of what lowLevelBehaviour does
+	 */
 	public void setLowLevelBehavior(LowLevelBehavior lowLevelBehavior) {
 		this.lowLevelBehavior = lowLevelBehavior;
 	}
 
+	/**
+	 * @return the {@link LowLevelBehavior} assigned to this class.
+	 */
 	public LowLevelBehavior getLowLevelBehavior() {
 		return lowLevelBehavior;
 	}
 
+	/**
+	 * @return the {@link Robot} this class represents in the {@link robocup.model.World model}
+	 */
 	public Robot getRobot() {
 		return robot;
 	}
 
+	/**
+	 * Stops the Robot.
+	 * @param stop true if you want to stop, false otherwise.
+	 */
 	public void stop(boolean stop) {
 		this.stop = stop;
 	}
