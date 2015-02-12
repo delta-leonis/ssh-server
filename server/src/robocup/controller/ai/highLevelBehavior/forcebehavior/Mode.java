@@ -24,6 +24,10 @@ public abstract class Mode {
 
 	protected World world;
 
+	/**
+	 * An enumeration that describes possible roles of Robots
+	 * Examples are: Keeper, Defender, Attacker and Blocker.
+	 */
 	public enum roles {
 		KEEPER, DEFENDER, ATTACKER, BLOCKER
 	};

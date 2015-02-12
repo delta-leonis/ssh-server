@@ -16,13 +16,13 @@ public class Attacker extends LowLevelBehavior {
 
 	/**
 	 * Create an attacker
-	 * @param robot the attacker
-	 * @param output 
-	 * @param freePosition a free position on the field
+	 * @param robot the attacker {@link Robot} in the model.
+	 * @param output Used to send data to the Robot
+	 * @param freePosition a free position on the field. If not null, the Robot should go here
 	 * @param ballPosition the position of the ball
-	 * @param chipKick kick and chip strength in percentages
+	 * @param chipKick kick and chip strength in percentages.  max kick = -100% , max chip = 100% . if chipKick = 0, do nothing
 	 * @param dribble enable dribbler
-	 * @param shootDirection direction where the attacker needs to shoot
+	 * @param shootDirection direction where the attacker needs to shoot, relative to the field. Values between -180 and 180. 0 degrees facing east. 90 degrees facing north. 
 	 */
 	public Attacker(Robot robot, ComInterface output, Point freePosition, Point ballPosition, int chipKick,
 			boolean dribble, int shootDirection) {
@@ -38,11 +38,11 @@ public class Attacker extends LowLevelBehavior {
 
 	/**
 	 * Update
-	 * @param freePosition
-	 * @param ballPosition
-	 * @param chipKick
-	 * @param dribble
-	 * @param shootDirection
+	 * @param freePosition a free position on the field. If not null, the Robot should go here
+	 * @param ballPosition the position of the ball
+	 * @param chipKick kick and chip strength in percentages.  max kick = -100% , max chip = 100% . if chipKick = 0, do nothing
+	 * @param dribble enable dribbler
+	 * @param shootDirection direction where the attacker needs to shoot, relative to the field. Values between -180 and 180. 0 degrees facing east. 90 degrees facing north. 
 	 */
 	public void update(Point freePosition, Point ballPosition, int chipKick, boolean dribble, int shootDirection) {
 		this.freePosition = freePosition;

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import robocup.model.enums.Color;
 
+/**
+ * Represents a Team in a Robocup match.
+ */
 public class Team {
 
 	private String name;
@@ -14,7 +17,7 @@ public class Team {
 	private int yellowCards;
 	private int redCards;
 	private ArrayList<Robot> robots;
-	private int goalie;
+	private int goalie;		//id of the keeper robot
 
 	public Team(String name, Color color) {
 		this.name = name;
@@ -45,84 +48,96 @@ public class Team {
 	}
 
 	/**
-	 * @return the goalie
+	 * @return the id of the goalie of this team. (Robot keeper)
 	 */
 	public int getGoalie() {
 		return goalie;
 	}
 
 	/**
-	 * @param goalie the goalie to set
+	 * Sets the goalie of the Team. 
+	 * @param goalie: the id of the goalie to of this team. (Robot keeper)
 	 */
 	public void setGoalie(int goalie) {
 		this.goalie = goalie;
 	}
 
 	/**
-	 * @return the name
+	 * @return the name of the Team
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * @param name the name to set
+	 * Sets the name of the Team
+	 * @param name: the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * @return the teamColor
+	 * @return color of this Team
 	 */
 	public Color getColor() {
 		return color;
 	}
 
 	/**
-	 * @param teamColor the teamColor to set
+	 * Sets the Color of this team.
+	 * @param color: The Color you want this Team to have.
 	 */
 	public void setColor(Color color) {
 		this.color = color;
 	}
 
 	/**
-	 * @return the score
+	 * @return the score this Team has currently.
 	 */
 	public int getScore() {
 		return score;
 	}
 
 	/**
-	 * @param score the score to set
+	 * Sets the score of this team
+	 * @param score: the new score for this Team
 	 */
 	public void setScore(int score) {
 		this.score = score;
 	}
 
 	/**
-	 * @return the timeoutsLeft
+	 * @return the amount of timeouts you may still call. Prevents games from lasting too long.
 	 */
 	public int getTimeoutsLeft() {
 		return timeoutsLeft;
 	}
 
 	/**
-	 * @param timeoutsLeft the timeoutsLeft to set
+	 * Sets the new amount of timeouts the Team may still call.
+	 * @param timeoutsLeft: The timeouts the Team may still call.
 	 */
 	public void setTimeoutsLeft(int timeoutsLeft) {
 		this.timeoutsLeft = timeoutsLeft;
 	}
 
 	/**
-	 * @return the remainingCardTimes
+	 * A Team can be penalized by giving them a yellow card.
+	 * Two yellow cards means that a robot must be removed from the game.
+	 * @return An ArrayList with Longs representing microseconds. 
+	 * Suggestion: Rename to getYellowCards()
+	 * TODO: It is not sure what these microseconds stand for. Perhaps the time a Robot is removed from the game?
 	 */
 	public ArrayList<Long> getRemainingCardTimes() {
 		return remainingCardTimes;
 	}
 
 	/**
-	 * @param remainingCardTimes the remainingCardTimes to set
+	 * Sets the yellow cards for this team. If this ArrayList contains two cards, a robot must be removed from the field.
+	 * @param remainingCardTimes: the new ArrayList with yellow card. This ArrayList contains Longs representing microseconds.
+	 * Suggestion: Rename to setYellowCards();
+	 * TODO: It is not sure what these microseconds stand for. Perhaps the time a Robot is removed from the game?
 	 */
 	public void setRemainingCardTimes(ArrayList<Long> remainingCardTimes) {
 		this.remainingCardTimes = remainingCardTimes;
@@ -130,6 +145,7 @@ public class Team {
 
 	/**
 	 * @return the yellowcards
+	 * Suggestion: Removal. getRemainingCardTimes does what this function should be doing, already
 	 */
 	public int getYelloCcards() {
 		return yellowCards;
@@ -137,55 +153,76 @@ public class Team {
 
 	/**
 	 * @param yellowcards the yellowcards to set
+	 * Suggestion: Removal. setRemainingCardTimes does what this function should be doing, already.
 	 */
 	public void setYellowCards(int yellowCards) {
 		this.yellowCards = yellowCards;
 	}
 
 	/**
-	 * @return the redcards
+	 * A red card can occur when a Robot breaks down and cannot be fixed within 20 seconds.
+	 * @return the redcards assigned to this Team.
 	 */
 	public int getRedCards() {
 		return redCards;
 	}
 
 	/**
-	 * @param redcards the redcards to set
+	 * A red card can occur when a Robot breaks down and cannot be fixed within 20 seconds.
+	 * @param redcards: The new amount of red cards this team has.
 	 */
 	public void setRedCards(int redCards) {
 		this.redCards = redCards;
 	}
 
 	/**
-	 * @return the robots
+	 * @return the {@link Robot robots} in this Team.
 	 */
 	public ArrayList<Robot> getRobots() {
 		return robots;
 	}
 
+	/**
+	 * Adds a {@link Robot} to this Team.
+	 * @param robot the Robot you would like to add.
+	 */
 	public void addRobot(Robot robot) {
 		robots.add(robot);
 	}
 
+	/**
+	 * Removes a {@link Robot} from this Team.
+	 * @param robotId the ID of the {@link Robot} you would like to remove from this Team.
+	 */
 	public void removeRobot(int robotId) {
-		for (int i = 0; i < robots.size(); i++) {
-			if (robots.get(i).getRobotID() == robotId) {
-				robots.remove(i);
+		for (Robot robot : robots) {
+			if (robot.getRobotID() == robotId) {
+				robots.remove(robot);
 				return;
 			}
 		}
 	}
 
+	/**
+	 * Returns the {@link Robot} with the given id.
+	 * @param id The id of the {@link Robot} you want to obtain.
+	 * @return The {@link Robot} with the given id. Returns null if the Robot doesn't exist.
+	 */
 	public Robot getRobotByID(int id) {
-		Robot r = null;
-		for (int i = 0; i < robots.size(); i++) {
-			if (robots.get(i).getRobotID() == id) {
-				r = robots.get(i);
-				break;
+		for (Robot robot : robots) {
+			if (robot.getRobotID() == id) {
+				return robot;
 			}
 		}
-
-		return r;
+		return null;
+	}
+	
+	/**
+	 * Checks whether this Team is of the given color
+	 * @return true if this Team is of the given color, false otherwise.  Used in {@link World#getTeamByColor(Color color) World.getTeamByColor(Color)}
+	 */
+	public boolean isTeamColor(Color color){
+		return color.equals(this.color);
 	}
 
 	@Override
@@ -195,11 +232,16 @@ public class Team {
 				+ redCards + ", robots=\r\n" + printRobots() + "]" + "\r\n";
 	}
 
+	/**
+	 * @returns a string the description for every {@link Robot} in this Team.
+	 * Suggestion: Rename to getRobotDescriptions(), since this function doesn't print.
+	 */
 	public String printRobots() {
 		String robotString = "";
-		for (int i = 0; i < robots.size(); i++) {
-			robotString += "\t" + robots.get(i).toString();
-		}
+
+		for (Robot robot : robots) {
+			robotString += "\n" + robot;
+ 		}
 
 		return robotString;
 	}

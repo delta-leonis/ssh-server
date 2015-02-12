@@ -1,5 +1,20 @@
 package robocup.model;
 
+/**
+ * Specifies a point on the {@link Field}. 
+ * The drawing underneath depicts what this point represents.
+ * 
+ * (-x,y)________________________________	(x,y)
+ * 		|								 |
+ * 		|								 |
+ *	   |				(0,0)		  	  |
+ * 		|								 |
+ * 		|________________________________|
+ * 	 (-x,-y)								(+x,-y)
+ * 
+ * x being half the field-width.
+ * y being half the field-height.
+ */
 public class Point {
 	private float x;
 	private float y;
@@ -39,28 +54,28 @@ public class Point {
 	}
 
 	/**
-	 * @return the x
+	 * @return the x co-ordinate of this {@link Point}
 	 */
 	public float getX() {
 		return x;
 	}
 
 	/**
-	 * @param x the x to set
+	 * @param x the x co-ordinate to set for this {@link Point}
 	 */
 	public void setX(float x) {
 		this.x = x;
 	}
 
 	/**
-	 * @return the y
+	 * @return the y co-ordinate of this {@link Point}
 	 */
 	public float getY() {
 		return y;
 	}
 
 	/**
-	 * @param y the y to set
+	 * @param y the y co-ordinate to set for this {@link Point}
 	 */
 	public void setY(float y) {
 		this.y = y;

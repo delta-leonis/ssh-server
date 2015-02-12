@@ -1,6 +1,4 @@
-/**
- * Use this class to control the low level behaviors in attack mode
- */
+
 package robocup.controller.ai.highLevelBehavior.forcebehavior;
 
 import java.util.ArrayList;
@@ -15,9 +13,13 @@ import robocup.output.ComInterface;
 import robocup.output.RobotCom;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+/**
+ * Use this class to control the low level behaviors in attack mode
+ */
 public class AttackMode extends Mode {
-
+	/** Co-ordinates of the goal on the left side of the field */
 	private static final Point MID_GOAL_NEGATIVE = new Point(-(World.getInstance().getField().getLength() / 2), 0);
+	/** Co-ordinates of the goal on the right side of the field */
 	private static final Point MID_GOAL_POSITIVE = new Point(World.getInstance().getField().getLength() / 2, 0);
 
 	private Point offset = new Point(0, 0);
@@ -26,6 +28,10 @@ public class AttackMode extends Mode {
 
 	private Robot penaltyRobot = null;
 
+	/**
+	 * Sets up the AttackMode. 
+	 * @param executers
+	 */
 	public AttackMode(ArrayList<RobotExecuter> executers) {
 		world = World.getInstance();
 
@@ -123,6 +129,7 @@ public class AttackMode extends Mode {
 				case "PREPARE_PENALTY_YELLOW":
 					if (refCommand.equals(("PREPARE_KICKOFF_" + world.getAlly().getColor().toString()))
 							&& penaltyRobot == null) {
+						//TODO: This if-statement will never be called, since refCommand is tested on PREPARE_KICKOFF_x, while refCommand already PREPARE_PENALTY_YELLOW
 						penaltyRobot = getClosestAllyRobotToBall(world);
 					}
 
@@ -187,7 +194,7 @@ public class AttackMode extends Mode {
 		boolean dribble = false;
 
 		// penalty mode
-		if (penaltyRobot != null && penaltyRobot == robot) {
+		if (penaltyRobot != null && penaltyRobot == robot) { //TODO: Remove "penaltyRobot != null"
 			// move to penalty area to get in range with the ball
 			if (penaltyRobot.getPosition().getDeltaDistance(ball.getPosition()) > 100) {
 				freePosition = ball.getPosition();
