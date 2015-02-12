@@ -37,8 +37,19 @@ public class RobotCom extends ComInterface {
 				e.printStackTrace();
 			}
 		} catch (IOException e) {
-			;
+			
 		}
+	}
+	
+	/**
+	 * Sending a message with only one argument,
+	 * mostly used with messagetype 0x80 (128) for setting a new channel frequency
+	 *
+	 * @param messageType
+	 * @param channel_freq
+	 */
+	public void send(int messageType, int channel_freq){
+		send(messageType, channel_freq, 0,0,0,0,0,0,false);
 	}
 
 	/**

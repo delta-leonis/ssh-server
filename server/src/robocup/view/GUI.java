@@ -422,7 +422,8 @@ public class GUI extends javax.swing.JFrame implements Observer {
 
 	private void kickButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_kickButtonActionPerformed
 		System.out.println("Kick");
-		ComInterface.getInstance(RobotCom.class).send(1, robocup.Main.TEST_ROBOT_ID, 0, 0, 0, 0, 0, -100, false);
+		//ComInterface.getInstance(RobotCom.class).send(1, robocup.Main.TEST_ROBOT_ID, 0, 0, 0, 0, 0, -100, false);
+		ComInterface.getInstance(RobotCom.class).send(128, 2500);
 	}// GEN-LAST:event_kickButtonActionPerformed
 
 	// Variables declaration - do not modify//GEN-BEGIN:variables
