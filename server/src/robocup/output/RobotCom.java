@@ -43,13 +43,13 @@ public class RobotCom extends ComInterface {
 	
 	/**
 	 * Sending a message with only one argument,
-	 * mostly used with messagetype 0x80 (128) for setting a new channel frequency
+	 * mostly used with messagetype 127 (highest signed 8_int) for setting a new channel frequency
 	 *
 	 * @param messageType
 	 * @param channel_freq
 	 */
-	public void send(int messageType, int channel_freq){
-		send(messageType, channel_freq, 0,0,0,0,0,0,false);
+	public void send(int messageType, int channel_freq) {
+		send(messageType, 0, channel_freq,0,0,0,0,0,false);
 	}
 
 	/**
