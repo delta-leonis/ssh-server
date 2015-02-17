@@ -71,7 +71,7 @@ public abstract class Mode {
 	 * @return a free position
 	 */
 	protected Point getFreePosition(Robot robot) {
-		if (robot.getRobotID() == 1)
+		if (robot.getRobotId() == 1)
 			return new Point(-500, -500);
 		else
 			return new Point(500, 500);
@@ -84,7 +84,7 @@ public abstract class Mode {
 	 */
 	protected Robot getClosestAllyRobotToBall(World world) {
 		Ball ball = world.getBall();
-		ArrayList<Robot> robots = world.getAlly().getRobots();
+		ArrayList<Robot> robots = world.getAlly().getRobotsOnSight();
 
 		int minDistance = -1;
 		Robot closestRobot = null;
@@ -115,7 +115,7 @@ public abstract class Mode {
 	 */
 	protected Robot getClosestAttackerRobotToBall(World world) {
 		Ball ball = world.getBall();
-		ArrayList<Robot> robots = world.getAlly().getRobots();
+		ArrayList<Robot> robots = world.getAlly().getRobotsOnSight();
 
 		int minDistance = -1;
 		Robot closestRobot = null;
@@ -144,8 +144,8 @@ public abstract class Mode {
 	 * @return true when the ally team is closer
 	 */
 	protected boolean allyHasBall(World world) {
-		ArrayList<Robot> allies = world.getAlly().getRobots();
-		ArrayList<Robot> enemies = world.getEnemy().getRobots();
+		ArrayList<Robot> allies = world.getAlly().getRobotsOnSight();
+		ArrayList<Robot> enemies = world.getEnemy().getRobotsOnSight();
 
 		int distanceAlly = getTeamDistanceToBall(world, allies);
 		int distanceEnemy = getTeamDistanceToBall(world, enemies);
@@ -183,7 +183,7 @@ public abstract class Mode {
 	 */
 	protected Robot getClosestEnemyToRobot(Robot robot, boolean withoutBlocker, ArrayList<RobotExecuter> executers) {
 		World world = World.getInstance();
-		ArrayList<Robot> robots = world.getEnemy().getRobots();
+		ArrayList<Robot> robots = world.getEnemy().getRobotsOnSight();
 
 		int minDistance = -1;
 		Robot closestRobot = null;
@@ -222,7 +222,7 @@ public abstract class Mode {
 		for (RobotExecuter executer : executers) {
 			if (executer.getLowLevelBehavior().getRole() == roles.BLOCKER) {
 
-				if (robot.getRobotID() == ((Blocker) executer.getLowLevelBehavior()).getOpponentId()) {
+				if (robot.getRobotId() == ((Blocker) executer.getLowLevelBehavior()).getOpponentId()) {
 					return true;
 				}
 			}

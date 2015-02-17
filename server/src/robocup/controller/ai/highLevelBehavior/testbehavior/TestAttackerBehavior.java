@@ -95,7 +95,7 @@ public class TestAttackerBehavior extends Behavior {
 			Line2D line = new Line2D.Float(currentPosition.getX(), currentPosition.getY(), goalPoint.getX(),
 					goalPoint.getY());
 
-			if (!lineIntersectsObject(line, robot.getRobotID())) {
+			if (!lineIntersectsObject(line, robot.getRobotId())) {
 				possibleShots[possibleShotCount] = -300 + i * 60;
 				possibleShotCount++;
 			}
@@ -120,12 +120,12 @@ public class TestAttackerBehavior extends Behavior {
 	public boolean lineIntersectsObject(Line2D line, int robotId) {
 		Rectangle2D rect = null;
 		ArrayList<Robot> objects = new ArrayList<Robot>();
-		objects.addAll(world.getEnemy().getRobots());
-		objects.addAll(world.getAlly().getRobots());
+		objects.addAll(world.getEnemy().getRobotsOnSight());
+		objects.addAll(world.getAlly().getRobotsOnSight());
 
 		for (Robot r : objects) {
 			rect = new Rectangle2D.Float(r.getPosition().getX(), r.getPosition().getY(), 180, 180);
-			if (line.intersects(rect) && r.getRobotID() != robotId) {
+			if (line.intersects(rect) && r.getRobotId() != robotId) {
 				return true;
 			}
 		}
@@ -148,7 +148,7 @@ public class TestAttackerBehavior extends Behavior {
 	 * @return closest robot
 	 */
 	private Robot getClosestAllyRobotToBall() {
-		ArrayList<Robot> robots = world.getAlly().getRobots();
+		ArrayList<Robot> robots = world.getAlly().getRobotsOnSight();
 		// System.out.println(robots.size());
 
 		int minDistance = -1;

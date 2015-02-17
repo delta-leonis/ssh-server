@@ -39,12 +39,12 @@ public class TestFuckRobotBehavior extends Behavior {
 				executer = new RobotExecuter(defender);
 				executer.setLowLevelBehavior(new Blocker(defender, ComInterface.getInstance(RobotCom.class),
 						distanceToOpponent, ball.getPosition(), defender.getPosition(), opponent.getPosition(),
-						opponent.getRobotID()));
+						opponent.getRobotId()));
 				new Thread(executer).start();
 				executers.add(executer);
 			} else {
 				((Blocker) executer.getLowLevelBehavior()).update(distanceToOpponent, ball.getPosition(),
-						defender.getPosition(), opponent.getPosition(), opponent.getRobotID());
+						defender.getPosition(), opponent.getPosition(), opponent.getRobotId());
 			}
 		}
 	}

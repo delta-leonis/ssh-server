@@ -15,7 +15,7 @@ public abstract class Behavior {
 
 	public RobotExecuter findExecuter(int robotId, ArrayList<RobotExecuter> executers) {
 		for (RobotExecuter r : executers) {
-			if (r.getRobot().getRobotID() == robotId)
+			if (r.getRobot().getRobotId() == robotId)
 				return r;
 		}
 		return null;

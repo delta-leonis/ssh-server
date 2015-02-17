@@ -9,38 +9,35 @@ import robocup.controller.ai.highLevelBehavior.forcebehavior.Mode;
 public abstract class Robot extends FieldObject {
 
 	public static final int DIAMETER = 180;	//In millimeters.
-	
-	private int robotID;
+	private int robotId;
 	private boolean isKeeper;
 	private int orientation;
 	private float height;
-	private Team team;
 	private float batteryStatus;
 	private long powerUpTime;
 	private boolean onSight;
 	private Mode.roles role;
 
-	public Robot(int robotID, boolean isKeeper, float height, Team team) {
+	public Robot(int robotID, boolean isKeeper, float height) {
 		super();
-		this.robotID = robotID;
+		this.robotId = robotID;
 		this.isKeeper = isKeeper;
 		this.height = height;
-		this.team = team;
 		this.role = null;
 	}
 
 	/**
 	 * @return the robotID
 	 */
-	public int getRobotID() {
-		return robotID;
+	public int getRobotId() {
+		return robotId;
 	}
 
 	/**
-	 * @param robotID the robotID to set
+	 * @param robotId the robotID to set
 	 */
-	public void setRobotID(int robotID) {
-		this.robotID = robotID;
+	public void setRobotID(int robotId) {
+		this.robotId = robotId;
 	}
 
 	/**
@@ -80,8 +77,10 @@ public abstract class Robot extends FieldObject {
 	 * @return whether this Robot is a keeper or not.
 	 */
 	public boolean isKeeper() {
-		if(World.getInstance().getAlly().getGoalie() == this.robotID) return true;
-			return false;
+		if(World.getInstance().getAlly().getGoalie() == this.robotId)
+			return true;
+
+		return false;
 	}
 
 	/**
@@ -141,21 +140,6 @@ public abstract class Robot extends FieldObject {
 	}
 
 	/**
-	 * @return the team this {@link Robot} belongs to.
-	 */
-	public Team getTeam() {
-		return team;
-	}
-
-	/**
-	 * Sets what {@link Team} this {@link Robot} belongs to.
-	 * @param team: The {@link Team} this {@link Robot} belongs to.
-	 */
-	public void setTeam(Team team) {
-		this.team = team;
-	}
-
-	/**
 	 * TODO: Document. Is this the percentage of battery left on the Robot?
 	 * @return the batteryStatus
 	 */
@@ -190,7 +174,7 @@ public abstract class Robot extends FieldObject {
 
 	@Override
 	public String toString() {
-		return "robotID=" + robotID + ", isKeeper=" + isKeeper + ", orientation=" + orientation + ", height=" + height
+		return "robotID=" + robotId + ", isKeeper=" + isKeeper + ", orientation=" + orientation + ", height=" + height
 				+ ", diameter=" + DIAMETER + ", " + super.toString() + "\r\n";
 	}
 }

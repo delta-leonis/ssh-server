@@ -176,7 +176,19 @@ public class Team {
 	}
 
 	/**
-	 * @return the {@link Robot robots} in this Team.
+	 * @return the {@link Robot robots} in this Team that are on sight 
+	 */
+	public ArrayList<Robot> getRobotsOnSight(){
+		ArrayList<Robot> onsight = new ArrayList<Robot>();
+		for( Robot robot : robots){
+			if(robot.isOnSight())
+				onsight.add(robot);
+		}
+		return onsight;
+	}
+	
+	/**
+	 * @return all {@link Robot robots} in this Team. Online and offline !
 	 */
 	public ArrayList<Robot> getRobots() {
 		return robots;
@@ -185,18 +197,35 @@ public class Team {
 	/**
 	 * Adds a {@link Robot} to this Team.
 	 * @param robot the Robot you would like to add.
+	 * @deprecated Team members should not be added, only set to online
 	 */
 	public void addRobot(Robot robot) {
 		robots.add(robot);
 	}
-
+ 
+	/**
+	 * Set a robot on- or offline
+	 * @param robotId the ID of the {@link Robot} to set onsight
+	 * @param onsight whether the robot is onsight
+	 */
+	public void setOnsight(int robotId, boolean onSight){
+		for (Robot robot : robots) {
+			if (robot.getRobotId() == robotId) {
+				robot.setOnSight(onSight);
+				return;
+			}
+		}
+	}
+	
+	
 	/**
 	 * Removes a {@link Robot} from this Team.
 	 * @param robotId the ID of the {@link Robot} you would like to remove from this Team.
+	 * @deprecated Team members should not be removed, only set to offline
 	 */
 	public void removeRobot(int robotId) {
 		for (Robot robot : robots) {
-			if (robot.getRobotID() == robotId) {
+			if (robot.getRobotId() == robotId) {
 				robots.remove(robot);
 				return;
 			}
@@ -210,7 +239,7 @@ public class Team {
 	 */
 	public Robot getRobotByID(int id) {
 		for (Robot robot : robots) {
-			if (robot.getRobotID() == id) {
+			if (robot.getRobotId() == id) {
 				return robot;
 			}
 		}

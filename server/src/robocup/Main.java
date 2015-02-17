@@ -21,6 +21,8 @@ import robocup.controller.handlers.protohandlers.MainHandler;
 import robocup.input.BaseStationClient;
 import robocup.input.RefereeClient;
 import robocup.input.SSLVisionClient;
+import robocup.model.Ally;
+import robocup.model.Enemy;
 import robocup.model.Field;
 import robocup.model.Team;
 import robocup.model.World;
@@ -31,6 +33,8 @@ public class Main {
 	public static final int TEST_ROBOT_ID = 1;
 	public static final int KEEPER_ROBOT_ID = 3;
 	public static final int TEST_FUCK_ROBOT_ID = 4;
+
+	public static final int TEAM_SIZE = 8;
 
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private static Level debugLevel = Level.INFO;
@@ -93,12 +97,12 @@ public class Main {
 					break;
 				}
 			}
-//			javax.swing.UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");  <-- TODO: Suggestion
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 				| UnsupportedLookAndFeelException e) {
 			LOGGER.warning("view lookAndFeel can't started");
 		}
-		new robocup.view.GUI(World.getInstance()).setVisible(true);
+		//new robocup.view.GUI(World.getInstance()).setVisible(true);
+		new robocup.migView.GUI(World.getInstance()).setVisible(true);
 	}
 
 	/**
@@ -150,7 +154,14 @@ public class Main {
 			otherTeamColor = Color.valueOf(configFile.getProperty("otherTeamColor").toUpperCase());
 
 			w.setAlly(new Team(configFile.getProperty("ownTeam"), ownTeamColor));
+			for(int i=0; i < TEAM_SIZE; i++)
+				w.getAlly().addRobot(new Ally(i, false, 150, 180));
+			
+			
 			w.setEnemy(new Team(configFile.getProperty("otherTeam"), otherTeamColor));
+
+			for(int i=0; i < TEAM_SIZE; i++)
+				w.getEnemy().addRobot(new Enemy(i, false, 150, 180));
 			w.setOwnTeamColor(ownTeamColor);
 
 		} catch (IllegalArgumentException e) {
@@ -208,6 +219,7 @@ public class Main {
 	 * Read data from the console
 	 * 
 	 * @author Gerbrand Bosch
+	 * @deprecated Unused function
 	 */
 	public static void console() {
 		BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
@@ -234,6 +246,7 @@ public class Main {
 	 * Initialize the intelligence
 	 * 
 	 * @author Gerbrand Bosch
+	 * @deprecated Unused function
 	 */
 	public static void initAi() {
 		final Properties configFile = new Properties();
