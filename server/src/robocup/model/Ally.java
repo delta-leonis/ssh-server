@@ -6,8 +6,8 @@ public class Ally extends Robot {
 	private boolean dribble;
 	private long lastKicked;
 
-	public Ally(int robotID, boolean isKeeper, float height, double diameter, Team team, int channel) {
-		super(robotID, isKeeper, height, diameter, team);
+	public Ally(int robotID, boolean isKeeper, float height, Team team, int channel) {
+		super(robotID, isKeeper, height, team);
 		this.channel = channel;
 	}
 

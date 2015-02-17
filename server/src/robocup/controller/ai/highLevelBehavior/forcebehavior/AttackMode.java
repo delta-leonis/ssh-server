@@ -90,7 +90,7 @@ public class AttackMode extends Mode {
 	public void updateExecuter(RobotExecuter executer, roles type, boolean isUpdate) {
 		Robot robot = executer.getRobot();
 		Ball ball = world.getBall();
-		int distanceToGoal = offset != null ? 500 : 500;
+		int distanceToGoal = offset != null ? 500 : 500;	//TODO: Always returns 500
 
 		// new assigment, assign to robot
 		// if(!isUpdate) {

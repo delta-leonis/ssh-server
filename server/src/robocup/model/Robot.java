@@ -8,23 +8,23 @@ import robocup.controller.ai.highLevelBehavior.forcebehavior.Mode;
  */
 public abstract class Robot extends FieldObject {
 
+	public static final int DIAMETER = 180;	//In millimeters.
+	
 	private int robotID;
 	private boolean isKeeper;
 	private int orientation;
 	private float height;
-	private double diameter;
 	private Team team;
 	private float batteryStatus;
 	private long powerUpTime;
 	private boolean onSight;
 	private Mode.roles role;
 
-	public Robot(int robotID, boolean isKeeper, float height, double diameter, Team team) {
+	public Robot(int robotID, boolean isKeeper, float height, Team team) {
 		super();
 		this.robotID = robotID;
 		this.isKeeper = isKeeper;
 		this.height = height;
-		this.diameter = diameter;
 		this.team = team;
 		this.role = null;
 	}
@@ -125,35 +125,19 @@ public abstract class Robot extends FieldObject {
 	}
 
 	/**
-	 * TODO: Document. Is this the height of the Robot? If so, is this value in centimeters or millimeters? Maybe change to double or int?
-	 * @return the height
+	 * Height of the Robot in Millimeters. Retrieved from {@link robocup.controller.handlers.protohandlers.DetectionHandler DetectionHandler}
+	 * @return the height of the Robot in Millimeters
 	 */
 	public float getHeight() {
 		return height;
 	}
 
 	/**
-	 * TODO: Document. Is this the height of the Robot? If so, is this value in centimeters or millimeters? Maybe change to double or int?
-	 * @param height the height to set
+	 * Height of the Robot in Millimeters. Retrieved from {@link robocup.controller.handlers.protohandlers.DetectionHandler DetectionHandler}
+	 * @param height the height to set for the {@link Robot}
 	 */
 	public void setHeight(float height) {
 		this.height = height;
-	}
-
-	/**
-	 * TODO: Document. Is this the diameter of the Robot? If so, is this value in centimeters or millimeters?
-	 * @return the diameter
-	 */
-	public double getDiameter() {
-		return diameter;
-	}
-
-	/**
-	 * TODO: Document. Is this the diameter of the Robot? If so, is this value in centimeters or millimeters?
-	 * @param diameter the diameter to set
-	 */
-	public void setDiameter(double diameter) {
-		this.diameter = diameter;
 	}
 
 	/**
@@ -207,6 +191,6 @@ public abstract class Robot extends FieldObject {
 	@Override
 	public String toString() {
 		return "robotID=" + robotID + ", isKeeper=" + isKeeper + ", orientation=" + orientation + ", height=" + height
-				+ ", diameter=" + diameter + ", " + super.toString() + "\r\n";
+				+ ", diameter=" + DIAMETER + ", " + super.toString() + "\r\n";
 	}
 }

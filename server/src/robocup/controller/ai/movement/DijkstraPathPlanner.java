@@ -18,7 +18,7 @@ public class DijkstraPathPlanner {
 	private static final int DISTANCE_TO_ROBOT = 130;
 	private static final int VERTEX_DISTANCE_TO_ROBOT = 400;
 	private World world;
-	private ArrayList<Rectangle2D> objects;
+	protected ArrayList<Rectangle2D> objects;
 	private ArrayList<Vertex> vertices;
 	private ArrayList<Vertex> filteredVertices;
 
@@ -36,7 +36,7 @@ public class DijkstraPathPlanner {
 	 * Class representing a vertex in a graph
 	 * Contains position, neighbours and previous vertex on the route
 	 */
-	private class Vertex {
+	protected class Vertex {
 		private Point position;
 		private int distance;
 		private ArrayList<Vertex> neighbours;
@@ -249,7 +249,7 @@ public class DijkstraPathPlanner {
 	 * Create a rectangle around every robot so we can calculate intersections
 	 * @param robotId the robot id of the robot who needs a path, no rectangle will be created for this robot
 	 */
-	private void generateObjectList(int robotId) {
+	protected void generateObjectList(int robotId) {
 		// WARNING: documentation for Rectangle2D.Double states the upper left corner should be specified,
 		// use lower left corner instead
 		for (Robot r : world.getAlly().getRobots())
@@ -318,7 +318,7 @@ public class DijkstraPathPlanner {
 	 * @param vertex2
 	 * @return true when an object is found between the vertices
 	 */
-	private boolean intersectsObject(Vertex vertex1, Vertex vertex2) {
+	protected boolean intersectsObject(Vertex vertex1, Vertex vertex2) {
 		for (Rectangle2D rect : objects)
 			if (rect.intersectsLine(vertex1.getPosition().getX(), vertex1.getPosition().getY(), vertex2.getPosition()
 					.getX(), vertex2.getPosition().getY()))

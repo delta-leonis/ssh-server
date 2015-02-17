@@ -123,7 +123,7 @@ public class DetectionHandler {
 					// filter out all robots that should not be available
 					if (robotMessage.getRobotId() == id) {
 						// if the robot is validated add it to the ally's list
-						t.addRobot(new Ally(robotMessage.getRobotId(), false, robotMessage.getHeight(), 180, t, 1));
+						t.addRobot(new Ally(robotMessage.getRobotId(), false, robotMessage.getHeight(), t, 1));
 						Point p = new Point(robotMessage.getX(), robotMessage.getY());
 						allyFilter[id] = new Kalman(p, 0, 0);
 						robotAdded = true;
@@ -132,7 +132,7 @@ public class DetectionHandler {
 			} else {
 				enemyFilter[robotMessage.getRobotId()] = new Kalman(
 						new Point(robotMessage.getX(), robotMessage.getY()), 0, 0);
-				t.addRobot(new Enemy(robotMessage.getRobotId(), false, robotMessage.getHeight(), 180, t));
+				t.addRobot(new Enemy(robotMessage.getRobotId(), false, robotMessage.getHeight(), t));
 				robotAdded = true;
 			}
 		}

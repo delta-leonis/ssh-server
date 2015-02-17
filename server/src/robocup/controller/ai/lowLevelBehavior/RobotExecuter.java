@@ -42,7 +42,7 @@ public class RobotExecuter implements Runnable {
 
 	/**
 	 * Sets the {@link LowLevelBehavior} for this class.
-	 * @param lowLevelBehavior TODO: description of what lowLevelBehaviour does
+	 * @param lowLevelBehavior A {@link LowLevelBehaviour} class that tells the physical Robot what to do.
 	 */
 	public void setLowLevelBehavior(LowLevelBehavior lowLevelBehavior) {
 		this.lowLevelBehavior = lowLevelBehavior;

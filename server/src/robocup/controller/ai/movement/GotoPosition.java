@@ -192,7 +192,7 @@ public class GotoPosition {
 	 */
 	private float getRotationSpeed(float rotation) {
 		// calculate total circumference of robot
-		float circumference = (float) (robot.getDiameter() * Math.PI);
+		float circumference = (float) (Robot.DIAMETER * Math.PI);
 
 		// must be between 0 and 50 percent, if it's higher than 50% rotating to
 		// the other direction is faster

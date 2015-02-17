@@ -90,11 +90,11 @@ public abstract class LowLevelBehavior {
 	 * @return The position we want our {@link Robot} to be at when before we chip or kick.
 	 */
 	public Point getShootingPosition(int shootDirection, Point ballPosition) {
-		// TODO find out why direction on robot is inverted / twisted. Problem probably lies in the code within the physical Robot.
+		// TODO find out why direction on robot is inverted / twisted. Problem probably lies in the code within the physical Robot.  Possible problem: Mbed:Robotcontroller#Drive() 
 		int angle = -shootDirection + 270;			// Angle needs to be the inverse of the shootDirection, to position the Robot behind the ball.
 
-		double dx = Math.sin(Math.toRadians(angle)) * (robot.getDiameter() / 2);
-		double dy = Math.cos(Math.toRadians(angle)) * (robot.getDiameter() / 2);
+		double dx = Math.sin(Math.toRadians(angle)) * (Robot.DIAMETER / 2);
+		double dy = Math.cos(Math.toRadians(angle)) * (Robot.DIAMETER / 2);
 
 		int destX = (int) (ballPosition.getX() + dx);
 		int destY = (int) (ballPosition.getY() + dy);

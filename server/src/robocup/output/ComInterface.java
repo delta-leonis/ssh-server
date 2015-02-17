@@ -21,8 +21,8 @@ public abstract class ComInterface {
 	}
 
 	/**
-	 * @param messageType, MessageType 0 => robot instructie
-	 * @param robotID
+	 * @param messageType, MessageType 0 => robot instruction
+	 * @param robotID The ID of the robot we want to send to.
 	 * @param direction
 	 * @param directionSpeed , degrees/sec
 	 * @param travelDistance
