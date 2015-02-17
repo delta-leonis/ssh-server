@@ -94,15 +94,6 @@ public class GotoPosition {
 	}
 
 	/**
-	 * Set Goal
-	 * @param GoalPoint
-	 * @deprecated replaced by setDestination
-	 */
-	public void setGoal(Point p) {
-		destination = p;
-	}
-
-	/**
 	 * Set Destination
 	 * @param destination
 	 */
