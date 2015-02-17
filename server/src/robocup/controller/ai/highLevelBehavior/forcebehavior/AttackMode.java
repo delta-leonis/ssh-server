@@ -44,7 +44,7 @@ public class AttackMode extends Mode {
 
 		// Go through executer lists and update / create the lowlevel behaviors
 		for (RobotExecuter executer : executers) {
-			if (executer.getRobot().getRobotID() == world.getAlly().getGoalie()) {
+			if (executer.getRobot().getRobotId() == world.getAlly().getGoalie()) {
 				if (executer.getLowLevelBehavior() instanceof Keeper) {
 					// lowlevel behavior already keeper, update values
 					updateExecuter(executer, roles.KEEPER, true);
@@ -98,7 +98,7 @@ public class AttackMode extends Mode {
 		// }
 
 		// Can I move?
-		if (isAllowedToMove(world, robot.getRobotID())) {
+		if (isAllowedToMove(world, robot.getRobotId())) {
 			executer.stop(false);
 		} else {
 			executer.stop(true);
@@ -218,7 +218,7 @@ public class AttackMode extends Mode {
 					dribble = true;
 				}
 				
-				if (robot.getRobotID() == 1)
+				if (robot.getRobotId() == 1)
 					shootDirection = getShootingDirection(world.getAlly().getRobotByID(3), ball);
 				else
 					shootDirection = getShootingDirection(world.getAlly().getRobotByID(1), ball);
@@ -253,11 +253,11 @@ public class AttackMode extends Mode {
 
 		if (isUpdate) {
 			((Blocker) executer.getLowLevelBehavior()).update(distanceToOpponent, ball.getPosition(),
-					robot.getPosition(), opponent.getPosition(), opponent.getRobotID());
+					robot.getPosition(), opponent.getPosition(), opponent.getRobotId());
 		} else {
 			executer.setLowLevelBehavior(new Blocker(robot, ComInterface.getInstance(RobotCom.class),
 					distanceToOpponent, ball.getPosition(), robot.getPosition(), opponent.getPosition(), opponent
-							.getRobotID()));
+							.getRobotId()));
 		}
 	}
 

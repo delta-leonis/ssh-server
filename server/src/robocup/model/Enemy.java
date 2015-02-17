@@ -1,8 +1,8 @@
 package robocup.model;
 
 public class Enemy extends Robot {
-	public Enemy(int robotID, boolean isKeeper, float height, double diameter, Team team) {
-		super(robotID, isKeeper, height, diameter, team);
+	public Enemy(int robotID, boolean isKeeper, float height, double diameter) {
+		super(robotID, isKeeper, height, diameter);
 	}
 
 	@Override

@@ -20,11 +20,11 @@ public class TestPositionBehavior extends Behavior {
 	@Override
 	public void execute(ArrayList<RobotExecuter> executers) {
 		World w = World.getInstance();
-		robots = w.getAlly().getRobots();
+		robots = w.getAlly().getRobotsOnSight();
 		Robot closest = getClosestToTarget(robots, World.getInstance().getBall().getPosition());
 		for (Robot r : robots) {
 			try {
-				RobotExecuter executer = findExecuter(r.getRobotID(), executers);
+				RobotExecuter executer = findExecuter(r.getRobotId(), executers);
 				if (executer == null) {
 					executer = new RobotExecuter(r);
 					// executer.setLowLevelBehavior(new GotoPosition(r,

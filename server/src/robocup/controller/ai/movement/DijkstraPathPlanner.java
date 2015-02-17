@@ -252,13 +252,13 @@ public class DijkstraPathPlanner {
 	private void generateObjectList(int robotId) {
 		// WARNING: documentation for Rectangle2D.Double states the upper left corner should be specified,
 		// use lower left corner instead
-		for (Robot r : world.getAlly().getRobots())
+		for (Robot r : world.getAlly().getRobotsOnSight())
 			if (r.getPosition() != null)
-				if (r.getRobotID() != robotId)
+				if (r.getRobotId() != robotId)
 					objects.add(new Rectangle2D.Double(r.getPosition().getX() - DISTANCE_TO_ROBOT, r.getPosition()
 							.getY() - DISTANCE_TO_ROBOT, DISTANCE_TO_ROBOT*2, DISTANCE_TO_ROBOT*2));
 
-		for (Robot r : world.getEnemy().getRobots())
+		for (Robot r : world.getEnemy().getRobotsOnSight())
 			if (r.getPosition() != null)
 				objects.add(new Rectangle2D.Double(r.getPosition().getX() - DISTANCE_TO_ROBOT, r.getPosition()
 						.getY() - DISTANCE_TO_ROBOT, DISTANCE_TO_ROBOT*2, DISTANCE_TO_ROBOT*2));

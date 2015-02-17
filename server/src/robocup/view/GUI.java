@@ -510,10 +510,10 @@ public class GUI extends javax.swing.JFrame implements Observer {
 			boolean[] robotUpdated = new boolean[12];
 
 			Arrays.fill(robotUpdated, false);
-			for (Robot robot : world.getAlly().getRobots()) {
+			for (Robot robot : world.getAlly().getRobotsOnSight()) {
 				// System.out.println(robot.getRobotID() + "    pos:" +
 				// robot.getPosition());
-				robotUpdated[robot.getRobotID()] = true;
+				robotUpdated[robot.getRobotId()] = true;
 			}
 
 			if (timePassed % 25 == 0) {

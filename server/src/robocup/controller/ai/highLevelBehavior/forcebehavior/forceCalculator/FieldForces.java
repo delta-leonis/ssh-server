@@ -40,8 +40,8 @@ public class FieldForces {
 
 		for (Force force : forces) {
 			if (force.affectsPoint(robot.getPosition())
-					&& !(force instanceof RobotForce && ((RobotForce) force).getRobot().getRobotID() == robot
-							.getRobotID())) {
+					&& !(force instanceof RobotForce && ((RobotForce) force).getRobot().getRobotId() == robot
+							.getRobotId())) {
 				int direction = force.getDirection(robot.getPosition());
 				int power = force.getPower();
 				int x = (int) (Math.sin(Math.toRadians(direction)) * power);

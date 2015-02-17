@@ -50,12 +50,12 @@ public abstract class LowLevelBehavior {
 				|| !World.getInstance().getReferee().isStart();
 
 		if (failed) {
-			LOGGER.warning("Robot " + robot.getRobotID() + " is not on sight");
+			LOGGER.warning("Robot " + robot.getRobotId() + " is not on sight");
 			LOGGER.warning("Time: " + (Calendar.getInstance().getTimeInMillis() / 1000));
 			LOGGER.warning("Robot: " + (robot.getLastUpdateTime()));
 
 			robot.setOnSight(false);
-			output.send(1, robot.getRobotID(), 0, 0, 0, 0, 0, 0, false); // stop
+			output.send(1, robot.getRobotId(), 0, 0, 0, 0, 0, 0, false); // stop
 																			// moving
 																			// if
 																			// the

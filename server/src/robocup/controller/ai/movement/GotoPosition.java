@@ -133,19 +133,19 @@ public class GotoPosition {
 	public void calculate() {
 		if (destination == null || target == null) {
 			robot.setOnSight(true);
-			output.send(1, robot.getRobotID(), 0, 0, 0, 0, 0, 0, false);
+			output.send(1, robot.getRobotId(), 0, 0, 0, 0, 0, 0, false);
 			return;
 
 			// Calculate parameters
 		} else {
 			robot.setOnSight(true);
 
-			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotID());
+			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId());
 			
 			if (route.size() > 0 && route.get(0) != null) {
 				destination = route.get(0);
 			} else {
-					output.send(1, robot.getRobotID(), 0, 0, 0, 0, 0, 0, false);
+					output.send(1, robot.getRobotId(), 0, 0, 0, 0, 0, 0, false);
 					return;
 			}
 
@@ -167,7 +167,7 @@ public class GotoPosition {
 			// direction and rotationAngle do nothing, set to 0
 			// rotationSpeed inverted because the motors spin in opposite
 			// direction
-			output.send(1, robot.getRobotID(), rotationToGoal, speed, travelDistance, 0, -rotationSpeed, chipKick, dribble);
+			output.send(1, robot.getRobotId(), rotationToGoal, speed, travelDistance, 0, -rotationSpeed, chipKick, dribble);
 			
 
 			// Set kick back to 0 to prevent kicking twice in a row

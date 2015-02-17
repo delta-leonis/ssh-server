@@ -1,29 +1,11 @@
 package robocup.model;
 
 public class Ally extends Robot {
-
-	private int channel;
 	private boolean dribble;
 	private long lastKicked;
 
-	public Ally(int robotID, boolean isKeeper, float height, double diameter, Team team, int channel) {
-		super(robotID, isKeeper, height, diameter, team);
-		this.channel = channel;
-	}
-
-	/**
-	 * @return the channel
-	 */
-	public int getChannel() {
-		return channel;
-	}
-
-	/**
-	 * @param channel
-	 *            the channel to set
-	 */
-	public void setChannel(int channel) {
-		this.channel = channel;
+	public Ally(int robotID, boolean isKeeper, float height, double diameter) {
+		super(robotID, isKeeper, height, diameter);
 	}
 
 	/**
@@ -56,7 +38,7 @@ public class Ally extends Robot {
 
 	@Override
 	public String toString() {
-		return "Ally [channel=" + channel + ", dribble=" + dribble + ", lastKicked=" + lastKicked + ", "
+		return "Ally [dribble=" + dribble + ", lastKicked=" + lastKicked + ", "
 				+ super.toString();
 	}
 }

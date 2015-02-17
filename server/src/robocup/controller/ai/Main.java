@@ -60,12 +60,12 @@ public class Main implements Observer {
 		ArrayList<RobotExecuter> updatedRobotExecuters = new ArrayList<RobotExecuter>();
 
 		Team team = world.getAlly();
-		for (Robot robot : team.getRobots()) {
+		for (Robot robot : team.getRobotsOnSight()) {
 			boolean executerFound = false;
 
 			if (robotExecuters != null) {
 				for (RobotExecuter exec : robotExecuters) {
-					if (exec.getRobot().getRobotID() == robot.getRobotID()) {
+					if (exec.getRobot().getRobotId() == robot.getRobotId()) {
 						updatedRobotExecuters.add(exec);
 						executerFound = true;
 					}

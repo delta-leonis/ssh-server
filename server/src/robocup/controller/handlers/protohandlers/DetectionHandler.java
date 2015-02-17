@@ -116,7 +116,12 @@ public class DetectionHandler {
 		boolean robotAdded = false;
 
 		Robot robot = t.getRobotByID(robotMessage.getRobotId());
-
+/*
+ 		TODO remove this section, 
+ 		 is deprecated because team members are initialized at the start,
+ 		 and aren' t removed anymore
+ 		 
+ 		 
 		if (robot == null) { // Create robot object
 			if (world.getOwnTeamColor().equals(color)) {
 				for (int id : validRobotIDs) {
@@ -135,15 +140,15 @@ public class DetectionHandler {
 				t.addRobot(new Enemy(robotMessage.getRobotId(), false, robotMessage.getHeight(), 180, t));
 				robotAdded = true;
 			}
-		}
+		}*/
 
 		robot = t.getRobotByID(robotMessage.getRobotId());
 		if (robot != null) {
 			Kalman filter;
 			if (world.getOwnTeamColor().equals(color)) {
-				filter = allyFilter[robot.getRobotID()];
+				filter = allyFilter[robot.getRobotId()];
 			} else {
-				filter = enemyFilter[robot.getRobotID()];
+				filter = enemyFilter[robot.getRobotId()];
 			}
 
 			Point filterPoint = new Point(robotMessage.getX(), robotMessage.getY());
@@ -167,9 +172,11 @@ public class DetectionHandler {
 				}
 			}
 		}
+		else
+			System.err.printf("DetectionHandler: Could not find robot with ID %d\n", robotMessage.getRobotId());
 
-		if (robotAdded) {
-			world.RobotAdded();
-		}
+		//if (robotAdded) {
+		//	world.RobotAdded();
+		//}
 	}
 }
