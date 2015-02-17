@@ -155,13 +155,13 @@ public class Main {
 
 			w.setAlly(new Team(configFile.getProperty("ownTeam"), ownTeamColor));
 			for(int i=0; i < TEAM_SIZE; i++)
-				w.getAlly().addRobot(new Ally(i, false, 150, 180));
+				w.getAlly().addRobot(new Ally(i, false, 150));
 			
 			
 			w.setEnemy(new Team(configFile.getProperty("otherTeam"), otherTeamColor));
 
 			for(int i=0; i < TEAM_SIZE; i++)
-				w.getEnemy().addRobot(new Enemy(i, false, 150, 180));
+				w.getEnemy().addRobot(new Enemy(i, false, 150));
 			w.setOwnTeamColor(ownTeamColor);
 
 		} catch (IllegalArgumentException e) {
