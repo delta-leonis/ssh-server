@@ -11,16 +11,21 @@ import robocup.model.World;
 /**
  * Pathplanner class based on Dijkstra's algorithm
  * Converts model to a graph, find shortest path between two vertices using getRoute
+ * TODO: If source is removed because of a nearby Robot, move away from said Robot and recalculate path.
  */
 public class DijkstraPathPlanner {
 
+	//TODO: Use only one value?
 	// distance from the middle of the robot to the vertices around it
+	// Basically the "Danger zone" for the Robot. A normal Robot has a radius of 90mm, so if DISTANCE_TO_ROBOT == 130mm,
+	// then it means we don't want to get within (130mm - 90mm = ) 40mm of any other Robot.
 	private static final int DISTANCE_TO_ROBOT = 130;
+	// This value is used to determine the vertex points, which are VERTEX_DISTANCE_TO_ROBOT from the middle points of the robots.
 	private static final int VERTEX_DISTANCE_TO_ROBOT = 400;
 	private World world;
 	protected ArrayList<Rectangle2D> objects;
 	private ArrayList<Vertex> vertices;
-	private ArrayList<Vertex> filteredVertices;
+//	private ArrayList<Vertex> filteredVertices;		//Moved to the function that uses it. #removeCollidingVertices() 
 
 	/**
 	 * Create the pathplanner
@@ -29,7 +34,7 @@ public class DijkstraPathPlanner {
 		world = World.getInstance();
 		objects = new ArrayList<Rectangle2D>();
 		vertices = new ArrayList<Vertex>();
-		filteredVertices = new ArrayList<Vertex>();
+//		filteredVertices = new ArrayList<Vertex>();
 	}
 
 	/**
@@ -156,6 +161,7 @@ public class DijkstraPathPlanner {
 
 		// calculate the shortest path through the graph
 		Vertex u = source;
+		//TODO : If source got removed from the vertex list, move away from the closest Robot.
 		calculatePath(source, u, dest);
 
 		// add positions to the route list
@@ -175,10 +181,10 @@ public class DijkstraPathPlanner {
 	/**
 	 * Reset objects
 	 */
-	private void reset() {
+	protected void reset() {
 		objects.clear();
 		vertices.clear();
-		filteredVertices.clear();
+//		filteredVertices.clear();
 	}
 
 	/**
@@ -189,14 +195,18 @@ public class DijkstraPathPlanner {
 	 */
 	private void calculatePath(Vertex source, Vertex u, Vertex dest) {
 		for (int i = 0; i < 50 && vertices.size() > 0; i++) {
+			// Triggers if an object was too close to the starting point.
+			// TODO: Move a bit further away.
 			if (!vertices.contains(source)) {
 				// get closest neighbour
 				u = getMinDistNeighbour(u);
 			}
-
+			
+			// If we're at the destination, we're done.
 			if (u.equals(dest))
 				return;
-
+			
+			
 			vertices.remove(u);
 
 			// calculate new costs for neighbours
@@ -210,6 +220,39 @@ public class DijkstraPathPlanner {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Calculate the path
+	 * @param source first vertex on the path
+	 * @param u helper vertex, contains the vertex closest to the previously evaluated vertex
+	 * @param dest destination
+	 */
+	private void calculatePath2(Vertex source, Vertex dest) {
+		// Triggers if an object was too close to the starting point.
+		// TODO: Move a bit further away.
+		if (!vertices.contains(source)) {
+			// get closest neighbour
+			source = getMinDistNeighbour(source);
+		}
+					
+		for (Vertex vertex : vertices) {
+			// If we're at the destination, we're done.
+			if (source.equals(dest))
+				return;
+			
+			// calculate new costs for neighbours
+			for (Vertex v : source.getNeighbours()) {
+				int alt = source.getDist() + getDistance(source, v);
+
+				// alternate path is shorter than the previous path to v
+				if (alt < v.getDist()) {
+					v.setDist(alt);
+					v.setPrevious(source);
+				}
+			}
+		}
+		
 	}
 
 	/**
@@ -248,6 +291,7 @@ public class DijkstraPathPlanner {
 	/**
 	 * Create a rectangle around every robot so we can calculate intersections
 	 * @param robotId the robot id of the robot who needs a path, no rectangle will be created for this robot
+	 * TODO: getRobotsOnSight()
 	 */
 	protected void generateObjectList(int robotId) {
 		// WARNING: documentation for Rectangle2D.Double states the upper left corner should be specified,
@@ -283,6 +327,7 @@ public class DijkstraPathPlanner {
 	 * Remove all vertices located inside rectangles
 	 */
 	private void removeCollidingVertices() {
+		ArrayList<Vertex> filteredVertices = new ArrayList<Vertex>();
 		for (Rectangle2D rect : objects)
 			for (Vertex v : vertices)
 				if (rect.contains(v.getPosition().getX(), v.getPosition().getY()))
