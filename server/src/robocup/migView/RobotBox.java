@@ -1,11 +1,15 @@
 package robocup.migView;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.model.Robot;
@@ -16,56 +20,43 @@ public class RobotBox extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private Robot robot;
-	private JLabel robotStatus;
-	private JTextArea robotPosition
-					 ,robotRole;
+	private JLabel robotStatus
+				  ,robotPosition
+				  ,robotRole;
 	private JButton chipButton
 				   ,kickButton;
 
 	public RobotBox(Robot _robot){
 		robot = _robot;
+		this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 
-		this.setLayout(new MigLayout("wrap 2"));
+		this.setLayout(new MigLayout("wrap 2", "[250][right, 250]"));
 		initComponents();
+		
 	}
 	
 	private void initComponents(){
 		robotStatus = new JLabel();
 		setRobotStatus(robot.isOnSight());
 
-		JLabel robotID = new JLabel(robot.getRobotId() + "");
-		robotID.setFont(new Font(robotID.getFont().getFontName(), Font.PLAIN, 20));
+		JLabel robotId = new JLabel("#" + robot.getRobotId());
+		robotId.setFont(new Font(robotId.getFont().getFontName(), Font.PLAIN, 20));
 
-		robotRole = new JTextArea();
-		robotPosition = new JTextArea();
-		robotRole.setEditable(false);
-		robotPosition.setEditable(false);
-
-		chipButton = new JButton("Chippen");
-		kickButton = new JButton("Kicken");
-		chipButton.addActionListener(new ButtonListener());
-		kickButton.addActionListener(new ButtonListener());
+		robotRole = new JLabel("UNKNOWN");
+		robotPosition = new JLabel("UNKNOWN");
 		
 		this.add(robotStatus);
-		this.add(robotID);
-		this.add(robotRole, "span 2");
-		this.add(robotPosition, "span 2");
+		this.add(robotId);
 
+		add(new JLabel("Role:"));
+		this.add(robotRole);
+		add(new JLabel("Position:"));
+		this.add(robotPosition);
 	}
 	
-    private class ButtonListener implements ActionListener {
-        public void actionPerformed(ActionEvent e){
-        	switch(((JButton)e.getSource()).getText()){
-    			case "Chippen":
-    				ComInterface.getInstance(RobotCom.class).send(1, robot.getRobotId(), 0, 0, 0, 0, 0, 100, false);
-    				break;
-
-    			case "Kicken":
-    				ComInterface.getInstance(RobotCom.class).send(1, robot.getRobotId(), 0, 0, 0, 0, 0, -100, false);
-    				break;
-        	}
-        }
-    }
+	public Robot getRobot(){
+		return robot;
+	}
     
     private void setRobotStatus(boolean online) {
     	if(online) {

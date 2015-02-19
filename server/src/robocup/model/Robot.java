@@ -16,6 +16,7 @@ public abstract class Robot extends FieldObject {
 	private float batteryStatus;
 	private long powerUpTime;
 	private boolean onSight;
+	private boolean visible;		//true = visible in the GUI
 	private Mode.roles role;
 
 	public Robot(int robotID, boolean isKeeper, float height) {
@@ -24,8 +25,22 @@ public abstract class Robot extends FieldObject {
 		this.isKeeper = isKeeper;
 		this.height = height;
 		this.role = null;
+		this.visible = true;
 	}
 
+	/**
+	 * @return if the robot should be visible on the GUI
+	 */
+	public boolean isVisible(){
+		return visible;
+	}
+	
+	/**
+	 * @param whether to show the robot 
+	 */
+	public void setVisible(boolean _visible){
+		visible = _visible;
+	}
 	/**
 	 * @return the robotID
 	 */
