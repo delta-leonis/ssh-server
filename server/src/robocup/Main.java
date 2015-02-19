@@ -31,6 +31,8 @@ public class Main {
 	public static final int KEEPER_ROBOT_ID = 3;
 	public static final int TEST_FUCK_ROBOT_ID = 4;
 
+	public static final int POSSIBLE_IDS = 11;
+	
 
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private static Level debugLevel = Level.INFO;
@@ -42,8 +44,6 @@ public class Main {
 	public static void main(String[] args) {
 		initLog();
 		LOGGER.info("Program started");
-		initView();
-		LOGGER.info("View initialized");
 		initBasestationClient();
 		LOGGER.info("BasestationClient initialized");
 		initField();
@@ -57,6 +57,9 @@ public class Main {
 		initAi();
 		LOGGER.info("Console disabled");
 		// console();
+
+		initView();
+		LOGGER.info("View initialized");
 	}
 
 	/**
@@ -86,17 +89,6 @@ public class Main {
 	 * @author Gerbrand Bosch
 	 */
 	public static void initView() {
-		try {
-			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-				if ("Nimbus".equals(info.getName())) {
-					javax.swing.UIManager.setLookAndFeel(info.getClassName());
-					break;
-				}
-			}
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-				| UnsupportedLookAndFeelException e) {
-			LOGGER.warning("view lookAndFeel can't started");
-		}
 		//new robocup.view.GUI(World.getInstance()).setVisible(true);
 		new robocup.migView.GUI(World.getInstance()).setVisible(true);
 	}
