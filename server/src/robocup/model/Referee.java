@@ -1,8 +1,16 @@
 package robocup.model;
 
+import java.util.ArrayList;
+
+import robocup.model.enums.Color;
 import robocup.model.enums.Command;
 import robocup.model.enums.Stage;
 
+/**
+ * Model representation of the "game", including the teams and rules
+ * @author jasper
+ *
+ */
 public class Referee {
 
 	private long timeoutTimeLeft;
@@ -13,11 +21,25 @@ public class Referee {
 	private long lastCommandTimestamp;
 	private boolean start;
 
+	private final int PLAYING_TEAM_SIZE = 8;
+	
+	private Team ourTeam;
+	private Team enemyTeam;
+	
+
 	public Referee() {
 		commandCounter = 0;
 		lastCommandTimestamp = 0;
+		command = Command.STOP;
 	}
-
+	
+	public void initAllyTeam(ArrayList<Robot> teamRobots) {
+		ourTeam = new Team("", Color.BLUE, PLAYING_TEAM_SIZE);
+	}
+	public void initEnemyTeam(ArrayList<Robot> teamRobots) {
+		enemyTeam = new Team("", Color.YELLOW, PLAYING_TEAM_SIZE);
+	}
+	
 	public void update(Command command, int commandCounter, long commandTimeStamp, Stage stage, int stageTimeLeft) {
 		this.command = command;
 		this.commandCounter = commandCounter;
@@ -33,6 +55,10 @@ public class Referee {
 		return stage;
 	}
 
+	public boolean isStage(Stage controlStage) {
+		return controlStage == stage;
+	}
+	
 	/**
 	 * @return the timeoutTimeLeft
 	 */
@@ -64,7 +90,7 @@ public class Referee {
 	/**
 	 * @return the command
 	 */
-	public Enum<Command> getCommand() {
+	public Command getCommand() {
 		return command;
 	}
 
@@ -103,6 +129,59 @@ public class Referee {
 	public void setStart(boolean start) {
 		this.start = start;
 	}
+	
+	/**
+	 * Returns the {@link Team} with the given color.
+	 * @param color the color of the {@link Team}
+	 * @return the {@link Team} with the given color. Returns null if there is no {@link Team} with the given color.
+	 */
+	public Team getTeamByColor(Color color) {
+		if (ourTeam.isColor(color))
+			return ourTeam;
+		else if (enemyTeam.isColor(color))
+			return enemyTeam;
+
+		return null;
+	}
+	
+	/**
+	 * Sets the Color for our own Team.
+	 * Suggestion: Rename to setAllyTeamColor()
+	 * @param color
+	 * 
+	 */
+	public void switchAllyTeamColor(Color color) {
+		if (color == Color.BLUE) {
+			ourTeam.setColor(Color.BLUE);
+			enemyTeam.setColor(Color.YELLOW);
+		} else {
+			ourTeam.setColor(Color.YELLOW);
+			enemyTeam.setColor(Color.BLUE);
+		}
+	}
+	
+	/**
+	 * Returns the color of your own team.
+	 * Suggestion: Rename to getAllyTeamColor()
+	 * @return 
+	 */
+	public Color getOwnTeamColor() {
+		return ourTeam.getColor();
+	}
+
+	/**
+	 * @return the ally {@link Team} in the current match.
+	 */
+	public Team getAlly() {
+		return ourTeam;
+	}
+
+	/**
+	 * @return the enemy {@link Team} in the current match.
+	 */
+	public Team getEnemy() {
+		return enemyTeam;
+	}
 
 	@Override
 	public String toString() {
@@ -110,4 +189,5 @@ public class Referee {
 				+ ", command=" + command + ", commandCounter=" + commandCounter + ", lastCommandTimestamp="
 				+ lastCommandTimestamp + "]" + "\r\n";
 	}
+
 }

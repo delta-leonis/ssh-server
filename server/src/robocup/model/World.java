@@ -1,19 +1,29 @@
 package robocup.model;
 
+import java.util.ArrayList;
 import java.util.Observable;
 
 import robocup.model.enums.Color;
-
+import robocup.model.enums.Command;
+/**
+ * Model representation of the physical "world", including the field, 
+ * all the robots (even non playing robots) and the ball
+ */
 public class World extends Observable {
 
 	private static World instance;
+	
 	private Ball ball;
 	private Referee referee;
 	private Field field;
-	private Team enemy;
-	private Team ally;
-	private Color ownTeamColor;
-
+	
+	ArrayList<Robot> allyTeam;
+	ArrayList<Robot> enemyTeam;
+	ArrayList<Robot> robotList;
+	
+	private static final int TOTAL_TEAM_SIZE = 11;
+	private final int STOP_BALL_DISTANCE = 500; // in mm
+	
 	/**
 	 * Constructor for the {@link World}
 	 * Can only be called as a singleton.
@@ -23,8 +33,28 @@ public class World extends Observable {
 		ball.setPosition(new Point(400, 200)); // added starting point for ball
 												// to remove nullpointer errors
 		referee = new Referee();
+		field = new Field();
+		
+		// initialize all robots
+		allyTeam = new ArrayList<Robot>();
+		enemyTeam = new ArrayList<Robot>();;
+		
+		for(int i=0; i < TOTAL_TEAM_SIZE; i++) 
+		{	
+			allyTeam.add(new Ally(i, false, 150));
+		}
+		for(int i=TOTAL_TEAM_SIZE; i < TOTAL_TEAM_SIZE*2; i++) 
+		{	
+			enemyTeam.add(new Enemy(i, false, 150));
+		} 
+		referee.initAllyTeam(allyTeam);
+		referee.initEnemyTeam(enemyTeam);
+		
+		robotList = new ArrayList<Robot>();
+		robotList.addAll(allyTeam);
+		robotList.addAll(enemyTeam);
 	}
-
+		
 	/**
 	 * @return Singleton for the {@link World}
 	 */
@@ -35,32 +65,13 @@ public class World extends Observable {
 		return instance;
 	}
 
+	/**
+	 * 
+	 * @param message
+	 */
 	public void HandlerFinished(String message) {
 		setChanged();
 		notifyObservers(message + "HandlerFinished");
-	}
-
-	public void RobotAdded() {
-		setChanged();
-		notifyObservers("RobotAdded");
-	}
-
-	/**
-	 * Sets the Color for our own Team.
-	 * Suggestion: Rename to setAllyTeamColor()
-	 * @param color
-	 */
-	public void setOwnTeamColor(Color color) {
-		ownTeamColor = color;
-	}
-
-	/**
-	 * Returns the color of your own team.
-	 * Suggestion: Rename to getAllyTeamColor()
-	 * @return 
-	 */
-	public Color getOwnTeamColor() {
-		return ownTeamColor;
 	}
 
 	/**
@@ -86,48 +97,50 @@ public class World extends Observable {
 	
 	/**
 	 * Returns the {@link Team} with the given color.
+	 * this methodd is an adapter from the old model, so its better to use referee getTeambyColor
 	 * @param color the color of the {@link Team}
 	 * @return the {@link Team} with the given color. Returns null if there is no {@link Team} with the given color.
 	 */
 	public Team getTeamByColor(Color color) {
-		if (ally.isTeamColor(color))
-			return ally;
-		else if (enemy.isTeamColor(color))
-			return enemy;
-
-		return null;
+		return referee.getTeamByColor(color);
 	}
 
 	/**
+	 * gets our team, this is a method from the old model, it bypasses the referee
 	 * @return the ally {@link Team} in the current match.
 	 */
 	public Team getAlly() {
-		return ally;
+		return referee.getAlly();
 	}
 
 	/**
-	 * Sets which {@link Team} is our ally in the current match.
-	 * @param t the {@link Team} that is our ally.
-	 */
-	public void setAlly(Team t) {
-		ally = t;
-	}
-
-	/**
+	 * gets the enemy team, this is a method from the old model, it bypasses the referee
 	 * @return the enemy {@link Team} in the current match.
 	 */
 	public Team getEnemy() {
-		return enemy;
+		return referee.getEnemy();
 	}
 
 	/**
-	 * Sets which {@link Team} is our enemy in the current match.
-	 * @param t the {@link Team} that is our enemy
+	 * 
+	 * @return all the robots in the current match
 	 */
-	public void setEnemy(Team t) {
-		enemy = t;
+	public ArrayList<Robot> getAllRobots() {
+		return robotList;
 	}
-
+	
+	/**
+	 * @return all robots currently on the playing field
+	 */
+	public ArrayList<Robot> getAllRobotsOnSight(){
+		ArrayList<Robot> onsight = new ArrayList<Robot>();
+		for( Robot robot : robotList){
+			if(robot.isOnSight())
+				onsight.add(robot);
+		}
+		return onsight;
+	}
+	
 	/**
 	 * Sets the {@link Field} of the current match. 
 	 * The {@link Field} contains all variables regarding the {@link Field}. (Think of field width, goal length etc.)
@@ -139,7 +152,46 @@ public class World extends Observable {
 
 	@Override
 	public String toString() {
-		return "World \r\n[ball=" + ball + "\r\nreferee=" + referee + "\r\nownTeamColor=" + ownTeamColor + "\r\n"
-				+ field + "\r\n" + enemy + "\r\n" + ally + "]";
+		return "World \r\n[ball=" + ball + "\r\nreferee=" + referee + "\r\n"
+				+ field + "]";
+	}
+	
+
+	/**
+	 * Helper function for referee commands, checks last command issued
+	 * when the robot may move because of the "keep 50 cm clearance" rule, pathfinding must find a way from the ball
+	 * @param robotID
+	 * @return bool indicating if movement is allowed
+	 */
+	public boolean robotMayMove(int robotID) {
+		// Halt = all robots stop
+		if (referee.getCommand() == Command.HALT) {
+			return false;
+		}
+
+		// Stop = keep 50cm from ball
+		if (referee.getCommand() == Command.STOP) {
+			// if the distance to ball is less then 50cm, is so return false
+			if ((int) referee.getAlly().getRobotByID(robotID).getPosition().getDeltaDistance(ball.getPosition()) < STOP_BALL_DISTANCE) {
+				return false;
+			}
+
+			// Goal = Should be treated the same as STOP
+		} else if (referee.getCommand() == Command.GOAL_YELLOW || referee.getCommand() == Command.GOAL_BLUE) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Returns the color of your own team.
+	 * Suggestion: Rename to getAllyTeamColor()
+	 * 
+ 	 * @Deprecated use Referee.getOwnTeamColor();
+	 * @return
+	 */
+	@Deprecated
+	public Color getOwnTeamColor() {
+		return referee.getOwnTeamColor();
 	}
 }

@@ -44,8 +44,8 @@ public abstract class Robot extends FieldObject {
 	 * {@inheritDoc}
 	 * @param orientation 
 	 */
-	public void update(Point p, double updateTime, int orientation, int lastCamUpdateNo) {
-		super.update(p, updateTime, lastCamUpdateNo);
+	public void update(Point newPosition, double updateTime, int orientation, int lastCamUpdateNo) {
+		super.update(newPosition, updateTime, lastCamUpdateNo);
 		this.orientation = orientation; // setOrientation(orientation)
 	}
 

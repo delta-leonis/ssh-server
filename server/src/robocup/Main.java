@@ -21,10 +21,7 @@ import robocup.controller.handlers.protohandlers.MainHandler;
 import robocup.input.BaseStationClient;
 import robocup.input.RefereeClient;
 import robocup.input.SSLVisionClient;
-import robocup.model.Ally;
-import robocup.model.Enemy;
 import robocup.model.Field;
-import robocup.model.Team;
 import robocup.model.World;
 import robocup.model.enums.Color;
 
@@ -34,7 +31,6 @@ public class Main {
 	public static final int KEEPER_ROBOT_ID = 3;
 	public static final int TEST_FUCK_ROBOT_ID = 4;
 
-	public static final int TEAM_SIZE = 8;
 
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private static Level debugLevel = Level.INFO;
@@ -108,29 +104,59 @@ public class Main {
 	/**
 	 * Initialize the field using fieldConfigName
 	 * 
-	 * @author Gerbrand Bosch
+	 * @author Jasper v O
 	 */
 	public static void initField() {
 		Properties configFile = new Properties();
 		try {
 			configFile.load(new FileInputStream(fieldConfigName));
-			World.getInstance().setField(
-					new Field(	Integer.parseInt(configFile.getProperty("length")),
-								Integer.parseInt(configFile.getProperty("width")), 
-								Integer.parseInt(configFile.getProperty("lineWidth")), 
-								Integer.parseInt(configFile.getProperty("boundaryWidth")), 
-								Integer.parseInt(configFile.getProperty("refereeWidth")), 
-								Integer.parseInt(configFile.getProperty("centerCircleRadius")), 
-								Integer.parseInt(configFile.getProperty("defenceRadius")),
-								Integer.parseInt(configFile.getProperty("defenceStretch")),
-								Integer.parseInt(configFile.getProperty("freeKickFromDefenceDistance")),
-								Integer.parseInt(configFile.getProperty("penaltySpotFromFieldLineDistance")), 
-								Integer.parseInt(configFile.getProperty("penaltyLineFromSpotDistance")), 
-								Integer.parseInt(configFile.getProperty("goalWidth")),
-								Integer.parseInt(configFile.getProperty("goalDepth")), 
-								Integer.parseInt(configFile.getProperty("goalWallWidth")), 
-								Integer.parseInt(configFile.getProperty("goalHeight")), 
-								Integer.parseInt(configFile.getProperty("cameraOverlapZoneWidth"))));
+			Field playingField = World.getInstance().getField();
+			
+			// The model always initializes its own subclasses, starting with default values
+			// All these lose variables should normally be "encapsulated" by a subclass
+			int fieldWidth = 
+					Integer.parseInt(configFile.getProperty("width"));
+			int fieldLength = 
+					Integer.parseInt(configFile.getProperty("length"));
+			int fieldLineWidth = 
+					Integer.parseInt(configFile.getProperty("lineWidth")); 
+			int fieldBoundaryWidth = 
+					Integer.parseInt(configFile.getProperty("boundaryWidth"));
+			int fieldRefereeWidth = 
+					Integer.parseInt(configFile.getProperty("refereeWidth"));
+			
+			int fieldCenterCircleRadius = 
+					Integer.parseInt(configFile.getProperty("centerCircleRadius"));
+			int fieldDefenceRadius = 
+					Integer.parseInt(configFile.getProperty("defenceRadius"));
+			int fieldDefenceStretch = 
+					Integer.parseInt(configFile.getProperty("defenceStretch"));
+			
+			int fieldFreeKickFromDefenceDistance = 
+					Integer.parseInt(configFile.getProperty("freeKickFromDefenceDistance"));
+			int fieldPenaltySpotFromFieldLineDistance = 
+					Integer.parseInt(configFile.getProperty("penaltySpotFromFieldLineDistance")); 
+			int fieldPenaltyLineFromSpotDistance = 
+					Integer.parseInt(configFile.getProperty("penaltyLineFromSpotDistance"));
+			
+			int fieldGoalWidth = 
+					Integer.parseInt(configFile.getProperty("goalWidth"));
+			int fieldGoalDepth = 
+					Integer.parseInt(configFile.getProperty("goalDepth"));
+			int fieldGoalWallWidth = 
+					Integer.parseInt(configFile.getProperty("goalWallWidth"));
+			int fieldGoalHeight = 
+					Integer.parseInt(configFile.getProperty("goalHeight"));
+			
+			int fieldCameraOverlapZoneWidth = 
+					Integer.parseInt(configFile.getProperty("cameraOverlapZoneWidth"));
+
+			playingField.setFieldProportions(fieldWidth, fieldLength, fieldLineWidth, fieldBoundaryWidth, fieldRefereeWidth);
+			playingField.setFieldZones(fieldCenterCircleRadius, fieldDefenceRadius, fieldDefenceStretch);
+			playingField.setRuleDistances(fieldFreeKickFromDefenceDistance, fieldPenaltySpotFromFieldLineDistance, fieldPenaltyLineFromSpotDistance);
+			playingField.setGoalProportions(fieldGoalWidth, fieldGoalDepth, fieldGoalWallWidth, fieldGoalHeight);
+			playingField.setCameraOverlapZoneWidth(fieldCameraOverlapZoneWidth);
+			
 		} catch (IOException e) {
 			LOGGER.severe("Field config cannot be read, please make sure the fieldConfig file exist and is correctly set");
 			System.exit(1);
@@ -140,30 +166,26 @@ public class Main {
 	/**
 	 * Creates teams from default values in configuration file.
 	 * 
-	 * @author Gerbrand Bosch
+	 * @author Gerbrand Bosch Jasper v O
 	 */
 	public static void initTeams() {
 		World w = World.getInstance();
 		final Properties configFile = new Properties();
-		Color ownTeamColor = null;
-		Color otherTeamColor = null;
+
 		try {
 			configFile.load(new FileInputStream(teamConfig));
 
-			ownTeamColor = Color.valueOf(configFile.getProperty("ownTeamColor").toUpperCase());
-			otherTeamColor = Color.valueOf(configFile.getProperty("otherTeamColor").toUpperCase());
-
-			w.setAlly(new Team(configFile.getProperty("ownTeam"), ownTeamColor));
-			for(int i=0; i < TEAM_SIZE; i++)
-				w.getAlly().addRobot(new Ally(i, false, 150));
+			String ourTeamColor   = configFile.getProperty("ownTeamColor").toUpperCase();
+			//there are only two colors, no need to retrieve the enemy color
+			//String enemyTeamColor = configFile.getProperty("otherTeamColor").toUpperCase();
+			String ourTeamName    = configFile.getProperty("ownTeam");
+			String enemyTeamName  = configFile.getProperty("otherTeam");
 			
+			w.getAlly().setName(ourTeamName);
+			w.getEnemy().setName(enemyTeamName);
 			
-			w.setEnemy(new Team(configFile.getProperty("otherTeam"), otherTeamColor));
-
-			for(int i=0; i < TEAM_SIZE; i++)
-				w.getEnemy().addRobot(new Enemy(i, false, 150));
-			w.setOwnTeamColor(ownTeamColor);
-
+			w.getReferee().switchAllyTeamColor(Color.valueOf(ourTeamColor));
+			
 		} catch (IllegalArgumentException e) {
 			LOGGER.severe("Please check the config file for type errors");
 			e.printStackTrace();

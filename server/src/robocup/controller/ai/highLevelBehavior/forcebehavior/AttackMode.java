@@ -9,6 +9,7 @@ import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.*;
+import robocup.model.enums.Command;
 import robocup.output.ComInterface;
 import robocup.output.RobotCom;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -92,20 +93,15 @@ public class AttackMode extends Mode {
 		Ball ball = world.getBall();
 		int distanceToGoal = offset != null ? 500 : 500;	//TODO: Always returns 500
 
-		// new assigment, assign to robot
-		// if(!isUpdate) {
+		// no need to check the role first, there is no "on role changed behavior"
 		robot.setRole(type);
-		// }
-
+		
 		// Can I move?
-		if (isAllowedToMove(world, robot.getRobotId())) {
+		if (world.robotMayMove(robot.getRobotId())) {
 			executer.stop(false);
 		} else {
 			executer.stop(true);
 		}
-
-		// System.out.println(robot.getRobotID()
-		// + " is forbidden to move an Inch");
 
 		// !!TODO implement break and/or holding patterns for robots
 		// TODO ^ done? robots only allowed to move when penaltyRobot != null
@@ -116,17 +112,14 @@ public class AttackMode extends Mode {
 		// penalty
 
 		Referee ref = world.getReferee();
-		String refCommand = "";
-		if (ref != null) {
-			if (ref.getCommand() != null) {
-				refCommand = ref.getCommand().toString();
+		Command refCommand = ref.getCommand();
 
-				switch (refCommand) {
-				case "PREPARE_KICKOFF_BLUE":
-				case "PREPARE_KICKOFF_YELLOW":
-					break;
-				case "PREPARE_PENALTY_BLUE":
-				case "PREPARE_PENALTY_YELLOW":
+		switch (refCommand) {
+				case PREPARE_KICKOFF_BLUE: break;
+				case PREPARE_KICKOFF_YELLOW: break;
+				case PREPARE_PENALTY_BLUE: break;
+				
+				case PREPARE_PENALTY_YELLOW: 
 					if (refCommand.equals(("PREPARE_KICKOFF_" + world.getAlly().getColor().toString()))
 							&& penaltyRobot == null) {
 						//TODO: This if-statement will never be called, since refCommand is tested on PREPARE_KICKOFF_x, while refCommand already PREPARE_PENALTY_YELLOW
@@ -136,21 +129,22 @@ public class AttackMode extends Mode {
 					if (robot != penaltyRobot) {
 						return;
 					}
-
 					break;
-				case "NORMAL_START":
+					
+				case NORMAL_START:
 					penaltyRobot = null;
 					break;
+					
 				default:
 					break;
-				}
 			}
+
 
 			// A new referee command was issued
 			if (ref.getCommandCounter() > lastCommandCounter) {
 				// System.out.println("Command received: " + refCommand);
 			}
-		}
+		//}
 
 		// TODO cleanup comments
 		/* // Check for referee-updates / commands Referee ref =
