@@ -45,7 +45,7 @@ public class AttackMode extends Mode {
 
 		// Go through executer lists and update / create the lowlevel behaviors
 		for (RobotExecuter executer : executers) {
-			if (executer.getRobot().getRobotId() == world.getAlly().getGoalie()) {
+			if (executer.getRobot().getRobotId() == world.getReferee().getAlly().getGoalie()) {
 				if (executer.getLowLevelBehavior() instanceof Keeper) {
 					// lowlevel behavior already keeper, update values
 					updateExecuter(executer, roles.KEEPER, true);
@@ -120,7 +120,7 @@ public class AttackMode extends Mode {
 				case PREPARE_PENALTY_BLUE: break;
 				
 				case PREPARE_PENALTY_YELLOW: 
-					if (refCommand.equals(("PREPARE_KICKOFF_" + world.getAlly().getColor().toString()))
+					if (refCommand.equals(("PREPARE_KICKOFF_" + world.getReferee().getAlly().getColor().toString()))
 							&& penaltyRobot == null) {
 						//TODO: This if-statement will never be called, since refCommand is tested on PREPARE_KICKOFF_x, while refCommand already PREPARE_PENALTY_YELLOW
 						penaltyRobot = getClosestAllyRobotToBall(world);
@@ -196,7 +196,7 @@ public class AttackMode extends Mode {
 				freePosition = null;
 			}
 
-			Robot keeper = world.getEnemy().getRobotByID(world.getEnemy().getGoalie());
+			Robot keeper = world.getReferee().getEnemy().getRobotByID(world.getReferee().getEnemy().getGoalie());
 			shootDirection = getPenaltyDirection(penaltyRobot, keeper, ball);
 
 			// check if robot is able to shoot and if the angle towards the
@@ -213,9 +213,9 @@ public class AttackMode extends Mode {
 				}
 				
 				if (robot.getRobotId() == 1)
-					shootDirection = getShootingDirection(world.getAlly().getRobotByID(3), ball);
+					shootDirection = getShootingDirection(world.getReferee().getAlly().getRobotByID(3), ball);
 				else
-					shootDirection = getShootingDirection(world.getAlly().getRobotByID(1), ball);
+					shootDirection = getShootingDirection(world.getReferee().getAlly().getRobotByID(1), ball);
 				
 				if (dDistance < 150 && dribble && Math.abs(shootDirection - (int)robot.getOrientation()) <2){
 					chipKick = -100;

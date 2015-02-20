@@ -20,7 +20,7 @@ public class TestPositionBehavior extends Behavior {
 	@Override
 	public void execute(ArrayList<RobotExecuter> executers) {
 		World w = World.getInstance();
-		robots = w.getAlly().getRobotsOnSight();
+		robots = w.getReferee().getAlly().getRobotsOnSight();
 		Robot closest = getClosestToTarget(robots, World.getInstance().getBall().getPosition());
 		for (Robot r : robots) {
 			try {

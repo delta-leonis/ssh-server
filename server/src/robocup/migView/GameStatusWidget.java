@@ -1,11 +1,10 @@
 package robocup.migView;
 
 import javax.swing.JLabel;
-import javax.swing.JSpinner;
 import javax.swing.JTextField;
 
-import robocup.model.World;
 import net.miginfocom.swing.MigLayout;
+import robocup.model.World;
 
 public class GameStatusWidget extends WidgetBox {
 	private static final long serialVersionUID = 1L;
@@ -54,7 +53,7 @@ public class GameStatusWidget extends WidgetBox {
 			timePlayedField.setText("" + java.util.concurrent.TimeUnit.MICROSECONDS.toMinutes(timePlayed) % 60
 					+ ":" + java.util.concurrent.TimeUnit.MICROSECONDS.toSeconds(timePlayed) % 60);
 		}
-		goalsField.setText("" + World.getInstance().getAlly().getScore());
+		goalsField.setText("" + World.getInstance().getReferee().getAlly().getScore());
 
 
 		fieldHalfField.setText("NOT YET IMPLEMENTED");

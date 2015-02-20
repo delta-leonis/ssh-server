@@ -64,8 +64,8 @@ public class ForceBehavior extends Behavior {
 	 */
 	@SuppressWarnings("unused")
 	private boolean allyHasBall() {
-		ArrayList<Robot> allies = world.getAlly().getRobotsOnSight();
-		ArrayList<Robot> enemies = world.getEnemy().getRobotsOnSight();
+		ArrayList<Robot> allies = world.getReferee().getAlly().getRobotsOnSight();
+		ArrayList<Robot> enemies = world.getReferee().getEnemy().getRobotsOnSight();
 
 		int distanceAlly = getTeamDistanceToBall(allies);
 		int distanceEnemy = getTeamDistanceToBall(enemies);

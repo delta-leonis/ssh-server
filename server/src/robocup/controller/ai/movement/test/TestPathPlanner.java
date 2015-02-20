@@ -157,7 +157,7 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 	 */
 	public void testIntersectObject(Vertex source, Vertex destination,
 			Point interceptingBox, boolean expectedReturn, boolean log) {
-		Team allyTeam = World.getInstance().getAlly();
+		Team allyTeam = World.getInstance().getReferee().getAlly();
 		Robot sourceRobot = allyTeam.getRobotByID(0);
 		sourceRobot.setPosition(source.getPosition());
 		sourceRobot.setOnSight(true);
@@ -187,7 +187,7 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 	 *            if true: System.out.print the progress.
 	 */
 	public void setupRobotsTooClose(Point destination, boolean log) {
-		Team allyTeam = World.getInstance().getAlly();
+		Team allyTeam = World.getInstance().getReferee().getAlly();
 
 		setupOneRobot(allyTeam, new Point(0, 0), 0, log);
 		setupOneRobot(allyTeam, new Point(150, 150), 4, log);
@@ -208,7 +208,7 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 	}
 
 	public void setupRandomRobots(Point destination, boolean log) {
-		Team allyTeam = World.getInstance().getAlly();
+		Team allyTeam = World.getInstance().getReferee().getAlly();
 		for (int i = 0; i < 8; ++i) {
 			setupOneRobot(allyTeam,
 					new Point((int) (Math.random() * WIDTH - WIDTH / 2),
@@ -229,12 +229,12 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 	 * @param log
 	 */
 	public void setupDeadEnd(Point destination, boolean log) {
-		Team allyTeam = World.getInstance().getAlly();
+		Team allyTeam = World.getInstance().getReferee().getAlly();
 
 		setupOneRobot(allyTeam, new Point(0, 0), 0, log);
 		// setupOneRobot(allyTeam, new Point(550,500), 1, log);
 
-		Vertex source = new Vertex(World.getInstance().getAlly()
+		Vertex source = new Vertex(World.getInstance().getReferee().getAlly()
 				.getRobotByID(0).getPosition());
 		source.setDist(0);
 		vertices.add(source);
@@ -296,7 +296,7 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 		JFrame frame = new JFrame();
 		
 		final LinkedList<Point> path =  planner.getRoute(World.getInstance()
-				.getAlly().getRobotByID(0).getPosition(), destination, 0, true);
+				.getReferee().getAlly().getRobotByID(0).getPosition(), destination, 0, true);
 		
 		JPanel panel = new JPanel() {
 			private static final long serialVersionUID = 1L;
@@ -365,7 +365,7 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 				}
 				// Source
 				g.setColor(Color.RED);
-				Robot source = World.getInstance().getAlly().getRobotByID(0);
+				Robot source = World.getInstance().getReferee().getAlly().getRobotByID(0);
 				drawRobot(g, (int) source.getPosition().getX(), (int) source
 						.getPosition().getY(), 90, DISTANCE_TO_ROBOT,
 						VERTEX_DISTANCE_TO_ROBOT, "id=" + source.getRobotId());

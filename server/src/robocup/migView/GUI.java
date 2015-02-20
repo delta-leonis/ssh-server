@@ -4,18 +4,20 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
-import java.util.ArrayList;
 
+import net.miginfocom.swing.MigLayout;
 import robocup.Main;
 import robocup.model.Robot;
 import robocup.model.World;
-import net.miginfocom.swing.MigLayout;
 
 public class GUI extends JFrame  {
 	private static final long serialVersionUID = 1L;

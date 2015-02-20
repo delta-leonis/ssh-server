@@ -42,7 +42,7 @@ public class BaseStationClient implements Runnable {
 				if (input.startsWith("V:")) {
 					String floatString = input.substring(2).trim();
 					try {
-						World.getInstance().getAlly().getRobotByID(robocup.Main.TEST_ROBOT_ID)
+						World.getInstance().getReferee().getAlly().getRobotByID(robocup.Main.TEST_ROBOT_ID)
 								.setBatteryStatus(Float.parseFloat(floatString));
 					} catch (NullPointerException | NumberFormatException nle) {
 						LOGGER.warning(nle.toString());

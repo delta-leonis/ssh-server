@@ -15,8 +15,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import javax.swing.UnsupportedLookAndFeelException;
-
 import robocup.controller.handlers.protohandlers.MainHandler;
 import robocup.input.BaseStationClient;
 import robocup.input.RefereeClient;
@@ -90,7 +88,8 @@ public class Main {
 	 */
 	public static void initView() {
 		//new robocup.view.GUI(World.getInstance()).setVisible(true);
-		new robocup.migView.GUI().setVisible(true);
+		World.getInstance().setGUI(new robocup.migView.GUI());
+		World.getInstance().getGUI().setVisible(true);
 	}
 
 	/**
@@ -173,8 +172,8 @@ public class Main {
 			String ourTeamName    = configFile.getProperty("ownTeam");
 			String enemyTeamName  = configFile.getProperty("otherTeam");
 			
-			w.getAlly().setName(ourTeamName);
-			w.getEnemy().setName(enemyTeamName);
+			w.getReferee().getAlly().setName(ourTeamName);
+			w.getReferee().getEnemy().setName(enemyTeamName);
 			
 			w.getReferee().switchAllyTeamColor(Color.valueOf(ourTeamColor));
 			

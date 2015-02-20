@@ -4,17 +4,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-import robocup.model.Robot;
-import robocup.model.World;
-
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 
 import net.miginfocom.swing.MigLayout;
+import robocup.model.Robot;
+import robocup.model.World;
 
 public class VisibleRobots extends WidgetBox {
 	private static final long serialVersionUID = 1L;
 	private ArrayList<JCheckBox> checkboxes = new ArrayList<JCheckBox>();
 	
+	@SuppressWarnings("serial")
 	public VisibleRobots() {
 		super("Visible robots");
 		setLayout(new MigLayout("wrap 6", "[][][][][][]"));
@@ -36,7 +38,7 @@ public class VisibleRobots extends WidgetBox {
 					checkboxes.get(i).setSelected(robot.isVisible());
 		    		i++;
 		    	}
-	    		World.getInstance().gui.update("robotBoxes");
+	    		World.getInstance().getGUI().update("robotBoxes");
 		    }
 		}), "span");
 	}

@@ -25,8 +25,8 @@ public class TestFuckRobotBehavior extends Behavior {
 
 	@Override
 	public void execute(ArrayList<RobotExecuter> executers) {
-		defender = world.getAlly().getRobotByID(Main.TEST_ROBOT_ID);
-		opponent = world.getEnemy().getRobotByID(Main.TEST_FUCK_ROBOT_ID);
+		defender = world.getReferee().getAlly().getRobotByID(Main.TEST_ROBOT_ID);
+		opponent = world.getReferee().getEnemy().getRobotByID(Main.TEST_FUCK_ROBOT_ID);
 
 		ball = world.getBall();
 		int distanceToOpponent = 250;

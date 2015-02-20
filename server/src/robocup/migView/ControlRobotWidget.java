@@ -3,13 +3,17 @@ package robocup.migView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
+import net.miginfocom.swing.MigLayout;
 import robocup.output.ComInterface;
 import robocup.output.RobotCom;
-import net.miginfocom.swing.MigLayout;
 
 public class ControlRobotWidget extends WidgetBox {
+
+	private static final long serialVersionUID = 1L;
 	private JLabel selectedRobotLabel;
 	private int selectedRobotId;
 	

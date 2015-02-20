@@ -33,7 +33,7 @@ public class TestKeepingBehavior extends Behavior {
 
 	@Override
 	public void execute(ArrayList<RobotExecuter> executers) {
-		keeper = world.getAlly().getRobotByID(robotId);
+		keeper = world.getReferee().getAlly().getRobotByID(robotId);
 		ball = world.getBall();
 		int distanceToGoal = offset != null ? 1000 : 500;
 

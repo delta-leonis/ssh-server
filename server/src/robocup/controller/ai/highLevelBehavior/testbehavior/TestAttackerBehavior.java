@@ -35,7 +35,7 @@ public class TestAttackerBehavior extends Behavior {
 
 	@Override
 	public void execute(ArrayList<RobotExecuter> executers) {
-		attacker = world.getAlly().getRobotByID(robotId);
+		attacker = world.getReferee().getAlly().getRobotByID(robotId);
 		ball = world.getBall();
 
 		if (attacker != null && ball != null) {
@@ -120,8 +120,8 @@ public class TestAttackerBehavior extends Behavior {
 	public boolean lineIntersectsObject(Line2D line, int robotId) {
 		Rectangle2D rect = null;
 		ArrayList<Robot> objects = new ArrayList<Robot>();
-		objects.addAll(world.getEnemy().getRobotsOnSight());
-		objects.addAll(world.getAlly().getRobotsOnSight());
+		objects.addAll(world.getReferee().getEnemy().getRobotsOnSight());
+		objects.addAll(world.getReferee().getAlly().getRobotsOnSight());
 
 		for (Robot r : objects) {
 			rect = new Rectangle2D.Float(r.getPosition().getX(), r.getPosition().getY(), 180, 180);
@@ -148,7 +148,7 @@ public class TestAttackerBehavior extends Behavior {
 	 * @return closest robot
 	 */
 	private Robot getClosestAllyRobotToBall() {
-		ArrayList<Robot> robots = world.getAlly().getRobotsOnSight();
+		ArrayList<Robot> robots = world.getReferee().getAlly().getRobotsOnSight();
 		// System.out.println(robots.size());
 
 		int minDistance = -1;

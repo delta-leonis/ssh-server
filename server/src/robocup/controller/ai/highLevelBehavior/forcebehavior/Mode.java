@@ -10,7 +10,6 @@ import robocup.controller.ai.lowLevelBehavior.Blocker;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Ball;
 import robocup.model.Point;
-import robocup.model.Referee;
 import robocup.model.Robot;
 import robocup.model.World;
 
@@ -84,7 +83,7 @@ public abstract class Mode {
 	 */
 	protected Robot getClosestAllyRobotToBall(World world) {
 		Ball ball = world.getBall();
-		ArrayList<Robot> robots = world.getAlly().getRobotsOnSight();
+		ArrayList<Robot> robots = world.getReferee().getAlly().getRobotsOnSight();
 
 		int minDistance = -1;
 		Robot closestRobot = null;
@@ -115,7 +114,7 @@ public abstract class Mode {
 	 */
 	protected Robot getClosestAttackerRobotToBall(World world) {
 		Ball ball = world.getBall();
-		ArrayList<Robot> robots = world.getAlly().getRobotsOnSight();
+		ArrayList<Robot> robots = world.getReferee().getAlly().getRobotsOnSight();
 
 		int minDistance = -1;
 		Robot closestRobot = null;
@@ -144,8 +143,8 @@ public abstract class Mode {
 	 * @return true when the ally team is closer
 	 */
 	protected boolean allyHasBall(World world) {
-		ArrayList<Robot> allies = world.getAlly().getRobotsOnSight();
-		ArrayList<Robot> enemies = world.getEnemy().getRobotsOnSight();
+		ArrayList<Robot> allies = world.getReferee().getAlly().getRobotsOnSight();
+		ArrayList<Robot> enemies = world.getReferee().getEnemy().getRobotsOnSight();
 
 		int distanceAlly = getTeamDistanceToBall(world, allies);
 		int distanceEnemy = getTeamDistanceToBall(world, enemies);
@@ -183,7 +182,7 @@ public abstract class Mode {
 	 */
 	protected Robot getClosestEnemyToRobot(Robot robot, boolean withoutBlocker, ArrayList<RobotExecuter> executers) {
 		World world = World.getInstance();
-		ArrayList<Robot> robots = world.getEnemy().getRobotsOnSight();
+		ArrayList<Robot> robots = world.getReferee().getEnemy().getRobotsOnSight();
 
 		int minDistance = -1;
 		Robot closestRobot = null;

@@ -12,7 +12,7 @@ public class RobotInputHandler {
 	}
 
 	public void process(int robotID, int batteryStatus, long timestamp) {
-		Robot r = world.getAlly().getRobotByID(robotID);
+		Robot r = world.getReferee().getAlly().getRobotByID(robotID);
 
 		if (r != null) {
 			r.setBatteryStatus(batteryStatus, timestamp);

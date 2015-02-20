@@ -152,6 +152,7 @@ public class DijkstraPathPlanner {
 	 * @param manualReset true if you're testing the function.
 	 * @return list with points forming the shortest route
 	 */
+	@SuppressWarnings("unchecked")
 	public LinkedList<Point> getRoute(Point beginNode, Point destination, int robotId, boolean testMode) {
 		LinkedList<Point> route = new LinkedList<Point>();
 
@@ -298,13 +299,13 @@ public class DijkstraPathPlanner {
 	protected void generateObjectList(int robotId) {
 		// WARNING: documentation for Rectangle2D.Double states the upper left corner should be specified,
 		// use lower left corner instead
-		for (Robot r : world.getAlly().getRobotsOnSight())
+		for (Robot r : world.getReferee().getAlly().getRobotsOnSight())
 			if (r.getPosition() != null)
 				if (r.getRobotId() != robotId)
 					objects.add(new Rectangle2D.Double(r.getPosition().getX() - DISTANCE_TO_ROBOT, r.getPosition()
 							.getY() - DISTANCE_TO_ROBOT, DISTANCE_TO_ROBOT*2, DISTANCE_TO_ROBOT*2));
 
-		for (Robot r : world.getEnemy().getRobotsOnSight())
+		for (Robot r : world.getReferee().getEnemy().getRobotsOnSight())
 			if (r.getPosition() != null)
 				objects.add(new Rectangle2D.Double(r.getPosition().getX() - DISTANCE_TO_ROBOT, r.getPosition()
 						.getY() - DISTANCE_TO_ROBOT, DISTANCE_TO_ROBOT*2, DISTANCE_TO_ROBOT*2));
@@ -402,6 +403,7 @@ public class DijkstraPathPlanner {
 		double halfWidth = rect.getWidth();
 		double halfHeight = rect.getHeight();
 		//Split rectangle in 4
+		@SuppressWarnings("unused")
 		// north west
 		if(checkRealCollision(vertex1, vertex2, new Rectangle2D.Double(rect.getX(),
 																		rect.getY() + halfHeight, 
