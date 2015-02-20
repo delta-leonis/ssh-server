@@ -16,6 +16,8 @@ public class PenguinWidget extends WidgetBox {
 	public PenguinWidget() {
 		super("Penguin Widget");
 		add(new JLabel(new ImageIcon(PenguinWidget.class.getResource("/robocup/migView/penguin.png"))));
+		
+		
 		add(new JButton(new AbstractAction("New logger entry") {
 		    public void actionPerformed(ActionEvent e) {
 		    	double wowlevel = Math.random();

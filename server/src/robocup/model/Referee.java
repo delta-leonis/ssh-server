@@ -20,6 +20,7 @@ public class Referee {
 	private int commandCounter;
 	private long lastCommandTimestamp;
 	private boolean start;
+	private boolean yellowTeamPlaysRight;
 
 	private final int PLAYING_TEAM_SIZE = 8;
 	
@@ -35,9 +36,11 @@ public class Referee {
 	
 	public void initAllyTeam(ArrayList<Robot> teamRobots) {
 		ourTeam = new Team("", Color.BLUE, PLAYING_TEAM_SIZE);
+		ourTeam.setRobots(teamRobots);
 	}
 	public void initEnemyTeam(ArrayList<Robot> teamRobots) {
 		enemyTeam = new Team("", Color.YELLOW, PLAYING_TEAM_SIZE);
+		enemyTeam.setRobots(teamRobots);
 	}
 	
 	public void update(Command command, int commandCounter, long commandTimeStamp, Stage stage, int stageTimeLeft) {
@@ -182,7 +185,29 @@ public class Referee {
 	public Team getEnemy() {
 		return enemyTeam;
 	}
+	
+	public void setRightTeamByColor(Color color) {
+		yellowTeamPlaysRight = (color == Color.YELLOW);
+	}
 
+	public boolean getDoesTeamPlaysRight(Color color) {
+		boolean teamIsYellow = (color == Color.YELLOW);
+		if (teamIsYellow) {
+			return yellowTeamPlaysRight;
+		} else {
+			return !yellowTeamPlaysRight;
+		}
+	}
+	
+	public boolean getDoesTeamPlaysLeft(Color color) {
+		boolean teamIsYellow = (color == Color.YELLOW);
+		if (teamIsYellow) {
+			return !yellowTeamPlaysRight;
+		} else {
+			return yellowTeamPlaysRight;
+		}
+	}
+	
 	@Override
 	public String toString() {
 		return "Referee [timeoutTimeLeft=" + timeoutTimeLeft + ", stagetimeLeft=" + stagetimeLeft + ", stage=" + stage

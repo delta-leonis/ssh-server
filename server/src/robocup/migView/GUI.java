@@ -10,27 +10,25 @@ import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.UIManager.LookAndFeelInfo;
+import java.util.ArrayList;
 
 import robocup.Main;
 import robocup.model.Robot;
 import robocup.model.World;
 import net.miginfocom.swing.MigLayout;
 
-public class GUI extends JFrame implements Observer {
+public class GUI extends JFrame  {
 	private static final long serialVersionUID = 1L;
-	private World world;
+
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private JPanel robotContainer;
 	private JPanel widgetContainer;
 	private ConsoleWidget console;
 	private int selectedRobotId;
+	private ArrayList<RobotBox> allRobotBoxes = new ArrayList<RobotBox>();
 
-	public GUI(World world){
+	public GUI(){
 		LOGGER.info("GUI started");
-
-		this.world = world;
-
-		world.addObserver(this);
 
 		setLookAndFeel();
 
@@ -64,11 +62,8 @@ public class GUI extends JFrame implements Observer {
 	}
 
 	private void initConsoleContainer(){
-		JPanel consoleContainer = new JPanel();
-		consoleContainer.setLayout(new MigLayout("", "[grow]", "[grow]"));
 		console = new ConsoleWidget();
-		consoleContainer.add(console, "growy, growx");
-		add(consoleContainer, "span, growy, growx");
+		add(console, "span, growy, growx");
 	}
 	
 	private void initWidgetContainer(){
@@ -90,13 +85,13 @@ public class GUI extends JFrame implements Observer {
 		robotContainer.setLayout(new MigLayout("wrap 2", "[250]related[250]"));
 		robotContainer.setBorder(BorderFactory.createTitledBorder("Robots"));
 
-		for(Robot robot : world.getAlly().getRobots()){
+		for(Robot robot : World.getInstance().getReferee().getAlly().getRobots()){
 			RobotBox box = new RobotBox(robot);
 			box.addMouseListener(new PanelClickListener());
-			robotContainer.add(box);
+			if(robot.isVisible())
+				robotContainer.add(box);
+			allRobotBoxes.add(box);
 		}
-			
-		robotContainer.add(new JPanel());
 		robotContainer.add(new JPanel(), "growy, span 2");
 		this.add(robotContainer, "growy");
 	}	
@@ -151,38 +146,41 @@ public class GUI extends JFrame implements Observer {
 		
 	}
 	
-	@Override
-	public void update(Observable arg0, Object arg1) {
-		if (arg0.equals(world)) {
-			
-			if(arg1 instanceof String){
-				switch((String)arg1)
-				{
-					case "robotContainer":
-					{
-						//update all robot items
-						for(Component item : robotContainer.getComponents()){
-							if(item instanceof RobotBox)
-								((RobotBox)item).update();
-						}
-						break;
-					}
-					
-					case "widgetContainer":
-					{
-						for(Component item : widgetContainer.getComponents()){
-							if(item instanceof WidgetBox)
-								((WidgetBox)item).update();
-						}
-						break;
-					}
+	public void update(String desc) {
+		switch(desc)
+		{
+			case "robotContainer":
+				//update all robot items
+				for(RobotBox box : allRobotBoxes)
+					box.update();
+				break;
+
+			case "robotBoxes":
+				robotContainer.removeAll();
+				for(RobotBox box : allRobotBoxes){
+					box.repaint();
+					if(box.getRobot().isVisible())
+						robotContainer.add(box);
 				}
-	
+				revalidate();
+				
+				robotContainer.repaint();
+				repaint();
+				break;
+			
+			case "widgetContainer":
+			{
+				for(Component item : widgetContainer.getComponents()){
+					if(item instanceof WidgetBox)
+						((WidgetBox)item).update();
+				}
+				break;
 			}
 			
-			
+			case "test":
+				JOptionPane.showMessageDialog(this, "A basic JOptionPane message dialog");
+				break;
 		}
-		
 	}
 
 }

@@ -5,11 +5,11 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import robocup.model.World;
 import net.miginfocom.swing.MigLayout;
 
 public class SettingsWidget extends WidgetBox {
-	private JComboBox fieldHalfBox;
+	private JComboBox<String> fieldHalfBox;
 
 	public SettingsWidget(){
 		super("Settings");
@@ -34,13 +34,19 @@ public class SettingsWidget extends WidgetBox {
         public void actionPerformed(ActionEvent e){
         	switch(((JButton)e.getSource()).getText()){
         		case "Set":
-        			throw new NotImplementedException();
+        			if(fieldHalfBox.getSelectedItem().equals("right"))
+        				World.getInstance().getReferee().setRightTeamByColor(World.getInstance().getReferee().getAlly().getColor());
+    				else
+        				World.getInstance().getReferee().setRightTeamByColor(World.getInstance().getReferee().getEnemy().getColor());
         	}
         }
     }
 	@Override
 	public void update() {
-		fieldHalfBox.setSelectedItem("left"); //TODO get info from model
+		fieldHalfBox.setSelectedItem("right");
+		if(World.getInstance().getReferee().getDoesTeamPlaysLeft(World.getInstance().getReferee().getAlly().getColor()))
+			fieldHalfBox.setSelectedItem("left");
+		
 	}
 
 }

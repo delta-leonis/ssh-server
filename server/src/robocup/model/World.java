@@ -3,6 +3,7 @@ package robocup.model;
 import java.util.ArrayList;
 import java.util.Observable;
 
+import robocup.migView.GUI;
 import robocup.model.enums.Color;
 import robocup.model.enums.Command;
 /**
@@ -23,6 +24,8 @@ public class World extends Observable {
 	
 	private static final int TOTAL_TEAM_SIZE = 11;
 	private final int STOP_BALL_DISTANCE = 500; // in mm
+
+	public GUI gui;
 	
 	/**
 	 * Constructor for the {@link World}
@@ -43,7 +46,7 @@ public class World extends Observable {
 		{	
 			allyTeam.add(new Ally(i, false, 150));
 		}
-		for(int i=TOTAL_TEAM_SIZE; i < TOTAL_TEAM_SIZE*2; i++) 
+		for(int i=0; i < TOTAL_TEAM_SIZE; i++) 
 		{	
 			enemyTeam.add(new Enemy(i, false, 150));
 		} 
@@ -63,6 +66,23 @@ public class World extends Observable {
 			instance = new World();
 		}
 		return instance;
+	}
+	
+	/**
+	 * Set used GUI
+	 * @param current GUI object
+	 */
+	public void setGUI(GUI _gui){
+		gui = _gui;
+	}
+
+	/**
+	 * mainly used to push updates
+	 * 
+	 * @return the gui object
+	 */
+	public GUI getGUI(){
+		return gui;
 	}
 
 	/**
@@ -108,6 +128,7 @@ public class World extends Observable {
 	/**
 	 * gets our team, this is a method from the old model, it bypasses the referee
 	 * @return the ally {@link Team} in the current match.
+	 * @deprecated Get it from Referee
 	 */
 	public Team getAlly() {
 		return referee.getAlly();
@@ -116,6 +137,7 @@ public class World extends Observable {
 	/**
 	 * gets the enemy team, this is a method from the old model, it bypasses the referee
 	 * @return the enemy {@link Team} in the current match.
+	 * @deprecated Get it from Referee
 	 */
 	public Team getEnemy() {
 		return referee.getEnemy();
