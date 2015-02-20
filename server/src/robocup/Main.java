@@ -90,7 +90,8 @@ public class Main {
 	 */
 	public static void initView() {
 		//new robocup.view.GUI(World.getInstance()).setVisible(true);
-		new robocup.migView.GUI().setVisible(true);
+		World.getInstance().setGUI(new robocup.migView.GUI());
+		World.getInstance().getGUI().setVisible(true);
 	}
 
 	/**

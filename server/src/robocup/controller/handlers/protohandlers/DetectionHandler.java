@@ -94,6 +94,9 @@ public class DetectionHandler {
 				}
 			}
 		}
+
+		World.getInstance().getGUI().update("robotContainer");
+		World.getInstance().getGUI().update("widgetContainer");
 	}
 
 	/**

@@ -36,7 +36,7 @@ public class VisibleRobots extends WidgetBox {
 					checkboxes.get(i).setSelected(robot.isVisible());
 		    		i++;
 		    	}
-	    		World.getInstance().gui.update("robotBoxes");
+	    		World.getInstance().getGUI().update("robotBoxes");
 		    }
 		}), "span");
 	}
