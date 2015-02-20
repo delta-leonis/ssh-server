@@ -22,7 +22,43 @@ public class Field {
 	private int penaltyLineFromSpotDistance;
 	private int cameraOverlapZoneWidth;
 	private ArrayList<Goal> goals;
+	
+	public Field() {
+		length=6050;
+		this.width=4050;
+		this.lineWidth=40;
+		this.boundaryWidth=100;
+		this.refereeWidth=425;
+		this.centerCircleRadius=500;
+		this.defenceRadius=800;
+		this.defenceStretch=350;
+		this.freeKickFromDefenceDistance=200;
+		this.penaltySpotFromFieldLineDistance=750;
+		this.penaltyLineFromSpotDistance=400;
+		this.cameraOverlapZoneWidth=400;
+		
+		createGoals(700, 180, 20, 180);
+	}
 
+	/**
+	 * constructor which declares all variables, makes it messy so its preferred to use the default constructor, and fill it in later with the given methods
+	 * @param length
+	 * @param width
+	 * @param lineWidth
+	 * @param boundaryWidth
+	 * @param refereeWidth
+	 * @param centerCircleRadius
+	 * @param defenceRadius
+	 * @param defenceStretch
+	 * @param freeKickFromDefenceDistance
+	 * @param penaltySpotFromFieldLineDistance
+	 * @param penaltyLineFromSpotDistance
+	 * @param goalWidth
+	 * @param goalDepth
+	 * @param goalWallWidth
+	 * @param goalHeight
+	 * @param cameraOverlapZoneWidth
+	 */
 	public Field(int length, int width, int lineWidth, int boundaryWidth, int refereeWidth, int centerCircleRadius,
 			int defenceRadius, int defenceStretch, int freeKickFromDefenceDistance,
 			int penaltySpotFromFieldLineDistance, int penaltyLineFromSpotDistance, int goalWidth, int goalDepth,
@@ -45,9 +81,8 @@ public class Field {
 		this.goalHeight = goalHeight;
 		this.cameraOverlapZoneWidth = cameraOverlapZoneWidth;
 		createGoals(goalWidth, goalDepth, goalWallWidth, goalHeight);
-
 	}
-
+	
 	public void update(int lineWidth, int fieldLength, int fieldWidth, int boundaryWidth, int refereeWidth,
 			int goalWidth, int goalDepth, int goalWallWidth, int centerCircleRadius, int defenseRadius,
 			int defenseStretch, int freeKickFromDefenceDistance, int penaltySpotFromFieldLineDist,
@@ -277,6 +312,40 @@ public class Field {
 	public int getCameraOverlapZoneWidth() {
 		return cameraOverlapZoneWidth;
 	}
+	
+	public void setCameraOverlapZoneWidth(int cameraOverlapZoneWith) {
+		this.cameraOverlapZoneWidth = cameraOverlapZoneWith;
+	}
+	
+	
+	
+	public void setFieldProportions(int width, int length, int lineWidth, int boundaryWidth, int refereeWidth) {
+		this.width = width;
+		this.length = length;
+		this.lineWidth = lineWidth;
+		this.boundaryWidth = boundaryWidth;
+		this.refereeWidth = refereeWidth;
+	}
+	
+	public void setFieldZones(int centerCircleRadius, int defenceRadius, int defenceStretch) {
+		this.centerCircleRadius = centerCircleRadius;
+		this.defenceRadius = defenceRadius;
+		this.defenceStretch = defenceStretch;
+	}
+	
+	public void setRuleDistances(int freeKickFromDefenceDistance, int penaltySpotFromFieldLineDistance, int penaltyLineFromSpotDistance) {
+		this.freeKickFromDefenceDistance = freeKickFromDefenceDistance;
+		this.penaltySpotFromFieldLineDistance = penaltySpotFromFieldLineDistance;
+		this.penaltyLineFromSpotDistance = penaltyLineFromSpotDistance;
+	}
+	
+	public void setGoalProportions(int goalWidth, int goalDepth, int goalWallWidth, int goalHeight) {
+		createGoals(goalWidth, goalDepth, goalWallWidth, goalHeight);
+	}
+	
+	
+	
+	
 
 	@Override
 	public String toString() {

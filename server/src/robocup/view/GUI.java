@@ -542,6 +542,9 @@ public class GUI extends javax.swing.JFrame implements Observer {
 				}
 
 			}
+			
+			
+			
 
 			// Game has not started yet
 			if (world.getReferee().getStagetimeLeft() == 0) {

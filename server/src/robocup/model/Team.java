@@ -8,7 +8,6 @@ import robocup.model.enums.Color;
  * Represents a Team in a Robocup match.
  */
 public class Team {
-
 	private String name;
 	private Color color;
 	private int score;
@@ -18,14 +17,19 @@ public class Team {
 	private int redCards;
 	private ArrayList<Robot> robots;
 	private int goalie;		//id of the keeper robot
+	
+	private int onsiteTeamSize;
 
-	public Team(String name, Color color) {
+	public Team(String name, Color color, int onsiteTeamSize) {
 		this.name = name;
 		this.color = color;
+		this.onsiteTeamSize = onsiteTeamSize;
+		
 		remainingCardTimes = new ArrayList<Long>();
+		// add an empty arraylist, an empty team is better than nullpointer exeptions
 		robots = new ArrayList<Robot>();
 	}
-
+	
 	public Team(String name, Color color, int yellowCards, int redCards, int score, int timeoutsLeft, int goalie) {
 		this.name = name;
 		this.color = color;
@@ -147,7 +151,7 @@ public class Team {
 	 * @return the yellowcards
 	 * Suggestion: Removal. getRemainingCardTimes does what this function should be doing, already
 	 */
-	public int getYelloCcards() {
+	public int getYellowCards() {
 		return yellowCards;
 	}
 
@@ -187,20 +191,15 @@ public class Team {
 		return onsight;
 	}
 	
+	public void setRobots(ArrayList<Robot> robots) {
+		this.robots = robots;
+	}
+	
 	/**
 	 * @return all {@link Robot robots} in this Team. Online and offline !
 	 */
 	public ArrayList<Robot> getRobots() {
 		return robots;
-	}
-
-	/**
-	 * Adds a {@link Robot} to this Team.
-	 * @param robot the Robot you would like to add.
-	 * @deprecated Team members should not be added, only set to online
-	 */
-	public void addRobot(Robot robot) {
-		robots.add(robot);
 	}
  
 	/**
@@ -212,21 +211,6 @@ public class Team {
 		for (Robot robot : robots) {
 			if (robot.getRobotId() == robotId) {
 				robot.setOnSight(onSight);
-				return;
-			}
-		}
-	}
-	
-	
-	/**
-	 * Removes a {@link Robot} from this Team.
-	 * @param robotId the ID of the {@link Robot} you would like to remove from this Team.
-	 * @deprecated Team members should not be removed, only set to offline
-	 */
-	public void removeRobot(int robotId) {
-		for (Robot robot : robots) {
-			if (robot.getRobotId() == robotId) {
-				robots.remove(robot);
 				return;
 			}
 		}
@@ -250,7 +234,7 @@ public class Team {
 	 * Checks whether this Team is of the given color
 	 * @return true if this Team is of the given color, false otherwise.  Used in {@link World#getTeamByColor(Color color) World.getTeamByColor(Color)}
 	 */
-	public boolean isTeamColor(Color color){
+	public boolean isColor(Color color){
 		return color.equals(this.color);
 	}
 

@@ -5,3 +5,4 @@ server/bin/
 server/bin1/
 server/log/
 .metadata
+.recommenders

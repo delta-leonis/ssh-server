@@ -1,81 +1,186 @@
 package robocup.migView;
 
+import java.awt.Color;
 import java.awt.Component;
-import java.util.ArrayList;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Logger;
 
 import javax.swing.*;
+import javax.swing.UIManager.LookAndFeelInfo;
+import java.util.ArrayList;
 
 import robocup.Main;
 import robocup.model.Robot;
 import robocup.model.World;
 import net.miginfocom.swing.MigLayout;
 
-/**
- * TODO
- * 	Nog work in progress,
- *  documentatie ontbreekt. eerst wordt het huidge systeem gefixed zodat
- *  alle robots gewoon bestaan, en onsight worden verwerkt. 
- * 
- * @author Jeroen
- *
- */
-public class GUI extends JFrame implements Observer {
+public class GUI extends JFrame  {
 	private static final long serialVersionUID = 1L;
-	private World world;
+
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
-	private ArrayList<WidgetBox> widgets = new ArrayList<WidgetBox>();
-	private ArrayList<RobotBox> robotboxes = new ArrayList<RobotBox>();
 	private JPanel robotContainer;
+	private JPanel widgetContainer;
+	private ConsoleWidget console;
+	private int selectedRobotId;
+	private ArrayList<RobotBox> allRobotBoxes = new ArrayList<RobotBox>();
 
-	public GUI(World world){
+	public GUI(){
 		LOGGER.info("GUI started");
-		try {
-			javax.swing.UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-		} catch (ClassNotFoundException | InstantiationException
-				| IllegalAccessException | UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
-		this.world = world;
-		world.addObserver(this);
+		setLookAndFeel();
 
-		MigLayout layout = new MigLayout("wrap 3", "[200]related[200]related[grow]", "[grow]");
+		getContentPane().setBackground(UIManager.getColor("Panel.background"));
+		MigLayout layout = new MigLayout("wrap 2", "[500][grow]", "[][grow]");
 		this.setLayout(layout);
+		this.setSize(800, 830);
 		
 		initRobotContainer();
 		initWidgetContainer();
+		initConsoleContainer();
+		
+		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+	}
+	
+	private void setLookAndFeel(){
+		try {
+		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		        if ("Nimbus".equals(info.getName())) {
+		            UIManager.setLookAndFeel(info.getClassName());
+		            break;
+		        }
+		    }
+		} catch (Exception e) {
+		    System.err.println("Aww :( no nimbus");
+		}
+	}
+
+	public int getSelectedRobotId() {
+		return selectedRobotId;
+	}
+
+	private void initConsoleContainer(){
+		console = new ConsoleWidget();
+		add(console, "span, growy, growx");
 	}
 	
 	private void initWidgetContainer(){
-		JPanel widgetContainer = new JPanel();
-		this.add(widgetContainer);
+		widgetContainer = new JPanel();
+		widgetContainer.setBorder(BorderFactory.createTitledBorder("Widgets"));
+		widgetContainer.setLayout(new MigLayout("wrap 1", "[grow]"));
+
+		widgetContainer.add(new GameStatusWidget(), "growx");
+		widgetContainer.add(new VisibleRobots(), "growx");
+		widgetContainer.add(new ControlRobotWidget(), "growx");
+		widgetContainer.add(new SettingsWidget(), "growx");
+		widgetContainer.add(new PenguinWidget(), "growx, growy");
+		
+		this.add(widgetContainer, "growy, growx");
 	}
 	
 	private void initRobotContainer(){
 		robotContainer = new JPanel();
-		this.add(robotContainer, "span 2");
-		
-		for(Robot robot : world.getAlly().getRobots()){
+		robotContainer.setLayout(new MigLayout("wrap 2", "[250]related[250]"));
+		robotContainer.setBorder(BorderFactory.createTitledBorder("Robots"));
+
+		for(Robot robot : World.getInstance().getReferee().getAlly().getRobots()){
 			RobotBox box = new RobotBox(robot);
-			robotboxes.add(box);
-			robotContainer.add(box);
+			box.addMouseListener(new PanelClickListener());
+			if(robot.isVisible())
+				robotContainer.add(box);
+			allRobotBoxes.add(box);
 		}
-		this.add(robotContainer);
+		robotContainer.add(new JPanel(), "growy, span 2");
+		this.add(robotContainer, "growy");
 	}	
 
-	@Override
-	public void update(Observable arg0, Object arg1) {
-		if (arg0.equals(world)) {
-			//update all robot items
+
+	private class PanelClickListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+
 			for(Component item : robotContainer.getComponents()){
-				if(item instanceof RobotBox)
-					((RobotBox)item).update();
+				if(item instanceof RobotBox){
+					if( ((RobotBox)item).equals(((RobotBox)arg0.getSource())))
+						((RobotBox)item).setBackground(Color.LIGHT_GRAY);
+					else
+						((RobotBox)item).setBackground(UIManager.getColor("Panel.background"));
+				}
 			}
+
+			selectedRobotId = ((RobotBox)arg0.getSource()).getRobot().getRobotId();
+			
+			
+			for(Component item : widgetContainer.getComponents())
+				if(item instanceof ControlRobotWidget)
+					((ControlRobotWidget)item).update();
+
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
 		}
 		
 	}
+	
+	public void update(String desc) {
+		switch(desc)
+		{
+			case "robotContainer":
+				//update all robot items
+				for(RobotBox box : allRobotBoxes)
+					box.update();
+				break;
+
+			case "robotBoxes":
+				robotContainer.removeAll();
+				for(RobotBox box : allRobotBoxes){
+					box.repaint();
+					if(box.getRobot().isVisible())
+						robotContainer.add(box);
+				}
+				revalidate();
+				
+				robotContainer.repaint();
+				repaint();
+				break;
+			
+			case "widgetContainer":
+			{
+				for(Component item : widgetContainer.getComponents()){
+					if(item instanceof WidgetBox)
+						((WidgetBox)item).update();
+				}
+				break;
+			}
+			
+			case "test":
+				JOptionPane.showMessageDialog(this, "A basic JOptionPane message dialog");
+				break;
+		}
+	}
+
 }
