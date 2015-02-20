@@ -140,7 +140,7 @@ public class GotoPosition {
 		} else {
 			robot.setOnSight(true);
 
-			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId());
+			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), false);
 			
 			if (route.size() > 0 && route.get(0) != null) {
 				destination = route.get(0);
