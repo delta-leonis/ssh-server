@@ -3,11 +3,14 @@ package robocup.migView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 
-import robocup.model.World;
 import net.miginfocom.swing.MigLayout;
+import robocup.model.World;
 
+@SuppressWarnings("serial")
 public class SettingsWidget extends WidgetBox {
 	private JComboBox<String> fieldHalfBox;
 
@@ -15,7 +18,7 @@ public class SettingsWidget extends WidgetBox {
 		super("Settings");
 		setLayout(new MigLayout("wrap 2", "[][grow]"));
 		
-		fieldHalfBox = new JComboBox();
+		fieldHalfBox = new JComboBox<String>();
 		fieldHalfBox.setEditable(false);
 		fieldHalfBox.addItem("left");
 		fieldHalfBox.addItem("right");

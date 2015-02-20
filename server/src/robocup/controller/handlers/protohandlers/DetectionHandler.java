@@ -1,14 +1,12 @@
 package robocup.controller.handlers.protohandlers;
 
+import java.util.List;
+
 import robocup.filter.Kalman;
 import robocup.input.protobuf.MessagesRobocupSslDetection.SSL_DetectionBall;
 import robocup.input.protobuf.MessagesRobocupSslDetection.SSL_DetectionFrame;
 import robocup.input.protobuf.MessagesRobocupSslDetection.SSL_DetectionRobot;
-
-import java.util.List;
-import robocup.model.Ally;
 import robocup.model.Ball;
-import robocup.model.Enemy;
 import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.model.Team;
@@ -116,7 +114,7 @@ public class DetectionHandler {
 			return;
 		}
 
-		boolean robotAdded = false;
+//		boolean robotAdded = false;
 
 		Robot robot = t.getRobotByID(robotMessage.getRobotId());
 /*

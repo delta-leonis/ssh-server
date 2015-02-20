@@ -1,7 +1,6 @@
 package robocup.migView;
 
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
@@ -12,6 +11,10 @@ import javax.swing.JLabel;
 import robocup.Main;
 
 public class PenguinWidget extends WidgetBox {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());	
 	public PenguinWidget() {
 		super("Penguin Widget");
@@ -19,7 +22,12 @@ public class PenguinWidget extends WidgetBox {
 		
 		
 		add(new JButton(new AbstractAction("New logger entry") {
-		    public void actionPerformed(ActionEvent e) {
+		    /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
 		    	double wowlevel = Math.random();
 
 		    	LOGGER.setLevel(java.util.logging.Level.FINEST);

@@ -10,7 +10,6 @@ import robocup.controller.ai.lowLevelBehavior.Blocker;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Ball;
 import robocup.model.Point;
-import robocup.model.Referee;
 import robocup.model.Robot;
 import robocup.model.World;
 

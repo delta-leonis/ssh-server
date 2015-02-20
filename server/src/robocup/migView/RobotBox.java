@@ -1,20 +1,15 @@
 package robocup.migView;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.model.Robot;
-import robocup.output.ComInterface;
-import robocup.output.RobotCom;
 
 public class RobotBox extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -23,8 +18,6 @@ public class RobotBox extends JPanel {
 	private JLabel robotStatus
 				  ,robotPosition
 				  ,robotRole;
-	private JButton chipButton
-				   ,kickButton;
 
 	public RobotBox(Robot _robot){
 		robot = _robot;

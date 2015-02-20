@@ -1,11 +1,10 @@
 package robocup.migView;
 
 import javax.swing.JLabel;
-import javax.swing.JSpinner;
 import javax.swing.JTextField;
 
-import robocup.model.World;
 import net.miginfocom.swing.MigLayout;
+import robocup.model.World;
 
 public class GameStatusWidget extends WidgetBox {
 	private static final long serialVersionUID = 1L;

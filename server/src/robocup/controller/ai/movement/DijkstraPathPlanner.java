@@ -152,6 +152,7 @@ public class DijkstraPathPlanner {
 	 * @param manualReset true if you're testing the function.
 	 * @return list with points forming the shortest route
 	 */
+	@SuppressWarnings("unchecked")
 	public LinkedList<Point> getRoute(Point beginNode, Point destination, int robotId, boolean testMode) {
 		LinkedList<Point> route = new LinkedList<Point>();
 
@@ -393,6 +394,7 @@ public class DijkstraPathPlanner {
 	public boolean intersectsNotRemovableObject(Vertex vertex1, Vertex vertex2, Rectangle2D rect){
 		boolean result = false;
 		//Split rectangle in 4
+		@SuppressWarnings("unused")
 		Rectangle2D[] rectangleSplit = new Rectangle2D[4];
 		// north west
 		

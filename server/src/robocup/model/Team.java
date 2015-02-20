@@ -18,6 +18,7 @@ public class Team {
 	private ArrayList<Robot> robots;
 	private int goalie;		//id of the keeper robot
 	
+	@SuppressWarnings("unused")
 	private int onsiteTeamSize;
 
 	public Team(String name, Color color, int onsiteTeamSize) {

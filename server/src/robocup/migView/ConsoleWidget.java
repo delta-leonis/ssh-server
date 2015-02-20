@@ -1,7 +1,7 @@
 package robocup.migView;
 
-import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
@@ -9,12 +9,13 @@ import java.util.logging.Logger;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
-import robocup.Main;
 import net.miginfocom.swing.MigLayout;
+import robocup.Main;
 
 public class ConsoleWidget extends WidgetBox {
+
+	private static final long serialVersionUID = 1L;
 	private Object[] header = {"ID", "tijd", "level", "bericht"};
 	private Object[][] data = {};
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
