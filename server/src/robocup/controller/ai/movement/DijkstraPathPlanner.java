@@ -403,7 +403,6 @@ public class DijkstraPathPlanner {
 		double halfWidth = rect.getWidth();
 		double halfHeight = rect.getHeight();
 		//Split rectangle in 4
-		@SuppressWarnings("unused")
 		// north west
 		if(checkRealCollision(vertex1, vertex2, new Rectangle2D.Double(rect.getX(),
 																		rect.getY() + halfHeight, 
