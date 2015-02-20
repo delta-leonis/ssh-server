@@ -92,7 +92,7 @@ public abstract class Robot extends FieldObject {
 	 * @return whether this Robot is a keeper or not.
 	 */
 	public boolean isKeeper() {
-		if(World.getInstance().getAlly().getGoalie() == this.robotId)
+		if(World.getInstance().getReferee().getAlly().getGoalie() == this.robotId)
 			return true;
 
 		return false;

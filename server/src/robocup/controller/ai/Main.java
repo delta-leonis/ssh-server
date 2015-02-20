@@ -59,7 +59,7 @@ public class Main implements Observer {
 
 		ArrayList<RobotExecuter> updatedRobotExecuters = new ArrayList<RobotExecuter>();
 
-		Team team = world.getAlly();
+		Team team = world.getReferee().getAlly();
 		for (Robot robot : team.getRobotsOnSight()) {
 			boolean executerFound = false;
 

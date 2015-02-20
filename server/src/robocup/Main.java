@@ -172,8 +172,8 @@ public class Main {
 			String ourTeamName    = configFile.getProperty("ownTeam");
 			String enemyTeamName  = configFile.getProperty("otherTeam");
 			
-			w.getAlly().setName(ourTeamName);
-			w.getEnemy().setName(enemyTeamName);
+			w.getReferee().getAlly().setName(ourTeamName);
+			w.getReferee().getEnemy().setName(enemyTeamName);
 			
 			w.getReferee().switchAllyTeamColor(Color.valueOf(ourTeamColor));
 			

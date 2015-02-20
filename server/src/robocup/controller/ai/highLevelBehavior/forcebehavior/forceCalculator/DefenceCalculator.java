@@ -34,11 +34,11 @@ public class DefenceCalculator extends ForceCalculator {
 	 * Create the Forces around Robots
 	 */
 	protected void calculateRobotForces() {
-		for (Robot r : world.getAlly().getRobotsOnSight()) {
+		for (Robot r : world.getReferee().getAlly().getRobotsOnSight()) {
 			fieldForces.addForce(new RobotForce(r, -50, 250));
 		}
 
-		for (Robot r : world.getEnemy().getRobotsOnSight()) {
+		for (Robot r : world.getReferee().getEnemy().getRobotsOnSight()) {
 			fieldForces.addForce(new RobotForce(r, -50, 250));
 		}
 	}

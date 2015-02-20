@@ -510,7 +510,7 @@ public class GUI extends javax.swing.JFrame implements Observer {
 			boolean[] robotUpdated = new boolean[12];
 
 			Arrays.fill(robotUpdated, false);
-			for (Robot robot : world.getAlly().getRobotsOnSight()) {
+			for (Robot robot : world.getReferee().getAlly().getRobotsOnSight()) {
 				// System.out.println(robot.getRobotID() + "    pos:" +
 				// robot.getPosition());
 				robotUpdated[robot.getRobotId()] = true;
@@ -523,7 +523,7 @@ public class GUI extends javax.swing.JFrame implements Observer {
 
 					if (robotUpdated[i]) {
 						// update goed
-						Robot robot = world.getAlly().getRobotByID(i);
+						Robot robot = world.getReferee().getAlly().getRobotByID(i);
 						robotPanels[i].setPoint(robot.getPosition());
 						robotPanels[i].setStatus("online");
 						Mode.roles role = robot.getRole();
@@ -559,7 +559,7 @@ public class GUI extends javax.swing.JFrame implements Observer {
 			// System.out.println( world.getReferee().getStagetimeLeft() /
 			// 1000000);
 			fieldHalfField.setText("null");
-			goalsField.setText("" + world.getAlly().getScore());
+			goalsField.setText("" + world.getReferee().getAlly().getScore());
 
 			// System.out.println(world.getReferee().);;
 			// refereeStateField.setText(""+

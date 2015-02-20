@@ -146,7 +146,7 @@ public class DetectionHandler {
 		robot = t.getRobotByID(robotMessage.getRobotId());
 		if (robot != null) {
 			Kalman filter;
-			if (world.getOwnTeamColor().equals(color)) {
+			if (world.getReferee().getOwnTeamColor().equals(color)) {
 				filter = allyFilter[robot.getRobotId()];
 			} else {
 				filter = enemyFilter[robot.getRobotId()];
