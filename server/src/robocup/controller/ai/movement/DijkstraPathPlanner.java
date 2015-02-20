@@ -390,13 +390,50 @@ public class DijkstraPathPlanner {
 		return false;
 	}
 	
-	public boolean intersectsNotRemovableObject(Vertex vertex1, Vertex vertex2, Rectangle2D rect){
-		boolean result = false;
+	/**
+	 * Uhhhhhh. Nog bezig met testen.
+	 * Splits Rectangle in four, for collision testing
+	 * @param vertex1 Source point
+	 * @param vertex2 Destination point
+	 * @param rect	Our obstacle
+	 * @returns true 
+	 */
+	public boolean intersectsNotRemovableObject(Point2D vertex1, Point2D vertex2, Rectangle2D rect){
+		double halfWidth = rect.getWidth();
+		double halfHeight = rect.getHeight();
 		//Split rectangle in 4
-		Rectangle2D[] rectangleSplit = new Rectangle2D[4];
 		// north west
-		
-		
-		return result;
+		if(checkRealCollision(vertex1, vertex2, new Rectangle2D.Double(rect.getX(),
+																		rect.getY() + halfHeight, 
+																		halfWidth, halfHeight))){
+			return true;
+		}
+		// north east
+		if(checkRealCollision(vertex1, vertex2, new Rectangle2D.Double(rect.getX() + halfWidth,
+																		rect.getY() + halfHeight,
+																		halfWidth, halfHeight))){
+			return true;
+		}
+		// south west
+		if(checkRealCollision(vertex1, vertex2, new Rectangle2D.Double(rect.getX() + halfWidth,
+																		rect.getY() + halfHeight, 
+																		halfWidth, halfHeight))){
+			return true;
+		}
+		// south east
+		if(checkRealCollision(vertex1, vertex2, new Rectangle2D.Double(rect.getX(),
+																		rect.getY() + halfHeight, 
+																		halfWidth, halfHeight))){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean checkRealCollision(Point2D vertex1, Point2D vertex2, Rectangle2D rectangleSection){
+		if(rectangleSection.contains(vertex1) || rectangleSection.contains(vertex2) || 
+				rectangleSection.intersectsLine(vertex1.getX(), vertex1.getY(), vertex2.getX(), vertex2.getY())){
+			return true;
+		}
+		return false;
 	}
 }
