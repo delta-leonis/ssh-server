@@ -15,12 +15,7 @@ import robocup.view.WidgetBox;
 @SuppressWarnings("serial")
 public class GameStatusWidget extends WidgetBox {
 
-	private JTextField fieldHalfField
-					  ,timePlayedField
-					  ,gameStatusField
-					  ,refereeStatusField
-					  ,goalsField
-				 	  ,keeperIdField;
+	private JTextField fieldHalfField, timePlayedField, gameStatusField, refereeStatusField, goalsField, keeperIdField;
 
 	/**
 	 * Creates widget
@@ -56,33 +51,33 @@ public class GameStatusWidget extends WidgetBox {
 		add(keeperIdField, "growx");
 		update();
 	}
-	
+
 	/**
 	 * Updates the fields
 	 */
 	@Override
-	public void update(){
+	public void update() {
 		if (World.getInstance().getReferee().getStagetimeLeft() == 0) {
 			timePlayedField.setText("0:00");
 		} else {
 			int timePlayed = 600000000 - World.getInstance().getReferee().getStagetimeLeft();
-			timePlayedField.setText("" + java.util.concurrent.TimeUnit.MICROSECONDS.toMinutes(timePlayed) % 60
-					+ ":" + java.util.concurrent.TimeUnit.MICROSECONDS.toSeconds(timePlayed) % 60);
+			timePlayedField.setText("" + java.util.concurrent.TimeUnit.MICROSECONDS.toMinutes(timePlayed) % 60 + ":"
+					+ java.util.concurrent.TimeUnit.MICROSECONDS.toSeconds(timePlayed) % 60);
 		}
 
-		if(World.getInstance().getReferee().getDoesTeamPlaysLeft(World.getInstance().getReferee().getAlly().getColor()))
+		if (World.getInstance().getReferee()
+				.getDoesTeamPlaysLeft(World.getInstance().getReferee().getAlly().getColor()))
 			fieldHalfField.setText("Left");
 		else
 			fieldHalfField.setText("Right");
-		
-		//TODO Rob moet hier even aan verder werken, Jeroen wist t niet meer
+
+		// TODO Rob moet hier even aan verder werken, Jeroen wist t niet meer
 		gameStatusField.setText("NOT YET IMPLEMENTED");
-		
+
 		refereeStatusField.setText(World.getInstance().getReferee().getStage().toString());
 		keeperIdField.setText(World.getInstance().getReferee().getAlly().getGoalie() + "");
 		goalsField.setText(World.getInstance().getReferee().getAlly().getScore() + "");
-		
-	}
 
+	}
 
 }

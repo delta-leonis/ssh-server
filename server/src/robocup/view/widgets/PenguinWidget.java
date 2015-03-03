@@ -22,7 +22,7 @@ import robocup.view.WidgetBox;
 @SuppressWarnings("serial")
 public class PenguinWidget extends WidgetBox {
 
-	private Logger LOGGER = Logger.getLogger(Main.class.getName());	
+	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 
 	/**
 	 * Creates GUI with a button
@@ -30,25 +30,26 @@ public class PenguinWidget extends WidgetBox {
 	public PenguinWidget() {
 		super("Penguin Widget");
 		add(new JLabel(new ImageIcon(PenguinWidget.class.getResource("/robocup/migView/penguin.png"))));
-		
+
 		add(new JButton(new AbstractAction("New logger entry") {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
-		    	double wowlevel = Math.random();
+				double wowlevel = Math.random();
 
-		    	LOGGER.setLevel(java.util.logging.Level.FINEST);
-		    	if(wowlevel <= 0.33)
-		    		LOGGER.fine("Selected robot: " +  World.getInstance().getGUI().getSelectedRobotId());
-		    	else if(wowlevel <= 0.66)
-		    		LOGGER.info("Log info");
-		    	else
-		    		LOGGER.severe("Log severe problem");
-		    }
+				LOGGER.setLevel(java.util.logging.Level.FINEST);
+				if (wowlevel <= 0.33)
+					LOGGER.fine("Selected robot: " + World.getInstance().getGUI().getSelectedRobotId());
+				else if (wowlevel <= 0.66)
+					LOGGER.info("Log info");
+				else
+					LOGGER.severe("Log severe problem");
+			}
 		}));
 	}
 
 	@Override
-	public void update() { }
+	public void update() {
+	}
 
 }

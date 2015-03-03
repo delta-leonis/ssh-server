@@ -24,26 +24,26 @@ import robocup.view.widgets.SettingsWidget;
 import robocup.view.widgets.VisibleRobotWidget;
 
 @SuppressWarnings("serial")
-public class GUI extends JFrame  {
+public class GUI extends JFrame {
 
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private JPanel robotContainer;
 	private JPanel widgetContainer;
 	private ConsoleWidget console;
-	private int selectedRobotId =-1;
+	private int selectedRobotId = -1;
 	private ArrayList<RobotBox> allRobotBoxes = new ArrayList<RobotBox>();
-	
+
 	/**
 	 * Build the GUI
 	 */
-	public GUI(){
+	public GUI() {
 
 		setLookAndFeel();
 
 		getContentPane().setBackground(UIManager.getColor("Panel.background"));
 		this.setLayout(new MigLayout("wrap 2", "[500][grow]", "[][grow]"));
 		this.setSize(800, 830);
-		
+
 		initRobotContainer();
 		initWidgetContainer();
 		initConsoleContainer();
@@ -53,20 +53,20 @@ public class GUI extends JFrame  {
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 	}
-	
+
 	/**
 	 * Sets the Nimbus look and feel to make the GUI pretty (less ugly at least)
 	 */
-	private void setLookAndFeel(){
+	private void setLookAndFeel() {
 		try {
-		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-		        if ("Nimbus".equals(info.getName())) {
-		            UIManager.setLookAndFeel(info.getClassName());
-		            break;
-		        }
-		    }
+			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+				if ("Nimbus".equals(info.getName())) {
+					UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			}
 		} catch (Exception e) {
-		    LOGGER.severe("Nimbus look and feel could not be loaded");
+			LOGGER.severe("Nimbus look and feel could not be loaded");
 		}
 	}
 
@@ -81,15 +81,15 @@ public class GUI extends JFrame  {
 	/**
 	 * Adds a consoleWidget at the bottom
 	 */
-	private void initConsoleContainer(){
+	private void initConsoleContainer() {
 		console = new ConsoleWidget();
 		add(console, "span, growy, growx");
 	}
-	
+
 	/**
 	 * Adds all widgets to a container on the right
 	 */
-	private void initWidgetContainer(){
+	private void initWidgetContainer() {
 		widgetContainer = new JPanel();
 		widgetContainer.setBorder(BorderFactory.createTitledBorder("Widgets"));
 		widgetContainer.setLayout(new MigLayout("wrap 1", "[grow]"));
@@ -98,25 +98,25 @@ public class GUI extends JFrame  {
 		widgetContainer.add(new VisibleRobotWidget(), "growx");
 		widgetContainer.add(new ControlRobotWidget(), "growx");
 		widgetContainer.add(new SettingsWidget(), "growx");
-		//widgetContainer.add(new PenguinWidget(), "growx, growy");
-		
+		// widgetContainer.add(new PenguinWidget(), "growx, growy");
+
 		this.add(widgetContainer, "growy, growx");
 	}
-	
+
 	/**
 	 * Adds all robot panels to a container on the left
 	 */
-	private void initRobotContainer(){
+	private void initRobotContainer() {
 		robotContainer = new JPanel();
 		robotContainer.setLayout(new MigLayout("wrap 2", "[250]related[250]"));
 		robotContainer.setBorder(BorderFactory.createTitledBorder("Robots"));
 
-		for(Robot robot : World.getInstance().getReferee().getAlly().getRobots()){
+		for (Robot robot : World.getInstance().getReferee().getAlly().getRobots()) {
 			RobotBox box = new RobotBox(robot);
 			box.addMouseListener(new PanelClickListener());
-			if(robot.getRobotId() == 0)
+			if (robot.getRobotId() == 0)
 				box.setBackground(Color.LIGHT_GRAY);
-			if(robot.isVisible())
+			if (robot.isVisible())
 				robotContainer.add(box);
 			allRobotBoxes.add(box);
 		}
@@ -131,71 +131,75 @@ public class GUI extends JFrame  {
 
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
-			//loop all RobotBoxes, and change the background color
-			for(Component item : robotContainer.getComponents()){
-				if(item instanceof RobotBox){
-					if( ((RobotBox)item).equals(((RobotBox)arg0.getSource())))
-						((RobotBox)item).setBackground(Color.LIGHT_GRAY);
+			// loop all RobotBoxes, and change the background color
+			for (Component item : robotContainer.getComponents()) {
+				if (item instanceof RobotBox) {
+					if (((RobotBox) item).equals(((RobotBox) arg0.getSource())))
+						((RobotBox) item).setBackground(Color.LIGHT_GRAY);
 					else
-						((RobotBox)item).setBackground(UIManager.getColor("Panel.background"));
+						((RobotBox) item).setBackground(UIManager.getColor("Panel.background"));
 				}
 			}
 
-			selectedRobotId = ((RobotBox)arg0.getSource()).getRobot().getRobotId();
-			
-			//update every ControlRobotWidget
-			for(Component item : widgetContainer.getComponents())
-				if(item instanceof ControlRobotWidget)
-					((ControlRobotWidget)item).update();
+			selectedRobotId = ((RobotBox) arg0.getSource()).getRobot().getRobotId();
+
+			// update every ControlRobotWidget
+			for (Component item : widgetContainer.getComponents())
+				if (item instanceof ControlRobotWidget)
+					((ControlRobotWidget) item).update();
 
 		}
 
 		@Override
-		public void mouseEntered(MouseEvent e) { }
+		public void mouseEntered(MouseEvent e) {
+		}
 
 		@Override
-		public void mouseExited(MouseEvent e) { }
+		public void mouseExited(MouseEvent e) {
+		}
 
 		@Override
-		public void mousePressed(MouseEvent e) { }
+		public void mousePressed(MouseEvent e) {
+		}
 
 		@Override
-		public void mouseReleased(MouseEvent e) { }
+		public void mouseReleased(MouseEvent e) {
+		}
 	}
-	
+
 	/**
 	 * Update parts of the GUI
 	 * @param name of the containers that needs to be updated
 	 */
 	public void update(String desc) {
 		LOGGER.info(String.format("Repainted GUI (%s)", desc));
-		switch(desc) {
-			case "robotContainer":
-				//update all robot items
-				for(RobotBox box : allRobotBoxes)
-					box.update();
-				break;
-			case "robotBoxes":
-				robotContainer.removeAll();
-				for(RobotBox box : allRobotBoxes){
-					box.repaint();
-					if(box.getRobot().isVisible())
-						robotContainer.add(box);
-				}
-				
-				revalidate();
-				repaint();
-				break;
-			case "widgetContainer":
-				for(Component item : widgetContainer.getComponents()){
-					if(item instanceof WidgetBox)
-						((WidgetBox)item).update();
-				}
-				
-				break;
-			default:
-				LOGGER.severe(String.format("Could not update %s", desc));
-				break;
+		switch (desc) {
+		case "robotContainer":
+			// update all robot items
+			for (RobotBox box : allRobotBoxes)
+				box.update();
+			break;
+		case "robotBoxes":
+			robotContainer.removeAll();
+			for (RobotBox box : allRobotBoxes) {
+				box.repaint();
+				if (box.getRobot().isVisible())
+					robotContainer.add(box);
+			}
+
+			revalidate();
+			repaint();
+			break;
+		case "widgetContainer":
+			for (Component item : widgetContainer.getComponents()) {
+				if (item instanceof WidgetBox)
+					((WidgetBox) item).update();
+			}
+
+			break;
+		default:
+			LOGGER.severe(String.format("Could not update %s", desc));
+			break;
 		}
 	}
 

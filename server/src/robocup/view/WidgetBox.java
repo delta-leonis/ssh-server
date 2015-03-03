@@ -6,13 +6,13 @@ import javax.swing.*;
  * Abstract class for Widgets 
  */
 @SuppressWarnings("serial")
-public abstract class WidgetBox extends JPanel  {
+public abstract class WidgetBox extends JPanel {
 
 	/**
 	 * Create a widgetBox
 	 * @param title 	the title of the widget 
 	 */
-	public WidgetBox(String title){
+	public WidgetBox(String title) {
 		this.setBorder(BorderFactory.createTitledBorder(title));
 	}
 
