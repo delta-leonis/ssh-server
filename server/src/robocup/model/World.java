@@ -3,9 +3,9 @@ package robocup.model;
 import java.util.ArrayList;
 import java.util.Observable;
 
-import robocup.migView.GUI;
 import robocup.model.enums.Color;
 import robocup.model.enums.Command;
+import robocup.view.GUI;
 /**
  * Model representation of the physical "world", including the field, 
  * all the robots (even non playing robots) and the ball

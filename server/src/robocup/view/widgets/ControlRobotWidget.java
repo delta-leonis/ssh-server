@@ -1,19 +1,25 @@
-package robocup.migView;
+package robocup.view.widgets;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
+import robocup.Main;
 import robocup.output.ComInterface;
 import robocup.output.RobotCom;
+import robocup.view.GUI;
+import robocup.view.WidgetBox;
 
 @SuppressWarnings("serial")
 public class ControlRobotWidget extends WidgetBox {
 
+
+	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private JLabel selectedRobotLabel;
 	private int selectedRobotId;
 	
@@ -24,7 +30,7 @@ public class ControlRobotWidget extends WidgetBox {
 		super("Control robot");
 		
 		setLayout(new MigLayout("wrap 2", "[grow][grow]"));
-		selectedRobotLabel = new JLabel("Selecteer een robot");
+		selectedRobotLabel = new JLabel("Robot #0 selected");
 		add(selectedRobotLabel, "span");
 
 		JButton chipButton = new JButton("Chippen");
@@ -42,7 +48,9 @@ public class ControlRobotWidget extends WidgetBox {
 	 */
     private class ButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e){
-        	switch(((JButton)e.getSource()).getText()){
+        	String buttonText = ((JButton)e.getSource()).getText();
+			LOGGER.info(String.format("%s commando send to robot #%d", buttonText.substring(0, 4), selectedRobotId));
+        	switch(buttonText){
     			case "Chippen":
     				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, 100, false);
     				break;
@@ -60,7 +68,7 @@ public class ControlRobotWidget extends WidgetBox {
 	@Override
 	public void update() {
 		selectedRobotId = ((GUI) SwingUtilities.getWindowAncestor((this))).getSelectedRobotId();
-		selectedRobotLabel.setText(String.format("Robot #%d geselecteerd", selectedRobotId));
+		selectedRobotLabel.setText(String.format("Robot #%d selected", selectedRobotId));
 	}
 
 }

@@ -1,4 +1,4 @@
-package robocup.migView;
+package robocup.view.widgets;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.Main;
+import robocup.view.WidgetBox;
 
 @SuppressWarnings("serial")
 public class ConsoleWidget extends WidgetBox {

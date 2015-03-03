@@ -1,4 +1,4 @@
-package robocup.migView;
+package robocup.view.widgets;
 
 import java.awt.event.ActionEvent;
 import java.util.logging.Logger;
@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 
 import robocup.Main;
 import robocup.model.World;
+import robocup.view.WidgetBox;
 
 /**
  * Example that shows how to implement a Widget,

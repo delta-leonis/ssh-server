@@ -42,6 +42,8 @@ public class Main {
 	public static void main(String[] args) {
 		initLog();
 		LOGGER.info("Program started");
+		initView();
+		LOGGER.info("View initialized");
 		initBasestationClient();
 		LOGGER.info("BasestationClient initialized");
 		initField();
@@ -51,20 +53,11 @@ public class Main {
 		initProtoBuffClients();
 		LOGGER.info("Handlers initialized");
 		initHandlers();
-		LOGGER.info("AI initialized");
-		initAi();
-		LOGGER.info("Console disabled");
-		// console();
-
-		initView();
-		LOGGER.info("View initialized");
 	}
 
 	/**
 	 * Create the root logger from this application.
 	 * Disable the console logger and set the warning level.
-	 * 
-	 * @author Gerbrand Bosch
 	 */
 	public static void initLog() {
 		try {
@@ -83,19 +76,15 @@ public class Main {
 
 	/**
 	 * Set a fancy lookAndFeel and start the view GUI
-	 * 
-	 * @author Gerbrand Bosch
 	 */
 	public static void initView() {
-		//new robocup.view.GUI(World.getInstance()).setVisible(true);
-		World.getInstance().setGUI(new robocup.migView.GUI());
+		World.getInstance().setGUI(new robocup.view.GUI());
 		World.getInstance().getGUI().setVisible(true);
 	}
 
 	/**
 	 * Initialize the field using fieldConfigName
 	 * 
-	 * @author Jasper v O
 	 */
 	public static void initField() {
 		Properties configFile = new Properties();

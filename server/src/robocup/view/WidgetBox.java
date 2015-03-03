@@ -1,4 +1,4 @@
-package robocup.migView;
+package robocup.view;
 
 import javax.swing.*;
 

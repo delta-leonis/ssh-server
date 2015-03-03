@@ -1,18 +1,19 @@
-package robocup.migView;
+package robocup.view.widgets;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.model.World;
+import robocup.view.WidgetBox;
 
 /**
  * TODO check whether it works at all,
  * way of updating has been copied from the previous GUI but well, 
  * that wasn't exactly perfect either
  */
+@SuppressWarnings("serial")
 public class GameStatusWidget extends WidgetBox {
-	private static final long serialVersionUID = 1L;
 
 	private JTextField fieldHalfField
 					  ,timePlayedField
@@ -29,11 +30,17 @@ public class GameStatusWidget extends WidgetBox {
 		setLayout(new MigLayout("wrap 2", "[]related[grow]"));
 
 		keeperIdField = new JTextField();
+		keeperIdField.setEnabled(false);
 		fieldHalfField = new JTextField();
+		fieldHalfField.setEnabled(false);
 		timePlayedField = new JTextField();
+		timePlayedField.setEnabled(false);
 		gameStatusField = new JTextField();
+		gameStatusField.setEnabled(false);
 		refereeStatusField = new JTextField();
+		refereeStatusField.setEnabled(false);
 		goalsField = new JTextField();
+		goalsField.setEnabled(false);
 
 		add(new JLabel("Field half"));
 		add(fieldHalfField, "growx");

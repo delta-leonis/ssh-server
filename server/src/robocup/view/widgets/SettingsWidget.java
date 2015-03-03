@@ -1,4 +1,4 @@
-package robocup.migView;
+package robocup.view.widgets;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +13,7 @@ import robocup.Main;
 import robocup.model.World;
 import robocup.output.ComInterface;
 import robocup.output.RobotCom;
+import robocup.view.WidgetBox;
 
 @SuppressWarnings("serial")
 public class SettingsWidget extends WidgetBox {
