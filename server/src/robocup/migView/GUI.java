@@ -30,7 +30,6 @@ public class GUI extends JFrame  {
 	private ArrayList<RobotBox> allRobotBoxes = new ArrayList<RobotBox>();
 
 	public GUI(){
-		LOGGER.info("GUI started");
 
 		setLookAndFeel();
 
@@ -42,7 +41,8 @@ public class GUI extends JFrame  {
 		initRobotContainer();
 		initWidgetContainer();
 		initConsoleContainer();
-		
+
+		LOGGER.info("GUI started");
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 	}
 	
@@ -77,7 +77,7 @@ public class GUI extends JFrame  {
 		widgetContainer.add(new VisibleRobots(), "growx");
 		widgetContainer.add(new ControlRobotWidget(), "growx");
 		widgetContainer.add(new SettingsWidget(), "growx");
-		widgetContainer.add(new PenguinWidget(), "growx, growy");
+		//widgetContainer.add(new PenguinWidget(), "growx, growy");
 		
 		this.add(widgetContainer, "growy, growx");
 	}
@@ -149,6 +149,7 @@ public class GUI extends JFrame  {
 	}
 	
 	public void update(String desc) {
+		LOGGER.info(String.format("Repainted GUI (%s)", desc));
 		switch(desc)
 		{
 			case "robotContainer":

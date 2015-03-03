@@ -35,6 +35,7 @@ public class RefereeHandler {
 				message.getYellow().getYellowCards(), message.getYellow().getTimeouts(),
 				message.getYellow().getGoalie());
 
+		World.getInstance().getGUI().update("widgetContainer");
 		// System.out.println(" hoi," + world.getReferee().getl
 		// .getYellow().getGoalie() + " command: " +
 		// message.getYellow().getRedCards());
