@@ -12,15 +12,14 @@ import net.miginfocom.swing.MigLayout;
 import robocup.model.Robot;
 import robocup.model.World;
 
+@SuppressWarnings("serial")
 public class VisibleRobots extends WidgetBox {
-	private static final long serialVersionUID = 1L;
+
 	private ArrayList<JCheckBox> checkboxes = new ArrayList<JCheckBox>();
 	
-	@SuppressWarnings("serial")
-	
 	/**
-	 * Creates a checbox for all robots (usually 11) and 
-	 * implements a anonymouse button handler for selecting onsight robots
+	 * Creates a check box for all robots (usually 11) and 
+	 * implements a anonymous button handler for selecting on sight robots
 	 */
 	public VisibleRobots() {
 		super("Visible robots");
@@ -28,7 +27,7 @@ public class VisibleRobots extends WidgetBox {
 
 		int numberOfRobots =World.getInstance().getReferee().getAlly().getRobots().size();
 
-		for(int i=0; i < numberOfRobots; i++){
+		for(int i=0; i < numberOfRobots; i++) {
 			JCheckBox checkbox = new JCheckBox("#" + i);
 			checkbox.addActionListener(new checkHandler());
 			checkbox.setSelected(World.getInstance().getReferee().getAlly().getRobotByID(i).isVisible());
@@ -36,9 +35,7 @@ public class VisibleRobots extends WidgetBox {
 			add(checkbox, (numberOfRobots-1 == i) ? "wrap" : "");
 		}
 
-		/*
-		 * Removes all panels of robots that aren't onSight
-		 */
+		//Removes the visibility of all panels of robots that aren't onSight
 		add(new JButton(new AbstractAction("Autoselect") {
 		    public void actionPerformed(ActionEvent e) {
 		    	int i =0;
@@ -53,22 +50,17 @@ public class VisibleRobots extends WidgetBox {
 	}
 
 	/**
-	 * Handler for the checkboxes
+	 * Handler for the check boxes
 	 */
     private class checkHandler implements ActionListener {
         public void actionPerformed(ActionEvent e){
         	JCheckBox checkbox = ((JCheckBox)e.getSource());
         	World.getInstance().getReferee().getAlly().getRobotByID(Integer.valueOf(checkbox.getText().substring(1))).setVisible(checkbox.isSelected());
-
     		World.getInstance().gui.update("robotBoxes");
         }
     }
     
-    /**
-     * Unused
-     */
 	@Override
-	public void update() {
-	}
+	public void update() { }
 
 }

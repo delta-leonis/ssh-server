@@ -5,8 +5,8 @@ import javax.swing.*;
 /**
  * Abstract class for Widgets 
  */
+@SuppressWarnings("serial")
 public abstract class WidgetBox extends JPanel  {
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Create a widgetBox

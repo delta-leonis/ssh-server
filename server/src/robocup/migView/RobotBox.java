@@ -26,7 +26,6 @@ public class RobotBox extends JPanel {
 	public RobotBox(Robot _robot){
 		robot = _robot;
 		this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-
 		this.setLayout(new MigLayout("wrap 2", "[250][right, 250]"));
 		
 		robotStatus = new JLabel();

@@ -15,11 +15,12 @@ import robocup.model.World;
  * Example that shows how to implement a Widget,
  * this specific example dumps information in the Logger when
  * a button is pressed. In most cases it isn't necessary to have a external class
- * for a buttonHandler, here is a example that implementa a anonymouse button listener
+ * for a buttonHandler, here is a example that implements a anonymous button listener
  *
  */
+@SuppressWarnings("serial")
 public class PenguinWidget extends WidgetBox {
-	private static final long serialVersionUID = 1L;
+
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());	
 
 	/**
@@ -29,7 +30,6 @@ public class PenguinWidget extends WidgetBox {
 		super("Penguin Widget");
 		add(new JLabel(new ImageIcon(PenguinWidget.class.getResource("/robocup/migView/penguin.png"))));
 		
-		
 		add(new JButton(new AbstractAction("New logger entry") {
 			private static final long serialVersionUID = 1L;
 
@@ -38,17 +38,16 @@ public class PenguinWidget extends WidgetBox {
 
 		    	LOGGER.setLevel(java.util.logging.Level.FINEST);
 		    	if(wowlevel <= 0.33)
-		    		LOGGER.fine("Selected robot:" +  World.getInstance().getGUI().getSelectedRobotId());
+		    		LOGGER.fine("Selected robot: " +  World.getInstance().getGUI().getSelectedRobotId());
 		    	else if(wowlevel <= 0.66)
-		    		LOGGER.info("Wow:o");
+		    		LOGGER.info("Log info");
 		    	else
-		    		LOGGER.severe("extra wow:o");
+		    		LOGGER.severe("Log severe problem");
 		    }
 		}));
 	}
 
 	@Override
-	public void update() {
-	}
+	public void update() { }
 
 }

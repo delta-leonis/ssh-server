@@ -22,11 +22,10 @@ public class GameStatusWidget extends WidgetBox {
 				 	  ,keeperIdField;
 
 	/**
-	 * Creates widget 
+	 * Creates widget
 	 */
 	public GameStatusWidget() {
 		super("Game Status");
-		
 		setLayout(new MigLayout("wrap 2", "[]related[grow]"));
 
 		keeperIdField = new JTextField();
@@ -35,7 +34,6 @@ public class GameStatusWidget extends WidgetBox {
 		gameStatusField = new JTextField();
 		refereeStatusField = new JTextField();
 		goalsField = new JTextField();
-		
 
 		add(new JLabel("Field half"));
 		add(fieldHalfField, "growx");
@@ -70,7 +68,7 @@ public class GameStatusWidget extends WidgetBox {
 		else
 			fieldHalfField.setText("Right");
 		
-		//TODO ROB CHECK DEZE
+		//TODO Rob moet hier even aan verder werken, Jeroen wist t niet meer
 		gameStatusField.setText("NOT YET IMPLEMENTED");
 		
 		refereeStatusField.setText(World.getInstance().getReferee().getStage().toString());

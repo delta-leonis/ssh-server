@@ -16,9 +16,11 @@ import robocup.output.RobotCom;
 
 @SuppressWarnings("serial")
 public class SettingsWidget extends WidgetBox {
+
 	private JComboBox<String> fieldHalfBox,
 							  frequencyBox;
-
+	//Base station frequencies
+	private static final int[] frequencies = {2436, 2450, 2490, 2500, 2525};
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 	/**
 	 * Creates the settingsWidget
@@ -37,11 +39,8 @@ public class SettingsWidget extends WidgetBox {
 
 		frequencyBox = new JComboBox<String>();
 		frequencyBox.setEditable(false);
-		frequencyBox.addItem("1. 2436");
-		frequencyBox.addItem("2. 2450");
-		frequencyBox.addItem("3. 2490");
-		frequencyBox.addItem("4. 2500");
-		frequencyBox.addItem("5. 2525");
+		for(int x=0; x < frequencies.length; x++)
+			frequencyBox.addItem(x+1 + ". " + frequencies[x]);
 		
 		JButton setFrequencyButton = new JButton("Set frequency");
 		setFrequencyButton.addActionListener(new ButtonListener());
@@ -88,7 +87,5 @@ public class SettingsWidget extends WidgetBox {
 			fieldHalfBox.setSelectedItem("left");
 		else
 			fieldHalfBox.setSelectedItem("right");
-		
 	}
-
 }

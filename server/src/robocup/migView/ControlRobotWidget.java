@@ -11,9 +11,9 @@ import net.miginfocom.swing.MigLayout;
 import robocup.output.ComInterface;
 import robocup.output.RobotCom;
 
+@SuppressWarnings("serial")
 public class ControlRobotWidget extends WidgetBox {
 
-	private static final long serialVersionUID = 1L;
 	private JLabel selectedRobotLabel;
 	private int selectedRobotId;
 	

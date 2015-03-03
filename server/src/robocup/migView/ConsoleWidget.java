@@ -13,9 +13,9 @@ import javax.swing.table.DefaultTableModel;
 import net.miginfocom.swing.MigLayout;
 import robocup.Main;
 
+@SuppressWarnings("serial")
 public class ConsoleWidget extends WidgetBox {
 
-	private static final long serialVersionUID = 1L;
 	private Object[] header = {"ID", "tijd", "level", "bericht"};
 	private Object[][] data = {};
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
@@ -42,21 +42,19 @@ public class ConsoleWidget extends WidgetBox {
 	 */
     private class LoggerHandler extends Handler {
 		@Override
-		public void close() throws SecurityException {// TODO Auto-generated method stub
-		}
+		public void close() throws SecurityException { }
 
 		@Override
-		public void flush() { // TODO Auto-generated method stub 
-		}
+		public void flush() { }
+		
 		@Override
 		public void publish(LogRecord record) {
-			model.addRow(new Object[]{record.getSequenceNumber(), toTime(record.getMillis()), (record.getLevel() == java.util.logging.Level.SEVERE) ? "CHAFFEUR" : record.getLevel(), record.getMessage()});
-			
-		}	
+			model.addRow(new Object[]{record.getSequenceNumber(), toTime(record.getMillis()), record.getLevel(), record.getMessage()});
+		}
     }
 
     /**
-     * Adjust columnwidth
+     * Adjust column width
      * @param table
      */
     private void correctColumnWidth(JTable table){
@@ -70,7 +68,7 @@ public class ConsoleWidget extends WidgetBox {
     
     /**
      * Format millis to readable output
-     * @param milliseconds since 1970 (unix)
+     * @param milliseconds since 1970 (Unix)
      * @return String in HH:mm:ss format
      */
 	public String toTime(long millis) {
@@ -78,8 +76,7 @@ public class ConsoleWidget extends WidgetBox {
 	}
     
 	@Override
-	public void update() {
-	}
+	public void update() { }
 	
 
 }
