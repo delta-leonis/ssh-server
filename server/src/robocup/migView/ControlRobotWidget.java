@@ -17,6 +17,9 @@ public class ControlRobotWidget extends WidgetBox {
 	private JLabel selectedRobotLabel;
 	private int selectedRobotId;
 	
+	/**
+	 * Create ControLRobotWidget
+	 */
 	public ControlRobotWidget(){
 		super("Control robot");
 		
@@ -34,6 +37,9 @@ public class ControlRobotWidget extends WidgetBox {
 		
 	}
 	
+	/**
+	 * Handler for chip and kick button
+	 */
     private class ButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e){
         	switch(((JButton)e.getSource()).getText()){
@@ -48,6 +54,9 @@ public class ControlRobotWidget extends WidgetBox {
         }
     }
 	
+    /**
+     * Update the selected robot panel
+     */
 	@Override
 	public void update() {
 		selectedRobotId = ((GUI) SwingUtilities.getWindowAncestor((this))).getSelectedRobotId();

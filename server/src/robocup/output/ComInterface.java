@@ -34,5 +34,10 @@ public abstract class ComInterface {
 	public abstract void send(int messageType, int robotID, int direction, int directionSpeed, int travelDistance,
 			int rotationAngle, int rotationSpeed, int kicker, boolean dribble);
 
+	/**
+	 * 
+	 * @param messageType	should be 0x7f (127)
+	 * @param channelID		robotFrequency
+	 */
 	public abstract void send(int messageType, int channelID);
 }

@@ -6,6 +6,11 @@ import javax.swing.JTextField;
 import net.miginfocom.swing.MigLayout;
 import robocup.model.World;
 
+/**
+ * TODO check whether it works at all,
+ * way of updating has been copied from the previous GUI but well, 
+ * that wasn't exactly perfect either
+ */
 public class GameStatusWidget extends WidgetBox {
 	private static final long serialVersionUID = 1L;
 
@@ -16,6 +21,9 @@ public class GameStatusWidget extends WidgetBox {
 					  ,goalsField
 				 	  ,keeperIdField;
 
+	/**
+	 * Creates widget 
+	 */
 	public GameStatusWidget() {
 		super("Game Status");
 		
@@ -44,6 +52,9 @@ public class GameStatusWidget extends WidgetBox {
 		update();
 	}
 	
+	/**
+	 * Updates the fields
+	 */
 	@Override
 	public void update(){
 		if (World.getInstance().getReferee().getStagetimeLeft() == 0) {
@@ -53,13 +64,18 @@ public class GameStatusWidget extends WidgetBox {
 			timePlayedField.setText("" + java.util.concurrent.TimeUnit.MICROSECONDS.toMinutes(timePlayed) % 60
 					+ ":" + java.util.concurrent.TimeUnit.MICROSECONDS.toSeconds(timePlayed) % 60);
 		}
-		goalsField.setText("" + World.getInstance().getReferee().getAlly().getScore());
 
-
-		fieldHalfField.setText("NOT YET IMPLEMENTED");
+		if(World.getInstance().getReferee().getDoesTeamPlaysLeft(World.getInstance().getReferee().getAlly().getColor()))
+			fieldHalfField.setText("Left");
+		else
+			fieldHalfField.setText("Right");
+		
+		//TODO ROB CHECK DEZE
 		gameStatusField.setText("NOT YET IMPLEMENTED");
-		refereeStatusField.setText("NOT YET IMPLEMENTED");
-		keeperIdField.setText("NOT YET IMPLEMENTED");
+		
+		refereeStatusField.setText(World.getInstance().getReferee().getStage().toString());
+		keeperIdField.setText(World.getInstance().getReferee().getAlly().getGoalie() + "");
+		goalsField.setText(World.getInstance().getReferee().getAlly().getScore() + "");
 		
 	}
 

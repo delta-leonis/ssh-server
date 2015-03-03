@@ -32,6 +32,7 @@ public class Referee {
 		commandCounter = 0;
 		lastCommandTimestamp = 0;
 		command = Command.STOP;
+		stage = Stage.POST_GAME;
 	}
 	
 	public void initAllyTeam(ArrayList<Robot> teamRobots) {

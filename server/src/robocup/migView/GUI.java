@@ -29,6 +29,9 @@ public class GUI extends JFrame  {
 	private int selectedRobotId;
 	private ArrayList<RobotBox> allRobotBoxes = new ArrayList<RobotBox>();
 
+	/**
+	 * Build the GUI
+	 */
 	public GUI(){
 
 		setLookAndFeel();
@@ -43,9 +46,14 @@ public class GUI extends JFrame  {
 		initConsoleContainer();
 
 		LOGGER.info("GUI started");
+		setTitle("Awesome GUI for ekte ekte V2.0");
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
 	}
 	
+	/**
+	 * Sets the nimbus look and feel to make the GUI prittey (less ugly at least)
+	 */
 	private void setLookAndFeel(){
 		try {
 		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -59,15 +67,25 @@ public class GUI extends JFrame  {
 		}
 	}
 
+	/**
+	 * Returns the id of the robot whoms panel is selected 
+	 * @return robotId
+	 */
 	public int getSelectedRobotId() {
 		return selectedRobotId;
 	}
 
+	/**
+	 * Adds a consoleWidget at the bottom
+	 */
 	private void initConsoleContainer(){
 		console = new ConsoleWidget();
 		add(console, "span, growy, growx");
 	}
 	
+	/**
+	 * Adds all widgets to a container on the right
+	 */
 	private void initWidgetContainer(){
 		widgetContainer = new JPanel();
 		widgetContainer.setBorder(BorderFactory.createTitledBorder("Widgets"));
@@ -82,6 +100,9 @@ public class GUI extends JFrame  {
 		this.add(widgetContainer, "growy, growx");
 	}
 	
+	/**
+	 * Adds all robot panels to a container on the left
+	 */
 	private void initRobotContainer(){
 		robotContainer = new JPanel();
 		robotContainer.setLayout(new MigLayout("wrap 2", "[250]related[250]"));
@@ -99,11 +120,15 @@ public class GUI extends JFrame  {
 	}	
 
 
+	/**
+	 * Handler for selecting robotpanels
+	 */
 	private class PanelClickListener implements MouseListener {
 
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
 
+			//loop all RobotBoxes, and change the background color
 			for(Component item : robotContainer.getComponents()){
 				if(item instanceof RobotBox){
 					if( ((RobotBox)item).equals(((RobotBox)arg0.getSource())))
@@ -115,7 +140,7 @@ public class GUI extends JFrame  {
 
 			selectedRobotId = ((RobotBox)arg0.getSource()).getRobot().getRobotId();
 			
-			
+			//update every ControlRobotWidget
 			for(Component item : widgetContainer.getComponents())
 				if(item instanceof ControlRobotWidget)
 					((ControlRobotWidget)item).update();
@@ -148,6 +173,10 @@ public class GUI extends JFrame  {
 		
 	}
 	
+	/**
+	 * Update parts of the GUI
+	 * @param name of the containers that needs to be updated
+	 */
 	public void update(String desc) {
 		LOGGER.info(String.format("Repainted GUI (%s)", desc));
 		switch(desc)
@@ -172,16 +201,10 @@ public class GUI extends JFrame  {
 				break;
 			
 			case "widgetContainer":
-			{
 				for(Component item : widgetContainer.getComponents()){
 					if(item instanceof WidgetBox)
 						((WidgetBox)item).update();
 				}
-				break;
-			}
-			
-			case "test":
-				JOptionPane.showMessageDialog(this, "A basic JOptionPane message dialog");
 				break;
 		}
 	}

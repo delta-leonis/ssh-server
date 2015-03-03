@@ -17,11 +17,17 @@ public class VisibleRobots extends WidgetBox {
 	private ArrayList<JCheckBox> checkboxes = new ArrayList<JCheckBox>();
 	
 	@SuppressWarnings("serial")
+	
+	/**
+	 * Creates a checbox for all robots (usually 11) and 
+	 * implements a anonymouse button handler for selecting onsight robots
+	 */
 	public VisibleRobots() {
 		super("Visible robots");
 		setLayout(new MigLayout("wrap 6", "[][][][][][]"));
 
 		int numberOfRobots =World.getInstance().getReferee().getAlly().getRobots().size();
+
 		for(int i=0; i < numberOfRobots; i++){
 			JCheckBox checkbox = new JCheckBox("#" + i);
 			checkbox.addActionListener(new checkHandler());
@@ -30,6 +36,9 @@ public class VisibleRobots extends WidgetBox {
 			add(checkbox, (numberOfRobots-1 == i) ? "wrap" : "");
 		}
 
+		/*
+		 * Removes all panels of robots that aren't onSight
+		 */
 		add(new JButton(new AbstractAction("Autoselect") {
 		    public void actionPerformed(ActionEvent e) {
 		    	int i =0;
@@ -43,6 +52,9 @@ public class VisibleRobots extends WidgetBox {
 		}), "span");
 	}
 
+	/**
+	 * Handler for the checkboxes
+	 */
     private class checkHandler implements ActionListener {
         public void actionPerformed(ActionEvent e){
         	JCheckBox checkbox = ((JCheckBox)e.getSource());
@@ -51,6 +63,10 @@ public class VisibleRobots extends WidgetBox {
     		World.getInstance().gui.update("robotBoxes");
         }
     }
+    
+    /**
+     * Unused
+     */
 	@Override
 	public void update() {
 	}

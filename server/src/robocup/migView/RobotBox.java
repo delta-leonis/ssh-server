@@ -19,16 +19,16 @@ public class RobotBox extends JPanel {
 				  ,robotPosition
 				  ,robotRole;
 
+	/**
+	 * Creates a JPanel with the information of a single robot
+	 * @param _robot
+	 */
 	public RobotBox(Robot _robot){
 		robot = _robot;
 		this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 
 		this.setLayout(new MigLayout("wrap 2", "[250][right, 250]"));
-		initComponents();
 		
-	}
-	
-	private void initComponents(){
 		robotStatus = new JLabel();
 		setRobotStatus(robot.isOnSight());
 
@@ -47,10 +47,17 @@ public class RobotBox extends JPanel {
 		this.add(robotPosition);
 	}
 	
+	/**
+	 * @return robot object used in this panel
+	 */
 	public Robot getRobot(){
 		return robot;
 	}
     
+	/**
+	 * Sets the robotstatus
+	 * @param desired status
+	 */
     private void setRobotStatus(boolean online) {
     	if(online) {
     		robotStatus.setText("Online");
@@ -62,6 +69,9 @@ public class RobotBox extends JPanel {
     	}
     }
     
+    /**
+     * Updates all robot information, called upon SSL_DetectionFrame
+     */
     public void update(){
     	setRobotStatus(robot.isOnSight());
     	robotRole.setText(robot.getRole().toString());

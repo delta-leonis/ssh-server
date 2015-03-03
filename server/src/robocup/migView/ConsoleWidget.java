@@ -21,12 +21,15 @@ public class ConsoleWidget extends WidgetBox {
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private DefaultTableModel model;
 
+	/**
+	 * Create ConsoleWidget
+	 */
 	public ConsoleWidget() {
 		super("Console");
 		setLayout(new MigLayout("", "[grow]", "[grow]"));
 
 		JTable table = new JTable(new DefaultTableModel(data, header));
-		//table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
+		table.setEnabled(false);
 		model = (DefaultTableModel) table.getModel();
 		add(new JScrollPane(table), "growy, growx");
 		correctColumnWidth(table);
@@ -34,6 +37,9 @@ public class ConsoleWidget extends WidgetBox {
 		LOGGER.addHandler(new LoggerHandler());
 	}
 
+	/**
+	 * Handler for LOGGER messages
+	 */
     private class LoggerHandler extends Handler {
 		@Override
 		public void close() throws SecurityException {// TODO Auto-generated method stub
@@ -49,6 +55,10 @@ public class ConsoleWidget extends WidgetBox {
 		}	
     }
 
+    /**
+     * Adjust columnwidth
+     * @param table
+     */
     private void correctColumnWidth(JTable table){
     	table.getColumnModel().getColumn(0).setMinWidth(50);
     	table.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -58,6 +68,11 @@ public class ConsoleWidget extends WidgetBox {
     	table.getColumnModel().getColumn(2).setMaxWidth(100);
     }
     
+    /**
+     * Format millis to readable output
+     * @param milliseconds since 1970 (unix)
+     * @return String in HH:mm:ss format
+     */
 	public String toTime(long millis) {
 		return (new SimpleDateFormat("HH:mm:ss")).format(new Date(millis));
 	}
