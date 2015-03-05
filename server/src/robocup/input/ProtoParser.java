@@ -1,17 +1,14 @@
 package robocup.input;
 
-import robocup.input.protobuf.MessagesRobocupSslWrapper.SSL_WrapperPacket;
-import robocup.input.protobuf.Referee.SSL_Referee;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.concurrent.LinkedTransferQueue;
 
+import robocup.input.protobuf.MessagesRobocupSslWrapper.SSL_WrapperPacket;
+import robocup.input.protobuf.Referee.SSL_Referee;
+
 /**
  * Handles creation and buffer of MessageFrame objects.
- * 
- * @author Erik Hubers, Gerbrand Bosch
- * 
  */
 public class ProtoParser {
 

@@ -8,8 +8,6 @@ import robocup.model.enums.Stage;
 
 /**
  * Model representation of the "game", including the teams and rules
- * @author jasper
- *
  */
 public class Referee {
 
@@ -23,10 +21,9 @@ public class Referee {
 	private boolean yellowTeamPlaysRight;
 
 	private final int PLAYING_TEAM_SIZE = 8;
-	
+
 	private Team ourTeam;
 	private Team enemyTeam;
-	
 
 	public Referee() {
 		commandCounter = 0;
@@ -34,16 +31,17 @@ public class Referee {
 		command = Command.STOP;
 		stage = Stage.POST_GAME;
 	}
-	
+
 	public void initAllyTeam(ArrayList<Robot> teamRobots) {
 		ourTeam = new Team("", Color.BLUE, PLAYING_TEAM_SIZE);
 		ourTeam.setRobots(teamRobots);
 	}
+
 	public void initEnemyTeam(ArrayList<Robot> teamRobots) {
 		enemyTeam = new Team("", Color.YELLOW, PLAYING_TEAM_SIZE);
 		enemyTeam.setRobots(teamRobots);
 	}
-	
+
 	public void update(Command command, int commandCounter, long commandTimeStamp, Stage stage, int stageTimeLeft) {
 		this.command = command;
 		this.commandCounter = commandCounter;
@@ -62,7 +60,7 @@ public class Referee {
 	public boolean isStage(Stage controlStage) {
 		return controlStage == stage;
 	}
-	
+
 	/**
 	 * @return the timeoutTimeLeft
 	 */
@@ -133,7 +131,7 @@ public class Referee {
 	public void setStart(boolean start) {
 		this.start = start;
 	}
-	
+
 	/**
 	 * Returns the {@link Team} with the given color.
 	 * @param color the color of the {@link Team}
@@ -147,7 +145,7 @@ public class Referee {
 
 		return null;
 	}
-	
+
 	/**
 	 * Sets the Color for our own Team.
 	 * Suggestion: Rename to setAllyTeamColor()
@@ -163,7 +161,7 @@ public class Referee {
 			enemyTeam.setColor(Color.BLUE);
 		}
 	}
-	
+
 	/**
 	 * Returns the color of your own team.
 	 * Suggestion: Rename to getAllyTeamColor()
@@ -186,7 +184,7 @@ public class Referee {
 	public Team getEnemy() {
 		return enemyTeam;
 	}
-	
+
 	public void setRightTeamByColor(Color color) {
 		yellowTeamPlaysRight = (color == Color.YELLOW);
 	}
@@ -199,7 +197,7 @@ public class Referee {
 			return !yellowTeamPlaysRight;
 		}
 	}
-	
+
 	public boolean getDoesTeamPlaysLeft(Color color) {
 		boolean teamIsYellow = (color == Color.YELLOW);
 		if (teamIsYellow) {
@@ -208,7 +206,7 @@ public class Referee {
 			return yellowTeamPlaysRight;
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Referee [timeoutTimeLeft=" + timeoutTimeLeft + ", stagetimeLeft=" + stagetimeLeft + ", stage=" + stage
