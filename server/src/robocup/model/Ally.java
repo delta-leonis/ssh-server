@@ -1,11 +1,15 @@
 package robocup.model;
 
+import robocup.model.enums.RobotMode;
+
 public class Ally extends Robot {
 	private boolean dribble;
 	private long lastKicked;
+	private RobotMode role;
 
 	public Ally(int robotID, boolean isKeeper, float height) {
 		super(robotID, isKeeper, height);
+		role = RobotMode.DEFENDER;
 	}
 
 	/**
@@ -20,6 +24,23 @@ public class Ally extends Robot {
 	 */
 	public void setDribble(boolean dribble) {
 		this.dribble = dribble;
+	}
+	
+	/** 
+	 * Set a role (keeper/defender/attacker/etc)
+	 * @param role A role from the enumaration Mode.roles
+	 */
+	public void setRole(RobotMode role) {
+		// System.out.println(" set role " + role);
+		this.role = role;
+	}
+
+	/**
+	 * Get the assigned role (keeper/defender/attacker/null/etc)
+	 * @return A role from the enumaration Mode.roles
+	 */
+	public RobotMode getRole() {
+		return role;
 	}
 
 	/**

@@ -12,6 +12,8 @@ import robocup.model.Ball;
 import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.model.World;
+import robocup.model.Ally;
+import robocup.model.enums.RobotMode;
 
 public abstract class Mode {
 
@@ -23,13 +25,7 @@ public abstract class Mode {
 
 	protected World world;
 
-	/**
-	 * An enumeration that describes possible roles of Robots
-	 * Examples are: Keeper, Defender, Attacker and Blocker.
-	 */
-	public enum roles {
-		KEEPER, DEFENDER, ATTACKER, BLOCKER
-	};
+
 
 	/**
 	 * Let the calculator recalculate all forces
@@ -49,7 +45,7 @@ public abstract class Mode {
 	 * @param type type of the low level behavior
 	 * @param isUpdate false if a new behavior should be created, true if update is required
 	 */
-	public abstract void updateExecuter(RobotExecuter executer, roles type, boolean isUpdate);
+	public abstract void updateExecuter(RobotExecuter executer, RobotMode type, boolean isUpdate);
 
 	public abstract void updateExecuters(ArrayList<RobotExecuter> executers);
 
@@ -120,7 +116,7 @@ public abstract class Mode {
 		Robot closestRobot = null;
 
 		for (Robot r : robots) {
-			if (r.getRole().equals("ATTACKER")) {
+			if (((Ally)r).getRole().equals("ATTACKER")) {
 				if (minDistance == -1) {
 					closestRobot = r;
 					minDistance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
@@ -219,7 +215,7 @@ public abstract class Mode {
 	 */
 	protected boolean robotHasBlocker(Robot robot, ArrayList<RobotExecuter> executers) {
 		for (RobotExecuter executer : executers) {
-			if (executer.getLowLevelBehavior().getRole() == roles.BLOCKER) {
+			if (executer.getLowLevelBehavior().getRole() == RobotMode.BLOCKER) {
 
 				if (robot.getRobotId() == ((Blocker) executer.getLowLevelBehavior()).getOpponentId()) {
 					return true;

@@ -12,9 +12,6 @@ import robocup.Main;
 /**
  * abstract class UDPClient.
  * method startListining has to be overridden
- * 
- * @author Erik Hubers, Gerbrand Bosch
- *
  */
 public abstract class UDPClient implements Runnable {
 

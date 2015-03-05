@@ -29,7 +29,7 @@ public class PenguinWidget extends WidgetBox {
 	 */
 	public PenguinWidget() {
 		super("Penguin Widget");
-		add(new JLabel(new ImageIcon(PenguinWidget.class.getResource("/robocup/migView/penguin.png"))));
+		add(new JLabel(new ImageIcon(PenguinWidget.class.getResource("/robocup/view/penguin.png"))));
 
 		add(new JButton(new AbstractAction("New logger entry") {
 			private static final long serialVersionUID = 1L;

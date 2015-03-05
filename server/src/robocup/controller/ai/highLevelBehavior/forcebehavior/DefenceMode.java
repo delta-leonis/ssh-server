@@ -5,6 +5,7 @@ package robocup.controller.ai.highLevelBehavior.forcebehavior;
 
 import java.util.ArrayList;
 
+import robocup.model.enums.RobotMode;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Ball;
 import robocup.model.Robot;
@@ -28,7 +29,7 @@ public class DefenceMode extends Mode {
 	}
 
 	@Override
-	public void updateExecuter(RobotExecuter executer, roles type, boolean isUpdate) {
+	public void updateExecuter(RobotExecuter executer, RobotMode type, boolean isUpdate) {
 		// TODO Auto-generated method stub
 
 	}

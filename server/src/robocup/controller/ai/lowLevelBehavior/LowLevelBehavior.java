@@ -11,6 +11,7 @@ import robocup.model.FieldObject;
 import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.model.World;
+import robocup.model.enums.RobotMode;
 
 /**
  * Describes the LowLevelBahaviour each role builds upon.
@@ -24,7 +25,7 @@ public abstract class LowLevelBehavior {
 	protected ComInterface output;
 	protected GotoPosition go;
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
-	protected Mode.roles role;
+	protected RobotMode role;
 
 	public LowLevelBehavior(Robot robot, ComInterface output) {
 		this.robot = robot;
@@ -37,7 +38,7 @@ public abstract class LowLevelBehavior {
 	 * @see {@link Mode.roles}
 	 * @return the {@link Mode.roles} assigned to this behaviour.
 	 */
-	public Mode.roles getRole() {
+	public RobotMode getRole() {
 		return role;
 	}
 

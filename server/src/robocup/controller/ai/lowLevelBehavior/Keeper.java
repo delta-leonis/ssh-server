@@ -1,6 +1,6 @@
 package robocup.controller.ai.lowLevelBehavior;
 
-import robocup.controller.ai.highLevelBehavior.forcebehavior.Mode;
+import robocup.model.enums.RobotMode;
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.Point;
 import robocup.model.Robot;
@@ -34,7 +34,7 @@ public class Keeper extends LowLevelBehavior {
 		this.keeperPosition = keeperPosition;
 		this.centerGoalPosition = centerGoalPosition;
 		this.yMax = yMax;
-		this.role = Mode.roles.KEEPER;
+		this.role = RobotMode.KEEPER;
 		go = new GotoPosition(robot, output, centerGoalPosition, ballPosition, 3000);
 	}
 
