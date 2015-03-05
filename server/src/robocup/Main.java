@@ -173,6 +173,8 @@ public class Main {
 		} catch (IOException e) {
 			LOGGER.severe(e.toString());
 		}
+		
+		World.getInstance().getGUI().update("robotContainer");
 	}
 
 	/**

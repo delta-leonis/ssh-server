@@ -10,6 +10,7 @@ import javax.swing.border.EtchedBorder;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.model.Robot;
+import robocup.model.Ally;
 
 public class RobotBox extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -70,7 +71,7 @@ public class RobotBox extends JPanel {
 	 */
 	public void update() {
 		setRobotStatus(robot.isOnSight());
-		robotRole.setText(robot.getRole().toString());
+		robotRole.setText(((Ally)robot).getRole().toString());
 		robotPosition.setText(robot.getPosition().getX() + ", " + robot.getPosition().getY());
 	}
 }

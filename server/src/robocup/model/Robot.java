@@ -1,6 +1,5 @@
 package robocup.model;
 
-import robocup.controller.ai.highLevelBehavior.forcebehavior.Mode;
 
 /**
  * Represents a Robot on the {@link Field}.
@@ -17,14 +16,13 @@ public abstract class Robot extends FieldObject {
 	private long powerUpTime;
 	private boolean onSight;
 	private boolean visible;		//true = visible in the GUI
-	private Mode.roles role;
+
 
 	public Robot(int robotID, boolean isKeeper, float height) {
 		super();
 		this.robotId = robotID;
 		this.isKeeper = isKeeper;
 		this.height = height;
-		this.role = null;
 		this.visible = true;
 	}
 
@@ -69,23 +67,6 @@ public abstract class Robot extends FieldObject {
 	 */
 	public void update(Point p, double updateTime, int lastCamUpdateNo) {
 		super.update(p, updateTime, lastCamUpdateNo);
-	}
-
-	/** 
-	 * Set a role (keeper/defender/attacker/etc)
-	 * @param role A role from the enumaration Mode.roles
-	 */
-	public void setRole(Mode.roles role) {
-		// System.out.println(" set role " + role);
-		this.role = role;
-	}
-
-	/**
-	 * Get the assigned role (keeper/defender/attacker/null/etc)
-	 * @return A role from the enumaration Mode.roles
-	 */
-	public Mode.roles getRole() {
-		return role;
 	}
 
 	/**

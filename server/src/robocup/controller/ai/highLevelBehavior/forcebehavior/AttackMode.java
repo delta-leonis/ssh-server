@@ -10,6 +10,7 @@ import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.*;
 import robocup.model.enums.Command;
+import robocup.model.enums.RobotMode;
 import robocup.output.ComInterface;
 import robocup.output.RobotCom;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -48,20 +49,20 @@ public class AttackMode extends Mode {
 			if (executer.getRobot().getRobotId() == world.getReferee().getAlly().getGoalie()) {
 				if (executer.getLowLevelBehavior() instanceof Keeper) {
 					// lowlevel behavior already keeper, update values
-					updateExecuter(executer, roles.KEEPER, true);
+					updateExecuter(executer, RobotMode.KEEPER, true);
 				} else {
 					// lowlevel behavior not a keeper yet,
 					// create lowlevel behavior and update
-					updateExecuter(executer, roles.KEEPER, false);
+					updateExecuter(executer, RobotMode.KEEPER, false);
 				}
 			} else {
 				if (executer.getLowLevelBehavior() instanceof Attacker) {
 					// lowlevel behavior already attacker, update values
-					updateExecuter(executer, roles.ATTACKER, true);
+					updateExecuter(executer, RobotMode.ATTACKER, true);
 				} else {
 					// lowlevel behavior not a attacker yet,
 					// create lowlevel behavior and update
-					updateExecuter(executer, roles.ATTACKER, false);
+					updateExecuter(executer, RobotMode.ATTACKER, false);
 				}
 			}
 			// TODO update executer with defender
@@ -88,13 +89,13 @@ public class AttackMode extends Mode {
 
 	@Override
 	// Genereert EN update een executer met een lowlevel behaviour
-	public void updateExecuter(RobotExecuter executer, roles type, boolean isUpdate) {
+	public void updateExecuter(RobotExecuter executer, RobotMode type, boolean isUpdate) {
 		Robot robot = executer.getRobot();
 		Ball ball = world.getBall();
 		int distanceToGoal = offset != null ? 500 : 500;	//TODO: Always returns 500
 
 		// no need to check the role first, there is no "on role changed behavior"
-		robot.setRole(type);
+		((Ally)robot).setRole(type);
 		
 		// Can I move?
 		if (world.robotMayMove(robot.getRobotId())) {

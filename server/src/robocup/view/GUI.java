@@ -20,6 +20,7 @@ import robocup.model.World;
 import robocup.view.widgets.ConsoleWidget;
 import robocup.view.widgets.ControlRobotWidget;
 import robocup.view.widgets.GameStatusWidget;
+import robocup.view.widgets.PenguinWidget;
 import robocup.view.widgets.SettingsWidget;
 import robocup.view.widgets.VisibleRobotWidget;
 
@@ -98,7 +99,7 @@ public class GUI extends JFrame {
 		widgetContainer.add(new VisibleRobotWidget(), "growx");
 		widgetContainer.add(new ControlRobotWidget(), "growx");
 		widgetContainer.add(new SettingsWidget(), "growx");
-		// widgetContainer.add(new PenguinWidget(), "growx, growy");
+		widgetContainer.add(new PenguinWidget(), "growx, growy");
 
 		this.add(widgetContainer, "growy, growx");
 	}
