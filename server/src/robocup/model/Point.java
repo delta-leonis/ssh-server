@@ -1,5 +1,7 @@
 package robocup.model;
 
+import java.awt.geom.Point2D;
+
 /**
  * Specifies a point on the {@link Field}. 
  * The drawing underneath depicts what this point represents.
@@ -23,6 +25,10 @@ public class Point {
 		super();
 		this.x = x;
 		this.y = y;
+	}
+	
+	public Point2D.Double toPoint2D(){
+		return new Point2D.Double(x,y);
 	}
 
 	/**
