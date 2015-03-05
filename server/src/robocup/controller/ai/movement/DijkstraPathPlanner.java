@@ -274,7 +274,7 @@ public class DijkstraPathPlanner {
 		source.setRemovable(false);
 		vertices.add(source);
 		
-		if(isInsideObject(beginNode.toPoint2D())) {
+		if(isInsideObject(source.toRect())) {
 			source.setStuck(true);
 			int x = (int)beginNode.getX();
 			int y = (int)beginNode.getY();
@@ -330,7 +330,7 @@ public class DijkstraPathPlanner {
 		
 		//TODO: Create new destination if we collide with something
 
-		if(isInsideObject(endNode.toPoint2D())){
+		if(isInsideObject(destination.toRect())){
 			destination.setStuck(true);
 			int x = (int)endNode.getX();
 			int y = (int)endNode.getY();
@@ -588,13 +588,13 @@ public class DijkstraPathPlanner {
 	}
 	
 	/**
-	 * checker method that checks if the geven point is within a object
+	 * checker method that checks if the given point is within a object
 	 * @param p point
 	 * @return true if point is in an object
 	 */
-	protected boolean isInsideObject(Point2D p) {
+	protected boolean isInsideObject(Rectangle2D r) {
 		for(Rectangle2D rect : objects) {
-			if(rect.contains(p))
+			if(rect.intersects(r))
 				return true;
 		}
 		return false;
