@@ -1,5 +1,6 @@
 package robocup.controller.ai.movement.test;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,9 +9,10 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import robocup.model.Point;
+import robocup.view.WidgetBox;
 
 
-public class TestPathPlannerVisualTestPanel extends JPanel implements ActionListener{
+public class TestPathPlannerVisualTestPanel extends WidgetBox implements ActionListener{
 	private static final long serialVersionUID = 1L;
 	private JButton randomButton;
 	private JButton lockedInSourceButton;
@@ -20,6 +22,7 @@ public class TestPathPlannerVisualTestPanel extends JPanel implements ActionList
 	private TestPathPlanner planner;
 	
 	public TestPathPlannerVisualTestPanel(TestPathPlanner planner){
+		super("Path Planner Test");
 		setLayout(new FlowLayout());
 		this.planner = planner;
 		plannerPanel = planner.getRandomRobotsTestPanel();
@@ -40,7 +43,8 @@ public class TestPathPlannerVisualTestPanel extends JPanel implements ActionList
 		lockedInDestinationButton.addActionListener(this);
 		robotTooCloseButton.addActionListener(this);
 		
-		add(buttonPanel);		
+		add(buttonPanel);
+		setPreferredSize(new Dimension(800, 700));
 	}
 
 	@Override
@@ -69,5 +73,11 @@ public class TestPathPlannerVisualTestPanel extends JPanel implements ActionList
 			plannerPanel.refresh(destination);
 			repaint();
 		}
+	}
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
 	}
 }

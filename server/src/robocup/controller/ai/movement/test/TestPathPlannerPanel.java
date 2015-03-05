@@ -52,7 +52,7 @@ public class TestPathPlannerPanel extends JPanel{
 		this.planner = planner;
 		this.path = planner.getRoute(World.getInstance().getAllRobots().get(0).getPosition(), destination, 0, true);
 		vertices = planner.getTestVertices();
-		setPreferredSize(new Dimension(800, 600));
+		setPreferredSize(new Dimension((int)(WIDTH * RATIO), (int)(HEIGHT * RATIO)));
 	}
 	
 	public void refresh(Point destination){
