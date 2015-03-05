@@ -35,7 +35,6 @@ public class MainHandler implements Runnable {
 			} else if (message instanceof SSL_GeometryData) {
 				geometryHandler.process((SSL_GeometryData) message);
 			} else if (message instanceof SSL_Referee) {
-				SSL_Referee a = (SSL_Referee) message;
 				refereeHandler.process((SSL_Referee) message);
 			}
 		}
