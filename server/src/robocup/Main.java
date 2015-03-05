@@ -1,7 +1,5 @@
 /**
  * Initialize the program and start all threads
- * 
- * @author Gerbrand Bosch
  */
 package robocup;
 
@@ -145,8 +143,6 @@ public class Main {
 
 	/**
 	 * Creates teams from default values in configuration file.
-	 * 
-	 * @author Gerbrand Bosch Jasper v O
 	 */
 	public static void initTeams() {
 		World w = World.getInstance();
@@ -179,8 +175,6 @@ public class Main {
 
 	/**
 	 * Initialize the client for data from SSLVISION
-	 * 
-	 * @author Gerbrand Bosch
 	 */
 	public static void initProtoBuffClients() {
 		final Properties configFile = new Properties();
@@ -203,8 +197,6 @@ public class Main {
 
 	/**
 	 * Create a client for the base station for receiving data from the robots.
-	 * 
-	 * @author Gerbrand Bosch
 	 */
 	public static void initBasestationClient() {
 		new Thread(new BaseStationClient()).start();
@@ -221,8 +213,6 @@ public class Main {
 
 	/**
 	 * Read data from the console
-	 * 
-	 * @author Gerbrand Bosch
 	 * @deprecated Unused function
 	 */
 	public static void console() {
@@ -248,8 +238,6 @@ public class Main {
 
 	/**
 	 * Initialize the intelligence
-	 * 
-	 * @author Gerbrand Bosch
 	 * @deprecated Unused function
 	 */
 	public static void initAi() {

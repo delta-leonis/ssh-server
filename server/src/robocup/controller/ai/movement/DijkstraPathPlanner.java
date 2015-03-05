@@ -12,22 +12,21 @@ import robocup.model.World;
 /**
  * Pathplanner class based on Dijkstra's algorithm
  * Converts model to a graph, find shortest path between two vertices using getRoute
- * TODO: If source is removed because of a nearby Robot, move away from said Robot and recalculate path.
  */
 public class DijkstraPathPlanner {
 
-	//TODO: Use only one value?
 	// distance from the middle of the robot to the vertices around it
 	// Basically the "Danger zone" for the Robot. A normal Robot has a radius of 90mm, so if DISTANCE_TO_ROBOT == 130mm,
-	// then it means we don't want to get within (130mm - 90mm = ) 40mm of any other Robot.
-	protected static final int DISTANCE_TO_ROBOT = 180;
+	// then it means we don't want to get within (180mm - 90mm = ) 90mm of any other Robot.
+	public static final int DISTANCE_TO_ROBOT = 180;
 	// This value is used to determine the vertex points, which are VERTEX_DISTANCE_TO_ROBOT from the middle points of the robots.
-	protected static final int VERTEX_DISTANCE_TO_ROBOT = 400;
+	public static final int VERTEX_DISTANCE_TO_ROBOT = 400;
 	private World world;
-	protected ArrayList<Rectangle2D> objects;
+	private ArrayList<Rectangle2D> objects;
 	protected ArrayList<Vertex> vertices;
-	protected ArrayList<Vertex> testVertices = null;
-//	private ArrayList<Vertex> filteredVertices;		//Moved to the function that uses it. #removeCollidingVertices() 
+	private ArrayList<Vertex> testVertices = null;
+	protected ArrayList<Vertex> notRemovableVertices; 	//Contains the source and destination.
+	
 
 	/**
 	 * Create the pathplanner
@@ -36,19 +35,20 @@ public class DijkstraPathPlanner {
 		world = World.getInstance();
 		objects = new ArrayList<Rectangle2D>();
 		vertices = new ArrayList<Vertex>();
-//		filteredVertices = new ArrayList<Vertex>();
+		notRemovableVertices = new ArrayList<Vertex>();
 	}
 
 	/**
 	 * Class representing a vertex in a graph
 	 * Contains position, neighbours and previous vertex on the route
 	 */
-	protected class Vertex {
+	public class Vertex {
 		private Point position;
 		private int distance;
 		private ArrayList<Vertex> neighbours;
 		private Vertex previous = null;
 		private boolean removable = true;
+		private boolean stuck = false;	// if start or dest is stuck
 
 		/**
 		 * Create a vertex which contains the position, 
@@ -59,6 +59,10 @@ public class DijkstraPathPlanner {
 			this.position = position;
 			distance = Integer.MAX_VALUE;
 			neighbours = new ArrayList<Vertex>();
+		}
+		
+		public Rectangle2D toRect(){
+			return new Rectangle2D.Double(position.getX() - DISTANCE_TO_ROBOT, position.getY() - DISTANCE_TO_ROBOT, DISTANCE_TO_ROBOT * 2, DISTANCE_TO_ROBOT * 2);
 		}
 
 		/**
@@ -136,11 +140,20 @@ public class DijkstraPathPlanner {
 		public boolean isRemovable() {
 			return removable;
 		}
+		
 		/**
 		 * Set false for source and destination points.
 		 */
 		public void setRemovable(boolean removable) {
 			this.removable = removable;
+		}
+		
+		public boolean isStuck(){
+			return stuck;
+		}
+		
+		public void setStuck(boolean stuck){
+			this.stuck = stuck;
 		}
 	}
 
@@ -155,14 +168,18 @@ public class DijkstraPathPlanner {
 	@SuppressWarnings("unchecked")
 	public LinkedList<Point> getRoute(Point beginNode, Point destination, int robotId, boolean testMode) {
 		LinkedList<Point> route = new LinkedList<Point>();
+		boolean found = false;
 
 		generateObjectList(robotId);
 
 		// no object on route
 		if (!intersectsObject(new Vertex(beginNode), new Vertex(destination))) {
-			reset();
 			route.push(destination);
-			return route;
+			found = true;
+			if(!testMode){
+				reset();
+				return route;
+			}
 		}
 
 		// generate vertices around robots and remove vertices colliding with
@@ -171,55 +188,254 @@ public class DijkstraPathPlanner {
 		removeCollidingVertices();
 		
 		// add source and dest to vertices list
-		Vertex source = new Vertex(beginNode);
-		source.setDist(0);
-		source.setRemovable(false);
-		vertices.add(source);
-		
-		Vertex dest = new Vertex(destination);
-		dest.setRemovable(false);
-		vertices.add(dest);
-		
-		if(!vertices.contains(source)){
-			// Create a point to go to first if the source has been removed.
-			// (This means we're too close to another Robot)
+		Vertex source = setupSource(beginNode);
+		if(source == null){
+			System.out.println("Locked in source");
+			if(testMode)
+				setTestVertices((ArrayList<Vertex>)vertices.clone());
+			return null;					//Locked in
 		}
-		
-		if(!vertices.contains(dest)){
-			// Create a new destination
+		Vertex dest = setupDestination(destination);
+		if(dest == null){
+			System.out.println("Locked in destination");
+			if(testMode)
+				setTestVertices((ArrayList<Vertex>)vertices.clone());
+			return null;					//Locked in
 		}
 		
 		// calculate neighbours for every vertex
 		generateNeighbours();
 		
 		if(testMode)
-			testVertices = (ArrayList<Vertex>)vertices.clone();
+			setTestVertices((ArrayList<Vertex>)vertices.clone());
 		
-		// calculate the shortest path through the graph
-		calculatePath(source, dest);
-
-		// add positions to the route list
-		Vertex u = dest;
-//		for(int i = 0; i < 50 && u.getPrevious() != null; i++) {
-		while (u.getPrevious() != null) {
-			route.push(u.getPosition());
-			u = u.getPrevious();
-		}
-
-		// reset lists so we can use the same pathplanner object multiple times
-		if(!testMode){
-			reset();
+		if(!found){
+			// calculate the shortest path through the graph
+			calculatePath(source, dest);
+	
+			// add positions to the route list
+			Vertex u = dest;
+	//		for(int i = 0; i < 50 && u.getPrevious() != null; i++) {
+			while (u.getPrevious() != null) {
+				route.push(u.getPosition());
+				u = u.getPrevious();
+			}
+	
+			// reset lists so we can use the same pathplanner object multiple times
+			if(!testMode){
+				reset();
+			}
 		}
 		return route;
+			
+	}
+	
+	/**
+	 * Sets up the source vertex, which has a few special properties.
+	 * - A source Vertex may not be removed.
+	 * - Its first point in its path is always one of its own generated vertices.
+	 * - If these vertices all got removed, then the source is locked in.
+	 * @param source The starting point of the robot.
+	 */
+	protected Vertex setupSource(Point beginNode){
+		boolean lockedIn = true; 	//Locked in until proven otherwise
+		Vertex source = new Vertex(beginNode);
+		source.setDist(0);
+		source.setRemovable(false);
+		vertices.add(source);
+		
+		if(isInsideObject(beginNode.toPoint2D())){
+			source.setStuck(true);
+			int x = (int)beginNode.getX();
+			int y = (int)beginNode.getY();
+			// North east
+			Vertex neighbour = new Vertex(new Point(x + VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT));
+			if(isValidPosition(source, neighbour)){
+				lockedIn = false;
+				vertices.add(neighbour);
+				source.addNeighbour(neighbour);
+			}
+//			// North
+//			neighbour = new Vertex(new Point(x, y + VERTEX_DISTANCE_TO_ROBOT));
+//			if(isValidPosition(source, neighbour)){
+//				vertices.add(neighbour);
+//				source.addNeighbour(neighbour);
+//			}
+			// South east
+			neighbour = new Vertex(new Point(x + VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT));
+			if(isValidPosition(source, neighbour)){
+				lockedIn = false;
+				vertices.add(neighbour);
+				source.addNeighbour(neighbour);
+			}
+//			// South
+//			neighbour = new Vertex(new Point(x, y - VERTEX_DISTANCE_TO_ROBOT));
+//			if(isValidPosition(source, neighbour)){
+//				vertices.add(neighbour);
+//				source.addNeighbour(neighbour);
+//			}
+//			// Middle
+//			neighbour = new Vertex(new Point(x, y));
+//			if(isValidPosition(source, neighbour)){
+//				vertices.add(neighbour);
+//				source.addNeighbour(neighbour);
+//			}
+			// North west
+			neighbour = new Vertex(new Point(x - VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT));
+			if(isValidPosition(source, neighbour)){
+				lockedIn = false;
+				vertices.add(neighbour);
+				source.addNeighbour(neighbour);
+			}
+//			// East
+//			neighbour = new Vertex(new Point(x + VERTEX_DISTANCE_TO_ROBOT, y));
+//			if(isValidPosition(source, neighbour)){
+//				vertices.add(neighbour);
+//				source.addNeighbour(neighbour);
+//			}
+			// South west
+			neighbour = new Vertex(new Point(x - VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT));
+			if(isValidPosition(source, neighbour)){
+				lockedIn = false;
+				vertices.add(neighbour);
+				source.addNeighbour(neighbour);
+			}
+//			// West
+//			neighbour = new Vertex(new Point(x - VERTEX_DISTANCE_TO_ROBOT, y));
+//			if(isValidPosition(source, neighbour)){
+//				vertices.add(neighbour);
+//				source.addNeighbour(neighbour);
+//			}
+			
+			// Stand still if we're locked in.
+			if(lockedIn)
+				return null;
+			
+			removeAllVectorsInRect(new Rectangle2D.Double(x - VERTEX_DISTANCE_TO_ROBOT + 1, y - VERTEX_DISTANCE_TO_ROBOT + 1, VERTEX_DISTANCE_TO_ROBOT*2 - 2, VERTEX_DISTANCE_TO_ROBOT*2 - 2));
+		}
+		
+		return source;
+	}
+	
+	/**
+	 * Sets up the destination node and everything associated with it.
+	 * @param endNode A {@link Point} that specifies the position of where you want to go.
+	 * @return The endNode in Vertex form.
+	 */
+	protected Vertex setupDestination(Point endNode){
+		boolean lockedIn = true;
+		Vertex destination = new Vertex(endNode);
+		destination.setRemovable(false);
+		vertices.add(destination);
+		
+		//TODO: Create new destination if we collide with something
+
+		if(isInsideObject(endNode.toPoint2D())){
+			destination.setStuck(true);
+			int x = (int)endNode.getX();
+			int y = (int)endNode.getY();
+			
+			// North east
+			Vertex neighbour = new Vertex(new Point(x + VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT));
+			if(isValidPosition(destination, neighbour)){
+				lockedIn = false;
+				vertices.add(neighbour);
+				neighbour.addNeighbour(destination);
+			}
+//			// South
+//			neighbour = new Vertex(new Point(x, y - VERTEX_DISTANCE_TO_ROBOT));
+//			if(isValidPosition(destination, neighbour)){
+//				vertices.add(neighbour);
+//				neighbour.addNeighbour(destination);
+//			}
+//			// Middle
+//			neighbour = new Vertex(new Point(x, y));
+//			if(isValidPosition(destination, neighbour)){
+//				vertices.add(neighbour);
+//				neighbour.addNeighbour(destination);
+//			}
+			// South east
+			neighbour = new Vertex(new Point(x + VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT));
+			if(isValidPosition(destination, neighbour)){
+				lockedIn = false;
+				vertices.add(neighbour);
+				neighbour.addNeighbour(destination);
+			}
+//			// North
+//			neighbour = new Vertex(new Point(x, y + VERTEX_DISTANCE_TO_ROBOT));
+//			if(isValidPosition(destination, neighbour)){
+//				vertices.add(neighbour);
+//				neighbour.addNeighbour(destination);
+//			}
+			// North west		
+			neighbour = new Vertex(new Point(x - VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT));
+			if(isValidPosition(destination, neighbour)){
+				lockedIn = false;
+				vertices.add(neighbour);
+				neighbour.addNeighbour(destination);
+			}
+//			// East
+//			neighbour = new Vertex(new Point(x + VERTEX_DISTANCE_TO_ROBOT, y));
+//			if(isValidPosition(destination, neighbour)){
+//				vertices.add(neighbour);
+//				neighbour.addNeighbour(destination);
+//			}
+			// South west
+			neighbour =new Vertex(new Point(x - VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT));
+			if(isValidPosition(destination, neighbour)){
+				lockedIn = false;
+				vertices.add(neighbour);
+				neighbour.addNeighbour(destination);
+			}
+//			// West
+//			neighbour = new Vertex(new Point(x - VERTEX_DISTANCE_TO_ROBOT, y));
+//			if(isValidPosition(destination, neighbour)){
+//				vertices.add(neighbour);
+//				neighbour.addNeighbour(destination);
+//			}
+			if(lockedIn)
+				return null;
+			
+			removeAllVectorsInRect(new Rectangle2D.Double(x - VERTEX_DISTANCE_TO_ROBOT + 1, y - VERTEX_DISTANCE_TO_ROBOT+1, VERTEX_DISTANCE_TO_ROBOT*2 -2, VERTEX_DISTANCE_TO_ROBOT*2 -2));
+		}
+		return destination;
 	}
 
 	/**
 	 * Reset objects
 	 */
-	protected void reset() {
+	public void reset() {
 		objects.clear();
 		vertices.clear();
+//		testVertices.clear();
 //		filteredVertices.clear();
+	}
+	
+	protected boolean isValidPosition(Vertex source, Vertex destination){
+		for(Rectangle2D rect : objects){
+			if(rect.intersects(source.toRect())){
+				// check whether it's in between source and destination.
+				Rectangle2D smallerRect = new Rectangle2D.Double(rect.getX() + 40, rect.getY() + 40, 180, 180);
+				if(smallerRect.intersectsLine(source.getPosition().getX(), source.getPosition().getY(), destination.getPosition()
+						.getX(), destination.getPosition().getY())){
+					return false;
+				}
+			}
+			if(rect.contains(destination.getPosition().toPoint2D())){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	protected void removeAllVectorsInRect(Rectangle2D rect){
+		ArrayList<Vertex> removeVertices = new ArrayList<Vertex>();
+		for(Vertex vertex : vertices){
+			if(vertex.isRemovable() && rect.contains(vertex.getPosition().toPoint2D())){
+				removeVertices.add(vertex);
+			}
+		}
+		vertices.removeAll(removeVertices);
 	}
 
 	/**
@@ -230,17 +446,24 @@ public class DijkstraPathPlanner {
 	 */
 	private void calculatePath(Vertex source, Vertex dest) {
 		Vertex u = source;
-		for (int i = 0; i < 50 && vertices.size() > 0; i++) {
-
+//		for (int i = 0; /*i < 50 && */vertices.size() > 0; i++) {
+		while(vertices.size() > 0){
 			if (!vertices.contains(source)) {
 				// get closest neighbour
 				u = getMinDistNeighbour(u);
+				if(u == null){
+					u = vertices.get(0);
+				}
 			}
 			
+//			System.out.println("Size: " + vertices.size());
+//			System.out.println("U: " + i + " : " + u);
 			// If we're at the destination, we're done.
-			if (u.equals(dest))
-				return;
-			
+//			if (u.equals(dest)){
+//				System.out.println("Destination: " + u + " Previous: " + u.getPrevious());
+//				return;
+//			}
+//			
 			vertices.remove(u);
 
 			// calculate new costs for neighbours
@@ -253,19 +476,19 @@ public class DijkstraPathPlanner {
 					v.setPrevious(u);
 				}
 			}
+//			System.out.println();
 		}
 	}
 	
 
 	/**
 	 * Get the closest neighbour for the vertex u
-	 * TODO: If the vertex is "locked in", infinite loops will ensue
 	 * @param u the vertex
 	 * @return closest neighbour vertex
 	 */
 	private Vertex getMinDistNeighbour(Vertex u) {
 		int minDist = Integer.MAX_VALUE;
-		Vertex closest = u;
+		Vertex closest = null;
 
 		for (Vertex v : u.getNeighbours()) {
 			int dist = getDistance(u, v);
@@ -299,6 +522,7 @@ public class DijkstraPathPlanner {
 	protected void generateObjectList(int robotId) {
 		// WARNING: documentation for Rectangle2D.Double states the upper left corner should be specified,
 		// use lower left corner instead
+		objects.clear();
 		for (Robot r : world.getReferee().getAlly().getRobotsOnSight())
 			if (r.getPosition() != null)
 				if (r.getRobotId() != robotId)
@@ -315,15 +539,28 @@ public class DijkstraPathPlanner {
 	 * Generate vertices around every robot in the robot list
 	 */
 	protected void generateVertices() {
-		for (Rectangle2D rect : objects) {
+		vertices.clear();
+		for (Rectangle2D rect : getObjects()) {
 			int x = (int) rect.getCenterX();
 			int y = (int) rect.getCenterY();
 
-			vertices.add(new Vertex(new Point(x + VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT)));
-			vertices.add(new Vertex(new Point(x + VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT)));
-			vertices.add(new Vertex(new Point(x - VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT)));
-			vertices.add(new Vertex(new Point(x - VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT)));
+			if(!isObjectNotRemovable(x,y)){	//Avoid double vertices from pre-generated vertices in source and dest.
+				vertices.add(new Vertex(new Point(x + VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT)));
+				vertices.add(new Vertex(new Point(x + VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT)));
+				vertices.add(new Vertex(new Point(x - VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT)));
+				vertices.add(new Vertex(new Point(x - VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT)));
+			}
 		}
+	}
+	
+	
+	protected boolean isObjectNotRemovable(int x, int y){
+		for(Vertex vertex : notRemovableVertices){
+			if((int)vertex.getPosition().getX() == x || (int)vertex.getPosition().getY() == y){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -331,7 +568,7 @@ public class DijkstraPathPlanner {
 	 */
 	protected void removeCollidingVertices() {
 		ArrayList<Vertex> filteredVertices = new ArrayList<Vertex>();
-		for (Rectangle2D rect : objects)
+		for (Rectangle2D rect : getObjects())
 			for (Vertex v : vertices)
 				if (rect.contains(v.getPosition().getX(), v.getPosition().getY()) && v.isRemovable())
 					filteredVertices.add(v);
@@ -346,8 +583,9 @@ public class DijkstraPathPlanner {
 		for (Vertex vertex1 : vertices)
 			for (Vertex vertex2 : vertices)
 				if (!vertex1.equals(vertex2))
-					if (!intersectsObject(vertex1, vertex2))
-						vertex1.addNeighbour(vertex2);
+//					if(/*vertex1.isRemovable() && vertex2.isRemovable()*/ !vertex1.isStuck() && !vertex2.isStuck())	//Pre-generated.
+						if (!intersectsObject(vertex1, vertex2))
+							vertex1.addNeighbour(vertex2);					
 	}
 
 	/**
@@ -362,79 +600,41 @@ public class DijkstraPathPlanner {
 
 	/**
 	 * calculate if there's an object between two vertices
-	 * @param vertex1
-	 * @param vertex2
+	 * @param source
+	 * @param destination
 	 * @return true when an object is found between the vertices
 	 */
-	protected boolean intersectsObject(Vertex vertex1, Vertex vertex2) {
-//		for (Rectangle2D rect : objects)
-//			if (rect.intersectsLine(vertex1.getPosition().getX(), vertex1.getPosition().getY(), vertex2.getPosition()
-//					.getX(), vertex2.getPosition().getY()))
-//				return true;
-//
-//		return false;
-		for (Rectangle2D rect : objects){
-			if(!vertex1.isRemovable() && rect.contains(new Point2D.Double(vertex1.getPosition().getX(),
-																	vertex1.getPosition().getY()))){	//Don't count source and dest as collision.
-//				rect.
-				continue;
-			}
-			if(!vertex2.isRemovable() && rect.contains(new Point2D.Double(vertex2.getPosition().getX(),
-																			vertex2.getPosition().getY()))){	//Don't count source and dest as collision.
-				continue;
-			}
-			if (rect.intersectsLine(vertex1.getPosition().getX(), vertex1.getPosition().getY(), 
-					vertex2.getPosition().getX(), vertex2.getPosition().getY())){
+	protected boolean intersectsObject(Vertex source, Vertex destination) {
+		//TODO: MAKE SURE NEIGHBOURS OF A NOT REMOVABLE VERTEX DON'T GET REMOVED.
+		for (Rectangle2D rect : objects)
+			if (rect.intersectsLine(source.getPosition().getX(), source.getPosition().getY(), destination.getPosition()
+					.getX(), destination.getPosition().getY()))
 				return true;
-			}
-		}
+		
 		return false;
 	}
 	
-	/**
-	 * Uhhhhhh. Nog bezig met testen.
-	 * Splits Rectangle in four, for collision testing
-	 * @param vertex1 Source point
-	 * @param vertex2 Destination point
-	 * @param rect	Our obstacle
-	 * @returns true 
-	 */
-	public boolean intersectsNotRemovableObject(Point2D vertex1, Point2D vertex2, Rectangle2D rect){
-		double halfWidth = rect.getWidth();
-		double halfHeight = rect.getHeight();
-		//Split rectangle in 4
-		// north west
-		if(checkRealCollision(vertex1, vertex2, new Rectangle2D.Double(rect.getX(),
-																		rect.getY() + halfHeight, 
-																		halfWidth, halfHeight))){
-			return true;
-		}
-		// north east
-		if(checkRealCollision(vertex1, vertex2, new Rectangle2D.Double(rect.getX() + halfWidth,
-																		rect.getY() + halfHeight,
-																		halfWidth, halfHeight))){
-			return true;
-		}
-		// south west
-		if(checkRealCollision(vertex1, vertex2, new Rectangle2D.Double(rect.getX() + halfWidth,
-																		rect.getY() + halfHeight, 
-																		halfWidth, halfHeight))){
-			return true;
-		}
-		// south east
-		if(checkRealCollision(vertex1, vertex2, new Rectangle2D.Double(rect.getX(),
-																		rect.getY() + halfHeight, 
-																		halfWidth, halfHeight))){
-			return true;
+	protected boolean isInsideObject(Point2D p){
+		for(Rectangle2D rect : objects){
+			if(rect.contains(p))
+				return true;
 		}
 		return false;
 	}
-	
-	public boolean checkRealCollision(Point2D vertex1, Point2D vertex2, Rectangle2D rectangleSection){
-		if(rectangleSection.contains(vertex1) || rectangleSection.contains(vertex2) || 
-				rectangleSection.intersectsLine(vertex1.getX(), vertex1.getY(), vertex2.getX(), vertex2.getY())){
-			return true;
-		}
-		return false;
+
+	public ArrayList<Vertex> getTestVertices() {
+		return testVertices;
+	}
+
+	public void setTestVertices(ArrayList<Vertex> testVertices) {
+		this.testVertices = testVertices;
+	}
+
+	public ArrayList<Rectangle2D> getObjects() {
+		return objects;
+	}
+
+	public void setObjects(ArrayList<Rectangle2D> objects) {
+		this.objects = objects;
 	}
 }

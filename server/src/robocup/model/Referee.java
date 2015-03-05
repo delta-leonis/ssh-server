@@ -8,8 +8,6 @@ import robocup.model.enums.Stage;
 
 /**
  * Model representation of the "game", including the teams and rules
- * @author jasper
- *
  */
 public class Referee {
 
@@ -23,10 +21,9 @@ public class Referee {
 	private boolean yellowTeamPlaysRight;
 
 	private final int PLAYING_TEAM_SIZE = 8;
-	
+
 	private Team ourTeam;
 	private Team enemyTeam;
-	
 
 	/**
 	 * constructor that initialises the default values, takes no argument
@@ -38,7 +35,7 @@ public class Referee {
 		command = Command.STOP;
 		stage = Stage.POST_GAME;
 	}
-	
+
 	/**
 	 * Method that accepts a list with robots, and adds them to the robotlist of the ally team
 	 * @param teamRobots the robots from the world mode class
@@ -56,7 +53,7 @@ public class Referee {
 		enemyTeam = new Team("", Color.YELLOW, PLAYING_TEAM_SIZE);
 		enemyTeam.setRobots(teamRobots);
 	}
-	
+
 	/**
 	 * a method that is called every time a protobuff message arrives from the hadlerr
 	 * the arguments send the new declared values
@@ -89,7 +86,7 @@ public class Referee {
 	public boolean isStage(Stage controlStage) {
 		return controlStage == stage;
 	}
-	
+
 	/**
 	 * method that returns the current timeout time for given yellow cards
 	 * @return the timeoutTimeLeft
@@ -176,7 +173,7 @@ public class Referee {
 	public void setStart(boolean start) {
 		this.start = start;
 	}
-	
+
 	/**
 	 * Returns the {@link Team} with the given color.
 	 * @param color the color of the {@link Team}
@@ -190,7 +187,7 @@ public class Referee {
 
 		return null;
 	}
-	
+
 	/**
 	 * Sets the Color for our own Team.
 	 * Suggestion: Rename to setAllyTeamColor()
@@ -206,7 +203,7 @@ public class Referee {
 			enemyTeam.setColor(Color.BLUE);
 		}
 	}
-	
+
 	/**
 	 * Returns the color of your own team.
 	 * Suggestion: Rename to getAllyTeamColor()
@@ -231,7 +228,7 @@ public class Referee {
 	public Team getEnemy() {
 		return enemyTeam;
 	}
-	
+
 	/**
 	 * setter function that sets the team that plays on the right side, the color identifies the team
 	 * @param color the color of the team that has to play on the right side of the field
@@ -253,7 +250,7 @@ public class Referee {
 			return !yellowTeamPlaysRight;
 		}
 	}
-	
+
 	/**
 	 * comparison method that returns if the team that plays on the left side has the same color as the given argument
 	 * @param color the color that will be compared
@@ -267,7 +264,7 @@ public class Referee {
 			return yellowTeamPlaysRight;
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Referee [timeoutTimeLeft=" + timeoutTimeLeft + ", stagetimeLeft=" + stagetimeLeft + ", stage=" + stage

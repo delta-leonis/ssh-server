@@ -5,8 +5,6 @@ import java.io.IOException;
 
 /**
  * Only override startListening()
- * @author Erik Hubers, Gerbrand Bosch
- *
  */
 public class SSLVisionClient extends UDPClient {
 
