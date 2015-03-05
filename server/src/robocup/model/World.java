@@ -3,7 +3,7 @@ package robocup.model;
 import java.util.ArrayList;
 import java.util.Observable;
 
-import robocup.model.enums.Color;
+import robocup.model.enums.TeamColor;
 import robocup.model.enums.Command;
 import robocup.view.GUI;
 /**
@@ -121,7 +121,7 @@ public class World extends Observable {
 	 * @param color the color of the {@link Team}
 	 * @return the {@link Team} with the given color. Returns null if there is no {@link Team} with the given color.
 	 */
-	public Team getTeamByColor(Color color) {
+	public Team getTeamByColor(TeamColor color) {
 		return referee.getTeamByColor(color);
 	}
 
@@ -213,7 +213,7 @@ public class World extends Observable {
 	 * @return
 	 */
 	@Deprecated
-	public Color getOwnTeamColor() {
+	public TeamColor getOwnTeamColor() {
 		return referee.getOwnTeamColor();
 	}
 }

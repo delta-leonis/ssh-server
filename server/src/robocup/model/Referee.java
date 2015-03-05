@@ -2,7 +2,7 @@ package robocup.model;
 
 import java.util.ArrayList;
 
-import robocup.model.enums.Color;
+import robocup.model.enums.TeamColor;
 import robocup.model.enums.Command;
 import robocup.model.enums.Stage;
 
@@ -41,7 +41,7 @@ public class Referee {
 	 * @param teamRobots the robots from the world mode class
 	 */
 	public void initAllyTeam(ArrayList<Robot> teamRobots) {
-		ourTeam = new Team("", Color.BLUE, PLAYING_TEAM_SIZE);
+		ourTeam = new Team("", TeamColor.BLUE, PLAYING_TEAM_SIZE);
 		ourTeam.setRobots(teamRobots);
 	}
 
@@ -50,7 +50,7 @@ public class Referee {
 	 * @param teamRobots the robots from the world mode class
 	 */
 	public void initEnemyTeam(ArrayList<Robot> teamRobots) {
-		enemyTeam = new Team("", Color.YELLOW, PLAYING_TEAM_SIZE);
+		enemyTeam = new Team("", TeamColor.YELLOW, PLAYING_TEAM_SIZE);
 		enemyTeam.setRobots(teamRobots);
 	}
 
@@ -179,7 +179,7 @@ public class Referee {
 	 * @param color the color of the {@link Team}
 	 * @return the {@link Team} with the given color. Returns null if there is no {@link Team} with the given color.
 	 */
-	public Team getTeamByColor(Color color) {
+	public Team getTeamByColor(TeamColor color) {
 		if (ourTeam.isColor(color))
 			return ourTeam;
 		else if (enemyTeam.isColor(color))
@@ -194,13 +194,13 @@ public class Referee {
 	 * @param color
 	 * 
 	 */
-	public void switchAllyTeamColor(Color color) {
-		if (color == Color.BLUE) {
-			ourTeam.setColor(Color.BLUE);
-			enemyTeam.setColor(Color.YELLOW);
+	public void switchAllyTeamColor(TeamColor color) {
+		if (color == TeamColor.BLUE) {
+			ourTeam.setColor(TeamColor.BLUE);
+			enemyTeam.setColor(TeamColor.YELLOW);
 		} else {
-			ourTeam.setColor(Color.YELLOW);
-			enemyTeam.setColor(Color.BLUE);
+			ourTeam.setColor(TeamColor.YELLOW);
+			enemyTeam.setColor(TeamColor.BLUE);
 		}
 	}
 
@@ -209,7 +209,7 @@ public class Referee {
 	 * Suggestion: Rename to getAllyTeamColor()
 	 * @return 
 	 */
-	public Color getOwnTeamColor() {
+	public TeamColor getOwnTeamColor() {
 		return ourTeam.getColor();
 	}
 
@@ -233,8 +233,8 @@ public class Referee {
 	 * setter function that sets the team that plays on the right side, the color identifies the team
 	 * @param color the color of the team that has to play on the right side of the field
 	 */
-	public void setRightTeamByColor(Color color) {
-		yellowTeamPlaysRight = (color == Color.YELLOW);
+	public void setRightTeamByColor(TeamColor color) {
+		yellowTeamPlaysRight = (color == TeamColor.YELLOW);
 	}
 
 	/**
@@ -242,8 +242,8 @@ public class Referee {
 	 * @param color the color that will be compared
 	 * @return whether or not the team on the right has the given color
 	 */
-	public boolean getDoesTeamPlaysRight(Color color) {
-		boolean teamIsYellow = (color == Color.YELLOW);
+	public boolean getDoesTeamPlaysRight(TeamColor color) {
+		boolean teamIsYellow = (color == TeamColor.YELLOW);
 		if (teamIsYellow) {
 			return yellowTeamPlaysRight;
 		} else {
@@ -256,8 +256,8 @@ public class Referee {
 	 * @param color the color that will be compared
 	 * @return whether or not the team on the right has the given color
 	 */
-	public boolean getDoesTeamPlaysLeft(Color color) {
-		boolean teamIsYellow = (color == Color.YELLOW);
+	public boolean getDoesTeamPlaysLeft(TeamColor color) {
+		boolean teamIsYellow = (color == TeamColor.YELLOW);
 		if (teamIsYellow) {
 			return !yellowTeamPlaysRight;
 		} else {

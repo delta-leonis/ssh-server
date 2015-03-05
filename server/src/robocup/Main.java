@@ -19,7 +19,7 @@ import robocup.input.RefereeClient;
 import robocup.input.SSLVisionClient;
 import robocup.model.Field;
 import robocup.model.World;
-import robocup.model.enums.Color;
+import robocup.model.enums.TeamColor;
 
 public class Main {
 
@@ -160,7 +160,7 @@ public class Main {
 			w.getReferee().getAlly().setName(ourTeamName);
 			w.getReferee().getEnemy().setName(enemyTeamName);
 			
-			w.getReferee().switchAllyTeamColor(Color.valueOf(ourTeamColor));
+			w.getReferee().switchAllyTeamColor(TeamColor.valueOf(ourTeamColor));
 			
 		} catch (IllegalArgumentException e) {
 			LOGGER.severe("Please check the config file for type errors");

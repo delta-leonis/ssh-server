@@ -2,7 +2,7 @@ package robocup.controller.handlers.protohandlers;
 
 import robocup.input.protobuf.Referee.SSL_Referee;
 import robocup.model.World;
-import robocup.model.enums.Color;
+import robocup.model.enums.TeamColor;
 import robocup.model.enums.Command;
 import robocup.model.enums.Stage;
 
@@ -27,10 +27,10 @@ public class RefereeHandler {
 		// getStageTimeLeft
 
 		// Update Teams
-		world.getTeamByColor(Color.valueOf("BLUE")).update(message.getBlue().getName(), message.getBlue().getScore(),
+		world.getTeamByColor(TeamColor.valueOf("BLUE")).update(message.getBlue().getName(), message.getBlue().getScore(),
 				message.getBlue().getRedCards(), message.getBlue().getYellowCards(), message.getBlue().getTimeouts(),
 				message.getBlue().getGoalie());
-		world.getTeamByColor(Color.valueOf("YELLOW")).update(message.getYellow().getName(),
+		world.getTeamByColor(TeamColor.valueOf("YELLOW")).update(message.getYellow().getName(),
 				message.getYellow().getScore(), message.getYellow().getRedCards(),
 				message.getYellow().getYellowCards(), message.getYellow().getTimeouts(),
 				message.getYellow().getGoalie());

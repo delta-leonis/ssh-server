@@ -2,14 +2,14 @@ package robocup.model;
 
 import java.util.ArrayList;
 
-import robocup.model.enums.Color;
+import robocup.model.enums.TeamColor;
 
 /**
  * Represents a Team in a Robocup match.
  */
 public class Team {
 	private String name;
-	private Color color;
+	private TeamColor color;
 	private int score;
 	private int timeoutsLeft;
 	private ArrayList<Long> remainingCardTimes;
@@ -21,7 +21,7 @@ public class Team {
 	@SuppressWarnings("unused")
 	private int onsiteTeamSize;
 
-	public Team(String name, Color color, int onsiteTeamSize) {
+	public Team(String name, TeamColor color, int onsiteTeamSize) {
 		this.name = name;
 		this.color = color;
 		this.onsiteTeamSize = onsiteTeamSize;
@@ -31,7 +31,7 @@ public class Team {
 		robots = new ArrayList<Robot>();
 	}
 	
-	public Team(String name, Color color, int yellowCards, int redCards, int score, int timeoutsLeft, int goalie) {
+	public Team(String name, TeamColor color, int yellowCards, int redCards, int score, int timeoutsLeft, int goalie) {
 		this.name = name;
 		this.color = color;
 		this.yellowCards = yellowCards;
@@ -85,7 +85,7 @@ public class Team {
 	/**
 	 * @return color of this Team
 	 */
-	public Color getColor() {
+	public TeamColor getColor() {
 		return color;
 	}
 
@@ -93,7 +93,7 @@ public class Team {
 	 * Sets the Color of this team.
 	 * @param color: The Color you want this Team to have.
 	 */
-	public void setColor(Color color) {
+	public void setColor(TeamColor color) {
 		this.color = color;
 	}
 
@@ -233,9 +233,9 @@ public class Team {
 	
 	/**
 	 * Checks whether this Team is of the given color
-	 * @return true if this Team is of the given color, false otherwise.  Used in {@link World#getTeamByColor(Color color) World.getTeamByColor(Color)}
+	 * @return true if this Team is of the given color, false otherwise.  Used in {@link World#getTeamByColor(TeamColor color) World.getTeamByColor(Color)}
 	 */
-	public boolean isColor(Color color){
+	public boolean isColor(TeamColor color){
 		return color.equals(this.color);
 	}
 

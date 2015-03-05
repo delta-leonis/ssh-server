@@ -11,7 +11,7 @@ import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.model.Team;
 import robocup.model.World;
-import robocup.model.enums.Color;
+import robocup.model.enums.TeamColor;
 
 public class DetectionHandler {
 
@@ -83,7 +83,7 @@ public class DetectionHandler {
 		for (SSL_DetectionRobot robot : blueList) {
 			for (int id : validEnemyRobotIDs) {
 				if (robot.getRobotId() == id) {
-					updateRobot(Color.BLUE, robot, time, camNo);
+					updateRobot(TeamColor.BLUE, robot, time, camNo);
 				}
 			}
 		}
@@ -91,7 +91,7 @@ public class DetectionHandler {
 		for (SSL_DetectionRobot robot : yellowList) {
 			for (int id : validRobotIDs) {
 				if (robot.getRobotId() == id) {
-					updateRobot(Color.YELLOW, robot, time, camNo);
+					updateRobot(TeamColor.YELLOW, robot, time, camNo);
 				}
 			}
 		}
@@ -107,7 +107,7 @@ public class DetectionHandler {
 	 * @param updateTime
 	 *            time of update
 	 */
-	public void updateRobot(Color color, SSL_DetectionRobot robotMessage, double updateTime, int camNo) {
+	public void updateRobot(TeamColor color, SSL_DetectionRobot robotMessage, double updateTime, int camNo) {
 		Team t = world.getTeamByColor(color);
 		// No team or robotID set. Reject data.
 		if (t == null || robotMessage.hasRobotId() == false) {
