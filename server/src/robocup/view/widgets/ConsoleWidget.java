@@ -21,6 +21,7 @@ public class ConsoleWidget extends WidgetBox {
 	private Object[][] data = {};
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private DefaultTableModel model;
+	private JTable table;
 
 	/**
 	 * Create ConsoleWidget
@@ -29,7 +30,7 @@ public class ConsoleWidget extends WidgetBox {
 		super("Console");
 		setLayout(new MigLayout("", "[grow]", "[grow]"));
 
-		JTable table = new JTable(new DefaultTableModel(data, header));
+		table = new JTable(new DefaultTableModel(data, header));
 		table.setEnabled(false);
 		model = (DefaultTableModel) table.getModel();
 		add(new JScrollPane(table), "growy, growx");
@@ -54,6 +55,7 @@ public class ConsoleWidget extends WidgetBox {
 		public void publish(LogRecord record) {
 			model.addRow(new Object[] { record.getSequenceNumber(), toTime(record.getMillis()), record.getLevel(),
 					record.getMessage() });
+	        table.scrollRectToVisible(table.getCellRect(table.getRowCount()-1, 0, true));
 		}
 	}
 
