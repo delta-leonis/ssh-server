@@ -7,10 +7,15 @@ import robocup.output.ComInterface;
 import robocup.model.enums.RobotMode;
 
 /**
+ * Stoorder
+ * Bezet lijn tussen bal en midden van eigen goal met een offset ten opzichte van de bal
+ * 
  * Describes the low-level behaviour for a Blocker Robot.
  * These Robots attempt to interrupt the enemy by getting in between the enemy {@link Robot} and the {@link Ball}
+ * TODO: remove defenderPosition. Variable can be acquired through robot.getPosition(). This variable isn't even in use.
+ * TODO: English-fy
  */
-public class Blocker extends LowLevelBehavior {
+public class Stoorder extends LowLevelBehavior {
 
 	protected Point ballPosition;
 	protected Point opponentPosition;
@@ -28,7 +33,7 @@ public class Blocker extends LowLevelBehavior {
 	 * @param opponentPosition center position of the opponent / enemy. See {@link Point}
 	 * @param opponentId The Id of the opponent this Robot is trying to interrupt.
 	 */
-	public Blocker(Robot robot, ComInterface output, int distanceToOpponent, Point ballPosition,
+	public Stoorder(Robot robot, ComInterface output, int distanceToOpponent, Point ballPosition,
 			Point defenderPosition, Point opponentPosition, int opponentId) {
 		super(robot, output);
 

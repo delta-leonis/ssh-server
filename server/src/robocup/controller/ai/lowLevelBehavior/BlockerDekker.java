@@ -1,25 +1,24 @@
 package robocup.controller.ai.lowLevelBehavior;
 
-import robocup.model.enums.RobotMode;
-import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.output.ComInterface;
 
 /**
- * Blocked and BlockerVooruit in documentation.
- *
+ * BlockerDekker
+ * Bezet lijn tussen midden van eigen goal en de bal met offset opzij en offset naar voren (blijft op rand strafschopgebied). 
+ * Bezet lijn tussen tegenstander en bal als er een tegenstander aanwezig is in zone ‘2ePaal’ of ‘Hoek’.
+ * TODO: English-fy
+ * TODO: Thomas: Deze rol is dus in principe hetzelfde als KeeperDefender, 
+ * maar in plaats van het verdedigen van een punt, gaat hij heen en weer over een lijn?
  */
-public class KeeperDefender extends Keeper {
+public class BlockerDekker extends KeeperDefender{
 
 	private Point offset;
 
-	public KeeperDefender(Robot robot, ComInterface output, int distanceToGoal, boolean goToKick, Point ballPosition,
+	public BlockerDekker(Robot robot, ComInterface output, int distanceToGoal, boolean goToKick, Point ballPosition,
 			Point keeperPosition, Point centerGoalPosition, Point offset, int yMax) {
-		super(robot, output, distanceToGoal, goToKick, ballPosition, keeperPosition, centerGoalPosition, yMax);
-		this.offset = offset;
-		this.role = RobotMode.DEFENDER;
-		go = new GotoPosition(robot, output, centerGoalPosition, ballPosition, 2000);
+		super(robot, output, distanceToGoal, goToKick, ballPosition, keeperPosition, centerGoalPosition, offset, yMax);
 	}
 
 	/**
@@ -46,4 +45,5 @@ public class KeeperDefender extends Keeper {
 
 		return newDestination;
 	}
+
 }
