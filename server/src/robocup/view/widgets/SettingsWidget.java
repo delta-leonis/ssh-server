@@ -67,6 +67,12 @@ public class SettingsWidget extends WidgetBox {
 				ComInterface.getInstance(RobotCom.class).send(127, frequency);
 				break;
 
+			case "Terminate":
+			{
+				LOGGER.info("Terminate command send to all robots");
+				ComInterface.getInstance(RobotCom.class).send(1, 0, 0, 0, 0, 0, 0,0, false);
+				break;
+			}
 			case "Set fieldhalf":
 				if (fieldHalfBox.getSelectedItem().equals("right"))
 					World.getInstance().getReferee()

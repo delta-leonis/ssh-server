@@ -6,7 +6,7 @@ package robocup.controller.ai.highLevelBehavior.forcebehavior;
 import java.util.ArrayList;
 
 import robocup.controller.ai.highLevelBehavior.forcebehavior.forceCalculator.FieldForces;
-import robocup.controller.ai.lowLevelBehavior.Blocker;
+import robocup.controller.ai.lowLevelBehavior.Stoorder;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Ball;
 import robocup.model.Point;
@@ -217,7 +217,7 @@ public abstract class Mode {
 		for (RobotExecuter executer : executers) {
 			if (executer.getLowLevelBehavior().getRole() == RobotMode.BLOCKER) {
 
-				if (robot.getRobotId() == ((Blocker) executer.getLowLevelBehavior()).getOpponentId()) {
+				if (robot.getRobotId() == ((Stoorder) executer.getLowLevelBehavior()).getOpponentId()) {
 					return true;
 				}
 			}

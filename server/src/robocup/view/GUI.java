@@ -23,6 +23,7 @@ import robocup.view.widgets.GameStatusWidget;
 import robocup.view.widgets.PenguinWidget;
 import robocup.view.widgets.SettingsWidget;
 import robocup.view.widgets.VisibleRobotWidget;
+import robocup.view.widgets.rotateRobotWidget;
 
 @SuppressWarnings("serial")
 public class GUI extends JFrame {
@@ -99,7 +100,8 @@ public class GUI extends JFrame {
 		widgetContainer.add(new VisibleRobotWidget(), "growx");
 		widgetContainer.add(new ControlRobotWidget(), "growx");
 		widgetContainer.add(new SettingsWidget(), "growx");
-		widgetContainer.add(new PenguinWidget(), "growx, growy");
+	//	widgetContainer.add(new PenguinWidget(), "growx, growy");
+		widgetContainer.add(new rotateRobotWidget(), "growx, growy");
 
 		this.add(widgetContainer, "growy, growx");
 	}
