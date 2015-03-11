@@ -13,24 +13,24 @@ public class AttackMode extends Mode {
 	@Override
 	public void handleAttacker(RobotExecuter executer) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void handleBlocker(RobotExecuter executer) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void handleDefender(RobotExecuter executer) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void handleKeeper(RobotExecuter executer) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

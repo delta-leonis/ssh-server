@@ -24,15 +24,19 @@ public abstract class Mode {
 	}
 
 	public void updateExecuter(RobotExecuter executer, RobotMode role) {
-		switch(role) {
+		switch (role) {
 		case ATTACKER:
 			handleAttacker(executer);
+			break;
 		case BLOCKER:
 			handleBlocker(executer);
+			break;
 		case DEFENDER:
 			handleDefender(executer);
+			break;
 		case KEEPER:
 			handleKeeper(executer);
+			break;
 		default:
 			System.out.println("Unknown role in Mode, role: " + role);
 		}
