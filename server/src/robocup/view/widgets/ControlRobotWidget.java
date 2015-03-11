@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
@@ -25,6 +26,12 @@ public class ControlRobotWidget extends WidgetBox{
 	private int selectedRobotId;
 	private boolean dribbling = false
 				  , keyPressed = false;
+	private int lastKey;
+	private long lastPressed =0,
+							firstPressed =0;
+	
+	private int currentCode = 0;		//Test.
+
 	
 	/**
 	 * Create ControLRobotWidget
@@ -86,11 +93,19 @@ public class ControlRobotWidget extends WidgetBox{
 				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, 0, dribbling);
 				break;
 			case "↑":
-				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 200, 0, 0, 0, 0, dribbling);
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 500, 0, 0, 0, 0, dribbling);
+				System.out.println("Forwards we go!" );
+				break;
+			case "↓":
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, -500, 0, 0, 0, 0, dribbling);
+				break;
+			case "←":
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, -200, 0, dribbling);
+				break;
+			case "→":
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 200, 0, dribbling);
 				break;
 			}
-			
-			
 		}
 	}
 	
@@ -98,33 +113,36 @@ public class ControlRobotWidget extends WidgetBox{
 		@Override
 		public void keyPressed(KeyEvent e){
 			int code = e.getKeyCode();
-			if(code != KeyEvent.VK_ESCAPE && keyPressed)
-				return;
 			
 			switch(code){
-				case KeyEvent.VK_UP:
-					System.out.println("Test! " + code);
-					keyPressed = true;
-					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 200, 0, 0, 0, 0, dribbling);
+				case KeyEvent.VK_W:
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 3000, 0, 0, 0, 0, dribbling);
 					break;
-				case KeyEvent.VK_DOWN:
-					System.out.println("Test! " + code);
-					keyPressed = true;
-					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, -200, 0, 0, 0, 0, dribbling);
+				case KeyEvent.VK_S:
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, -3000, 0, 0, 0, 0, dribbling);
 					break;
-				case KeyEvent.VK_LEFT:
-					System.out.println("Test! " + code);
-					keyPressed = true;
-					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 20, 0, dribbling);
+				case KeyEvent.VK_A:
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, -100, 0, dribbling);
 					break;
-				case KeyEvent.VK_RIGHT:
-					System.out.println("Test! " + code);
-					keyPressed = true;
-					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, -20, 0, dribbling);
+				case KeyEvent.VK_D:
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 100, 0, dribbling);
 					break;
+				case KeyEvent.VK_E:
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, -100, dribbling);
+					break;
+					
+				case KeyEvent.VK_Q:
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, 100, dribbling);
+					break;
+					
+				case KeyEvent.VK_R:
+					dribbling = !dribbling;
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, 0, dribbling);
+					break;
+
 				case KeyEvent.VK_ESCAPE:
-					System.out.println("Test! " + code);
-					keyPressed = false;
+				case KeyEvent.VK_SPACE:
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0,0, false);
 					for(int i = 0; i < 12; ++i){
 						ComInterface.getInstance(RobotCom.class).send(1, i, 0, 0, 0, 0, 0,0, false);
 					}
@@ -134,13 +152,10 @@ public class ControlRobotWidget extends WidgetBox{
 
 		@Override
 		public void keyReleased(KeyEvent e) {
-			System.out.println("Test! ");
-			keyPressed = false;
-			ComInterface.getInstance(RobotCom.class).send(1,selectedRobotId, 0, 0, 0, 0, 0,0, false);
 		}
 
 		@Override
-		public void keyTyped(KeyEvent e) {			
+		public void keyTyped(KeyEvent e) {		
 		}
 	}
 
