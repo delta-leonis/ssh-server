@@ -36,13 +36,28 @@ public class ControlRobotWidget extends WidgetBox {
 		JButton chipButton = new JButton("Chippen");
 		JButton kickButton = new JButton("Kicken");
 		JButton dribbleToggleButton = new JButton("Dribble toggle");
+		JButton moveForwardButton = new JButton("↑");
+		JButton moveBackButton = new JButton("↓");
+		JButton moveLeftButton = new JButton("←");
+		JButton moveRightButton = new JButton("→");
+
 		chipButton.addActionListener(new ButtonListener());
 		kickButton.addActionListener(new ButtonListener());
 		dribbleToggleButton.addActionListener(new ButtonListener());
+		moveForwardButton.addActionListener(new ButtonListener());
+		moveBackButton.addActionListener(new ButtonListener());
+		moveLeftButton.addActionListener(new ButtonListener());
+		moveRightButton.addActionListener(new ButtonListener());
 
 		add(chipButton, "growx");
 		add(kickButton, "growx");
 		add(dribbleToggleButton, "growx");
+		add(new JLabel(), "growx");
+		add(moveForwardButton, "growx");
+		add(new JLabel(), "growx");
+		add(moveLeftButton, "growx");
+		add(moveBackButton, "growx");
+		add(moveRightButton, "growx");
 	}
 
 	/**
@@ -63,7 +78,12 @@ public class ControlRobotWidget extends WidgetBox {
 				dribbling = !dribbling;
 				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, 0, dribbling);
 				break;
+			case "↑":
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 200, 0, 0, 0, 0, dribbling);
+				break;
 			}
+			
+			
 		}
 	}
 
