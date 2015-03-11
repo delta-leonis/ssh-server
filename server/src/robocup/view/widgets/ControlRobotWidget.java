@@ -21,6 +21,7 @@ public class ControlRobotWidget extends WidgetBox {
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private JLabel selectedRobotLabel;
 	private int selectedRobotId;
+	private boolean dribbling = false;
 
 	/**
 	 * Create ControLRobotWidget
@@ -28,18 +29,20 @@ public class ControlRobotWidget extends WidgetBox {
 	public ControlRobotWidget() {
 		super("Control robot");
 
-		setLayout(new MigLayout("wrap 2", "[grow][grow]"));
+		setLayout(new MigLayout("wrap 3", "[grow][grow][grow]"));
 		selectedRobotLabel = new JLabel("Robot #0 selected");
 		add(selectedRobotLabel, "span");
 
 		JButton chipButton = new JButton("Chippen");
 		JButton kickButton = new JButton("Kicken");
+		JButton dribbleToggleButton = new JButton("Dribble toggle");
 		chipButton.addActionListener(new ButtonListener());
 		kickButton.addActionListener(new ButtonListener());
+		dribbleToggleButton.addActionListener(new ButtonListener());
 
 		add(chipButton, "growx");
 		add(kickButton, "growx");
-
+		add(dribbleToggleButton, "growx");
 	}
 
 	/**
@@ -48,14 +51,17 @@ public class ControlRobotWidget extends WidgetBox {
 	private class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			String buttonText = ((JButton) e.getSource()).getText();
-			LOGGER.info(String.format("%s commando send to robot #%d", buttonText.substring(0, 4), selectedRobotId));
+			LOGGER.info(String.format("%s commando send to robot #%d", buttonText.split("\\s+" )[0], selectedRobotId));
 			switch (buttonText) {
 			case "Chippen":
-				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, 100, false);
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, 100, dribbling);
 				break;
-
 			case "Kicken":
-				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, -100, false);
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, -100, dribbling);
+				break;
+			case "Dribble toggle":
+				dribbling = !dribbling;
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, 0, dribbling);
 				break;
 			}
 		}
