@@ -23,7 +23,8 @@ public class ControlRobotWidget extends WidgetBox{
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private JLabel selectedRobotLabel;
 	private int selectedRobotId;
-	private boolean dribbling = false;
+	private boolean dribbling = false
+				  , keyPressed = false;
 	
 	/**
 	 * Create ControLRobotWidget
@@ -97,20 +98,33 @@ public class ControlRobotWidget extends WidgetBox{
 		@Override
 		public void keyPressed(KeyEvent e){
 			int code = e.getKeyCode();
+			if(code != KeyEvent.VK_ESCAPE && keyPressed)
+				return;
+			
 			switch(code){
 				case KeyEvent.VK_UP:
+					System.out.println("Test! " + code);
+					keyPressed = true;
 					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 200, 0, 0, 0, 0, dribbling);
 					break;
 				case KeyEvent.VK_DOWN:
+					System.out.println("Test! " + code);
+					keyPressed = true;
 					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, -200, 0, 0, 0, 0, dribbling);
 					break;
 				case KeyEvent.VK_LEFT:
+					System.out.println("Test! " + code);
+					keyPressed = true;
 					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 20, 0, dribbling);
 					break;
 				case KeyEvent.VK_RIGHT:
+					System.out.println("Test! " + code);
+					keyPressed = true;
 					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, -20, 0, dribbling);
 					break;
 				case KeyEvent.VK_ESCAPE:
+					System.out.println("Test! " + code);
+					keyPressed = false;
 					for(int i = 0; i < 12; ++i){
 						ComInterface.getInstance(RobotCom.class).send(1, i, 0, 0, 0, 0, 0,0, false);
 					}
@@ -120,6 +134,9 @@ public class ControlRobotWidget extends WidgetBox{
 
 		@Override
 		public void keyReleased(KeyEvent e) {
+			System.out.println("Test! ");
+			keyPressed = false;
+			ComInterface.getInstance(RobotCom.class).send(1,selectedRobotId, 0, 0, 0, 0, 0,0, false);
 		}
 
 		@Override
