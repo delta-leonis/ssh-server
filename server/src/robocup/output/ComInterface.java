@@ -22,13 +22,13 @@ public abstract class ComInterface {
 	/**
 	 * @param messageType, MessageType 0 => robot instruction
 	 * @param robotID The ID of the robot we want to send to.
-	 * @param direction
+	 * @param direction 
 	 * @param directionSpeed , degrees/sec
-	 * @param travelDistance
+	 * @param travelDistance 
 	 * @param rotationAngle
 	 * @param rotationSpeed
-	 * @param kicker
-	 * @param dribble
+	 * @param kicker -1 to -100 for chipping, 1 to 100 for kicking.
+	 * @param dribble true to start the dribbler, false otherwise
 	 */
 	public abstract void send(int messageType, int robotID, int direction, int directionSpeed, int travelDistance,
 			int rotationAngle, int rotationSpeed, int kicker, boolean dribble);

@@ -121,7 +121,7 @@ public class GotoPosition {
 	/**
 	 * Set the kicking or chipping power for the next message, resets to 0 after
 	 * using it
-	 * @param kick ranges 1-100 3for kicking, -1 to -100 for chipping power in percentages
+	 * @param kick ranges 1-100 for kicking, -1 to -100 for chipping power in percentages
 	 */
 	public void setKick(int chipKick) {
 		this.chipKick = chipKick;
@@ -238,7 +238,7 @@ public class GotoPosition {
 
 		return speed;
 	}
-
+	
 	/**
 	 * Calculate the needed rotation to destination
 	 * @param newPoint

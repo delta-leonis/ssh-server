@@ -2,6 +2,9 @@ package robocup.view.widgets;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
@@ -16,13 +19,20 @@ import robocup.view.GUI;
 import robocup.view.WidgetBox;
 
 @SuppressWarnings("serial")
-public class ControlRobotWidget extends WidgetBox {
+public class ControlRobotWidget extends WidgetBox{
 
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private JLabel selectedRobotLabel;
 	private int selectedRobotId;
-	private boolean dribbling = false;
+	private boolean dribbling = false
+				  , keyPressed = false;
+	private int lastKey;
+	private long lastPressed =0,
+							firstPressed =0;
+	
+	private int currentCode = 0;		//Test.
 
+	
 	/**
 	 * Create ControLRobotWidget
 	 */
@@ -36,13 +46,32 @@ public class ControlRobotWidget extends WidgetBox {
 		JButton chipButton = new JButton("Chippen");
 		JButton kickButton = new JButton("Kicken");
 		JButton dribbleToggleButton = new JButton("Dribble toggle");
+		JButton moveForwardButton = new JButton("↑");
+		JButton moveBackButton = new JButton("↓");
+		JButton moveLeftButton = new JButton("←");
+		JButton moveRightButton = new JButton("→");
+
 		chipButton.addActionListener(new ButtonListener());
 		kickButton.addActionListener(new ButtonListener());
 		dribbleToggleButton.addActionListener(new ButtonListener());
+		moveForwardButton.addActionListener(new ButtonListener());
+		moveBackButton.addActionListener(new ButtonListener());
+		moveLeftButton.addActionListener(new ButtonListener());
+		moveRightButton.addActionListener(new ButtonListener());
 
 		add(chipButton, "growx");
 		add(kickButton, "growx");
 		add(dribbleToggleButton, "growx");
+		add(new JLabel(), "growx");
+		add(moveForwardButton, "growx");
+		add(new JLabel(), "growx");
+		add(moveLeftButton, "growx");
+		add(moveBackButton, "growx");
+		add(moveRightButton, "growx");
+
+		addKeyListener(new MoveKeyListener());
+		setFocusable(true);
+		requestFocusInWindow();
 	}
 
 	/**
@@ -63,7 +92,70 @@ public class ControlRobotWidget extends WidgetBox {
 				dribbling = !dribbling;
 				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, 0, dribbling);
 				break;
+			case "↑":
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 500, 0, 0, 0, 0, dribbling);
+				System.out.println("Forwards we go!" );
+				break;
+			case "↓":
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, -500, 0, 0, 0, 0, dribbling);
+				break;
+			case "←":
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, -200, 0, dribbling);
+				break;
+			case "→":
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 200, 0, dribbling);
+				break;
 			}
+		}
+	}
+	
+	private class MoveKeyListener implements KeyListener {
+		@Override
+		public void keyPressed(KeyEvent e){
+			int code = e.getKeyCode();
+			
+			switch(code){
+				case KeyEvent.VK_W:
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 3000, 0, 0, 0, 0, dribbling);
+					break;
+				case KeyEvent.VK_S:
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, -3000, 0, 0, 0, 0, dribbling);
+					break;
+				case KeyEvent.VK_A:
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, -100, 0, dribbling);
+					break;
+				case KeyEvent.VK_D:
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 100, 0, dribbling);
+					break;
+				case KeyEvent.VK_E:
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, -100, dribbling);
+					break;
+					
+				case KeyEvent.VK_Q:
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, 100, dribbling);
+					break;
+					
+				case KeyEvent.VK_R:
+					dribbling = !dribbling;
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, 0, dribbling);
+					break;
+
+				case KeyEvent.VK_ESCAPE:
+				case KeyEvent.VK_SPACE:
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0,0, false);
+					for(int i = 0; i < 12; ++i){
+						ComInterface.getInstance(RobotCom.class).send(1, i, 0, 0, 0, 0, 0,0, false);
+					}
+					break;
+			}
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+		}
+
+		@Override
+		public void keyTyped(KeyEvent e) {		
 		}
 	}
 
@@ -72,6 +164,7 @@ public class ControlRobotWidget extends WidgetBox {
 	 */
 	@Override
 	public void update() {
+		requestFocusInWindow();
 		selectedRobotId = ((GUI) SwingUtilities.getWindowAncestor((this))).getSelectedRobotId();
 		selectedRobotLabel.setText(String.format("Robot #%d selected", selectedRobotId));
 	}
