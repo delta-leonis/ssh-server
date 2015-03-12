@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
@@ -24,13 +23,8 @@ public class ControlRobotWidget extends WidgetBox{
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private JLabel selectedRobotLabel;
 	private int selectedRobotId;
-	private boolean dribbling = false
-				  , keyPressed = false;
-	private int lastKey;
-	private long lastPressed =0,
-							firstPressed =0;
+	private boolean dribbling = false;
 	
-	private int currentCode = 0;		//Test.
 
 	
 	/**
