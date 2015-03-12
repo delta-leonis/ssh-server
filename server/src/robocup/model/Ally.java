@@ -9,7 +9,7 @@ public class Ally extends Robot {
 
 	public Ally(int robotID, boolean isKeeper, float height) {
 		super(robotID, isKeeper, height);
-		role = RobotMode.DEFENDER;
+		role = RobotMode.KEEPERDEFENDER;
 	}
 
 	/**

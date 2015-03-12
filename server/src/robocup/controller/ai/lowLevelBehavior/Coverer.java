@@ -1,10 +1,12 @@
 package robocup.controller.ai.lowLevelBehavior;
 
 import robocup.controller.ai.movement.GotoPosition;
+import robocup.model.Ball;
 import robocup.model.Point;
 import robocup.model.Robot;
-import robocup.output.ComInterface;
 import robocup.model.enums.RobotMode;
+import robocup.output.ComInterface;
+import robocup.output.RobotCom;
 
 /**
  * Stoorder
@@ -15,7 +17,7 @@ import robocup.model.enums.RobotMode;
  * TODO: remove defenderPosition. Variable can be acquired through robot.getPosition(). This variable isn't even in use.
  * TODO: English-fy
  */
-public class Stoorder extends LowLevelBehavior {
+public class Coverer extends LowLevelBehavior {
 
 	protected Point ballPosition;
 	protected Point opponentPosition;
@@ -33,7 +35,7 @@ public class Stoorder extends LowLevelBehavior {
 	 * @param opponentPosition center position of the opponent / enemy. See {@link Point}
 	 * @param opponentId The Id of the opponent this Robot is trying to interrupt.
 	 */
-	public Stoorder(Robot robot, ComInterface output, int distanceToOpponent, Point ballPosition,
+	public Coverer(Robot robot, ComInterface output, int distanceToOpponent, Point ballPosition,
 			Point defenderPosition, Point opponentPosition, int opponentId) {
 		super(robot, output);
 
@@ -41,7 +43,7 @@ public class Stoorder extends LowLevelBehavior {
 		this.ballPosition = ballPosition;
 		this.distanceToOpponent = distanceToOpponent;
 		this.defenderPosition = defenderPosition;
-		this.role = RobotMode.BLOCKER;
+		this.role = RobotMode.COVERER;
 		this.opponentId = opponentId;
 		go = new GotoPosition(robot, output, defenderPosition, opponentPosition, 400);
 	}

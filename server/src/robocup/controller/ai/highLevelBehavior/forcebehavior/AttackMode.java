@@ -4,10 +4,10 @@ package robocup.controller.ai.highLevelBehavior.forcebehavior;
 import java.util.ArrayList;
 
 import robocup.controller.ai.lowLevelBehavior.Attacker;
+import robocup.controller.ai.lowLevelBehavior.Coverer;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
-import robocup.controller.ai.lowLevelBehavior.Stoorder;
 import robocup.model.Ally;
 import robocup.model.Ball;
 import robocup.model.Point;
@@ -174,13 +174,13 @@ public class AttackMode extends Mode {
 		case KEEPER:
 			handleKeeper(robot, ball, executer, isUpdate, distanceToGoal);
 			break;
-		case DEFENDER:
+		case KEEPERDEFENDER:
 			handleDefender(robot, ball, executer, isUpdate, distanceToGoal);
 			break;
 		case ATTACKER:
 			handleAttacker(robot, ball, executer, isUpdate);
 			break;
-		case BLOCKER: // fuckrobot
+		case COVERER: // fuckrobot
 			handleBlocker(robot, ball, executer, isUpdate);
 			break;
 		default:
@@ -255,10 +255,10 @@ public class AttackMode extends Mode {
 		int distanceToOpponent = 250;
 
 		if (isUpdate) {
-			((Stoorder) executer.getLowLevelBehavior()).update(distanceToOpponent, ball.getPosition(),
+			((Coverer) executer.getLowLevelBehavior()).update(distanceToOpponent, ball.getPosition(),
 					robot.getPosition(), opponent.getPosition(), opponent.getRobotId());
 		} else {
-			executer.setLowLevelBehavior(new Stoorder(robot, ComInterface.getInstance(RobotCom.class),
+			executer.setLowLevelBehavior(new Coverer(robot, ComInterface.getInstance(RobotCom.class),
 					distanceToOpponent, ball.getPosition(), robot.getPosition(), opponent.getPosition(), opponent
 							.getRobotId()));
 		}

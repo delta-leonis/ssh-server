@@ -6,7 +6,7 @@ import robocup.controller.ai.lowLevelBehavior.Attacker;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
-import robocup.controller.ai.lowLevelBehavior.Stoorder;
+import robocup.controller.ai.lowLevelBehavior.Coverer;
 import robocup.model.enums.RobotMode;
 
 public class DefenseMode extends Mode {
@@ -18,7 +18,7 @@ public class DefenseMode extends Mode {
 	@Override
 	public RobotMode determineRole(RobotExecuter executer) {
 		// TODO Determine role based on positions and zones on the field
-		return RobotMode.DEFENDER;
+		return RobotMode.KEEPERDEFENDER;
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class DefenseMode extends Mode {
 
 	@Override
 	public void updateBlocker(RobotExecuter executer) {
-		Stoorder blocker = (Stoorder) executer.getLowLevelBehavior();
+		Coverer blocker = (Coverer) executer.getLowLevelBehavior();
 		// TODO Update with normal values
 		blocker.update(250, null, null, null, 0);
 	}

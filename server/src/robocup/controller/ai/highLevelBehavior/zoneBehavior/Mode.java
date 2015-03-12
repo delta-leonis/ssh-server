@@ -6,7 +6,7 @@ import robocup.controller.ai.lowLevelBehavior.Attacker;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
-import robocup.controller.ai.lowLevelBehavior.Stoorder;
+import robocup.controller.ai.lowLevelBehavior.Coverer;
 import robocup.model.Ally;
 import robocup.model.Ball;
 import robocup.model.World;
@@ -64,10 +64,10 @@ public abstract class Mode {
 		case ATTACKER:
 			handleAttacker(executer);
 			break;
-		case BLOCKER:
-			handleBlocker(executer);
+		case COVERER:
+			handleCoverer(executer);
 			break;
-		case DEFENDER:
+		case KEEPERDEFENDER:
 			handleKeeperDefender(executer);
 			break;
 		case KEEPER:
@@ -104,9 +104,9 @@ public abstract class Mode {
 	 * Update the values of the Blocker afterwards.
 	 * @param executer the executer which needs to be handled
 	 */
-	public void handleBlocker(RobotExecuter executer) {
-		if (!(executer.getLowLevelBehavior() instanceof Stoorder))
-			executer.setLowLevelBehavior(new Stoorder(executer.getRobot(), ComInterface.getInstance(RobotCom.class),
+	public void handleCoverer(RobotExecuter executer) {
+		if (!(executer.getLowLevelBehavior() instanceof Coverer))
+			executer.setLowLevelBehavior(new Coverer(executer.getRobot(), ComInterface.getInstance(RobotCom.class),
 					250, null, null, null, 0));
 
 		updateBlocker(executer);

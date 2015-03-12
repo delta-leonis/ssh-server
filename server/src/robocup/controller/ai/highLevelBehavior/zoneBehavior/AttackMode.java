@@ -6,7 +6,7 @@ import robocup.controller.ai.lowLevelBehavior.Attacker;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
-import robocup.controller.ai.lowLevelBehavior.Stoorder;
+import robocup.controller.ai.lowLevelBehavior.Coverer;
 import robocup.model.enums.RobotMode;
 
 public class AttackMode extends Mode {
@@ -30,7 +30,7 @@ public class AttackMode extends Mode {
 
 	@Override
 	public void updateBlocker(RobotExecuter executer) {
-		Stoorder blocker = (Stoorder) executer.getLowLevelBehavior();
+		Coverer blocker = (Coverer) executer.getLowLevelBehavior();
 		// TODO Update with normal values
 		blocker.update(250, null, null, null, 0);
 	}
