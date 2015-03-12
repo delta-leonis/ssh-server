@@ -53,10 +53,7 @@ public class RobotCom extends ComInterface {
 	}
 
 	/**
-	 * @see Output.ComInterface#send(int, int, int, int, int, int, int, boolean,
-	 *      boolean)
-	 * 
-	 * 
+	 * {@inheritDoc}
 	 */
 	public void send(int messageType, int robotID, int direction, int directionSpeed, int travelDistance,
 			int rotationAngle, int rotationSpeed, int shootKicker, boolean dribble) {

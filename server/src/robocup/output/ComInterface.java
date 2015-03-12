@@ -25,7 +25,7 @@ public abstract class ComInterface {
 	 * @param direction 
 	 * @param directionSpeed , degrees/sec
 	 * @param travelDistance 
-	 * @param rotationAngle
+	 * @param rotationAngle Not used.
 	 * @param rotationSpeed
 	 * @param kicker -1 to -100 for chipping, 1 to 100 for kicking.
 	 * @param dribble true to start the dribbler, false otherwise
