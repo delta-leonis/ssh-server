@@ -116,10 +116,10 @@ public class ControlRobotWidget extends WidgetBox{
 			
 			switch(code){
 				case KeyEvent.VK_W:
-					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 3000, 0, 0, 0, 0, dribbling);
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 500, 0, 0, 0, 0, dribbling);
 					break;
 				case KeyEvent.VK_S:
-					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, -3000, 0, 0, 0, 0, dribbling);
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, -500, 0, 0, 0, 0, dribbling);
 					break;
 				case KeyEvent.VK_A:
 					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, -100, 0, dribbling);
