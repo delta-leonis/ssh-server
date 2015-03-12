@@ -6,13 +6,13 @@ package robocup.controller.ai.highLevelBehavior.forcebehavior;
 import java.util.ArrayList;
 
 import robocup.controller.ai.highLevelBehavior.forcebehavior.forceCalculator.FieldForces;
-import robocup.controller.ai.lowLevelBehavior.Stoorder;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
+import robocup.controller.ai.lowLevelBehavior.Stoorder;
+import robocup.model.Ally;
 import robocup.model.Ball;
 import robocup.model.Point;
 import robocup.model.Robot;
 import robocup.model.World;
-import robocup.model.Ally;
 import robocup.model.enums.RobotMode;
 
 public abstract class Mode {
@@ -24,8 +24,6 @@ public abstract class Mode {
 	private RobotExecuter[] robotExcecuter;
 
 	protected World world;
-
-
 
 	/**
 	 * Let the calculator recalculate all forces
@@ -116,7 +114,7 @@ public abstract class Mode {
 		Robot closestRobot = null;
 
 		for (Robot r : robots) {
-			if (((Ally)r).getRole().equals("ATTACKER")) {
+			if (((Ally) r).getRole().equals("ATTACKER")) {
 				if (minDistance == -1) {
 					closestRobot = r;
 					minDistance = (int) r.getPosition().getDeltaDistance(ball.getPosition());

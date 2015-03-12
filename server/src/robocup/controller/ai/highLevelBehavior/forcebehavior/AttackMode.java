@@ -4,11 +4,16 @@ package robocup.controller.ai.highLevelBehavior.forcebehavior;
 import java.util.ArrayList;
 
 import robocup.controller.ai.lowLevelBehavior.Attacker;
-import robocup.controller.ai.lowLevelBehavior.Stoorder;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
-import robocup.model.*;
+import robocup.controller.ai.lowLevelBehavior.Stoorder;
+import robocup.model.Ally;
+import robocup.model.Ball;
+import robocup.model.Point;
+import robocup.model.Referee;
+import robocup.model.Robot;
+import robocup.model.World;
 import robocup.model.enums.Command;
 import robocup.model.enums.RobotMode;
 import robocup.output.ComInterface;
@@ -177,6 +182,9 @@ public class AttackMode extends Mode {
 			break;
 		case BLOCKER: // fuckrobot
 			handleBlocker(robot, ball, executer, isUpdate);
+			break;
+		default:
+			
 			break;
 		}
 	}
