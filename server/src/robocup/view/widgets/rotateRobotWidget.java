@@ -16,6 +16,7 @@ import robocup.output.RobotCom;
 import robocup.view.WidgetBox;
 
 
+@SuppressWarnings("serial")
 public class rotateRobotWidget extends WidgetBox{
 
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
