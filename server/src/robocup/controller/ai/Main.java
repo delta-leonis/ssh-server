@@ -49,9 +49,6 @@ public class Main implements Observer {
 		}
 		if ("detectionHandlerFinished".equals(arg)) {
 			behavior.execute(robotExecuters);
-		} else if ("RobotAdded".equals(arg)) {
-			initExecutors();
-			behavior.updateExecuters(robotExecuters);
 		}
 	}
 
