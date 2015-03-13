@@ -3,6 +3,7 @@ package robocup.model;
 public class Ball extends FieldObject {
 
 	private float posZ;
+	private Robot owner;
 
 	public Ball() {
 		super();
@@ -28,5 +29,13 @@ public class Ball extends FieldObject {
 	@Override
 	public String toString() {
 		return "Ball [posZ=" + posZ + ", " + super.toString() + "]" + "\r\n";
+	}
+	
+	public void setOwner(Robot owner){
+		this.owner = owner;
+	}
+
+	public Robot getOwner() {
+		return owner;
 	}
 }
