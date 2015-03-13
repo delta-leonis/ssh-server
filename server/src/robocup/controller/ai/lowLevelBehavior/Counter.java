@@ -74,7 +74,7 @@ public class Counter extends LowLevelBehavior {
 				// Calculate a free path from ball towards zone, based on the robots on the field.
 				// If there is no free path, move to middle of zone.
 			}
-			go.setDestination(null);
+			go.setDestination(newDestination);
 		}
 		go.calculate();
 	}
