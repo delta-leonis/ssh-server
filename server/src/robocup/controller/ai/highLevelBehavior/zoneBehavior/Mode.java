@@ -1,6 +1,7 @@
 package robocup.controller.ai.highLevelBehavior.zoneBehavior;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import robocup.controller.ai.lowLevelBehavior.Attacker;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
@@ -9,7 +10,12 @@ import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.controller.ai.lowLevelBehavior.Coverer;
 import robocup.model.Ally;
 import robocup.model.Ball;
+import robocup.model.Enemy;
+import robocup.model.FieldObject;
+import robocup.model.Point;
 import robocup.model.World;
+import robocup.model.Zone;
+import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
 import robocup.output.ComInterface;
 import robocup.output.RobotCom;
@@ -157,4 +163,46 @@ public abstract class Mode {
 	 * @param executer the executer to update
 	 */
 	public abstract void updateKeeper(RobotExecuter executer);
+	
+	
+	/**
+	 * Checks whether a ally has a free shot, will only be checked
+	 * if the robot is in one of the 6 center zones (due to accuracy)
+	 * 
+	 * @param executer
+	 * @return
+	 */
+	public Point hasFreeShot(RobotExecuter executer){
+		//only proceed when we are the ballowner
+		if(ball.getOwner() instanceof Enemy)
+			return null;
+		
+		FieldZone[] zones = {FieldZone.EAST_CENTER, FieldZone.EAST_LEFT_FRONT, FieldZone.EAST_MIDDLE, FieldZone.EAST_LEFT_SECOND_POST, 
+							FieldZone.WEST_CENTER, FieldZone.WEST_LEFT_FRONT, FieldZone.WEST_MIDDLE, FieldZone.WEST_LEFT_SECOND_POST};
+		
+		//check if the ball is in a zone from which we can actually make the angle
+		if(!Arrays.asList(zones).contains(getZoneByObject(ball)))
+			return null;
+
+		//World.getInstance().getField().get
+		
+
+		return null;
+	}
+	
+	/**
+	 * TODO MOVE TO MODEL
+	 * Jasper will move this to the model when he will finishes the Zone implementation
+	 * 
+	 *  Method that returns the Zone in which a given FieldObject is localized
+	 *  
+	 * @param obj	field object
+	 * @return	zone that contains given object 
+	 */
+	public Zone getZoneByObject(FieldObject obj){
+//		for(Zone zone : World.getInstance().getZones())
+//			if(zone.check(obj))
+//				return zone;
+		return null;
+	}
 }
