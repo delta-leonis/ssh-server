@@ -13,6 +13,7 @@ import robocup.model.Ball;
 import robocup.model.Enemy;
 import robocup.model.FieldObject;
 import robocup.model.Point;
+import robocup.model.Robot;
 import robocup.model.World;
 import robocup.model.Zone;
 import robocup.model.enums.FieldZone;
@@ -24,6 +25,11 @@ public abstract class Mode {
 
 	protected World world;
 	protected Ball ball;
+
+	/** Co-ordinates of the goal on the left side of the field */
+	private static final Point MID_GOAL_NEGATIVE = new Point(-(World.getInstance().getField().getLength() / 2), 0);
+	/** Co-ordinates of the goal on the right side of the field */
+	private static final Point MID_GOAL_POSITIVE = new Point(World.getInstance().getField().getLength() / 2, 0);
 
 	public Mode(ArrayList<RobotExecuter> executers) {
 		world = World.getInstance();
@@ -151,9 +157,13 @@ public abstract class Mode {
 	 * @param executer the executer which needs to be handled
 	 */
 	private void handleKeeper(RobotExecuter executer) {
+		Robot keeper = executer.getRobot();
+
+		// TODO determine field half in a better way
 		if (!(executer.getLowLevelBehavior() instanceof Keeper))
-			executer.setLowLevelBehavior(new Keeper(executer.getRobot(), ComInterface.getInstance(RobotCom.class), 500,
-					false, null, null, null, 0));
+			executer.setLowLevelBehavior(new Keeper(keeper, ComInterface.getInstance(RobotCom.class), 500, false, ball
+					.getPosition(), keeper.getPosition(), keeper.getPosition().getX() < 0 ? MID_GOAL_NEGATIVE
+					: MID_GOAL_POSITIVE, world.getField().getWidth() / 2));
 
 		updateKeeper(executer);
 	}
