@@ -20,10 +20,6 @@ public class Goal {
 		this.backRight = backRight;
 		this.wallWidth = wallWidth;
 		this.height = height;
-
-		System.out.println(height);
-		System.out.println(wallWidth);
-		System.out.println("FL: " + frontLeft + ", RF" + frontRight);
 	}
 	
 	/**
