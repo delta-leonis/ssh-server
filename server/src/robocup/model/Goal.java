@@ -20,6 +20,17 @@ public class Goal {
 		this.backRight = backRight;
 		this.wallWidth = wallWidth;
 		this.height = height;
+
+		System.out.println(height);
+		System.out.println(wallWidth);
+		System.out.println("FL: " + frontLeft + ", RF" + frontRight);
+	}
+	
+	/**
+	 * @return goal width excluding post width
+	 */
+	public int getWidth(){
+		return (int) (Math.abs(frontLeft.getY() - frontRight.getY()));
 	}
 
 	/**
