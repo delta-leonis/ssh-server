@@ -242,7 +242,7 @@ public class Referee {
 	 * @param color the color that will be compared
 	 * @return whether or not the team on the right has the given color
 	 */
-	public boolean getDoesTeamPlaysRight(TeamColor color) {
+	public boolean getDoesTeamPlaysEast(TeamColor color) {
 		boolean teamIsYellow = (color == TeamColor.YELLOW);
 		if (teamIsYellow) {
 			return yellowTeamPlaysRight;
@@ -256,7 +256,7 @@ public class Referee {
 	 * @param color the color that will be compared
 	 * @return whether or not the team on the right has the given color
 	 */
-	public boolean getDoesTeamPlaysLeft(TeamColor color) {
+	public boolean getDoesTeamPlaysWest(TeamColor color) {
 		boolean teamIsYellow = (color == TeamColor.YELLOW);
 		if (teamIsYellow) {
 			return !yellowTeamPlaysRight;
