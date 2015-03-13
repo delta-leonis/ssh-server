@@ -21,7 +21,7 @@ public class GotoPosition {
 	private DijkstraPathPlanner dplanner = new DijkstraPathPlanner();
 	private LinkedList<Point> route;
 	
-	private static final int MAX_VELOCITY = 2400;
+	private static final int MAX_VELOCITY = 500;	//TODO: Make 2400
 
 	/**
 	 * Go to target position
@@ -248,7 +248,7 @@ public class GotoPosition {
 	 * @param distanceToSlowDown If the robot has less distance to travel than the distance to slow down, the robot should slow down.
 	 * @return The speed in degrees/s
 	 */
-	private int getSpeed(int distance, int distanceToSlowDown) {
+	public int getSpeed(int distance, int distanceToSlowDown) {
 		if(distance > distanceToSlowDown){
 			return MAX_VELOCITY;
 		}
