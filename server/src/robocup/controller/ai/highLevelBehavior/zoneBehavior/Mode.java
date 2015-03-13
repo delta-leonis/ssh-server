@@ -115,14 +115,14 @@ public abstract class Mode {
 			executer.setLowLevelBehavior(new Coverer(executer.getRobot(), ComInterface.getInstance(RobotCom.class),
 					250, null, null, null, 0));
 
-		updateBlocker(executer);
+		updateCoverer(executer);
 	}
 
 	/**
 	 * Update the values of the Blocker behavior belonging to the executer.
 	 * @param executer the executer to update
 	 */
-	protected abstract void updateBlocker(RobotExecuter executer);
+	protected abstract void updateCoverer(RobotExecuter executer);
 
 	/**
 	 * Handle the behavior of the KeeperDefender.

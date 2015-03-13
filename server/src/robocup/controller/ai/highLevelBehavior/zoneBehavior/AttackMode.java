@@ -29,7 +29,7 @@ public class AttackMode extends Mode {
 	}
 
 	@Override
-	public void updateBlocker(RobotExecuter executer) {
+	public void updateCoverer(RobotExecuter executer) {
 		Coverer blocker = (Coverer) executer.getLowLevelBehavior();
 		// TODO Update with normal values
 		blocker.update(250, null, null, null, 0);
