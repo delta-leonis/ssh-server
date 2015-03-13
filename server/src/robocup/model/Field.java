@@ -1,7 +1,5 @@
 package robocup.model;
 
-import java.util.ArrayList;
-
 public class Field {
 
 	private int length;
@@ -21,7 +19,8 @@ public class Field {
 	private int penaltySpotFromFieldLineDistance;
 	private int penaltyLineFromSpotDistance;
 	private int cameraOverlapZoneWidth;
-	private ArrayList<Goal> goals;
+	private Goal eastGoal,
+				 westGoal;
 	
 	public Field() {
 		length=6050;
@@ -133,7 +132,6 @@ public class Field {
 	 * goalWallWidth, goalHeigth, length
 	 */
 	private void createGoals(int goalWidth, int goalDepth, int goalWallWidth, int goalHeigth) {
-		goals = new ArrayList<Goal>();
 
 		Point frontLeft = new Point(length / 2, goalWidth / 2);
 		Point frontRight = new Point(length / 2, goalWidth / -2);
@@ -141,11 +139,11 @@ public class Field {
 		Point backRight = new Point(frontRight.getX() + goalDepth, frontRight.getY());
 
 		// Adding Goal A
-		goals.add(new Goal(frontLeft, frontRight, backLeft, backRight, goalWallWidth, goalHeigth));
+		eastGoal = new Goal(frontLeft, frontRight, backLeft, backRight, goalWallWidth, goalHeigth);
 
 		// Adding Goal B
-		goals.add(new Goal(frontLeft.diagMirror(), frontRight.diagMirror(), backLeft.diagMirror(), backRight
-				.diagMirror(), goalWallWidth, goalHeigth));
+		westGoal = new Goal(frontLeft.diagMirror(), frontRight.diagMirror(), backLeft.diagMirror(), backRight
+				.diagMirror(), goalWallWidth, goalHeigth);
 	}
 
 	/**
@@ -302,11 +300,11 @@ public class Field {
 		this.penaltyLineFromSpotDistance = penaltyLineFromSpotDistance;
 	}
 
-	/**
-	 * @return the goal
-	 */
-	public ArrayList<Goal> getGoal() {
-		return goals;
+	public Goal getEastGoal(){
+		return eastGoal;
+	}
+	public Goal getWestGoal(){
+		return westGoal;
 	}
 
 	public int getCameraOverlapZoneWidth() {
@@ -361,12 +359,6 @@ public class Field {
 	}
 
 	private String printGoals() {
-		String goalString = "";
-
-		for (int i = 0; i < goals.size(); i++) {
-			goalString += goals.get(i).toString() + "\r\n";
-		}
-
-		return goalString;
+		return eastGoal.toString() +  westGoal.toString();
 	}
 }

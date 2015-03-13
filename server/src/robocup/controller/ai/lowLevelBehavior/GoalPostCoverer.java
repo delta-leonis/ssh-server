@@ -16,7 +16,7 @@ import robocup.output.ComInterface;
  * TODO: English-fy
  * TODO: use config to determine position of goal posts.
  */
-public class Paaldekker extends LowLevelBehavior {
+public class GoalPostCoverer extends LowLevelBehavior {
 	
 	public static final int distanceFromGoal = 1000;
 	public static final int distanceFromMid = 250;
@@ -34,13 +34,13 @@ public class Paaldekker extends LowLevelBehavior {
 	 * @param paalPosition the position of the ball
 	 * @param dribble enable dribbler
 	 */
-	public Paaldekker(Robot robot, ComInterface output, Robot enemyRobot, Point paalPosition, 
+	public GoalPostCoverer(Robot robot, ComInterface output, Robot enemyRobot, Point paalPosition, 
 			boolean dribble) {
 		super(robot, output);
 		this.enemyRobot = enemyRobot;
 		this.paalPosition = paalPosition;
 		this.dribble = dribble;
-		this.role = RobotMode.PAALDEKKER;
+		this.role = RobotMode.GOALPOSTCOVERER;
 		go = new GotoPosition(robot, output, null, enemyRobot.getPosition());
 	}
 

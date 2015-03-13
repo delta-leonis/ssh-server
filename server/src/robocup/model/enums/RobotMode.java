@@ -5,5 +5,5 @@ package robocup.model.enums;
  * Examples are: Keeper, Defender, Attacker and Blocker.
  */
 public enum RobotMode {
-	KEEPER, ATTACKER, DEFENDER, BLOCKER, PAALDEKKER;
+	KEEPER, KEEPERDEFENDER, PENALTYKEEPER, DISTURBER, COVERER, GOALPOSTCOVERER, ATTACKER, COUNTER;
 }

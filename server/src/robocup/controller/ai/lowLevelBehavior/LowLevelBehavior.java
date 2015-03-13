@@ -15,7 +15,7 @@ import robocup.model.enums.RobotMode;
 
 /**
  * Describes the LowLevelBahaviour each role builds upon.
- * @see {@link Stoorder}
+ * @see {@link Coverer}
  * @see {@link Attacker}
  * @see {@link Keeper}
  * @see {@link KeeperDefender}
