@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
@@ -13,6 +12,9 @@ import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.Main;
+import robocup.controller.ai.movement.GotoPosition;
+import robocup.model.Ally;
+import robocup.model.Point;
 import robocup.output.ComInterface;
 import robocup.output.RobotCom;
 import robocup.view.GUI;
@@ -24,14 +26,7 @@ public class ControlRobotWidget extends WidgetBox{
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private JLabel selectedRobotLabel;
 	private int selectedRobotId;
-	private boolean dribbling = false
-				  , keyPressed = false;
-	private int lastKey;
-	private long lastPressed =0,
-							firstPressed =0;
-	
-	private int currentCode = 0;		//Test.
-
+	private boolean dribbling = false;
 	
 	/**
 	 * Create ControLRobotWidget
@@ -50,21 +45,25 @@ public class ControlRobotWidget extends WidgetBox{
 		JButton moveBackButton = new JButton("↓");
 		JButton moveLeftButton = new JButton("←");
 		JButton moveRightButton = new JButton("→");
+		JButton slowDownTestButton = new JButton("Slow Down Test");
 
-		chipButton.addActionListener(new ButtonListener());
-		kickButton.addActionListener(new ButtonListener());
-		dribbleToggleButton.addActionListener(new ButtonListener());
-		moveForwardButton.addActionListener(new ButtonListener());
-		moveBackButton.addActionListener(new ButtonListener());
-		moveLeftButton.addActionListener(new ButtonListener());
-		moveRightButton.addActionListener(new ButtonListener());
+		ButtonListener buttonListener = new ButtonListener();
+		chipButton.addActionListener(buttonListener);
+		kickButton.addActionListener(buttonListener);
+		dribbleToggleButton.addActionListener(buttonListener);
+		moveForwardButton.addActionListener(buttonListener);
+		moveBackButton.addActionListener(buttonListener);
+		moveLeftButton.addActionListener(buttonListener);
+		moveRightButton.addActionListener(buttonListener);
+		slowDownTestButton.addActionListener(buttonListener);
+
 
 		add(chipButton, "growx");
 		add(kickButton, "growx");
 		add(dribbleToggleButton, "growx");
 		add(new JLabel(), "growx");
 		add(moveForwardButton, "growx");
-		add(new JLabel(), "growx");
+		add(slowDownTestButton, "growx");
 		add(moveLeftButton, "growx");
 		add(moveBackButton, "growx");
 		add(moveRightButton, "growx");
@@ -104,6 +103,9 @@ public class ControlRobotWidget extends WidgetBox{
 				break;
 			case "→":
 				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 200, 0, dribbling);
+				break;
+			case "Slow Down Test":
+				slowDownTest();
 				break;
 			}
 		}
@@ -156,6 +158,24 @@ public class ControlRobotWidget extends WidgetBox{
 
 		@Override
 		public void keyTyped(KeyEvent e) {		
+		}
+	}
+	
+	private void slowDownTest(){
+		try{
+			GotoPosition go = new GotoPosition(new Ally(0, false, 0), ComInterface.getInstance(RobotCom.class), new Point(0,0));
+			ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, go.getSpeed(500, 100), 0, 0, 0, 0, dribbling);
+			Thread.sleep(1000);
+			
+			for(int i = 0; i < 10; ++i){
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, go.getSpeed(100 - (i*10), 100), 0, 0, 0, 0, dribbling);
+				Thread.sleep(50);
+			}
+			ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, 0, dribbling);
+
+			
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 

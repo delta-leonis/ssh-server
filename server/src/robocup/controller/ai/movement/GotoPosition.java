@@ -20,6 +20,8 @@ public class GotoPosition {
 	private boolean dribble = false;
 	private DijkstraPathPlanner dplanner = new DijkstraPathPlanner();
 	private LinkedList<Point> route;
+	
+	private static final int MAX_VELOCITY = 500;	//TODO: Make 2400
 
 	/**
 	 * Go to target position
@@ -155,7 +157,7 @@ public class GotoPosition {
 			int rotationToTarget = rotationToDest(target);
 			int rotationToGoal = rotationToDest(destination);
 
-			int speed = getSpeed(getDistance(), rotationToGoal);
+			int speed = getSpeed(getDistance(), 100);
 			int rotationSpeed = (int) getRotationSpeed(rotationToTarget);
 
 			// Overrule speed
@@ -220,23 +222,37 @@ public class GotoPosition {
 	 * @param rotation
 	 * @return
 	 */
-	private int getSpeed(int distance, int rotation) {
-		// Defaults
-		int speed = 0;
-		int thresholdValue = 800;
-
-		// If distance to travel is less then the `threshold`, use a logarithmic
-		// formula for speed
-		if (distance < thresholdValue) {
-			speed = (int) (Math.log(distance) / Math.log(1.1)) * 8; // -
-																	// robotDiameter
-		} else if (Math.abs(rotation) > 10) {
-			speed = (180 - Math.abs(rotation)) * 16;
-		} else {
-			speed = 2400;
+//	private int getSpeed(int distance, int rotation) {
+//		// Defaults
+//		int speed = 0;
+//		int thresholdValue = 800;
+//
+//		// If distance to travel is less then the `threshold`, use a logarithmic
+//		// formula for speed
+//		if (distance < thresholdValue) {
+//			speed = (int) (Math.log(distance) / Math.log(1.1)) * 8; // -
+//																	// robotDiameter
+//		} else if (Math.abs(rotation) > 10) {
+//			speed = (180 - Math.abs(rotation)) * 16;
+//		} else {
+//			speed = 2400;
+//		}
+//
+//		return speed;
+//	}
+	
+	/**
+	 * Returns the speed the robot should drive at.
+	 * When a robot nears its destination, it should slow down.
+	 * @param distance The distance to travel in mm
+	 * @param distanceToSlowDown If the robot has less distance to travel than the distance to slow down, the robot should slow down.
+	 * @return The speed in degrees/s
+	 */
+	public int getSpeed(int distance, int distanceToSlowDown) {
+		if(distance > distanceToSlowDown){
+			return MAX_VELOCITY;
 		}
-
-		return speed;
+		return (distance / distanceToSlowDown) * MAX_VELOCITY;
 	}
 	
 	/**

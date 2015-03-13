@@ -18,7 +18,7 @@ public class KeeperDefender extends Keeper {
 			Point keeperPosition, Point centerGoalPosition, Point offset, int yMax) {
 		super(robot, output, distanceToGoal, goToKick, ballPosition, keeperPosition, centerGoalPosition, yMax);
 		this.offset = offset;
-		this.role = RobotMode.DEFENDER;
+		this.role = RobotMode.KEEPERDEFENDER;
 		go = new GotoPosition(robot, output, centerGoalPosition, ballPosition, 2000);
 	}
 

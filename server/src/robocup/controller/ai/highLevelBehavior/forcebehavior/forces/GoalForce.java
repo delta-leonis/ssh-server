@@ -18,10 +18,10 @@ public class GoalForce extends Force {
 	 * A point is affected by a GoalForce when the distance to one of the goal posts is less than the scope
 	 */
 	public boolean affectsPoint(Point position) {
-		int dist1 = (int) position.getDeltaDistance(world.getField().getGoal().get(0).getFrontLeft());
-		int dist2 = (int) position.getDeltaDistance(world.getField().getGoal().get(0).getFrontRight());
-		int dist3 = (int) position.getDeltaDistance(world.getField().getGoal().get(1).getFrontLeft());
-		int dist4 = (int) position.getDeltaDistance(world.getField().getGoal().get(1).getFrontRight());
+		int dist1 = (int) position.getDeltaDistance(world.getField().getEastGoal().getFrontLeft());
+		int dist2 = (int) position.getDeltaDistance(world.getField().getEastGoal().getFrontRight());
+		int dist3 = (int) position.getDeltaDistance(world.getField().getWestGoal().getFrontLeft());
+		int dist4 = (int) position.getDeltaDistance(world.getField().getWestGoal().getFrontRight());
 		return dist1 < scope && dist2 < scope || dist3 < scope && dist4 < scope;
 	}
 
