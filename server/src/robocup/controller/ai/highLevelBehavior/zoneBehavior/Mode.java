@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import robocup.controller.ai.lowLevelBehavior.Attacker;
+import robocup.controller.ai.lowLevelBehavior.Coverer;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
-import robocup.controller.ai.lowLevelBehavior.Coverer;
 import robocup.model.Ally;
 import robocup.model.Ball;
 import robocup.model.Enemy;
@@ -51,7 +51,7 @@ public abstract class Mode {
 	 * Role will be chosen based on current strategy and mode.
 	 * @return role of the robot
 	 */
-	public abstract RobotMode determineRole(RobotExecuter executer);
+	protected abstract RobotMode determineRole(RobotExecuter executer);
 
 	/**
 	 * Update an executer.
@@ -61,7 +61,7 @@ public abstract class Mode {
 	 * @param executer the executer to update
 	 * @param role the role which needs to be assigned to the robot belonging to the executer
 	 */
-	public void updateExecuter(RobotExecuter executer, RobotMode role) {
+	private void updateExecuter(RobotExecuter executer, RobotMode role) {
 		// Set Role for Robot
 		((Ally) executer.getRobot()).setRole(role);
 
@@ -90,7 +90,7 @@ public abstract class Mode {
 	 * Update the values of the Attacker afterwards.
 	 * @param executer the executer which needs to be handled
 	 */
-	public void handleAttacker(RobotExecuter executer) {
+	private void handleAttacker(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof Attacker))
 			executer.setLowLevelBehavior(new Attacker(executer.getRobot(), ComInterface.getInstance(RobotCom.class),
 					null, null, 0, false, 0));
@@ -102,7 +102,7 @@ public abstract class Mode {
 	 * Update the values of the Attacker behavior belonging to the executer.
 	 * @param executer the executer to update
 	 */
-	public abstract void updateAttacker(RobotExecuter executer);
+	protected abstract void updateAttacker(RobotExecuter executer);
 
 	/**
 	 * Handle the behavior of the Blocker.
@@ -110,7 +110,7 @@ public abstract class Mode {
 	 * Update the values of the Blocker afterwards.
 	 * @param executer the executer which needs to be handled
 	 */
-	public void handleCoverer(RobotExecuter executer) {
+	private void handleCoverer(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof Coverer))
 			executer.setLowLevelBehavior(new Coverer(executer.getRobot(), ComInterface.getInstance(RobotCom.class),
 					250, null, null, null, 0));
@@ -122,7 +122,7 @@ public abstract class Mode {
 	 * Update the values of the Blocker behavior belonging to the executer.
 	 * @param executer the executer to update
 	 */
-	public abstract void updateBlocker(RobotExecuter executer);
+	protected abstract void updateBlocker(RobotExecuter executer);
 
 	/**
 	 * Handle the behavior of the KeeperDefender.
@@ -130,7 +130,7 @@ public abstract class Mode {
 	 * Update the values of the KeeperDefender afterwards.
 	 * @param executer the executer which needs to be handled
 	 */
-	public void handleKeeperDefender(RobotExecuter executer) {
+	private void handleKeeperDefender(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof KeeperDefender))
 			executer.setLowLevelBehavior(new KeeperDefender(executer.getRobot(), ComInterface
 					.getInstance(RobotCom.class), 1200, false, null, null, null, null, 0));
@@ -142,7 +142,7 @@ public abstract class Mode {
 	 * Update the values of the KeeperDefender behavior belonging to the executer.
 	 * @param executer the executer to update
 	 */
-	public abstract void updateKeeperDefender(RobotExecuter executer);
+	protected abstract void updateKeeperDefender(RobotExecuter executer);
 
 	/**
 	 * Handle the behavior of the Keeper.
@@ -150,7 +150,7 @@ public abstract class Mode {
 	 * Update the values of the Keeper afterwards.
 	 * @param executer the executer which needs to be handled
 	 */
-	public void handleKeeper(RobotExecuter executer) {
+	private void handleKeeper(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof Keeper))
 			executer.setLowLevelBehavior(new Keeper(executer.getRobot(), ComInterface.getInstance(RobotCom.class), 500,
 					false, null, null, null, 0));
@@ -162,7 +162,7 @@ public abstract class Mode {
 	 * Update the values of the Keeper behavior belonging to the executer.
 	 * @param executer the executer to update
 	 */
-	public abstract void updateKeeper(RobotExecuter executer);
+	protected abstract void updateKeeper(RobotExecuter executer);
 	
 	
 	/**
