@@ -1,9 +1,11 @@
 package robocup.model;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.Map;
+import robocup.model.enums.FieldZone;
 
 public class Field {
-
 	private int length;
 	private int width;
 
@@ -22,24 +24,151 @@ public class Field {
 	private int penaltyLineFromSpotDistance;
 	private int cameraOverlapZoneWidth;
 	private ArrayList<Goal> goals;
-	
+	private Map<FieldZone,Zone> zoneList;	
+
 	public Field() {
-		length=6050;
-		this.width=4050;
-		this.lineWidth=40;
-		this.boundaryWidth=100;
-		this.refereeWidth=425;
-		this.centerCircleRadius=500;
-		this.defenceRadius=800;
-		this.defenceStretch=350;
-		this.freeKickFromDefenceDistance=200;
-		this.penaltySpotFromFieldLineDistance=750;
-		this.penaltyLineFromSpotDistance=400;
-		this.cameraOverlapZoneWidth=400;
+		this.length = 6050;
+		this.width = 4050;
+		this.lineWidth = 40;
+		this.boundaryWidth = 100;
+		this.refereeWidth = 425;
+		this.centerCircleRadius = 500;
+		this.defenceRadius = 800;
+		this.defenceStretch = 350;
+		this.freeKickFromDefenceDistance = 200;
+		this.penaltySpotFromFieldLineDistance = 750;
+		this.penaltyLineFromSpotDistance = 400;
+		this.cameraOverlapZoneWidth = 400;
 		
 		createGoals(700, 180, 20, 180);
-	}
+		zoneList = new EnumMap<FieldZone, Zone>(FieldZone.class);
+		
 
+		// a      b     c
+		// *------*-----*
+		// |     /|     |
+		// d   e/ |     |
+		// *---*  |     |
+		//     \f g     h
+ 		//      *-*-----*
+		//      | |     |
+		//      | |     |
+		//      i j     k
+		//      *-*-----*
+		// l   m/ |     |
+		// *---*  |     |
+		// |    \ |     |
+		// n     \o     p
+		// *------*-----*
+		
+		// single field
+		//		x		y		index
+		// a	0		0		0
+		// b 	1400	0		1
+		// c 	3025	0		2
+		// d 	0		1000	3		
+		// e 	400		1000	4		
+		// f	700		1500	5		
+		// g 	1400	1500	6		
+		// h 	3025	1500	7		
+		// i 	700		2550	8		
+		// j 	1400	2550	9		
+		// k 	3025	2550	10		
+		// l 	0		3050	11		
+		// m 	400		3050	12		
+		// n 	0		4050	13		
+		// o 	1400	4050	14		
+		// p 	3025	4050	15
+		
+		Point fieldLocs[] = new Point[16];
+		fieldLocs[0] = new Point(0, 0);
+		fieldLocs[1] = new Point(1400, 0);
+		fieldLocs[2] = new Point(3025, 0);
+		fieldLocs[3] = new Point(0, 1000);
+		fieldLocs[4] = new Point(400, 1000);
+		fieldLocs[5] = new Point(700, 1500);
+		fieldLocs[6] = new Point(1400, 1500);
+		fieldLocs[7] = new Point(3025, 1500);
+		fieldLocs[8] = new Point(700, 2550);
+		fieldLocs[9] = new Point(1400, 2550);
+		fieldLocs[10] = new Point(3025, 2550);
+		fieldLocs[11] = new Point(0, 3050);
+		fieldLocs[12] = new Point(400, 3050);
+		fieldLocs[13] = new Point(0, 4050);
+		fieldLocs[14] = new Point(1400, 4050);
+		fieldLocs[15] = new Point(3025, 4050);
+
+		// sectoren
+		// naam						p1        p2        P3		  P4
+		// WEST_RIGHT_CORNER		a -  0	  b -  1    e -  4	  d -  3
+		// WEST_RIGHT_SECOND_POST	b -  1	  g -  6    f -  5    e -  4
+		// WEST_CENTER				f -  5	  g -  6    j -  9	  i -  8
+		// WEST_LEFT_SECOND_POST	i -  8	  j -  9    o - 14    m - 12
+		// WEST_LEFT_CORNER			l - 11	  m - 12    o - 14    n - 13
+		// WEST_RIGHT_FRONT			b -  1	  c -  2    h -  7    g -  6
+		// WEST_MIDDLE				g -  6	  h -  7    k - 10    j -  9
+		// WEST_LEFT_FRONT			j -  9	  k - 10    p - 15    o - 14
+		
+		//west row one (goal)
+		zoneList.put(FieldZone.WEST_RIGHT_CORNER,
+				new Zone("rightCorner", 
+				new Point[] { fieldLocs[0],fieldLocs[1],fieldLocs[4],fieldLocs[3] }));
+		zoneList.put(FieldZone.WEST_RIGHT_SECOND_POST,
+				new Zone("rightSecondPost", 
+				new Point[] { fieldLocs[1],fieldLocs[6],fieldLocs[5],fieldLocs[4] }));
+		zoneList.put(FieldZone.WEST_CENTER,
+				new Zone("center", 
+				new Point[] { fieldLocs[5],fieldLocs[6],fieldLocs[9],fieldLocs[8] }));
+		zoneList.put(FieldZone.WEST_LEFT_SECOND_POST,
+				new Zone("leftSecondPost", 
+				new Point[] { fieldLocs[8],fieldLocs[9],fieldLocs[14],fieldLocs[12] }));
+		zoneList.put(FieldZone.WEST_LEFT_CORNER,
+				new Zone("leftCorner", 
+				new Point[] { fieldLocs[11],fieldLocs[12],fieldLocs[14],fieldLocs[13] }));
+		//west row two (mid)
+		zoneList.put(FieldZone.WEST_RIGHT_FRONT,
+				new Zone("rightFront",
+				new Point[] { fieldLocs[1],fieldLocs[2],fieldLocs[7],fieldLocs[6] }));
+		zoneList.put(FieldZone.WEST_MIDDLE,
+				new Zone("middle", 
+				new Point[] { fieldLocs[6],fieldLocs[7],fieldLocs[10],fieldLocs[9] }));
+		zoneList.put(FieldZone.WEST_LEFT_FRONT,
+				new Zone("leftFront",
+				new Point[] { fieldLocs[9],fieldLocs[10],fieldLocs[15],fieldLocs[14] }));
+
+		//east row one (goal)
+		zoneList.put(FieldZone.EAST_LEFT_CORNER,
+				new Zone("leftCorner",
+				new Point[] {makeXReverse(fieldLocs[0]), makeXReverse(fieldLocs[1]), makeXReverse(fieldLocs[4]), makeXReverse(fieldLocs[3]) }));
+		zoneList.put(FieldZone.EAST_LEFT_SECOND_POST,
+				new Zone("leftSecondPost",
+				new Point[] {makeXReverse(fieldLocs[1]), makeXReverse(fieldLocs[6]), makeXReverse(fieldLocs[5]), makeXReverse(fieldLocs[4]) }));
+		zoneList.put(FieldZone.EAST_CENTER,
+				new Zone("center",
+				new Point[] {makeXReverse(fieldLocs[5]), makeXReverse(fieldLocs[6]), makeXReverse(fieldLocs[9]), makeXReverse(fieldLocs[8]) }));
+		zoneList.put(FieldZone.EAST_RIGHT_SECOND_POST,
+				new Zone("rightSecondPost", 
+				new Point[] {makeXReverse(fieldLocs[8]), makeXReverse(fieldLocs[9]), makeXReverse(fieldLocs[14]), makeXReverse(fieldLocs[12]) }));
+		zoneList.put(FieldZone.EAST_RIGHT_CORNER,
+				new Zone("rightCorner", 
+				new Point[] {makeXReverse(fieldLocs[11]), makeXReverse(fieldLocs[12]), makeXReverse(fieldLocs[14]), makeXReverse(fieldLocs[13]) }));
+
+		//east row two (mid)
+		zoneList.put(FieldZone.EAST_LEFT_FRONT,
+				new Zone("leftFront",
+				new Point[] {makeXReverse(fieldLocs[1]), makeXReverse(fieldLocs[2]), makeXReverse(fieldLocs[7]), makeXReverse(fieldLocs[6]) }));
+		zoneList.put(FieldZone.EAST_MIDDLE,
+				new Zone("middle",
+				new Point[] {makeXReverse(fieldLocs[6]), makeXReverse(fieldLocs[7]), makeXReverse(fieldLocs[10]), makeXReverse(fieldLocs[9]) }));
+		zoneList.put(FieldZone.EAST_RIGHT_FRONT,
+				new Zone("rightFront",
+				new Point[] {makeXReverse(fieldLocs[9]), makeXReverse(fieldLocs[10]), makeXReverse(fieldLocs[15]), makeXReverse(fieldLocs[14]) }));
+	}
+	
+	private Point makeXReverse(Point point) {
+		return new Point(6050 - point.getX(), 4050 - point.getY()); 
+	}
+	
 	/**
 	 * constructor which declares all variables, makes it messy so its preferred to use the default constructor, and fill it in later with the given methods
 	 * @param length
@@ -81,6 +210,8 @@ public class Field {
 		this.goalHeight = goalHeight;
 		this.cameraOverlapZoneWidth = cameraOverlapZoneWidth;
 		createGoals(goalWidth, goalDepth, goalWallWidth, goalHeight);
+		
+		
 	}
 	
 	public void update(int lineWidth, int fieldLength, int fieldWidth, int boundaryWidth, int refereeWidth,
@@ -317,8 +448,6 @@ public class Field {
 		this.cameraOverlapZoneWidth = cameraOverlapZoneWith;
 	}
 	
-	
-	
 	public void setFieldProportions(int width, int length, int lineWidth, int boundaryWidth, int refereeWidth) {
 		this.width = width;
 		this.length = length;
@@ -342,11 +471,11 @@ public class Field {
 	public void setGoalProportions(int goalWidth, int goalDepth, int goalWallWidth, int goalHeight) {
 		createGoals(goalWidth, goalDepth, goalWallWidth, goalHeight);
 	}
-	
-	
-	
-	
 
+	public Map<FieldZone, Zone> getZones () {
+		return zoneList;
+	}
+	
 	@Override
 	public String toString() {
 		return "Field [length=" + length + "\r\n width=" + width + "\r\n lineWidth=" + lineWidth

@@ -20,10 +20,10 @@ import robocup.model.World;
 import robocup.view.widgets.ConsoleWidget;
 import robocup.view.widgets.ControlRobotWidget;
 import robocup.view.widgets.GameStatusWidget;
-import robocup.view.widgets.PenguinWidget;
 import robocup.view.widgets.SettingsWidget;
 import robocup.view.widgets.VisibleRobotWidget;
 import robocup.view.widgets.rotateRobotWidget;
+//import robocup.view.widgets.PenguinWidget;
 
 @SuppressWarnings("serial")
 public class GUI extends JFrame {

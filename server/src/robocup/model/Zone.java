@@ -4,119 +4,125 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 public class Zone {
-	private int x, y;
-	private double ratio =1;
 	private String name;
+	
+	private Point[] relativePoints;
+	private Point[] absolutePoints;
+	
 	private int[] relativeYPoints;
 	private int[] relativeXPoints;
 	private int[] absoluteXPoints;
 	private int[] absoluteYPoints;
-	private double xOffset; //just for visualizing and calculating absolute X/Y points
-	private double yOffset; //just for visualizing and calculating absolute X/Y points
-	private Color color;
 
-	public Zone(Dimension dimension, Color teamColor, String name, int x, int y, double ratio, int[] yPoints, int[] xPoints){
-		if(yPoints.length != xPoints.length){
-			System.err.println("Point arrays aren't equal in length");
-			return; 
-		}
-		this.color=teamColor;
+	// teamcolor has to be deleted because it aint an indicator for the correct side, maybe an isleft bool
+	public Zone(String name,  Point[] points) {
+		//this.color=teamColor;
 		this.name=name;
-		this.xOffset = dimension.getWidth()/2.0;
-		this.yOffset = dimension.getHeight()/2.0;
-		this.x=x;
-		this.y=y;
-		this.ratio = ratio;
-		this.relativeYPoints=yPoints;
-		this.relativeXPoints=xPoints;
+
+		//-3000 tot 3000, -2000 tot 2000
+		this.relativePoints = points;
 		this.absoluteXPoints = new int[getNPoints()];
 		this.absoluteYPoints = new int[getNPoints()];
+		this.absolutePoints = new Point[getNPoints()];
+		
+		//this.relativeYPoints=yPoints;
+		//this.relativeXPoints=xPoints;
 		calculateAbsolutePoints();
+		
+		check (400, 200);
+		check (500, 400);
+	}
+	
+	private void check(int xarg, int yarg) {
+		boolean a = contains(new Point(xarg,yarg));
+		if (a){
+			System.out.println(xarg+", "+yarg+" lies in: "+name);
+			print();
+		}
 
 	}
-	public Zone(String name, Color teamColor, int x, int y, int[] yPoints, int[] xPoints){
-		this(new Dimension(0,0), teamColor, name, x, y, 1, yPoints, xPoints);
+	
+	private void print(){
+		for (int a = 0; a < absoluteXPoints.length; a++) {
+			System.out.println(absoluteXPoints[a]+" "+absoluteYPoints[a]);
+		}
+		
 	}
 	
 	public String getName(){
 		return name;
 	}
 	
-	public void setOffset(Dimension dimension, double ratio){
-		this.xOffset = dimension.getWidth()/2.0;
-		this.yOffset = dimension.getHeight()/2.0;
-		this.ratio = ratio;
-	}
 	
-	public void calculateAbsolutePoints(){
+	public void calculateAbsolutePoints() {
 		int i=0;
 		//x and y swapped for random
-		for(int coord:relativeXPoints){
-			absoluteYPoints[i] = (int) (yOffset - (y + coord) * ratio);
+		for(Point coord:relativePoints) {
+			absoluteXPoints[i] = (int) coord.getX();
+			absoluteYPoints[i] = (int) coord.getY();
+
+			absolutePoints[i] = new Point(absoluteXPoints[i], absoluteYPoints[i]);
 			i++;
 		}
-		i=0;
-		for(int coord:relativeYPoints){
-			absoluteXPoints[i] = (int) (xOffset + ( x +coord) * ratio);
-			i++;
-		}
-	}
-	
-	public Color getColor(){
-		return color;
-	}
-	
-	public void setColor(Color color){
-		this.color = color;
 	}
 
-	public int getX(){
-		return (int) (x + xOffset);
-	}
-	
-	public int getY(){
-		return (int) (y + yOffset);
-	}
-	
-	public void setCoords(int x, int y){
-		this.x = x;
-		this.y = y;
-		calculateAbsolutePoints();
+	public int getWidth() {
+		return getXDelta(relativePoints);
 	}
 
-	public int getWidth(){
-		return getDelta(relativeXPoints);
+	public int getHeight() {
+		return getYDelta(relativePoints);
 	}
 
-	public int getHeight(){
-		return getDelta(relativeYPoints);
-	}
-
-	public int[] getAbsoluteXPoints(){
+	// to be changed
+	public int[] getAbsoluteXPoints() {
 		return absoluteXPoints;
 	}
-	public int[] getAbsoluteYPoints(){
+	// to be changed
+	public int[] getAbsoluteYPoints() {
 		return absoluteYPoints;
 	}
 	
-	public int[] getRelativeXPoints(){
-		return relativeXPoints;
+	public Point[] getAbsolutePoints() {
+		return absolutePoints;
 	}
 	
-	public int[] getRelativeYPoints(){
-		return relativeYPoints;
-	}
-	
-	public int getNPoints(){
-		return relativeYPoints.length;
+	public Point[] getRelativePoints() {
+		return relativePoints;
 	}
 
-	private int getDelta(int[] pointArray) {
-		int max =0
-		   ,min =0;
-		for(int x: pointArray){
-			max = (max > x ? max : x);
-			min = (min < x ? min : x);
+	
+	public int getNPoints() {
+		return relativePoints.length;
+	}
+	
+    public boolean contains(Point test) {
+        int i;
+        int j;
+        boolean result = false;
+        for (i = 0, j = absoluteXPoints.length - 1; i < absoluteXPoints.length; j = i++) {        	
+          if ((absoluteYPoints[i] > test.getY()) != (absoluteYPoints[j] > test.getY()) &&
+              (test.getX() < (absoluteXPoints[j] - absoluteXPoints[i]) * (test.getY() - absoluteYPoints[i]) / (absoluteYPoints[j] - absoluteYPoints[i]) + absoluteXPoints[i])) {
+            result = !result;
+           }
+        }
+        return result;
+      }
+
+	private int getXDelta(Point[] pointArray) {
+		int max = 0, min = 0;
+		for(Point p: pointArray) {
+			max = (max > (int)p.getX() ? max : (int)p.getX());
+			min = (min < (int)p.getX() ? min : (int)p.getX());
+		}
+		return max - min;
+	}
+	
+	private int getYDelta(Point[] pointArray) {
+		int max = 0, min = 0;
+		for(Point p: pointArray){
+			max = (max > (int)p.getY() ? max : (int)p.getY());
+			min = (min < (int)p.getY() ? min : (int)p.getY());
 		}
 		return max - min;
 	}
