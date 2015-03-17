@@ -3,6 +3,7 @@ package robocup.model;
 import java.util.ArrayList;
 import java.util.Observable;
 
+import robocup.model.enums.FieldZone;
 import robocup.model.enums.TeamColor;
 import robocup.model.enums.Command;
 import robocup.view.GUI;
@@ -204,6 +205,50 @@ public class World extends Observable {
 		}
 		return true;
 	}
+	
+	public ArrayList<Ally> getAllyRobotsInZones(ArrayList<FieldZone> fieldZones) {
+		ArrayList<Ally> foundAllies = new ArrayList<Ally>();
+		
+		for (FieldZone fieldzone : fieldZones) {
+			for (Robot ally : allyTeam) {
+				if (field.getZone(fieldzone).contains(ally.getPosition()))
+				{
+					foundAllies.add((Ally)ally);
+				};
+			}
+		}
+		return foundAllies;
+	}
+
+	public ArrayList<Enemy> getEnemyRobotsInZones(ArrayList<FieldZone> fieldZones) {
+		ArrayList<Enemy> foundEnemies = new ArrayList<Enemy>();
+		
+		for (FieldZone fieldzone : fieldZones) {
+			for (Robot enemy : enemyTeam) {
+				if (field.getZone(fieldzone).contains(enemy.getPosition()))
+				{
+					foundEnemies.add((Enemy)enemy);
+				};
+			}
+		}
+		return foundEnemies;
+	}
+	
+
+	public ArrayList<Robot> getAllRobotsInZones(ArrayList<FieldZone> fieldZones) {
+		ArrayList<Robot> foundRobots = new ArrayList<Robot>();
+		
+		for (FieldZone fieldzone : fieldZones) {
+			for (Robot robot : robotList) {
+				if (field.getZone(fieldzone).contains(robot.getPosition()))
+				{
+					foundRobots.add(robot);
+				};
+			}
+		}
+		return foundRobots;
+	}
+	
 	
 	/**
 	 * Returns the color of your own team.

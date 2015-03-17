@@ -1,7 +1,9 @@
 package robocup.model;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.Map;
+
 import robocup.model.enums.FieldZone;
 public class Field {
 	private int length;
@@ -471,6 +473,10 @@ public class Field {
 
 	public Map<FieldZone, Zone> getZones () {
 		return zoneList;
+	}
+
+	public Zone getZone(FieldZone fieldZone) {
+		return zoneList.get(fieldZone);
 	}
 	
 	@Override
