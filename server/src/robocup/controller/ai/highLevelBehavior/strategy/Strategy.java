@@ -29,4 +29,12 @@ public abstract class Strategy {
 	public FieldZone getZoneForRole(RobotMode role) {
 		return zonesForRole.get(role);
 	}
+	
+	/**
+	 * Get all the roles which are used in this strategy
+	 * @return all roles
+	 */
+	public ArrayList<RobotMode> getRoles() {
+		return roles;
+	}
 }

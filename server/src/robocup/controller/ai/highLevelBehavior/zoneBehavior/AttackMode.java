@@ -2,6 +2,7 @@ package robocup.controller.ai.highLevelBehavior.zoneBehavior;
 
 import java.util.ArrayList;
 
+import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.controller.ai.lowLevelBehavior.Attacker;
 import robocup.controller.ai.lowLevelBehavior.Coverer;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
@@ -12,17 +13,27 @@ import robocup.model.enums.RobotMode;
 
 public class AttackMode extends Mode {
 
-	public AttackMode() {
-		super();
+	public AttackMode(Strategy strategy) {
+		super(strategy);
 	}
 
 	@Override
 	public void setRoles(ArrayList<RobotExecuter> executers) {
+		// clear executers so we start clean
 		for (RobotExecuter executer : executers) {
-			if (executer.getRobot().getRobotId() == world.getReferee().getAlly().getGoalie())
-				((Ally) executer.getRobot()).setRole(RobotMode.KEEPER);
+			((Ally) executer.getRobot()).setRole(null);
+		}
 
-			// TODO Determine role based on positions and zones on the field
+		for (RobotMode role : strategy.getRoles()) {
+			if (role == RobotMode.KEEPER) {
+				// Find executer belonging to the goalie and set role
+				((Ally) findExecuter(world.getReferee().getAlly().getGoalie(), executers).getRobot())
+						.setRole(RobotMode.KEEPER);
+			} else if (strategy.getZoneForRole(role) != null) {
+				// find robot near or in this zone and assign role
+			} else {
+				// assign remaining roles
+			}
 		}
 	}
 

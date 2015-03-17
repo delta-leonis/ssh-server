@@ -3,6 +3,7 @@ package robocup.controller.ai.highLevelBehavior.zoneBehavior;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.controller.ai.lowLevelBehavior.Attacker;
 import robocup.controller.ai.lowLevelBehavior.Coverer;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
@@ -24,15 +25,17 @@ public abstract class Mode {
 
 	protected World world;
 	protected Ball ball;
+	protected Strategy strategy;
 
 	/** Co-ordinates of the goal on the left side of the field */
 	private static final Point MID_GOAL_NEGATIVE = new Point(-(World.getInstance().getField().getLength() / 2), 0);
 	/** Co-ordinates of the goal on the right side of the field */
 	private static final Point MID_GOAL_POSITIVE = new Point(World.getInstance().getField().getLength() / 2, 0);
 
-	public Mode() {
+	public Mode(Strategy strategy) {
 		world = World.getInstance();
 		ball = world.getBall();
+		this.strategy = strategy;
 	}
 
 	/**
@@ -208,6 +211,20 @@ public abstract class Mode {
 //		for(Zone zone : World.getInstance().getZones())
 //			if(zone.check(obj))
 //				return zone;
+		return null;
+	}
+	
+	/**
+	 * Find a RobotExecuter based on robot id
+	 * @param robotId the robotid
+	 * @param executers a list containing all the executers
+	 * @return RobotExecuter belonging to a robot with id robotId
+	 */
+	protected RobotExecuter findExecuter(int robotId, ArrayList<RobotExecuter> executers) {
+		for (RobotExecuter r : executers) {
+			if (r.getRobot().getRobotId() == robotId)
+				return r;
+		}
 		return null;
 	}
 }
