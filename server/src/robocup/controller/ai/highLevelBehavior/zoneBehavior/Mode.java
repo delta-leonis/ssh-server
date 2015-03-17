@@ -17,7 +17,6 @@ import robocup.model.Robot;
 import robocup.model.World;
 import robocup.model.Zone;
 import robocup.model.enums.FieldZone;
-import robocup.model.enums.RobotMode;
 import robocup.output.ComInterface;
 import robocup.output.RobotCom;
 
@@ -31,7 +30,7 @@ public abstract class Mode {
 	/** Co-ordinates of the goal on the right side of the field */
 	private static final Point MID_GOAL_POSITIVE = new Point(World.getInstance().getField().getLength() / 2, 0);
 
-	public Mode(ArrayList<RobotExecuter> executers) {
+	public Mode() {
 		world = World.getInstance();
 		ball = world.getBall();
 	}
@@ -43,9 +42,11 @@ public abstract class Mode {
 	 */
 	public void execute(ArrayList<RobotExecuter> executers) {
 		try {
-			for (RobotExecuter executer : executers) {
-				updateExecuter(executer, determineRole(executer));
-			}
+			setRoles(executers);
+
+			for (RobotExecuter executer : executers)
+				updateExecuter(executer);
+
 		} catch (Exception e) {
 			System.out.println("Exception in Mode, please fix me :(");
 			e.printStackTrace();
@@ -53,26 +54,19 @@ public abstract class Mode {
 	}
 
 	/**
-	 * Determine the role for an executer.
-	 * Role will be chosen based on current strategy and mode.
-	 * @return role of the robot
+	 * Set the roles for all executers based on current strategy and mode.
 	 */
-	protected abstract RobotMode determineRole(RobotExecuter executer);
+	protected abstract void setRoles(ArrayList<RobotExecuter> executers);
 
 	/**
 	 * Update an executer.
-	 * A role will be assigned to the robot belonging to this executer.
 	 * A new lowlevel behavior will be created if the role is different from the previous role.
-	 * The lowlevel behavior will be updated as well.
+	 * The lowlevel behavior will receive updated values.
 	 * @param executer the executer to update
-	 * @param role the role which needs to be assigned to the robot belonging to the executer
 	 */
-	private void updateExecuter(RobotExecuter executer, RobotMode role) {
-		// Set Role for Robot
-		((Ally) executer.getRobot()).setRole(role);
-
+	private void updateExecuter(RobotExecuter executer) {
 		// Execute handle functions based on role
-		switch (role) {
+		switch (((Ally) executer.getRobot()).getRole()) {
 		case ATTACKER:
 			handleAttacker(executer);
 			break;
@@ -86,7 +80,8 @@ public abstract class Mode {
 			handleKeeper(executer);
 			break;
 		default:
-			System.out.println("Unknown role in Mode, role: " + role);
+			System.out.println("Role used without handle function, please add me in Mode.java, role: "
+					+ ((Ally) executer.getRobot()).getRole());
 		}
 	}
 

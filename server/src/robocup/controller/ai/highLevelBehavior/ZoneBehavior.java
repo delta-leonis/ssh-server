@@ -27,8 +27,8 @@ public class ZoneBehavior extends Behavior {
 		world = World.getInstance();
 		ball = world.getBall();
 
-		defenseMode = new DefenseMode(executers);
-		attackMode = new AttackMode(executers);
+		defenseMode = new DefenseMode();
+		attackMode = new AttackMode();
 	}
 
 	/**

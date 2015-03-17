@@ -7,21 +7,23 @@ import robocup.controller.ai.lowLevelBehavior.Coverer;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
+import robocup.model.Ally;
 import robocup.model.enums.RobotMode;
 
 public class DefenseMode extends Mode {
 
-	public DefenseMode(ArrayList<RobotExecuter> executers) {
-		super(executers);
+	public DefenseMode() {
+		super();
 	}
 
 	@Override
-	public RobotMode determineRole(RobotExecuter executer) {
-		if (executer.getRobot().getRobotId() == world.getReferee().getAlly().getGoalie())
-			return RobotMode.KEEPER;
+	public void setRoles(ArrayList<RobotExecuter> executers) {
+		for (RobotExecuter executer : executers) {
+			if (executer.getRobot().getRobotId() == world.getReferee().getAlly().getGoalie())
+				((Ally) executer.getRobot()).setRole(RobotMode.KEEPER);
 
-		// TODO Determine role based on positions and zones on the field
-		return RobotMode.KEEPERDEFENDER;
+			// TODO Determine role based on positions and zones on the field
+		}
 	}
 
 	@Override

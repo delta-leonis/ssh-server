@@ -7,21 +7,23 @@ import robocup.controller.ai.lowLevelBehavior.Coverer;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
+import robocup.model.Ally;
 import robocup.model.enums.RobotMode;
 
 public class AttackMode extends Mode {
 
-	public AttackMode(ArrayList<RobotExecuter> executers) {
-		super(executers);
+	public AttackMode() {
+		super();
 	}
 
 	@Override
-	public RobotMode determineRole(RobotExecuter executer) {
-		if (executer.getRobot().getRobotId() == world.getReferee().getAlly().getGoalie())
-			return RobotMode.KEEPER;
+	public void setRoles(ArrayList<RobotExecuter> executers) {
+		for (RobotExecuter executer : executers) {
+			if (executer.getRobot().getRobotId() == world.getReferee().getAlly().getGoalie())
+				((Ally) executer.getRobot()).setRole(RobotMode.KEEPER);
 
-		// TODO Determine role based on positions and zones on the field
-		return RobotMode.ATTACKER;
+			// TODO Determine role based on positions and zones on the field
+		}
 	}
 
 	@Override
@@ -48,7 +50,7 @@ public class AttackMode extends Mode {
 	@Override
 	public void updateKeeper(RobotExecuter executer) {
 		Keeper keeper = (Keeper) executer.getLowLevelBehavior();
-		
+
 		int distanceToGoal = 700;
 		// TODO check if keeper needs to move to the ball, if so, set goToKick to true
 		boolean goToKick = false;
