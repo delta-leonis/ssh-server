@@ -16,12 +16,4 @@ public abstract class Behavior {
 	 * TODO merge updateExecuters with execute in ForceBehavior
 	 */
 	public abstract void updateExecuters(ArrayList<RobotExecuter> executers);
-
-	public RobotExecuter findExecuter(int robotId, ArrayList<RobotExecuter> executers) {
-		for (RobotExecuter r : executers) {
-			if (r.getRobot().getRobotId() == robotId)
-				return r;
-		}
-		return null;
-	}
 }

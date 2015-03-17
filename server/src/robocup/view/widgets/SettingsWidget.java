@@ -92,7 +92,7 @@ public class SettingsWidget extends WidgetBox {
 	@Override
 	public void update() {
 		if (World.getInstance().getReferee()
-				.getDoesTeamPlaysLeft(World.getInstance().getReferee().getAlly().getColor()))
+				.getDoesTeamPlaysEast(World.getInstance().getReferee().getAlly().getColor()))
 			fieldHalfBox.setSelectedItem("left");
 		else
 			fieldHalfBox.setSelectedItem("right");

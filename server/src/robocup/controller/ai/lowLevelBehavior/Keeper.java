@@ -1,9 +1,9 @@
 package robocup.controller.ai.lowLevelBehavior;
 
-import robocup.model.enums.RobotMode;
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.Point;
 import robocup.model.Robot;
+import robocup.model.enums.RobotMode;
 import robocup.output.ComInterface;
 
 public class Keeper extends LowLevelBehavior {
@@ -24,6 +24,7 @@ public class Keeper extends LowLevelBehavior {
 	 * @param ballPosition current position of the ball
 	 * @param keeperPosition current position of the keeper
 	 * @param centerGoalPosition center of the goal on the correct side of the playing field
+	 * @param yMax maximum y position on the field
 	 */
 	public Keeper(Robot robot, ComInterface output, int distanceToGoal, boolean goToKick, Point ballPosition,
 			Point keeperPosition, Point centerGoalPosition, int yMax) {
@@ -64,6 +65,8 @@ public class Keeper extends LowLevelBehavior {
 				newDestination.setX(centerGoalPosition.getX() > 0 ? centerGoalPosition.getX() - 100
 						: centerGoalPosition.getX() + 100);
 
+			// TODO move to gotoposition,
+			// this is the implementation for a no-go zone where robots shouldn't drive (to prevent going off-camera)
 			if (newDestination.getY() > 0 && newDestination.getY() > yMax - 100)
 				newDestination.setY(yMax - 100);
 			else if (newDestination.getY() < 0 && newDestination.getY() < -yMax + 100)

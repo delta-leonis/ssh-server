@@ -2,6 +2,7 @@ package robocup.controller.ai.highLevelBehavior;
 
 import java.util.ArrayList;
 
+import robocup.controller.ai.highLevelBehavior.strategy.defense.ExampleStrategy;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.AttackMode;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.DefenseMode;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.Mode;
@@ -27,8 +28,8 @@ public class ZoneBehavior extends Behavior {
 		world = World.getInstance();
 		ball = world.getBall();
 
-		defenseMode = new DefenseMode(executers);
-		attackMode = new AttackMode(executers);
+		defenseMode = new DefenseMode(new ExampleStrategy());
+		attackMode = new AttackMode(new ExampleStrategy());
 	}
 
 	/**

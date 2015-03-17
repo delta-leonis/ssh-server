@@ -21,6 +21,13 @@ public class Goal {
 		this.wallWidth = wallWidth;
 		this.height = height;
 	}
+	
+	/**
+	 * @return goal width excluding post width
+	 */
+	public int getWidth(){
+		return (int) (Math.abs(frontLeft.getY() - frontRight.getY()));
+	}
 
 	/**
 	 * @return the wallWidth
