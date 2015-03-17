@@ -66,7 +66,7 @@ public class GameStatusWidget extends WidgetBox {
 		}
 
 		if (World.getInstance().getReferee()
-				.getDoesTeamPlaysLeft(World.getInstance().getReferee().getAlly().getColor()))
+				.getDoesTeamPlaysEast(World.getInstance().getReferee().getAlly().getColor()))
 			fieldHalfField.setText("Left");
 		else
 			fieldHalfField.setText("Right");
