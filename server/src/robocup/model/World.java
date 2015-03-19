@@ -23,6 +23,8 @@ public class World extends Observable {
 	ArrayList<Robot> enemyTeam;
 	ArrayList<Robot> robotList;
 	
+	private int robotRadius = 90;
+	
 	private static final int TOTAL_TEAM_SIZE = 11;
 	private final int STOP_BALL_DISTANCE = 500; // in mm
 
@@ -206,6 +208,53 @@ public class World extends Observable {
 		return true;
 	}
 	
+	/*
+	 * Method that retrieves all allies that are present within a zone
+	 */
+	public ArrayList<Ally> getAllyRobotsInArea(ArrayList<FieldZone> fieldZones, Point[] argPoly) {
+		ArrayList<Ally> foundAllies = new ArrayList<Ally>();
+		for (Robot ally : allyTeam) {
+			if (areaContainsCircle(ally.getPosition(), argPoly, robotRadius))
+			{
+				foundAllies.add((Ally)ally);
+			}
+		}
+		return foundAllies;
+	}
+
+	/*
+	 * Method that retrieves all enemies that are present within a zone
+	 */
+	public ArrayList<Enemy> getEnemyRobotsInArea(ArrayList<FieldZone> fieldZones, Point[] argPoly) {
+		ArrayList<Enemy> foundEnemies = new ArrayList<Enemy>();
+		for (Robot enemy : enemyTeam) {
+			if (areaContainsCircle(enemy.getPosition(), argPoly, robotRadius))
+			{
+				foundEnemies.add((Enemy)enemy);
+			}
+		}
+		return foundEnemies;
+	}
+	
+	/*
+	 * Method that retrieves all robots that are present within a zone
+	 */
+	public ArrayList<Robot> getAllRobotsInArea(ArrayList<FieldZone> fieldZones, Point[] argPoly) {
+		ArrayList<Robot> foundRobots = new ArrayList<Robot>();
+		for (Robot robot : robotList) {
+			if (areaContainsCircle(robot.getPosition(), argPoly, robotRadius))
+			{
+				foundRobots.add(robot);
+			}
+		}
+		return foundRobots;
+	}
+	
+	
+	
+	/*
+	 * Method that retrieves all allies that are present within a zone
+	 */
 	public ArrayList<Ally> getAllyRobotsInZones(ArrayList<FieldZone> fieldZones) {
 		ArrayList<Ally> foundAllies = new ArrayList<Ally>();
 		
@@ -220,6 +269,9 @@ public class World extends Observable {
 		return foundAllies;
 	}
 
+	/*
+	 * Method that retrieves all enemies that are present within a zone
+	 */
 	public ArrayList<Enemy> getEnemyRobotsInZones(ArrayList<FieldZone> fieldZones) {
 		ArrayList<Enemy> foundEnemies = new ArrayList<Enemy>();
 		
@@ -234,7 +286,9 @@ public class World extends Observable {
 		return foundEnemies;
 	}
 	
-
+	/*
+	 * Method that retrieves all robots that are present within a zone
+	 */
 	public ArrayList<Robot> getAllRobotsInZones(ArrayList<FieldZone> fieldZones) {
 		ArrayList<Robot> foundRobots = new ArrayList<Robot>();
 		
@@ -249,7 +303,46 @@ public class World extends Observable {
 		return foundRobots;
 	}
 	
-	
+	/*
+	 * method that calculates if a circle falls in or touches a polygon
+	 */
+    public boolean areaContainsCircle(Point argPoint, Point[] areaPoly, double radius) {
+    	boolean result = false;
+    	
+    	for (int edges = 0; edges < areaPoly.length-1; edges++) {
+    		if (pointToLineDistance(new Point(areaPoly[edges].getX(), areaPoly[edges].getY()), new Point(areaPoly[edges + 1].getX(), areaPoly[edges + 1].getY()), argPoint) < radius) {
+    			result = true;
+            }
+    	}
+    	
+    	result = result || pointInPolygon(argPoint, areaPoly);
+    	return result;
+    }
+    
+    /*
+     * a method that calculates the distance of the right-angle between a point and a line
+     */
+    public double pointToLineDistance(Point A, Point B, Point P) {
+    	double normalLength = Math.sqrt((B.getX() - A.getX()) * (B.getX() - A.getX()) + (B.getY() - A.getY()) * (B.getY() - A.getY()));
+    	return Math.abs((P.getX() - A.getX()) * (B.getY() - A.getY()) - (P.getY() - A.getY()) * (B.getX() - A.getX())) / normalLength;
+    }
+    
+    /*
+     * a method that checks if a point falls within a polygon
+     */
+    public boolean pointInPolygon(Point argPoint, Point[] areaPoly) {
+        boolean result = false;
+        for (int i = 0, j = areaPoly.length - 1; i < areaPoly.length; j = i++) {        	
+          if ((areaPoly[i].getY() > argPoint.getY()) != (areaPoly[j].getY() > argPoint.getY()) &&
+              (argPoint.getX() < (areaPoly[j].getX() - areaPoly[i].getX()) * (argPoint.getY() - areaPoly[i].getY()) / (areaPoly[j].getY() - areaPoly[i].getY()) + areaPoly[i].getX())) {
+        	  result = !result;
+           }
+        }
+        return result;
+     }
+
+
+
 	/**
 	 * Returns the color of your own team.
 	 * Suggestion: Rename to getAllyTeamColor()

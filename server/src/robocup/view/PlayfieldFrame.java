@@ -38,7 +38,7 @@ public class PlayfieldFrame extends JPanel {
 		setSize((int)(FIELDWIDTH * ratio), (int)(FIELDHEIGHT * ratio));
 	}
 	
-
+				
 
     public void paint(Graphics g) {
 		super.paintComponents(g);

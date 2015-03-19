@@ -1,6 +1,5 @@
 package robocup.model;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -478,6 +477,16 @@ public class Field {
 	public Zone getZone(FieldZone fieldZone) {
 		return zoneList.get(fieldZone);
 	}
+	
+	public FieldZone locateObject(FieldObject argObject) {
+		for (Map.Entry<FieldZone, Zone> entry : zoneList.entrySet())
+		{	
+			if (entry.getValue().contains(argObject.getPosition()))
+				return entry.getKey();
+		}
+		return null;
+	}
+	
 	
 	@Override
 	public String toString() {

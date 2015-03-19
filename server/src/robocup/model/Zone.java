@@ -1,23 +1,20 @@
 package robocup.model;
 
-import java.awt.Color;
-import java.awt.Dimension;
-
 public class Zone {
 	private String name;
 	
 	private Point[] relativePoints;
 	private Point[] absolutePoints;
 	
-	private int[] relativeYPoints;
-	private int[] relativeXPoints;
+	//private int[] relativeYPoints;
+	//private int[] relativeXPoints;
 	private int[] absoluteXPoints;
 	private int[] absoluteYPoints;
 
 	// teamcolor has to be deleted because it aint an indicator for the correct side, maybe an isleft bool
 	public Zone(String name,  Point[] points) {
 		//this.color=teamColor;
-		this.name=name;
+		this.name =name;
 
 		//-3000 tot 3000, -2000 tot 2000
 		this.relativePoints = points;
@@ -96,18 +93,19 @@ public class Zone {
 		return relativePoints.length;
 	}
 	
-    public boolean contains(Point test) {
+    public boolean contains(Point argPoint) {
         int i;
         int j;
         boolean result = false;
         for (i = 0, j = absoluteXPoints.length - 1; i < absoluteXPoints.length; j = i++) {        	
-          if ((absoluteYPoints[i] > test.getY()) != (absoluteYPoints[j] > test.getY()) &&
-              (test.getX() < (absoluteXPoints[j] - absoluteXPoints[i]) * (test.getY() - absoluteYPoints[i]) / (absoluteYPoints[j] - absoluteYPoints[i]) + absoluteXPoints[i])) {
+          if ((absoluteYPoints[i] > argPoint.getY()) != (absoluteYPoints[j] > argPoint.getY()) &&
+              (argPoint.getX() < (absoluteXPoints[j] - absoluteXPoints[i]) * (argPoint.getY() - absoluteYPoints[i]) / (absoluteYPoints[j] - absoluteYPoints[i]) + absoluteXPoints[i])) {
             result = !result;
            }
         }
         return result;
-      }
+     }
+    
 
 	private int getXDelta(Point[] pointArray) {
 		int max = 0, min = 0;
