@@ -211,7 +211,7 @@ public class World extends Observable {
 	/*
 	 * Method that retrieves all allies that are present within a zone
 	 */
-	public ArrayList<Ally> getAllyRobotsInArea(ArrayList<FieldZone> fieldZones, Point[] argPoly) {
+	public ArrayList<Ally> getAllyRobotsInArea(Point[] argPoly) {
 		ArrayList<Ally> foundAllies = new ArrayList<Ally>();
 		for (Robot ally : allyTeam) {
 			if (areaContainsCircle(ally.getPosition(), argPoly, robotRadius))
@@ -225,7 +225,7 @@ public class World extends Observable {
 	/*
 	 * Method that retrieves all enemies that are present within a zone
 	 */
-	public ArrayList<Enemy> getEnemyRobotsInArea(ArrayList<FieldZone> fieldZones, Point[] argPoly) {
+	public ArrayList<Enemy> getEnemyRobotsInArea(Point[] argPoly) {
 		ArrayList<Enemy> foundEnemies = new ArrayList<Enemy>();
 		for (Robot enemy : enemyTeam) {
 			if (areaContainsCircle(enemy.getPosition(), argPoly, robotRadius))
@@ -239,7 +239,7 @@ public class World extends Observable {
 	/*
 	 * Method that retrieves all robots that are present within a zone
 	 */
-	public ArrayList<Robot> getAllRobotsInArea(ArrayList<FieldZone> fieldZones, Point[] argPoly) {
+	public ArrayList<Robot> getAllRobotsInArea(Point[] argPoly) {
 		ArrayList<Robot> foundRobots = new ArrayList<Robot>();
 		for (Robot robot : robotList) {
 			if (areaContainsCircle(robot.getPosition(), argPoly, robotRadius))
