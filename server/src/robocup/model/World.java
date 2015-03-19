@@ -57,7 +57,7 @@ public class World extends Observable {
 		referee.initEnemyTeam(enemyTeam);
 		
 		robotList = new ArrayList<Robot>();
-		robotList.addAll(allyTeam);
+		robotList.addAll(allyTeam);	
 		robotList.addAll(enemyTeam);
 	}
 		
@@ -284,6 +284,15 @@ public class World extends Observable {
 			}
 		}
 		return foundEnemies;
+	}
+	
+	public FieldZone locateFieldObject(FieldObject fieldObject) {
+		for (FieldZone fieldzone : FieldZone.values()) {
+			if (field.getZone(fieldzone).contains(fieldObject.getPosition())) {
+				return fieldzone;
+			}
+		}
+		return null;
 	}
 	
 	/*
