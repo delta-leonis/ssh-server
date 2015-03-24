@@ -14,8 +14,8 @@ import robocup.model.enums.RobotMode;
 
 public class AttackMode extends Mode {
 
-	public AttackMode(Strategy strategy) {
-		super(strategy);
+	public AttackMode(Strategy strategy, ArrayList<RobotExecuter> executers) {
+		super(strategy, executers);
 	}
 
 	@Override
@@ -38,6 +38,17 @@ public class AttackMode extends Mode {
 				//	robot.setRole(role);
 			} else {
 				// assign remaining roles
+				ArrayList<Ally> robotsWithoutRole = getAllyRobotsWithoutRole();
+
+				switch (role) {
+				case KEEPERDEFENDER:
+					// TODO move keeperdefenders to specific zone?
+				case DISTURBER:
+					robotsWithoutRole.get(0).setRole(role);
+					break;
+				default:
+					System.out.println("Unknown role used in setRoles, please add me in AttackMode, role: " + role);
+				}
 			}
 		}
 	}
@@ -46,21 +57,21 @@ public class AttackMode extends Mode {
 	public void updateAttacker(RobotExecuter executer) {
 		Attacker attacker = (Attacker) executer.getLowLevelBehavior();
 		// TODO Update with normal values
-		attacker.update(null, null, 0, false, 0);
+		attacker.update(null, ball.getPosition(), 0, false, 0);
 	}
 
 	@Override
 	public void updateCoverer(RobotExecuter executer) {
 		Coverer blocker = (Coverer) executer.getLowLevelBehavior();
 		// TODO Update with normal values
-		blocker.update(250, null, null, null, 0);
+		blocker.update(250, ball.getPosition(), executer.getRobot().getPosition(), null, 0);
 	}
 
 	@Override
 	public void updateKeeperDefender(RobotExecuter executer) {
 		KeeperDefender keeperDefender = (KeeperDefender) executer.getLowLevelBehavior();
 		// TODO Update with normal values
-		keeperDefender.update(0, false, null, null);
+		keeperDefender.update(1200, false, ball.getPosition(), executer.getRobot().getPosition());
 	}
 
 	@Override
