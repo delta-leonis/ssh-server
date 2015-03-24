@@ -9,6 +9,7 @@ import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Ally;
+import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
 
 public class AttackMode extends Mode {
@@ -25,12 +26,16 @@ public class AttackMode extends Mode {
 		}
 
 		for (RobotMode role : strategy.getRoles()) {
+			FieldZone zone = strategy.getZoneForRole(role);
+
 			if (role == RobotMode.KEEPER) {
 				// Find executer belonging to the goalie and set role
 				((Ally) findExecuter(world.getReferee().getAlly().getGoalie(), executers).getRobot())
 						.setRole(RobotMode.KEEPER);
-			} else if (strategy.getZoneForRole(role) != null) {
-				// find robot near or in this zone and assign role
+			} else if (zone != null) {
+				//	find robot near or in this zone and assign role
+				//	Ally robot = world.getClosestAllyRobotToZoneWithoutRole(zone).get(0);
+				//	robot.setRole(role);
 			} else {
 				// assign remaining roles
 			}
