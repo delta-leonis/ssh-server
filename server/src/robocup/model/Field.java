@@ -25,9 +25,9 @@ public class Field {
 	private Goal eastGoal, westGoal;
 	private Map<FieldZone,Zone> zoneList;
 
-	public Field() {
-		this.length = 6050;
-		this.width = 4050;
+	public Field(int fieldHeight, int fieldWidth) {
+		this.length = fieldHeight;
+		this.width = fieldWidth;
 		this.lineWidth = 40;
 		this.boundaryWidth = 100;
 		this.refereeWidth = 425;
@@ -111,57 +111,57 @@ public class Field {
 		//west row one (goal)
 		zoneList.put(FieldZone.WEST_RIGHT_CORNER,
 				new Zone("rightCorner", 
-				new Point[] { fieldLocs[0],fieldLocs[1],fieldLocs[4],fieldLocs[3] }));
+				new Point[] { fieldLocs[0],fieldLocs[1],fieldLocs[4],fieldLocs[3] },length,width));
 		zoneList.put(FieldZone.WEST_RIGHT_SECOND_POST,
 				new Zone("rightSecondPost", 
-				new Point[] { fieldLocs[1],fieldLocs[6],fieldLocs[5],fieldLocs[4] }));
+				new Point[] { fieldLocs[1],fieldLocs[6],fieldLocs[5],fieldLocs[4] },length,width));
 		zoneList.put(FieldZone.WEST_CENTER,
 				new Zone("center", 
-				new Point[] { fieldLocs[5],fieldLocs[6],fieldLocs[9],fieldLocs[8] }));
+				new Point[] { fieldLocs[5],fieldLocs[6],fieldLocs[9],fieldLocs[8] },length,width));
 		zoneList.put(FieldZone.WEST_LEFT_SECOND_POST,
 				new Zone("leftSecondPost", 
-				new Point[] { fieldLocs[8],fieldLocs[9],fieldLocs[14],fieldLocs[12] }));
+				new Point[] { fieldLocs[8],fieldLocs[9],fieldLocs[14],fieldLocs[12] },length,width));
 		zoneList.put(FieldZone.WEST_LEFT_CORNER,
 				new Zone("leftCorner", 
-				new Point[] { fieldLocs[11],fieldLocs[12],fieldLocs[14],fieldLocs[13] }));
+				new Point[] { fieldLocs[11],fieldLocs[12],fieldLocs[14],fieldLocs[13] },length,width));
 		//west row two (mid)
 		zoneList.put(FieldZone.WEST_RIGHT_FRONT,
 				new Zone("rightFront",
-				new Point[] { fieldLocs[1],fieldLocs[2],fieldLocs[7],fieldLocs[6] }));
+				new Point[] { fieldLocs[1],fieldLocs[2],fieldLocs[7],fieldLocs[6] },length,width));
 		zoneList.put(FieldZone.WEST_MIDDLE,
 				new Zone("middle", 
-				new Point[] { fieldLocs[6],fieldLocs[7],fieldLocs[10],fieldLocs[9] }));
+				new Point[] { fieldLocs[6],fieldLocs[7],fieldLocs[10],fieldLocs[9] },length,width));
 		zoneList.put(FieldZone.WEST_LEFT_FRONT,
 				new Zone("leftFront",
-				new Point[] { fieldLocs[9],fieldLocs[10],fieldLocs[15],fieldLocs[14] }));
+				new Point[] { fieldLocs[9],fieldLocs[10],fieldLocs[15],fieldLocs[14] },length,width));
 
 		//east row one (goal)
 		zoneList.put(FieldZone.EAST_LEFT_CORNER,
 				new Zone("leftCorner",
-				new Point[] {makeXReverse(fieldLocs[0]), makeXReverse(fieldLocs[1]), makeXReverse(fieldLocs[4]), makeXReverse(fieldLocs[3]) }));
+				new Point[] {makeXReverse(fieldLocs[0]), makeXReverse(fieldLocs[1]), makeXReverse(fieldLocs[4]), makeXReverse(fieldLocs[3]) },length,width));
 		zoneList.put(FieldZone.EAST_LEFT_SECOND_POST,
 				new Zone("leftSecondPost",
-				new Point[] {makeXReverse(fieldLocs[1]), makeXReverse(fieldLocs[6]), makeXReverse(fieldLocs[5]), makeXReverse(fieldLocs[4]) }));
+				new Point[] {makeXReverse(fieldLocs[1]), makeXReverse(fieldLocs[6]), makeXReverse(fieldLocs[5]), makeXReverse(fieldLocs[4]) },length,width));
 		zoneList.put(FieldZone.EAST_CENTER,
 				new Zone("center",
-				new Point[] {makeXReverse(fieldLocs[5]), makeXReverse(fieldLocs[6]), makeXReverse(fieldLocs[9]), makeXReverse(fieldLocs[8]) }));
+				new Point[] {makeXReverse(fieldLocs[5]), makeXReverse(fieldLocs[6]), makeXReverse(fieldLocs[9]), makeXReverse(fieldLocs[8]) },length,width));
 		zoneList.put(FieldZone.EAST_RIGHT_SECOND_POST,
 				new Zone("rightSecondPost", 
-				new Point[] {makeXReverse(fieldLocs[8]), makeXReverse(fieldLocs[9]), makeXReverse(fieldLocs[14]), makeXReverse(fieldLocs[12]) }));
+				new Point[] {makeXReverse(fieldLocs[8]), makeXReverse(fieldLocs[9]), makeXReverse(fieldLocs[14]), makeXReverse(fieldLocs[12]) },length,width));
 		zoneList.put(FieldZone.EAST_RIGHT_CORNER,
 				new Zone("rightCorner", 
-				new Point[] {makeXReverse(fieldLocs[11]), makeXReverse(fieldLocs[12]), makeXReverse(fieldLocs[14]), makeXReverse(fieldLocs[13]) }));
+				new Point[] {makeXReverse(fieldLocs[11]), makeXReverse(fieldLocs[12]), makeXReverse(fieldLocs[14]), makeXReverse(fieldLocs[13]) },length,width));
 
 		//east row two (mid)
 		zoneList.put(FieldZone.EAST_LEFT_FRONT,
 				new Zone("leftFront",
-				new Point[] {makeXReverse(fieldLocs[1]), makeXReverse(fieldLocs[2]), makeXReverse(fieldLocs[7]), makeXReverse(fieldLocs[6]) }));
+				new Point[] {makeXReverse(fieldLocs[1]), makeXReverse(fieldLocs[2]), makeXReverse(fieldLocs[7]), makeXReverse(fieldLocs[6]) },length,width));
 		zoneList.put(FieldZone.EAST_MIDDLE,
 				new Zone("middle",
-				new Point[] {makeXReverse(fieldLocs[6]), makeXReverse(fieldLocs[7]), makeXReverse(fieldLocs[10]), makeXReverse(fieldLocs[9]) }));
+				new Point[] {makeXReverse(fieldLocs[6]), makeXReverse(fieldLocs[7]), makeXReverse(fieldLocs[10]), makeXReverse(fieldLocs[9]) },length,width));
 		zoneList.put(FieldZone.EAST_RIGHT_FRONT,
 				new Zone("rightFront",
-				new Point[] {makeXReverse(fieldLocs[9]), makeXReverse(fieldLocs[10]), makeXReverse(fieldLocs[15]), makeXReverse(fieldLocs[14]) }));
+				new Point[] {makeXReverse(fieldLocs[9]), makeXReverse(fieldLocs[10]), makeXReverse(fieldLocs[15]), makeXReverse(fieldLocs[14]) },length,width));
 	}
 	
 	private Point makeXReverse(Point point) {
@@ -208,9 +208,7 @@ public class Field {
 		this.goalWallWidth = goalWallWidth;
 		this.goalHeight = goalHeight;
 		this.cameraOverlapZoneWidth = cameraOverlapZoneWidth;
-		createGoals(goalWidth, goalDepth, goalWallWidth, goalHeight);
-		
-		
+		createGoals(goalWidth, goalDepth, goalWallWidth, goalHeight);	
 	}
 	
 	public void update(int lineWidth, int fieldLength, int fieldWidth, int boundaryWidth, int refereeWidth,
@@ -263,7 +261,6 @@ public class Field {
 	 * goalWallWidth, goalHeigth, length
 	 */
 	private void createGoals(int goalWidth, int goalDepth, int goalWallWidth, int goalHeigth) {
-
 		Point frontLeft = new Point(length / 2, goalWidth / 2);
 		Point frontRight = new Point(length / 2, goalWidth / -2);
 		Point backLeft = new Point(frontLeft.getX() + goalDepth, frontLeft.getY());
