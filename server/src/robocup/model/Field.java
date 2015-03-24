@@ -48,12 +48,12 @@ public class Field {
 		// |     /|     |
 		// d   e/ |     |
 		// *---*  |     |
-		//     \f g     h
- 		//      *-*-----*
-		//      | |     |
-		//      | |     |
-		//      i j     k
-		//      *-*-----*
+		// |   \f g     h
+ 		// |gt  *-*-----*
+		// |q  r| |     |
+		// *---*| |     |
+		// |gb  i j     k
+		// |    *-*-----*
 		// l   m/ |     |
 		// *---*  |     |
 		// |    \ |     |
@@ -78,8 +78,10 @@ public class Field {
 		// n 	0		4050	13		
 		// o 	1400	4050	14		
 		// p 	3025	4050	15
+		// q    0	 	700	    16
+		// r    2025    700  	17
 		
-		Point fieldLocs[] = new Point[16];
+		Point fieldLocs[] = new Point[18];
 		fieldLocs[0] = new Point(0, 0);
 		fieldLocs[1] = new Point(1400, 0);
 		fieldLocs[2] = new Point(3025, 0);
@@ -96,6 +98,8 @@ public class Field {
 		fieldLocs[13] = new Point(0, 4050);
 		fieldLocs[14] = new Point(1400, 4050);
 		fieldLocs[15] = new Point(3025, 4050);
+		fieldLocs[16] = new Point(0, 2025);
+		fieldLocs[17] = new Point(700, 2025);
 
 		// sectoren
 		// naam						p1        p2        P3		  P4
@@ -107,6 +111,8 @@ public class Field {
 		// WEST_RIGHT_FRONT			b -  1	  c -  2    h -  7    g -  6
 		// WEST_MIDDLE				g -  6	  h -  7    k - 10    j -  9
 		// WEST_LEFT_FRONT			j -  9	  k - 10    p - 15    o - 14
+		// WEST_GOAL_TOP			d    3    e    4    f   5     r   17    q   16
+		// WEST_GOAL_BOT			q    16   r    17   i   8     m   12    l   11
 		
 		//west row one (goal)
 		zoneList.put(FieldZone.WEST_RIGHT_CORNER,
@@ -134,6 +140,14 @@ public class Field {
 		zoneList.put(FieldZone.WEST_LEFT_FRONT,
 				new Zone("leftFront",
 				new Point[] { fieldLocs[9],fieldLocs[10],fieldLocs[15],fieldLocs[14] },length,width));
+		
+		//goal area
+		zoneList.put(FieldZone.WEST_GOAL_LEFT,
+				new Zone("goal left", 
+				new Point[] { fieldLocs[3],fieldLocs[4],fieldLocs[5],fieldLocs[17],fieldLocs[16] },length,width));
+		zoneList.put(FieldZone.WEST_GOAL_RIGHT,
+				new Zone("goal right",
+				new Point[] { fieldLocs[16],fieldLocs[17],fieldLocs[8],fieldLocs[12], fieldLocs[11] },length,width));
 
 		//east row one (goal)
 		zoneList.put(FieldZone.EAST_LEFT_CORNER,
@@ -162,6 +176,16 @@ public class Field {
 		zoneList.put(FieldZone.EAST_RIGHT_FRONT,
 				new Zone("rightFront",
 				new Point[] {makeXReverse(fieldLocs[9]), makeXReverse(fieldLocs[10]), makeXReverse(fieldLocs[15]), makeXReverse(fieldLocs[14]) },length,width));
+		
+		
+		//goal area
+		zoneList.put(FieldZone.EAST_GOAL_LEFT,
+				new Zone("goal left", 
+				new Point[] { makeXReverse(fieldLocs[3]),makeXReverse(fieldLocs[4]),makeXReverse(fieldLocs[5]),makeXReverse(fieldLocs[17]),makeXReverse(fieldLocs[16])},length,width));
+		zoneList.put(FieldZone.EAST_GOAL_RIGHT,
+				new Zone("goal right",
+				new Point[] { makeXReverse(fieldLocs[16]),makeXReverse(fieldLocs[17]),makeXReverse(fieldLocs[8]),makeXReverse(fieldLocs[12]), makeXReverse(fieldLocs[11]) },length,width));
+
 	}
 	
 	private Point makeXReverse(Point point) {
