@@ -47,6 +47,9 @@ public class Zone {
 		return name;
 	}
 	
+	/**
+	 * probably an unused method, but it should not be removed before the system of zones is fully finished
+	 */
 	public void calculateAbsolutePoints() {
 		int i=0;
 		//x and y swapped for random
@@ -99,6 +102,12 @@ public class Zone {
 		return absolutePoints;
 	}
 	
+	/**
+	 * method that takes a point, and calculates the distances between the point and all the vertexes of this zone.
+	 * It will return the vertex point that is closest to the given point.
+	 * @param argPoint the point to find the vertex with
+	 * @return the vertex point that is closest to the argument
+	 */
 	public Point getClosestVertex(Point argPoint) {
 		Point closestVertex = new Point(0,0);
 		double shortestDistance = Double.MAX_VALUE;
@@ -114,14 +123,26 @@ public class Zone {
 		return closestVertex;
 	}
 	
+	/**
+	 * getter method that returns the Point object of the center of this zone
+	 * @return the point object of the center
+	 */
 	public Point getCenterPoint() {
 		return centerPoint;
 	}
 	
+	/**
+	 * setter method that overwrites the center of this zone
+	 * @param argCenter the new center point
+	 */
 	public void setCenterPoint(Point argCenter) {
 		centerPoint = argCenter;
 	}
 	
+	/**
+	 * a function that returns the absolute distance between the argument point and the declared center of the zone
+	 * @param argPoint the point to calculate the distance with
+	 */
 	public void getDistanceFromCenter(Point argPoint) {
 		argPoint.getDeltaDistance(centerPoint);
 	}
@@ -134,7 +155,10 @@ public class Zone {
 		return relativePoints;
 	}
 
-	
+	/**
+	 * a meethod that returns how many vertexes this zone has
+	 * @return ammount of vertexes
+	 */
 	public int getNPoints() {
 		return relativePoints.length;
 	}

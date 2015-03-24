@@ -66,7 +66,6 @@ public class World extends Observable {
 		robotList.addAll(allyTeam);	
 		robotList.addAll(enemyTeam);
 		
-		Point[] pointList = {new Point(0,0), new Point(100,0), new Point(0,100)};
 	}
 		
 	/**
@@ -190,8 +189,14 @@ public class World extends Observable {
 	}
 	
 	
-	
-	
+	/**
+	 * method that returns a robot by checking vertex points of the given fieldzone
+	 * the closest robot will be returned
+	 *
+	 * this method is not yet finished, as robots "within" the zone should get priority, as should the center of the zone be more important
+	 * @param fieldZone
+	 * @return
+	 */
 	public Robot getClosestRobotToZoneWithoutRole(FieldZone fieldZone) {
 		Ally foundAlly = null;
 		double closestDistance = Double.MAX_VALUE;
