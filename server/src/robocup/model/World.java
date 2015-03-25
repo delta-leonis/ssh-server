@@ -19,9 +19,9 @@ public class World extends Observable {
 	private Referee referee;
 	private Field field;
 	
-	ArrayList<Robot> allyTeam;
-	ArrayList<Robot> enemyTeam;
-	ArrayList<Robot> robotList;
+	private ArrayList<Robot> allyTeam;
+	private ArrayList<Robot> enemyTeam;
+	private ArrayList<Robot> robotList;
 	
 	private int robotRadius = Robot.DIAMETER/2;
 	
@@ -188,7 +188,6 @@ public class World extends Observable {
 				+ field + "]";
 	}
 	
-	
 	/**
 	 * method that returns a robot by checking vertex points of the given fieldzone
 	 * the closest robot will be returned
@@ -215,7 +214,6 @@ public class World extends Observable {
 		}
 		return foundAlly;
 	}
-	
 
 	/**
 	 * Helper function for referee commands, checks last command issued
@@ -290,8 +288,6 @@ public class World extends Observable {
 		}
 		return foundRobots;
 	}
-	
-	
 	
 	/**
 	 * Method that retrieves all allies that are present within a zone
@@ -413,8 +409,6 @@ public class World extends Observable {
         }
         return result;
      }
-
-
 
 	/**
 	 * Returns the color of your own team.
