@@ -69,7 +69,7 @@ public class PlayfieldFrame extends JPanel {
     	
     	drawPlayfield(g);
     	drawFieldObjects(g);
-    	//drawFreeShot(g);
+    	drawFreeShot(g);
 	    Graphics2D g2 = (Graphics2D) g;
 	    g2.setColor(Color.white);
     }
@@ -156,10 +156,6 @@ public class PlayfieldFrame extends JPanel {
 				obstructedArea.put(L.toPoint2D().getY(), R.toPoint2D().getY());
 		}
 
-		g2.setColor(Color.RED);
-		double x = (double) enemyGoal.getFrontLeft().getX();
-		for(Entry<Double, Double> entry : obstructedArea.entrySet())
-		drawLine(g2, new Line2D.Double(x, entry.getKey(), x, entry.getValue()));
 		
 		//list with area that is not blocked
 		ArrayList<Line2D.Double> availableArea = new ArrayList<Line2D.Double>();
@@ -193,6 +189,7 @@ public class PlayfieldFrame extends JPanel {
 		//merge lines that overlap
 		Line2D.Double currentLine = new Line2D.Double();
 		
+		double x = (double) enemyGoal.getFrontLeft().getX();
 
 		currentLine = new Line2D.Double(x, minY, x, maxY);
 		g2.setColor(Color.PINK);
@@ -328,11 +325,5 @@ public class PlayfieldFrame extends JPanel {
 		g2.drawArc((int) (getWidth() / 9.0 * 8), getHeight() / 2 - getWidth() / 9 + getWidth() / 18, (int) (getWidth() / 9.0 * 2), getWidth() / 9 * 2, 180, 90);
 		g2.drawLine((int) (getWidth() / 9.0 * 8), getHeight() / 2 - getWidth() / 18, 
 					(int) (getWidth() / 9.0 * 8), getHeight() / 2 + getWidth() / 18);
-		
-		g2.setStroke(new BasicStroke(5));
-		g2.setColor(Color.RED);
-		Point frontLeft = World.getInstance().getField().getWestGoal().getFrontLeft();
-		Point frontRight = World.getInstance().getField().getWestGoal().getFrontRight();
-		drawLine(g2, new Line2D.Double(frontLeft.toPoint2D(), frontRight.toPoint2D()));
 	}
 }
