@@ -35,14 +35,10 @@ public class Zone {
 		// this is a temporary declaration, must be altered
 		centerPoint = new Point(0, 0);
 	}
-
-	@SuppressWarnings("unused")
-	private void print(){
-		for (int a = 0; a < absoluteXPoints.length; a++) {
-			System.out.println(absoluteXPoints[a]+" "+absoluteYPoints[a]);
-		}
-	}
 	
+	/**
+	 * @return Name that identifies this 
+	 */
 	public String getName(){
 		return name;
 	}

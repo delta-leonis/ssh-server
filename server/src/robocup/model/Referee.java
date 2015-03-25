@@ -26,7 +26,7 @@ public class Referee {
 	private Team enemyTeam;
 
 	/**
-	 * constructor that initialises the default values, takes no argument
+	 * constructor that initializes the default values, takes no argument
 	 * most variables remain undeclared
 	 */
 	public Referee() {
@@ -55,9 +55,9 @@ public class Referee {
 	}
 
 	/**
-	 * a method that is called every time a protobuff message arrives from the hadlerr
+	 * a method that is called every time a protobuff message arrives from the handler
 	 * the arguments send the new declared values
-	 * @param command the referee command enumeration,  everytime there is a change it wil be handled
+	 * @param command the referee command enumeration,  every time there is a change it will be handled
 	 * @param commandCounter the id of the command, identifies commands from each other
 	 * @param commandTimeStamp the time that the previous command had been send
 	 * @param stage the current stage of the game
@@ -127,7 +127,7 @@ public class Referee {
 	}
 
 	/**
-	 * getter method thhat returns the id number of the last command
+	 * getter method that returns the id number of the last command
 	 * @return the commandCounter
 	 */
 	public int getCommandCounter() {
@@ -143,7 +143,7 @@ public class Referee {
 	}
 
 	/**
-	 * getter method that returns the time of the last commandstamp
+	 * getter method that returns the timestamp of the last command
 	 * @return the lastCommandTimestamp
 	 */
 	public long getLastCommandTimestamp() {
@@ -151,7 +151,7 @@ public class Referee {
 	}
 
 	/**
-	 * setter method that sets the comandstamptime
+	 * setter method that sets the timestamp for the last command
 	 * @param lastCommandTimestamp the lastCommandTimestamp to set
 	 */
 	public void setLastCommandTimestamp(long lastCommandTimestamp) {

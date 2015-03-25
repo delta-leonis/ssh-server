@@ -127,7 +127,7 @@ public class World extends Observable {
 	
 	/**
 	 * Returns the {@link Team} with the given color.
-	 * this methodd is an adapter from the old model, so its better to use referee getTeambyColor
+	 * this method is an adapter from the old model, so its better to use referee getTeambyColor
 	 * @param color the color of the {@link Team}
 	 * @return the {@link Team} with the given color. Returns null if there is no {@link Team} with the given color.
 	 */
@@ -244,7 +244,7 @@ public class World extends Observable {
 	/**
 	 * Method that retrieves all allies that are present within a zone
 	 * @param argPoly the polygon in which the method looks for ally's, a point list with absolute locations
-	 * @return an arraylist with all the ally robots 
+	 * @return an list with all the ally robots 
 	 */
 	public ArrayList<Ally> getAllyRobotsInArea(Point[] argPoly) {
 		ArrayList<Ally> foundAllies = new ArrayList<Ally>();
@@ -260,7 +260,7 @@ public class World extends Observable {
 	/**
 	 * Method that retrieves all enemies that are present within a zone
 	 * @param argPoly the polygon in which the method looks for enemies, a point list with absolute locations
-	 * @return an arraylist with all the enemy robots 
+	 * @return an list with all the enemy robots 
 	 */
 	public ArrayList<Enemy> getEnemyRobotsInArea(Point[] argPoly) {
 		ArrayList<Enemy> foundEnemies = new ArrayList<Enemy>();
@@ -276,7 +276,7 @@ public class World extends Observable {
 	/**
 	 * Method that retrieves all robots that are present within a zone
      * @param argPoly the polygon in which the method looks for robots, a point list with absolute locations
-	 * @return an arraylist with all the robots 
+	 * @return an list with all the robots 
 	 */
 	public ArrayList<Robot> getAllRobotsInArea(Point[] argPoly) {
 		ArrayList<Robot> foundRobots = new ArrayList<Robot>();
@@ -292,7 +292,7 @@ public class World extends Observable {
 	/**
 	 * Method that retrieves all allies that are present within a zone
      * @param fieldZones array with all the zones where to look for robots
-	 * @return an arraylist with all the found robots 
+	 * @return an list with all the found robots 
 	 */
 	public ArrayList<Ally> getAllyRobotsInZones(ArrayList<FieldZone> fieldZones) {
 		ArrayList<Ally> foundAllies = new ArrayList<Ally>();
@@ -311,7 +311,7 @@ public class World extends Observable {
 	/**
 	 * Method that retrieves all enemies that are present within a zone
      * @param fieldZones array with all the zones where to look for robots
-	 * @return an arraylist with all the found robots 
+	 * @return an list with all the found robots 
 	 */
 	public ArrayList<Enemy> getEnemyRobotsInZones(ArrayList<FieldZone> fieldZones) {
 		ArrayList<Enemy> foundEnemies = new ArrayList<Enemy>();
@@ -344,7 +344,7 @@ public class World extends Observable {
 	/**
 	 * Method that retrieves all robots that are present within given zones
 	 * @param fieldZones a list with FieldZones which have to be searched for robots
-	 * @return Arraylist<Robot> containing all the found robots in the fieldzones
+	 * @return list containing all the found robots in the field zones
 	 */
 	public ArrayList<Robot> getAllRobotsInZones(ArrayList<FieldZone> fieldZones) {
 		ArrayList<Robot> foundRobots = new ArrayList<Robot>();
@@ -385,8 +385,8 @@ public class World extends Observable {
     
     /**
      * a method that calculates the distance of the right-angle between a point and a line
-     * @param a the startpoint of the line
-     * @param b the endpoint of the line
+     * @param a the start point of the line
+     * @param b the end point of the line
      * @param p the point to check the distance from the line with
      */
     public double pointToLineDistance(Point A, Point B, Point P) {
