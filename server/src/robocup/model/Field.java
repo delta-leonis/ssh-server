@@ -285,8 +285,8 @@ public class Field {
 	 * goalWallWidth, goalHeigth, length
 	 */
 	private void createGoals(int goalWidth, int goalDepth, int goalWallWidth, int goalHeigth) {
-		Point frontLeft = new Point(length / 2, goalWidth / 2);
-		Point frontRight = new Point(length / 2, goalWidth / -2);
+		Point frontLeft = new Point(width / 2, goalWidth / 2);
+		Point frontRight = new Point(width / 2, goalWidth / -2);
 		Point backLeft = new Point(frontLeft.getX() + goalDepth, frontLeft.getY());
 		Point backRight = new Point(frontRight.getX() + goalDepth, frontRight.getY());
 
