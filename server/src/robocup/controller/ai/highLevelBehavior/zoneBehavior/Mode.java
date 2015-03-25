@@ -34,7 +34,7 @@ public abstract class Mode {
 	/** Co-ordinates of the goal on the right side of the field */
 	private static final Point MID_GOAL_POSITIVE = new Point(World.getInstance().getField().getLength() / 2, 0);
 
-	public Mode(Strategy strategy) {
+	public Mode(Strategy strategy, ArrayList<RobotExecuter> executers) {
 		world = World.getInstance();
 		ball = world.getBall();
 		this.strategy = strategy;
@@ -173,8 +173,21 @@ public abstract class Mode {
 	 * @param executer the executer to update
 	 */
 	protected abstract void updateKeeper(RobotExecuter executer);
-	
-	
+
+	/**
+	 * Get all Robots without a role
+	 * @return ArrayList containing all Ally robots without a role
+	 */
+	protected ArrayList<Ally> getAllyRobotsWithoutRole() {
+		ArrayList<Ally> robotsWithoutRole = new ArrayList<Ally>();
+
+		for (Robot robot : world.getReferee().getAlly().getRobots())
+			if (((Ally) robot).getRole() == null)
+				robotsWithoutRole.add((Ally) robot);
+
+		return robotsWithoutRole;
+	}
+
 	/**
 	 * Checks whether a ally has a free shot, will only be checked
 	 * if the robot is in one of the 6 center zones (due to accuracy)

@@ -1,9 +1,5 @@
 package robocup.controller.ai.highLevelBehavior.strategy.defense;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
@@ -13,18 +9,25 @@ import robocup.model.enums.RobotMode;
  */
 public class ExampleStrategy extends Strategy {
 
-	private static ArrayList<RobotMode> roles = new ArrayList<RobotMode>();
-	protected static Map<RobotMode, FieldZone> zonesForRole = new HashMap<RobotMode, FieldZone>();
-
+	/**
+	 * Create an example strategy.
+	 * Roles must be added in the constructor in a specified order.
+	 * Keeper must first be assigned (done through super()).
+	 * Roles which are connected to a zone must be assigned afterwards.
+	 * Last, all roles without specified zones must be added, i.e. KEEPERDEFENDER.
+	 * This specific order is needed for the mode, roles are assigned in the same order.
+	 * KEEPER > ROLES CONNECTED TO ZONE > ROLES WITHOUT ZONE.
+	 */
 	public ExampleStrategy() {
-		roles.add(RobotMode.KEEPER);
-		roles.add(RobotMode.KEEPERDEFENDER);
-		roles.add(RobotMode.KEEPERDEFENDER);
+		super();
 		roles.add(RobotMode.COUNTER);
-		roles.add(RobotMode.DISTURBER);
 		roles.add(RobotMode.GOALPOSTCOVERER);
 
 		zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.WEST_RIGHT_SECOND_POST);
 		zonesForRole.put(RobotMode.COUNTER, FieldZone.EAST_CENTER);
+
+		roles.add(RobotMode.KEEPERDEFENDER);
+		roles.add(RobotMode.KEEPERDEFENDER);
+		roles.add(RobotMode.DISTURBER);
 	}
 }

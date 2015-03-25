@@ -28,8 +28,8 @@ public class ZoneBehavior extends Behavior {
 		world = World.getInstance();
 		ball = world.getBall();
 
-		defenseMode = new DefenseMode(new ExampleStrategy());
-		attackMode = new AttackMode(new ExampleStrategy());
+		defenseMode = new DefenseMode(new ExampleStrategy(), executers);
+		attackMode = new AttackMode(new ExampleStrategy(), executers);
 	}
 
 	/**
@@ -38,8 +38,21 @@ public class ZoneBehavior extends Behavior {
 	 */
 	@Override
 	public void execute(ArrayList<RobotExecuter> executers) {
-		currentMode = determineMode();
+		if (eventHappened())
+			currentMode = determineMode();
+
 		currentMode.execute(executers);
+	}
+
+	/**
+	 * Event based system, using events like:
+	 * ball changing owner
+	 * ball changing field half
+	 * @return true when event has happened
+	 */
+	private boolean eventHappened() {
+		// TODO calculate if event has happened
+		return true;
 	}
 
 	/**
@@ -47,6 +60,7 @@ public class ZoneBehavior extends Behavior {
 	 * @return AttackMode when our team is closer to the ball. DefenseMode when the enemy team is closer to the ball.
 	 */
 	private Mode determineMode() {
+		// TODO create a new mode and determine strategy instead of using standard examplestrategy
 		return allyHasBall() ? attackMode : defenseMode;
 	}
 

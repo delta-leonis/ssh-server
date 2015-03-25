@@ -23,7 +23,10 @@ public class World extends Observable {
 	ArrayList<Robot> enemyTeam;
 	ArrayList<Robot> robotList;
 	
-	private int robotRadius = 90;
+	private int robotRadius = Robot.DIAMETER/2;
+	
+	private int fieldHeight;
+	private int fieldWidth;
 	
 	private static final int TOTAL_TEAM_SIZE = 11;
 	private final int STOP_BALL_DISTANCE = 500; // in mm
@@ -35,21 +38,24 @@ public class World extends Observable {
 	 * Can only be called as a singleton.
 	 */
 	private World() {
+		fieldHeight = 4050;
+		fieldWidth = 6050;
+		
 		ball = new Ball();
 		ball.setPosition(new Point(400, 200)); // added starting point for ball
 												// to remove nullpointer errors
 		referee = new Referee();
-		field = new Field();
+		field = new Field(fieldHeight, fieldWidth);
 		
 		// initialize all robots
 		allyTeam = new ArrayList<Robot>();
 		enemyTeam = new ArrayList<Robot>();;
 		
-		for(int i=0; i < TOTAL_TEAM_SIZE; i++) 
+		for(int i = 0; i < TOTAL_TEAM_SIZE; i++) 
 		{	
 			allyTeam.add(new Ally(i, false, 150));
 		}
-		for(int i=0; i < TOTAL_TEAM_SIZE; i++) 
+		for(int i = 0; i < TOTAL_TEAM_SIZE; i++) 
 		{	
 			enemyTeam.add(new Enemy(i, false, 150));
 		} 
@@ -59,6 +65,7 @@ public class World extends Observable {
 		robotList = new ArrayList<Robot>();
 		robotList.addAll(allyTeam);	
 		robotList.addAll(enemyTeam);
+		
 	}
 		
 	/**
@@ -181,6 +188,34 @@ public class World extends Observable {
 				+ field + "]";
 	}
 	
+	
+	/**
+	 * method that returns a robot by checking vertex points of the given fieldzone
+	 * the closest robot will be returned
+	 *
+	 * this method is not yet finished, as robots "within" the zone should get priority, as should the center of the zone be more important
+	 * @param fieldZone
+	 * @return
+	 */
+	public Robot getClosestRobotToZoneWithoutRole(FieldZone fieldZone) {
+		Ally foundAlly = null;
+		double closestDistance = Double.MAX_VALUE;
+		
+		for (Robot itRobot: allyTeam) {
+			Ally itAlly = (Ally) itRobot;
+			
+			if (itAlly.getRole() == null) {
+				double itDistance = field.getZone(fieldZone).getClosestVertex(itAlly.getPosition()).getDeltaDistance(itAlly.getPosition());
+				if (itDistance < closestDistance)
+				{
+					closestDistance = itDistance;
+					foundAlly = itAlly;
+				}
+			}
+		}
+		return foundAlly;
+	}
+	
 
 	/**
 	 * Helper function for referee commands, checks last command issued
@@ -208,8 +243,10 @@ public class World extends Observable {
 		return true;
 	}
 	
-	/*
+	/**
 	 * Method that retrieves all allies that are present within a zone
+	 * @param argPoly the polygon in which the method looks for ally's, a point list with absolute locations
+	 * @return an arraylist with all the ally robots 
 	 */
 	public ArrayList<Ally> getAllyRobotsInArea(Point[] argPoly) {
 		ArrayList<Ally> foundAllies = new ArrayList<Ally>();
@@ -222,8 +259,10 @@ public class World extends Observable {
 		return foundAllies;
 	}
 
-	/*
+	/**
 	 * Method that retrieves all enemies that are present within a zone
+	 * @param argPoly the polygon in which the method looks for enemies, a point list with absolute locations
+	 * @return an arraylist with all the enemy robots 
 	 */
 	public ArrayList<Enemy> getEnemyRobotsInArea(Point[] argPoly) {
 		ArrayList<Enemy> foundEnemies = new ArrayList<Enemy>();
@@ -236,8 +275,10 @@ public class World extends Observable {
 		return foundEnemies;
 	}
 	
-	/*
+	/**
 	 * Method that retrieves all robots that are present within a zone
+     * @param argPoly the polygon in which the method looks for robots, a point list with absolute locations
+	 * @return an arraylist with all the robots 
 	 */
 	public ArrayList<Robot> getAllRobotsInArea(Point[] argPoly) {
 		ArrayList<Robot> foundRobots = new ArrayList<Robot>();
@@ -252,8 +293,10 @@ public class World extends Observable {
 	
 	
 	
-	/*
+	/**
 	 * Method that retrieves all allies that are present within a zone
+     * @param fieldZones array with all the zones where to look for robots
+	 * @return an arraylist with all the found robots 
 	 */
 	public ArrayList<Ally> getAllyRobotsInZones(ArrayList<FieldZone> fieldZones) {
 		ArrayList<Ally> foundAllies = new ArrayList<Ally>();
@@ -269,8 +312,10 @@ public class World extends Observable {
 		return foundAllies;
 	}
 
-	/*
+	/**
 	 * Method that retrieves all enemies that are present within a zone
+     * @param fieldZones array with all the zones where to look for robots
+	 * @return an arraylist with all the found robots 
 	 */
 	public ArrayList<Enemy> getEnemyRobotsInZones(ArrayList<FieldZone> fieldZones) {
 		ArrayList<Enemy> foundEnemies = new ArrayList<Enemy>();
@@ -286,6 +331,11 @@ public class World extends Observable {
 		return foundEnemies;
 	}
 	
+	/**
+	 * Method that locates an object and returns the field where the object is (or null if not found)
+	 * @param fieldObject the object to locate
+	 * @return FieldZone where the given object is located 
+	 */
 	public FieldZone locateFieldObject(FieldObject fieldObject) {
 		for (FieldZone fieldzone : FieldZone.values()) {
 			if (field.getZone(fieldzone).contains(fieldObject.getPosition())) {
@@ -295,8 +345,10 @@ public class World extends Observable {
 		return null;
 	}
 	
-	/*
-	 * Method that retrieves all robots that are present within a zone
+	/**
+	 * Method that retrieves all robots that are present within given zones
+	 * @param fieldZones a list with FieldZones which have to be searched for robots
+	 * @return Arraylist<Robot> containing all the found robots in the fieldzones
 	 */
 	public ArrayList<Robot> getAllRobotsInZones(ArrayList<FieldZone> fieldZones) {
 		ArrayList<Robot> foundRobots = new ArrayList<Robot>();
@@ -312,14 +364,21 @@ public class World extends Observable {
 		return foundRobots;
 	}
 	
-	/*
+	/**
 	 * method that calculates if a circle falls in or touches a polygon
+	 * accepts 
+	 *@param argPoint the center of the circle
+	 *@param areaPoly the point array with corner locations of the polygon
+	 *@param radius the radius of the circle
 	 */
     public boolean areaContainsCircle(Point argPoint, Point[] areaPoly, double radius) {
     	boolean result = false;
     	
     	for (int edges = 0; edges < areaPoly.length-1; edges++) {
-    		if (pointToLineDistance(new Point(areaPoly[edges].getX(), areaPoly[edges].getY()), new Point(areaPoly[edges + 1].getX(), areaPoly[edges + 1].getY()), argPoint) < radius) {
+    		if (pointToLineDistance(
+    				new Point(areaPoly[edges].getX()+(fieldWidth/2), areaPoly[edges].getY() + (fieldHeight/2)), 
+    				new Point(areaPoly[edges + 1].getX()+(fieldWidth/2), areaPoly[edges + 1].getY()+(fieldHeight/2)), 
+    				new Point(argPoint.getX()+(fieldWidth/2), argPoint.getY()+(fieldHeight/2)) ) < radius) {
     			result = true;
             }
     	}
@@ -328,16 +387,21 @@ public class World extends Observable {
     	return result;
     }
     
-    /*
+    /**
      * a method that calculates the distance of the right-angle between a point and a line
+     * @param a the startpoint of the line
+     * @param b the endpoint of the line
+     * @param p the point to check the distance from the line with
      */
     public double pointToLineDistance(Point A, Point B, Point P) {
     	double normalLength = Math.sqrt((B.getX() - A.getX()) * (B.getX() - A.getX()) + (B.getY() - A.getY()) * (B.getY() - A.getY()));
     	return Math.abs((P.getX() - A.getX()) * (B.getY() - A.getY()) - (P.getY() - A.getY()) * (B.getX() - A.getX())) / normalLength;
     }
     
-    /*
+    /**
      * a method that checks if a point falls within a polygon
+     * @param argPoint the point
+     * @param point[] the array with the locations of the polygon
      */
     public boolean pointInPolygon(Point argPoint, Point[] areaPoly) {
         boolean result = false;
