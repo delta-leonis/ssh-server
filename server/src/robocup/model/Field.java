@@ -507,8 +507,7 @@ public class Field {
 		}
 		return null;
 	}
-	
-	
+
 	@Override
 	public String toString() {
 		return "Field [length=" + length + "\r\n width=" + width + "\r\n lineWidth=" + lineWidth
