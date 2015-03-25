@@ -156,8 +156,8 @@ public class Zone {
 	}
 
 	/**
-	 * a meethod that returns how many vertexes this zone has
-	 * @return ammount of vertexes
+	 * a method that returns how many vertexes this zone has
+	 * @return amount of vertexes
 	 */
 	public int getNPoints() {
 		return relativePoints.length;
