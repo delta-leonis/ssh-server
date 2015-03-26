@@ -97,7 +97,7 @@ public class ControlRobotWidget extends WidgetBox{
 			LOGGER.info(String.format("%s commando send to robot #%d", buttonText.split("\\s+" )[0], selectedRobotId));
 			switch (buttonText) {
 			case "Chippen":
-				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, 100, dribbling);
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId,0, 0, 0, 0, 0, 100, dribbling);
 				break;
 			case "Kicken":
 				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, -100, dribbling);
@@ -107,7 +107,7 @@ public class ControlRobotWidget extends WidgetBox{
 				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, 0, dribbling);
 				break;
 			case "↑":
-				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 500, 0, 0, 0, 0, dribbling);
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, /*(int) World.getInstance().getReferee().getAlly().getRobotByID(selectedRobotId).getDirection()*/ 0, 500, 0, 0, 0, 0, dribbling);
 				break;
 			case "↓":
 				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, -500, 0, 0, 0, 0, dribbling);

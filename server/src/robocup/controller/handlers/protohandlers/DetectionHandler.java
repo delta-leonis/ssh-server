@@ -97,7 +97,7 @@ public class DetectionHandler {
 			}
 		}
 		
-		if(World.getInstance().getOwnTeamColor()== TeamColor.YELLOW){
+		if(World.getInstance().getReferee().getOwnTeamColor()== TeamColor.YELLOW){
 			updateOnSight(yellowList);
 		}
 		else{

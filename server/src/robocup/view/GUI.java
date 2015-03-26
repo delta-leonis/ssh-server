@@ -19,7 +19,6 @@ import robocup.Main;
 import robocup.model.Robot;
 import robocup.model.World;
 import robocup.view.widgets.ConsoleWidget;
-import robocup.view.widgets.ControlRobotPacketTestWidget;
 import robocup.view.widgets.ControlRobotWidget;
 import robocup.view.widgets.GameStatusWidget;
 import robocup.view.widgets.SettingsWidget;

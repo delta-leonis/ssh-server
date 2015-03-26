@@ -82,7 +82,7 @@ public class PlayfieldFrame extends JPanel {
     	drawFieldObjects(g);
 
 	    Graphics2D g2 = (Graphics2D) g;
-    	drawFreeShot(g);
+    	drawFreeShot(g2);
 	    g2.setColor(Color.white);
     }
     
@@ -93,9 +93,11 @@ public class PlayfieldFrame extends JPanel {
 		int i = 0;
 		long beginTime = System.currentTimeMillis();
 		long endTime = beginTime + (1 * 1000);
-		//while(System.currentTimeMillis() < endTime){
+		while(System.currentTimeMillis() < endTime){
 			hitmarker = hasFreeShot();
-		//}
+			i++;
+		}
+		System.out.println(i);
 		Ball ball = World.getInstance().getBall();
 		if(hitmarker != null)
 			drawLine(g2, new Line2D.Double(hitmarker.toPoint2D(), ball.getPosition().toPoint2D()));
@@ -319,12 +321,12 @@ public class PlayfieldFrame extends JPanel {
 				continue;
 			}
 			Double Y1 = entry.getKey();
-			Double Y2 = entry.getValue();
 			invertedMap.put(prevY2, Y1);
 		}
 		return invertedMap;
 	}
 
+	@SuppressWarnings("unused")
 	private void printMap(TreeMap<Double, Double> map){
 		System.out.println("  Y1 |   Y2");
 		System.out.println("-------------");
@@ -359,6 +361,8 @@ public class PlayfieldFrame extends JPanel {
 		return mergedMap;
     }
 
+    
+	@SuppressWarnings("unused")
 	private void drawPolygon(Graphics2D g2, Point[] points){
 		int[] xPoints = new int[points.length];
 		int[] yPoints = new int[points.length];

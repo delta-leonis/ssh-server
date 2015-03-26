@@ -3,8 +3,6 @@ package robocup.view.widgets;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
@@ -14,9 +12,6 @@ import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.Main;
-import robocup.controller.ai.movement.GotoPosition;
-import robocup.model.Ally;
-import robocup.model.Point;
 import robocup.output.ComInterface;
 import robocup.output.RobotCom;
 import robocup.view.GUI;

@@ -1,6 +1,5 @@
 package robocup.controller.ai.highLevelBehavior.zoneBehavior;
 
-import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map.Entry;
@@ -346,7 +345,6 @@ public abstract class Mode {
 				continue;
 			}
 			Double Y1 = entry.getKey();
-			Double Y2 = entry.getValue();
 			invertedMap.put(prevY2, Y1);
 		}
 		return invertedMap;
