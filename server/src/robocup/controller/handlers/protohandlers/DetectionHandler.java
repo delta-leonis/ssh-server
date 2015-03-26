@@ -1,5 +1,6 @@
 package robocup.controller.handlers.protohandlers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import robocup.filter.Kalman;
@@ -17,8 +18,8 @@ public class DetectionHandler {
 
 	private World world;
 	// TODO: read in validRobotId's from somewhere else / no more hardcoded id's
-	int validRobotIDs[] = { 1, 3 };
-	int validEnemyRobotIDs[] = { 2 };
+	int validRobotIDs[] = { 6 };
+	int validEnemyRobotIDs[] = {  };
 	Kalman allyFilter[] = new Kalman[12];
 	Kalman enemyFilter[] = new Kalman[12];
 	Kalman ballFilter;
@@ -95,6 +96,31 @@ public class DetectionHandler {
 				}
 			}
 		}
+		
+		if(World.getInstance().getOwnTeamColor()== TeamColor.YELLOW){
+			updateOnSight(yellowList);
+		}
+		else{
+			updateOnSight(blueList);
+		}
+	}
+	
+	/**
+	 * Updates the ally team's robots to be set "onSight"  or not onSight.
+	 * Setting this variable to true in a robot will allow the GUI to display it as "Online"
+	 * @param robotList A list with the Detected Robots from the ally team.
+	 */
+	public void updateOnSight(List<SSL_DetectionRobot> robotList){
+		ArrayList<Robot> team = World.getInstance().getAllRobots();
+		for(Robot ally : team){
+			ally.setOnSight(false);
+			for(SSL_DetectionRobot allyMsg: robotList){
+				if(ally.getRobotId() == allyMsg.getRobotId()){
+					ally.setOnSight(true);
+					break;
+				}
+			}
+		}
 	}
 
 	/**
@@ -117,31 +143,27 @@ public class DetectionHandler {
 //		boolean robotAdded = false;
 
 		Robot robot = t.getRobotByID(robotMessage.getRobotId());
-/*
- 		TODO remove this section, 
- 		 is deprecated because team members are initialized at the start,
- 		 and aren' t removed anymore
+
+// 		TODO remove this section, 
+// 		 is deprecated because team members are initialized at the start,
+// 		 and aren' t removed anymore
  		 
  		 
-		if (robot == null) { // Create robot object
-			if (world.getOwnTeamColor().equals(color)) {
+		if (allyFilter[robotMessage.getRobotId()] == null) { // Create robot object
+			if (world.getReferee().getOwnTeamColor().equals(color)) {
 				for (int id : validRobotIDs) {
 					// filter out all robots that should not be available
 					if (robotMessage.getRobotId() == id) {
 						// if the robot is validated add it to the ally's list
-						t.addRobot(new Ally(robotMessage.getRobotId(), false, robotMessage.getHeight(), t, 1));
 						Point p = new Point(robotMessage.getX(), robotMessage.getY());
 						allyFilter[id] = new Kalman(p, 0, 0);
-						robotAdded = true;
 					}
 				}
 			} else {
 				enemyFilter[robotMessage.getRobotId()] = new Kalman(
 						new Point(robotMessage.getX(), robotMessage.getY()), 0, 0);
-				t.addRobot(new Enemy(robotMessage.getRobotId(), false, robotMessage.getHeight(), t));
-				robotAdded = true;
 			}
-		}*/
+		}
 
 		robot = t.getRobotByID(robotMessage.getRobotId());
 		if (robot != null) {
