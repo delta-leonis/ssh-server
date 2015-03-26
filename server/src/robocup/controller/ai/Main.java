@@ -25,7 +25,6 @@ public class Main implements Observer {
 	public Main() {
 		world = World.getInstance();
 		world.addObserver(this);
-
 		initExecutors();
 
 		behavior = new ForceBehavior(robotExecuters);
@@ -37,7 +36,7 @@ public class Main implements Observer {
 		// behaviors.add(new TestAttackerBehavior(1, -100));
 		// behaviors.add(new TestAttackerBehavior(3, 0));
 		// robotExecuters = new ArrayList<RobotExecuter>();
-		// createExecuters();
+		 initExecutors();
 		// lowLevelBehaviors = new ArrayList<LowLevelBehavior>();
 
 	}
