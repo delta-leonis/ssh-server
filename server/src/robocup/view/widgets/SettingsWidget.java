@@ -68,6 +68,7 @@ public class SettingsWidget extends WidgetBox {
 		add(new JLabel("Field frequency"));
 		add(frequencyBox);
 		add(setFrequencyButton, "span 2");
+		add(new JLabel("Minimum logger level"));
 		add(levelBox);
 		add(setLevelButton, "span 2");
 	}
