@@ -21,7 +21,7 @@ public class GotoPosition {
 	private DijkstraPathPlanner dplanner = new DijkstraPathPlanner();
 	private LinkedList<Point> route;
 	
-	private static final int MAX_VELOCITY = 500;	//TODO: Make 2400
+	private static final int MAX_VELOCITY =5000;
 
 	/**
 	 * Go to target position
@@ -252,7 +252,7 @@ public class GotoPosition {
 		if(distance > distanceToSlowDown){
 			return MAX_VELOCITY;
 		}
-		return (distance / distanceToSlowDown) * MAX_VELOCITY;
+		return (int)(((float)distance / (float)distanceToSlowDown) * MAX_VELOCITY);	//TODO: Maak fatsoenlijk,
 	}
 	
 	/**
