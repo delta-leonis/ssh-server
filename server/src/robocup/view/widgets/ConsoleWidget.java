@@ -1,11 +1,18 @@
 package robocup.view.widgets;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -28,8 +35,12 @@ public class ConsoleWidget extends WidgetBox {
 	 */
 	public ConsoleWidget() {
 		super("Console");
-		setLayout(new MigLayout("", "[grow]", "[grow]"));
+		setLayout(new MigLayout("wrap 1", "[grow]", "[][grow]"));
 
+		JButton clearButton = new JButton("Clear log");
+		clearButton.addActionListener(new ButtonListener());
+		add(clearButton);
+		
 		table = new JTable(new DefaultTableModel(data, header));
 		table.setEnabled(false);
 		model = (DefaultTableModel) table.getModel();
@@ -55,10 +66,25 @@ public class ConsoleWidget extends WidgetBox {
 		public void publish(LogRecord record) {
 			model.addRow(new Object[] { record.getSequenceNumber(), toTime(record.getMillis()), record.getLevel(),
 					record.getMessage() });
-	        table.scrollRectToVisible(table.getCellRect(table.getRowCount()-1, 0, true));
+			table.scrollRectToVisible(table.getCellRect(table.getRowCount()-1, 0, true));
+			
 		}
 	}
 
+
+	/**
+	 * ActionListener to set a different settings
+	 *
+	 */
+	private class ButtonListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			switch (((JButton) e.getSource()).getText()) {
+			case "Clear log":
+				model.setRowCount(0);
+			}
+		}
+	}
+	
 	/**
 	 * Adjust column width
 	 * @param table

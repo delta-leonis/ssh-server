@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.border.TitledBorder;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.Main;
@@ -147,12 +148,7 @@ public class GUI extends JFrame {
 			}
 
 			selectedRobotId = ((RobotBox) arg0.getSource()).getRobot().getRobotId();
-
-			// update every ControlRobotWidget
-			for (Component item : widgetContainer.getComponents())
-				if (item instanceof ControlRobotWidget)
-					((ControlRobotWidget) item).update();
-
+			update("widgetContainer");
 		}
 
 		@Override
@@ -184,6 +180,7 @@ public class GUI extends JFrame {
 			for (RobotBox box : allRobotBoxes)
 				box.update();
 			break;
+			
 		case "robotBoxes":
 			robotContainer.removeAll();
 			for (RobotBox box : allRobotBoxes) {
@@ -197,8 +194,10 @@ public class GUI extends JFrame {
 			break;
 		case "widgetContainer":
 			for (Component item : widgetContainer.getComponents()) {
-				if (item instanceof WidgetBox)
+				if (item instanceof WidgetBox){
+					LOGGER.fine("Updated: " + ((TitledBorder)(((WidgetBox) item).getBorder())).getTitle());
 					((WidgetBox) item).update();
+				}
 			}
 
 			break;

@@ -1,5 +1,6 @@
 package robocup.view.widgets;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -48,10 +49,12 @@ public class ControlRobotPacketTestWidget extends WidgetBox{
 		ButtonListener buttonListener = new ButtonListener();
 		sendPacketButton.addActionListener(buttonListener);
 		
-		directionField = new JTextField("		");
-		directionSpeedField = new JTextField("		");
-		rotationAngleField = new JTextField("		");
-		rotationSpeedField = new JTextField("		");
+		directionField = new JTextField("0");
+		directionField.setPreferredSize(new Dimension(50, 20));
+		directionSpeedField = new JTextField("0");
+		directionSpeedField.setPreferredSize(new Dimension(50, 20));
+		rotationAngleField = new JTextField("0");
+		rotationSpeedField = new JTextField("0");
 
 
 		add(new JLabel("Direction"), "growx");
