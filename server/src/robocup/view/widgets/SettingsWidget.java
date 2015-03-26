@@ -2,6 +2,7 @@ package robocup.view.widgets;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
@@ -19,6 +20,7 @@ import robocup.view.WidgetBox;
 public class SettingsWidget extends WidgetBox {
 
 	private JComboBox<String> fieldHalfBox, frequencyBox;
+	private JComboBox<Level> levelBox;
 	// Base station frequencies
 	private static final int[] frequencies = { 2436, 2450, 2490, 2500, 2525 };
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
@@ -34,6 +36,18 @@ public class SettingsWidget extends WidgetBox {
 		fieldHalfBox.setEditable(false);
 		fieldHalfBox.addItem("left");
 		fieldHalfBox.addItem("right");
+		
+		levelBox = new JComboBox<Level>();
+		levelBox.addItem(Level.ALL);
+		levelBox.addItem(Level.FINEST);
+		levelBox.addItem(Level.FINER);
+		levelBox.addItem(Level.FINE);
+		levelBox.addItem(Level.INFO);
+		levelBox.addItem(Level.CONFIG);
+		levelBox.addItem(Level.WARNING);
+		levelBox.addItem(Level.SEVERE);
+		levelBox.addItem(Level.OFF);
+		levelBox.setSelectedItem(LOGGER.getLevel());
 
 		JButton setHalfButton = new JButton("Set fieldhalf");
 		setHalfButton.addActionListener(new ButtonListener());
@@ -46,12 +60,16 @@ public class SettingsWidget extends WidgetBox {
 		JButton setFrequencyButton = new JButton("Set frequency");
 		setFrequencyButton.addActionListener(new ButtonListener());
 
+		JButton setLevelButton = new JButton("Set logger level");
+		setLevelButton.addActionListener(new ButtonListener());
 		add(new JLabel("Field half"));
 		add(fieldHalfBox);
 		add(setHalfButton, "span 2");
 		add(new JLabel("Field frequency"));
 		add(frequencyBox);
 		add(setFrequencyButton, "span 2");
+		add(levelBox);
+		add(setLevelButton, "span 2");
 	}
 
 	/**
@@ -73,6 +91,14 @@ public class SettingsWidget extends WidgetBox {
 				ComInterface.getInstance(RobotCom.class).send(1, 0, 0, 0, 0, 0, 0,0, false);
 				break;
 			}
+			
+			case "Set logger level":
+			{
+				LOGGER.setLevel((Level)levelBox.getSelectedItem());
+				LOGGER.config("Logger level set to " +(Level)levelBox.getSelectedItem());
+				break;
+			}
+			
 			case "Set fieldhalf":
 				if (fieldHalfBox.getSelectedItem().equals("right"))
 					World.getInstance().getReferee()

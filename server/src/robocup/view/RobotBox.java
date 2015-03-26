@@ -72,6 +72,6 @@ public class RobotBox extends JPanel {
 	public void update() {
 		setRobotStatus(robot.isOnSight());
 		robotRole.setText(((Ally)robot).getRole().toString());
-		robotPosition.setText(robot.getPosition().getX() + ", " + robot.getPosition().getY());
+		robotPosition.setText(String.format("%.1f,  %.1f", robot.getPosition().getX(), robot.getPosition().getY()));
 	}
 }
