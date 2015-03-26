@@ -192,18 +192,45 @@ public abstract class Mode {
 	 * Checks whether a ally has a free shot, will only be checked
 	 * if the robot is in one of the 6 center zones (due to accuracy)
 	 * returns a {@link Point} that represents the ideal shooting position
-	 *  
-	 * @param executer
-	 * @return Point
+	 * Uses all zones except for the 4 corners
+	 * Uses a maximum of 5 obstacles
+	 * 
+	 * @return Point	ideal aim position in goal
 	 */
-	public Point hasFreeShot(RobotExecuter executer){
+	public Point hasFreeShot(){
+		return hasFreeShot(5);
+	}
+	
+	/**
+	 * Checks whether a ally has a free shot, will only be checked
+	 * if the robot is in one of the 6 center zones (due to accuracy)
+	 * returns a {@link Point} that represents the ideal shooting position
+	 * Uses all zones except for the 4 corners
+	 * 
+	 * @param maxObstacles	maximum number of obstacles in the shooting triangle (ball-leftpost-rightpost)
+	 * @return Point	ideal aim position in goal
+	 */
+	public Point hasFreeShot(int maxObstacles){
+		FieldZone[] zones = {FieldZone.EAST_RIGHT_FRONT, FieldZone.EAST_CENTER, FieldZone.EAST_LEFT_FRONT, FieldZone.EAST_MIDDLE, FieldZone.EAST_LEFT_SECOND_POST, FieldZone.EAST_RIGHT_SECOND_POST, 
+							FieldZone.WEST_RIGHT_FRONT, FieldZone.WEST_CENTER, FieldZone.WEST_LEFT_FRONT, FieldZone.WEST_MIDDLE, FieldZone.WEST_LEFT_SECOND_POST, FieldZone.WEST_RIGHT_SECOND_POST};
+
+		return hasFreeShot(zones, maxObstacles);
+	}
+	
+	/**
+	 * Checks whether a ally has a free shot, will only be checked
+	 * if the robot is in one of the 6 center zones (due to accuracy)
+	 * returns a {@link Point} that represents the ideal shooting position
+	 *  
+	 * @param zones		zones that the ball has to be in in order to check a free shot
+	 * @param maxObstacles	maximum number of obstacles in the shooting triangle (ball-leftpost-rightpost)
+	 * @return Point	ideal aim position in goal
+	 */
+	public Point hasFreeShot(FieldZone[] zones, int maxObstacles){
     	Ball ball = World.getInstance().getBall();
 		//only proceed when we are the ballowner
 		if(ball.getOwner() instanceof Enemy)
 			return null;
-		
-		FieldZone[] zones = {FieldZone.EAST_RIGHT_FRONT, FieldZone.EAST_CENTER, FieldZone.EAST_LEFT_FRONT, FieldZone.EAST_MIDDLE, FieldZone.EAST_LEFT_SECOND_POST, FieldZone.EAST_RIGHT_SECOND_POST, 
-							FieldZone.WEST_RIGHT_FRONT, FieldZone.WEST_CENTER, FieldZone.WEST_LEFT_FRONT, FieldZone.WEST_MIDDLE, FieldZone.WEST_LEFT_SECOND_POST, FieldZone.WEST_RIGHT_SECOND_POST};
 		
 		//check if the ball is in a zone from which we can actually make the angle
 		if(!Arrays.asList(zones).contains(World.getInstance().locateFieldObject(ball)))
@@ -217,7 +244,9 @@ public abstract class Mode {
 		//No obstacles?! shoot directly in the center of the goal;
 		if(obstacles.size() == 0)
 			return new Point(enemyGoal.getFrontLeft().getX(), 0.0f);
-		
+
+		if(obstacles.size() > maxObstacles)
+			return null;
 
 		//make a list with all blocked areas.
 		//Y is the same for all points, so key = x1, and value = x2
