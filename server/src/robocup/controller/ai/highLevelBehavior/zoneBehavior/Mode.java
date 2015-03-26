@@ -191,17 +191,19 @@ public abstract class Mode {
 	/**
 	 * Checks whether a ally has a free shot, will only be checked
 	 * if the robot is in one of the 6 center zones (due to accuracy)
-	 * 
+	 * returns a {@link Point} that represents the ideal shooting position
+	 *  
 	 * @param executer
-	 * @return
+	 * @return Point
 	 */
 	public Point hasFreeShot(RobotExecuter executer){
+    	Ball ball = World.getInstance().getBall();
 		//only proceed when we are the ballowner
 		if(ball.getOwner() instanceof Enemy)
 			return null;
 		
-		FieldZone[] zones = {FieldZone.EAST_CENTER, FieldZone.EAST_LEFT_FRONT, FieldZone.EAST_MIDDLE, FieldZone.EAST_LEFT_SECOND_POST, 
-							FieldZone.WEST_CENTER, FieldZone.WEST_LEFT_FRONT, FieldZone.WEST_MIDDLE, FieldZone.WEST_LEFT_SECOND_POST};
+		FieldZone[] zones = {FieldZone.EAST_RIGHT_FRONT, FieldZone.EAST_CENTER, FieldZone.EAST_LEFT_FRONT, FieldZone.EAST_MIDDLE, FieldZone.EAST_LEFT_SECOND_POST, FieldZone.EAST_RIGHT_SECOND_POST, 
+							FieldZone.WEST_RIGHT_FRONT, FieldZone.WEST_CENTER, FieldZone.WEST_LEFT_FRONT, FieldZone.WEST_MIDDLE, FieldZone.WEST_LEFT_SECOND_POST, FieldZone.WEST_RIGHT_SECOND_POST};
 		
 		//check if the ball is in a zone from which we can actually make the angle
 		if(!Arrays.asList(zones).contains(World.getInstance().locateFieldObject(ball)))
@@ -210,12 +212,11 @@ public abstract class Mode {
 		//get the enemy goal (checking which side is ours, and get the opposite 
 		Goal enemyGoal = (World.getInstance().getReferee().getDoesTeamPlaysWest(World.getInstance().getReferee().getOwnTeamColor())) ?  World.getInstance().getField().getEastGoal() : World.getInstance().getField().getWestGoal();
 
-		//scoreArea.add(new Line2D.Double(enemyGoal.getFrontLeft().toPoint2D(), enemyGoal.getFrontRight().toPoint2D()));
 		ArrayList<Robot> obstacles = World.getInstance().getAllRobotsInArea(new Point[]{enemyGoal.getFrontLeft(), enemyGoal.getFrontRight(), ball.getPosition()});
 
 		//No obstacles?! shoot directly in the center of the goal;
 		if(obstacles.size() == 0)
-			return new Point(enemyGoal.getFrontLeft().getX(), 0);
+			return new Point(enemyGoal.getFrontLeft().getX(), 0.0f);
 		
 
 		//make a list with all blocked areas.
@@ -227,69 +228,137 @@ public abstract class Mode {
 
 		for(Robot obstacle : obstacles){
 			double distance = obstacle.getPosition().getDeltaDistance(ball.getPosition()); 
-			double divertAngle = Math.tan((Robot.DIAMETER/2) / distance);			
+			double divertAngle = Math.atan((Robot.DIAMETER/2) / distance);			
 			
-			double obstacleLeftAngle = (90 - ball.getPosition().getAngle(obstacle.getPosition())) + divertAngle;
-			double obstacleRightAngle = (90 - ball.getPosition().getAngle(obstacle.getPosition())) - divertAngle;
-			double backLineDistance = Math.abs(enemyGoal.getFrontLeft().getX() - ball.getPosition().getX());
-
-			Point obstacleLeftPoint = new Point((float) (ball.getPosition().getX() + Math.sin(obstacleLeftAngle) * distance),
-												(float) (ball.getPosition().getY() + Math.cos(obstacleLeftAngle) * distance));
-			Point obstacleRightPoint = new Point((float) (ball.getPosition().getX() + Math.sin(obstacleRightAngle) * distance),
-												 (float) (ball.getPosition().getY() + Math.cos(obstacleRightAngle) * distance));
+			double obstacleLeftAngle = Math.toRadians(ball.getPosition().getAngle(obstacle.getPosition()))  + divertAngle;
+			double obstacleRightAngle = Math.toRadians(ball.getPosition().getAngle(obstacle.getPosition())) - divertAngle;
 			
+			double dx = enemyGoal.getFrontLeft().getX() - ball.getPosition().getX();
+			double dyL = Math.tan(obstacleLeftAngle) * dx;
+			double dyR = Math.tan(obstacleRightAngle) * dx;
 
-			double angleToGoal = ball.getPosition().getAngle(obstacleLeftPoint);
-			double dy = Math.tan(angleToGoal) * backLineDistance;
-			Point leftPoint = new Point(enemyGoal.getFrontLeft().getX(), (float) (ball.getPosition().getY() + dy));
-			
+			Point L = new Point((float) (ball.getPosition().getX() + dx),
+								(float) (ball.getPosition().getY() + dyL));
+			Point R = new Point((float) (ball.getPosition().getX() + dx),
+					(float) (ball.getPosition().getY() + dyR));
 
-			angleToGoal = ball.getPosition().getAngle(obstacleRightPoint);
-			dy = Math.tan(angleToGoal) * backLineDistance;
-			Point rightPoint = new Point(enemyGoal.getFrontLeft().getX(), (float) (ball.getPosition().getY() + dy));
-
-			if(obstructedArea.containsKey(leftPoint.toPoint2D().getX()) && 
-					obstructedArea.get(leftPoint.toPoint2D().getX()) > rightPoint.toPoint2D().getX())
-				obstructedArea.put(leftPoint.toPoint2D().getX(), rightPoint.toPoint2D().getX());
+			//is there a point with the same start X coordinate
+			//if so, check whether it is bigger, and replace it if necessary
+			if(!obstructedArea.containsKey(L.toPoint2D().getY()) ||
+					(obstructedArea.get(L.toPoint2D().getY())) > R.toPoint2D().getY())
+				obstructedArea.put(L.toPoint2D().getY(), R.toPoint2D().getY());
 		}
+		double minY = (double)enemyGoal.getFrontLeft().getY();
+		double maxY = (double)enemyGoal.getFrontRight().getY();
+		obstructedArea = minMax(obstructedArea, minY, maxY);
+		obstructedArea = mergeOverlappingValues(obstructedArea);
 
-		//list with area that is not blocked
-		ArrayList<Line2D.Double> availableArea = new ArrayList<Line2D.Double>();
+		TreeMap<Double, Double> availableArea = invertMap(obstructedArea);
 
-		//merge lines that overlap
-		Line2D.Double currentLine = new Line2D.Double();
-		double y = enemyGoal.getBackLeft().getY();
-		for(Entry<Double, Double> entry : obstructedArea.entrySet()) {
-			Double x1 = entry.getKey();
-			Double x2 = entry.getValue();
+		if(obstructedArea.firstKey() != minY)
+			availableArea.put(minY, obstructedArea.firstKey());
+		if(obstructedArea.lastEntry().getValue() != maxY)
+			availableArea.put(obstructedArea.lastEntry().getValue(), maxY);
 
-			if(currentLine.getP1() == null){
-				currentLine.setLine(x1, y, x2, y);
-				continue;
-			}
-			
-			if(x1 <= currentLine.getX1())
-				currentLine.setLine(currentLine.getX1(), y, x2, y);
-			else
-			{
-				availableArea.add(currentLine);
-				currentLine = new Line2D.Double();
-			}
-		}
-
+		double x = (double) enemyGoal.getFrontLeft().getX();
+		
 		if(availableArea.size() <= 0)
 			return null;
-
-		//in this case size DOES matter
-		Line2D.Double biggest = availableArea.get(0);
-		for(Line2D.Double line : availableArea)
-			if((line.getX1() + line.getX2()) > (biggest.getX1() + biggest.getX2()))
-				biggest = line;
 		
+		//in this case size DOES matter
+		Double biggestKey = availableArea.firstKey();
+		for(Entry<Double, Double> entry : availableArea.entrySet())
+			if(entry.getValue() - entry.getKey() > availableArea.get(biggestKey) - biggestKey)
+				biggestKey = entry.getKey();
+
 		//return point that lies in the center of the biggest point
-		return new Point((float)(biggest.getX2()/2), (float)y);
+		Point hitmarker = new Point((float)x, (float)(biggestKey/2 + availableArea.get(biggestKey)/2));
+		return hitmarker;
 	}
 
+	/**
+	 * Ensures all values are within given limits
+	 * @param map	map that has to be processed
+	 * @param min	minimum value
+	 * @param max	maximum value
+	 * @return map that honorers limits
+	 */
+	private TreeMap<Double, Double> minMax(
+			TreeMap<Double, Double> map, double min, double max) {
+		TreeMap<Double, Double> newMap = new TreeMap<Double, Double>();
+		for(Entry<Double, Double> entry : map.entrySet()){
+			Double newKey, newValue;
+			newKey = Math.min(Math.max(entry.getKey(), min), max);
+			newValue = Math.min(Math.max(entry.getValue(), min), max);
+			newMap.put(newKey, newValue);
+		}
+		return newMap;
+	}
+
+	/**
+	 * "inverts" a TreeMap,
+	 * example:		 Y1 | Y2
+	 * 				 16 | 100
+	 * 				120 | 130
+	 * returns:		 Y1 | Y2
+	 * 				100 | 120 
+	 * @param map
+	 * @return
+	 */
+	private TreeMap<Double, Double> invertMap(
+			TreeMap<Double, Double> map) {
+		TreeMap<Double, Double> invertedMap = new TreeMap<Double, Double>();
+		Double prevY1 = null,
+				prevY2 = null;
+		for(Entry<Double, Double> entry : map.entrySet()){
+			if(prevY1 == null){
+				prevY1 = entry.getKey();
+				prevY2 = entry.getValue();
+				continue;
+			}
+			Double Y1 = entry.getKey();
+			Double Y2 = entry.getValue();
+			invertedMap.put(prevY2, Y1);
+		}
+		return invertedMap;
+	}
+
+	/**
+	 * Merges a TreeMap that has overlapping values,
+	 * example	Y1 | Y2
+	 * 			16 | 100
+	 * 			80 | 130
+	 * will return:   Y1 | Y2
+	 * 				  16 | 130
+	 * @param map to be processed
+	 * @return processed map
+	 */
+    private TreeMap<Double, Double> mergeOverlappingValues(TreeMap<Double, Double> map){
+		TreeMap<Double, Double> mergedMap = new TreeMap<Double, Double>();
+		Double prevY1 = null,
+				prevY2 = null;
+		for(Entry<Double, Double> entry : map.entrySet()){
+			if(prevY1 == null){
+				prevY1 = entry.getKey();
+				prevY2 = entry.getValue();
+				continue;
+			}
+			Double Y1 = entry.getKey();
+			Double Y2 = entry.getValue();
+			if(prevY2 >= Y1){
+				//meergeeee
+				prevY1 = (prevY1 > Y1 ? Y1 : prevY1);
+				prevY2 = (prevY2 > Y2 ? prevY2 : Y2);
+			}else {
+				mergedMap.put((prevY1 < prevY2 ? prevY1 : prevY2), (prevY1 > prevY2 ? prevY1 : prevY2));
+				//no merge
+				prevY1 = entry.getKey();
+				prevY2 = entry.getValue();
+			}
+		}
+		mergedMap.put((prevY1 < prevY2 ? prevY1 : prevY2), (prevY1 > prevY2 ? prevY1 : prevY2));
+		return mergedMap;
+    }
 	/**
 	 * Find a RobotExecuter based on robot id
 	 * @param robotId the robotid
