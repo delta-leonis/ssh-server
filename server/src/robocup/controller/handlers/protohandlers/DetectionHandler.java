@@ -8,7 +8,7 @@ import robocup.input.protobuf.MessagesRobocupSslDetection.SSL_DetectionBall;
 import robocup.input.protobuf.MessagesRobocupSslDetection.SSL_DetectionFrame;
 import robocup.input.protobuf.MessagesRobocupSslDetection.SSL_DetectionRobot;
 import robocup.model.Ball;
-import robocup.model.Point;
+import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.Team;
 import robocup.model.World;
@@ -27,7 +27,7 @@ public class DetectionHandler {
 	public DetectionHandler(World world) {
 		this.world = world;
 		Ball b = world.getBall();
-		ballFilter = new Kalman(new Point(b.getPosition().getX(), b.getPosition().getY()), 0, 0);
+		ballFilter = new Kalman(new FieldPoint(b.getPosition().getX(), b.getPosition().getY()), 0, 0);
 	}
 
 	/**
@@ -60,10 +60,10 @@ public class DetectionHandler {
 	 * @param ball
 	 */
 	public void updateBall(SSL_DetectionBall ball, double time, int camNo) {
-		Point filterPoint = new Point(ball.getX(), ball.getY());
-		int xSpeed = (int) (ball.getX() - ballFilter.getLastX());
-		int ySpeed = (int) (ball.getY() - ballFilter.getLastY());
-		Point filteredPoint = ballFilter.filterPoint(filterPoint, xSpeed, ySpeed);
+		FieldPoint filterPoint = new FieldPoint(ball.getX(), ball.getY());
+		double xSpeed = (ball.getX() - ballFilter.getLastX());
+		double ySpeed = (ball.getY() - ballFilter.getLastY());
+		FieldPoint filteredPoint = ballFilter.filterPoint(filterPoint, xSpeed, ySpeed);
 
 		if (ball.hasZ()) {
 			world.getBall().update(time, filteredPoint, ball.getZ(), camNo);
@@ -155,13 +155,13 @@ public class DetectionHandler {
 					// filter out all robots that should not be available
 					if (robotMessage.getRobotId() == id) {
 						// if the robot is validated add it to the ally's list
-						Point p = new Point(robotMessage.getX(), robotMessage.getY());
+						FieldPoint p = new FieldPoint(robotMessage.getX(), robotMessage.getY());
 						allyFilter[id] = new Kalman(p, 0, 0);
 					}
 				}
 			} else {
 				enemyFilter[robotMessage.getRobotId()] = new Kalman(
-						new Point(robotMessage.getX(), robotMessage.getY()), 0, 0);
+						new FieldPoint(robotMessage.getX(), robotMessage.getY()), 0, 0);
 			}
 		}
 
@@ -174,32 +174,28 @@ public class DetectionHandler {
 				filter = enemyFilter[robot.getRobotId()];
 			}
 
-			Point filterPoint = new Point(robotMessage.getX(), robotMessage.getY());
+			FieldPoint filterPoint = new FieldPoint(robotMessage.getX(), robotMessage.getY());
 
 			// deltadistance between predicted and measured point
 			double deltaDistance = filter.getPredictPoint().getDeltaDistance(filterPoint);
-			int xSpeed = (int) (robotMessage.getX() - filter.getLastX());
-			int ySpeed = (int) (robotMessage.getY() - filter.getLastY());
+			double xSpeed = (robotMessage.getX() - filter.getLastX());
+			double ySpeed = (robotMessage.getY() - filter.getLastY());
 
 			// Point data after Kalman filtering
-			Point filteredPoint = filter.filterPoint(filterPoint, xSpeed, ySpeed);
+			FieldPoint filteredPoint = filter.filterPoint(filterPoint, xSpeed, ySpeed);
 			filter.predictPoint(); // predict new point for next iteration
 
 			// if predicted and measured points are close update position data
 			if (deltaDistance < 20) {
 				if (robotMessage.hasOrientation()) {
-					int degrees = (int) Math.toDegrees(robotMessage.getOrientation());
-					robot.update(new Point(filteredPoint.getX(), filteredPoint.getY()), updateTime, degrees, camNo);
+					double degrees = Math.toDegrees(robotMessage.getOrientation());
+					robot.update(new FieldPoint(filteredPoint.getX(), filteredPoint.getY()), updateTime, degrees, camNo);
 				} else {
-					robot.update(new Point(filteredPoint.getX(), filteredPoint.getY()), updateTime, camNo);
+					robot.update(new FieldPoint(filteredPoint.getX(), filteredPoint.getY()), updateTime, camNo);
 				}
 			}
 		}
 		else
 			System.err.printf("DetectionHandler: Could not find robot with ID %d\n", robotMessage.getRobotId());
-
-		//if (robotAdded) {
-		//	world.RobotAdded();
-		//}
 	}
 }

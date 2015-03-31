@@ -1,10 +1,10 @@
 package robocup.model;
 
 public class Goal {
-	private Point frontLeft;
-	private Point frontRight;
-	private Point backLeft;
-	private Point backRight;
+	private FieldPoint frontLeft;
+	private FieldPoint frontRight;
+	private FieldPoint backLeft;
+	private FieldPoint backRight;
 	private int wallWidth; // Width of goal post. Goal post is outside the
 							// defined goal area
 	private int height;
@@ -13,7 +13,7 @@ public class Goal {
 	// |W|<<<<>>>>|W|
 	// (W = wallWidth)
 
-	public Goal(Point frontLeft, Point frontRight, Point backLeft, Point backRight, int wallWidth, int height) {
+	public Goal(FieldPoint frontLeft, FieldPoint frontRight, FieldPoint backLeft, FieldPoint backRight, int wallWidth, int height) {
 		this.frontLeft = frontLeft;
 		this.frontRight = frontRight;
 		this.backLeft = backLeft;
@@ -25,8 +25,8 @@ public class Goal {
 	/**
 	 * @return goal width excluding post width
 	 */
-	public int getWidth(){
-		return (int) (Math.abs(frontLeft.getY() - frontRight.getY()));
+	public double getWidth(){
+		return (Math.abs(frontLeft.getY() - frontRight.getY()));
 	}
 
 	/**
@@ -60,56 +60,56 @@ public class Goal {
 	/**
 	 * @return the frontLeft
 	 */
-	public Point getFrontLeft() {
+	public FieldPoint getFrontLeft() {
 		return frontLeft;
 	}
 
 	/**
 	 * @param frontLeft the frontLeft to set
 	 */
-	public void setFrontLeft(Point frontLeft) {
+	public void setFrontLeft(FieldPoint frontLeft) {
 		this.frontLeft = frontLeft;
 	}
 
 	/**
 	 * @return the frontRight
 	 */
-	public Point getFrontRight() {
+	public FieldPoint getFrontRight() {
 		return frontRight;
 	}
 
 	/**
 	 * @param frontRight the frontRight to set
 	 */
-	public void setFrontRight(Point frontRight) {
+	public void setFrontRight(FieldPoint frontRight) {
 		this.frontRight = frontRight;
 	}
 
 	/**
 	 * @return the backLeft
 	 */
-	public Point getBackLeft() {
+	public FieldPoint getBackLeft() {
 		return backLeft;
 	}
 
 	/**
 	 * @param backLeft the backLeft to set
 	 */
-	public void setBackLeft(Point backLeft) {
+	public void setBackLeft(FieldPoint backLeft) {
 		this.backLeft = backLeft;
 	}
 
 	/**
 	 * @return the backRight
 	 */
-	public Point getBackRight() {
+	public FieldPoint getBackRight() {
 		return backRight;
 	}
 
 	/**
 	 * @param backRight the backRight to set
 	 */
-	public void setBackRight(Point backRight) {
+	public void setBackRight(FieldPoint backRight) {
 		this.backRight = backRight;
 	}
 

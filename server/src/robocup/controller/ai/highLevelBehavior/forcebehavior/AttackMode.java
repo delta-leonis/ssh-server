@@ -10,7 +10,7 @@ import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Ally;
 import robocup.model.Ball;
-import robocup.model.Point;
+import robocup.model.FieldPoint;
 import robocup.model.Referee;
 import robocup.model.Robot;
 import robocup.model.World;
@@ -25,11 +25,11 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public class AttackMode extends Mode {
 	/** Co-ordinates of the goal on the left side of the field */
-	private static final Point MID_GOAL_NEGATIVE = new Point(-(World.getInstance().getField().getLength() / 2), 0);
+	private static final FieldPoint MID_GOAL_NEGATIVE = new FieldPoint(-(World.getInstance().getField().getLength() / 2), 0);
 	/** Co-ordinates of the goal on the right side of the field */
-	private static final Point MID_GOAL_POSITIVE = new Point(World.getInstance().getField().getLength() / 2, 0);
+	private static final FieldPoint MID_GOAL_POSITIVE = new FieldPoint(World.getInstance().getField().getLength() / 2, 0);
 
-	private Point offset = new Point(0, 0);
+	private FieldPoint offset = new FieldPoint(0, 0);
 	private ArrayList<RobotExecuter> executers;
 	private int lastCommandCounter = 0;
 
@@ -191,7 +191,7 @@ public class AttackMode extends Mode {
 
 	@Override
 	public void handleAttacker(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate) {
-		Point freePosition = getClosestAllyRobotToBall(world) == robot ? null : getFreePosition(robot); //robot was null
+		FieldPoint freePosition = getClosestAllyRobotToBall(world) == robot ? null : getFreePosition(robot); //robot was null
 		int chipKick = 0;
 		int shootDirection = 0;
 		boolean dribble = false;

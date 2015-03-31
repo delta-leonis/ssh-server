@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import robocup.controller.handlers.protohandlers.MainHandler;
-import robocup.input.BaseStationClient;
 import robocup.input.RefereeClient;
 import robocup.input.SSLVisionClient;
 import robocup.model.Field;
@@ -42,8 +41,6 @@ public class Main {
 		LOGGER.info("Program started");
 		initView();
 		LOGGER.info("View initialized");
-		initBasestationClient();
-		LOGGER.info("BasestationClient initialized");
 		initField();
 		LOGGER.info("Field initialized");
 		initTeams();
@@ -193,13 +190,6 @@ public class Main {
 			LOGGER.severe(e.toString());
 			System.exit(1);
 		}
-	}
-
-	/**
-	 * Create a client for the base station for receiving data from the robots.
-	 */
-	public static void initBasestationClient() {
-		new Thread(new BaseStationClient()).start();
 	}
 
 	/**

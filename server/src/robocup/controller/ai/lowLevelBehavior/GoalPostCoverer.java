@@ -1,14 +1,14 @@
 package robocup.controller.ai.lowLevelBehavior;
 
 import robocup.controller.ai.movement.GotoPosition;
-import robocup.model.Point;
+import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.enums.RobotMode;
 import robocup.output.ComInterface;
 
 /**
  * Paaldekker
- * Bezet lijn tussen tegenstander en midden van eigen goal, blijft binnen zone ‘2ePaal’ staan. De af te dekken 
+ * Bezet lijn tussen tegenstander en midden van eigen goal, blijft binnen zone ï¿½2ePaalï¿½ staan. De af te dekken 
  * tegenstander is de tegenstander die het dichts bij is waarbij een lijn door de zone naar de goal mogelijk is.
  * De klasse hoeft alleen maar te weten tussen welke tegenstander en paal hij moet staan.
  * 
@@ -23,7 +23,7 @@ public class GoalPostCoverer extends LowLevelBehavior {
 	
 
 	private Robot enemyRobot;
-	private Point paalPosition;
+	private FieldPoint paalPosition;
 	private boolean dribble = false;
 
 	/**
@@ -34,7 +34,7 @@ public class GoalPostCoverer extends LowLevelBehavior {
 	 * @param paalPosition the position of the ball
 	 * @param dribble enable dribbler
 	 */
-	public GoalPostCoverer(Robot robot, ComInterface output, Robot enemyRobot, Point paalPosition, 
+	public GoalPostCoverer(Robot robot, ComInterface output, Robot enemyRobot, FieldPoint paalPosition, 
 			boolean dribble) {
 		super(robot, output);
 		this.enemyRobot = enemyRobot;
@@ -52,7 +52,7 @@ public class GoalPostCoverer extends LowLevelBehavior {
 	 * @param dribble enable dribbler
 	 * @param shootDirection direction where the attacker needs to shoot, relative to the field. Values between -180 and 180. 0 degrees facing east. 90 degrees facing north. 
 	 */
-	public void update(Robot enemyRobot, Point paalPosition, boolean dribble) {
+	public void update(Robot enemyRobot, FieldPoint paalPosition, boolean dribble) {
 		this.enemyRobot = enemyRobot;
 		this.paalPosition = paalPosition;
 		this.dribble = dribble;
@@ -63,7 +63,7 @@ public class GoalPostCoverer extends LowLevelBehavior {
 		if (timeOutCheck()) {
 
 		} else {
-			Point newDestination = null;
+			FieldPoint newDestination = null;
 
 			go.setDribble(dribble);
 
@@ -79,31 +79,30 @@ public class GoalPostCoverer extends LowLevelBehavior {
 	 * TODO: Test. Testtesttest. I don't trust the getAngle function. 
 	 * @returns best position to block the opposing robot.
 	 */
-	public Point calculateBestPosition(){
+	public FieldPoint calculateBestPosition(){
 		// point on the aftraplijn (1 meter radius from 25cm from each pole) between the goal and the enemy robot.
 		// get 25cm point from goal
-		Point goalPoint = null;
+		FieldPoint goalPoint = null;
 		// check if it's even a goal.. post .. thing.
-		if(		paalPosition.equals(new Point(-3000, -500)) ||
-				paalPosition.equals(new Point(-3000, 500)) ||
-				paalPosition.equals(new Point(3000, -500)) ||
-				paalPosition.equals(new Point(3000, 500))){
-			goalPoint = new Point(paalPosition.getX(),
+		if(		paalPosition.equals(new FieldPoint(-3000, -500)) ||
+				paalPosition.equals(new FieldPoint(-3000, 500)) ||
+				paalPosition.equals(new FieldPoint(3000, -500)) ||
+				paalPosition.equals(new FieldPoint(3000, 500))){
+			goalPoint = new FieldPoint(paalPosition.getX(),
 					paalPosition.getY() < 0 ? paalPosition.getY() + distanceFromMid : paalPosition.getY() -distanceFromMid);
 		}
 		// get direction
-		int direction = goalPoint.getAngle(enemyRobot.getPosition());
+		double direction = goalPoint.getAngle(enemyRobot.getPosition());
 		// tan(direction) * 1000mm = point.
 		
-		
-		return new Point((int)(goalPoint.getX() + Math.cos(direction) * distanceFromGoal), (int)(goalPoint.getY() + Math.sin(direction) * distanceFromGoal));
+		return new FieldPoint((goalPoint.getX() + Math.cos(direction) * distanceFromGoal), (goalPoint.getY() + Math.sin(direction) * distanceFromGoal));
 	}
 
 	/**
 	 * Change the destination of the robot
 	 * @param newDestination the new destination
 	 */
-	private void changeDestination(Point newDestination) {
+	private void changeDestination(FieldPoint newDestination) {
 		if (newDestination != null) {
 			go.setDestination(newDestination);
 			go.setTarget(enemyRobot.getPosition());

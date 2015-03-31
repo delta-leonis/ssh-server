@@ -81,8 +81,8 @@ public class ZoneBehavior extends Behavior {
 		ArrayList<Robot> allies = world.getReferee().getAlly().getRobots();
 		ArrayList<Robot> enemies = world.getReferee().getEnemy().getRobots();
 
-		int distanceAlly = getTeamDistanceToBall(allies);
-		int distanceEnemy = getTeamDistanceToBall(enemies);
+		double distanceAlly = getTeamDistanceToBall(allies);
+		double distanceEnemy = getTeamDistanceToBall(enemies);
 
 		return distanceAlly <= distanceEnemy;
 	}
@@ -92,17 +92,17 @@ public class ZoneBehavior extends Behavior {
 	 * @param robots the team of robots
 	 * @return the distance of the closest robot
 	 */
-	private int getTeamDistanceToBall(ArrayList<Robot> robots) {
+	private double getTeamDistanceToBall(ArrayList<Robot> robots) {
 		if (ball == null)
 			return Integer.MAX_VALUE;
 
-		int minDistance = -1;
+		double minDistance = -1.0;
 
 		for (Robot r : robots) {
 			if (minDistance == -1)
-				minDistance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
+				minDistance = r.getPosition().getDeltaDistance(ball.getPosition());
 			else {
-				int distance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
+				double distance = r.getPosition().getDeltaDistance(ball.getPosition());
 
 				if (distance < minDistance)
 					minDistance = distance;

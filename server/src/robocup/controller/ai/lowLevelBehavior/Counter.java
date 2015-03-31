@@ -1,20 +1,20 @@
 package robocup.controller.ai.lowLevelBehavior;
 
 import robocup.controller.ai.movement.GotoPosition;
-import robocup.model.Point;
+import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.enums.RobotMode;
 import robocup.output.ComInterface;
 
 /**
  * Counter
- * Houdt vrije lijn tussen bal en zichzelf binnen zone ‘middenTegenstander’
+ * Houdt vrije lijn tussen bal en zichzelf binnen zone ï¿½middenTegenstanderï¿½
  * 
  * Dekker
- * Bezet lijn tussen tegenstander en bal in zone met volgende prioriteit: 1. ‘2ePaal 2. ‘Hoek 3. ‘Zijkant’
+ * Bezet lijn tussen tegenstander en bal in zone met volgende prioriteit: 1. ï¿½2ePaal 2. ï¿½Hoek 3. ï¿½Zijkantï¿½
  * 
  * DekkerStoorder	//TODO: Sub-klasse.
- * Blijft binnen zone ‘Zijkant’. Bezet de lijn tussen tegenstander in zijn zone als de bal aan de andere breedte van het veld is en er een tegenstander is.
+ * Blijft binnen zone ï¿½Zijkantï¿½. Bezet de lijn tussen tegenstander in zijn zone als de bal aan de andere breedte van het veld is en er een tegenstander is.
  * Bezet de lijn tussen bal en eigen goal als deze in de zone is.
  * 
  * TODO: Rename.
@@ -23,8 +23,8 @@ import robocup.output.ComInterface;
  */
 public class Counter extends LowLevelBehavior {
 
-	private Point zone;
-	private Point ballPosition;
+	private FieldPoint zone;
+	private FieldPoint ballPosition;
 	private boolean dribble = false;
 
 	/**
@@ -36,7 +36,7 @@ public class Counter extends LowLevelBehavior {
 	 * @param TODO: lijst met robots/obstakels
 	 * @param dribble enable dribbler
 	 */
-	public Counter(Robot robot, ComInterface output, Point zone, Point ballPosition,
+	public Counter(Robot robot, ComInterface output, FieldPoint zone, FieldPoint ballPosition,
 			boolean dribble) {
 		super(robot, output);
 		this.zone = zone;
@@ -52,7 +52,7 @@ public class Counter extends LowLevelBehavior {
 	 * @param ballPosition the position of the ball
 	 * @param dribble enable dribbler
 	 */
-	public void update(Point zone, Point ballPosition, boolean dribble) {
+	public void update(FieldPoint zone, FieldPoint ballPosition, boolean dribble) {
 		this.zone = zone;
 		this.ballPosition = ballPosition;
 		this.dribble = dribble;
@@ -63,7 +63,7 @@ public class Counter extends LowLevelBehavior {
 		if (timeOutCheck()) {
 
 		} else {
-			Point newDestination = null;
+			FieldPoint newDestination = null;
 			go.setTarget(ballPosition);
 			go.setDribble(dribble);
 

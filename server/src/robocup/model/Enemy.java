@@ -1,7 +1,7 @@
 package robocup.model;
 
 public class Enemy extends Robot {
-	public Enemy(int robotID, boolean isKeeper, float height) {
+	public Enemy(int robotID, boolean isKeeper, double height) {
 		super(robotID, isKeeper, height);
 	}
 

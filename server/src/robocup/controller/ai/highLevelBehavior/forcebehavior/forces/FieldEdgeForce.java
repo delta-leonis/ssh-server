@@ -1,6 +1,6 @@
 package robocup.controller.ai.highLevelBehavior.forcebehavior.forces;
 
-import robocup.model.Point;
+import robocup.model.FieldPoint;
 
 public class FieldEdgeForce extends Force {
 
@@ -17,7 +17,7 @@ public class FieldEdgeForce extends Force {
 	 * Calculate if a point is affected by this force
 	 * A point is affected when the distance to the edge of the field is less than the scope
 	 */
-	public boolean affectsPoint(Point position) {
+	public boolean affectsPoint(FieldPoint position) {
 		int maxY = world.getField().getWidth() / 2;
 		int maxX = world.getField().getLength() / 2;
 		return maxX - Math.abs(position.getX()) < scope || maxY - Math.abs(position.getY()) < scope;
@@ -26,7 +26,7 @@ public class FieldEdgeForce extends Force {
 	/**
 	 * Get the direction, facing away from the edge of the field
 	 */
-	public int getDirection(Point position) {
+	public int getDirection(FieldPoint position) {
 		boolean maxXReached = world.getField().getLength() / 2 - Math.abs(position.getX()) < scope;
 		boolean maxYReached = world.getField().getWidth() / 2 - Math.abs(position.getY()) < scope;
 

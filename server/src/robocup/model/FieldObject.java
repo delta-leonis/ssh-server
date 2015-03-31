@@ -2,19 +2,19 @@ package robocup.model;
 
 public abstract class FieldObject {
 
-	private Point positionCam0;
-	private Point positionCam1;
-	private Point position;
+	private FieldPoint positionCam0;
+	private FieldPoint positionCam1;
+	private FieldPoint position;
 	// LastUpdateTime = time off the day in sec
 	protected double lastUpdateTime;
-	private int direction;
+	private double direction;
 	private double speed;
 
 	// private int lastCamUpdateNo;
 
 	public FieldObject() {
 		lastUpdateTime = 0;
-		position = new Point(0,0);
+		position = new FieldPoint(0,0);
 		positionCam0 = null;
 		positionCam1 = null;
 		// lastCamUpdateNo = -1;
@@ -26,11 +26,11 @@ public abstract class FieldObject {
 	 * @param newPosition New positiont point.
 	 * @post Updated position, direction and speed.
 	 */
-	public void update(Point newPosition, double updateTime, int camUpdateNo) {
+	public void update(FieldPoint newPosition, double updateTime, int camUpdateNo) {
 		double newTime = updateTime;
 
 		// System.out.println(newPosition);
-		Point tmpPosition;
+		FieldPoint tmpPosition;
 		if (!correctCamSide(newPosition.getX(), newPosition.getY(), camUpdateNo)) {
 			if (camUpdateNo == 0 && positionCam1 == null) {
 				;
@@ -43,11 +43,11 @@ public abstract class FieldObject {
 			}
 		}
 		if (camUpdateNo == 0) {
-			positionCam0 = new Point(newPosition.getX(), newPosition.getY());
+			positionCam0 = new FieldPoint(newPosition.getX(), newPosition.getY());
 			// System.out.println(camUpdateNo + "# " + positionCam0.getX());
 		}
 		if (camUpdateNo == 1) {
-			positionCam1 = new Point(newPosition.getX(), newPosition.getY());
+			positionCam1 = new FieldPoint(newPosition.getX(), newPosition.getY());
 			// System.out.println(camUpdateNo + "# " + positionCam1.getX());
 		}
 
@@ -55,8 +55,8 @@ public abstract class FieldObject {
 			if (this instanceof Ball) {
 				if ((positionCam0 != null && positionCam1 != null)) {
 
-					float newX = positionCam0.getX();
-					float newY = positionCam0.getY();
+					double newX = positionCam0.getX();
+					double newY = positionCam0.getY();
 					if (Math.abs(positionCam1.getX()) > Math.abs(newX)
 							&& Math.abs(positionCam1.getY()) > Math.abs(newY)) {
 						newX = positionCam1.getX();
@@ -67,7 +67,7 @@ public abstract class FieldObject {
 					}
 
 					// System.out.println("isbal: " + (this instanceof Ball));
-					tmpPosition = new Point(newX, newY);
+					tmpPosition = new FieldPoint(newX, newY);
 				} else {
 					tmpPosition = newPosition;
 				}
@@ -92,10 +92,10 @@ public abstract class FieldObject {
 		lastUpdateTime = newTime;
 	}
 
-	public boolean correctCamSide(float x, float y, int camNo) {
-		if (x > 0 && camNo == 1)
+	public boolean correctCamSide(double d, double e, int camNo) {
+		if (d > 0 && camNo == 1)
 			return true;
-		if (x < 0 && camNo == 0)
+		if (d < 0 && camNo == 0)
 			return true;
 		return false;
 	}
@@ -103,7 +103,7 @@ public abstract class FieldObject {
 	/**
 	 * @param direction the direction to set
 	 */
-	public void setDirection(Point newPosition) {
+	public void setDirection(FieldPoint newPosition) {
 		if (position != null) {
 			double deltaDistance = position.getDeltaDistance(newPosition);
 
@@ -117,7 +117,7 @@ public abstract class FieldObject {
 	/**
 	 * @return the direction
 	 */
-	public float getDirection() {
+	public double getDirection() {
 		return direction;
 	}
 
@@ -126,7 +126,7 @@ public abstract class FieldObject {
 	 * @param updateTime
 	 * @param newPosition
 	 */
-	private void setSpeed(double updateTime, Point newPosition) {
+	private void setSpeed(double updateTime, FieldPoint newPosition) {
 		double deltaDistance = position.getDeltaDistance(newPosition);
 		double deltaTime = updateTime - lastUpdateTime;
 		if (deltaDistance > 1.5) {
@@ -159,14 +159,14 @@ public abstract class FieldObject {
 	/**
 	 * @return the position
 	 */
-	public Point getPosition() {
+	public FieldPoint getPosition() {
 		return position;
 	}
 
 	/**
 	 * @param position the position to set
 	 */
-	public void setPosition(Point position) {
+	public void setPosition(FieldPoint position) {
 		this.position = position;
 	}
 

@@ -16,7 +16,7 @@ import net.miginfocom.swing.MigLayout;
 import robocup.Main;
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.Ally;
-import robocup.model.Point;
+import robocup.model.FieldPoint;
 import robocup.output.ComInterface;
 import robocup.output.RobotCom;
 import robocup.view.GUI;
@@ -201,13 +201,13 @@ public class ControlRobotWidget extends WidgetBox{
 	
 	private void slowDownTest(){
 		try{
-			GotoPosition go = new GotoPosition(new Ally(0, false, 0), ComInterface.getInstance(RobotCom.class), new Point(0,0));
-			ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, go.getSpeed(500, 100), 0, 0, 0, 0, dribbling);
+			GotoPosition go = new GotoPosition(new Ally(0, false, 0), ComInterface.getInstance(RobotCom.class), new FieldPoint(0,0));
+			ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, (int) go.getSpeed(500, 100), 0, 0, 0, 0, dribbling);
 			System.out.println("Test! " + go.getSpeed(500, 100));
 			Thread.sleep(500);
 			
 			for(int i = 0; i < 10; ++i){
-				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, go.getSpeed(100 - (i*10), 100), 0, 0, 0, 0, dribbling);
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, (int) go.getSpeed(100 - (i*10), 100), 0, 0, 0, 0, dribbling);
 				System.out.println("Test! " + go.getSpeed(100 - (i*10), 100));
 				Thread.sleep(50);
 			}

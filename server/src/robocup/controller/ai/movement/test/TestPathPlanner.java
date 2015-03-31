@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import robocup.Main;
 import robocup.controller.ai.movement.DijkstraPathPlanner;
-import robocup.model.Point;
+import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.Team;
 import robocup.model.World;
@@ -65,7 +65,7 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 	public TestPathPlannerPanel getRandomRobotsTestPanel(){
 		Main.initTeams();
 
-		Point destination = new Point((int)(Math.random() * TestPathPlannerPanel.WIDTH - TestPathPlannerPanel.WIDTH/2),
+		FieldPoint destination = new FieldPoint((int)(Math.random() * TestPathPlannerPanel.WIDTH - TestPathPlannerPanel.WIDTH/2),
 				(int)(Math.random() * TestPathPlannerPanel.HEIGHT - TestPathPlannerPanel.HEIGHT/2));
 		TestPathPlanner planner = new TestPathPlanner();
 		planner.setupRandomRobots(LOGGING);
@@ -83,8 +83,8 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 			System.out.println("\nTest Intersect 1");
 		}
 
-		testIntersectObject(new Vertex(new Point(0, 0)), new Vertex(new Point(
-				2000, 2000)), new Point(1000, 1000), true, LOGGING);
+		testIntersectObject(new Vertex(new FieldPoint(0, 0)), new Vertex(new FieldPoint(
+				2000, 2000)), new FieldPoint(1000, 1000), true, LOGGING);
 	}
 
 	/**
@@ -97,8 +97,8 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 			System.out.println("\nTest Intersect 2");
 		}
 
-		testIntersectObject(new Vertex(new Point(100, 100)), new Vertex(
-				new Point(500, 500)), new Point(300, 300), true, LOGGING);
+		testIntersectObject(new Vertex(new FieldPoint(100, 100)), new Vertex(
+				new FieldPoint(500, 500)), new FieldPoint(300, 300), true, LOGGING);
 	}
 
 	/** Tests whether we always stay at least 90mm away from any Robot. */
@@ -107,8 +107,8 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 		if (LOGGING) {
 			System.out.println("\nTest Intersect 3\nTest East");
 		}
-		testIntersectObject(new Vertex(new Point(0, 0)), new Vertex(new Point(
-				50, 0)), new Point(231, 0), false, LOGGING); // Object east 181
+		testIntersectObject(new Vertex(new FieldPoint(0, 0)), new Vertex(new FieldPoint(
+				50, 0)), new FieldPoint(231, 0), false, LOGGING); // Object east 181
 																// = 50 +
 																// DijkstraPathPlanner.DISTANCE_TO_ROBOT
 																// + 1
@@ -116,20 +116,20 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 		if (LOGGING) {
 			System.out.println("\nTest North");
 		}
-		testIntersectObject(new Vertex(new Point(0, 0)), new Vertex(new Point(
-				0, 50)), new Point(0, 231), false, LOGGING); // Object north
+		testIntersectObject(new Vertex(new FieldPoint(0, 0)), new Vertex(new FieldPoint(
+				0, 50)), new FieldPoint(0, 231), false, LOGGING); // Object north
 
 		if (LOGGING) {
 			System.out.println("\nTest West");
 		}
-		testIntersectObject(new Vertex(new Point(0, 0)), new Vertex(new Point(
-				-50, 0)), new Point(-231, 0), false, LOGGING); // Object west
+		testIntersectObject(new Vertex(new FieldPoint(0, 0)), new Vertex(new FieldPoint(
+				-50, 0)), new FieldPoint(-231, 0), false, LOGGING); // Object west
 
 		if (LOGGING) {
 			System.out.println("\nTest South");
 		}
-		testIntersectObject(new Vertex(new Point(0, 0)), new Vertex(new Point(
-				0, -50)), new Point(0, -231), false, LOGGING); // Object south
+		testIntersectObject(new Vertex(new FieldPoint(0, 0)), new Vertex(new FieldPoint(
+				0, -50)), new FieldPoint(0, -231), false, LOGGING); // Object south
 	}
 	
 	/**
@@ -137,11 +137,11 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 	 */
 	@Test
 	public void testLockedInSource(){
-		Point destination = new Point(1500, 1500);
+		FieldPoint destination = new FieldPoint(1500, 1500);
 		TestPathPlanner planner = new TestPathPlanner();
 		planner.setupLockedInSource(destination, true);
 		System.out.println("\nTest Locked In Source...");
-		assertNull("Test Locked In Source", planner.getRoute(new Point(0,0), destination, 0, true));
+		assertNull("Test Locked In Source", planner.getRoute(new FieldPoint(0,0), destination, 0, true));
 		System.out.println("Succeeded");
 	}
 	
@@ -150,11 +150,11 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 	 */
 	@Test
 	public void testLockedInDestination(){
-		Point destination = new Point(1500, 1500);
+		FieldPoint destination = new FieldPoint(1500, 1500);
 		TestPathPlanner planner = new TestPathPlanner();
 		planner.setupLockedInDestination(destination, true);
 		System.out.println("\nTest Locked In Destination...");
-		assertNull("Test Locked In Source", planner.getRoute(new Point(0,0), destination, 0, true));
+		assertNull("Test Locked In Source", planner.getRoute(new FieldPoint(0,0), destination, 0, true));
 		System.out.println("Succeeded");
 	}
 
@@ -173,7 +173,7 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 	 *            test for this.
 	 */
 	public void testIntersectObject(Vertex source, Vertex destination,
-			Point interceptingBox, boolean expectedReturn, boolean log) {
+			FieldPoint interceptingBox, boolean expectedReturn, boolean log) {
 		Team allyTeam = World.getInstance().getReferee().getAlly();
 		Robot sourceRobot = allyTeam.getRobotByID(0);
 		sourceRobot.setPosition(source.getPosition());
@@ -203,14 +203,14 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 	 * @param log
 	 *            if true: System.out.print the progress.
 	 */
-	public void setupRobotsTooClose(Point destination, boolean log) {
+	public void setupRobotsTooClose(FieldPoint destination, boolean log) {
 		Team allyTeam = World.getInstance().getReferee().getAlly();
 
-		setupOneRobot(allyTeam, new Point(0, 0), 0, log);
-		setupOneRobot(allyTeam, new Point(150, 150), 4, log);
-		setupOneRobot(allyTeam, new Point(400, 400), 1, log);
-		setupOneRobot(allyTeam, new Point(845, 850), 2, log);
-		setupOneRobot(allyTeam, new Point(1300, 1300), 3, log);
+		setupOneRobot(allyTeam, new FieldPoint(0, 0), 0, log);
+		setupOneRobot(allyTeam, new FieldPoint(150, 150), 4, log);
+		setupOneRobot(allyTeam, new FieldPoint(400, 400), 1, log);
+		setupOneRobot(allyTeam, new FieldPoint(845, 850), 2, log);
+		setupOneRobot(allyTeam, new FieldPoint(1300, 1300), 3, log);
 	}
 	
 	/**
@@ -220,14 +220,14 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 	 * @param log
 	 *            if true: System.out.print the progress.
 	 */
-	public void setupLockedInSource(Point destination, boolean log) {
+	public void setupLockedInSource(FieldPoint destination, boolean log) {
 		Team allyTeam = World.getInstance().getReferee().getAlly();
 
-		setupOneRobot(allyTeam, new Point(0, 0), 0, log);
-		setupOneRobot(allyTeam, new Point(180, 180), 4, log);
-		setupOneRobot(allyTeam, new Point(-180, -180), 1, log);
-		setupOneRobot(allyTeam, new Point(180, -180), 2, log);
-		setupOneRobot(allyTeam, new Point(-180, 180), 3, log);
+		setupOneRobot(allyTeam, new FieldPoint(0, 0), 0, log);
+		setupOneRobot(allyTeam, new FieldPoint(180, 180), 4, log);
+		setupOneRobot(allyTeam, new FieldPoint(-180, -180), 1, log);
+		setupOneRobot(allyTeam, new FieldPoint(180, -180), 2, log);
+		setupOneRobot(allyTeam, new FieldPoint(-180, 180), 3, log);
 	}
 	
 	/**
@@ -237,17 +237,17 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 	 * @param log
 	 *            if true: System.out.print the progress.
 	 */
-	public void setupLockedInDestination(Point destination, boolean log) {
+	public void setupLockedInDestination(FieldPoint destination, boolean log) {
 		Team allyTeam = World.getInstance().getReferee().getAlly();
 		
 		int x = (int)destination.getX();
 		int y = (int)destination.getY();
 		
-		setupOneRobot(allyTeam, new Point(0, 0), 0, log);
-		setupOneRobot(allyTeam, new Point(x + 180, y + 180), 4, log);
-		setupOneRobot(allyTeam, new Point(x-180, y-180), 1, log);
-		setupOneRobot(allyTeam, new Point(x+180, y-180), 2, log);
-		setupOneRobot(allyTeam, new Point(x-180, y+180), 3, log);
+		setupOneRobot(allyTeam, new FieldPoint(0, 0), 0, log);
+		setupOneRobot(allyTeam, new FieldPoint(x + 180, y + 180), 4, log);
+		setupOneRobot(allyTeam, new FieldPoint(x-180, y-180), 1, log);
+		setupOneRobot(allyTeam, new FieldPoint(x+180, y-180), 2, log);
+		setupOneRobot(allyTeam, new FieldPoint(x-180, y+180), 3, log);
 	}
 
 	/**
@@ -259,7 +259,7 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 		Team allyTeam = World.getInstance().getReferee().getAlly();
 		for (int i = 0; i < 8; ++i) {
 			setupOneRobot(allyTeam,
-					new Point((int) (Math.random() * TestPathPlannerPanel.WIDTH - TestPathPlannerPanel.WIDTH / 2),
+					new FieldPoint((int) (Math.random() * TestPathPlannerPanel.WIDTH - TestPathPlannerPanel.WIDTH / 2),
 							(int) (Math.random() * TestPathPlannerPanel.HEIGHT - TestPathPlannerPanel.HEIGHT / 2)), i,
 					log);
 		}
@@ -285,7 +285,7 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 	 * @param log
 	 * 			  True for logging.
 	 */
-	public void setupOneRobot(Team team, Point position, int id, boolean log) {
+	public void setupOneRobot(Team team, FieldPoint position, int id, boolean log) {
 		Robot robot = team.getRobotByID(id);
 		robot.setPosition(position);
 		robot.setOnSight(true);

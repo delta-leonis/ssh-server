@@ -3,7 +3,7 @@ package robocup.controller.ai.movement;
 import java.util.LinkedList;
 
 import robocup.model.FieldObject;
-import robocup.model.Point;
+import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.output.ComInterface;
 
@@ -11,15 +11,15 @@ public class GotoPosition {
 
 	// TODO find a better solution
 	private static final double DISTANCE_ROTATIONSPEED_COEFFICIENT = 3;
-	private Point destination;
-	private Point target;
+	private FieldPoint destination;
+	private FieldPoint target;
 	private Robot robot;
 	private ComInterface output;
 	private int forcedSpeed = 0;
 	private int chipKick = 0;
 	private boolean dribble = false;
 	private DijkstraPathPlanner dplanner = new DijkstraPathPlanner();
-	private LinkedList<Point> route;
+	private LinkedList<FieldPoint> route;
 	
 	private static final int MAX_VELOCITY =5000;
 
@@ -29,7 +29,7 @@ public class GotoPosition {
 	 * @param output Output Connection
 	 * @param destination Destination Position
 	 */
-	public GotoPosition(Robot robot, ComInterface output, Point destination) {
+	public GotoPosition(Robot robot, ComInterface output, FieldPoint destination) {
 		this.robot = robot;
 		this.output = output;
 		this.destination = destination;
@@ -56,7 +56,7 @@ public class GotoPosition {
 	 * @param destination Position to drive to
 	 * @param target Position to look at
 	 */
-	public GotoPosition(Robot robot, ComInterface output, Point destination, Point target) {
+	public GotoPosition(Robot robot, ComInterface output, FieldPoint destination, FieldPoint target) {
 		this.robot = robot;
 		this.output = output;
 		this.destination = destination;
@@ -71,7 +71,7 @@ public class GotoPosition {
 	 * @param target Position to look at
 	 * @param forcedSpeed Speed to drive with
 	 */
-	public GotoPosition(Robot robot, ComInterface output, Point destination, Point target, int forcedSpeed) {
+	public GotoPosition(Robot robot, ComInterface output, FieldPoint destination, FieldPoint target, int forcedSpeed) {
 		this.robot = robot;
 		this.output = output;
 		this.destination = destination;
@@ -83,7 +83,7 @@ public class GotoPosition {
 	 * Get Target
 	 * @return TargetPoint
 	 */
-	public Point getTarget() {
+	public FieldPoint getTarget() {
 		return target;
 	}
 
@@ -91,7 +91,7 @@ public class GotoPosition {
 	 * Set Target
 	 * @param TargetPoint
 	 */
-	public void setTarget(Point p) {
+	public void setTarget(FieldPoint p) {
 		target = p;
 	}
 
@@ -99,7 +99,7 @@ public class GotoPosition {
 	 * Set Destination
 	 * @param destination
 	 */
-	public void setDestination(Point destination) {
+	public void setDestination(FieldPoint destination) {
 		this.destination = destination;
 	}
 
@@ -108,7 +108,7 @@ public class GotoPosition {
 	 * @return GoalPoint
 	 * @deprecated replaced by getDestination
 	 */
-	public Point getGoal() {
+	public FieldPoint getGoal() {
 		return destination;
 	}
 
@@ -116,7 +116,7 @@ public class GotoPosition {
 	 * Get Destination
 	 * @return
 	 */
-	public Point getDestination() {
+	public FieldPoint getDestination() {
 		return destination;
 	}
 
@@ -153,12 +153,12 @@ public class GotoPosition {
 
 			// TODO make robot stop when distance is reached, should be handled
 			// in robot code
-			int travelDistance = getDistance();
-			int rotationToTarget = rotationToDest(target);
-			int rotationToGoal = rotationToDest(destination);
+			double travelDistance = getDistance();
+			double rotationToTarget = rotationToDest(target);
+			double rotationToGoal = rotationToDest(destination);
 
-			int speed = getSpeed(getDistance(), 100);
-			int rotationSpeed = (int) getRotationSpeed(rotationToTarget);
+			double speed = getSpeed(getDistance(), 100);
+			double rotationSpeed = getRotationSpeed(rotationToTarget);
 
 			// Overrule speed
 			if (forcedSpeed > 0) {
@@ -169,7 +169,7 @@ public class GotoPosition {
 			// direction and rotationAngle do nothing, set to 0
 			// rotationSpeed inverted because the motors spin in opposite
 			// direction
-			output.send(1, robot.getRobotId(), rotationToGoal, speed, travelDistance, 0, -rotationSpeed, chipKick, dribble);
+			output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)travelDistance, 0, (int)-rotationSpeed, chipKick, dribble);
 			
 
 			// Set kick back to 0 to prevent kicking twice in a row
@@ -183,28 +183,28 @@ public class GotoPosition {
 	 * @param rotation
 	 * @return
 	 */
-	private float getRotationSpeed(float rotation) {
+	private double getRotationSpeed(double rotation) {
 		// calculate total circumference of robot
-		float circumference = (float) (Robot.DIAMETER * Math.PI);
+		double circumference = (Robot.DIAMETER * Math.PI);
 
 		// must be between 0 and 50 percent, if it's higher than 50% rotating to
 		// the other direction is faster
-		float rotationPercent = rotation / 360;
+		double rotationPercent = rotation / 360;
 
 		// distance needed to rotate in mm
-		float rotationDistance = circumference * rotationPercent;
+		double rotationDistance = circumference * rotationPercent;
 
-		return (float) (rotationDistance * DISTANCE_ROTATIONSPEED_COEFFICIENT);
+		return (rotationDistance * DISTANCE_ROTATIONSPEED_COEFFICIENT);
 	}
 
 	/**
 	 * Get travel distance
 	 * @return
 	 */
-	private int getDistance() {
-		int distance = 0;
+	private double getDistance() {
+		double distance = 0;
 
-		distance = (int) robot.getPosition().getDeltaDistance(route.get(0));
+		distance = robot.getPosition().getDeltaDistance(route.get(0));
 //		if (route != null && !route.isEmpty()) {
 //			distance += robot.getPosition().getDeltaDistance(route.get(0));
 //
@@ -244,15 +244,14 @@ public class GotoPosition {
 	/**
 	 * Returns the speed the robot should drive at.
 	 * When a robot nears its destination, it should slow down.
-	 * @param distance The distance to travel in mm
+	 * @param d The distance to travel in mm
 	 * @param distanceToSlowDown If the robot has less distance to travel than the distance to slow down, the robot should slow down.
 	 * @return The speed in degrees/s
 	 */
-	public int getSpeed(int distance, int distanceToSlowDown) {
-		if(distance > distanceToSlowDown){
+	public double getSpeed(double d, int distanceToSlowDown) {
+		if(d > distanceToSlowDown)
 			return MAX_VELOCITY;
-		}
-		return (int)(((float)distance / (float)distanceToSlowDown) * MAX_VELOCITY);	//TODO: Maak fatsoenlijk,
+		return ((d / distanceToSlowDown) * MAX_VELOCITY);
 	}
 	
 	/**
@@ -260,10 +259,10 @@ public class GotoPosition {
 	 * @param newPoint
 	 * @return
 	 */
-	private int rotationToDest(Point newPoint) {
+	private double rotationToDest(FieldPoint newPoint) {
 		// angle vector between old and new
-		int newangle = robot.getPosition().getAngle(newPoint);
-		int rot = (int) (newangle - robot.getOrientation());
+		double newangle = robot.getPosition().getAngle(newPoint);
+		double rot = (newangle - robot.getOrientation());
 
 		if (rot > 180) {
 			rot -= 360;

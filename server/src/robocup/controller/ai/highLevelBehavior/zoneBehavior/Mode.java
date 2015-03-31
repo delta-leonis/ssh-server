@@ -15,7 +15,7 @@ import robocup.model.Ally;
 import robocup.model.Ball;
 import robocup.model.Enemy;
 import robocup.model.Goal;
-import robocup.model.Point;
+import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.World;
 import robocup.model.enums.FieldZone;
@@ -29,9 +29,9 @@ public abstract class Mode {
 	protected Strategy strategy;
 
 	/** Co-ordinates of the goal on the left side of the field */
-	private static final Point MID_GOAL_NEGATIVE = new Point(-(World.getInstance().getField().getLength() / 2), 0);
+	private static final FieldPoint MID_GOAL_NEGATIVE = new FieldPoint(-(World.getInstance().getField().getLength() / 2), 0);
 	/** Co-ordinates of the goal on the right side of the field */
-	private static final Point MID_GOAL_POSITIVE = new Point(World.getInstance().getField().getLength() / 2, 0);
+	private static final FieldPoint MID_GOAL_POSITIVE = new FieldPoint(World.getInstance().getField().getLength() / 2, 0);
 
 	public Mode(Strategy strategy, ArrayList<RobotExecuter> executers) {
 		world = World.getInstance();
@@ -190,26 +190,26 @@ public abstract class Mode {
 	/**
 	 * Checks whether a ally has a free shot, will only be checked
 	 * if the robot is in one of the 6 center zones (due to accuracy)
-	 * returns a {@link Point} that represents the ideal shooting position
+	 * returns a {@link FieldPoint} that represents the ideal shooting position
 	 * Uses all zones except for the 4 corners
 	 * Uses a maximum of 5 obstacles
 	 * 
 	 * @return Point	ideal aim position in goal
 	 */
-	public Point hasFreeShot(){
+	public FieldPoint hasFreeShot(){
 		return hasFreeShot(5);
 	}
 	
 	/**
 	 * Checks whether a ally has a free shot, will only be checked
 	 * if the robot is in one of the 6 center zones (due to accuracy)
-	 * returns a {@link Point} that represents the ideal shooting position
+	 * returns a {@link FieldPoint} that represents the ideal shooting position
 	 * Uses all zones except for the 4 corners
 	 * 
 	 * @param maxObstacles	maximum number of obstacles in the shooting triangle (ball-leftpost-rightpost)
 	 * @return Point	ideal aim position in goal
 	 */
-	public Point hasFreeShot(int maxObstacles){
+	public FieldPoint hasFreeShot(int maxObstacles){
 		FieldZone[] zones = {FieldZone.EAST_RIGHT_FRONT, FieldZone.EAST_CENTER, FieldZone.EAST_LEFT_FRONT, FieldZone.EAST_MIDDLE, FieldZone.EAST_LEFT_SECOND_POST, FieldZone.EAST_RIGHT_SECOND_POST, 
 							FieldZone.WEST_RIGHT_FRONT, FieldZone.WEST_CENTER, FieldZone.WEST_LEFT_FRONT, FieldZone.WEST_MIDDLE, FieldZone.WEST_LEFT_SECOND_POST, FieldZone.WEST_RIGHT_SECOND_POST};
 
@@ -219,13 +219,13 @@ public abstract class Mode {
 	/**
 	 * Checks whether a ally has a free shot, will only be checked
 	 * if the robot is in one of the 6 center zones (due to accuracy)
-	 * returns a {@link Point} that represents the ideal shooting position
+	 * returns a {@link FieldPoint} that represents the ideal shooting position
 	 *  
 	 * @param zones		zones that the ball has to be in in order to check a free shot
 	 * @param maxObstacles	maximum number of obstacles in the shooting triangle (ball-leftpost-rightpost)
 	 * @return Point	ideal aim position in goal
 	 */
-	public Point hasFreeShot(FieldZone[] zones, int maxObstacles){
+	public FieldPoint hasFreeShot(FieldZone[] zones, int maxObstacles){
     	Ball ball = World.getInstance().getBall();
 		//only proceed when we are the ballowner
 		if(ball.getOwner() instanceof Enemy)
@@ -238,11 +238,11 @@ public abstract class Mode {
 		//get the enemy goal (checking which side is ours, and get the opposite 
 		Goal enemyGoal = (World.getInstance().getReferee().getDoesTeamPlaysWest(World.getInstance().getReferee().getOwnTeamColor())) ?  World.getInstance().getField().getEastGoal() : World.getInstance().getField().getWestGoal();
 
-		ArrayList<Robot> obstacles = World.getInstance().getAllRobotsInArea(new Point[]{enemyGoal.getFrontLeft(), enemyGoal.getFrontRight(), ball.getPosition()});
+		ArrayList<Robot> obstacles = World.getInstance().getAllRobotsInArea(new FieldPoint[]{enemyGoal.getFrontLeft(), enemyGoal.getFrontRight(), ball.getPosition()});
 
 		//No obstacles?! shoot directly in the center of the goal;
 		if(obstacles.size() == 0)
-			return new Point(enemyGoal.getFrontLeft().getX(), 0.0f);
+			return new FieldPoint(enemyGoal.getFrontLeft().getX(), 0.0f);
 
 		if(obstacles.size() > maxObstacles)
 			return null;
@@ -265,10 +265,10 @@ public abstract class Mode {
 			double dyL = Math.tan(obstacleLeftAngle) * dx;
 			double dyR = Math.tan(obstacleRightAngle) * dx;
 
-			Point L = new Point((float) (ball.getPosition().getX() + dx),
-								(float) (ball.getPosition().getY() + dyL));
-			Point R = new Point((float) (ball.getPosition().getX() + dx),
-					(float) (ball.getPosition().getY() + dyR));
+			FieldPoint L = new FieldPoint((ball.getPosition().getX() + dx),
+								(ball.getPosition().getY() + dyL));
+			FieldPoint R = new FieldPoint((ball.getPosition().getX() + dx),
+					(ball.getPosition().getY() + dyR));
 
 			//is there a point with the same start X coordinate
 			//if so, check whether it is bigger, and replace it if necessary
@@ -276,8 +276,8 @@ public abstract class Mode {
 					(obstructedArea.get(L.toPoint2D().getY())) > R.toPoint2D().getY())
 				obstructedArea.put(L.toPoint2D().getY(), R.toPoint2D().getY());
 		}
-		double minY = (double)enemyGoal.getFrontLeft().getY();
-		double maxY = (double)enemyGoal.getFrontRight().getY();
+		double minY = enemyGoal.getFrontLeft().getY();
+		double maxY = enemyGoal.getFrontRight().getY();
 		obstructedArea = minMax(obstructedArea, minY, maxY);
 		obstructedArea = mergeOverlappingValues(obstructedArea);
 
@@ -288,7 +288,7 @@ public abstract class Mode {
 		if(obstructedArea.lastEntry().getValue() != maxY)
 			availableArea.put(obstructedArea.lastEntry().getValue(), maxY);
 
-		double x = (double) enemyGoal.getFrontLeft().getX();
+		double x = enemyGoal.getFrontLeft().getX();
 		
 		if(availableArea.size() <= 0)
 			return null;
@@ -300,7 +300,7 @@ public abstract class Mode {
 				biggestKey = entry.getKey();
 
 		//return point that lies in the center of the biggest point
-		Point hitmarker = new Point((float)x, (float)(biggestKey/2 + availableArea.get(biggestKey)/2));
+		FieldPoint hitmarker = new FieldPoint(x, (biggestKey/2 + availableArea.get(biggestKey)/2));
 		return hitmarker;
 	}
 

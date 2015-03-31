@@ -1,7 +1,7 @@
 package robocup.controller.ai.lowLevelBehavior;
 
 import robocup.controller.ai.movement.GotoPosition;
-import robocup.model.Point;
+import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.enums.RobotMode;
 import robocup.output.ComInterface;
@@ -10,9 +10,9 @@ public class Keeper extends LowLevelBehavior {
 
 	protected int distanceToGoal;
 	protected boolean goToKick;
-	protected Point ballPosition;
-	protected Point keeperPosition;
-	protected Point centerGoalPosition;
+	protected FieldPoint ballPosition;
+	protected FieldPoint keeperPosition;
+	protected FieldPoint centerGoalPosition;
 	private int yMax;
 
 	/**
@@ -26,8 +26,8 @@ public class Keeper extends LowLevelBehavior {
 	 * @param centerGoalPosition center of the goal on the correct side of the playing field
 	 * @param yMax maximum y position on the field
 	 */
-	public Keeper(Robot robot, ComInterface output, int distanceToGoal, boolean goToKick, Point ballPosition,
-			Point keeperPosition, Point centerGoalPosition, int yMax) {
+	public Keeper(Robot robot, ComInterface output, int distanceToGoal, boolean goToKick, FieldPoint ballPosition,
+			FieldPoint keeperPosition, FieldPoint centerGoalPosition, int yMax) {
 		super(robot, output);
 		this.distanceToGoal = distanceToGoal;
 		this.goToKick = goToKick;
@@ -46,7 +46,7 @@ public class Keeper extends LowLevelBehavior {
 	 * @param ballPosition
 	 * @param keeperPosition
 	 */
-	public void update(int distanceToGoal, boolean goToKick, Point ballPosition, Point keeperPosition) {
+	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, FieldPoint keeperPosition) {
 		this.distanceToGoal = distanceToGoal;
 		this.goToKick = goToKick;
 		this.ballPosition = ballPosition;
@@ -59,7 +59,7 @@ public class Keeper extends LowLevelBehavior {
 		if (timeOutCheck()) {
 
 		} else {
-			Point newDestination = getNewKeeperDestination();
+			FieldPoint newDestination = getNewKeeperDestination();
 
 			if (centerGoalPosition.getX() > 0 && centerGoalPosition.getX() < newDestination.getX())
 				newDestination.setX(centerGoalPosition.getX() > 0 ? centerGoalPosition.getX() - 100
@@ -90,17 +90,17 @@ public class Keeper extends LowLevelBehavior {
 		}
 	}
 
-	protected Point getNewKeeperDestination() {
-		Point newDestination = null;
+	protected FieldPoint getNewKeeperDestination() {
+		FieldPoint newDestination = null;
 
 		if (ballPosition != null) {
-			int angle = centerGoalPosition.getAngle(ballPosition);
+			double angle = centerGoalPosition.getAngle(ballPosition);
 			double dx = Math.cos(Math.toRadians(angle)) * distanceToGoal;
 			double dy = Math.sin(Math.toRadians(angle)) * distanceToGoal;
 
-			int destX = (int) (centerGoalPosition.getX() + dx);
-			int destY = (int) (centerGoalPosition.getY() + dy);
-			newDestination = new Point(destX, destY);
+			double destX = (centerGoalPosition.getX() + dx);
+			double destY = (centerGoalPosition.getY() + dy);
+			newDestination = new FieldPoint(destX, destY);
 		}
 
 		return newDestination;

@@ -6,7 +6,7 @@ import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 
-import robocup.model.Point;
+import robocup.model.FieldPoint;
 
 public class Kalman {
 
@@ -28,7 +28,7 @@ public class Kalman {
 
 	RealVector control = new ArrayRealVector(new double[] { 0, 0, 0, 0 });
 
-	Point predictedPoint;
+	FieldPoint predictedPoint;
 	RealVector predicted_x;
 
 	/**
@@ -37,7 +37,7 @@ public class Kalman {
 	 * @param xSpeed
 	 * @param ySpeed
 	 */
-	public Kalman(Point position, int xSpeed, int ySpeed) {
+	public Kalman(FieldPoint position, int xSpeed, int ySpeed) {
 		last_x = new ArrayRealVector(new double[] { position.getX(), position.getY(), xSpeed, ySpeed });
 		predictedPoint = position;
 	}
@@ -49,7 +49,7 @@ public class Kalman {
 	 * @param ySpeed
 	 * @return filtered point of robot
 	 */
-	public Point filterPoint(Point measuredPoint, int xSpeed, int ySpeed) {
+	public FieldPoint filterPoint(FieldPoint measuredPoint, double xSpeed, double ySpeed) {
 		/* see
 		 * http://commons.apache.org/proper/commons-math/javadocs/api-3.3/index
 		 * .html -- kalmanfilter
@@ -79,7 +79,7 @@ public class Kalman {
 		last_x = cur_x;
 		last_P = cur_P;
 
-		return new Point((float) cur_x.getEntry(0), (float) cur_x.getEntry(1));
+		return new FieldPoint(cur_x.getEntry(0), cur_x.getEntry(1));
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class Kalman {
 	 * get predicted robot location
 	 * @return Point robotLocation
 	 */
-	public Point getPredictPoint() {
+	public FieldPoint getPredictPoint() {
 		return predictedPoint;
 	}
 
@@ -111,6 +111,6 @@ public class Kalman {
 	 */
 	public void predictPoint() {
 		RealVector pred_x = stateMatrix.operate(last_x).add(controlMatrix.operate(control));
-		predictedPoint = new Point((float) pred_x.getEntry(0), (float) pred_x.getEntry(1));
+		predictedPoint = new FieldPoint(pred_x.getEntry(0), pred_x.getEntry(1));
 	}
 }

@@ -2,27 +2,27 @@ package robocup.model;
 
 public class Ball extends FieldObject {
 
-	private float posZ;
+	private double posZ;
 	private Robot owner;
 
 	public Ball() {
 		super();
 	}
 
-	public void update(double newTime, Point p, float posZ, int lastCamUpdateNo) {
+	public void update(double newTime, FieldPoint p, double posZ, int lastCamUpdateNo) {
 		super.update(p, newTime, lastCamUpdateNo);
 		this.posZ = posZ;
 	}
 
-	public void update(double newTime, Point p, int lastCamUpdateNo) {
+	public void update(double newTime, FieldPoint p, int lastCamUpdateNo) {
 		super.update(p, newTime, lastCamUpdateNo);
 	}
 
-	public float getPosZ() {
+	public double getPosZ() {
 		return posZ;
 	}
 
-	public void setPosZ(float posZ) {
+	public void setPosZ(double posZ) {
 		this.posZ = posZ;
 	}
 

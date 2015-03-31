@@ -1,6 +1,6 @@
 package robocup.controller.ai.lowLevelBehavior;
 
-import robocup.model.Point;
+import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.output.ComInterface;
 
@@ -14,10 +14,10 @@ import robocup.output.ComInterface;
  */
 public class BlockerDekker extends KeeperDefender{
 
-	private Point offset;
+	private FieldPoint offset;
 
-	public BlockerDekker(Robot robot, ComInterface output, int distanceToGoal, boolean goToKick, Point ballPosition,
-			Point keeperPosition, Point centerGoalPosition, Point offset, int yMax) {
+	public BlockerDekker(Robot robot, ComInterface output, int distanceToGoal, boolean goToKick, FieldPoint ballPosition,
+			FieldPoint keeperPosition, FieldPoint centerGoalPosition, FieldPoint offset, int yMax) {
 		super(robot, output, distanceToGoal, goToKick, ballPosition, keeperPosition, centerGoalPosition, offset, yMax);
 	}
 
@@ -29,14 +29,14 @@ public class BlockerDekker extends KeeperDefender{
 	 * @param keeperPosition
 	 * @param offset the offset Position
 	 */
-	public void update(int distanceToGoal, boolean goToKick, Point ballPosition, Point keeperPosition, Point offset) {
+	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, FieldPoint keeperPosition, FieldPoint offset) {
 		super.update(distanceToGoal, goToKick, ballPosition, keeperPosition);
 		this.offset = offset;
 	}
 
 	@Override
-	protected Point getNewKeeperDestination() {
-		Point newDestination = super.getNewKeeperDestination();
+	protected FieldPoint getNewKeeperDestination() {
+		FieldPoint newDestination = super.getNewKeeperDestination();
 
 		if (newDestination != null) {
 			newDestination.setX(newDestination.getX() + offset.getX());

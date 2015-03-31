@@ -10,7 +10,7 @@ import robocup.controller.ai.lowLevelBehavior.Coverer;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Ally;
 import robocup.model.Ball;
-import robocup.model.Point;
+import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.World;
 import robocup.model.enums.RobotMode;
@@ -63,11 +63,11 @@ public abstract class Mode {
 	 * @param robot the robot who needs a free position
 	 * @return a free position
 	 */
-	protected Point getFreePosition(Robot robot) {
+	protected FieldPoint getFreePosition(Robot robot) {
 		if (robot.getRobotId() == 1)
-			return new Point(-500, -500);
+			return new FieldPoint(-500, -500);
 		else
-			return new Point(500, 500);
+			return new FieldPoint(500, 500);
 	}
 
 	/**
@@ -224,27 +224,30 @@ public abstract class Mode {
 		return false;
 	}
 
+	// TODO 
+	// cast to int because it worked previously
+	// so no change to double needed, will be moving to Zonebehaviour anyway
 	public int getPenaltyDirection(Robot penaltyRobot, Robot keeper, Ball ball) {
 		if (ball.getPosition().getX() > 0) {
 			// right side of the field
 			if (keeper.getPosition().getY() > 0) {
-				return ball.getPosition().getAngle(new Point(world.getField().getLength() / 2, -300));
+				return (int) ball.getPosition().getAngle(new FieldPoint(world.getField().getLength() / 2, -300));
 			} else {
-				return ball.getPosition().getAngle(new Point(world.getField().getLength() / 2, 300));
+				return (int) ball.getPosition().getAngle(new FieldPoint(world.getField().getLength() / 2, 300));
 			}
 		} else {
 			// left side of the field
 			if (keeper.getPosition().getY() > 0) {
-				return ball.getPosition().getAngle(new Point(-world.getField().getLength() / 2, -300));
+				return (int) ball.getPosition().getAngle(new FieldPoint(-world.getField().getLength() / 2, -300));
 			} else {
-				return ball.getPosition().getAngle(new Point(-world.getField().getLength() / 2, 300));
+				return (int) ball.getPosition().getAngle(new FieldPoint(-world.getField().getLength() / 2, 300));
 			}
 		}
 	}
 
 	public int getShootingDirection(Robot target, Ball ball) {
 		if (target != null && ball != null) {
-			return ball.getPosition().getAngle(target.getPosition());
+			return (int) ball.getPosition().getAngle(target.getPosition());
 		} else {
 			return 0;
 		}
