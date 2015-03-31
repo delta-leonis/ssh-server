@@ -24,6 +24,7 @@ import robocup.model.Robot;
 import robocup.model.World;
 import robocup.model.Zone;
 import robocup.model.enums.FieldZone;
+import robocup.model.enums.TeamColor;
 
 @SuppressWarnings("serial")
 public class PlayfieldFrame extends JPanel {
@@ -44,6 +45,7 @@ public class PlayfieldFrame extends JPanel {
 		//zoneList = new EnumMap<FieldZone, Zone>(FieldZone.class);
 		setSize((int)(FIELDWIDTH * ratio), (int)(FIELDHEIGHT * ratio));
 		initFieldObjects();
+		World.getInstance().getReferee().setRightTeamByColor(TeamColor.BLUE);
 		
 		addMouseListener(new MouseAdapter() { 
 	          public void mousePressed(MouseEvent me) { 
@@ -82,22 +84,14 @@ public class PlayfieldFrame extends JPanel {
     	drawFieldObjects(g);
 
 	    Graphics2D g2 = (Graphics2D) g;
-    	drawFreeShot(g2);
+    	drawFreeShot(g);
 	    g2.setColor(Color.white);
     }
     
     public void drawFreeShot(Graphics2D g2){
 		g2.setStroke(new BasicStroke(1));
 
-		FieldPoint hitmarker = null;
-		int i = 0;
-		long beginTime = System.currentTimeMillis();
-		long endTime = beginTime + (1 * 1000);
-		while(System.currentTimeMillis() < endTime){
-			hitmarker = hasFreeShot();
-			i++;
-		}
-		System.out.println(i);
+		FieldPoint hitmarker = hasFreeShot();
 		Ball ball = World.getInstance().getBall();
 		if(hitmarker != null)
 			drawLine(g2, new Line2D.Double(hitmarker.toPoint2D(), ball.getPosition().toPoint2D()));
@@ -121,11 +115,11 @@ public class PlayfieldFrame extends JPanel {
 		//get the enemy goal (checking which side is ours, and get the opposite 
 		Goal enemyGoal = (World.getInstance().getReferee().getDoesTeamPlaysWest(World.getInstance().getReferee().getOwnTeamColor())) ?  World.getInstance().getField().getEastGoal() : World.getInstance().getField().getWestGoal();
 
-		ArrayList<Robot> obstacles = World.getInstance().getAllRobotsInArea(new FieldPoint[]{enemyGoal.getFrontLeft(), enemyGoal.getFrontRight(), ball.getPosition()});
+		ArrayList<Robot> obstacles = World.getInstance().getAllRobotsInArea(new FieldPoint[]{enemyGoal.getSouthPoint(), enemyGoal.getNorthPoint(), ball.getPosition()});
 
 		//No obstacles?! shoot directly in the center of the goal;
 		if(obstacles.size() == 0)
-			return new FieldPoint(enemyGoal.getFrontLeft().getX(), 0.0f);
+			return new FieldPoint(enemyGoal.getSouthPoint().getX(), 0.0f);
 		
 
 		//make a list with all blocked areas.
@@ -142,7 +136,7 @@ public class PlayfieldFrame extends JPanel {
 			double obstacleLeftAngle = Math.toRadians(ball.getPosition().getAngle(obstacle.getPosition()))  + divertAngle;
 			double obstacleRightAngle = Math.toRadians(ball.getPosition().getAngle(obstacle.getPosition())) - divertAngle;
 			
-			double dx = enemyGoal.getFrontLeft().getX() - ball.getPosition().getX();
+			double dx = enemyGoal.getSouthPoint().getX() - ball.getPosition().getX();
 			double dyL = Math.tan(obstacleLeftAngle) * dx;
 			double dyR = Math.tan(obstacleRightAngle) * dx;
 
@@ -157,8 +151,8 @@ public class PlayfieldFrame extends JPanel {
 					(obstructedArea.get(L.toPoint2D().getY())) > R.toPoint2D().getY())
 				obstructedArea.put(L.toPoint2D().getY(), R.toPoint2D().getY());
 		}
-		double minY = enemyGoal.getFrontLeft().getY();
-		double maxY = enemyGoal.getFrontRight().getY();
+		double minY = enemyGoal.getSouthPoint().getY();
+		double maxY = enemyGoal.getNorthPoint().getY();
 		obstructedArea = minMax(obstructedArea, minY, maxY);
 		obstructedArea = mergeOverlappingValues(obstructedArea);
 
@@ -169,7 +163,7 @@ public class PlayfieldFrame extends JPanel {
 		if(obstructedArea.lastEntry().getValue() != maxY)
 			availableArea.put(obstructedArea.lastEntry().getValue(), maxY);
 
-		double x = enemyGoal.getFrontLeft().getX();
+		double x = enemyGoal.getSouthPoint().getX();
 		
 		if(availableArea.size() <= 0)
 			return null;
@@ -213,16 +207,16 @@ public class PlayfieldFrame extends JPanel {
 		//get the enemy goal (checking which side is ours, and get the opposite 
 		Goal enemyGoal = (World.getInstance().getReferee().getDoesTeamPlaysWest(World.getInstance().getReferee().getOwnTeamColor())) ?  World.getInstance().getField().getEastGoal() : World.getInstance().getField().getWestGoal();
 
-		//scoreArea.add(new Line2D.Double(enemyGoal.getFrontLeft().toPoint2D(), enemyGoal.getFrontRight().toPoint2D()));
-		//drawPolygon(g2, new Point[]{enemyGoal.getFrontLeft(), enemyGoal.getFrontRight(), ball.getPosition()});
-		drawLine(g2, new Line2D.Double(enemyGoal.getFrontLeft().toPoint2D(), ball.getPosition().toPoint2D()));
-		drawLine(g2, new Line2D.Double(enemyGoal.getFrontRight().toPoint2D(), ball.getPosition().toPoint2D()));
-		ArrayList<Robot> obstacles = World.getInstance().getAllRobotsInArea(new FieldPoint[]{enemyGoal.getFrontLeft(), enemyGoal.getFrontRight(), ball.getPosition()});
+		//scoreArea.add(new Line2D.Double(enemyGoal.getSouthPoint().toPoint2D(), enemyGoal.getNorthPoint().toPoint2D()));
+		//drawPolygon(g2, new Point[]{enemyGoal.getSouthPoint(), enemyGoal.getNorthPoint(), ball.getPosition()});
+		drawLine(g2, new Line2D.Double(enemyGoal.getSouthPoint().toPoint2D(), ball.getPosition().toPoint2D()));
+		drawLine(g2, new Line2D.Double(enemyGoal.getNorthPoint().toPoint2D(), ball.getPosition().toPoint2D()));
+		ArrayList<Robot> obstacles = World.getInstance().getAllRobotsInArea(new FieldPoint[]{enemyGoal.getSouthPoint(), enemyGoal.getNorthPoint(), ball.getPosition()});
 
 		//No obstacles?! shoot directly in the center of the goal;
 		if(obstacles.size() == 0){
 			System.out.println("No obstacles");
-			drawOval(g2, (int) (enemyGoal.getFrontLeft().getX()), 0, 43);
+			drawOval(g2, (int) (enemyGoal.getSouthPoint().getX()), 0, 43);
 			return;
 		}
 		
@@ -241,7 +235,7 @@ public class PlayfieldFrame extends JPanel {
 			double obstacleLeftAngle = Math.toRadians(ball.getPosition().getAngle(obstacle.getPosition()))  + divertAngle;
 			double obstacleRightAngle = Math.toRadians(ball.getPosition().getAngle(obstacle.getPosition())) - divertAngle;
 			
-			double dx = enemyGoal.getFrontLeft().getX() - ball.getPosition().getX();
+			double dx = enemyGoal.getSouthPoint().getX() - ball.getPosition().getX();
 			double dyL = Math.tan(obstacleLeftAngle) * dx;
 			double dyR = Math.tan(obstacleRightAngle) * dx;
 
@@ -261,8 +255,8 @@ public class PlayfieldFrame extends JPanel {
 					(obstructedArea.get(L.toPoint2D().getY())) > R.toPoint2D().getY())
 				obstructedArea.put(L.toPoint2D().getY(), R.toPoint2D().getY());
 		}
-		double minY = enemyGoal.getFrontLeft().getY();
-		double maxY = enemyGoal.getFrontRight().getY();
+		double minY = enemyGoal.getSouthPoint().getY();
+		double maxY = enemyGoal.getNorthPoint().getY();
 		obstructedArea = minMax(obstructedArea, minY, maxY);
 		obstructedArea = mergeOverlappingValues(obstructedArea);
 
@@ -273,7 +267,7 @@ public class PlayfieldFrame extends JPanel {
 		if(obstructedArea.lastEntry().getValue() != maxY)
 			availableArea.put(obstructedArea.lastEntry().getValue(), maxY);
 
-		double x =  enemyGoal.getFrontLeft().getX();
+		double x =  enemyGoal.getSouthPoint().getX();
 		for(Entry<Double, Double> entry : availableArea.entrySet()){
 			drawLine(g2, new Line2D.Double(x, entry.getKey(), x, entry.getValue()));
 		}
@@ -465,10 +459,10 @@ public class PlayfieldFrame extends JPanel {
 		g2.drawLine((int) (getWidth() / 9.0 * 8), getHeight() / 2 - getWidth() / 18, 
 					(int) (getWidth() / 9.0 * 8), getHeight() / 2 + getWidth() / 18);
 		g2.setStroke(new BasicStroke(5));
-		drawLine(g2, new Line2D.Double(World.getInstance().getField().getEastGoal().getFrontLeft().toPoint2D(),
-				World.getInstance().getField().getEastGoal().getFrontRight().toPoint2D()));
-		drawLine(g2, new Line2D.Double(World.getInstance().getField().getWestGoal().getFrontLeft().toPoint2D(),
-				World.getInstance().getField().getWestGoal().getFrontRight().toPoint2D()));
+		drawLine(g2, new Line2D.Double(World.getInstance().getField().getEastGoal().getSouthPoint().toPoint2D(),
+				World.getInstance().getField().getEastGoal().getNorthPoint().toPoint2D()));
+		drawLine(g2, new Line2D.Double(World.getInstance().getField().getWestGoal().getSouthPoint().toPoint2D(),
+				World.getInstance().getField().getWestGoal().getNorthPoint().toPoint2D()));
 		
 	}
 }

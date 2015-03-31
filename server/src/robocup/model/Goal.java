@@ -21,6 +21,13 @@ public class Goal {
 		this.wallWidth = wallWidth;
 		this.height = height;
 	}
+
+	public FieldPoint getNorthPoint(){
+		return (getFrontLeft().getY() > 0 ? getFrontLeft() : getFrontRight());
+	}
+	public FieldPoint getSouthPoint(){
+		return (getFrontLeft().getY() <0 ? getFrontLeft() : getFrontRight());
+	}
 	
 	/**
 	 * @return goal width excluding post width
