@@ -54,7 +54,7 @@ public class GUI extends JFrame {
 		LOGGER.info("GUI is started and initialized");
 		setTitle("User interface RoboCup SSH");
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-		setLocationRelativeTo(null);
+		setLocationRelativeTo(null); 
 	}
 
 	/**

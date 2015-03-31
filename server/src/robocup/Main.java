@@ -13,6 +13,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import javax.swing.JFrame;
+
 import robocup.controller.handlers.protohandlers.MainHandler;
 import robocup.input.RefereeClient;
 import robocup.input.SSLVisionClient;
@@ -75,6 +77,7 @@ public class Main {
 	public static void initView() {
 		World.getInstance().setGUI(new robocup.view.GUI());
 		World.getInstance().getGUI().setVisible(true);
+		World.getInstance().getGUI().setExtendedState(World.getInstance().getGUI().getExtendedState() | JFrame.MAXIMIZED_BOTH);
 	}
 
 	/**
