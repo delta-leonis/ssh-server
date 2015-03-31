@@ -46,6 +46,7 @@ public class ZoneBehavior extends Behavior {
 
 	/**
 	 * Event based system, using events like:
+	 * referee command
 	 * ball changing owner
 	 * ball changing field half
 	 * @return true when event has happened

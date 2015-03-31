@@ -1,11 +1,12 @@
 package robocup.controller.ai.highLevelBehavior.strategy.defense;
 
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
+import robocup.model.Point;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
 
 /**
- * Example strategy class which implements the 'Dichtleggen links' strategy on the west half of the field
+ * Example strategy class which implements the 'Dichtleggen' strategy on the west half of the field
  */
 public class ExampleStrategy extends Strategy {
 
@@ -23,11 +24,17 @@ public class ExampleStrategy extends Strategy {
 		roles.add(RobotMode.COUNTER);
 		roles.add(RobotMode.GOALPOSTCOVERER);
 
-		zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.WEST_RIGHT_SECOND_POST);
-		zonesForRole.put(RobotMode.COUNTER, FieldZone.EAST_CENTER);
-
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.DISTURBER);
+		
+		// TODO move outside to a class which has acces to model
+		updateZones(null);
+	}
+	
+	public void updateZones(Point ballposition) {
+		// TODO bepaal waar de bal is, assign zones op basis hiervan
+		zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.WEST_RIGHT_SECOND_POST);
+		zonesForRole.put(RobotMode.COUNTER, FieldZone.EAST_CENTER);
 	}
 }
