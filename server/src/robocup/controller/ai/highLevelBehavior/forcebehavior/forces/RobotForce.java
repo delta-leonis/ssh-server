@@ -1,6 +1,6 @@
 package robocup.controller.ai.highLevelBehavior.forcebehavior.forces;
 
-import robocup.model.Point;
+import robocup.model.FieldPoint;
 import robocup.model.Robot;
 
 public class RobotForce extends Force {
@@ -30,7 +30,7 @@ public class RobotForce extends Force {
 	 * Calculate if a point is affected by this force
 	 * 	true when the distance of the robot to the point is within the scope
 	 */
-	public boolean affectsPoint(Point position) {
+	public boolean affectsPoint(FieldPoint position) {
 		return super.affectsPoint(position);
 	}
 
@@ -38,7 +38,7 @@ public class RobotForce extends Force {
 	 * If the power is positive use the angle from the position to the robot (pulling towards the robot)
 	 * If the power is negative use the angle from the robot to the position (pushing away from the robot)
 	 */
-	public int getDirection(Point position) {
-		return power > 0 ? position.getAngle(robot.getPosition()) : robot.getPosition().getAngle(position);
+	public int getDirection(FieldPoint position) {
+		return (int) (power > 0 ? position.getAngle(robot.getPosition()) : robot.getPosition().getAngle(position));
 	}
 }

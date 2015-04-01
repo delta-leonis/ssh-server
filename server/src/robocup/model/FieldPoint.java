@@ -9,19 +9,22 @@ import java.awt.geom.Point2D;
  * (-x,y)________________________________	(x,y)
  * 		|								 |
  * 		|								 |
- *	   |				(0,0)		  	  |
+ *	    |				(0,0)		  	 |
  * 		|								 |
  * 		|________________________________|
  * 	 (-x,-y)								(+x,-y)
  * 
  * x being half the field-width.
  * y being half the field-height.
+ * 
+ * TODO
+ * Give Point2D and convert to a FieldPoint. Can be a static method
  */
-public class Point {
-	private float x;
-	private float y;
+public class FieldPoint {
+	private double x;
+	private double y;
 
-	public Point(float x, float y) {
+	public FieldPoint(double x, double y) {
 		super();
 		this.x = x;
 		this.y = y;
@@ -34,12 +37,10 @@ public class Point {
 	/**
 	 * Calculate angle between 2 points
 	 * @param target
-	 * @return Angle in degrees (int) between this and target
+	 * @return Angle in degrees between this and target
 	 */
-	public int getAngle(Point target) {
-		// return (int) Math.toDegrees(Math.atan2(target.getX() - x,
-		// target.getY() - y)); //TODO fix x, y fuck-up
-		return (int) Math.toDegrees(Math.atan2(target.getY() - y, target.getX() - x));
+	public double getAngle(FieldPoint target) {
+		return Math.toDegrees(Math.atan2(target.getY() - y, target.getX() - x));
 	}
 
 	/**
@@ -47,7 +48,7 @@ public class Point {
 	 * @param target
 	 * @return Distance between this and target
 	 */
-	public double getDeltaDistance(Point target) {
+	public double getDeltaDistance(FieldPoint target) {
 		return Math.sqrt((target.getX() - x) * (target.getX() - x) + (target.getY() - y) * (target.getY() - y));
 	}
 
@@ -55,35 +56,35 @@ public class Point {
 	 * Creates a new diagonally mirrored point
 	 * @return diagmirrored point
 	 */
-	public Point diagMirror() {
-		return new Point(-x, -y);
+	public FieldPoint diagMirror() {
+		return new FieldPoint(-x, -y);
 	}
 
 	/**
-	 * @return the x co-ordinate of this {@link Point}
+	 * @return the x co-ordinate of this {@link FieldPoint}
 	 */
-	public float getX() {
+	public double getX() {
 		return x;
 	}
 
 	/**
-	 * @param x the x co-ordinate to set for this {@link Point}
+	 * @param x the x co-ordinate to set for this {@link FieldPoint}
 	 */
-	public void setX(float x) {
+	public void setX(double x) {
 		this.x = x;
 	}
 
 	/**
-	 * @return the y co-ordinate of this {@link Point}
+	 * @return the y co-ordinate of this {@link FieldPoint}
 	 */
-	public float getY() {
+	public double getY() {
 		return y;
 	}
 
 	/**
-	 * @param y the y co-ordinate to set for this {@link Point}
+	 * @param y the y co-ordinate to set for this {@link FieldPoint}
 	 */
-	public void setY(float y) {
+	public void setY(double y) {
 		this.y = y;
 	}
 
@@ -94,7 +95,7 @@ public class Point {
 
 	@Override
 	public boolean equals(Object point) {
-		Point p = (Point) point;
+		FieldPoint p = (FieldPoint) point;
 		return p.getX() == x && p.getY() == y;
 	}
 }

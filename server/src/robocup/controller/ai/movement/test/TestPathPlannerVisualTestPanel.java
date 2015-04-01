@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import robocup.model.Point;
+import robocup.model.FieldPoint;
 import robocup.view.WidgetBox;
 
 
@@ -50,25 +50,25 @@ public class TestPathPlannerVisualTestPanel extends WidgetBox implements ActionL
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == randomButton){
-			Point destination = new Point((int)(Math.random() * 6000 - 3000), (int)(Math.random() * 4000 - 2000));
+			FieldPoint destination = new FieldPoint((int)(Math.random() * 6000 - 3000), (int)(Math.random() * 4000 - 2000));
 			planner.setupRandomRobots(true);
 			plannerPanel.refresh(destination);
 			repaint();
 		}
 		else if(e.getSource() == lockedInSourceButton){
-			Point destination = new Point(1500,1500);
+			FieldPoint destination = new FieldPoint(1500,1500);
 			planner.setupLockedInSource(destination, true);
 			plannerPanel.refresh(destination);
 			repaint();
 		}
 		else if(e.getSource() == lockedInDestinationButton){
-			Point destination = new Point(1500,1500);
+			FieldPoint destination = new FieldPoint(1500,1500);
 			planner.setupLockedInDestination(destination, true);
 			plannerPanel.refresh(destination);
 			repaint();
 		}
 		else if(e.getSource() == robotTooCloseButton){
-			Point destination = new Point(1500,1500);
+			FieldPoint destination = new FieldPoint(1500,1500);
 			planner.setupRobotsTooClose(destination, true);
 			plannerPanel.refresh(destination);
 			repaint();

@@ -2,7 +2,7 @@ package robocup.controller.ai.lowLevelBehavior;
 
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.Ball;
-import robocup.model.Point;
+import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.enums.RobotMode;
 import robocup.output.ComInterface;
@@ -19,9 +19,9 @@ import robocup.output.RobotCom;
  */
 public class Coverer extends LowLevelBehavior {
 
-	protected Point ballPosition;
-	protected Point opponentPosition;
-	protected Point defenderPosition;
+	protected FieldPoint ballPosition;
+	protected FieldPoint opponentPosition;
+	protected FieldPoint defenderPosition;
 	protected int distanceToOpponent;
 	protected int opponentId;
 
@@ -30,13 +30,13 @@ public class Coverer extends LowLevelBehavior {
 	 * @param robot The {@link Robot} that describes the blocker.
 	 * @param output The {@link RobotCom} that sends the commands to the physical Robot.
 	 * @param distanceToOpponent The distance the defender keeps from the enemy (center) in millimeters
-	 * @param ballPosition current position of the ball. See {@link Point}
-	 * @param defenderPosition current position of the defender (this robot). See {@link Point}
-	 * @param opponentPosition center position of the opponent / enemy. See {@link Point}
+	 * @param ballPosition current position of the ball. See {@link FieldPoint}
+	 * @param defenderPosition current position of the defender (this robot). See {@link FieldPoint}
+	 * @param opponentPosition center position of the opponent / enemy. See {@link FieldPoint}
 	 * @param opponentId The Id of the opponent this Robot is trying to interrupt.
 	 */
-	public Coverer(Robot robot, ComInterface output, int distanceToOpponent, Point ballPosition,
-			Point defenderPosition, Point opponentPosition, int opponentId) {
+	public Coverer(Robot robot, ComInterface output, int distanceToOpponent, FieldPoint ballPosition,
+			FieldPoint defenderPosition, FieldPoint opponentPosition, int opponentId) {
 		super(robot, output);
 
 		this.opponentPosition = opponentPosition;
@@ -51,12 +51,12 @@ public class Coverer extends LowLevelBehavior {
 	/**
 	 * Update
 	 * @param distanceToOpponent The distance the defender keeps from the enemy (center) in millimeters
-	 * @param ballPosition current position of the ball. See {@link Point}
-	 * @param defenderPosition current position of the defender (this robot). See {@link Point}
-	 * @param opponentPosition center position of the opponent / enemy. See {@link Point}
+	 * @param ballPosition current position of the ball. See {@link FieldPoint}
+	 * @param defenderPosition current position of the defender (this robot). See {@link FieldPoint}
+	 * @param opponentPosition center position of the opponent / enemy. See {@link FieldPoint}
 	 * @param opponentId The Id of the opponent this Robot is trying to interrupt.
 	 */
-	public void update(int distanceToOpponent, Point ballPosition, Point defenderPosition, Point opponentPosition,
+	public void update(int distanceToOpponent, FieldPoint ballPosition, FieldPoint defenderPosition, FieldPoint opponentPosition,
 			int opponentId) {
 		this.distanceToOpponent = distanceToOpponent;
 		this.ballPosition = ballPosition;
@@ -72,7 +72,7 @@ public class Coverer extends LowLevelBehavior {
 	public void calculate() {
 		// Only run if the robot isn't timed out
 		if (!timeOutCheck()) {
-			Point newDestination = getNewDestination();
+			FieldPoint newDestination = getNewDestination();
 			// If available, set the new destination
 			if (newDestination != null) {
 				go.setDestination(newDestination);
@@ -93,18 +93,18 @@ public class Coverer extends LowLevelBehavior {
 	 * @returns the new destination we want this robot to move to. 
 	 * 			The function attempts to pick a point in between the opponent we are blocking and the ball.
 	 */
-	private Point getNewDestination() {
-		Point newDestination = null;
+	private FieldPoint getNewDestination() {
+		FieldPoint newDestination = null;
 
 		// Ball has to be on the field
 		if (ballPosition != null) {
 
-			int angle = opponentPosition.getAngle(ballPosition);
+			double angle = opponentPosition.getAngle(ballPosition);
 
-			int dx = (int) (Math.sin(angle) * distanceToOpponent);
-			int dy = (int) (Math.cos(angle) * distanceToOpponent);
+			double dx = (Math.sin(angle) * distanceToOpponent);
+			double dy = (Math.cos(angle) * distanceToOpponent);
 
-			newDestination = new Point(opponentPosition.getX() + dx, opponentPosition.getY() + dy);
+			newDestination = new FieldPoint(opponentPosition.getX() + dx, opponentPosition.getY() + dy);
 		}
 
 		return newDestination;

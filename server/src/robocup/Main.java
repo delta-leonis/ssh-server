@@ -13,8 +13,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import javax.swing.JFrame;
+
 import robocup.controller.handlers.protohandlers.MainHandler;
-import robocup.input.BaseStationClient;
 import robocup.input.RefereeClient;
 import robocup.input.SSLVisionClient;
 import robocup.model.Field;
@@ -31,7 +32,7 @@ public class Main {
 	
 
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
-	private static Level debugLevel = Level.INFO;
+	private static Level debugLevel = Level.WARNING;
 	private static String fieldConfigName = "config/field.properties";
 	private static String teamConfig = "config/teams.properties";
 	private static String protobufConfig = "config/config.properties";
@@ -42,8 +43,6 @@ public class Main {
 		LOGGER.info("Program started");
 		initView();
 		LOGGER.info("View initialized");
-		initBasestationClient();
-		LOGGER.info("BasestationClient initialized");
 		initField();
 		LOGGER.info("Field initialized");
 		initTeams();
@@ -78,6 +77,7 @@ public class Main {
 	public static void initView() {
 		World.getInstance().setGUI(new robocup.view.GUI());
 		World.getInstance().getGUI().setVisible(true);
+		World.getInstance().getGUI().setExtendedState(World.getInstance().getGUI().getExtendedState() | JFrame.MAXIMIZED_BOTH);
 	}
 
 	/**
@@ -170,7 +170,7 @@ public class Main {
 			LOGGER.severe(e.toString());
 		}
 		
-		World.getInstance().getGUI().update("robotContainer");
+		World.getInstance().getGUI().update("robotContainer");		//TURN OFF FOR TESTPATHPLANNERWIDGET
 	}
 
 	/**
@@ -196,58 +196,11 @@ public class Main {
 	}
 
 	/**
-	 * Create a client for the base station for receiving data from the robots.
-	 */
-	public static void initBasestationClient() {
-		new Thread(new BaseStationClient()).start();
-	}
-
-	/**
 	 * Create the handler threads for handling data from the SSLVISION client
 	 */
 	public static void initHandlers() {
 		MainHandler handler = new MainHandler(World.getInstance());
 		Thread handlerThread = new Thread(handler);
 		handlerThread.start();
-	}
-
-	/**
-	 * Read data from the console
-	 * @deprecated Unused function
-	 */
-	public static void console() {
-		BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
-		World w = World.getInstance();
-		while (true) {
-			String s = null;
-			try {
-				s = bufferRead.readLine();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			if (s.toLowerCase().equals("tostring"))
-				System.out.println(World.getInstance().toString());
-			if (s.toLowerCase().equals("ownteam"))
-				System.out.println(w.getTeamByColor(w.getOwnTeamColor()).getRobots().toString());
-			if (s.toLowerCase().equals("stop"))
-				World.getInstance().getReferee().setStart(false);
-			if (s.toLowerCase().equals("start"))
-				World.getInstance().getReferee().setStart(true);
-		}
-	}
-
-	/**
-	 * Initialize the intelligence
-	 * @deprecated Unused function
-	 */
-	public static void initAi() {
-		final Properties configFile = new Properties();
-		try {
-			configFile.load(new FileInputStream(aiConfig));
-			new robocup.controller.ai.Main();
-		} catch (IOException e) {
-			LOGGER.severe(e.toString());
-			System.exit(1);
-		}
 	}
 }

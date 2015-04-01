@@ -1,15 +1,15 @@
 package robocup.controller.ai.lowLevelBehavior;
 
 import robocup.controller.ai.movement.GotoPosition;
-import robocup.model.Point;
+import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.output.ComInterface;
 import robocup.model.enums.RobotMode;
 
 public class Attacker extends LowLevelBehavior {
 
-	private Point freePosition;
-	private Point ballPosition;
+	private FieldPoint freePosition;
+	private FieldPoint ballPosition;
 	private int chipKick;
 	private int shootDirection;
 	private boolean dribble = false;
@@ -24,7 +24,7 @@ public class Attacker extends LowLevelBehavior {
 	 * @param dribble enable dribbler
 	 * @param shootDirection direction where the attacker needs to shoot, relative to the field. Values between -180 and 180. 0 degrees facing east. 90 degrees facing north. 
 	 */
-	public Attacker(Robot robot, ComInterface output, Point freePosition, Point ballPosition, int chipKick,
+	public Attacker(Robot robot, ComInterface output, FieldPoint freePosition, FieldPoint ballPosition, int chipKick,
 			boolean dribble, int shootDirection) {
 		super(robot, output);
 		this.freePosition = freePosition;
@@ -44,7 +44,7 @@ public class Attacker extends LowLevelBehavior {
 	 * @param dribble enable dribbler
 	 * @param shootDirection direction where the attacker needs to shoot, relative to the field. Values between -180 and 180. 0 degrees facing east. 90 degrees facing north. 
 	 */
-	public void update(Point freePosition, Point ballPosition, int chipKick, boolean dribble, int shootDirection) {
+	public void update(FieldPoint freePosition, FieldPoint ballPosition, int chipKick, boolean dribble, int shootDirection) {
 		this.freePosition = freePosition;
 		this.ballPosition = ballPosition;
 		this.chipKick = chipKick;
@@ -57,7 +57,7 @@ public class Attacker extends LowLevelBehavior {
 		if (timeOutCheck()) {
 
 		} else {
-			Point newDestination = null;
+			FieldPoint newDestination = null;
 
 			go.setDribble(dribble);
 
@@ -81,9 +81,9 @@ public class Attacker extends LowLevelBehavior {
 	 * Change the destination of the robot
 	 * @param newDestination the new destination
 	 */
-	private void changeDestination(Point newDestination) {
+	private void changeDestination(FieldPoint newDestination) {
 		if (newDestination != null) {
-			if (isWithinRange(robot, newDestination, 10) && Math.abs(shootDirection - (int)robot.getOrientation()) <2)
+			if (isWithinRange(robot, newDestination, 10) && Math.abs(shootDirection - robot.getOrientation()) <2)
 				go.setDestination(null);
 			else
 				go.setDestination(newDestination);

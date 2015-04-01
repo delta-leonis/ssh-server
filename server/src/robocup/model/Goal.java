@@ -1,10 +1,10 @@
 package robocup.model;
 
 public class Goal {
-	private Point frontLeft;
-	private Point frontRight;
-	private Point backLeft;
-	private Point backRight;
+	private FieldPoint frontNorth;
+	private FieldPoint frontSouth;
+	private FieldPoint backNorth;
+	private FieldPoint backSouth;
 	private int wallWidth; // Width of goal post. Goal post is outside the
 							// defined goal area
 	private int height;
@@ -13,11 +13,11 @@ public class Goal {
 	// |W|<<<<>>>>|W|
 	// (W = wallWidth)
 
-	public Goal(Point frontLeft, Point frontRight, Point backLeft, Point backRight, int wallWidth, int height) {
-		this.frontLeft = frontLeft;
-		this.frontRight = frontRight;
-		this.backLeft = backLeft;
-		this.backRight = backRight;
+	public Goal(FieldPoint frontNorth, FieldPoint frontSouth, FieldPoint backNorth, FieldPoint backSouth, int wallWidth, int height) {
+		this.frontNorth = frontNorth;
+		this.frontSouth = frontSouth;
+		this.backNorth = backNorth;
+		this.backSouth = backSouth;
 		this.wallWidth = wallWidth;
 		this.height = height;
 	}
@@ -25,8 +25,8 @@ public class Goal {
 	/**
 	 * @return goal width excluding post width
 	 */
-	public int getWidth(){
-		return (int) (Math.abs(frontLeft.getY() - frontRight.getY()));
+	public double getWidth(){
+		return frontNorth.getY() - frontSouth.getY();
 	}
 
 	/**
@@ -58,65 +58,65 @@ public class Goal {
 	}
 
 	/**
-	 * @return the frontLeft
+	 * @return the frontNorth
 	 */
-	public Point getFrontLeft() {
-		return frontLeft;
+	public FieldPoint getFrontNorth() {
+		return frontNorth;
 	}
 
 	/**
-	 * @param frontLeft the frontLeft to set
+	 * @param frontNorth the frontNorth to set
 	 */
-	public void setFrontLeft(Point frontLeft) {
-		this.frontLeft = frontLeft;
+	public void setFrontNorth(FieldPoint frontNorth) {
+		this.frontNorth = frontNorth;
 	}
 
 	/**
-	 * @return the frontRight
+	 * @return the frontSouth
 	 */
-	public Point getFrontRight() {
-		return frontRight;
+	public FieldPoint getFrontSouth() {
+		return frontSouth;
 	}
 
 	/**
-	 * @param frontRight the frontRight to set
+	 * @param frontSouth the frontSouth to set
 	 */
-	public void setFrontRight(Point frontRight) {
-		this.frontRight = frontRight;
+	public void setFrontSouth(FieldPoint frontSouth) {
+		this.frontSouth = frontSouth;
 	}
 
 	/**
-	 * @return the backLeft
+	 * @return the backNorth
 	 */
-	public Point getBackLeft() {
-		return backLeft;
+	public FieldPoint getBackNorth() {
+		return backNorth;
 	}
 
 	/**
-	 * @param backLeft the backLeft to set
+	 * @param backNorth the backNorth to set
 	 */
-	public void setBackLeft(Point backLeft) {
-		this.backLeft = backLeft;
+	public void setBackNorth(FieldPoint backNorth) {
+		this.backNorth = backNorth;
 	}
 
 	/**
-	 * @return the backRight
+	 * @return the backSouth
 	 */
-	public Point getBackRight() {
-		return backRight;
+	public FieldPoint getBackSouth() {
+		return backSouth;
 	}
 
 	/**
-	 * @param backRight the backRight to set
+	 * @param backSouth the backSouth to set
 	 */
-	public void setBackRight(Point backRight) {
-		this.backRight = backRight;
+	public void setBackSouth(FieldPoint backSouth) {
+		this.backSouth = backSouth;
 	}
 
 	@Override
 	public String toString() {
-		return "Goal [frontLeft=" + frontLeft + ", frontRight=" + frontRight + ", backLeft=" + backLeft
-				+ ", backRight=" + backRight + ", wallWidth=" + wallWidth + ", height=" + height + "]" + "\r\n";
+		return "Goal [frontNorth=" + frontNorth + ", frontSouth=" + frontSouth + ", backNorth=" + backNorth
+				+ ", backSouth=" + backSouth + ", wallWidth=" + wallWidth + ", height=" + height + "]" + "\r\n";
 	}
 
 }

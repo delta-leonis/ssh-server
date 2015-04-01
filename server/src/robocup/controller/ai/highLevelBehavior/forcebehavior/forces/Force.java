@@ -1,10 +1,10 @@
 package robocup.controller.ai.highLevelBehavior.forcebehavior.forces;
 
-import robocup.model.Point;
+import robocup.model.FieldPoint;
 import robocup.model.World;
 
 public abstract class Force {
-	private Point origin;
+	private FieldPoint origin;
 	protected int power;
 	protected int scope;
 	protected World world;
@@ -15,7 +15,7 @@ public abstract class Force {
 	 * @param power the power of this force
 	 * @param scope the range where this force affects other objects
 	 */
-	protected Force(Point origin, int power, int scope) {
+	protected Force(FieldPoint origin, int power, int scope) {
 		this.origin = origin;
 		this.power = power;
 		this.scope = scope;
@@ -26,7 +26,7 @@ public abstract class Force {
 	 * Get the origin
 	 * @return the origin
 	 */
-	public Point getOrigin() {
+	public FieldPoint getOrigin() {
 		return origin;
 	}
 
@@ -51,7 +51,7 @@ public abstract class Force {
 	 * @param position the point
 	 * @return true when the point is affected by this force
 	 */
-	public boolean affectsPoint(Point position) {
+	public boolean affectsPoint(FieldPoint position) {
 		return origin.getDeltaDistance(position) < scope;
 	}
 
@@ -60,5 +60,5 @@ public abstract class Force {
 	 * @param position the object on which the force works
 	 * @return the direction where the force is going
 	 */
-	public abstract int getDirection(Point position);
+	public abstract int getDirection(FieldPoint position);
 }

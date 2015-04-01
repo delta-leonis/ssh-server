@@ -16,7 +16,7 @@ import net.miginfocom.swing.MigLayout;
 import robocup.Main;
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.Ally;
-import robocup.model.Point;
+import robocup.model.FieldPoint;
 import robocup.output.ComInterface;
 import robocup.output.RobotCom;
 import robocup.view.GUI;
@@ -97,39 +97,39 @@ public class ControlRobotWidget extends WidgetBox{
 			LOGGER.info(String.format("%s commando send to robot #%d", buttonText.split("\\s+" )[0], selectedRobotId));
 			switch (buttonText) {
 			case "Chippen":
-				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId,0, 0, 0, 0, 0, 100, dribbling);
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId,0, 0, 0, 100, dribbling);
 				break;
 			case "Kicken":
-				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, -100, dribbling);
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, -100, dribbling);
 				break;
 			case "Dribble toggle":
 				dribbling = !dribbling;
-				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, 0, dribbling);
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, dribbling);
 				break;
 			case "↑":
-				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, /*(int) World.getInstance().getReferee().getAlly().getRobotByID(selectedRobotId).getDirection()*/ 0, 500, 0, 0, 0, 0, dribbling);
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId,0, 500, 0, 0, dribbling);
 				break;
 			case "↓":
-				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, -500, 0, 0, 0, 0, dribbling);
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, -500, 0, 0, dribbling);
 				break;
 			case "←":
-				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, -200, 0, dribbling);
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, -200, 0, dribbling);
 				break;
 			case "→":
-				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 200, 0, dribbling);
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 200, 0, dribbling);
 				break;
 			case "←←":
-				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, -90, 500, 0, 0, 0, 0, dribbling);
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, -90, 500, 0, 0, dribbling);
 				break;
 			case "→→":
-				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 90, 500, 0, 0, 0, 0, dribbling);
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 90, 500, 0, 0, dribbling);
 				break;
 			case "Slow Down Test":
 				slowDownTest();
 				break;
 			case "Forward":
 				try{
-					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, Integer.parseInt(forwardBox.getText()), 0, 0, 0, 0, dribbling);
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, Integer.parseInt(forwardBox.getText()), 0, 0, dribbling);
 				}
 				catch(Exception exc){
 					LOGGER.severe("USE AN INTEGER.");
@@ -146,44 +146,44 @@ public class ControlRobotWidget extends WidgetBox{
 			
 			switch(code){
 				case KeyEvent.VK_W:
-					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 750, 0, 0, 0, 0, dribbling);
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 750, 0, 0, dribbling);
 					break;
 				case KeyEvent.VK_S:
-					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, -750, 0, 0, 0, 0, dribbling);
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, -750, 0, 0, dribbling);
 					break;
 				case KeyEvent.VK_A:
-					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, -100, 0, dribbling);
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, -100, 0, dribbling);
 					break;
 				case KeyEvent.VK_D:
-					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 100, 0, dribbling);
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 100, 0, dribbling);
 					break;
 				case KeyEvent.VK_E:
-					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 90, 500, 0, 0, 0, 0, dribbling);
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 90, 500, 0, 0, dribbling);
 					break;
 					
 				case KeyEvent.VK_Q:
-					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, -90, 500, 0, 0, 0, 0, dribbling);
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, -90, 500, 0, 0, dribbling);
 					break;
 					
 				case KeyEvent.VK_1:
-					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, -100, dribbling);
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, -100, dribbling);
 					break;
 					
 				case KeyEvent.VK_2:
-					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, 100, dribbling);
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 100, dribbling);
 					break;	
 					
 				case KeyEvent.VK_R:
 					dribbling = !dribbling;
-					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, 0, dribbling);
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, dribbling);
 					break;
 
 				case KeyEvent.VK_ESCAPE:
 				case KeyEvent.VK_SPACE:
 					LOGGER.info("Send terminate command");
-					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0,0, false);
+					ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, false);
 					for(int i = 0; i < 12; ++i){
-						ComInterface.getInstance(RobotCom.class).send(1, i, 0, 0, 0, 0, 0,0, false);
+						ComInterface.getInstance(RobotCom.class).send(1, i, 0, 0, 0,0, false);
 						System.out.println();
 					}
 					break;
@@ -201,17 +201,17 @@ public class ControlRobotWidget extends WidgetBox{
 	
 	private void slowDownTest(){
 		try{
-			GotoPosition go = new GotoPosition(new Ally(0, false, 0), ComInterface.getInstance(RobotCom.class), new Point(0,0));
-			ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, go.getSpeed(500, 100), 0, 0, 0, 0, dribbling);
+			GotoPosition go = new GotoPosition(new Ally(0, false, 0), ComInterface.getInstance(RobotCom.class), new FieldPoint(0,0));
+			ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, (int) go.getSpeed(500, 100), 0, 0, dribbling);
 			System.out.println("Test! " + go.getSpeed(500, 100));
 			Thread.sleep(500);
 			
 			for(int i = 0; i < 10; ++i){
-				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, go.getSpeed(100 - (i*10), 100), 0, 0, 0, 0, dribbling);
+				ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, (int) go.getSpeed(100 - (i*10), 100), 0, 0, dribbling);
 				System.out.println("Test! " + go.getSpeed(100 - (i*10), 100));
 				Thread.sleep(50);
 			}
-			ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, 0, 0, dribbling);
+			ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, 0, 0, 0, 0, dribbling);
 
 			
 		}catch(Exception e){

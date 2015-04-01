@@ -4,7 +4,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import robocup.model.Point;
+import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.World;
 
@@ -43,8 +43,8 @@ public class DijkstraPathPlanner {
 	 * Contains position, neighbours and previous vertex on the route
 	 */
 	public class Vertex {
-		private Point position;
-		private int distance;
+		private FieldPoint position;
+		private double distance;
 		private ArrayList<Vertex> neighbours;
 		private Vertex previous = null;
 		private boolean removable = true;
@@ -55,9 +55,9 @@ public class DijkstraPathPlanner {
 		 * all neighbours for the vertex and the previous vertex in the shortest path
 		 * @param position
 		 */
-		public Vertex(Point position) {
+		public Vertex(FieldPoint position) {
 			this.position = position;
-			distance = Integer.MAX_VALUE;
+			distance = Double.MAX_VALUE;
 			neighbours = new ArrayList<Vertex>();
 		}
 		
@@ -73,7 +73,7 @@ public class DijkstraPathPlanner {
 		 * getter method that returns the position
 		 * @return the position
 		 */
-		public Point getPosition() {
+		public FieldPoint getPosition() {
 			return position;
 		}
 
@@ -81,16 +81,16 @@ public class DijkstraPathPlanner {
 		 * getter method that returns the distance covered to reach this vertex
 		 * @return the distance
 		 */
-		public int getDist() {
+		public double getDist() {
 			return distance;
 		}
 
 		/**
 		 * setter method that sets the distance
-		 * @param dist the distance to set
+		 * @param alt the distance to set
 		 */
-		public void setDist(int dist) {
-			distance = dist;
+		public void setDist(double alt) {
+			distance = alt;
 		}
 
 		/**
@@ -196,8 +196,8 @@ public class DijkstraPathPlanner {
 	 * @return list with points forming the shortest route
 	 */
 	@SuppressWarnings("unchecked")
-	public LinkedList<Point> getRoute(Point beginNode, Point destination, int robotId, boolean testMode) {
-		LinkedList<Point> route = new LinkedList<Point>();
+	public LinkedList<FieldPoint> getRoute(FieldPoint beginNode, FieldPoint destination, int robotId, boolean testMode) {
+		LinkedList<FieldPoint> route = new LinkedList<FieldPoint>();
 		boolean found = false;
 
 		generateObjectList(robotId);
@@ -266,7 +266,7 @@ public class DijkstraPathPlanner {
 	 * - If these vertices all got removed, then the source is locked in.
 	 * @param source The starting point of the robot.
 	 */
-	protected Vertex setupSource(Point beginNode){
+	protected Vertex setupSource(FieldPoint beginNode){
 		boolean lockedIn = true; //Locked in until proven otherwise
 		Vertex source = new Vertex(beginNode);
 		source.setDist(0);
@@ -275,31 +275,31 @@ public class DijkstraPathPlanner {
 		
 		if(isInsideObject(source.toRect())) {
 			source.setStuck(true);
-			int x = (int)beginNode.getX();
-			int y = (int)beginNode.getY();
+			double x = beginNode.getX();
+			double y = beginNode.getY();
 			// North east
-			Vertex neighbour = new Vertex(new Point(x + VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT));
+			Vertex neighbour = new Vertex(new FieldPoint(x + VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT));
 			if(isValidPosition(source, neighbour)) {
 				lockedIn = false;
 				vertices.add(neighbour);
 				source.addNeighbour(neighbour);
 			}
 			// South east
-			neighbour = new Vertex(new Point(x + VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT));
+			neighbour = new Vertex(new FieldPoint(x + VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT));
 			if(isValidPosition(source, neighbour)){
 				lockedIn = false;
 				vertices.add(neighbour);
 				source.addNeighbour(neighbour);
 			}
 			// North west
-			neighbour = new Vertex(new Point(x - VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT));
+			neighbour = new Vertex(new FieldPoint(x - VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT));
 			if(isValidPosition(source, neighbour)){
 				lockedIn = false;
 				vertices.add(neighbour);
 				source.addNeighbour(neighbour);
 			}
 			// South west
-			neighbour = new Vertex(new Point(x - VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT));
+			neighbour = new Vertex(new FieldPoint(x - VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT));
 			if(isValidPosition(source, neighbour)){
 				lockedIn = false;
 				vertices.add(neighbour);
@@ -318,10 +318,10 @@ public class DijkstraPathPlanner {
 	
 	/**
 	 * Sets up the destination node and everything associated with it.
-	 * @param endNode A {@link Point} that specifies the position of where you want to go.
+	 * @param endNode A {@link FieldPoint} that specifies the position of where you want to go.
 	 * @return The endNode in Vertex form.
 	 */
-	protected Vertex setupDestination(Point endNode){
+	protected Vertex setupDestination(FieldPoint endNode){
 		boolean lockedIn = true;
 		Vertex destination = new Vertex(endNode);
 		destination.setRemovable(false);
@@ -331,32 +331,32 @@ public class DijkstraPathPlanner {
 
 		if(isInsideObject(destination.toRect())){
 			destination.setStuck(true);
-			int x = (int)endNode.getX();
-			int y = (int)endNode.getY();
+			double x = endNode.getX();
+			double y = endNode.getY();
 			
 			// North east
-			Vertex neighbour = new Vertex(new Point(x + VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT));
+			Vertex neighbour = new Vertex(new FieldPoint(x + VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT));
 			if(isValidPosition(destination, neighbour)){
 				lockedIn = false;
 				vertices.add(neighbour);
 				neighbour.addNeighbour(destination);
 			}
 			// South east
-			neighbour = new Vertex(new Point(x + VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT));
+			neighbour = new Vertex(new FieldPoint(x + VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT));
 			if(isValidPosition(destination, neighbour)){
 				lockedIn = false;
 				vertices.add(neighbour);
 				neighbour.addNeighbour(destination);
 			}
 			// North west		
-			neighbour = new Vertex(new Point(x - VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT));
+			neighbour = new Vertex(new FieldPoint(x - VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT));
 			if(isValidPosition(destination, neighbour)){
 				lockedIn = false;
 				vertices.add(neighbour);
 				neighbour.addNeighbour(destination);
 			}
 			// South west
-			neighbour =new Vertex(new Point(x - VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT));
+			neighbour =new Vertex(new FieldPoint(x - VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT));
 			if(isValidPosition(destination, neighbour)){
 				lockedIn = false;
 				vertices.add(neighbour);
@@ -436,7 +436,7 @@ public class DijkstraPathPlanner {
 
 			// calculate new costs for neighbours
 			for (Vertex v : u.getNeighbours()) {
-				int alt = u.getDist() + getDistance(u, v);
+				double alt = u.getDist() + getDistance(u, v);
 
 				// alternate path is shorter than the previous path to v
 				if (alt < v.getDist()) {
@@ -454,11 +454,11 @@ public class DijkstraPathPlanner {
 	 * @return closest neighbour vertex
 	 */
 	private Vertex getMinDistNeighbour(Vertex u) {
-		int minDist = Integer.MAX_VALUE;
+		double minDist = Double.MAX_VALUE;
 		Vertex closest = null;
 
 		for (Vertex v : u.getNeighbours()) {
-			int dist = getDistance(u, v);
+			double dist = getDistance(u, v);
 			if (dist < minDist && !isVertexClosed(v)) {
 				closest = v;
 				minDist = dist;
@@ -510,14 +510,14 @@ public class DijkstraPathPlanner {
 	protected void generateVertices() {
 		vertices.clear();
 		for (Rectangle2D rect : getObjects()) {
-			int x = (int) rect.getCenterX();
-			int y = (int) rect.getCenterY();
+			double x = rect.getCenterX();
+			double y = rect.getCenterY();
 
 			if(!isObjectNotRemovable(x,y)){	//Avoid double vertices from pre-generated vertices in source and dest.
-				vertices.add(new Vertex(new Point(x + VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT)));
-				vertices.add(new Vertex(new Point(x + VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT)));
-				vertices.add(new Vertex(new Point(x - VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT)));
-				vertices.add(new Vertex(new Point(x - VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT)));
+				vertices.add(new Vertex(new FieldPoint(x + VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT)));
+				vertices.add(new Vertex(new FieldPoint(x + VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT)));
+				vertices.add(new Vertex(new FieldPoint(x - VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT)));
+				vertices.add(new Vertex(new FieldPoint(x - VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT)));
 			}
 		}
 	}
@@ -528,9 +528,9 @@ public class DijkstraPathPlanner {
 	 * @param y center y position of the rectanlge
 	 * @return
 	 */
-	protected boolean isObjectNotRemovable(int x, int y) {
+	protected boolean isObjectNotRemovable(double x, double y) {
 		for(Vertex vertex : notRemovableVertices){
-			if((int)vertex.getPosition().getX() == x || (int)vertex.getPosition().getY() == y){
+			if(vertex.getPosition().getX() == x || vertex.getPosition().getY() == y){
 				return true;
 			}
 		}
@@ -567,8 +567,8 @@ public class DijkstraPathPlanner {
 	 * @param vertex2
 	 * @return distance
 	 */
-	private int getDistance(Vertex vertex1, Vertex vertex2) {
-		return (int) vertex1.getPosition().getDeltaDistance(vertex2.getPosition());
+	private double getDistance(Vertex vertex1, Vertex vertex2) {
+		return vertex1.getPosition().getDeltaDistance(vertex2.getPosition());
 	}
 
 	/**

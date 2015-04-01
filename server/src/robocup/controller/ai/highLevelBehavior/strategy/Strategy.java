@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import robocup.model.FieldPoint;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
 
@@ -29,7 +30,7 @@ public abstract class Strategy {
 	public FieldZone getZoneForRole(RobotMode role) {
 		return zonesForRole.get(role);
 	}
-	
+
 	/**
 	 * Get all the roles which are used in this strategy
 	 * @return all roles
@@ -37,4 +38,12 @@ public abstract class Strategy {
 	public ArrayList<RobotMode> getRoles() {
 		return roles;
 	}
+
+	/**
+	 * Update zones for this strategy based on ballposition.
+	 * Example:
+	 * Second goal post coverer will receive a new zone because its current zone is on the same field half as the ball.
+	 * @param ballPosition The position of the ball
+	 */
+	public abstract void updateZones(FieldPoint ballPosition);
 }

@@ -7,7 +7,7 @@ public class Ally extends Robot {
 	private long lastKicked;
 	private RobotMode role;
 
-	public Ally(int robotID, boolean isKeeper, float height) {
+	public Ally(int robotID, boolean isKeeper, double height) {
 		super(robotID, isKeeper, height);
 		role = RobotMode.KEEPERDEFENDER;
 	}

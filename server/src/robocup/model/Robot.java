@@ -10,15 +10,14 @@ public abstract class Robot extends FieldObject {
 	public static final int DIAMETER = 180;	//In millimeters.
 	private int robotId;
 	private boolean isKeeper;
-	private int orientation;
-	private float height;
-	private float batteryStatus;
+	private double orientation;
+	private double height;
 	private long powerUpTime;
 	private boolean onSight;
 	private boolean visible;		//true = visible in the GUI
 
 
-	public Robot(int robotID, boolean isKeeper, float height) {
+	public Robot(int robotID, boolean isKeeper, double height) {
 		super();
 		this.robotId = robotID;
 		this.isKeeper = isKeeper;
@@ -55,17 +54,17 @@ public abstract class Robot extends FieldObject {
 
 	/**
 	 * {@inheritDoc}
-	 * @param orientation 
+	 * @param degrees 
 	 */
-	public void update(Point newPosition, double updateTime, int orientation, int lastCamUpdateNo) {
+	public void update(FieldPoint newPosition, double updateTime, double degrees, int lastCamUpdateNo) {
 		super.update(newPosition, updateTime, lastCamUpdateNo);
-		this.orientation = orientation; // setOrientation(orientation)
+		this.orientation = degrees; // setOrientation(orientation)
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void update(Point p, double updateTime, int lastCamUpdateNo) {
+	public void update(FieldPoint p, double updateTime, int lastCamUpdateNo) {
 		super.update(p, updateTime, lastCamUpdateNo);
 	}
 
@@ -107,7 +106,7 @@ public abstract class Robot extends FieldObject {
 	 * TODO: Document. What is the orientation? The direction the Robot is looking at? If so, is this value in degrees or radians?
 	 * @return the orientation
 	 */
-	public float getOrientation() {
+	public double getOrientation() {
 		return orientation;
 	}
 
@@ -123,7 +122,7 @@ public abstract class Robot extends FieldObject {
 	 * Height of the Robot in Millimeters. Retrieved from {@link robocup.controller.handlers.protohandlers.DetectionHandler DetectionHandler}
 	 * @return the height of the Robot in Millimeters
 	 */
-	public float getHeight() {
+	public double getHeight() {
 		return height;
 	}
 
@@ -131,16 +130,8 @@ public abstract class Robot extends FieldObject {
 	 * Height of the Robot in Millimeters. Retrieved from {@link robocup.controller.handlers.protohandlers.DetectionHandler DetectionHandler}
 	 * @param height the height to set for the {@link Robot}
 	 */
-	public void setHeight(float height) {
+	public void setHeight(double height) {
 		this.height = height;
-	}
-
-	/**
-	 * TODO: Document. Is this the percentage of battery left on the Robot?
-	 * @return the batteryStatus
-	 */
-	public float getBatteryStatus() {
-		return batteryStatus;
 	}
 
 	/**
@@ -151,22 +142,6 @@ public abstract class Robot extends FieldObject {
 		return powerUpTime;
 	}
 
-	/**
-	 * @param batteryStatus TODO: Document. Is this the percentage of battery left on the Robot?
-	 * @param timestamp TODO: Document. Is this the time it takes to fully charge the Robot? If so, is the value in seconds or milliseconds?
-	 */
-	public void setBatteryStatus(int batteryStatus, long timestamp) {
-		this.batteryStatus = batteryStatus;
-		powerUpTime = timestamp;
-	}
-
-	/**
-	 * TODO: Document. Is the batteryStatus supposed to be in integers like in {@link Robot#setBatteryStatus(int, long)} or is it supposed to be a long?
-	 * @param batteryStatus
-	 */
-	public void setBatteryStatus(float batteryStatus) {
-		this.batteryStatus = batteryStatus;
-	}
 
 	@Override
 	public String toString() {

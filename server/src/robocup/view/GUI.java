@@ -21,6 +21,7 @@ import robocup.model.World;
 import robocup.view.widgets.ConsoleWidget;
 import robocup.view.widgets.ControlRobotWidget;
 import robocup.view.widgets.GameStatusWidget;
+//import robocup.view.widgets.PathPlannerTestWidget;
 import robocup.view.widgets.SettingsWidget;
 import robocup.view.widgets.VisibleRobotWidget;
 import robocup.view.widgets.rotateRobotWidget;
@@ -54,7 +55,7 @@ public class GUI extends JFrame {
 		LOGGER.info("GUI is started and initialized");
 		setTitle("User interface RoboCup SSH");
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-		setLocationRelativeTo(null);
+		setLocationRelativeTo(null); 
 	}
 
 	/**
@@ -99,6 +100,7 @@ public class GUI extends JFrame {
 
 		widgetContainer.add(new GameStatusWidget(), "growx");
 		widgetContainer.add(new VisibleRobotWidget(), "growx");
+//		widgetContainer.add(new PathPlannerTestWidget(), "growx");	// Comment "World.getInstance().getGUI().update("robotContainer");" in Main.initTeams() for this widget to work.
 //		widgetContainer.add(new ControlRobotPacketTestWidget(), "growx");
 		widgetContainer.add(new ControlRobotWidget(), "growx");
 		widgetContainer.add(new SettingsWidget(), "growx");

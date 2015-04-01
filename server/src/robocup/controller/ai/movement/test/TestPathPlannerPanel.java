@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 
 import robocup.controller.ai.movement.DijkstraPathPlanner;
 import robocup.controller.ai.movement.DijkstraPathPlanner.Vertex;
-import robocup.model.Point;
+import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.World;
 
@@ -36,14 +36,14 @@ public class TestPathPlannerPanel extends JPanel{
 	public static final int X_OFFSET = (int) (WIDTH * RATIO) / 2;
 	public static final int Y_OFFSET = (int) (HEIGHT * RATIO) / 2;
 	
-	private Point destination;
+	private FieldPoint destination;
 	private boolean drawNeighbours;
 	private boolean drawPath;
 	private TestPathPlanner planner;
-	private LinkedList<Point> path;
+	private LinkedList<FieldPoint> path;
 	private ArrayList<Vertex> vertices;
 	
-	public TestPathPlannerPanel(Point destination,
+	public TestPathPlannerPanel(FieldPoint destination,
 			boolean drawNeighbours, boolean drawPath,
 			TestPathPlanner planner){
 		this.destination = destination;
@@ -55,7 +55,7 @@ public class TestPathPlannerPanel extends JPanel{
 		setPreferredSize(new Dimension((int)(WIDTH * RATIO), (int)(HEIGHT * RATIO)));
 	}
 	
-	public void refresh(Point destination){
+	public void refresh(FieldPoint destination){
 		this.destination = destination;
 		this.path = planner.getRoute(World.getInstance().getAllRobots().get(0).getPosition(), destination, 0, true);
 		vertices = planner.getTestVertices();
@@ -149,11 +149,11 @@ public class TestPathPlannerPanel extends JPanel{
 	}
 
 	public final static void drawPath(Graphics g, Graphics2D g2,
-			LinkedList<Point> path, Point start, Point destination) {
+			LinkedList<FieldPoint> path, FieldPoint start, FieldPoint destination) {
 		g.setColor(Color.ORANGE);
 		g2.setStroke(new BasicStroke(LINE_WIDTH_PATHPLANNER));
-		Point previous = start;
-		for (Point p : path) {
+		FieldPoint previous = start;
+		for (FieldPoint p : path) {
 			int x = (int) (X_OFFSET + p.getX() * RATIO);
 			int y = (int) (Y_OFFSET - p.getY() * RATIO);
 			int x2 = (int) (X_OFFSET + previous.getX() * RATIO);

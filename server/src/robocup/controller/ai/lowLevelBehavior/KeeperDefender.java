@@ -2,7 +2,7 @@ package robocup.controller.ai.lowLevelBehavior;
 
 import robocup.model.enums.RobotMode;
 import robocup.controller.ai.movement.GotoPosition;
-import robocup.model.Point;
+import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.output.ComInterface;
 
@@ -12,10 +12,10 @@ import robocup.output.ComInterface;
  */
 public class KeeperDefender extends Keeper {
 
-	private Point offset;
+	private FieldPoint offset;
 
-	public KeeperDefender(Robot robot, ComInterface output, int distanceToGoal, boolean goToKick, Point ballPosition,
-			Point keeperPosition, Point centerGoalPosition, Point offset, int yMax) {
+	public KeeperDefender(Robot robot, ComInterface output, int distanceToGoal, boolean goToKick, FieldPoint ballPosition,
+			FieldPoint keeperPosition, FieldPoint centerGoalPosition, FieldPoint offset, int yMax) {
 		super(robot, output, distanceToGoal, goToKick, ballPosition, keeperPosition, centerGoalPosition, yMax);
 		this.offset = offset;
 		this.role = RobotMode.KEEPERDEFENDER;
@@ -30,14 +30,14 @@ public class KeeperDefender extends Keeper {
 	 * @param keeperPosition
 	 * @param offset the offset Position
 	 */
-	public void update(int distanceToGoal, boolean goToKick, Point ballPosition, Point keeperPosition, Point offset) {
+	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, FieldPoint keeperPosition, FieldPoint offset) {
 		super.update(distanceToGoal, goToKick, ballPosition, keeperPosition);
 		this.offset = offset;
 	}
 
 	@Override
-	protected Point getNewKeeperDestination() {
-		Point newDestination = super.getNewKeeperDestination();
+	protected FieldPoint getNewKeeperDestination() {
+		FieldPoint newDestination = super.getNewKeeperDestination();
 
 		if (newDestination != null) {
 			newDestination.setX(newDestination.getX() + offset.getX());

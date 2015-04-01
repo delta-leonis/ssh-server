@@ -157,9 +157,9 @@ public class TestAttackerBehavior extends Behavior {
 		for (Robot r : robots) {
 			if (minDistance == -1) {
 				closestRobot = r;
-				minDistance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
+				minDistance = r.getPosition().getDeltaDistance(ball.getPosition());
 			} else {
-				int distance = (int) r.getPosition().getDeltaDistance(ball.getPosition());
+				double distance = r.getPosition().getDeltaDistance(ball.getPosition());
 
 				if (distance < minDistance) {
 					closestRobot = r;

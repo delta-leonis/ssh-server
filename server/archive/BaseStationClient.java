@@ -73,7 +73,6 @@ public class BaseStationClient implements Runnable {
 			writer.close();
 			fw.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

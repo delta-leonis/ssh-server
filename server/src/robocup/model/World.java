@@ -3,9 +3,9 @@ package robocup.model;
 import java.util.ArrayList;
 import java.util.Observable;
 
+import robocup.model.enums.Command;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.TeamColor;
-import robocup.model.enums.Command;
 import robocup.view.GUI;
 /**
  * Model representation of the physical "world", including the field, 
@@ -42,7 +42,7 @@ public class World extends Observable {
 		fieldWidth = 6050;
 		
 		ball = new Ball();
-		ball.setPosition(new Point(400, 200)); // added starting point for ball
+		ball.setPosition(new FieldPoint(400, 200)); // added starting point for ball
 												// to remove nullpointer errors
 		referee = new Referee();
 		field = new Field(fieldHeight, fieldWidth);
@@ -187,6 +187,45 @@ public class World extends Observable {
 		return "World \r\n[ball=" + ball + "\r\nreferee=" + referee + "\r\n"
 				+ field + "]";
 	}
+
+	/**
+	 * Calculate if ally team is closer to the ball
+	 * @return true when the ally team is closer
+	 */
+	public boolean allyHasBall() {
+		ArrayList<Robot> allies = getReferee().getAlly().getRobots();
+		ArrayList<Robot> enemies = getReferee().getEnemy().getRobots();
+
+		double distanceAlly = getTeamDistanceToBall(allies);
+		double distanceEnemy = getTeamDistanceToBall(enemies);
+
+		return distanceAlly <= distanceEnemy;
+	}
+
+	/**
+	 * Get the distance from the closest robot in one team to the ball
+	 * @param robots the team of robots
+	 * @return the distance of the closest robot
+	 */
+	private double getTeamDistanceToBall(ArrayList<Robot> robots) {
+		if (ball == null)
+			return Integer.MAX_VALUE;
+
+		double minDistance = -1.0;
+
+		for (Robot r : robots) {
+			if (minDistance == -1.0)
+				minDistance = r.getPosition().getDeltaDistance(ball.getPosition());
+			else {
+				double distance = r.getPosition().getDeltaDistance(ball.getPosition());
+
+				if (distance < minDistance)
+					minDistance = distance;
+			}
+		}
+
+		return minDistance;
+	}
 	
 	/**
 	 * method that returns a robot by checking vertex points of the given fieldzone
@@ -230,7 +269,7 @@ public class World extends Observable {
 		// Stop = keep 50cm from ball
 		if (referee.getCommand() == Command.STOP) {
 			// if the distance to ball is less then 50cm, is so return false
-			if ((int) referee.getAlly().getRobotByID(robotID).getPosition().getDeltaDistance(ball.getPosition()) < STOP_BALL_DISTANCE) {
+			if (referee.getAlly().getRobotByID(robotID).getPosition().getDeltaDistance(ball.getPosition()) < STOP_BALL_DISTANCE) {
 				return false;
 			}
 
@@ -246,7 +285,7 @@ public class World extends Observable {
 	 * @param argPoly the polygon in which the method looks for ally's, a point list with absolute locations
 	 * @return an list with all the ally robots 
 	 */
-	public ArrayList<Ally> getAllyRobotsInArea(Point[] argPoly) {
+	public ArrayList<Ally> getAllyRobotsInArea(FieldPoint[] argPoly) {
 		ArrayList<Ally> foundAllies = new ArrayList<Ally>();
 		for (Robot ally : allyTeam) {
 			if (areaContainsCircle(ally.getPosition(), argPoly, robotRadius))
@@ -262,7 +301,7 @@ public class World extends Observable {
 	 * @param argPoly the polygon in which the method looks for enemies, a point list with absolute locations
 	 * @return an list with all the enemy robots 
 	 */
-	public ArrayList<Enemy> getEnemyRobotsInArea(Point[] argPoly) {
+	public ArrayList<Enemy> getEnemyRobotsInArea(FieldPoint[] argPoly) {
 		ArrayList<Enemy> foundEnemies = new ArrayList<Enemy>();
 		for (Robot enemy : enemyTeam) {
 			if (areaContainsCircle(enemy.getPosition(), argPoly, robotRadius))
@@ -278,7 +317,7 @@ public class World extends Observable {
      * @param argPoly the polygon in which the method looks for robots, a point list with absolute locations
 	 * @return an list with all the robots 
 	 */
-	public ArrayList<Robot> getAllRobotsInArea(Point[] argPoly) {
+	public ArrayList<Robot> getAllRobotsInArea(FieldPoint[] argPoly) {
 		ArrayList<Robot> foundRobots = new ArrayList<Robot>();
 		for (Robot robot : robotList) {
 			if (areaContainsCircle(robot.getPosition(), argPoly, robotRadius))
@@ -367,14 +406,14 @@ public class World extends Observable {
 	 *@param areaPoly the point array with corner locations of the polygon
 	 *@param radius the radius of the circle
 	 */
-    public boolean areaContainsCircle(Point argPoint, Point[] areaPoly, double radius) {
+    public boolean areaContainsCircle(FieldPoint argPoint, FieldPoint[] areaPoly, double radius) {
     	boolean result = false;
     	
     	for (int edges = 0; edges < areaPoly.length-1; edges++) {
     		if (pointToLineDistance(
-    				new Point(areaPoly[edges].getX()+(fieldWidth/2), areaPoly[edges].getY() + (fieldHeight/2)), 
-    				new Point(areaPoly[edges + 1].getX()+(fieldWidth/2), areaPoly[edges + 1].getY()+(fieldHeight/2)), 
-    				new Point(argPoint.getX()+(fieldWidth/2), argPoint.getY()+(fieldHeight/2)) ) < radius) {
+    				new FieldPoint(areaPoly[edges].getX()+(fieldWidth/2), areaPoly[edges].getY() + (fieldHeight/2)), 
+    				new FieldPoint(areaPoly[edges + 1].getX()+(fieldWidth/2), areaPoly[edges + 1].getY()+(fieldHeight/2)), 
+    				new FieldPoint(argPoint.getX()+(fieldWidth/2), argPoint.getY()+(fieldHeight/2)) ) < radius) {
     			result = true;
             }
     	}
@@ -389,7 +428,7 @@ public class World extends Observable {
      * @param b the end point of the line
      * @param p the point to check the distance from the line with
      */
-    public double pointToLineDistance(Point A, Point B, Point P) {
+    public double pointToLineDistance(FieldPoint A, FieldPoint B, FieldPoint P) {
     	double normalLength = Math.sqrt((B.getX() - A.getX()) * (B.getX() - A.getX()) + (B.getY() - A.getY()) * (B.getY() - A.getY()));
     	return Math.abs((P.getX() - A.getX()) * (B.getY() - A.getY()) - (P.getY() - A.getY()) * (B.getX() - A.getX())) / normalLength;
     }
@@ -399,7 +438,7 @@ public class World extends Observable {
      * @param argPoint the point
      * @param point[] the array with the locations of the polygon
      */
-    public boolean pointInPolygon(Point argPoint, Point[] areaPoly) {
+    public boolean pointInPolygon(FieldPoint argPoint, FieldPoint[] areaPoly) {
         boolean result = false;
         for (int i = 0, j = areaPoly.length - 1; i < areaPoly.length; j = i++) {        	
           if ((areaPoly[i].getY() > argPoint.getY()) != (areaPoly[j].getY() > argPoint.getY()) &&
