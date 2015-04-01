@@ -238,11 +238,11 @@ public abstract class Mode {
 		//get the enemy goal (checking which side is ours, and get the opposite 
 		Goal enemyGoal = (World.getInstance().getReferee().getDoesTeamPlaysWest(World.getInstance().getReferee().getOwnTeamColor())) ?  World.getInstance().getField().getEastGoal() : World.getInstance().getField().getWestGoal();
 
-		ArrayList<Robot> obstacles = World.getInstance().getAllRobotsInArea(new FieldPoint[]{enemyGoal.getSouthPoint(), enemyGoal.getNorthPoint(), ball.getPosition()});
+		ArrayList<Robot> obstacles = World.getInstance().getAllRobotsInArea(new FieldPoint[]{enemyGoal.getFrontSouth(), enemyGoal.getFrontNorth(), ball.getPosition()});
 
 		//No obstacles?! shoot directly in the center of the goal;
 		if(obstacles.size() == 0)
-			return new FieldPoint(enemyGoal.getSouthPoint().getX(), 0.0);
+			return new FieldPoint(enemyGoal.getFrontSouth().getX(), 0.0);
 		
 		if(obstacles.size() >= maxObstacles)
 			return null;
@@ -261,7 +261,7 @@ public abstract class Mode {
 			double obstacleLeftAngle = Math.toRadians(ball.getPosition().getAngle(obstacle.getPosition()))  + divertAngle;
 			double obstacleRightAngle = Math.toRadians(ball.getPosition().getAngle(obstacle.getPosition())) - divertAngle;
 			
-			double dx = enemyGoal.getSouthPoint().getX() - ball.getPosition().getX();
+			double dx = enemyGoal.getFrontSouth().getX() - ball.getPosition().getX();
 			double dyL = Math.tan(obstacleLeftAngle) * dx;
 			double dyR = Math.tan(obstacleRightAngle) * dx;
 
@@ -276,8 +276,8 @@ public abstract class Mode {
 					(obstructedArea.get(L.toPoint2D().getY())) > R.toPoint2D().getY())
 				obstructedArea.put(L.toPoint2D().getY(), R.toPoint2D().getY());
 		}
-		double minY = enemyGoal.getSouthPoint().getY();
-		double maxY = enemyGoal.getNorthPoint().getY();
+		double minY = enemyGoal.getFrontSouth().getY();
+		double maxY = enemyGoal.getFrontNorth().getY();
 		obstructedArea = minMax(obstructedArea, minY, maxY);
 		obstructedArea = mergeOverlappingValues(obstructedArea);
 
@@ -288,7 +288,7 @@ public abstract class Mode {
 		if(obstructedArea.lastEntry().getValue() != maxY)
 			availableArea.put(obstructedArea.lastEntry().getValue(), maxY);
 
-		double x = enemyGoal.getSouthPoint().getX();
+		double x = enemyGoal.getFrontSouth().getX();
 		
 		if(availableArea.size() <= 0)
 			return null;
@@ -299,6 +299,8 @@ public abstract class Mode {
 			if(entry.getValue() - entry.getKey() > availableArea.get(biggestKey) - biggestKey)
 				biggestKey = entry.getKey();
 
+		System.out.println("Size: " + biggestKey + availableArea.get(biggestKey));
+		
 		//return point that lies in the center of the biggest point
 		FieldPoint hitmarker = new FieldPoint(x, (biggestKey/2 + availableArea.get(biggestKey)/2));
 		return hitmarker;

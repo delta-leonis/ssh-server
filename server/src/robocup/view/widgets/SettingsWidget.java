@@ -55,7 +55,7 @@ public class SettingsWidget extends WidgetBox {
 		frequencyBox = new JComboBox<String>();
 		frequencyBox.setEditable(false);
 		for (int x = 0; x < frequencies.length; x++)
-			frequencyBox.addItem(x + 1 + ". " + frequencies[x]);
+			frequencyBox.addItem(x + ". " + frequencies[x]);
 
 		JButton setFrequencyButton = new JButton("Set frequency");
 		setFrequencyButton.addActionListener(new ButtonListener());

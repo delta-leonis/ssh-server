@@ -285,16 +285,16 @@ public class Field {
 	 * goalWallWidth, goalHeigth, length
 	 */
 	private void createGoals(int goalWidth, int goalDepth, int goalWallWidth, int goalHeigth) {
-		FieldPoint frontLeft = new FieldPoint(width / 2, goalWidth / 2);
-		FieldPoint frontRight = new FieldPoint(width / 2, goalWidth / -2);
-		FieldPoint backLeft = new FieldPoint(frontLeft.getX() + goalDepth, frontLeft.getY());
-		FieldPoint backRight = new FieldPoint(frontRight.getX() + goalDepth, frontRight.getY());
+		FieldPoint frontNorth = new FieldPoint(width / 2, goalWidth / 2);
+		FieldPoint frontSouth = new FieldPoint(width / 2, goalWidth / -2);
+		FieldPoint backNorth = new FieldPoint(frontNorth.getX() + goalDepth, frontNorth.getY());
+		FieldPoint backSouth = new FieldPoint(frontSouth.getX() + goalDepth, frontSouth.getY());
 
 		// Adding Goal A
-		eastGoal = new Goal(frontLeft, frontRight, backLeft, backRight, goalWallWidth, goalHeigth);
+		eastGoal = new Goal(frontNorth, frontSouth, backNorth, backSouth, goalWallWidth, goalHeigth);
 
 		// Adding Goal B
-		westGoal = new Goal(frontLeft.diagMirror(), frontRight.diagMirror(), backLeft.diagMirror(), backRight
+		westGoal = new Goal(frontSouth.diagMirror(), frontNorth.diagMirror(), backSouth.diagMirror(), backNorth
 				.diagMirror(), goalWallWidth, goalHeigth);
 	}
 
