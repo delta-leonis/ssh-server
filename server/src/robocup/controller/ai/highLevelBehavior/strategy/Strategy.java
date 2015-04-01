@@ -18,7 +18,7 @@ public abstract class Strategy {
 	 * @param zonesForRole the zones which are connected to specific roles
 	 */
 	public Strategy() {
-		roles.add(RobotMode.KEEPER);
+		
 	}
 
 	/**
