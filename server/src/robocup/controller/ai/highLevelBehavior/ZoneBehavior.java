@@ -2,34 +2,31 @@ package robocup.controller.ai.highLevelBehavior;
 
 import java.util.ArrayList;
 
+import robocup.controller.ai.highLevelBehavior.events.EventSystem;
 import robocup.controller.ai.highLevelBehavior.strategy.defense.ExampleStrategy;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.AttackMode;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.DefenseMode;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.Mode;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Ball;
-import robocup.model.Robot;
 import robocup.model.World;
 
 public class ZoneBehavior extends Behavior {
 
 	private World world;
-	private DefenseMode defenseMode;
-	private AttackMode attackMode;
 	private Mode currentMode;
+	private EventSystem events;
 	private Ball ball;
 
 	/**
-	 * Create the a ZoneBehavior.
+	 * Create a ZoneBehavior.
 	 * DefenseMode and AttackMode will be created as well.
 	 * @param executers the list containing all RobotExecuters
 	 */
 	public ZoneBehavior(ArrayList<RobotExecuter> executers) {
 		world = World.getInstance();
 		ball = world.getBall();
-
-		defenseMode = new DefenseMode(new ExampleStrategy(), executers);
-		attackMode = new AttackMode(new ExampleStrategy(), executers);
+		events = new EventSystem();
 	}
 
 	/**
@@ -38,31 +35,54 @@ public class ZoneBehavior extends Behavior {
 	 */
 	@Override
 	public void execute(ArrayList<RobotExecuter> executers) {
-		if (eventHappened())
-			currentMode = determineMode();
+		determineMode(executers);
 
 		currentMode.execute(executers);
 	}
 
 	/**
-	 * Event based system, using events like:
-	 * referee command
-	 * ball changing owner
-	 * ball changing field half
-	 * @return true when event has happened
-	 */
-	private boolean eventHappened() {
-		// TODO calculate if event has happened
-		return true;
-	}
-
-	/**
 	 * Determine which Mode needs to be used.
+	 * @param executers all executers
 	 * @return AttackMode when our team is closer to the ball. DefenseMode when the enemy team is closer to the ball.
 	 */
-	private Mode determineMode() {
-		// TODO create a new mode and determine strategy instead of using standard examplestrategy
-		return allyHasBall() ? attackMode : defenseMode;
+	private void determineMode(ArrayList<RobotExecuter> executers) {
+		switch (events.getNewEvent()) {
+		case BALL_ALLY_CAPTURE:
+			// TODO choose an attack strategy
+			currentMode = new AttackMode(new ExampleStrategy(), executers);
+			break;
+		case BALL_ALLY_CHANGEOWNER:
+			currentMode.setRoles(executers);
+			break;
+		case BALL_ENEMY_CAPTURE:
+			// TODO choose a defense strategy
+			currentMode = new DefenseMode(new ExampleStrategy(), executers);
+			break;
+		case BALL_ENEMY_CHANGEOWNER:
+			currentMode.setRoles(executers);
+			break;
+		case BALL_MOVESPAST_MIDLINE:
+			// if(enemyRobotsOnOurSide > 3)
+			// choose more defensive strategy
+			currentMode = new DefenseMode(new ExampleStrategy(), executers);
+			break;
+		case BALL_MOVESPAST_NORTHSOUTH:
+			currentMode.getStrategy().updateZones(ball.getPosition());
+			currentMode.setRoles(executers);
+			break;
+		case REFEREE_NEWCOMMAND:
+			// TODO choose strategy from standard situation strategy classes
+			currentMode = new AttackMode(new ExampleStrategy(), executers);
+			break;
+		case ROBOT_ENEMY_MOVESPAST_MIDLINE:
+			if (world.allyHasBall())
+				currentMode = new AttackMode(new ExampleStrategy(), executers);
+			else
+				currentMode = new DefenseMode(new ExampleStrategy(), executers);
+			break;
+		default:
+			break;
+		}
 	}
 
 	/**
