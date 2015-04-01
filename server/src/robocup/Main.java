@@ -32,7 +32,7 @@ public class Main {
 	
 
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
-	private static Level debugLevel = Level.INFO;
+	private static Level debugLevel = Level.WARNING;
 	private static String fieldConfigName = "config/field.properties";
 	private static String teamConfig = "config/teams.properties";
 	private static String protobufConfig = "config/config.properties";
