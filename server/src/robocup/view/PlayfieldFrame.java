@@ -119,7 +119,7 @@ public class PlayfieldFrame extends JPanel {
 
 		//No obstacles?! shoot directly in the center of the goal;
 		if(obstacles.size() == 0)
-			return new FieldPoint(enemyGoal.getSouthPoint().getX(), 0.0f);
+			return new FieldPoint(enemyGoal.getSouthPoint().getX(), 0.0);
 		
 
 		//make a list with all blocked areas.

@@ -230,7 +230,7 @@ public abstract class Mode {
 		//only proceed when we are the ballowner
 		if(ball.getOwner() instanceof Enemy)
 			return null;
-		
+
 		//check if the ball is in a zone from which we can actually make the angle
 		if(!Arrays.asList(zones).contains(World.getInstance().locateFieldObject(ball)))
 			return null;
@@ -238,13 +238,13 @@ public abstract class Mode {
 		//get the enemy goal (checking which side is ours, and get the opposite 
 		Goal enemyGoal = (World.getInstance().getReferee().getDoesTeamPlaysWest(World.getInstance().getReferee().getOwnTeamColor())) ?  World.getInstance().getField().getEastGoal() : World.getInstance().getField().getWestGoal();
 
-		ArrayList<Robot> obstacles = World.getInstance().getAllRobotsInArea(new FieldPoint[]{enemyGoal.getFrontLeft(), enemyGoal.getFrontRight(), ball.getPosition()});
+		ArrayList<Robot> obstacles = World.getInstance().getAllRobotsInArea(new FieldPoint[]{enemyGoal.getSouthPoint(), enemyGoal.getNorthPoint(), ball.getPosition()});
 
 		//No obstacles?! shoot directly in the center of the goal;
 		if(obstacles.size() == 0)
-			return new FieldPoint(enemyGoal.getFrontLeft().getX(), 0.0f);
-
-		if(obstacles.size() > maxObstacles)
+			return new FieldPoint(enemyGoal.getSouthPoint().getX(), 0.0);
+		
+		if(obstacles.size() >= maxObstacles)
 			return null;
 
 		//make a list with all blocked areas.
@@ -261,7 +261,7 @@ public abstract class Mode {
 			double obstacleLeftAngle = Math.toRadians(ball.getPosition().getAngle(obstacle.getPosition()))  + divertAngle;
 			double obstacleRightAngle = Math.toRadians(ball.getPosition().getAngle(obstacle.getPosition())) - divertAngle;
 			
-			double dx = enemyGoal.getFrontLeft().getX() - ball.getPosition().getX();
+			double dx = enemyGoal.getSouthPoint().getX() - ball.getPosition().getX();
 			double dyL = Math.tan(obstacleLeftAngle) * dx;
 			double dyR = Math.tan(obstacleRightAngle) * dx;
 
@@ -276,8 +276,8 @@ public abstract class Mode {
 					(obstructedArea.get(L.toPoint2D().getY())) > R.toPoint2D().getY())
 				obstructedArea.put(L.toPoint2D().getY(), R.toPoint2D().getY());
 		}
-		double minY = enemyGoal.getFrontLeft().getY();
-		double maxY = enemyGoal.getFrontRight().getY();
+		double minY = enemyGoal.getSouthPoint().getY();
+		double maxY = enemyGoal.getNorthPoint().getY();
 		obstructedArea = minMax(obstructedArea, minY, maxY);
 		obstructedArea = mergeOverlappingValues(obstructedArea);
 
@@ -288,7 +288,7 @@ public abstract class Mode {
 		if(obstructedArea.lastEntry().getValue() != maxY)
 			availableArea.put(obstructedArea.lastEntry().getValue(), maxY);
 
-		double x = enemyGoal.getFrontLeft().getX();
+		double x = enemyGoal.getSouthPoint().getX();
 		
 		if(availableArea.size() <= 0)
 			return null;
