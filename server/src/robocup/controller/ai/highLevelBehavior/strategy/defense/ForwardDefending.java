@@ -5,8 +5,30 @@ import robocup.model.FieldPoint;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
 
+/**
+ * {@link ForwardDefending} is an defense strategy that is used to force success from a
+ * counter attack. The shot line of the enemy is blocked by a {@link RobotMode#KEEPER}
+ * and 2 {@link RobotMode#KEEPERDEFENDER}s. A {@link RobotMode#COUNTER} is waiting for
+ * the ball to come. 2 {@link RobotMode#COVERER}s block the passing lines to enemy
+ * robots.
+ * <br><br>
+ * <img src="../../../../../../../images/forwardDefending.jpg" />
+ * <br><br>
+ * For more information about the strategy and roles see TactiekDocument
+ */
 public class ForwardDefending extends Strategy {
 
+	/**
+	 * Roles in the {@link ForwardDefending} strategy are assigned in the following order:<br>
+	 * <ol>
+	 * <li>{@link RobotMode#KEEPER}</li>
+	 * <li>{@link RobotMode#KEEPERDEFENDERS}</li>
+	 * <li>{@link RobotMode#KEEPERDEFENDERS}</li>
+	 * <li>{@link RobotMode#COUNTER}</li>
+	 * <li>{@link RobotMode#COVERER}</li>
+	 * <li>{@link RobotMode#COVERER}</li>
+	 * </ol>
+	 */
 	public ForwardDefending() {
 		super();
 		roles.add(RobotMode.KEEPER);
