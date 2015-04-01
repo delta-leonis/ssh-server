@@ -26,7 +26,6 @@ public class ControlRobotPacketTestWidget extends WidgetBox{
 	private boolean dribbling = false;
 	private JTextField directionField;
 	private JTextField directionSpeedField;
-	private JTextField rotationAngleField;
 	private JTextField rotationSpeedField;
 	
 	/**
@@ -48,7 +47,6 @@ public class ControlRobotPacketTestWidget extends WidgetBox{
 		directionField.setPreferredSize(new Dimension(50, 20));
 		directionSpeedField = new JTextField("0");
 		directionSpeedField.setPreferredSize(new Dimension(50, 20));
-		rotationAngleField = new JTextField("0");
 		rotationSpeedField = new JTextField("0");
 
 
@@ -58,8 +56,6 @@ public class ControlRobotPacketTestWidget extends WidgetBox{
 		add(directionSpeedField, "growx");
 		add(new JLabel(), "wrap");
 		
-		add(new JLabel("Rotation Angle"), "growx");
-		add(rotationAngleField, "growx");
 		add(new JLabel("Rotation Speed"), "growx");
 		add(rotationSpeedField, "growx");
 		add(sendPacketButton, "growx");
@@ -77,7 +73,7 @@ public class ControlRobotPacketTestWidget extends WidgetBox{
 			LOGGER.info(String.format("%s commando send to robot #%d", buttonText.split("\\s+" )[0], selectedRobotId));
 			switch (buttonText) {
 			case "Send":
-				send(directionField.getText(), directionSpeedField.getText(), rotationAngleField.getText(), rotationSpeedField.getText());
+				send(directionField.getText(), directionSpeedField.getText(), rotationSpeedField.getText());
 				break;
 			}
 		}
@@ -90,14 +86,13 @@ public class ControlRobotPacketTestWidget extends WidgetBox{
 	 * @param rotationAngle The direction the robot needs to face, relative to itself. (-180 : 180)
 	 * @param rotationSpeed The speed at which the robot turns.
 	 */
-	public void send(String direction, String directionSpeed, String rotationAngle, String rotationSpeed){
+	public void send(String direction, String directionSpeed, String rotationSpeed){
 		try{
 			int directionInt = Integer.parseInt(direction);
 			int directionSpeedInt = Integer.parseInt(directionSpeed);
-			int rotationAngleInt = Integer.parseInt(rotationAngle);
 			int rotationSpeedInt = Integer.parseInt(rotationSpeed);
 			
-			ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, directionInt, directionSpeedInt, 0, rotationAngleInt, rotationSpeedInt, 100, dribbling);
+			ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, directionInt, directionSpeedInt, rotationSpeedInt, 100, dribbling);
 
 		}catch(NumberFormatException e){
 			LOGGER.severe("Number Format Exception");

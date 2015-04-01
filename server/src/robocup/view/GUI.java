@@ -21,7 +21,7 @@ import robocup.model.World;
 import robocup.view.widgets.ConsoleWidget;
 import robocup.view.widgets.ControlRobotWidget;
 import robocup.view.widgets.GameStatusWidget;
-import robocup.view.widgets.PathPlannerTestWidget;
+//import robocup.view.widgets.PathPlannerTestWidget;
 import robocup.view.widgets.SettingsWidget;
 import robocup.view.widgets.VisibleRobotWidget;
 import robocup.view.widgets.rotateRobotWidget;

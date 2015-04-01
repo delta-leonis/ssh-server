@@ -30,8 +30,8 @@ public abstract class ComInterface {
 	 * @param kicker -1 to -100 for chipping, 1 to 100 for kicking.
 	 * @param dribble true to start the dribbler, false otherwise
 	 */
-	public abstract void send(int messageType, int robotID, int direction, int directionSpeed, int travelDistance,
-			int rotationAngle, int rotationSpeed, int kicker, boolean dribble);
+	public abstract void send(int messageType, int robotID, int direction, int directionSpeed,
+			int rotationSpeed, int kicker, boolean dribble);
 
 	/**
 	 * 
