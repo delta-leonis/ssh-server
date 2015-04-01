@@ -3,20 +3,32 @@ package robocup.controller.ai.highLevelBehavior;
 import java.util.ArrayList;
 
 import robocup.controller.ai.highLevelBehavior.events.EventSystem;
+import robocup.controller.ai.highLevelBehavior.strategy.attack.CornerToCornerAttack;
+import robocup.controller.ai.highLevelBehavior.strategy.attack.FreeShotRoundPlay;
+import robocup.controller.ai.highLevelBehavior.strategy.attack.PenaltyAreaKickIn;
+import robocup.controller.ai.highLevelBehavior.strategy.attack.SecondPostKickIn;
+import robocup.controller.ai.highLevelBehavior.strategy.defense.BarricadeDefending;
 import robocup.controller.ai.highLevelBehavior.strategy.defense.ExampleStrategy;
+import robocup.controller.ai.highLevelBehavior.strategy.defense.ForwardDefending;
+import robocup.controller.ai.highLevelBehavior.strategy.defense.ZonallyBackward;
+import robocup.controller.ai.highLevelBehavior.strategy.defense.ZonallyForward;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.AttackMode;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.DefenseMode;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.Mode;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Ball;
 import robocup.model.World;
+import robocup.model.enums.Command;
 
 public class ZoneBehavior extends Behavior {
 
 	private World world;
 	private Mode currentMode;
-	private EventSystem events;
 	private Ball ball;
+
+	private EventSystem events;
+	private ArrayList<AttackMode> attackModes;
+	private ArrayList<DefenseMode> defenseModes;
 
 	/**
 	 * Create a ZoneBehavior.
@@ -27,6 +39,18 @@ public class ZoneBehavior extends Behavior {
 		world = World.getInstance();
 		ball = world.getBall();
 		events = new EventSystem();
+
+		attackModes = new ArrayList<AttackMode>();
+		attackModes.add(new AttackMode(new CornerToCornerAttack(), executers));
+		attackModes.add(new AttackMode(new FreeShotRoundPlay(), executers));
+		attackModes.add(new AttackMode(new PenaltyAreaKickIn(), executers));
+		attackModes.add(new AttackMode(new SecondPostKickIn(), executers));
+
+		defenseModes = new ArrayList<DefenseMode>();
+		defenseModes.add(new DefenseMode(new BarricadeDefending(), executers));
+		defenseModes.add(new DefenseMode(new ForwardDefending(), executers));
+		defenseModes.add(new DefenseMode(new ZonallyBackward(), executers));
+		defenseModes.add(new DefenseMode(new ZonallyForward(), executers));
 	}
 
 	/**
@@ -85,11 +109,13 @@ public class ZoneBehavior extends Behavior {
 		}
 
 		// Check in case of missed event
-		if (world.allyHasBall() && currentMode instanceof DefenseMode)
-			currentMode = chooseAttackStrategy(executers);
+		if (world.getReferee().getCommand() == Command.NORMAL_START) {
+			if (world.allyHasBall() && currentMode instanceof DefenseMode)
+				currentMode = chooseAttackStrategy(executers);
 
-		if (!world.allyHasBall() && currentMode instanceof AttackMode)
-			currentMode = chooseDefenseStrategy(executers);
+			if (!world.allyHasBall() && currentMode instanceof AttackMode)
+				currentMode = chooseDefenseStrategy(executers);
+		}
 	}
 
 	/**
@@ -98,7 +124,9 @@ public class ZoneBehavior extends Behavior {
 	 * @return The AttackMode containing the chosen strategy
 	 */
 	private AttackMode chooseAttackStrategy(ArrayList<RobotExecuter> executers) {
-		return new AttackMode(new ExampleStrategy(), executers);
+		AttackMode mode = attackModes.get((int) (Math.random() * attackModes.size()));
+		mode.getStrategy().updateZones(ball.getPosition());
+		return mode;
 	}
 
 	/**
@@ -107,7 +135,9 @@ public class ZoneBehavior extends Behavior {
 	 * @return The DefenseMode containing the chosen strategy
 	 */
 	private DefenseMode chooseDefenseStrategy(ArrayList<RobotExecuter> executers) {
-		return new DefenseMode(new ExampleStrategy(), executers);
+		DefenseMode mode = defenseModes.get((int) (Math.random() * defenseModes.size()));
+		mode.getStrategy().updateZones(ball.getPosition());
+		return mode;
 	}
 
 	/**
