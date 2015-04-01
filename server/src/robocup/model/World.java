@@ -203,6 +203,53 @@ public class World extends Observable {
 	}
 
 	/**
+	 * Count all attacking enemies.
+	 * An enemy is attacking when it is located on the same field half as our keeper.
+	 * @return sum of all attacking enemy robots
+	 */
+	public int getAttackingEnemiesCount() {
+		int count = 0;
+		FieldPoint keeperPosition = referee.getAlly().getRobotByID(referee.getAlly().getGoalie()).getPosition();
+
+		for (Robot r : referee.getEnemy().getRobots()) {
+			if (r.getPosition().getX() > 0.0 && keeperPosition.getX() > 0.0 || r.getPosition().getX() < 0.0
+					&& keeperPosition.getX() < 0.0)
+				count++;
+		}
+
+		return count;
+	}
+
+	/**
+	 * Get the closest robot to the ball. This can either be an ally or an enemy robot.
+	 * @return the closest robot to the ball
+	 */
+	public Robot getClosestRobotToBall() {
+		ArrayList<Robot> robots = new ArrayList<Robot>();
+		robots.addAll(getReferee().getAlly().getRobots());
+		robots.addAll(getReferee().getEnemy().getRobots());
+
+		double minDistance = -1.0;
+		Robot minDistanceRobot = null;
+
+		for (Robot robot : robots) {
+			if (minDistance == -1.0) {
+				minDistanceRobot = robot;
+				minDistance = robot.getPosition().getDeltaDistance(ball.getPosition());
+			} else {
+				double distance = robot.getPosition().getDeltaDistance(ball.getPosition());
+
+				if (distance < minDistance) {
+					minDistanceRobot = robot;
+					minDistance = distance;
+				}
+			}
+		}
+
+		return minDistanceRobot;
+	}
+
+	/**
 	 * Get the distance from the closest robot in one team to the ball
 	 * @param robots the team of robots
 	 * @return the distance of the closest robot

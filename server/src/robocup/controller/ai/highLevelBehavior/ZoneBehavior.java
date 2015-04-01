@@ -48,41 +48,74 @@ public class ZoneBehavior extends Behavior {
 	private void determineMode(ArrayList<RobotExecuter> executers) {
 		switch (events.getNewEvent()) {
 		case BALL_ALLY_CAPTURE:
-			// TODO choose an attack strategy
-			currentMode = new AttackMode(new ExampleStrategy(), executers);
+			currentMode = chooseAttackStrategy(executers);
 			break;
 		case BALL_ALLY_CHANGEOWNER:
 			currentMode.setRoles(executers);
 			break;
 		case BALL_ENEMY_CAPTURE:
-			// TODO choose a defense strategy
-			currentMode = new DefenseMode(new ExampleStrategy(), executers);
+			currentMode = chooseDefenseStrategy(executers);
 			break;
 		case BALL_ENEMY_CHANGEOWNER:
 			currentMode.setRoles(executers);
 			break;
 		case BALL_MOVESPAST_MIDLINE:
-			// if(enemyRobotsOnOurSide > 3)
-			// choose more defensive strategy
-			currentMode = new DefenseMode(new ExampleStrategy(), executers);
+			if (world.allyHasBall())
+				currentMode = chooseAttackStrategy(executers);
+			else
+				currentMode = chooseDefenseStrategy(executers);
 			break;
 		case BALL_MOVESPAST_NORTHSOUTH:
 			currentMode.getStrategy().updateZones(ball.getPosition());
 			currentMode.setRoles(executers);
 			break;
 		case REFEREE_NEWCOMMAND:
-			// TODO choose strategy from standard situation strategy classes
-			currentMode = new AttackMode(new ExampleStrategy(), executers);
+			currentMode = chooseStandardStrategy(executers);
 			break;
-		case ROBOT_ENEMY_MOVESPAST_MIDLINE:
-			if (world.allyHasBall())
-				currentMode = new AttackMode(new ExampleStrategy(), executers);
+		case ROBOT_ENEMY_ATTACKCOUNT_CHANGE:
+			if (world.getAttackingEnemiesCount() > 3)
+				// choose ultra defense strategy
+				currentMode = chooseDefenseStrategy(executers);
 			else
-				currentMode = new DefenseMode(new ExampleStrategy(), executers);
+				// choose normal defense strategy
+				currentMode = chooseDefenseStrategy(executers);
 			break;
 		default:
 			break;
 		}
+
+		// Check in case of missed event
+		if (world.allyHasBall() && currentMode instanceof DefenseMode)
+			currentMode = chooseAttackStrategy(executers);
+
+		if (!world.allyHasBall() && currentMode instanceof AttackMode)
+			currentMode = chooseDefenseStrategy(executers);
+	}
+
+	/**
+	 * Choose an attack strategy based on previous decisions
+	 * TODO track all previous strategies
+	 * @return The AttackMode containing the chosen strategy
+	 */
+	private AttackMode chooseAttackStrategy(ArrayList<RobotExecuter> executers) {
+		return new AttackMode(new ExampleStrategy(), executers);
+	}
+
+	/**
+	 * Choose a defense strategy based on previous decisions
+	 * TODO track all previous strategies
+	 * @return The DefenseMode containing the chosen strategy
+	 */
+	private DefenseMode chooseDefenseStrategy(ArrayList<RobotExecuter> executers) {
+		return new DefenseMode(new ExampleStrategy(), executers);
+	}
+
+	/**
+	 * Choose a standard strategy based on referee command
+	 * @return The mode containing the chosen strategy
+	 */
+	private Mode chooseStandardStrategy(ArrayList<RobotExecuter> executers) {
+		return new DefenseMode(new ExampleStrategy(), executers);
 	}
 
 	/**
