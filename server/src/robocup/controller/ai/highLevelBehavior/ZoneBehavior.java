@@ -72,43 +72,4 @@ public class ZoneBehavior extends Behavior {
 	public void updateExecuters(ArrayList<RobotExecuter> executers) {
 		// Use execute instead, this is deprecated
 	}
-
-	/**
-	 * Calculate if ally team is closer to the ball
-	 * @return true when the ally team is closer
-	 */
-	private boolean allyHasBall() {
-		ArrayList<Robot> allies = world.getReferee().getAlly().getRobots();
-		ArrayList<Robot> enemies = world.getReferee().getEnemy().getRobots();
-
-		double distanceAlly = getTeamDistanceToBall(allies);
-		double distanceEnemy = getTeamDistanceToBall(enemies);
-
-		return distanceAlly <= distanceEnemy;
-	}
-
-	/**
-	 * Get the distance from the closest robot in one team to the ball
-	 * @param robots the team of robots
-	 * @return the distance of the closest robot
-	 */
-	private double getTeamDistanceToBall(ArrayList<Robot> robots) {
-		if (ball == null)
-			return Integer.MAX_VALUE;
-
-		double minDistance = -1.0;
-
-		for (Robot r : robots) {
-			if (minDistance == -1)
-				minDistance = r.getPosition().getDeltaDistance(ball.getPosition());
-			else {
-				double distance = r.getPosition().getDeltaDistance(ball.getPosition());
-
-				if (distance < minDistance)
-					minDistance = distance;
-			}
-		}
-
-		return minDistance;
-	}
 }
