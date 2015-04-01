@@ -1,6 +1,7 @@
 package robocup.controller.ai.highLevelBehavior.strategy.attack;
 
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
+import robocup.model.FieldPoint;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
 
@@ -18,7 +19,8 @@ public class FreeShotRoundPlay extends Strategy {
 		roles.add(RobotMode.ATTACKER);
 	}
 	
-	public void updateZones() {
+	@Override
+	public void updateZones(FieldPoint ballPosition) {
 		//TODO kant afhanklijk maken
 		zonesForRole.put(RobotMode.ATTACKER, FieldZone.WEST_CENTER);
 		zonesForRole.put(RobotMode.ATTACKER, FieldZone.WEST_RIGHT_SECOND_POST);

@@ -1,6 +1,7 @@
 package robocup.controller.ai.highLevelBehavior.strategy.attack;
 
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
+import robocup.model.FieldPoint;
 import robocup.model.enums.RobotMode;
 
 public class CornerToCornerAttack extends Strategy {
@@ -17,7 +18,8 @@ public class CornerToCornerAttack extends Strategy {
 		roles.add(RobotMode.RUNNER);
 	}
 	
-	public void updateZones() {
+	@Override
+	public void updateZones(FieldPoint ballPosition) {
 		
 	}
 }

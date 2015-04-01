@@ -1,6 +1,7 @@
 package robocup.controller.ai.highLevelBehavior.strategy.defense;
 
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
+import robocup.model.FieldPoint;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
 
@@ -18,7 +19,8 @@ public class BarricadeDefending extends Strategy {
 		roles.add(RobotMode.DISTURBER);
 	}
 	
-	public void updateZones() {
+	@Override
+	public void updateZones(FieldPoint ballPosition) {
 		//TODO kantafhankelijk
 		//vijandelijke helft centrum
 		zonesForRole.put(RobotMode.COUNTER, FieldZone.EAST_CENTER);
