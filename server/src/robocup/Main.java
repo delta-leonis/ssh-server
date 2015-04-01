@@ -170,7 +170,7 @@ public class Main {
 			LOGGER.severe(e.toString());
 		}
 		
-		World.getInstance().getGUI().update("robotContainer");
+		World.getInstance().getGUI().update("robotContainer");		//TURN OFF FOR TESTPATHPLANNERWIDGET
 	}
 
 	/**
