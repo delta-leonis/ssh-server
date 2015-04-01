@@ -14,8 +14,8 @@ import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Ally;
 import robocup.model.Ball;
 import robocup.model.Enemy;
-import robocup.model.Goal;
 import robocup.model.FieldPoint;
+import robocup.model.Goal;
 import robocup.model.Robot;
 import robocup.model.World;
 import robocup.model.enums.FieldZone;
@@ -58,9 +58,17 @@ public abstract class Mode {
 	}
 
 	/**
+	 * Get the strategy for this Mode
+	 * @return the strategy
+	 */
+	public Strategy getStrategy() {
+		return strategy;
+	}
+
+	/**
 	 * Set the roles for all executers based on current strategy and mode.
 	 */
-	protected abstract void setRoles(ArrayList<RobotExecuter> executers);
+	public abstract void setRoles(ArrayList<RobotExecuter> executers);
 
 	/**
 	 * Update an executer.

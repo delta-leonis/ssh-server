@@ -55,7 +55,7 @@ public abstract class LowLevelBehavior {
 			LOGGER.warning("Robot: " + (robot.getLastUpdateTime()));
 
 			robot.setOnSight(false);
-			output.send(1, robot.getRobotId(), 0, 0, 0, 0, 0, 0, false); // stop
+			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false); // stop
 																			// moving
 																			// if
 																			// the

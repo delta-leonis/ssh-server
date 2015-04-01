@@ -89,7 +89,7 @@ public class SettingsWidget extends WidgetBox {
 			case "Terminate":
 			{
 				LOGGER.info("Terminate command send to all robots");
-				ComInterface.getInstance(RobotCom.class).send(1, 0, 0, 0, 0, 0, 0,0, false);
+				ComInterface.getInstance(RobotCom.class).send(1, 0, 0, 0, 0, 0, false);
 				break;
 			}
 			

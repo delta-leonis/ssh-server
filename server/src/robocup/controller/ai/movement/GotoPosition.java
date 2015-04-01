@@ -135,7 +135,7 @@ public class GotoPosition {
 	public void calculate() {
 		if (destination == null || target == null) {
 			robot.setOnSight(true);
-			output.send(1, robot.getRobotId(), 0, 0, 0, 0, 0, 0, false);
+			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
 			return;
 
 			// Calculate parameters
@@ -147,13 +147,12 @@ public class GotoPosition {
 			if (route.size() > 0 && route.get(0) != null) {
 				destination = route.get(0);
 			} else {
-					output.send(1, robot.getRobotId(), 0, 0, 0, 0, 0, 0, false);
+					output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
 					return;
 			}
 
 			// TODO make robot stop when distance is reached, should be handled
 			// in robot code
-			double travelDistance = getDistance();
 			double rotationToTarget = rotationToDest(target);
 			double rotationToGoal = rotationToDest(destination);
 
@@ -169,7 +168,7 @@ public class GotoPosition {
 			// direction and rotationAngle do nothing, set to 0
 			// rotationSpeed inverted because the motors spin in opposite
 			// direction
-			output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)travelDistance, 0, (int)-rotationSpeed, chipKick, dribble);
+			output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)-rotationSpeed, chipKick, dribble);
 			
 
 			// Set kick back to 0 to prevent kicking twice in a row

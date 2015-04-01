@@ -3,9 +3,9 @@ package robocup.model;
 import java.util.ArrayList;
 import java.util.Observable;
 
+import robocup.model.enums.Command;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.TeamColor;
-import robocup.model.enums.Command;
 import robocup.view.GUI;
 /**
  * Model representation of the physical "world", including the field, 
@@ -186,6 +186,45 @@ public class World extends Observable {
 	public String toString() {
 		return "World \r\n[ball=" + ball + "\r\nreferee=" + referee + "\r\n"
 				+ field + "]";
+	}
+
+	/**
+	 * Calculate if ally team is closer to the ball
+	 * @return true when the ally team is closer
+	 */
+	public boolean allyHasBall() {
+		ArrayList<Robot> allies = getReferee().getAlly().getRobots();
+		ArrayList<Robot> enemies = getReferee().getEnemy().getRobots();
+
+		double distanceAlly = getTeamDistanceToBall(allies);
+		double distanceEnemy = getTeamDistanceToBall(enemies);
+
+		return distanceAlly <= distanceEnemy;
+	}
+
+	/**
+	 * Get the distance from the closest robot in one team to the ball
+	 * @param robots the team of robots
+	 * @return the distance of the closest robot
+	 */
+	private double getTeamDistanceToBall(ArrayList<Robot> robots) {
+		if (ball == null)
+			return Integer.MAX_VALUE;
+
+		double minDistance = -1.0;
+
+		for (Robot r : robots) {
+			if (minDistance == -1.0)
+				minDistance = r.getPosition().getDeltaDistance(ball.getPosition());
+			else {
+				double distance = r.getPosition().getDeltaDistance(ball.getPosition());
+
+				if (distance < minDistance)
+					minDistance = distance;
+			}
+		}
+
+		return minDistance;
 	}
 	
 	/**
