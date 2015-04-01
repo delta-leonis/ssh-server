@@ -9,13 +9,16 @@ import java.awt.geom.Point2D;
  * (-x,y)________________________________	(x,y)
  * 		|								 |
  * 		|								 |
- *	   |				(0,0)		  	  |
+ *	    |				(0,0)		  	 |
  * 		|								 |
  * 		|________________________________|
  * 	 (-x,-y)								(+x,-y)
  * 
  * x being half the field-width.
  * y being half the field-height.
+ * 
+ * TODO
+ * Give Point2D and convert to a FieldPoint. Can be a static method
  */
 public class FieldPoint {
 	private double x;

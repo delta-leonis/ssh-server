@@ -203,44 +203,4 @@ public class Main {
 		Thread handlerThread = new Thread(handler);
 		handlerThread.start();
 	}
-
-	/**
-	 * Read data from the console
-	 * @deprecated Unused function
-	 */
-	public static void console() {
-		BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
-		World w = World.getInstance();
-		while (true) {
-			String s = null;
-			try {
-				s = bufferRead.readLine();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			if (s.toLowerCase().equals("tostring"))
-				System.out.println(World.getInstance().toString());
-			if (s.toLowerCase().equals("ownteam"))
-				System.out.println(w.getTeamByColor(w.getOwnTeamColor()).getRobots().toString());
-			if (s.toLowerCase().equals("stop"))
-				World.getInstance().getReferee().setStart(false);
-			if (s.toLowerCase().equals("start"))
-				World.getInstance().getReferee().setStart(true);
-		}
-	}
-
-	/**
-	 * Initialize the intelligence
-	 * @deprecated Unused function
-	 */
-	public static void initAi() {
-		final Properties configFile = new Properties();
-		try {
-			configFile.load(new FileInputStream(aiConfig));
-			new robocup.controller.ai.Main();
-		} catch (IOException e) {
-			LOGGER.severe(e.toString());
-			System.exit(1);
-		}
-	}
 }

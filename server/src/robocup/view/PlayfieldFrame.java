@@ -220,6 +220,7 @@ public class PlayfieldFrame extends JPanel {
 			drawOval(g2, (int) (enemyGoal.getFrontSouth().getX()), 0, 43);
 			return;
 		}
+		System.out.println(obstacles.size() + " robots gevonden");
 		
 
 		//make a list with all blocked areas.
@@ -281,7 +282,7 @@ public class PlayfieldFrame extends JPanel {
 		//in this case size DOES matter
 		Double biggestKey = availableArea.firstKey();
 		for(Entry<Double, Double> entry : availableArea.entrySet())
-			if(entry.getValue() - entry.getKey() > availableArea.get(biggestKey) - biggestKey)
+			if((entry.getValue() - entry.getKey() )> (availableArea.get(biggestKey) - biggestKey))
 				biggestKey = entry.getKey();
 
 		//return point that lies in the center of the biggest point
