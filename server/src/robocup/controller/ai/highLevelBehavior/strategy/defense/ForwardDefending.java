@@ -43,7 +43,11 @@ public class ForwardDefending extends Strategy {
 	
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
-		//TODO kantafhanklijk
-		zonesForRole.put(RobotMode.COUNTER, FieldZone.EAST_CENTER);
+		//TODO
+//		if(iets.getOwnSide() == EAST) {
+			zonesForRole.put(RobotMode.COUNTER, FieldZone.WEST_CENTER);
+//		} else {
+			zonesForRole.put(RobotMode.COUNTER, FieldZone.EAST_CENTER);
+//		}
 	}
 }

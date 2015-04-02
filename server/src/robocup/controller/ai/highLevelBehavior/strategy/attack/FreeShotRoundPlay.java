@@ -45,9 +45,15 @@ public class FreeShotRoundPlay extends Strategy {
 	
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
-		//TODO kant afhanklijk maken
-		zonesForRole.put(RobotMode.ATTACKER, FieldZone.WEST_CENTER);
-		zonesForRole.put(RobotMode.ATTACKER, FieldZone.WEST_RIGHT_SECOND_POST);
-		zonesForRole.put(RobotMode.ATTACKER, FieldZone.WEST_LEFT_SECOND_POST);
+		//TODO
+//		if(iets.getOwnSide() == EAST) {
+			zonesForRole.put(RobotMode.ATTACKER, FieldZone.WEST_CENTER);
+			zonesForRole.put(RobotMode.ATTACKER, FieldZone.WEST_RIGHT_SECOND_POST);
+			zonesForRole.put(RobotMode.ATTACKER, FieldZone.WEST_LEFT_SECOND_POST);
+//		} else {
+			zonesForRole.put(RobotMode.ATTACKER, FieldZone.EAST_CENTER);
+			zonesForRole.put(RobotMode.ATTACKER, FieldZone.EAST_RIGHT_SECOND_POST);
+			zonesForRole.put(RobotMode.ATTACKER, FieldZone.EAST_LEFT_SECOND_POST);
+//		}
 	}
 }
