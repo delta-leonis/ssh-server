@@ -505,6 +505,6 @@ public class World extends Observable {
 	 */
 	@Deprecated
 	public TeamColor getOwnTeamColor() {
-		return referee.getOwnTeamColor();
+		return referee.getAllyTeamColor();
 	}
 }

@@ -34,8 +34,8 @@ public class SettingsWidget extends WidgetBox {
 
 		fieldHalfBox = new JComboBox<String>();
 		fieldHalfBox.setEditable(false);
-		fieldHalfBox.addItem("left");
-		fieldHalfBox.addItem("right");
+		fieldHalfBox.addItem("east");
+		fieldHalfBox.addItem("west");
 		
 		levelBox = new JComboBox<Level>();
 		levelBox.addItem(Level.ALL);
@@ -101,12 +101,12 @@ public class SettingsWidget extends WidgetBox {
 			}
 			
 			case "Set fieldhalf":
-				if (fieldHalfBox.getSelectedItem().equals("right"))
+				if (fieldHalfBox.getSelectedItem().equals("west"))
 					World.getInstance().getReferee()
-							.setRightTeamByColor(World.getInstance().getReferee().getAlly().getColor());
+							.setWestTeam(World.getInstance().getReferee().getAlly());
 				else
 					World.getInstance().getReferee()
-							.setRightTeamByColor(World.getInstance().getReferee().getEnemy().getColor());
+							.setWestTeam(World.getInstance().getReferee().getEnemy());
 				World.getInstance().getGUI().update("widgetContainer");
 				break;
 			}
@@ -119,9 +119,9 @@ public class SettingsWidget extends WidgetBox {
 	@Override
 	public void update() {
 		if (World.getInstance().getReferee()
-				.getDoesTeamPlaysEast(World.getInstance().getReferee().getAlly().getColor()))
-			fieldHalfBox.setSelectedItem("left");
+				.isEastTeamColor(World.getInstance().getReferee().getAlly().getColor()))
+			fieldHalfBox.setSelectedItem("east");
 		else
-			fieldHalfBox.setSelectedItem("right");
+			fieldHalfBox.setSelectedItem("west");
 	}
 }

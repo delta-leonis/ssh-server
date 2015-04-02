@@ -97,7 +97,7 @@ public class DetectionHandler {
 			}
 		}
 		
-		if(World.getInstance().getReferee().getOwnTeamColor()== TeamColor.YELLOW){
+		if(World.getInstance().getReferee().getAllyTeamColor()== TeamColor.YELLOW){
 			updateOnSight(yellowList);
 		}
 		else{
@@ -150,7 +150,7 @@ public class DetectionHandler {
  		 
  		 
 		if (allyFilter[robotMessage.getRobotId()] == null) { // Create robot object
-			if (world.getReferee().getOwnTeamColor().equals(color)) {
+			if (world.getReferee().getAllyTeamColor().equals(color)) {
 				for (int id : validRobotIDs) {
 					// filter out all robots that should not be available
 					if (robotMessage.getRobotId() == id) {
@@ -168,7 +168,7 @@ public class DetectionHandler {
 		robot = t.getRobotByID(robotMessage.getRobotId());
 		if (robot != null) {
 			Kalman filter;
-			if (world.getReferee().getOwnTeamColor().equals(color)) {
+			if (world.getReferee().getAllyTeamColor().equals(color)) {
 				filter = allyFilter[robot.getRobotId()];
 			} else {
 				filter = enemyFilter[robot.getRobotId()];

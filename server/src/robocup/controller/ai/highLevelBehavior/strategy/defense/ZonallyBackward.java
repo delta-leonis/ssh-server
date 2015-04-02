@@ -2,6 +2,7 @@ package robocup.controller.ai.highLevelBehavior.strategy.defense;
 
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.model.FieldPoint;
+import robocup.model.World;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
 
@@ -46,13 +47,12 @@ public class ZonallyBackward extends Strategy {
 	
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
-		//TODO
-//		if(iets.getOwnSide() == EAST) {
+		if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
 			zonesForRole.put(RobotMode.DISTURBER_COVERER, FieldZone.EAST_LEFT_FRONT);
 			zonesForRole.put(RobotMode.DISTURBER_COVERER, FieldZone.EAST_RIGHT_FRONT);
-//		} else {
+		} else {
 			zonesForRole.put(RobotMode.DISTURBER_COVERER, FieldZone.WEST_LEFT_FRONT);
 			zonesForRole.put(RobotMode.DISTURBER_COVERER, FieldZone.WEST_RIGHT_FRONT);
-//		}
+		}
 	}
 }
