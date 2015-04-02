@@ -159,7 +159,7 @@ public class Main {
 			w.getReferee().getAlly().setName(ourTeamName);
 			w.getReferee().getEnemy().setName(enemyTeamName);
 			
-			w.getReferee().switchAllyTeamColor(TeamColor.valueOf(ourTeamColor));
+			w.getReferee().setAllyTeamColor(TeamColor.valueOf(ourTeamColor));
 			
 		} catch (IllegalArgumentException e) {
 			LOGGER.severe("Please check the config file for type errors");

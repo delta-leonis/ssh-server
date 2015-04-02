@@ -24,7 +24,6 @@ import robocup.model.Robot;
 import robocup.model.World;
 import robocup.model.Zone;
 import robocup.model.enums.FieldZone;
-import robocup.model.enums.TeamColor;
 
 @SuppressWarnings("serial")
 public class PlayfieldFrame extends JPanel {
@@ -45,7 +44,7 @@ public class PlayfieldFrame extends JPanel {
 		//zoneList = new EnumMap<FieldZone, Zone>(FieldZone.class);
 		setSize((int)(FIELDWIDTH * ratio), (int)(FIELDHEIGHT * ratio));
 		initFieldObjects();
-		World.getInstance().getReferee().setRightTeamByColor(TeamColor.BLUE);
+		//World.getInstance().getReferee().setRightTeamByColor(TeamColor.BLUE);
 		
 		addMouseListener(new MouseAdapter() { 
 	          public void mousePressed(MouseEvent me) { 
@@ -113,7 +112,7 @@ public class PlayfieldFrame extends JPanel {
 			return null;
 
 		//get the enemy goal (checking which side is ours, and get the opposite 
-		Goal enemyGoal = (World.getInstance().getReferee().getDoesTeamPlaysWest(World.getInstance().getReferee().getOwnTeamColor())) ?  World.getInstance().getField().getEastGoal() : World.getInstance().getField().getWestGoal();
+		Goal enemyGoal = (World.getInstance().getReferee().isWestTeamColor(World.getInstance().getReferee().getAllyTeamColor())) ?  World.getInstance().getField().getEastGoal() : World.getInstance().getField().getWestGoal();
 
 		ArrayList<Robot> obstacles = World.getInstance().getAllRobotsInArea(new FieldPoint[]{enemyGoal.getFrontSouth(), enemyGoal.getFrontNorth(), ball.getPosition()});
 
@@ -206,7 +205,7 @@ public class PlayfieldFrame extends JPanel {
 		}
 
 		//get the enemy goal (checking which side is ours, and get the opposite 
-		Goal enemyGoal = (World.getInstance().getReferee().getDoesTeamPlaysWest(World.getInstance().getReferee().getOwnTeamColor())) ?  World.getInstance().getField().getEastGoal() : World.getInstance().getField().getWestGoal();
+		Goal enemyGoal = (World.getInstance().getReferee().isWestTeamColor(World.getInstance().getReferee().getAllyTeamColor())) ?  World.getInstance().getField().getEastGoal() : World.getInstance().getField().getWestGoal();
 
 		//scoreArea.add(new Line2D.Double(enemyGoal.getFrontSouth().toPoint2D(), enemyGoal.getFrontNorth().toPoint2D()));
 		//drawPolygon(g2, new Point[]{enemyGoal.getFrontSouth(), enemyGoal.getFrontNorth(), ball.getPosition()});

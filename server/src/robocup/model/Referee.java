@@ -18,12 +18,13 @@ public class Referee {
 	private int commandCounter;
 	private long lastCommandTimestamp;
 	private boolean start;
-	private boolean yellowTeamPlaysRight;
 
 	private final int PLAYING_TEAM_SIZE = 8;
 
-	private Team ourTeam;
+	private Team allyTeam;
 	private Team enemyTeam;
+	private Team eastTeam;
+	private Team westTeam;
 
 	/**
 	 * constructor that initializes the default values, takes no argument
@@ -41,8 +42,9 @@ public class Referee {
 	 * @param teamRobots the robots from the world mode class
 	 */
 	public void initAllyTeam(ArrayList<Robot> teamRobots) {
-		ourTeam = new Team("", TeamColor.BLUE, PLAYING_TEAM_SIZE);
-		ourTeam.setRobots(teamRobots);
+		allyTeam = new Team("", TeamColor.BLUE, PLAYING_TEAM_SIZE);
+		allyTeam.setRobots(teamRobots);
+		eastTeam = allyTeam;
 	}
 
 	/**
@@ -52,6 +54,7 @@ public class Referee {
 	public void initEnemyTeam(ArrayList<Robot> teamRobots) {
 		enemyTeam = new Team("", TeamColor.YELLOW, PLAYING_TEAM_SIZE);
 		enemyTeam.setRobots(teamRobots);
+		westTeam = enemyTeam;
 	}
 
 	/**
@@ -180,8 +183,8 @@ public class Referee {
 	 * @return the {@link Team} with the given color. Returns null if there is no {@link Team} with the given color.
 	 */
 	public Team getTeamByColor(TeamColor color) {
-		if (ourTeam.isColor(color))
-			return ourTeam;
+		if (allyTeam.isColor(color))
+			return allyTeam;
 		else if (enemyTeam.isColor(color))
 			return enemyTeam;
 
@@ -190,27 +193,25 @@ public class Referee {
 
 	/**
 	 * Sets the Color for our own Team.
-	 * Suggestion: Rename to setAllyTeamColor()
 	 * @param color
 	 * 
 	 */
-	public void switchAllyTeamColor(TeamColor color) {
+	public void setAllyTeamColor(TeamColor color) {
 		if (color == TeamColor.BLUE) {
-			ourTeam.setColor(TeamColor.BLUE);
+			allyTeam.setColor(TeamColor.BLUE);
 			enemyTeam.setColor(TeamColor.YELLOW);
 		} else {
-			ourTeam.setColor(TeamColor.YELLOW);
+			allyTeam.setColor(TeamColor.YELLOW);
 			enemyTeam.setColor(TeamColor.BLUE);
 		}
 	}
 
 	/**
 	 * Returns the color of your own team.
-	 * Suggestion: Rename to getAllyTeamColor()
 	 * @return 
 	 */
-	public TeamColor getOwnTeamColor() {
-		return ourTeam.getColor();
+	public TeamColor getAllyTeamColor() {
+		return allyTeam.getColor();
 	}
 
 	/**
@@ -218,7 +219,7 @@ public class Referee {
 	 * @return the ally {@link Team} in the current match.
 	 */
 	public Team getAlly() {
-		return ourTeam;
+		return allyTeam;
 	}
 
 	/**
@@ -228,43 +229,68 @@ public class Referee {
 	public Team getEnemy() {
 		return enemyTeam;
 	}
-
+	
 	/**
-	 * setter function that sets the team that plays on the right side, the color identifies the team
-	 * @param color the color of the team that has to play on the right side of the field
+	 * @param color The {@link TeamColor} that will be compared
+	 * @return if the {@link Team} that plays east has the given {@link TeamColor}
 	 */
-	public void setRightTeamByColor(TeamColor color) {
-		yellowTeamPlaysRight = (color == TeamColor.YELLOW);
+	public boolean isEastTeamColor(TeamColor color) {
+		return color == getEastTeam().getColor();
 	}
 
 	/**
-	 * comparison method that returns if the team that plays on the right side has the same color as the given argument
-	 * @param color the color that will be compared
-	 * @return whether or not the team on the right has the given color
+	 * @param color The {@link TeamColor} that will be compared
+	 * @return if the {@link Team} that plays west has the given {@link TeamColor}
 	 */
-	public boolean getDoesTeamPlaysEast(TeamColor color) {
-		boolean teamIsYellow = (color == TeamColor.YELLOW);
-		if (teamIsYellow) {
-			return yellowTeamPlaysRight;
-		} else {
-			return !yellowTeamPlaysRight;
+	public boolean isWestTeamColor(TeamColor color) {
+		return color == getWestTeam().getColor();
+	}
+
+	/**
+	 * @return return {@link Team} that plays east
+	 */
+	public Team getEastTeam() {
+		return eastTeam;
+	}
+
+	/**
+	 * @return return {@link Team} that plays west
+	 */
+	public Team getWestTeam() {
+		return westTeam;
+	}
+
+	/**
+	 * Set {@link Team} that plays east
+	 * @param Team to be set east
+	 */
+	public void setEastTeam(Team team){
+		if(team.equals(allyTeam)){
+			eastTeam = allyTeam;
+			westTeam = enemyTeam;
+		}
+		else {
+			eastTeam = enemyTeam;
+			westTeam = allyTeam;
 		}
 	}
 
 	/**
-	 * comparison method that returns if the team that plays on the left side has the same color as the given argument
-	 * @param color the color that will be compared
-	 * @return whether or not the team on the right has the given color
+	 * Set {@link Team} that plays west
+	 * @param Team to be set west
 	 */
-	public boolean getDoesTeamPlaysWest(TeamColor color) {
-		boolean teamIsYellow = (color == TeamColor.YELLOW);
-		if (teamIsYellow) {
-			return !yellowTeamPlaysRight;
-		} else {
-			return yellowTeamPlaysRight;
+	public void setWestTeam(Team team){
+		if(team.equals(allyTeam)){
+			westTeam = allyTeam;
+			eastTeam = enemyTeam;
+		}
+		else {
+			westTeam = enemyTeam;
+			eastTeam = allyTeam;
 		}
 	}
 
+	//public TeamColor get
 	@Override
 	public String toString() {
 		return "Referee [timeoutTimeLeft=" + timeoutTimeLeft + ", stagetimeLeft=" + stagetimeLeft + ", stage=" + stage

@@ -65,11 +65,10 @@ public class GameStatusWidget extends WidgetBox {
 					+ java.util.concurrent.TimeUnit.MICROSECONDS.toSeconds(timePlayed) % 60);
 		}
 
-		if (World.getInstance().getReferee()
-				.getDoesTeamPlaysEast(World.getInstance().getReferee().getAlly().getColor()))
-			fieldHalfField.setText("Left");
+		if (World.getInstance().getReferee().isEastTeamColor(World.getInstance().getReferee().getAlly().getColor()))
+			fieldHalfField.setText("east");
 		else
-			fieldHalfField.setText("Right");
+			fieldHalfField.setText("west");
 
 		// TODO Rob moet hier even aan verder werken, Jeroen wist t niet meer
 		gameStatusField.setText("NOT YET IMPLEMENTED");
