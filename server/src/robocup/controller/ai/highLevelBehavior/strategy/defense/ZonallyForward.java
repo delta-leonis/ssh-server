@@ -46,9 +46,15 @@ public class ZonallyForward extends Strategy {
 
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
-		//TODO kantafhanklijk
-		zonesForRole.put(RobotMode.DISTURBER_COVERER, FieldZone.WEST_LEFT_FRONT);
-		zonesForRole.put(RobotMode.DISTURBER_COVERER, FieldZone.WEST_RIGHT_FRONT);
-		zonesForRole.put(RobotMode.COUNTER, FieldZone.EAST_CENTER);
+		//TODO
+//		if(iets.getOwnSide() == EAST) {
+			zonesForRole.put(RobotMode.DISTURBER_COVERER, FieldZone.EAST_LEFT_FRONT);
+			zonesForRole.put(RobotMode.DISTURBER_COVERER, FieldZone.EAST_RIGHT_FRONT);
+			zonesForRole.put(RobotMode.COUNTER, FieldZone.WEST_CENTER);
+//		} else {
+			zonesForRole.put(RobotMode.DISTURBER_COVERER, FieldZone.WEST_LEFT_FRONT);
+			zonesForRole.put(RobotMode.DISTURBER_COVERER, FieldZone.WEST_RIGHT_FRONT);
+			zonesForRole.put(RobotMode.COUNTER, FieldZone.EAST_CENTER);
+//		}
 	}
 }

@@ -46,10 +46,19 @@ public class BarricadeDefending extends Strategy {
 	
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
-		//TODO kantafhankelijk
-		//vijandelijke helft centrum
-		zonesForRole.put(RobotMode.COUNTER, FieldZone.EAST_CENTER);
-		//2e paal eigen kant, helft waar de bal niet is
-		zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.EAST_LEFT_SECOND_POST);
+		//TODO
+//		if(iets.getOwnSide() == EAST) {
+			zonesForRole.put(RobotMode.COUNTER, FieldZone.WEST_CENTER);
+			if(ballPosition.getY() <= 0.0)
+				zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.EAST_RIGHT_SECOND_POST);
+			else
+				zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.EAST_LEFT_SECOND_POST);
+//		} else {
+			zonesForRole.put(RobotMode.COUNTER, FieldZone.EAST_CENTER);
+			if(ballPosition.getY() <= 0.0)
+				zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.EAST_LEFT_SECOND_POST);
+			else
+				zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.EAST_RIGHT_SECOND_POST);
+//		}
 	}
 }
