@@ -74,12 +74,10 @@ public class ZoneBehavior extends Behavior {
 		case BALL_ALLY_CAPTURE:
 			currentMode = chooseAttackStrategy(executers);
 			break;
-		case BALL_ALLY_CHANGEOWNER:
-			currentMode.setRoles(executers);
-			break;
 		case BALL_ENEMY_CAPTURE:
 			currentMode = chooseDefenseStrategy(executers);
 			break;
+		case BALL_ALLY_CHANGEOWNER:
 		case BALL_ENEMY_CHANGEOWNER:
 			currentMode.setRoles(executers);
 			break;
@@ -142,9 +140,64 @@ public class ZoneBehavior extends Behavior {
 
 	/**
 	 * Choose a standard strategy based on referee command
+	 * TODO create the corresponding strategy classes
 	 * @return The mode containing the chosen strategy
 	 */
 	private Mode chooseStandardStrategy(ArrayList<RobotExecuter> executers) {
+		switch (world.getReferee().getCommand()) {
+		case DIRECT_FREE_BLUE:
+			// return new StandardMode(new directFreeKick(), executers);
+			break;
+		case DIRECT_FREE_YELLOW:
+			// return new StandardMode(new directFreeKick(), executers);
+			break;
+		case FORCE_START:
+			// return new StandardMode(new forceStart(), executers);
+			break;
+		case GOAL_BLUE:
+			// return new StandardMode(new goal(), executers);
+			break;
+		case GOAL_YELLOW:
+			// return new StandardMode(new goal(), executers);
+			break;
+		case HALT:
+			// return new StandardMode(new halt(), executers);
+			break;
+		case INDIRECT_FREE_BLUE:
+			// return new StandardMode(new indirectFreeKick(), executers);
+			break;
+		case INDIRECT_FREE_YELLOW:
+			// return new StandardMode(new indirectFreeKick(), executers);
+			break;
+		case NORMAL_START:
+			// return new StandardMode(new normalStart(), executers);
+			break;
+		case PREPARE_KICKOFF_BLUE:
+			// return new StandardMode(new prepareKickOff(), executers);
+			break;
+		case PREPARE_KICKOFF_YELLOW:
+			// return new StandardMode(new prepareKickOff(), executers);
+			break;
+		case PREPARE_PENALTY_BLUE:
+			// return new StandardMode(new preparePenalty(), executers);
+			break;
+		case PREPARE_PENALTY_YELLOW:
+			// return new StandardMode(new preparePenalty(), executers);
+			break;
+		case STOP:
+			// return new StandardMode(new stop(), executers);
+			break;
+		case TIMEOUT_BLUE:
+			// return new StandardMode(new timeOut(), executers);
+			break;
+		case TIMEOUT_YELLOW:
+			// return new StandardMode(new timeOut(), executers);
+			break;
+		default:
+			// LOGGER.info("unknown command?");
+			break;
+		}
+
 		return new DefenseMode(new ExampleStrategy(), executers);
 	}
 
