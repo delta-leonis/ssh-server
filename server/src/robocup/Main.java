@@ -34,7 +34,6 @@ public class Main {
 	private static String fieldConfigName = "config/field.properties";
 	private static String teamConfig = "config/teams.properties";
 	private static String protobufConfig = "config/config.properties";
-	private static String aiConfig = "config/config.properties";
 
 	public static void main(String[] args) {
 		initLog();
@@ -48,6 +47,8 @@ public class Main {
 		initProtoBuffClients();
 		LOGGER.info("Handlers initialized");
 		initHandlers();
+		LOGGER.info("Main initialized");
+        new robocup.controller.ai.Main();
 	}
 
 	/**
