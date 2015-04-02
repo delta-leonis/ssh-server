@@ -16,7 +16,7 @@ import robocup.output.ComInterface;
  * TODO: English-fy
  * TODO: use config to determine position of goal posts.
  */
-public class GoalPostCoverer extends LowLevelBehavior {
+public class GoalPostCoverer extends Keeper {
 	
 	public static final int distanceFromGoal = 1000;
 	public static final int distanceFromMid = 250;
@@ -36,7 +36,7 @@ public class GoalPostCoverer extends LowLevelBehavior {
 	 */
 	public GoalPostCoverer(Robot robot, ComInterface output, Robot enemyRobot, FieldPoint paalPosition, 
 			boolean dribble) {
-		super(robot, output);
+		super(robot, output, 0, false, null, null, null, 0);
 		this.enemyRobot = enemyRobot;
 		this.paalPosition = paalPosition;
 		this.dribble = dribble;
