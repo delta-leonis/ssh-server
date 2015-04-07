@@ -36,8 +36,7 @@ public class Counter extends LowLevelBehavior {
 	 * @param TODO: lijst met robots/obstakels
 	 * @param dribble enable dribbler
 	 */
-	public Counter(Robot robot, ComInterface output, FieldPoint zone, FieldPoint ballPosition,
-			boolean dribble) {
+	public Counter(Robot robot, ComInterface output, FieldPoint zone, FieldPoint ballPosition, boolean dribble) {
 		super(robot, output);
 		this.zone = zone;
 		this.ballPosition = ballPosition;
@@ -60,22 +59,18 @@ public class Counter extends LowLevelBehavior {
 
 	@Override
 	public void calculate() {
-		if (timeOutCheck()) {
+		FieldPoint newDestination = null;
+		go.setTarget(ballPosition);
+		go.setDribble(dribble);
 
-		} else {
-			FieldPoint newDestination = null;
-			go.setTarget(ballPosition);
-			go.setDribble(dribble);
-
-			
-			// Move towards a free position when given
-			if (zone != null){
-				// TODO
-				// Calculate a free path from ball towards zone, based on the robots on the field.
-				// If there is no free path, move to middle of zone.
-			}
-			go.setDestination(newDestination);
+		// Move towards a free position when given
+		if (zone != null) {
+			// TODO
+			// Calculate a free path from ball towards zone, based on the robots on the field.
+			// If there is no free path, move to middle of zone.
 		}
+
+		go.setDestination(newDestination);
 		go.calculate();
 	}
 }

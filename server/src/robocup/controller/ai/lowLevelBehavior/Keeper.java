@@ -8,7 +8,7 @@ import robocup.output.ComInterface;
 
 public class Keeper extends LowLevelBehavior {
 
-	protected int distanceToGoal;
+	protected int distanceToObject;
 	protected boolean goToKick;
 	protected FieldPoint ballPosition;
 	protected FieldPoint centerGoalPosition;
@@ -25,7 +25,7 @@ public class Keeper extends LowLevelBehavior {
 	public Keeper(Robot robot, ComInterface output, int distanceToGoal, boolean goToChip, FieldPoint ballPosition,
 			FieldPoint centerGoalPosition) {
 		super(robot, output);
-		this.distanceToGoal = distanceToGoal;
+		this.distanceToObject = distanceToGoal;
 		this.goToKick = goToChip;
 		this.ballPosition = ballPosition;
 		this.centerGoalPosition = centerGoalPosition;
@@ -40,34 +40,47 @@ public class Keeper extends LowLevelBehavior {
 	 * @param ballPosition
 	 */
 	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition) {
-		this.distanceToGoal = distanceToGoal;
+		this.distanceToObject = distanceToGoal;
 		this.goToKick = goToKick;
 		this.ballPosition = ballPosition;
 	}
 
 	@Override
 	public void calculate() {
-		FieldPoint newDestination = getNewKeeperDestination();
+		FieldPoint newDestination = getNewKeeperDestination(centerGoalPosition, ballPosition, distanceToObject);
+
+		changeDestination(newDestination, ballPosition);
+	}
+
+	protected void changeDestination(FieldPoint destination, FieldPoint target) {
 		go.setTarget(ballPosition);
 
 		if (goToKick)
 			go.setDestination(ballPosition);
-		else if (newDestination != null)
-			go.setDestination(newDestination);
+		else if (destination != null)
+			go.setDestination(destination);
 
 		go.calculate();
 	}
 
-	protected FieldPoint getNewKeeperDestination() {
+	/**
+	 * Calculate a new Keeper destination.
+	 * The destination will be a point between the object and the subject position with a specified distance to the object position.
+	 * @param objectPosition the position of the point this keeper is defending.
+	 * @param subjectPosition the point which needs to be blocked
+	 * @param distance the distance to the object position
+	 * @return the new keeper destination
+	 */
+	protected FieldPoint getNewKeeperDestination(FieldPoint objectPosition, FieldPoint subjectPosition, int distance) {
 		FieldPoint newDestination = null;
 
-		if (ballPosition != null) {
-			double angle = centerGoalPosition.getAngle(ballPosition);
-			double dx = Math.cos(Math.toRadians(angle)) * distanceToGoal;
-			double dy = Math.sin(Math.toRadians(angle)) * distanceToGoal;
+		if (objectPosition != null && subjectPosition != null) {
+			double angle = objectPosition.getAngle(subjectPosition);
+			double dx = Math.cos(Math.toRadians(angle)) * distance;
+			double dy = Math.sin(Math.toRadians(angle)) * distance;
 
-			double destX = (centerGoalPosition.getX() + dx);
-			double destY = (centerGoalPosition.getY() + dy);
+			double destX = objectPosition.getX() + dx;
+			double destY = objectPosition.getY() + dy;
 			newDestination = new FieldPoint(destX, destY);
 		}
 
