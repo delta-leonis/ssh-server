@@ -66,6 +66,7 @@ public abstract class Mode {
 	}
 
 	/**
+	 * TODO: Rename to updateRoles()?
 	 * Set the roles for all executers based on current strategy and mode.
 	 */
 	public abstract void setRoles(ArrayList<RobotExecuter> executers);
