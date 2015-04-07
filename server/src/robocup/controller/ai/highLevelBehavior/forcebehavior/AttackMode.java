@@ -271,21 +271,18 @@ public class AttackMode extends Mode {
 					robot.getPosition());
 		} else {
 			executer.setLowLevelBehavior(new KeeperDefender(robot, ComInterface.getInstance(RobotCom.class),
-					distanceToGoal, false, ball.getPosition(), robot.getPosition(),
-					robot.getPosition().getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE, offset, world.getField()
-							.getWidth() / 2));
+					distanceToGoal, false, ball.getPosition(), robot.getPosition().getX() > 0 ? MID_GOAL_POSITIVE
+							: MID_GOAL_NEGATIVE, offset));
 		}
 	}
 
 	@Override
 	public void handleKeeper(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate, int distanceToGoal) {
 		if (isUpdate) {
-			((Keeper) executer.getLowLevelBehavior()).update(distanceToGoal, false, ball.getPosition(),
-					robot.getPosition());
+			((Keeper) executer.getLowLevelBehavior()).update(distanceToGoal, false, ball.getPosition());
 		} else {
 			executer.setLowLevelBehavior(new Keeper(robot, ComInterface.getInstance(RobotCom.class), distanceToGoal,
-					false, ball.getPosition(), robot.getPosition(), robot.getPosition().getX() > 0 ? MID_GOAL_POSITIVE
-							: MID_GOAL_NEGATIVE, world.getField().getWidth() / 2));
+					false, ball.getPosition(), robot.getPosition().getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE));
 		}
 	}
 }

@@ -82,6 +82,6 @@ public class AttackMode extends Mode {
 		// TODO check if keeper needs to move to the ball, if so, set goToKick to true
 		boolean goToKick = false;
 
-		keeper.update(distanceToGoal, goToKick, ball.getPosition(), executer.getRobot().getPosition());
+		keeper.update(distanceToGoal, goToKick, ball.getPosition());
 	}
 }

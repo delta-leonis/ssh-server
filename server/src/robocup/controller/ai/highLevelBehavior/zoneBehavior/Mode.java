@@ -147,7 +147,7 @@ public abstract class Mode {
 	private void handleKeeperDefender(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof KeeperDefender))
 			executer.setLowLevelBehavior(new KeeperDefender(executer.getRobot(), ComInterface
-					.getInstance(RobotCom.class), 1200, false, null, null, null, null, 0));
+					.getInstance(RobotCom.class), 1200, false, null, null, null));
 
 		updateKeeperDefender(executer);
 	}
@@ -170,8 +170,7 @@ public abstract class Mode {
 		// TODO determine field half in a better way
 		if (!(executer.getLowLevelBehavior() instanceof Keeper))
 			executer.setLowLevelBehavior(new Keeper(keeper, ComInterface.getInstance(RobotCom.class), 500, false, ball
-					.getPosition(), keeper.getPosition(), keeper.getPosition().getX() < 0 ? MID_GOAL_NEGATIVE
-					: MID_GOAL_POSITIVE, world.getField().getWidth() / 2));
+					.getPosition(), keeper.getPosition().getX() < 0 ? MID_GOAL_NEGATIVE : MID_GOAL_POSITIVE));
 
 		updateKeeper(executer);
 	}
