@@ -36,7 +36,7 @@ public class GoalPostCoverer extends Keeper {
 	 */
 	public GoalPostCoverer(Robot robot, ComInterface output, Robot enemyRobot, FieldPoint paalPosition, 
 			boolean dribble) {
-		super(robot, output, 0, false, null, null, null, 0);
+		super(robot, output, 0, false, null, null);
 		this.enemyRobot = enemyRobot;
 		this.paalPosition = paalPosition;
 		this.dribble = dribble;
