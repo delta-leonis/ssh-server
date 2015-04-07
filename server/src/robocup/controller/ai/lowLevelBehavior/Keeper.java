@@ -47,23 +47,15 @@ public class Keeper extends LowLevelBehavior {
 
 	@Override
 	public void calculate() {
-		if (timeOutCheck()) {
+		FieldPoint newDestination = getNewKeeperDestination();
+		go.setTarget(ballPosition);
 
-		} else {
-			FieldPoint newDestination = getNewKeeperDestination();
+		if (goToKick)
+			go.setDestination(ballPosition);
+		else if (newDestination != null)
+			go.setDestination(newDestination);
 
-			if (newDestination != null) {
-				if (goToKick)
-					go.setDestination(ballPosition);// GotoPosition(keeperPosition, ballPosition, ballPosition)
-				else if (isWithinRange(robot, newDestination, 15))
-					go.setDestination(null);
-				else
-					go.setDestination(newDestination);// GotoPosition(keeperPosition, newDestination, ballPosition)
-
-				go.setTarget(ballPosition);
-				go.calculate();
-			}
-		}
+		go.calculate();
 	}
 
 	protected FieldPoint getNewKeeperDestination() {

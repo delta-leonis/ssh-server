@@ -3,8 +3,8 @@ package robocup.controller.ai.lowLevelBehavior;
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
-import robocup.output.ComInterface;
 import robocup.model.enums.RobotMode;
+import robocup.output.ComInterface;
 
 public class Attacker extends LowLevelBehavior {
 
@@ -44,7 +44,8 @@ public class Attacker extends LowLevelBehavior {
 	 * @param dribble enable dribbler
 	 * @param shootDirection direction where the attacker needs to shoot, relative to the field. Values between -180 and 180. 0 degrees facing east. 90 degrees facing north. 
 	 */
-	public void update(FieldPoint freePosition, FieldPoint ballPosition, int chipKick, boolean dribble, int shootDirection) {
+	public void update(FieldPoint freePosition, FieldPoint ballPosition, int chipKick, boolean dribble,
+			int shootDirection) {
 		this.freePosition = freePosition;
 		this.ballPosition = ballPosition;
 		this.chipKick = chipKick;
@@ -54,27 +55,23 @@ public class Attacker extends LowLevelBehavior {
 
 	@Override
 	public void calculate() {
-		if (timeOutCheck()) {
+		FieldPoint newDestination = null;
 
-		} else {
-			FieldPoint newDestination = null;
+		go.setDribble(dribble);
 
-			go.setDribble(dribble);
-
-			// Kick or chip if the values are higher than 0
-			if (chipKick != 0)
-				go.setKick(chipKick);
-			else {
-				// Move towards a free position when given
-				if (freePosition != null)
-					newDestination = freePosition;
-				// Move towards a shooting position behind the ball
-				else
-					newDestination = getShootingPosition(shootDirection, ballPosition);
-			}
-
-			changeDestination(newDestination);
+		// Kick or chip if the values are higher than 0
+		if (chipKick != 0)
+			go.setKick(chipKick);
+		else {
+			// Move towards a free position when given
+			if (freePosition != null)
+				newDestination = freePosition;
+			// Move towards a shooting position behind the ball
+			else
+				newDestination = getShootingPosition(shootDirection, ballPosition);
 		}
+
+		changeDestination(newDestination);
 	}
 
 	/**
@@ -83,7 +80,7 @@ public class Attacker extends LowLevelBehavior {
 	 */
 	private void changeDestination(FieldPoint newDestination) {
 		if (newDestination != null) {
-			if (isWithinRange(robot, newDestination, 10) && Math.abs(shootDirection - robot.getOrientation()) <2)
+			if (isWithinRange(robot, newDestination, 10) && Math.abs(shootDirection - robot.getOrientation()) < 2)
 				go.setDestination(null);
 			else
 				go.setDestination(newDestination);

@@ -127,7 +127,7 @@ public abstract class Mode {
 	private void handleCoverer(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof Coverer))
 			executer.setLowLevelBehavior(new Coverer(executer.getRobot(), ComInterface.getInstance(RobotCom.class),
-					250, null, null, null, 0));
+					250, null, null, 0));
 
 		updateCoverer(executer);
 	}

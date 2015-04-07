@@ -19,50 +19,45 @@ import robocup.output.RobotCom;
  */
 public class Coverer extends LowLevelBehavior {
 
-	protected FieldPoint ballPosition;
-	protected FieldPoint opponentPosition;
-	protected FieldPoint defenderPosition;
-	protected int distanceToOpponent;
-	protected int opponentId;
+	protected FieldPoint objectPosition;
+	protected FieldPoint subjectPosition;
+	protected int distanceToSubject;
+	protected int subjectId;
 
 	/**
 	 * Create a defender (stands between "target" enemy and the ball)
 	 * @param robot The {@link Robot} that describes the blocker.
 	 * @param output The {@link RobotCom} that sends the commands to the physical Robot.
-	 * @param distanceToOpponent The distance the defender keeps from the enemy (center) in millimeters
-	 * @param ballPosition current position of the ball. See {@link FieldPoint}
-	 * @param defenderPosition current position of the defender (this robot). See {@link FieldPoint}
-	 * @param opponentPosition center position of the opponent / enemy. See {@link FieldPoint}
-	 * @param opponentId The Id of the opponent this Robot is trying to interrupt.
+	 * @param distanceToSubject The distance the coverer keeps from the subject in millimeters
+	 * @param objectPosition current position of the object the coverer needs to cover. See {@link FieldPoint}
+	 * @param subjectPosition current position of the subject. See {@link FieldPoint}
+	 * @param subjectId The Id of the subject this Robot is trying to interrupt.
 	 */
-	public Coverer(Robot robot, ComInterface output, int distanceToOpponent, FieldPoint ballPosition,
-			FieldPoint defenderPosition, FieldPoint opponentPosition, int opponentId) {
+	public Coverer(Robot robot, ComInterface output, int distanceToSubject, FieldPoint objectPosition,
+			FieldPoint subjectPosition, int subjectId) {
 		super(robot, output);
 
-		this.opponentPosition = opponentPosition;
-		this.ballPosition = ballPosition;
-		this.distanceToOpponent = distanceToOpponent;
-		this.defenderPosition = defenderPosition;
+		this.subjectPosition = subjectPosition;
+		this.objectPosition = objectPosition;
+		this.distanceToSubject = distanceToSubject;
 		this.role = RobotMode.COVERER;
-		this.opponentId = opponentId;
-		go = new GotoPosition(robot, output, defenderPosition, opponentPosition, 400);
+		this.subjectId = subjectId;
+		go = new GotoPosition(robot, output, robot.getPosition(), objectPosition, 400);
 	}
 
 	/**
 	 * Update
-	 * @param distanceToOpponent The distance the defender keeps from the enemy (center) in millimeters
-	 * @param ballPosition current position of the ball. See {@link FieldPoint}
-	 * @param defenderPosition current position of the defender (this robot). See {@link FieldPoint}
-	 * @param opponentPosition center position of the opponent / enemy. See {@link FieldPoint}
-	 * @param opponentId The Id of the opponent this Robot is trying to interrupt.
+	 * @param distanceToSubject The distance the defender keeps from the enemy (center) in millimeters
+	 * @param objectPosition current position of the ball. See {@link FieldPoint}
+	 * @param subjectPosition center position of the opponent / enemy. See {@link FieldPoint}
+	 * @param subjectId The Id of the opponent this Robot is trying to interrupt.
 	 */
-	public void update(int distanceToOpponent, FieldPoint ballPosition, FieldPoint defenderPosition, FieldPoint opponentPosition,
-			int opponentId) {
-		this.distanceToOpponent = distanceToOpponent;
-		this.ballPosition = ballPosition;
-		this.defenderPosition = defenderPosition;
-		this.opponentPosition = opponentPosition;
-		this.opponentId = opponentId;
+	public void update(int distanceToSubject, FieldPoint objectPosition, FieldPoint defenderPosition,
+			FieldPoint subjectPosition, int subjectId) {
+		this.distanceToSubject = distanceToSubject;
+		this.objectPosition = objectPosition;
+		this.subjectPosition = subjectPosition;
+		this.subjectId = subjectId;
 	}
 
 	/**
@@ -70,23 +65,20 @@ public class Coverer extends LowLevelBehavior {
 	 */
 	@Override
 	public void calculate() {
-		// Only run if the robot isn't timed out
-		if (!timeOutCheck()) {
-			FieldPoint newDestination = getNewDestination();
-			// If available, set the new destination
-			if (newDestination != null) {
-				go.setDestination(newDestination);
-				go.setTarget(ballPosition);
-				go.calculate();
-			}
-		}
+		FieldPoint newDestination = getNewDestination();
+		// If available, set the new destination
+		if (newDestination != null)
+			go.setDestination(newDestination);
+
+		go.setTarget(objectPosition);
+		go.calculate();
 	}
 
 	/**
 	 * @returns the id of the Opponent this Robot is trying to block.
 	 */
 	public int getOpponentId() {
-		return opponentId;
+		return subjectId;
 	}
 
 	/**
@@ -97,14 +89,14 @@ public class Coverer extends LowLevelBehavior {
 		FieldPoint newDestination = null;
 
 		// Ball has to be on the field
-		if (ballPosition != null) {
+		if (objectPosition != null) {
 
-			double angle = opponentPosition.getAngle(ballPosition);
+			double angle = subjectPosition.getAngle(objectPosition);
 
-			double dx = (Math.sin(angle) * distanceToOpponent);
-			double dy = (Math.cos(angle) * distanceToOpponent);
+			double dx = (Math.sin(angle) * distanceToSubject);
+			double dy = (Math.cos(angle) * distanceToSubject);
 
-			newDestination = new FieldPoint(opponentPosition.getX() + dx, opponentPosition.getY() + dy);
+			newDestination = new FieldPoint(subjectPosition.getX() + dx, subjectPosition.getY() + dy);
 		}
 
 		return newDestination;

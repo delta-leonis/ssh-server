@@ -259,8 +259,7 @@ public class AttackMode extends Mode {
 					robot.getPosition(), opponent.getPosition(), opponent.getRobotId());
 		} else {
 			executer.setLowLevelBehavior(new Coverer(robot, ComInterface.getInstance(RobotCom.class),
-					distanceToOpponent, ball.getPosition(), robot.getPosition(), opponent.getPosition(), opponent
-							.getRobotId()));
+					distanceToOpponent, ball.getPosition(), opponent.getPosition(), opponent.getRobotId()));
 		}
 	}
 
