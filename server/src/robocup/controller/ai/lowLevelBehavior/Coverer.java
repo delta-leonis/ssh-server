@@ -9,13 +9,8 @@ import robocup.output.ComInterface;
 import robocup.output.RobotCom;
 
 /**
- * Stoorder
- * Bezet lijn tussen bal en midden van eigen goal met een offset ten opzichte van de bal
- * 
- * Describes the low-level behaviour for a Blocker Robot.
+ * Describes the low-level behaviour for a Coverer robot.
  * These Robots attempt to interrupt the enemy by getting in between the enemy {@link Robot} and the {@link Ball}
- * TODO: remove defenderPosition. Variable can be acquired through robot.getPosition(). This variable isn't even in use.
- * TODO: English-fy
  */
 public class Coverer extends LowLevelBehavior {
 
@@ -66,6 +61,7 @@ public class Coverer extends LowLevelBehavior {
 	@Override
 	public void calculate() {
 		FieldPoint newDestination = getNewDestination();
+
 		// If available, set the new destination
 		if (newDestination != null)
 			go.setDestination(newDestination);
@@ -82,14 +78,14 @@ public class Coverer extends LowLevelBehavior {
 	}
 
 	/**
-	 * @returns the new destination we want this robot to move to. 
-	 * 			The function attempts to pick a point in between the opponent we are blocking and the ball.
+	 * @returns the new destination for the robot.
+	 * The function attempts to pick a point at a specified distance from the subject, towards the object.
 	 */
 	private FieldPoint getNewDestination() {
 		FieldPoint newDestination = null;
 
-		// Ball has to be on the field
-		if (objectPosition != null) {
+		// object and subject has to be on the field
+		if (objectPosition != null && subjectPosition != null) {
 
 			double angle = subjectPosition.getAngle(objectPosition);
 
