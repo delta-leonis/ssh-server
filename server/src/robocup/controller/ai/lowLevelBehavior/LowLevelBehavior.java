@@ -31,7 +31,7 @@ public abstract class LowLevelBehavior {
 
 	/**
 	 * @see {@link Mode.roles}
-	 * @return the {@link Mode.roles} assigned to this behaviour.
+	 * @return the {@link Mode.roles} assigned to this behavior.
 	 */
 	public RobotMode getRole() {
 		return role;
@@ -45,8 +45,8 @@ public abstract class LowLevelBehavior {
 	 * @return true if the {@link FieldPoint target} is within the given range of the {@link FieldObject object}, false otherwise.
 	 */
 	protected boolean isWithinRange(FieldObject object, FieldPoint target, int range) {
-		double dy = (target.getY() - object.getPosition().getY());
-		double dx = (target.getX() - object.getPosition().getX());
+		double dy = target.getY() - object.getPosition().getY();
+		double dx = target.getX() - object.getPosition().getX();
 
 		return range > Math.abs(dy) && range > Math.abs(dx);
 	}
@@ -54,21 +54,20 @@ public abstract class LowLevelBehavior {
 	/**
 	 * Calculate the position where the robot will be able to shoot
 	 * Basically makes sure your {@link Robot} is half-diameter away from the ball.
-	 * 
 	 * @param shootDirection The direction you want your {@link Robot} to shoot the {@link Ball}. 
 	 * 						 This direction is in degrees, with a value between -180 and 180. 0 being east and 90 being north.
 	 * @param ballPosition 	 The position of the Ball. See {@link FieldPoint} for further documentation. 
 	 * @return The position we want our {@link Robot} to be at when before we chip or kick.
 	 */
-	public FieldPoint getShootingPosition(int shootDirection, FieldPoint ballPosition) {
+	public FieldPoint getShootingPosition(double shootDirection, FieldPoint ballPosition) {
 		// TODO find out why direction on robot is inverted / twisted. Problem probably lies in the code within the physical Robot.  Possible problem: Mbed:Robotcontroller#Drive() 
-		int angle = -shootDirection + 270; // Angle needs to be the inverse of the shootDirection, to position the Robot behind the ball.
+		double angle = -shootDirection + 270; // Angle needs to be the inverse of the shootDirection, to position the Robot behind the ball.
 
 		double dx = Math.sin(Math.toRadians(angle)) * (Robot.DIAMETER / 2);
 		double dy = Math.cos(Math.toRadians(angle)) * (Robot.DIAMETER / 2);
 
-		double destX = (ballPosition.getX() + dx);
-		double destY = (ballPosition.getY() + dy);
+		double destX = ballPosition.getX() + dx;
+		double destY = ballPosition.getY() + dy;
 
 		return new FieldPoint(destX, destY);
 	}

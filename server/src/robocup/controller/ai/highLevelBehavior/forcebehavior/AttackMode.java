@@ -240,11 +240,10 @@ public class AttackMode extends Mode {
 		}
 
 		if (isUpdate) {
-			((Attacker) executer.getLowLevelBehavior()).update(freePosition, ball.getPosition(), chipKick, dribble,
-					shootDirection);
+			((Attacker) executer.getLowLevelBehavior()).update(shootDirection, chipKick, null, ball.getPosition());
 		} else {
-			executer.setLowLevelBehavior(new Attacker(robot, ComInterface.getInstance(RobotCom.class), freePosition,
-					ball.getPosition(), chipKick, dribble, shootDirection));
+			executer.setLowLevelBehavior(new Attacker(robot, ComInterface.getInstance(RobotCom.class), shootDirection,
+					chipKick, null, ball.getPosition()));
 		}
 	}
 
