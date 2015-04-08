@@ -15,8 +15,8 @@ public class Keeper extends LowLevelBehavior {
 
 	/**
 	 * Create a keeper
-	 * @param robot
-	 * @param output
+	 * @param robot the keeper {@link Robot} in the model.
+	 * @param output Used to send data to the Robot
 	 * @param distanceToGoal defense radius size, 500 ideal in most situations
 	 * @param goToChip if true, move to ball and chip it away
 	 * @param ballPosition current position of the ball
@@ -24,7 +24,7 @@ public class Keeper extends LowLevelBehavior {
 	 */
 	public Keeper(Robot robot, ComInterface output, int distanceToGoal, boolean goToChip, FieldPoint ballPosition,
 			FieldPoint centerGoalPosition) {
-		super(robot, output);
+		super(robot);
 		this.distanceToObject = distanceToGoal;
 		this.goToKick = goToChip;
 		this.ballPosition = ballPosition;

@@ -30,8 +30,7 @@ public class Coverer extends LowLevelBehavior {
 	 */
 	public Coverer(Robot robot, ComInterface output, int distanceToSubject, FieldPoint objectPosition,
 			FieldPoint subjectPosition, int subjectId) {
-		super(robot, output);
-
+		super(robot);
 		this.subjectPosition = subjectPosition;
 		this.objectPosition = objectPosition;
 		this.distanceToSubject = distanceToSubject;

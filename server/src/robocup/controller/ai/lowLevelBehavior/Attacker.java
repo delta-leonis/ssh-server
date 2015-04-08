@@ -28,7 +28,7 @@ public class Attacker extends LowLevelBehavior {
 	 */
 	public Attacker(Robot robot, ComInterface output, double shootDirection, int chipKick, Ally freeRobot,
 			FieldPoint ballPosition) {
-		super(robot, output);
+		super(robot);
 		this.ballPosition = ballPosition;
 		this.chipKick = chipKick;
 		this.shootDirection = shootDirection;

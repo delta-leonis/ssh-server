@@ -6,7 +6,6 @@ import robocup.model.FieldObject;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.enums.RobotMode;
-import robocup.output.ComInterface;
 
 /**
  * Describes the LowLevelBahaviour each role builds upon.
@@ -18,13 +17,11 @@ import robocup.output.ComInterface;
 public abstract class LowLevelBehavior {
 
 	protected Robot robot;
-	protected ComInterface output;
 	protected GotoPosition go;
 	protected RobotMode role;
 
-	public LowLevelBehavior(Robot robot, ComInterface output) {
+	public LowLevelBehavior(Robot robot) {
 		this.robot = robot;
-		this.output = output;
 	}
 
 	public abstract void calculate();

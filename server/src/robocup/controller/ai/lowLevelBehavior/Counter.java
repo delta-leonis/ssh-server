@@ -37,7 +37,7 @@ public class Counter extends LowLevelBehavior {
 	 * @param dribble enable dribbler
 	 */
 	public Counter(Robot robot, ComInterface output, FieldPoint zone, FieldPoint ballPosition, boolean dribble) {
-		super(robot, output);
+		super(robot);
 		this.zone = zone;
 		this.ballPosition = ballPosition;
 		this.dribble = dribble;

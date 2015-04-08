@@ -7,7 +7,7 @@ import robocup.output.ComInterface;
 public class Runner extends LowLevelBehavior {
 
 	public Runner(Robot robot, ComInterface output) {
-		super(robot, output);
+		super(robot);
 		// TODO Auto-generated constructor stub
 	}
 
