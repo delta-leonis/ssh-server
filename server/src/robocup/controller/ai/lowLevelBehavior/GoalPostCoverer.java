@@ -23,7 +23,6 @@ public class GoalPostCoverer extends Keeper {
 
 	private Robot enemyRobot;
 	private FieldPoint paalPosition;
-	private boolean dribble = false;
 
 	/**
 	 * Create a Paaldekker LowLevelBehaviour
@@ -31,13 +30,11 @@ public class GoalPostCoverer extends Keeper {
 	 * @param output Used to send data to the Robot
 	 * @param enemyRobot the Robot that matters most to this {@link LowLevelBehaviour}
 	 * @param paalPosition the position of the ball
-	 * @param dribble enable dribbler
 	 */
-	public GoalPostCoverer(Robot robot, ComInterface output, Robot enemyRobot, FieldPoint paalPosition, boolean dribble) {
+	public GoalPostCoverer(Robot robot, ComInterface output, Robot enemyRobot, FieldPoint paalPosition) {
 		super(robot, output, 0, false, null, null);
 		this.enemyRobot = enemyRobot;
 		this.paalPosition = paalPosition;
-		this.dribble = dribble;
 		this.role = RobotMode.GOALPOSTCOVERER;
 		go = new GotoPosition(robot, output, null, enemyRobot.getPosition());
 	}
@@ -50,17 +47,14 @@ public class GoalPostCoverer extends Keeper {
 	 * @param dribble enable dribbler
 	 * @param shootDirection direction where the attacker needs to shoot, relative to the field. Values between -180 and 180. 0 degrees facing east. 90 degrees facing north. 
 	 */
-	public void update(Robot enemyRobot, FieldPoint paalPosition, boolean dribble) {
+	public void update(Robot enemyRobot, FieldPoint paalPosition) {
 		this.enemyRobot = enemyRobot;
 		this.paalPosition = paalPosition;
-		this.dribble = dribble;
 	}
 
 	@Override
 	public void calculate() {
 		FieldPoint newDestination = null;
-
-		go.setDribble(dribble);
 
 		// Move towards a free position when given
 		if (enemyRobot != null)
