@@ -19,7 +19,6 @@ public class ComInterface {
 
 	private static ComInterface instance;
 
-	@SuppressWarnings("rawtypes")
 	public static ComInterface getInstance() {
 		if (instance == null) {
 			instance = new ComInterface();
