@@ -1,4 +1,4 @@
-package robocup.controller.ai.movement.test;
+package robocup.test;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;

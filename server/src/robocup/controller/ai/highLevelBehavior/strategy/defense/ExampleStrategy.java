@@ -34,7 +34,7 @@ public class ExampleStrategy extends Strategy {
 	
 	public void updateZones(FieldPoint ballposition) {
 		// TODO bepaal waar de bal is, assign zones op basis hiervan
-		zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.WEST_RIGHT_SECOND_POST);
+		zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.WEST_NORTH_SECONDPOST);
 		zonesForRole.put(RobotMode.COUNTER, FieldZone.EAST_CENTER);
 	}
 }

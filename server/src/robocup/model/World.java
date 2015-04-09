@@ -290,7 +290,7 @@ public class World extends Observable {
 			Ally itAlly = (Ally) itRobot;
 			
 			if (itAlly.getRole() == null) {
-				double itDistance = field.getZone(fieldZone).getClosestVertex(itAlly.getPosition()).getDeltaDistance(itAlly.getPosition());
+				double itDistance = fieldZone.getClosestVertex(itAlly.getPosition()).getDeltaDistance(itAlly.getPosition());
 				if (itDistance < closestDistance)
 				{
 					closestDistance = itDistance;
@@ -383,9 +383,9 @@ public class World extends Observable {
 	public ArrayList<Ally> getAllyRobotsInZones(ArrayList<FieldZone> fieldZones) {
 		ArrayList<Ally> foundAllies = new ArrayList<Ally>();
 		
-		for (FieldZone fieldzone : fieldZones) {
+		for (FieldZone fieldZone : FieldZone.values()) {
 			for (Robot ally : allyTeam) {
-				if (field.getZone(fieldzone).contains(ally.getPosition()))
+				if (fieldZone.contains(ally.getPosition()))
 				{
 					foundAllies.add((Ally)ally);
 				};
@@ -402,9 +402,9 @@ public class World extends Observable {
 	public ArrayList<Enemy> getEnemyRobotsInZones(ArrayList<FieldZone> fieldZones) {
 		ArrayList<Enemy> foundEnemies = new ArrayList<Enemy>();
 		
-		for (FieldZone fieldzone : fieldZones) {
+		for (FieldZone fieldZone : fieldZones) {
 			for (Robot enemy : enemyTeam) {
-				if (field.getZone(fieldzone).contains(enemy.getPosition()))
+				if (fieldZone.contains(enemy.getPosition()))
 				{
 					foundEnemies.add((Enemy)enemy);
 				};
@@ -419,9 +419,9 @@ public class World extends Observable {
 	 * @return FieldZone where the given object is located 
 	 */
 	public FieldZone locateFieldObject(FieldObject fieldObject) {
-		for (FieldZone fieldzone : FieldZone.values()) {
-			if (field.getZone(fieldzone).contains(fieldObject.getPosition())) {
-				return fieldzone;
+		for (FieldZone fieldZone : FieldZone.values()) {
+			if (fieldZone.contains(fieldObject.getPosition())) {
+				return fieldZone;
 			}
 		}
 		return null;
@@ -435,9 +435,9 @@ public class World extends Observable {
 	public ArrayList<Robot> getAllRobotsInZones(ArrayList<FieldZone> fieldZones) {
 		ArrayList<Robot> foundRobots = new ArrayList<Robot>();
 		
-		for (FieldZone fieldzone : fieldZones) {
+		for (FieldZone fieldZone : fieldZones) {
 			for (Robot robot : robotList) {
-				if (field.getZone(fieldzone).contains(robot.getPosition()))
+				if (fieldZone.contains(robot.getPosition()))
 				{
 					foundRobots.add(robot);
 				};

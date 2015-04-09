@@ -50,15 +50,15 @@ public class BarricadeDefending extends Strategy {
 		if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
 			zonesForRole.put(RobotMode.COUNTER, FieldZone.WEST_CENTER);
 			if(ballPosition.getY() <= 0.0)
-				zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.EAST_RIGHT_SECOND_POST);
+				zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.EAST_SOUTH_SECONDPOST);
 			else
-				zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.EAST_LEFT_SECOND_POST);
+				zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.EAST_NORTH_SECONDPOST);
 		} else {
 			zonesForRole.put(RobotMode.COUNTER, FieldZone.EAST_CENTER);
 			if(ballPosition.getY() <= 0.0)
-				zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.EAST_LEFT_SECOND_POST);
+				zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.EAST_SOUTH_SECONDPOST);
 			else
-				zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.EAST_RIGHT_SECOND_POST);
+				zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.EAST_NORTH_SECONDPOST);
 		}
 	}
 }

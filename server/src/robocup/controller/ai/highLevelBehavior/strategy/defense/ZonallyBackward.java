@@ -48,11 +48,11 @@ public class ZonallyBackward extends Strategy {
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
 		if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
-			zonesForRole.put(RobotMode.DISTURBER_COVERER, FieldZone.EAST_LEFT_FRONT);
-			zonesForRole.put(RobotMode.DISTURBER_COVERER, FieldZone.EAST_RIGHT_FRONT);
+			zonesForRole.put(RobotMode.DISTURBER_COVERER, FieldZone.EAST_NORTH_FRONT);
+			zonesForRole.put(RobotMode.DISTURBER_COVERER, FieldZone.EAST_SOUTH_FRONT);
 		} else {
-			zonesForRole.put(RobotMode.DISTURBER_COVERER, FieldZone.WEST_LEFT_FRONT);
-			zonesForRole.put(RobotMode.DISTURBER_COVERER, FieldZone.WEST_RIGHT_FRONT);
+			zonesForRole.put(RobotMode.DISTURBER_COVERER, FieldZone.WEST_SOUTH_FRONT);
+			zonesForRole.put(RobotMode.DISTURBER_COVERER, FieldZone.WEST_NORTH_FRONT);
 		}
 	}
 }

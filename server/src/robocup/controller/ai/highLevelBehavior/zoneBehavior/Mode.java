@@ -218,8 +218,8 @@ public abstract class Mode {
 	 * @return Point	ideal aim position in goal
 	 */
 	public FieldPoint hasFreeShot(int maxObstacles){
-		FieldZone[] zones = {FieldZone.EAST_RIGHT_FRONT, FieldZone.EAST_CENTER, FieldZone.EAST_LEFT_FRONT, FieldZone.EAST_MIDDLE, FieldZone.EAST_LEFT_SECOND_POST, FieldZone.EAST_RIGHT_SECOND_POST, 
-							FieldZone.WEST_RIGHT_FRONT, FieldZone.WEST_CENTER, FieldZone.WEST_LEFT_FRONT, FieldZone.WEST_MIDDLE, FieldZone.WEST_LEFT_SECOND_POST, FieldZone.WEST_RIGHT_SECOND_POST};
+		FieldZone[] zones = {FieldZone.EAST_NORTH_FRONT, FieldZone.EAST_CENTER, FieldZone.EAST_SOUTH_FRONT, FieldZone.EAST_MIDDLE, FieldZone.EAST_NORTH_SECONDPOST, FieldZone.EAST_SOUTH_SECONDPOST, 
+							FieldZone.WEST_NORTH_FRONT, FieldZone.WEST_CENTER, FieldZone.WEST_SOUTH_FRONT, FieldZone.WEST_MIDDLE, FieldZone.WEST_SOUTH_SECONDPOST, FieldZone.WEST_NORTH_SECONDPOST};
 
 		return hasFreeShot(zones, maxObstacles);
 	}
