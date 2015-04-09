@@ -13,7 +13,6 @@ import net.miginfocom.swing.MigLayout;
 import robocup.Main;
 import robocup.model.World;
 import robocup.output.ComInterface;
-import robocup.output.RobotCom;
 import robocup.view.WidgetBox;
 
 @SuppressWarnings("serial")
@@ -36,7 +35,7 @@ public class SettingsWidget extends WidgetBox {
 		fieldHalfBox.setEditable(false);
 		fieldHalfBox.addItem("east");
 		fieldHalfBox.addItem("west");
-		
+
 		levelBox = new JComboBox<Level>();
 		levelBox.addItem(Level.ALL);
 		levelBox.addItem(Level.FINEST);
@@ -83,13 +82,13 @@ public class SettingsWidget extends WidgetBox {
 			case "Set frequency":
 				int frequency = Integer.valueOf(((String) frequencyBox.getSelectedItem()).substring(3));
 				LOGGER.info("Basestation frequency set to " + frequency);
-				ComInterface.getInstance(RobotCom.class).send(127, frequency);
+				ComInterface.getInstance().send(127, frequency);
 				break;
 
 			case "Terminate":
 			{
 				LOGGER.info("Terminate command send to all robots");
-				ComInterface.getInstance(RobotCom.class).send(1, 0, 0, 0, 0, 0, false);
+				ComInterface.getInstance().send(1, 0, 0, 0, 0, 0, false);
 				break;
 			}
 			

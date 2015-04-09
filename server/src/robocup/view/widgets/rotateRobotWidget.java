@@ -12,7 +12,6 @@ import javax.swing.JTextField;
 import robocup.Main;
 import robocup.model.World;
 import robocup.output.ComInterface;
-import robocup.output.RobotCom;
 import robocup.view.WidgetBox;
 
 
@@ -41,12 +40,12 @@ public class rotateRobotWidget extends WidgetBox{
 	    	if(shouldBeRunning()){
 	    		textField.setText("" + (Integer.valueOf(textField.getText())*-1));
 	    		LOGGER.info("inverted rotation speed");
-				ComInterface.getInstance(RobotCom.class).send(1,  World.getInstance().getGUI().getSelectedRobotId(), 0, 0,  Integer.valueOf(textField.getText()),0, false);
+				ComInterface.getInstance().send(1,  World.getInstance().getGUI().getSelectedRobotId(), 0, 0,  Integer.valueOf(textField.getText()),0, false);
 				wisselTimer = new Timer();
 				wisselTimer.schedule(new RemindTask(),  1000);
 	    	}else{
 	    		System.out.println("terminated");
-	    		ComInterface.getInstance(RobotCom.class).send(1,  World.getInstance().getGUI().getSelectedRobotId(), 0, 0, 0,0, false);
+	    		ComInterface.getInstance().send(1,  World.getInstance().getGUI().getSelectedRobotId(), 0, 0, 0,0, false);
 	    	}
 
 	    }
@@ -62,7 +61,7 @@ public class rotateRobotWidget extends WidgetBox{
 				{
 					run = false;
 					LOGGER.info("Terminate command send to robot #"+  World.getInstance().getGUI().getSelectedRobotId());
-					ComInterface.getInstance(RobotCom.class).send(1,  World.getInstance().getGUI().getSelectedRobotId(), 0, 0, 0,0, false);
+					ComInterface.getInstance().send(1,  World.getInstance().getGUI().getSelectedRobotId(), 0, 0, 0,0, false);
 					break;
 				}
 				
@@ -70,7 +69,7 @@ public class rotateRobotWidget extends WidgetBox{
 				{
 					run = true;
 					LOGGER.info("Spin robot #" +  World.getInstance().getGUI().getSelectedRobotId() + ", speed " + Integer.valueOf(textField.getText()));
-					ComInterface.getInstance(RobotCom.class).send(1,  World.getInstance().getGUI().getSelectedRobotId(), 0, 0, Integer.valueOf(textField.getText()),0, false);
+					ComInterface.getInstance().send(1,  World.getInstance().getGUI().getSelectedRobotId(), 0, 0, Integer.valueOf(textField.getText()),0, false);
 					wisselTimer = new Timer();
 					wisselTimer.schedule(new RemindTask(),  1000);
 				}

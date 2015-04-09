@@ -23,21 +23,11 @@ public class RobotCom extends ComInterface {
 			configFile.load(new FileInputStream("config/config.properties"));
 			String ipAddress = configFile.getProperty("outputAddress");
 			int port = Integer.parseInt(configFile.getProperty("ownTeamOutputPort"));
-			try {
 				this.ipAddress = InetAddress.getByName(ipAddress);
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			this.port = port;
-			try {
 				serverSocket = new DatagramSocket();
-			} catch (SocketException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		} catch (IOException e) {
-			
+			e.printStackTrace();
 		}
 	}
 	
@@ -58,19 +48,6 @@ public class RobotCom extends ComInterface {
 	@Override
 	public void send(int messageType, int robotID, int direction, int directionSpeed, 
 			int rotationSpeed, int shootKicker, boolean dribble) {
-
-		// use LOGGER instead of this
-		// if(robotID == 0xB || robotID == 0x3){
-		// System.out.println("Message:");
-		// System.out.println("Robot: " + robotID);
-		// System.out.println("Direction: " + direction);
-		// System.out.println("DirectionSpeed: " + directionSpeed);
-		// System.out.println("travelDistance: " + travelDistance);
-		// System.out.println("rotationAngle: " + rotationAngle);
-		// System.out.println("rotationSpeed: " + rotationSpeed);
-		// System.out.println("shootKicker: " + shootKicker);
-		// System.out.println("dribble: " + dribble);
-		// }
 		byte[] dataPacket = createByteArray(messageType, robotID, direction, directionSpeed, rotationSpeed, shootKicker, dribble);
 		DatagramPacket sendPacket = new DatagramPacket(dataPacket, dataPacket.length, ipAddress, port);
 

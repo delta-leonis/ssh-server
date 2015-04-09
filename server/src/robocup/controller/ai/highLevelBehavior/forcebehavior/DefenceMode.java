@@ -5,10 +5,10 @@ package robocup.controller.ai.highLevelBehavior.forcebehavior;
 
 import java.util.ArrayList;
 
-import robocup.model.enums.RobotMode;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Ball;
 import robocup.model.Robot;
+import robocup.model.enums.RobotMode;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class DefenceMode extends Mode {

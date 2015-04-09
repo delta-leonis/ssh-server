@@ -2,9 +2,9 @@ package robocup.controller.handlers.protohandlers;
 
 import robocup.input.protobuf.Referee.SSL_Referee;
 import robocup.model.World;
-import robocup.model.enums.TeamColor;
 import robocup.model.enums.Command;
 import robocup.model.enums.Stage;
+import robocup.model.enums.TeamColor;
 
 public class RefereeHandler {
 
