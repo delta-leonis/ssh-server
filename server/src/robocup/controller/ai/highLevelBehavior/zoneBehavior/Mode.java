@@ -1,9 +1,6 @@
 package robocup.controller.ai.highLevelBehavior.zoneBehavior;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map.Entry;
-import java.util.TreeMap;
 
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.controller.ai.lowLevelBehavior.Attacker;
@@ -13,12 +10,9 @@ import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Ally;
 import robocup.model.Ball;
-import robocup.model.Enemy;
 import robocup.model.FieldPoint;
-import robocup.model.Goal;
 import robocup.model.Robot;
 import robocup.model.World;
-import robocup.model.enums.FieldZone;
 import robocup.output.ComInterface;
 
 public abstract class Mode {
@@ -194,207 +188,6 @@ public abstract class Mode {
 		return robotsWithoutRole;
 	}
 
-	/**
-	 * Checks whether a ally has a free shot, will only be checked
-	 * if the robot is in one of the 6 center zones (due to accuracy)
-	 * returns a {@link FieldPoint} that represents the ideal shooting position
-	 * Uses all zones except for the 4 corners
-	 * Uses a maximum of 5 obstacles
-	 * 
-	 * @return Point	ideal aim position in goal
-	 */
-	public FieldPoint hasFreeShot(){
-		return hasFreeShot(5);
-	}
-	
-	/**
-	 * Checks whether a ally has a free shot, will only be checked
-	 * if the robot is in one of the 6 center zones (due to accuracy)
-	 * returns a {@link FieldPoint} that represents the ideal shooting position
-	 * Uses all zones except for the 4 corners
-	 * 
-	 * @param maxObstacles	maximum number of obstacles in the shooting triangle (ball-leftpost-rightpost)
-	 * @return Point	ideal aim position in goal
-	 */
-	public FieldPoint hasFreeShot(int maxObstacles){
-		FieldZone[] zones = {FieldZone.EAST_NORTH_FRONT, FieldZone.EAST_CENTER, FieldZone.EAST_SOUTH_FRONT, FieldZone.EAST_MIDDLE, FieldZone.EAST_NORTH_SECONDPOST, FieldZone.EAST_SOUTH_SECONDPOST, 
-							FieldZone.WEST_NORTH_FRONT, FieldZone.WEST_CENTER, FieldZone.WEST_SOUTH_FRONT, FieldZone.WEST_MIDDLE, FieldZone.WEST_SOUTH_SECONDPOST, FieldZone.WEST_NORTH_SECONDPOST};
-
-		return hasFreeShot(zones, maxObstacles);
-	}
-	
-	/**
-	 * Checks whether a ally has a free shot, will only be checked
-	 * if the robot is in one of the 6 center zones (due to accuracy)
-	 * returns a {@link FieldPoint} that represents the ideal shooting position
-	 *  
-	 * @param zones		zones that the ball has to be in in order to check a free shot
-	 * @param maxObstacles	maximum number of obstacles in the shooting triangle (ball-leftpost-rightpost)
-	 * @return Point	ideal aim position in goal
-	 */
-	public FieldPoint hasFreeShot(FieldZone[] zones, int maxObstacles){
-    	Ball ball = World.getInstance().getBall();
-		//only proceed when we are the ballowner
-		if(ball.getOwner() instanceof Enemy)
-			return null;
-
-		//check if the ball is in a zone from which we can actually make the angle
-		if(!Arrays.asList(zones).contains(World.getInstance().locateFieldObject(ball)))
-			return null;
-
-		//get the enemy goal (checking which side is ours, and get the opposite 
-		Goal enemyGoal = (World.getInstance().getReferee().isWestTeamColor(World.getInstance().getReferee().getAllyTeamColor())) ?  World.getInstance().getField().getEastGoal() : World.getInstance().getField().getWestGoal();
-
-		ArrayList<Robot> obstacles = World.getInstance().getAllRobotsInArea(new FieldPoint[]{enemyGoal.getFrontSouth(), enemyGoal.getFrontNorth(), ball.getPosition()});
-
-		//No obstacles?! shoot directly in the center of the goal;
-		if(obstacles.size() == 0)
-			return new FieldPoint(enemyGoal.getFrontSouth().getX(), 0.0);
-		
-		if(obstacles.size() >= maxObstacles)
-			return null;
-
-		//make a list with all blocked areas.
-		//Y is the same for all points, so key = x1, and value = x2
-		//that way the map is automatically ordered in size, note that adding a new
-		//point should check whether the key exist, and if the new value is bigger or smaller to
-		//prevent loss of points
-		TreeMap<Double, Double> obstructedArea = new TreeMap<Double, Double>();
-
-		for(Robot obstacle : obstacles){
-			double distance = obstacle.getPosition().getDeltaDistance(ball.getPosition()); 
-			double divertAngle = Math.atan((Robot.DIAMETER/2) / distance);			
-			
-			double obstacleLeftAngle = Math.toRadians(ball.getPosition().getAngle(obstacle.getPosition()))  + divertAngle;
-			double obstacleRightAngle = Math.toRadians(ball.getPosition().getAngle(obstacle.getPosition())) - divertAngle;
-			
-			double dx = enemyGoal.getFrontSouth().getX() - ball.getPosition().getX();
-			double dyL = Math.tan(obstacleLeftAngle) * dx;
-			double dyR = Math.tan(obstacleRightAngle) * dx;
-
-			FieldPoint L = new FieldPoint((ball.getPosition().getX() + dx),
-								(ball.getPosition().getY() + dyL));
-			FieldPoint R = new FieldPoint((ball.getPosition().getX() + dx),
-					(ball.getPosition().getY() + dyR));
-
-			//is there a point with the same start X coordinate
-			//if so, check whether it is bigger, and replace it if necessary
-			if(!obstructedArea.containsKey(L.toPoint2D().getY()) ||
-					(obstructedArea.get(L.toPoint2D().getY())) > R.toPoint2D().getY())
-				obstructedArea.put(L.toPoint2D().getY(), R.toPoint2D().getY());
-		}
-		double minY = enemyGoal.getFrontSouth().getY();
-		double maxY = enemyGoal.getFrontNorth().getY();
-		obstructedArea = minMax(obstructedArea, minY, maxY);
-		obstructedArea = mergeOverlappingValues(obstructedArea);
-
-		TreeMap<Double, Double> availableArea = invertMap(obstructedArea);
-
-		if(obstructedArea.firstKey() != minY)
-			availableArea.put(minY, obstructedArea.firstKey());
-		if(obstructedArea.lastEntry().getValue() != maxY)
-			availableArea.put(obstructedArea.lastEntry().getValue(), maxY);
-
-		double x = enemyGoal.getFrontSouth().getX();
-		
-		if(availableArea.size() <= 0)
-			return null;
-		
-		//in this case size DOES matter
-		Double biggestKey = availableArea.firstKey();
-		for(Entry<Double, Double> entry : availableArea.entrySet())
-			if(entry.getValue() - entry.getKey() > availableArea.get(biggestKey) - biggestKey)
-				biggestKey = entry.getKey();
-
-		System.out.println("Size: " + biggestKey + availableArea.get(biggestKey));
-		
-		//return point that lies in the center of the biggest point
-		FieldPoint hitmarker = new FieldPoint(x, (biggestKey/2 + availableArea.get(biggestKey)/2));
-		return hitmarker;
-	}
-
-	/**
-	 * Ensures all values are within given limits
-	 * @param map	map that has to be processed
-	 * @param min	minimum value
-	 * @param max	maximum value
-	 * @return map that honorers limits
-	 */
-	private TreeMap<Double, Double> minMax(
-			TreeMap<Double, Double> map, double min, double max) {
-		TreeMap<Double, Double> newMap = new TreeMap<Double, Double>();
-		for(Entry<Double, Double> entry : map.entrySet()){
-			Double newKey, newValue;
-			newKey = Math.min(Math.max(entry.getKey(), min), max);
-			newValue = Math.min(Math.max(entry.getValue(), min), max);
-			newMap.put(newKey, newValue);
-		}
-		return newMap;
-	}
-
-	/**
-	 * "inverts" a TreeMap,
-	 * example:		 Y1 | Y2
-	 * 				 16 | 100
-	 * 				120 | 130
-	 * returns:		 Y1 | Y2
-	 * 				100 | 120 
-	 * @param map
-	 * @return
-	 */
-	private TreeMap<Double, Double> invertMap(
-			TreeMap<Double, Double> map) {
-		TreeMap<Double, Double> invertedMap = new TreeMap<Double, Double>();
-		Double prevY1 = null,
-				prevY2 = null;
-		for(Entry<Double, Double> entry : map.entrySet()){
-			if(prevY1 == null){
-				prevY1 = entry.getKey();
-				prevY2 = entry.getValue();
-				continue;
-			}
-			Double Y1 = entry.getKey();
-			invertedMap.put(prevY2, Y1);
-		}
-		return invertedMap;
-	}
-
-	/**
-	 * Merges a TreeMap that has overlapping values,
-	 * example	Y1 | Y2
-	 * 			16 | 100
-	 * 			80 | 130
-	 * will return:   Y1 | Y2
-	 * 				  16 | 130
-	 * @param map to be processed
-	 * @return processed map
-	 */
-    private TreeMap<Double, Double> mergeOverlappingValues(TreeMap<Double, Double> map){
-		TreeMap<Double, Double> mergedMap = new TreeMap<Double, Double>();
-		Double prevY1 = null,
-				prevY2 = null;
-		for(Entry<Double, Double> entry : map.entrySet()){
-			if(prevY1 == null){
-				prevY1 = entry.getKey();
-				prevY2 = entry.getValue();
-				continue;
-			}
-			Double Y1 = entry.getKey();
-			Double Y2 = entry.getValue();
-			if(prevY2 >= Y1){
-				//meergeeee
-				prevY1 = (prevY1 > Y1 ? Y1 : prevY1);
-				prevY2 = (prevY2 > Y2 ? prevY2 : Y2);
-			}else {
-				mergedMap.put((prevY1 < prevY2 ? prevY1 : prevY2), (prevY1 > prevY2 ? prevY1 : prevY2));
-				//no merge
-				prevY1 = entry.getKey();
-				prevY2 = entry.getValue();
-			}
-		}
-		mergedMap.put((prevY1 < prevY2 ? prevY1 : prevY2), (prevY1 > prevY2 ? prevY1 : prevY2));
-		return mergedMap;
-    }
 	/**
 	 * Find a RobotExecuter based on robot id
 	 * @param robotId the robotid
