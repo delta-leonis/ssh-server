@@ -1,9 +1,15 @@
 package robocup.model;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+import java.util.logging.Logger;
+
+import robocup.Main;
 import robocup.model.enums.FieldZone;
 
 public class Field {
-	private int length;
+	private int height;
 	private int width;
 
 	private int lineWidth;
@@ -22,21 +28,31 @@ public class Field {
 	private int cameraOverlapZoneWidth;
 	private Goal eastGoal, westGoal;
 
-	public Field(int fieldHeight, int fieldWidth) {
-		this.length = fieldHeight;
-		this.width = fieldWidth;
-		this.lineWidth = 40;
-		this.boundaryWidth = 100;
-		this.refereeWidth = 425;
-		this.centerCircleRadius = 500;
-		this.defenceRadius = 800;
-		this.defenceStretch = 350;
-		this.freeKickFromDefenceDistance = 200;
-		this.penaltySpotFromFieldLineDistance = 750;
-		this.penaltyLineFromSpotDistance = 400;
-		this.cameraOverlapZoneWidth = 400;
-		
-		createGoals(700, 180, 20, 180);
+	
+	public Field() {
+		Properties properties = new Properties();
+		try {
+			properties.load(new FileInputStream("config/field.properties"));
+			height = Integer.parseInt(properties.getProperty("fullsize.height"));
+			width = Integer.parseInt(properties.getProperty("fullsize.width"));
+			lineWidth = Integer.parseInt(properties.getProperty("fullsize.lineWidth"));
+			boundaryWidth = Integer.parseInt(properties.getProperty("fullsize.boundaryWidth"));
+			refereeWidth = Integer.parseInt(properties.getProperty("fullsize.refereeWidth"));
+			centerCircleRadius = Integer.parseInt(properties.getProperty("fullsize.centerCircleRadius"));
+			defenceRadius = Integer.parseInt(properties.getProperty("fullsize.defenceRadius"));
+			defenceStretch = Integer.parseInt(properties.getProperty("fullsize.defenceStretch"));
+			freeKickFromDefenceDistance = Integer.parseInt(properties.getProperty("fullsize.freeKickFromDefenceDistance"));
+			penaltySpotFromFieldLineDistance = Integer.parseInt(properties.getProperty("fullsize.penaltySpotFromFieldLineDistance"));
+			penaltyLineFromSpotDistance = Integer.parseInt(properties.getProperty("fullsize.penaltyLineFromSpotDistance"));
+			cameraOverlapZoneWidth = Integer.parseInt(properties.getProperty("fullsize.cameraOverlapZoneWidth"));
+			
+			createGoals(Integer.parseInt(properties.getProperty("fullsize.goal.width")),
+					Integer.parseInt(properties.getProperty("fullsize.goal.depth")),
+					Integer.parseInt(properties.getProperty("fullsize.goal.wallWidth")),
+					Integer.parseInt(properties.getProperty("fullsize.goal.height")));
+		} catch (IOException | NullPointerException e) {
+			Logger.getLogger(Main.class.getName()).warning("Properties file is not correct");
+		}
 	}
 	
 	public void update(int lineWidth, int fieldLength, int fieldWidth, int boundaryWidth, int refereeWidth,
@@ -46,8 +62,8 @@ public class Field {
 		boolean changed = false;
 		if (this.lineWidth != lineWidth)
 			this.lineWidth = lineWidth;
-		if (this.length != fieldLength) {
-			this.length = fieldLength;
+		if (this.height != fieldLength) {
+			this.height = fieldLength;
 			changed = true;
 		}
 		if (this.width != fieldWidth)
@@ -105,15 +121,15 @@ public class Field {
 	/**
 	 * @return the length
 	 */
-	public int getLength() {
-		return length;
+	public int getHeight() {
+		return height;
 	}
 
 	/**
 	 * @param length the length to set
 	 */
-	public void setLength(int length) {
-		this.length = length;
+	public void setHeight(int height) {
+		this.height = height;
 	}
 
 	/**
@@ -273,7 +289,7 @@ public class Field {
 	
 	public void setFieldProportions(int width, int length, int lineWidth, int boundaryWidth, int refereeWidth) {
 		this.width = width;
-		this.length = length;
+		this.height = length;
 		this.lineWidth = lineWidth;
 		this.boundaryWidth = boundaryWidth;
 		this.refereeWidth = refereeWidth;
@@ -305,7 +321,7 @@ public class Field {
 
 	@Override
 	public String toString() {
-		return "Field [length=" + length + "\r\n width=" + width + "\r\n lineWidth=" + lineWidth
+		return "Field [length=" + height + "\r\n width=" + width + "\r\n lineWidth=" + lineWidth
 				+ "\r\n boundaryWidth=" + boundaryWidth + "\r\n refereeWidth=" + refereeWidth + "\r\n goalWidth="
 				+ goalWidth + "\r\n goalDepth=" + goalDepth + "\r\n goalWallWidth=" + goalWallWidth
 				+ "\r\n goalHeight=" + goalHeight + "\r\n centerCircleRadius=" + centerCircleRadius

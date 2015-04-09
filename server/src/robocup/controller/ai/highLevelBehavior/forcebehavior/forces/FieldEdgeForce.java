@@ -19,7 +19,7 @@ public class FieldEdgeForce extends Force {
 	 */
 	public boolean affectsPoint(FieldPoint position) {
 		int maxY = world.getField().getWidth() / 2;
-		int maxX = world.getField().getLength() / 2;
+		int maxX = world.getField().getHeight() / 2;
 		return maxX - Math.abs(position.getX()) < scope || maxY - Math.abs(position.getY()) < scope;
 	}
 
@@ -27,7 +27,7 @@ public class FieldEdgeForce extends Force {
 	 * Get the direction, facing away from the edge of the field
 	 */
 	public int getDirection(FieldPoint position) {
-		boolean maxXReached = world.getField().getLength() / 2 - Math.abs(position.getX()) < scope;
+		boolean maxXReached = world.getField().getHeight() / 2 - Math.abs(position.getX()) < scope;
 		boolean maxYReached = world.getField().getWidth() / 2 - Math.abs(position.getY()) < scope;
 
 		int direction = 0;

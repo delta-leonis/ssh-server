@@ -1,5 +1,9 @@
 package robocup.model.enums;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
 import robocup.model.FieldPoint;
 
 /**
@@ -250,16 +254,24 @@ public enum FieldZone {
 	 * <img src="../../../../images/zones.jpg" />
 	 */
 	public static class FieldPointPaletteZones {
-		public static final FieldPoint a = new FieldPoint(4500, 3000);
-		public static final FieldPoint b = new FieldPoint(2500, 3000);
-		public static final FieldPoint c = new FieldPoint(0, 3000);
-		public static final FieldPoint d = new FieldPoint(4500, 1500);
-		public static final FieldPoint e = new FieldPoint(4000, 1500);
-		public static final FieldPoint f = new FieldPoint(3500, 750);
-		public static final FieldPoint g = new FieldPoint(2500, 750);
-		public static final FieldPoint h = new FieldPoint(0, 750);
-		public static final FieldPoint i = new FieldPoint(4500, 0);
-		public static final FieldPoint j = new FieldPoint(3500, 0);
+		private static final Properties properties = new Properties();
+		static {
+			try {
+				properties.load(new FileInputStream("config/field.properties"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		public static final FieldPoint a = new FieldPoint(properties.getProperty("fullsize.zonepoint.a"));
+		public static final FieldPoint b = new FieldPoint(properties.getProperty("fullsize.zonepoint.b"));
+		public static final FieldPoint c = new FieldPoint(properties.getProperty("fullsize.zonepoint.c"));
+		public static final FieldPoint d = new FieldPoint(properties.getProperty("fullsize.zonepoint.d"));
+		public static final FieldPoint e = new FieldPoint(properties.getProperty("fullsize.zonepoint.e"));
+		public static final FieldPoint f = new FieldPoint(properties.getProperty("fullsize.zonepoint.f"));
+		public static final FieldPoint g = new FieldPoint(properties.getProperty("fullsize.zonepoint.g"));
+		public static final FieldPoint h = new FieldPoint(properties.getProperty("fullsize.zonepoint.h"));
+		public static final FieldPoint i = new FieldPoint(properties.getProperty("fullsize.zonepoint.i"));
+		public static final FieldPoint j = new FieldPoint(properties.getProperty("fullsize.zonepoint.j"));
 
 		/**
 		 * @param point The {@link FieldPoint} that represents the point in the first quadrant.

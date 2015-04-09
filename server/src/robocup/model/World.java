@@ -38,25 +38,20 @@ public class World extends Observable {
 	 * Can only be called as a singleton.
 	 */
 	private World() {
-		fieldHeight = 4050;
-		fieldWidth = 6050;
-		
 		ball = new Ball();
-		ball.setPosition(new FieldPoint(400, 200)); // added starting point for ball
-												// to remove nullpointer errors
+		//set a ball position to prevent null pointers 
+		ball.setPosition(new FieldPoint(400, 200));
 		referee = new Referee();
-		field = new Field(fieldHeight, fieldWidth);
+		field = new Field();
 		
 		// initialize all robots
 		allyTeam = new ArrayList<Robot>();
 		enemyTeam = new ArrayList<Robot>();;
 		
-		for(int i = 0; i < TOTAL_TEAM_SIZE; i++) 
-		{	
+		for(int i = 0; i < TOTAL_TEAM_SIZE; i++) {	
 			allyTeam.add(new Ally(i, false, 150));
 		}
-		for(int i = 0; i < TOTAL_TEAM_SIZE; i++) 
-		{	
+		for(int i = 0; i < TOTAL_TEAM_SIZE; i++) {	
 			enemyTeam.add(new Enemy(i, false, 150));
 		} 
 		referee.initAllyTeam(allyTeam);

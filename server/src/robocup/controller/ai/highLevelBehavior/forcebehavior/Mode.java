@@ -231,16 +231,16 @@ public abstract class Mode {
 		if (ball.getPosition().getX() > 0) {
 			// right side of the field
 			if (keeper.getPosition().getY() > 0) {
-				return (int) ball.getPosition().getAngle(new FieldPoint(world.getField().getLength() / 2, -300));
+				return (int) ball.getPosition().getAngle(new FieldPoint(world.getField().getHeight() / 2, -300));
 			} else {
-				return (int) ball.getPosition().getAngle(new FieldPoint(world.getField().getLength() / 2, 300));
+				return (int) ball.getPosition().getAngle(new FieldPoint(world.getField().getHeight() / 2, 300));
 			}
 		} else {
 			// left side of the field
 			if (keeper.getPosition().getY() > 0) {
-				return (int) ball.getPosition().getAngle(new FieldPoint(-world.getField().getLength() / 2, -300));
+				return (int) ball.getPosition().getAngle(new FieldPoint(-world.getField().getHeight() / 2, -300));
 			} else {
-				return (int) ball.getPosition().getAngle(new FieldPoint(-world.getField().getLength() / 2, 300));
+				return (int) ball.getPosition().getAngle(new FieldPoint(-world.getField().getHeight() / 2, 300));
 			}
 		}
 	}

@@ -1,6 +1,9 @@
 package robocup.model;
 
 import java.awt.geom.Point2D;
+import java.util.logging.Logger;
+
+import robocup.Main;
 
 /**
  * Specifies a point on the {@link Field}. 
@@ -29,7 +32,22 @@ public class FieldPoint {
 		this.x = x;
 		this.y = y;
 	}
-	
+
+	/**
+	 * Constructor for {@link FieldPoint} where x and y are initialized on basis of a String
+	 * coordinate.
+	 * @param coordinate The x and y coordinates separated by a comma. Like: 200,40
+	 */
+	public FieldPoint(String coordinate) {
+		String[] xy = coordinate.split(",");
+		if(xy.length != 2) {
+			Logger.getLogger(Main.class.getName()).warning("Point coordinate has wrong format");
+			return;
+		}
+		x = Double.parseDouble(xy[0]);
+		y = Double.parseDouble(xy[1]);
+	}
+
 	public Point2D.Double toPoint2D(){
 		return new Point2D.Double(x,y);
 	}

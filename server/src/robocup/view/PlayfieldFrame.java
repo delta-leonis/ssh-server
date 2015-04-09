@@ -27,10 +27,10 @@ import robocup.model.enums.FieldZone;
 @SuppressWarnings("serial")
 public class PlayfieldFrame extends JPanel {
 
-	private static int FIELDWIDTH = 9000;
-	private static int FIELDHEIGHT = 6000;
-//	private static int FIELDWIDTH = World.getInstance().getField().getWidth();
-//	private static int FIELDHEIGHT = World.getInstance().getField().getLength();
+//	private static int FIELDWIDTH = 9000;
+//	private static int FIELDHEIGHT = 6000;
+	private static int FIELDWIDTH = World.getInstance().getField().getWidth();
+	private static int FIELDHEIGHT = World.getInstance().getField().getHeight();
 	private static double ratio = 0.10;
 	
 	public static void main(String [] args) {

@@ -29,9 +29,9 @@ public abstract class Mode {
 	protected Strategy strategy;
 
 	/** Co-ordinates of the goal on the left side of the field */
-	private static final FieldPoint MID_GOAL_NEGATIVE = new FieldPoint(-(World.getInstance().getField().getLength() / 2), 0);
+	private static final FieldPoint MID_GOAL_NEGATIVE = new FieldPoint(-(World.getInstance().getField().getHeight() / 2), 0);
 	/** Co-ordinates of the goal on the right side of the field */
-	private static final FieldPoint MID_GOAL_POSITIVE = new FieldPoint(World.getInstance().getField().getLength() / 2, 0);
+	private static final FieldPoint MID_GOAL_POSITIVE = new FieldPoint(World.getInstance().getField().getHeight() / 2, 0);
 
 	public Mode(Strategy strategy, ArrayList<RobotExecuter> executers) {
 		world = World.getInstance();
