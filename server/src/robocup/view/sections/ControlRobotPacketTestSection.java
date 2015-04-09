@@ -1,4 +1,4 @@
-package robocup.view.widgets;
+package robocup.view.sections;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -14,10 +14,10 @@ import net.miginfocom.swing.MigLayout;
 import robocup.Main;
 import robocup.output.ComInterface;
 import robocup.view.GUI;
-import robocup.view.WidgetBox;
+import robocup.view.SectionBox;
 
 @SuppressWarnings("serial")
-public class ControlRobotPacketTestWidget extends WidgetBox{
+public class ControlRobotPacketTestSection extends SectionBox{
 
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private JLabel selectedRobotLabel;
@@ -28,9 +28,9 @@ public class ControlRobotPacketTestWidget extends WidgetBox{
 	private JTextField rotationSpeedField;
 	
 	/**
-	 * Create ControLRobotWidget
+	 * Create ControLRobotSection
 	 */
-	public ControlRobotPacketTestWidget() {
+	public ControlRobotPacketTestSection() {
 		super("Control robot");
 
 		setLayout(new MigLayout());

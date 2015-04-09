@@ -9,10 +9,10 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import robocup.model.FieldPoint;
-import robocup.view.WidgetBox;
+import robocup.view.SectionBox;
 
 
-public class TestPathPlannerVisualTestPanel extends WidgetBox implements ActionListener{
+public class TestPathPlannerVisualTestPanel extends SectionBox implements ActionListener{
 	private static final long serialVersionUID = 1L;
 	private JButton randomButton;
 	private JButton lockedInSourceButton;

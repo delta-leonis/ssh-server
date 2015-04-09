@@ -18,22 +18,29 @@ import net.miginfocom.swing.MigLayout;
 import robocup.Main;
 import robocup.model.Robot;
 import robocup.model.World;
-import robocup.view.widgets.ConsoleWidget;
-import robocup.view.widgets.ControlRobotWidget;
-import robocup.view.widgets.GameStatusWidget;
-//import robocup.view.widgets.PathPlannerTestWidget;
-import robocup.view.widgets.SettingsWidget;
-import robocup.view.widgets.VisibleRobotWidget;
-import robocup.view.widgets.rotateRobotWidget;
-//import robocup.view.widgets.PenguinWidget;
+import robocup.view.sections.ConsoleSection;
+import robocup.view.sections.ControlRobotSection;
+import robocup.view.sections.GameStatusSection;
+import robocup.view.sections.SettingsSection;
+import robocup.view.sections.VisibleRobotSection;
+import robocup.view.sections.RotateRobotSection;
+//import robocup.view.sections.PathPlannerTestSection;
 
+/**
+ * Main GUI for controlling en monitoring the robots
+ * The overal used Layout is a {@link MigLayout} for easier resizing,
+ * and an easier way to implement modular sections
+ * 
+ * @author Jeroen
+ *
+ */
 @SuppressWarnings("serial")
 public class GUI extends JFrame {
 
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private JPanel robotContainer;
-	private JPanel widgetContainer;
-	private ConsoleWidget console;
+	private JPanel sectionContainer;
+	private ConsoleSection console;
 	private int selectedRobotId = -1;
 	private ArrayList<RobotBox> allRobotBoxes = new ArrayList<RobotBox>();
 
@@ -49,7 +56,7 @@ public class GUI extends JFrame {
 		this.setSize(800, 830);
 
 		initRobotContainer();
-		initWidgetContainer();
+		initSectionContainer();
 		initConsoleContainer();
 
 		LOGGER.info("GUI is started and initialized");
@@ -83,31 +90,31 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Adds a consoleWidget at the bottom
+	 * Adds a consoleSection at the bottom
 	 */
 	private void initConsoleContainer() {
-		console = new ConsoleWidget();
+		console = new ConsoleSection();
 		add(console, "span, growy, growx");
 	}
 
 	/**
-	 * Adds all widgets to a container on the right
+	 * Adds all sections to a container on the right
 	 */
-	private void initWidgetContainer() {
-		widgetContainer = new JPanel();
-		widgetContainer.setBorder(BorderFactory.createTitledBorder("Widgets"));
-		widgetContainer.setLayout(new MigLayout("wrap 1", "[grow]"));
+	private void initSectionContainer() {
+		sectionContainer = new JPanel();
+		sectionContainer.setBorder(BorderFactory.createTitledBorder("Sections"));
+		sectionContainer.setLayout(new MigLayout("wrap 1", "[grow]"));
 
-		widgetContainer.add(new GameStatusWidget(), "growx");
-		widgetContainer.add(new VisibleRobotWidget(), "growx");
-//		widgetContainer.add(new PathPlannerTestWidget(), "growx");	// Comment "World.getInstance().getGUI().update("robotContainer");" in Main.initTeams() for this widget to work.
-//		widgetContainer.add(new ControlRobotPacketTestWidget(), "growx");
-		widgetContainer.add(new ControlRobotWidget(), "growx");
-		widgetContainer.add(new SettingsWidget(), "growx");
-	//	widgetContainer.add(new PenguinWidget(), "growx, growy");
-		widgetContainer.add(new rotateRobotWidget(), "growx, growy");
+		sectionContainer.add(new GameStatusSection(), "growx");
+		sectionContainer.add(new VisibleRobotSection(), "growx");
+//		sectionContainer.add(new PathPlannerTestSection(), "growx");	// Comment "World.getInstance().getGUI().update("robotContainer");" in Main.initTeams() for this section to work.
+//		sectionContainer.add(new ControlRobotPacketTestSection(), "growx");
+		sectionContainer.add(new ControlRobotSection(), "growx");
+		sectionContainer.add(new SettingsSection(), "growx");
+	//	sectionContainer.add(new PenguinSection(), "growx, growy");
+		sectionContainer.add(new RotateRobotSection(), "growx, growy");
 
-		this.add(widgetContainer, "growy, growx");
+		this.add(sectionContainer, "growy, growx");
 	}
 
 	/**
@@ -149,7 +156,7 @@ public class GUI extends JFrame {
 			}
 
 			selectedRobotId = ((RobotBox) arg0.getSource()).getRobot().getRobotId();
-			update("widgetContainer");
+			update("sectionContainer");
 		}
 
 		@Override
@@ -193,11 +200,11 @@ public class GUI extends JFrame {
 			revalidate();
 			repaint();
 			break;
-		case "widgetContainer":
-			for (Component item : widgetContainer.getComponents()) {
-				if (item instanceof WidgetBox){
-					LOGGER.fine("Updated: " + ((TitledBorder)(((WidgetBox) item).getBorder())).getTitle());
-					((WidgetBox) item).update();
+		case "sectionContainer":
+			for (Component item : sectionContainer.getComponents()) {
+				if (item instanceof SectionBox){
+					LOGGER.fine("Updated: " + ((TitledBorder)(((SectionBox) item).getBorder())).getTitle());
+					((SectionBox) item).update();
 				}
 			}
 

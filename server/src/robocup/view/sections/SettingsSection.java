@@ -1,4 +1,4 @@
-package robocup.view.widgets;
+package robocup.view.sections;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,10 +13,10 @@ import net.miginfocom.swing.MigLayout;
 import robocup.Main;
 import robocup.model.World;
 import robocup.output.ComInterface;
-import robocup.view.WidgetBox;
+import robocup.view.SectionBox;
 
 @SuppressWarnings("serial")
-public class SettingsWidget extends WidgetBox {
+public class SettingsSection extends SectionBox {
 
 	private JComboBox<String> fieldHalfBox, frequencyBox;
 	private JComboBox<Level> levelBox;
@@ -25,9 +25,9 @@ public class SettingsWidget extends WidgetBox {
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 
 	/**
-	 * Creates the settingsWidget
+	 * Creates the settingsSection
 	 */
-	public SettingsWidget() {
+	public SettingsSection() {
 		super("Settings");
 		setLayout(new MigLayout("wrap 2", "[][grow]"));
 
@@ -106,7 +106,7 @@ public class SettingsWidget extends WidgetBox {
 				else
 					World.getInstance().getReferee()
 							.setWestTeam(World.getInstance().getReferee().getEnemy());
-				World.getInstance().getGUI().update("widgetContainer");
+				World.getInstance().getGUI().update("sectionContainer");
 				break;
 			}
 		}
