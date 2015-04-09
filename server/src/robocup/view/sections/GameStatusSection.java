@@ -1,11 +1,11 @@
-package robocup.view.widgets;
+package robocup.view.sections;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.model.World;
-import robocup.view.WidgetBox;
+import robocup.view.SectionBox;
 
 /**
  * TODO check whether it works at all,
@@ -13,14 +13,14 @@ import robocup.view.WidgetBox;
  * that wasn't exactly perfect either
  */
 @SuppressWarnings("serial")
-public class GameStatusWidget extends WidgetBox {
+public class GameStatusSection extends SectionBox {
 
 	private JTextField fieldHalfField, timePlayedField, gameStatusField, refereeStatusField, goalsField, keeperIdField;
 
 	/**
-	 * Creates widget
+	 * Creates section
 	 */
-	public GameStatusWidget() {
+	public GameStatusSection() {
 		super("Game Status");
 		setLayout(new MigLayout("wrap 2", "[]related[grow]"));
 

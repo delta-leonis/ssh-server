@@ -4,16 +4,16 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 /**
- * Abstract class for Widgets 
+ * Abstract class for sections 
  */
 @SuppressWarnings("serial")
-public abstract class WidgetBox extends JPanel {
+public abstract class SectionBox extends JPanel {
 
 	/**
-	 * Create a widgetBox
-	 * @param title 	the title of the widget 
+	 * Create a sectionBox
+	 * @param title 	the title of the sections 
 	 */
-	public WidgetBox(String title) {
+	public SectionBox(String title) {
 		this.setBorder(BorderFactory.createTitledBorder(title));
 	}
 

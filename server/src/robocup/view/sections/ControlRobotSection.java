@@ -1,4 +1,4 @@
-package robocup.view.widgets;
+package robocup.view.sections;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -19,10 +19,10 @@ import robocup.model.Ally;
 import robocup.model.FieldPoint;
 import robocup.output.ComInterface;
 import robocup.view.GUI;
-import robocup.view.WidgetBox;
+import robocup.view.SectionBox;
 
 @SuppressWarnings("serial")
-public class ControlRobotWidget extends WidgetBox{
+public class ControlRobotSection extends SectionBox{
 
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private JLabel selectedRobotLabel;
@@ -31,9 +31,9 @@ public class ControlRobotWidget extends WidgetBox{
 	private JTextField forwardBox;
 	
 	/**
-	 * Create ControLRobotWidget
+	 * Create ControLRobotSection
 	 */
-	public ControlRobotWidget() {
+	public ControlRobotSection() {
 		super("Control robot");
 
 		setLayout(new MigLayout("wrap 3", "[grow][grow][grow]"));
