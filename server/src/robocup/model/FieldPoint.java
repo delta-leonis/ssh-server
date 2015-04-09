@@ -35,6 +35,15 @@ public class FieldPoint {
 	}
 
 	/**
+	 * @param ratio Ratio is percentage/100 that represents minification of the drawn field
+	 * @return The {@link FieldPoint} translated to a {@link Point2D.Double} for GUI use.
+	 */
+	public Point2D.Double toGUIPoint(double ratio) {
+		return new Point2D.Double((x+(9000/2))*ratio,(-1*y+6000/2)*ratio);
+		//return new Point2D.Double((x+(World.getInstance().getField().getWidth()/2))*ratio,(-1*y+World.getInstance().getField().getLength()/2)*ratio);
+	}
+
+	/**
 	 * Calculate angle between 2 points
 	 * @param target
 	 * @return Angle in degrees between this and target

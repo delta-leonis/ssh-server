@@ -1,4 +1,4 @@
-package robocup.controller.ai.movement.test;
+package robocup.test;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

@@ -7,9 +7,9 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
@@ -22,14 +22,16 @@ import robocup.model.FieldPoint;
 import robocup.model.Goal;
 import robocup.model.Robot;
 import robocup.model.World;
-import robocup.model.Zone;
 import robocup.model.enums.FieldZone;
 
 @SuppressWarnings("serial")
 public class PlayfieldFrame extends JPanel {
-	private static int FIELDWIDTH = 6050;
-	private static int FIELDHEIGHT = 4050;
-	private static double ratio = 0.15;
+
+	private static int FIELDWIDTH = 9000;
+	private static int FIELDHEIGHT = 6000;
+//	private static int FIELDWIDTH = World.getInstance().getField().getWidth();
+//	private static int FIELDHEIGHT = World.getInstance().getField().getLength();
+	private static double ratio = 0.10;
 	
 	public static void main(String [] args) {
 		JFrame hai = new JFrame();	
@@ -76,8 +78,8 @@ public class PlayfieldFrame extends JPanel {
 
     	drawRaster(g);
 
-    	for (final Map.Entry<FieldZone, Zone> zone : World.getInstance().getField().getZones().entrySet())
-    		drawZone(g, zone.getValue());
+    	for (FieldZone fieldZone : FieldZone.values())
+    		drawZone(g, fieldZone);
     	
     	drawPlayfield(g);
     	drawFieldObjects(g);
@@ -104,8 +106,8 @@ public class PlayfieldFrame extends JPanel {
 		if(ball.getOwner() instanceof Enemy)
 			return null;
 		
-		FieldZone[] zones = {FieldZone.EAST_RIGHT_FRONT, FieldZone.EAST_CENTER, FieldZone.EAST_LEFT_FRONT, FieldZone.EAST_MIDDLE, FieldZone.EAST_LEFT_SECOND_POST, FieldZone.EAST_RIGHT_SECOND_POST, 
-							FieldZone.WEST_RIGHT_FRONT, FieldZone.WEST_CENTER, FieldZone.WEST_LEFT_FRONT, FieldZone.WEST_MIDDLE, FieldZone.WEST_LEFT_SECOND_POST, FieldZone.WEST_RIGHT_SECOND_POST};
+		FieldZone[] zones = {FieldZone.EAST_NORTH_FRONT, FieldZone.EAST_CENTER, FieldZone.EAST_SOUTH_FRONT, FieldZone.EAST_MIDDLE, FieldZone.EAST_SOUTH_SECONDPOST, FieldZone.EAST_NORTH_SECONDPOST, 
+							FieldZone.WEST_NORTH_FRONT, FieldZone.WEST_CENTER, FieldZone.WEST_SOUTH_FRONT, FieldZone.WEST_MIDDLE, FieldZone.WEST_SOUTH_SECONDPOST, FieldZone.WEST_NORTH_SECONDPOST};
 		
 		//check if the ball is in a zone from which we can actually make the angle
 		if(!Arrays.asList(zones).contains(World.getInstance().locateFieldObject(ball)))
@@ -195,8 +197,8 @@ public class PlayfieldFrame extends JPanel {
 		if(ball.getOwner() instanceof Enemy)
 			return;
 
-		FieldZone[] zones = {FieldZone.EAST_RIGHT_FRONT, FieldZone.EAST_CENTER, FieldZone.EAST_LEFT_FRONT, FieldZone.EAST_MIDDLE, FieldZone.EAST_LEFT_SECOND_POST, FieldZone.EAST_RIGHT_SECOND_POST, 
-							FieldZone.WEST_RIGHT_FRONT, FieldZone.WEST_CENTER, FieldZone.WEST_LEFT_FRONT, FieldZone.WEST_MIDDLE, FieldZone.WEST_LEFT_SECOND_POST, FieldZone.WEST_RIGHT_SECOND_POST};
+		FieldZone[] zones = {FieldZone.EAST_NORTH_FRONT, FieldZone.EAST_CENTER, FieldZone.EAST_SOUTH_FRONT, FieldZone.EAST_MIDDLE, FieldZone.EAST_SOUTH_SECONDPOST, FieldZone.EAST_NORTH_SECONDPOST, 
+							FieldZone.WEST_NORTH_FRONT, FieldZone.WEST_CENTER, FieldZone.WEST_SOUTH_FRONT, FieldZone.WEST_MIDDLE, FieldZone.WEST_SOUTH_SECONDPOST, FieldZone.WEST_NORTH_SECONDPOST};
 		
 		//check if the ball is in a zone from which we can actually make the angle
 		if(!Arrays.asList(zones).contains(World.getInstance().locateFieldObject(ball))){
@@ -207,7 +209,7 @@ public class PlayfieldFrame extends JPanel {
 		//get the enemy goal (checking which side is ours, and get the opposite 
 		Goal enemyGoal = (World.getInstance().getReferee().isWestTeamColor(World.getInstance().getReferee().getAllyTeamColor())) ?  World.getInstance().getField().getEastGoal() : World.getInstance().getField().getWestGoal();
 
-		//scoreArea.add(new Line2D.Double(enemyGoal.getFrontSouth().toPoint2D(), enemyGoal.getFrontNorth().toPoint2D()));
+		//scoreArea.add(new Line2D.Double(enemyGoal.getFrontSouth().toGUIPoint(ratio), enemyGoal.getFrontNorth().toGUIPoint(ratio)));
 		//drawPolygon(g2, new Point[]{enemyGoal.getFrontSouth(), enemyGoal.getFrontNorth(), ball.getPosition()});
 		drawLine(g2, new Line2D.Double(enemyGoal.getFrontSouth().toPoint2D(), ball.getPosition().toPoint2D()));
 		drawLine(g2, new Line2D.Double(enemyGoal.getFrontNorth().toPoint2D(), ball.getPosition().toPoint2D()));
@@ -355,27 +357,11 @@ public class PlayfieldFrame extends JPanel {
 		mergedMap.put((prevY1 < prevY2 ? prevY1 : prevY2), (prevY1 > prevY2 ? prevY1 : prevY2));
 		return mergedMap;
     }
-
-    
-	@SuppressWarnings("unused")
-	private void drawPolygon(Graphics2D g2, FieldPoint[] points){
-		int[] xPoints = new int[points.length];
-		int[] yPoints = new int[points.length];
-		int i = 0;
-		for(FieldPoint point : points){
-			xPoints[i] = (int) (point.getX()*ratio + getWidth()/2);
-			yPoints[i] = (int) (-1*point.getY()*ratio + getHeight()/2);
-			i++;
-		}
-		g2.drawPolygon(xPoints, yPoints, i);
-	}
-	
+   
 	private void drawLine(Graphics2D g2, Line2D.Double line){
-		int x1 = (int) (line.getX1()*ratio + getWidth()/2);
-		int y1 = (int) (-1*line.getY1()*ratio + getHeight()/2); 
-		int x2 = (int) (line.getX2()*ratio + getWidth()/2); 
-		int y2 = (int) (-1*line.getY2()*ratio + getHeight()/2);
-		g2.drawLine(x1, y1, x2, y2);
+		Point2D.Double p1 = new FieldPoint(line.getP1().getX(), line.getP1().getY()).toGUIPoint(ratio);
+		Point2D.Double p2 = new FieldPoint(line.getP2().getX(), line.getP2().getY()).toGUIPoint(ratio);
+		g2.drawLine((int)p1.getX(), (int)p1.getY(), (int)p2.getX(), (int)p2.getY());
 	}
 	
 	private void drawOval(Graphics2D g2,int _x, int _y, int _width){
@@ -418,23 +404,24 @@ public class PlayfieldFrame extends JPanel {
     }
     
     // must  be redone, zones now exist within the model.
-    private void drawZone(Graphics g, Zone zone) {
+    private void drawZone(Graphics g, FieldZone fieldZone) {
 	    Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(1));
 		//zone.setOffset(getSize(), ratio);
 		//zone.calculateAbsolutePoints();
 
-		int[] scaledX = new int[zone.getNPoints()];
-		int[] scaledY = new int[zone.getNPoints()];
-		for (int index = 0; index < zone.getNPoints(); index++) {
-			double unscaledX = zone.getAbsoluteXPoints()[index];
-			double unscaledY = zone.getAbsoluteYPoints()[index];
-			scaledX[index] = (int) (unscaledX*ratio);
-			scaledY[index] = (int) (unscaledY*ratio);
+		int[] scaledX = new int[fieldZone.getNumberOfVertices()];
+		int[] scaledY = new int[fieldZone.getNumberOfVertices()];
+		int index =0;
+		for(FieldPoint point : fieldZone.getVertices()){
+			scaledX[index] = (int) (point.toGUIPoint(ratio).getX());
+			scaledY[index] = (int) (point.toGUIPoint(ratio).getY());
+			index++;
 		}
+		
 		g2.setColor(Color.BLUE);
-		g2.drawPolygon(scaledX, scaledY, zone.getNPoints());
-		g2.drawString(zone.getName(), (int)(((zone.getAbsoluteXPoints()[0] + zone.getAbsoluteXPoints()[2]) / 2 - zone.getName().length() / 2 * 4)*ratio), (int)(((zone.getAbsoluteYPoints()[0] + zone.getAbsoluteYPoints()[2]) / 2)*ratio));
+		g2.drawPolygon(scaledX, scaledY, fieldZone.getNumberOfVertices());
+		g2.drawString(fieldZone.name(), (int) (fieldZone.getCenterPoint().toGUIPoint(ratio).getX() - fieldZone.name().length()*4), (int) (fieldZone.getCenterPoint().toGUIPoint(ratio).getY()));
     }
 
 	private void drawPlayfield(Graphics g) {
@@ -460,10 +447,10 @@ public class PlayfieldFrame extends JPanel {
 		g2.drawLine((int) (getWidth() / 9.0 * 8), getHeight() / 2 - getWidth() / 18, 
 					(int) (getWidth() / 9.0 * 8), getHeight() / 2 + getWidth() / 18);
 		g2.setStroke(new BasicStroke(5));
-		drawLine(g2, new Line2D.Double(World.getInstance().getField().getEastGoal().getFrontSouth().toPoint2D(),
-				World.getInstance().getField().getEastGoal().getFrontNorth().toPoint2D()));
-		drawLine(g2, new Line2D.Double(World.getInstance().getField().getWestGoal().getFrontSouth().toPoint2D(),
-				World.getInstance().getField().getWestGoal().getFrontNorth().toPoint2D()));
+		drawLine(g2, new Line2D.Double(World.getInstance().getField().getEastGoal().getFrontSouth().toGUIPoint(ratio),
+				World.getInstance().getField().getEastGoal().getFrontNorth().toGUIPoint(ratio)));
+		drawLine(g2, new Line2D.Double(World.getInstance().getField().getWestGoal().getFrontSouth().toGUIPoint(ratio),
+				World.getInstance().getField().getWestGoal().getFrontNorth().toGUIPoint(ratio)));
 		
 	}
 }

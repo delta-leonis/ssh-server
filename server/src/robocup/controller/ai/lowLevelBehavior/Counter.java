@@ -3,45 +3,31 @@ package robocup.controller.ai.lowLevelBehavior;
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
+import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
 import robocup.output.ComInterface;
 
-/**
- * Counter
- * Houdt vrije lijn tussen bal en zichzelf binnen zone �middenTegenstander�
- * 
- * Dekker
- * Bezet lijn tussen tegenstander en bal in zone met volgende prioriteit: 1. �2ePaal 2. �Hoek 3. �Zijkant�
- * 
- * DekkerStoorder	//TODO: Sub-klasse.
- * Blijft binnen zone �Zijkant�. Bezet de lijn tussen tegenstander in zijn zone als de bal aan de andere breedte van het veld is en er een tegenstander is.
- * Bezet de lijn tussen bal en eigen goal als deze in de zone is.
- * 
- * TODO: Rename.
- * TODO: English-fy
- * TODO: Implements zones.
- */
 public class Counter extends LowLevelBehavior {
 
-	private FieldPoint zone;
+	private FieldZone zone;
 	private FieldPoint ballPosition;
-	private boolean dribble = false;
+	private FieldPoint freePosition;
 
 	/**
-	 * Create Counter LowLevelBevahiour
-	 * @param robot the Counter {@link Robot} in the model.
+	 * Create Counter LowLevelBevahior
+	 * A counter tries to move to a given free position,
+	 * if no free position is given try to move to the center point of his assigned zone 
+	 * @param robot the Counter {@link Robot} in the model
 	 * @param output Used to send data to the Robot
-	 * @param TODO: vrije zone.
 	 * @param ballPosition the position of the ball
-	 * @param TODO: lijst met robots/obstakels
-	 * @param dribble enable dribbler
+	 * @param freePosition a free position within the zone
 	 */
-	public Counter(Robot robot, ComInterface output, FieldPoint zone, FieldPoint ballPosition, boolean dribble) {
+	public Counter(Robot robot, ComInterface output, FieldZone zone, FieldPoint ballPosition, FieldPoint freePosition) {
 		super(robot);
 		this.zone = zone;
 		this.ballPosition = ballPosition;
-		this.dribble = dribble;
-		this.role = RobotMode.ATTACKER;
+		this.freePosition = freePosition;
+		this.role = RobotMode.COUNTER;
 		go = new GotoPosition(robot, output, null, ballPosition);
 	}
 
@@ -49,28 +35,24 @@ public class Counter extends LowLevelBehavior {
 	 * Update
 	 * @param zone a free position on the field. If not null, the Robot should go here
 	 * @param ballPosition the position of the ball
-	 * @param dribble enable dribbler
+	 * @param freePosition a free position within the zone
 	 */
-	public void update(FieldPoint zone, FieldPoint ballPosition, boolean dribble) {
+	public void update(FieldZone zone, FieldPoint ballPosition, FieldPoint freePosition) {
 		this.zone = zone;
 		this.ballPosition = ballPosition;
-		this.dribble = dribble;
+		this.freePosition = freePosition;
 	}
 
 	@Override
 	public void calculate() {
-		FieldPoint newDestination = null;
 		go.setTarget(ballPosition);
-		go.setDribble(dribble);
 
-		// Move towards a free position when given
-		if (zone != null) {
-			// TODO
-			// Calculate a free path from ball towards zone, based on the robots on the field.
-			// If there is no free path, move to middle of zone.
-		}
+		if (freePosition != null)
+			go.setDestination(freePosition);
+		else
+			// try to go to center point if no free position is given
+			go.setDestination(zone.getCenterPoint());
 
-		go.setDestination(newDestination);
 		go.calculate();
 	}
 }

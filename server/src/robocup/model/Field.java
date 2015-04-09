@@ -1,9 +1,7 @@
 package robocup.model;
 
-import java.util.EnumMap;
-import java.util.Map;
-
 import robocup.model.enums.FieldZone;
+
 public class Field {
 	private int length;
 	private int width;
@@ -23,7 +21,6 @@ public class Field {
 	private int penaltyLineFromSpotDistance;
 	private int cameraOverlapZoneWidth;
 	private Goal eastGoal, westGoal;
-	private Map<FieldZone,Zone> zoneList;
 
 	public Field(int fieldHeight, int fieldWidth) {
 		this.length = fieldHeight;
@@ -40,199 +37,6 @@ public class Field {
 		this.cameraOverlapZoneWidth = 400;
 		
 		createGoals(700, 180, 20, 180);
-		zoneList = new EnumMap<FieldZone, Zone>(FieldZone.class);
-		
-
-		// a      b     c
-		// *------*-----*
-		// |     /|     |
-		// d   e/ |     |
-		// *---*  |     |
-		// |   \f g     h
- 		// |gt  *-*-----*
-		// |q  r| |     |
-		// *---*| |     |
-		// |gb  i j     k
-		// |    *-*-----*
-		// l   m/ |     |
-		// *---*  |     |
-		// |    \ |     |
-		// n     \o     p
-		// *------*-----*
-		
-		// single field
-		//		x		y		index
-		// a	0		0		0
-		// b 	1400	0		1
-		// c 	3025	0		2
-		// d 	0		1000	3		
-		// e 	400		1000	4		
-		// f	700		1500	5		
-		// g 	1400	1500	6		
-		// h 	3025	1500	7		
-		// i 	700		2550	8		
-		// j 	1400	2550	9		
-		// k 	3025	2550	10		
-		// l 	0		3050	11		
-		// m 	400		3050	12		
-		// n 	0		4050	13		
-		// o 	1400	4050	14		
-		// p 	3025	4050	15
-		// q    0	 	700	    16
-		// r    2025    700  	17
-		
-		FieldPoint fieldLocs[] = new FieldPoint[18];
-		fieldLocs[0] = new FieldPoint(0, 0);
-		fieldLocs[1] = new FieldPoint(1400, 0);
-		fieldLocs[2] = new FieldPoint(3025, 0);
-		fieldLocs[3] = new FieldPoint(0, 1000);
-		fieldLocs[4] = new FieldPoint(400, 1000);
-		fieldLocs[5] = new FieldPoint(700, 1500);
-		fieldLocs[6] = new FieldPoint(1400, 1500);
-		fieldLocs[7] = new FieldPoint(3025, 1500);
-		fieldLocs[8] = new FieldPoint(700, 2550);
-		fieldLocs[9] = new FieldPoint(1400, 2550);
-		fieldLocs[10] = new FieldPoint(3025, 2550);
-		fieldLocs[11] = new FieldPoint(0, 3050);
-		fieldLocs[12] = new FieldPoint(400, 3050);
-		fieldLocs[13] = new FieldPoint(0, 4050);
-		fieldLocs[14] = new FieldPoint(1400, 4050);
-		fieldLocs[15] = new FieldPoint(3025, 4050);
-		fieldLocs[16] = new FieldPoint(0, 2025);
-		fieldLocs[17] = new FieldPoint(700, 2025);
-
-		// sectoren
-		// naam						p1        p2        P3		  P4
-		// WEST_RIGHT_CORNER		a -  0	  b -  1    e -  4	  d -  3
-		// WEST_RIGHT_SECOND_POST	b -  1	  g -  6    f -  5    e -  4
-		// WEST_CENTER				f -  5	  g -  6    j -  9	  i -  8
-		// WEST_LEFT_SECOND_POST	i -  8	  j -  9    o - 14    m - 12
-		// WEST_LEFT_CORNER			l - 11	  m - 12    o - 14    n - 13
-		// WEST_RIGHT_FRONT			b -  1	  c -  2    h -  7    g -  6
-		// WEST_MIDDLE				g -  6	  h -  7    k - 10    j -  9
-		// WEST_LEFT_FRONT			j -  9	  k - 10    p - 15    o - 14
-		// WEST_GOAL_TOP			d    3    e    4    f   5     r   17    q   16
-		// WEST_GOAL_BOT			q    16   r    17   i   8     m   12    l   11
-		
-		//west row one (goal)
-		zoneList.put(FieldZone.WEST_RIGHT_CORNER,
-				new Zone("rightCorner", 
-				new FieldPoint[] { fieldLocs[0],fieldLocs[1],fieldLocs[4],fieldLocs[3] },length,width));
-		zoneList.put(FieldZone.WEST_RIGHT_SECOND_POST,
-				new Zone("rightSecondPost", 
-				new FieldPoint[] { fieldLocs[1],fieldLocs[6],fieldLocs[5],fieldLocs[4] },length,width));
-		zoneList.put(FieldZone.WEST_CENTER,
-				new Zone("center", 
-				new FieldPoint[] { fieldLocs[5],fieldLocs[6],fieldLocs[9],fieldLocs[8] },length,width));
-		zoneList.put(FieldZone.WEST_LEFT_SECOND_POST,
-				new Zone("leftSecondPost", 
-				new FieldPoint[] { fieldLocs[8],fieldLocs[9],fieldLocs[14],fieldLocs[12] },length,width));
-		zoneList.put(FieldZone.WEST_LEFT_CORNER,
-				new Zone("leftCorner", 
-				new FieldPoint[] { fieldLocs[11],fieldLocs[12],fieldLocs[14],fieldLocs[13] },length,width));
-		//west row two (mid)
-		zoneList.put(FieldZone.WEST_RIGHT_FRONT,
-				new Zone("rightFront",
-				new FieldPoint[] { fieldLocs[1],fieldLocs[2],fieldLocs[7],fieldLocs[6] },length,width));
-		zoneList.put(FieldZone.WEST_MIDDLE,
-				new Zone("middle", 
-				new FieldPoint[] { fieldLocs[6],fieldLocs[7],fieldLocs[10],fieldLocs[9] },length,width));
-		zoneList.put(FieldZone.WEST_LEFT_FRONT,
-				new Zone("leftFront",
-				new FieldPoint[] { fieldLocs[9],fieldLocs[10],fieldLocs[15],fieldLocs[14] },length,width));
-		
-		//goal area
-		zoneList.put(FieldZone.WEST_GOAL_LEFT,
-				new Zone("goal left", 
-				new FieldPoint[] { fieldLocs[3],fieldLocs[4],fieldLocs[5],fieldLocs[17],fieldLocs[16] },length,width));
-		zoneList.put(FieldZone.WEST_GOAL_RIGHT,
-				new Zone("goal right",
-				new FieldPoint[] { fieldLocs[16],fieldLocs[17],fieldLocs[8],fieldLocs[12], fieldLocs[11] },length,width));
-
-		//east row one (goal)
-		zoneList.put(FieldZone.EAST_LEFT_CORNER,
-				new Zone("leftCorner",
-				new FieldPoint[] {makeXReverse(fieldLocs[0]), makeXReverse(fieldLocs[1]), makeXReverse(fieldLocs[4]), makeXReverse(fieldLocs[3]) },length,width));
-		zoneList.put(FieldZone.EAST_LEFT_SECOND_POST,
-				new Zone("leftSecondPost",
-				new FieldPoint[] {makeXReverse(fieldLocs[1]), makeXReverse(fieldLocs[6]), makeXReverse(fieldLocs[5]), makeXReverse(fieldLocs[4]) },length,width));
-		zoneList.put(FieldZone.EAST_CENTER,
-				new Zone("center",
-				new FieldPoint[] {makeXReverse(fieldLocs[5]), makeXReverse(fieldLocs[6]), makeXReverse(fieldLocs[9]), makeXReverse(fieldLocs[8]) },length,width));
-		zoneList.put(FieldZone.EAST_RIGHT_SECOND_POST,
-				new Zone("rightSecondPost", 
-				new FieldPoint[] {makeXReverse(fieldLocs[8]), makeXReverse(fieldLocs[9]), makeXReverse(fieldLocs[14]), makeXReverse(fieldLocs[12]) },length,width));
-		zoneList.put(FieldZone.EAST_RIGHT_CORNER,
-				new Zone("rightCorner", 
-				new FieldPoint[] {makeXReverse(fieldLocs[11]), makeXReverse(fieldLocs[12]), makeXReverse(fieldLocs[14]), makeXReverse(fieldLocs[13]) },length,width));
-
-		//east row two (mid)
-		zoneList.put(FieldZone.EAST_LEFT_FRONT,
-				new Zone("leftFront",
-				new FieldPoint[] {makeXReverse(fieldLocs[1]), makeXReverse(fieldLocs[2]), makeXReverse(fieldLocs[7]), makeXReverse(fieldLocs[6]) },length,width));
-		zoneList.put(FieldZone.EAST_MIDDLE,
-				new Zone("middle",
-				new FieldPoint[] {makeXReverse(fieldLocs[6]), makeXReverse(fieldLocs[7]), makeXReverse(fieldLocs[10]), makeXReverse(fieldLocs[9]) },length,width));
-		zoneList.put(FieldZone.EAST_RIGHT_FRONT,
-				new Zone("rightFront",
-				new FieldPoint[] {makeXReverse(fieldLocs[9]), makeXReverse(fieldLocs[10]), makeXReverse(fieldLocs[15]), makeXReverse(fieldLocs[14]) },length,width));
-		
-		
-		//goal area
-		zoneList.put(FieldZone.EAST_GOAL_LEFT,
-				new Zone("goal left", 
-				new FieldPoint[] { makeXReverse(fieldLocs[3]),makeXReverse(fieldLocs[4]),makeXReverse(fieldLocs[5]),makeXReverse(fieldLocs[17]),makeXReverse(fieldLocs[16])},length,width));
-		zoneList.put(FieldZone.EAST_GOAL_RIGHT,
-				new Zone("goal right",
-				new FieldPoint[] { makeXReverse(fieldLocs[16]),makeXReverse(fieldLocs[17]),makeXReverse(fieldLocs[8]),makeXReverse(fieldLocs[12]), makeXReverse(fieldLocs[11]) },length,width));
-
-	}
-	
-	private FieldPoint makeXReverse(FieldPoint point) {
-		return new FieldPoint(6050 - point.getX(), 4050 - point.getY()); 
-	}
-	
-	/**
-	 * constructor which declares all variables, makes it messy so its preferred to use the default constructor, and fill it in later with the given methods
-	 * @param length
-	 * @param width
-	 * @param lineWidth
-	 * @param boundaryWidth
-	 * @param refereeWidth
-	 * @param centerCircleRadius
-	 * @param defenceRadius
-	 * @param defenceStretch
-	 * @param freeKickFromDefenceDistance
-	 * @param penaltySpotFromFieldLineDistance
-	 * @param penaltyLineFromSpotDistance
-	 * @param goalWidth
-	 * @param goalDepth
-	 * @param goalWallWidth
-	 * @param goalHeight
-	 * @param cameraOverlapZoneWidth
-	 */
-	public Field(int length, int width, int lineWidth, int boundaryWidth, int refereeWidth, int centerCircleRadius,
-			int defenceRadius, int defenceStretch, int freeKickFromDefenceDistance,
-			int penaltySpotFromFieldLineDistance, int penaltyLineFromSpotDistance, int goalWidth, int goalDepth,
-			int goalWallWidth, int goalHeight, int cameraOverlapZoneWidth) {
-
-		this.length = length;
-		this.width = width;
-		this.lineWidth = lineWidth;
-		this.boundaryWidth = boundaryWidth;
-		this.refereeWidth = refereeWidth;
-		this.centerCircleRadius = centerCircleRadius;
-		this.defenceRadius = defenceRadius;
-		this.defenceStretch = defenceStretch;
-		this.freeKickFromDefenceDistance = freeKickFromDefenceDistance;
-		this.penaltySpotFromFieldLineDistance = penaltySpotFromFieldLineDistance;
-		this.penaltyLineFromSpotDistance = penaltyLineFromSpotDistance;
-		this.goalWidth = goalWidth;
-		this.goalDepth = goalDepth;
-		this.goalWallWidth = goalWallWidth;
-		this.goalHeight = goalHeight;
-		this.cameraOverlapZoneWidth = cameraOverlapZoneWidth;
-		createGoals(goalWidth, goalDepth, goalWallWidth, goalHeight);	
 	}
 	
 	public void update(int lineWidth, int fieldLength, int fieldWidth, int boundaryWidth, int refereeWidth,
@@ -490,20 +294,11 @@ public class Field {
 	public void setGoalProportions(int goalWidth, int goalDepth, int goalWallWidth, int goalHeight) {
 		createGoals(goalWidth, goalDepth, goalWallWidth, goalHeight);
 	}
-
-	public Map<FieldZone, Zone> getZones () {
-		return zoneList;
-	}
-
-	public Zone getZone(FieldZone fieldZone) {
-		return zoneList.get(fieldZone);
-	}
 	
 	public FieldZone locateObject(FieldObject argObject) {
-		for (Map.Entry<FieldZone, Zone> entry : zoneList.entrySet())
-		{	
-			if (entry.getValue().contains(argObject.getPosition()))
-				return entry.getKey();
+		for (FieldZone fieldZone : FieldZone.values()) {	
+			if (fieldZone.contains(argObject.getPosition()))
+				return fieldZone;
 		}
 		return null;
 	}
