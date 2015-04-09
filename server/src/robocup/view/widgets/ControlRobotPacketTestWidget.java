@@ -13,7 +13,6 @@ import javax.swing.SwingUtilities;
 import net.miginfocom.swing.MigLayout;
 import robocup.Main;
 import robocup.output.ComInterface;
-import robocup.output.RobotCom;
 import robocup.view.GUI;
 import robocup.view.WidgetBox;
 
@@ -92,7 +91,7 @@ public class ControlRobotPacketTestWidget extends WidgetBox{
 			int directionSpeedInt = Integer.parseInt(directionSpeed);
 			int rotationSpeedInt = Integer.parseInt(rotationSpeed);
 			
-			ComInterface.getInstance(RobotCom.class).send(1, selectedRobotId, directionInt, directionSpeedInt, rotationSpeedInt, 100, dribbling);
+			ComInterface.getInstance().send(1, selectedRobotId, directionInt, directionSpeedInt, rotationSpeedInt, 100, dribbling);
 
 		}catch(NumberFormatException e){
 			LOGGER.severe("Number Format Exception");

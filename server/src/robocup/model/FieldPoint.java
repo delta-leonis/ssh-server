@@ -23,7 +23,7 @@ import java.awt.geom.Point2D;
 public class FieldPoint {
 	private double x;
 	private double y;
-
+	
 	public FieldPoint(double x, double y) {
 		super();
 		this.x = x;

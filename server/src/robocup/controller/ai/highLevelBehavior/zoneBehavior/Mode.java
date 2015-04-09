@@ -20,7 +20,6 @@ import robocup.model.Robot;
 import robocup.model.World;
 import robocup.model.enums.FieldZone;
 import robocup.output.ComInterface;
-import robocup.output.RobotCom;
 
 public abstract class Mode {
 
@@ -106,7 +105,7 @@ public abstract class Mode {
 	 */
 	private void handleAttacker(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof Attacker))
-			executer.setLowLevelBehavior(new Attacker(executer.getRobot(), ComInterface.getInstance(RobotCom.class),
+			executer.setLowLevelBehavior(new Attacker(executer.getRobot(), ComInterface.getInstance(),
 					0.0, 0, null, null));
 
 		updateAttacker(executer);
@@ -126,7 +125,7 @@ public abstract class Mode {
 	 */
 	private void handleCoverer(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof Coverer))
-			executer.setLowLevelBehavior(new Coverer(executer.getRobot(), ComInterface.getInstance(RobotCom.class),
+			executer.setLowLevelBehavior(new Coverer(executer.getRobot(), ComInterface.getInstance(),
 					250, null, null, 0));
 
 		updateCoverer(executer);
@@ -147,7 +146,7 @@ public abstract class Mode {
 	private void handleKeeperDefender(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof KeeperDefender))
 			executer.setLowLevelBehavior(new KeeperDefender(executer.getRobot(), ComInterface
-					.getInstance(RobotCom.class), 1200, false, null, null, null));
+					.getInstance(), 1200, false, null, null, null));
 
 		updateKeeperDefender(executer);
 	}
@@ -169,7 +168,7 @@ public abstract class Mode {
 
 		// TODO determine field half in a better way
 		if (!(executer.getLowLevelBehavior() instanceof Keeper))
-			executer.setLowLevelBehavior(new Keeper(keeper, ComInterface.getInstance(RobotCom.class), 500, false, ball
+			executer.setLowLevelBehavior(new Keeper(keeper, ComInterface.getInstance(), 500, false, ball
 					.getPosition(), keeper.getPosition().getX() < 0 ? MID_GOAL_NEGATIVE : MID_GOAL_POSITIVE));
 
 		updateKeeper(executer);

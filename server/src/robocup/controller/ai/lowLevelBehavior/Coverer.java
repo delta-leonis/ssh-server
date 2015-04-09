@@ -6,7 +6,6 @@ import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.enums.RobotMode;
 import robocup.output.ComInterface;
-import robocup.output.RobotCom;
 
 /**
  * Describes the low-level behaviour for a Coverer robot.

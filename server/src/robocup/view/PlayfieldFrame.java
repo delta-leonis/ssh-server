@@ -10,16 +10,16 @@ import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import robocup.model.Ball;
 import robocup.model.Enemy;
-import robocup.model.Goal;
 import robocup.model.FieldPoint;
+import robocup.model.Goal;
 import robocup.model.Robot;
 import robocup.model.World;
 import robocup.model.Zone;

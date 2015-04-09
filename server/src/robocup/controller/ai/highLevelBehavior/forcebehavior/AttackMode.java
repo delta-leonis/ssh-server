@@ -17,7 +17,6 @@ import robocup.model.World;
 import robocup.model.enums.Command;
 import robocup.model.enums.RobotMode;
 import robocup.output.ComInterface;
-import robocup.output.RobotCom;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -242,7 +241,7 @@ public class AttackMode extends Mode {
 		if (isUpdate) {
 			((Attacker) executer.getLowLevelBehavior()).update(shootDirection, chipKick, null, ball.getPosition());
 		} else {
-			executer.setLowLevelBehavior(new Attacker(robot, ComInterface.getInstance(RobotCom.class), shootDirection,
+			executer.setLowLevelBehavior(new Attacker(robot, ComInterface.getInstance(), shootDirection,
 					chipKick, null, ball.getPosition()));
 		}
 	}
@@ -257,7 +256,7 @@ public class AttackMode extends Mode {
 			((Coverer) executer.getLowLevelBehavior()).update(distanceToOpponent, ball.getPosition(),
 					robot.getPosition(), opponent.getPosition(), opponent.getRobotId());
 		} else {
-			executer.setLowLevelBehavior(new Coverer(robot, ComInterface.getInstance(RobotCom.class),
+			executer.setLowLevelBehavior(new Coverer(robot, ComInterface.getInstance(),
 					distanceToOpponent, ball.getPosition(), opponent.getPosition(), opponent.getRobotId()));
 		}
 	}
@@ -268,7 +267,7 @@ public class AttackMode extends Mode {
 			((KeeperDefender) executer.getLowLevelBehavior()).update(distanceToGoal, false, ball.getPosition(),
 					robot.getPosition());
 		} else {
-			executer.setLowLevelBehavior(new KeeperDefender(robot, ComInterface.getInstance(RobotCom.class),
+			executer.setLowLevelBehavior(new KeeperDefender(robot, ComInterface.getInstance(),
 					distanceToGoal, false, ball.getPosition(), robot.getPosition().getX() > 0 ? MID_GOAL_POSITIVE
 							: MID_GOAL_NEGATIVE, offset));
 		}
@@ -279,7 +278,7 @@ public class AttackMode extends Mode {
 		if (isUpdate) {
 			((Keeper) executer.getLowLevelBehavior()).update(distanceToGoal, false, ball.getPosition());
 		} else {
-			executer.setLowLevelBehavior(new Keeper(robot, ComInterface.getInstance(RobotCom.class), distanceToGoal,
+			executer.setLowLevelBehavior(new Keeper(robot, ComInterface.getInstance(), distanceToGoal,
 					false, ball.getPosition(), robot.getPosition().getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE));
 		}
 	}

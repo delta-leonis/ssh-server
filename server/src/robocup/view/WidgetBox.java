@@ -1,6 +1,7 @@
 package robocup.view;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
 
 /**
  * Abstract class for Widgets 

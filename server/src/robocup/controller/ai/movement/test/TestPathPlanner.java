@@ -1,7 +1,7 @@
 package robocup.controller.ai.movement.test;
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNull;
 
 import java.awt.geom.Rectangle2D;
 

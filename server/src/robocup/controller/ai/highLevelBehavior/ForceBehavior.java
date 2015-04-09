@@ -2,13 +2,13 @@ package robocup.controller.ai.highLevelBehavior;
 
 import java.util.ArrayList;
 
-import robocup.model.Ball;
-import robocup.model.Robot;
-import robocup.model.World;
 import robocup.controller.ai.highLevelBehavior.forcebehavior.AttackMode;
 import robocup.controller.ai.highLevelBehavior.forcebehavior.DefenceMode;
 import robocup.controller.ai.highLevelBehavior.forcebehavior.Mode;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
+import robocup.model.Ball;
+import robocup.model.Robot;
+import robocup.model.World;
 
 public class ForceBehavior extends Behavior {
 

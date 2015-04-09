@@ -2,9 +2,9 @@ package robocup.model;
 
 import java.util.ArrayList;
 
-import robocup.model.enums.TeamColor;
 import robocup.model.enums.Command;
 import robocup.model.enums.Stage;
+import robocup.model.enums.TeamColor;
 
 /**
  * Model representation of the "game", including the teams and rules

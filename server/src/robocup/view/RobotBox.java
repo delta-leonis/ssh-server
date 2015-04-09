@@ -9,8 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 
 import net.miginfocom.swing.MigLayout;
-import robocup.model.Robot;
 import robocup.model.Ally;
+import robocup.model.Robot;
 
 public class RobotBox extends JPanel {
 	private static final long serialVersionUID = 1L;
