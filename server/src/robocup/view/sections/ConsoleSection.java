@@ -1,4 +1,4 @@
-package robocup.view.widgets;
+package robocup.view.sections;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,10 +15,10 @@ import javax.swing.table.DefaultTableModel;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.Main;
-import robocup.view.WidgetBox;
+import robocup.view.SectionBox;
 
 @SuppressWarnings("serial")
-public class ConsoleWidget extends WidgetBox {
+public class ConsoleSection extends SectionBox {
 
 	private Object[] header = { "ID", "tijd", "level", "bericht" };
 	private Object[][] data = {};
@@ -27,9 +27,9 @@ public class ConsoleWidget extends WidgetBox {
 	private JTable table;
 
 	/**
-	 * Create ConsoleWidget
+	 * Create ConsoleSection
 	 */
-	public ConsoleWidget() {
+	public ConsoleSection() {
 		super("Console");
 		setLayout(new MigLayout("wrap 1", "[grow]", "[][grow]"));
 

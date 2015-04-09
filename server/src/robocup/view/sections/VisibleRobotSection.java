@@ -1,4 +1,4 @@
-package robocup.view.widgets;
+package robocup.view.sections;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,18 +11,18 @@ import javax.swing.JCheckBox;
 import net.miginfocom.swing.MigLayout;
 import robocup.model.Robot;
 import robocup.model.World;
-import robocup.view.WidgetBox;
+import robocup.view.SectionBox;
 
 @SuppressWarnings("serial")
-public class VisibleRobotWidget extends WidgetBox {
+public class VisibleRobotSection extends SectionBox {
 
 	private ArrayList<JCheckBox> checkboxes = new ArrayList<JCheckBox>();
 
 	/**
-	 * Creates a check box for all robots (usually 11) and 
+	 * Creates a check box for all robots and 
 	 * implements a anonymous button handler for selecting on sight robots
 	 */
-	public VisibleRobotWidget() {
+	public VisibleRobotSection() {
 		super("Visible robots");
 		setLayout(new MigLayout("wrap 6", "[][][][][][]"));
 

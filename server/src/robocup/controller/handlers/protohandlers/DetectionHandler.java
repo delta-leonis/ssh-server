@@ -40,7 +40,7 @@ public class DetectionHandler {
 		world.HandlerFinished("detection");
 
 		World.getInstance().getGUI().update("robotContainer");
-		World.getInstance().getGUI().update("widgetContainer");
+		World.getInstance().getGUI().update("sectionContainer");
 	}
 
 	/**

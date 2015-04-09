@@ -1,4 +1,4 @@
-package robocup.view.widgets;
+package robocup.view.sections;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,18 +12,18 @@ import javax.swing.JTextField;
 import robocup.Main;
 import robocup.model.World;
 import robocup.output.ComInterface;
-import robocup.view.WidgetBox;
+import robocup.view.SectionBox;
 
 
 @SuppressWarnings("serial")
-public class rotateRobotWidget extends WidgetBox{
+public class RotateRobotSection extends SectionBox{
 
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private JTextField textField;
 	private boolean run = false;
 	private Timer wisselTimer;
 	
-	public rotateRobotWidget(){
+	public RotateRobotSection(){
 		super("Rotate robot");
 		JButton spinButton = new JButton("spin");
 		spinButton.addActionListener(new ButtonListener());

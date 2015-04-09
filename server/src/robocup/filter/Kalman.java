@@ -8,6 +8,10 @@ import org.apache.commons.math3.linear.RealVector;
 
 import robocup.model.FieldPoint;
 
+/**
+ * The Kalman filter is used to filter out camera noise, based on the data of previous frames.
+ * Basically makes sure that Robots don't randomly teleport across the screen
+ */
 public class Kalman {
 
 	RealMatrix stateMatrix = new Array2DRowRealMatrix(new double[][] { { 1, 0, 1, 0 }, { 0, 1, 0, 1 }, { 0, 0, 1, 0 },
@@ -33,9 +37,9 @@ public class Kalman {
 
 	/**
 	 * Kalman filter constructor, init begin values of filter
-	 * @param position
-	 * @param xSpeed
-	 * @param ySpeed
+	 * @param position Starting position of the FieldPoint we wish to track
+	 * @param xSpeed Current speed on the x-axis
+	 * @param ySpeed Current speed on the y-axis
 	 */
 	public Kalman(FieldPoint position, int xSpeed, int ySpeed) {
 		last_x = new ArrayRealVector(new double[] { position.getX(), position.getY(), xSpeed, ySpeed });
@@ -43,10 +47,10 @@ public class Kalman {
 	}
 
 	/**
-	 * Filter noise out of robot location data by comparing measured data with prediction data with added measurement and process errors
-	 * @param measuredPoint
-	 * @param xSpeed
-	 * @param ySpeed
+	 * Filter noise out of robot location data, by comparing measured data with predicted data with
+	 * @param position Starting position of the FieldPoint we wish to track
+	 * @param xSpeed Current speed on the x-axis
+	 * @param ySpeed Current speed on the y-axis
 	 * @return filtered point of robot
 	 */
 	public FieldPoint filterPoint(FieldPoint measuredPoint, double xSpeed, double ySpeed) {
@@ -83,24 +87,21 @@ public class Kalman {
 	}
 
 	/**
-	 * Get last Y position
-	 * @return Ypos
+	 * @return last Y position
 	 */
 	public double getLastY() {
 		return last_x.getEntry(1);
 	}
 
 	/**
-	 * get last X position
-	 * @return Xpos
+	 * @return last X position
 	 */
 	public double getLastX() {
 		return last_x.getEntry(0);
 	}
 
 	/**
-	 * get predicted robot location
-	 * @return Point robotLocation
+	 * @return A FieldPoint with the predicted robot location.
 	 */
 	public FieldPoint getPredictPoint() {
 		return predictedPoint;
