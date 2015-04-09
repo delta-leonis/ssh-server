@@ -102,7 +102,7 @@ public class GUI extends JFrame {
 	 */
 	private void initSectionContainer() {
 		sectionContainer = new JPanel();
-		sectionContainer.setBorder(BorderFactory.createTitledBorder("Sections"));
+		//sectionContainer.setBorder(BorderFactory.createTitledBorder("Sections"));
 		sectionContainer.setLayout(new MigLayout("wrap 1", "[grow]"));
 
 		sectionContainer.add(new GameStatusSection(), "growx");
@@ -121,6 +121,9 @@ public class GUI extends JFrame {
 	 * Adds all robot panels to a container on the left
 	 */
 	private void initRobotContainer() {
+		JPanel wrapper = new JPanel();
+		wrapper.setLayout(new MigLayout("wrap 1", "[grow]", "[grow]"));
+		
 		robotContainer = new JPanel();
 		robotContainer.setLayout(new MigLayout("wrap 2", "[250]related[250]"));
 		robotContainer.setBorder(BorderFactory.createTitledBorder("Robots"));
@@ -134,8 +137,10 @@ public class GUI extends JFrame {
 				robotContainer.add(box);
 			allRobotBoxes.add(box);
 		}
+
 		robotContainer.add(new JPanel(), "growy, span 2");
-		this.add(robotContainer, "growy");
+		wrapper.add(robotContainer, "growy");
+		this.add(wrapper, "growy");
 	}
 
 	/**
@@ -181,7 +186,7 @@ public class GUI extends JFrame {
 	 * @param name of the containers that needs to be updated
 	 */
 	public void update(String desc) {
-		LOGGER.info(String.format("Repainted GUI (%s)", desc));
+		LOGGER.fine(String.format("Repainted GUI (%s)", desc));
 		switch (desc) {
 		case "robotContainer":
 			// update all robot items
