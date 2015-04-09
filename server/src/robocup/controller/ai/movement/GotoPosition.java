@@ -7,6 +7,15 @@ import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.output.ComInterface;
 
+/**
+ * Class used by {@link robocup.controller.ai.lowLevelBehavior.LowLevelBehavior
+ * LowLevelBehaviors} to move to a certain point on the field. The Class will
+ * direct a robot to a certain position using the given
+ * {@link robocup.model.Robot Robot} and a
+ * {@link robocup.controller.ai.movement.DijkstraPathPlanner Path_Planner}.
+ * 
+ * @see {@link robocup.output.ComInterface ComInterface}
+ */
 public class GotoPosition {
 
 	// TODO find a better solution
@@ -124,15 +133,13 @@ public class GotoPosition {
 	 * parameters given in the constructor.
 	 */
 	public void calculate() {
+		robot.setOnSight(true);
 		if (destination == null || target == null) {
-			robot.setOnSight(true);
 			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
 			return;
 
 			// Calculate parameters
 		} else {
-			robot.setOnSight(true);
-
 			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), false);
 			
 			if (route.size() > 0 && route.get(0) != null) {
@@ -144,8 +151,12 @@ public class GotoPosition {
 
 			double rotationToTarget = rotationToDest(target);
 			double rotationToGoal = rotationToDest(destination);
-
-			double speed = getSpeed(getDistance(), 100);
+			double speed;
+			if(route.size() > 1)							//If we're not at our destination
+				speed = getSpeed(getDistance()+50, 100);	//Don't slow down as much
+			else
+				speed = getSpeed(getDistance(), 100);
+			
 			double rotationSpeed = getRotationSpeed(rotationToTarget);
 
 			// Overrule speed
