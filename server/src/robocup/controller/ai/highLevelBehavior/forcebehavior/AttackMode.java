@@ -240,11 +240,10 @@ public class AttackMode extends Mode {
 		}
 
 		if (isUpdate) {
-			((Attacker) executer.getLowLevelBehavior()).update(freePosition, ball.getPosition(), chipKick, dribble,
-					shootDirection);
+			((Attacker) executer.getLowLevelBehavior()).update(shootDirection, chipKick, null, ball.getPosition());
 		} else {
-			executer.setLowLevelBehavior(new Attacker(robot, ComInterface.getInstance(RobotCom.class), freePosition,
-					ball.getPosition(), chipKick, dribble, shootDirection));
+			executer.setLowLevelBehavior(new Attacker(robot, ComInterface.getInstance(RobotCom.class), shootDirection,
+					chipKick, null, ball.getPosition()));
 		}
 	}
 
@@ -259,8 +258,7 @@ public class AttackMode extends Mode {
 					robot.getPosition(), opponent.getPosition(), opponent.getRobotId());
 		} else {
 			executer.setLowLevelBehavior(new Coverer(robot, ComInterface.getInstance(RobotCom.class),
-					distanceToOpponent, ball.getPosition(), robot.getPosition(), opponent.getPosition(), opponent
-							.getRobotId()));
+					distanceToOpponent, ball.getPosition(), opponent.getPosition(), opponent.getRobotId()));
 		}
 	}
 
@@ -271,21 +269,18 @@ public class AttackMode extends Mode {
 					robot.getPosition());
 		} else {
 			executer.setLowLevelBehavior(new KeeperDefender(robot, ComInterface.getInstance(RobotCom.class),
-					distanceToGoal, false, ball.getPosition(), robot.getPosition(),
-					robot.getPosition().getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE, offset, world.getField()
-							.getWidth() / 2));
+					distanceToGoal, false, ball.getPosition(), robot.getPosition().getX() > 0 ? MID_GOAL_POSITIVE
+							: MID_GOAL_NEGATIVE, offset));
 		}
 	}
 
 	@Override
 	public void handleKeeper(Robot robot, Ball ball, RobotExecuter executer, boolean isUpdate, int distanceToGoal) {
 		if (isUpdate) {
-			((Keeper) executer.getLowLevelBehavior()).update(distanceToGoal, false, ball.getPosition(),
-					robot.getPosition());
+			((Keeper) executer.getLowLevelBehavior()).update(distanceToGoal, false, ball.getPosition());
 		} else {
 			executer.setLowLevelBehavior(new Keeper(robot, ComInterface.getInstance(RobotCom.class), distanceToGoal,
-					false, ball.getPosition(), robot.getPosition(), robot.getPosition().getX() > 0 ? MID_GOAL_POSITIVE
-							: MID_GOAL_NEGATIVE, world.getField().getWidth() / 2));
+					false, ball.getPosition(), robot.getPosition().getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE));
 		}
 	}
 }

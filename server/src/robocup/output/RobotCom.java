@@ -76,7 +76,6 @@ public class RobotCom extends ComInterface {
 
 		try {
 			serverSocket.send(sendPacket);
-			// System.out.println("Send");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

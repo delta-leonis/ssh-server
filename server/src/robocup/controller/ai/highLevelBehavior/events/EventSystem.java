@@ -49,8 +49,6 @@ public class EventSystem {
 	 * Get the current event. Returns null when no event has happened.
 	 */
 	public Event getNewEvent() {
-		Event currentEvent = null;
-
 		previousBallPosition = currentBallPosition;
 		currentBallPosition = world.getBall().getPosition();
 
@@ -66,20 +64,21 @@ public class EventSystem {
 		if (ball.getSpeed() < 100.0) {
 			previousBallOwner = currentBallOwner;
 			currentBallOwner = world.getClosestRobotToBall();
-
-			if (previousBallOwner instanceof Ally && currentBallOwner instanceof Enemy)
-				return Event.BALL_ENEMY_CAPTURE;
-
-			if (previousBallOwner instanceof Enemy && currentBallOwner instanceof Ally)
-				return Event.BALL_ALLY_CAPTURE;
-
-			if (previousBallOwner instanceof Enemy && currentBallOwner instanceof Enemy
-					&& previousBallOwner.getRobotId() != currentBallOwner.getRobotId())
-				return Event.BALL_ENEMY_CHANGEOWNER;
-
-			if (previousBallOwner instanceof Ally && currentBallOwner instanceof Ally
-					&& previousBallOwner.getRobotId() != currentBallOwner.getRobotId())
-				return Event.BALL_ALLY_CHANGEOWNER;
+			
+			if (previousBallOwner instanceof Ally){
+				if(currentBallOwner instanceof Enemy)	//Previous Ally, current Enemy
+					return Event.BALL_ENEMY_CAPTURE;
+					
+				else if(previousBallOwner.getRobotId() != currentBallOwner.getRobotId()) //Ally retains possession of ball
+					return Event.BALL_ALLY_CHANGEOWNER;
+			}
+			else{	// previousBallOwner instanceof Enemy
+				if(currentBallOwner instanceof Ally)	//Previous Enemy, current Ally
+					return Event.BALL_ALLY_CAPTURE;
+				
+				else if(previousBallOwner.getRobotId() != currentBallOwner.getRobotId())	//Enemy retains possession of ball
+					return Event.BALL_ENEMY_CHANGEOWNER;
+			}
 		}
 
 		if (previousBallPosition.getX() < 0 && currentBallPosition.getX() > 0 || previousBallPosition.getX() > 0
@@ -93,6 +92,6 @@ public class EventSystem {
 		if (previousEnemyCountOnAttackingHalf != currentEnemyCountOnAttackingHalf)
 			return Event.ROBOT_ENEMY_ATTACKCOUNT_CHANGE;
 
-		return currentEvent;
+		return null;
 	}
 }

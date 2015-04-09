@@ -66,6 +66,7 @@ public abstract class Mode {
 	}
 
 	/**
+	 * TODO: Rename to updateRoles()?
 	 * Set the roles for all executers based on current strategy and mode.
 	 */
 	public abstract void setRoles(ArrayList<RobotExecuter> executers);
@@ -106,7 +107,7 @@ public abstract class Mode {
 	private void handleAttacker(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof Attacker))
 			executer.setLowLevelBehavior(new Attacker(executer.getRobot(), ComInterface.getInstance(RobotCom.class),
-					null, null, 0, false, 0));
+					0.0, 0, null, null));
 
 		updateAttacker(executer);
 	}
@@ -126,7 +127,7 @@ public abstract class Mode {
 	private void handleCoverer(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof Coverer))
 			executer.setLowLevelBehavior(new Coverer(executer.getRobot(), ComInterface.getInstance(RobotCom.class),
-					250, null, null, null, 0));
+					250, null, null, 0));
 
 		updateCoverer(executer);
 	}
@@ -146,7 +147,7 @@ public abstract class Mode {
 	private void handleKeeperDefender(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof KeeperDefender))
 			executer.setLowLevelBehavior(new KeeperDefender(executer.getRobot(), ComInterface
-					.getInstance(RobotCom.class), 1200, false, null, null, null, null, 0));
+					.getInstance(RobotCom.class), 1200, false, null, null, null));
 
 		updateKeeperDefender(executer);
 	}
@@ -169,8 +170,7 @@ public abstract class Mode {
 		// TODO determine field half in a better way
 		if (!(executer.getLowLevelBehavior() instanceof Keeper))
 			executer.setLowLevelBehavior(new Keeper(keeper, ComInterface.getInstance(RobotCom.class), 500, false, ball
-					.getPosition(), keeper.getPosition(), keeper.getPosition().getX() < 0 ? MID_GOAL_NEGATIVE
-					: MID_GOAL_POSITIVE, world.getField().getWidth() / 2));
+					.getPosition(), keeper.getPosition().getX() < 0 ? MID_GOAL_NEGATIVE : MID_GOAL_POSITIVE));
 
 		updateKeeper(executer);
 	}

@@ -21,7 +21,7 @@ public class GotoPosition {
 	private DijkstraPathPlanner dplanner = new DijkstraPathPlanner();
 	private LinkedList<FieldPoint> route;
 	
-	private static final int MAX_VELOCITY =5000;
+	private static final int MAX_VELOCITY =2000;
 
 	/**
 	 * Go to target position
@@ -40,7 +40,7 @@ public class GotoPosition {
 	 * Go to target object
 	 * @param robot RobotObject
 	 * @param output Output Connection
-	 * @param target Target Object (position)
+	 * @param target Target to look at (usually the ball)
 	 */
 	public GotoPosition(Robot robot, ComInterface output, FieldObject target) {
 		this.robot = robot;
@@ -54,7 +54,7 @@ public class GotoPosition {
 	 * @param robot RobotObject
 	 * @param output Output Connection
 	 * @param destination Position to drive to
-	 * @param target Position to look at
+	 * @param target Target to look at	(usually the ball)
 	 */
 	public GotoPosition(Robot robot, ComInterface output, FieldPoint destination, FieldPoint target) {
 		this.robot = robot;
@@ -80,36 +80,26 @@ public class GotoPosition {
 	}
 
 	/**
-	 * Get Target
-	 * @return TargetPoint
+	 * @return TargetPoint the target we wish our robot to look at
 	 */
 	public FieldPoint getTarget() {
 		return target;
 	}
 
 	/**
-	 * Set Target
-	 * @param TargetPoint
+	 * Sets the {@link FieldPoint target} we wish our robot to look at
+	 * @param TargetPoint The target we wish out {@link Robot} to look at
 	 */
 	public void setTarget(FieldPoint p) {
 		target = p;
 	}
 
 	/**
-	 * Set Destination
-	 * @param destination
+	 * Sets the {@link FieldPoint destination} we want our robot to drive to
+	 * @param destination The destination we want our {@link Robot} to drive to.
 	 */
 	public void setDestination(FieldPoint destination) {
 		this.destination = destination;
-	}
-
-	/**
-	 * Get Goal position
-	 * @return GoalPoint
-	 * @deprecated replaced by getDestination
-	 */
-	public FieldPoint getGoal() {
-		return destination;
 	}
 
 	/**
@@ -130,7 +120,8 @@ public class GotoPosition {
 	}
 
 	/**
-	 * Calulate
+	 * Calculates what message we need to send to the robot, based on the
+	 * parameters given in the constructor.
 	 */
 	public void calculate() {
 		if (destination == null || target == null) {
@@ -147,12 +138,10 @@ public class GotoPosition {
 			if (route.size() > 0 && route.get(0) != null) {
 				destination = route.get(0);
 			} else {
-					output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
-					return;
+				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+				return;
 			}
 
-			// TODO make robot stop when distance is reached, should be handled
-			// in robot code
 			double rotationToTarget = rotationToDest(target);
 			double rotationToGoal = rotationToDest(destination);
 
@@ -168,7 +157,7 @@ public class GotoPosition {
 			// direction and rotationAngle do nothing, set to 0
 			// rotationSpeed inverted because the motors spin in opposite
 			// direction
-			output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)-rotationSpeed, chipKick, dribble);
+			output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, chipKick, dribble);
 			
 
 			// Set kick back to 0 to prevent kicking twice in a row
@@ -214,38 +203,13 @@ public class GotoPosition {
 
 		return distance;
 	}
-
-	/**
-	 * Get speed based on travel distance and rotation
-	 * @param distance
-	 * @param rotation
-	 * @return
-	 */
-//	private int getSpeed(int distance, int rotation) {
-//		// Defaults
-//		int speed = 0;
-//		int thresholdValue = 800;
-//
-//		// If distance to travel is less then the `threshold`, use a logarithmic
-//		// formula for speed
-//		if (distance < thresholdValue) {
-//			speed = (int) (Math.log(distance) / Math.log(1.1)) * 8; // -
-//																	// robotDiameter
-//		} else if (Math.abs(rotation) > 10) {
-//			speed = (180 - Math.abs(rotation)) * 16;
-//		} else {
-//			speed = 2400;
-//		}
-//
-//		return speed;
-//	}
 	
 	/**
 	 * Returns the speed the robot should drive at.
 	 * When a robot nears its destination, it should slow down.
 	 * @param d The distance to travel in mm
 	 * @param distanceToSlowDown If the robot has less distance to travel than the distance to slow down, the robot should slow down.
-	 * @return The speed in degrees/s
+	 * @return The speed in mm/s
 	 */
 	public double getSpeed(double d, int distanceToSlowDown) {
 		if(d > distanceToSlowDown)
@@ -281,7 +245,7 @@ public class GotoPosition {
 	}
 
 	/**
-	 * @param dribble the dribble to set
+	 * @param dribble True if you want to active the dribbler. False if you want to deactivate it.
 	 */
 	public void setDribble(boolean dribble) {
 		this.dribble = dribble;

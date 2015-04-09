@@ -23,7 +23,7 @@ import robocup.model.enums.Command;
 public class ZoneBehavior extends Behavior {
 
 	private World world;
-	private Mode currentMode;
+	private Mode currentMode;	// AttackMode or DefenseMode
 	private Ball ball;
 
 	private EventSystem events;
@@ -33,6 +33,9 @@ public class ZoneBehavior extends Behavior {
 	/**
 	 * Create a ZoneBehavior.
 	 * DefenseMode and AttackMode will be created as well.
+	 * 	Modes are currently contained within ArrayLists for testing purposes.
+	 * @see {@link #chooseAttackStrategy(ArrayList)}
+	 * @see {@link #chooseDefenseStrategy(ArrayList)}
 	 * @param executers the list containing all RobotExecuters
 	 */
 	public ZoneBehavior(ArrayList<RobotExecuter> executers) {
@@ -66,8 +69,8 @@ public class ZoneBehavior extends Behavior {
 
 	/**
 	 * Determine which Mode needs to be used.
-	 * @param executers all executers
-	 * @return AttackMode when our team is closer to the ball. DefenseMode when the enemy team is closer to the ball.
+	 * @param executers All the {@link robocup.controller.ai.lowLevelBehavior.RobotExecuter executers} that control our {@link robocup.model.Robot robots}
+	 * @return {@link AttackMode} when our team is closer to the ball. {@link DefenseMode} when the enemy team is closer to the ball.
 	 */
 	private void determineMode(ArrayList<RobotExecuter> executers) {
 		switch (events.getNewEvent()) {

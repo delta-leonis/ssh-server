@@ -16,11 +16,10 @@ import robocup.output.ComInterface;
  * TODO: English-fy
  * TODO: use config to determine position of goal posts.
  */
-public class GoalPostCoverer extends LowLevelBehavior {
-	
+public class GoalPostCoverer extends Keeper {
+
 	public static final int distanceFromGoal = 1000;
 	public static final int distanceFromMid = 250;
-	
 
 	private Robot enemyRobot;
 	private FieldPoint paalPosition;
@@ -34,9 +33,8 @@ public class GoalPostCoverer extends LowLevelBehavior {
 	 * @param paalPosition the position of the ball
 	 * @param dribble enable dribbler
 	 */
-	public GoalPostCoverer(Robot robot, ComInterface output, Robot enemyRobot, FieldPoint paalPosition, 
-			boolean dribble) {
-		super(robot, output);
+	public GoalPostCoverer(Robot robot, ComInterface output, Robot enemyRobot, FieldPoint paalPosition, boolean dribble) {
+		super(robot, output, 0, false, null, null);
 		this.enemyRobot = enemyRobot;
 		this.paalPosition = paalPosition;
 		this.dribble = dribble;
@@ -60,42 +58,37 @@ public class GoalPostCoverer extends LowLevelBehavior {
 
 	@Override
 	public void calculate() {
-		if (timeOutCheck()) {
+		FieldPoint newDestination = null;
 
-		} else {
-			FieldPoint newDestination = null;
+		go.setDribble(dribble);
 
-			go.setDribble(dribble);
+		// Move towards a free position when given
+		if (enemyRobot != null)
+			newDestination = calculateBestPosition();
 
-			// Move towards a free position when given
-			if (enemyRobot != null)
-				newDestination = calculateBestPosition();			
-
-			changeDestination(newDestination);
-		}
+		changeDestination(newDestination);
 	}
-	
+
 	/**
 	 * TODO: Test. Testtesttest. I don't trust the getAngle function. 
 	 * @returns best position to block the opposing robot.
 	 */
-	public FieldPoint calculateBestPosition(){
+	public FieldPoint calculateBestPosition() {
 		// point on the aftraplijn (1 meter radius from 25cm from each pole) between the goal and the enemy robot.
 		// get 25cm point from goal
 		FieldPoint goalPoint = null;
 		// check if it's even a goal.. post .. thing.
-		if(		paalPosition.equals(new FieldPoint(-3000, -500)) ||
-				paalPosition.equals(new FieldPoint(-3000, 500)) ||
-				paalPosition.equals(new FieldPoint(3000, -500)) ||
-				paalPosition.equals(new FieldPoint(3000, 500))){
-			goalPoint = new FieldPoint(paalPosition.getX(),
-					paalPosition.getY() < 0 ? paalPosition.getY() + distanceFromMid : paalPosition.getY() -distanceFromMid);
+		if (paalPosition.equals(new FieldPoint(-3000, -500)) || paalPosition.equals(new FieldPoint(-3000, 500))
+				|| paalPosition.equals(new FieldPoint(3000, -500)) || paalPosition.equals(new FieldPoint(3000, 500))) {
+			goalPoint = new FieldPoint(paalPosition.getX(), paalPosition.getY() < 0 ? paalPosition.getY()
+					+ distanceFromMid : paalPosition.getY() - distanceFromMid);
 		}
 		// get direction
 		double direction = goalPoint.getAngle(enemyRobot.getPosition());
 		// tan(direction) * 1000mm = point.
-		
-		return new FieldPoint((goalPoint.getX() + Math.cos(direction) * distanceFromGoal), (goalPoint.getY() + Math.sin(direction) * distanceFromGoal));
+
+		return new FieldPoint((goalPoint.getX() + Math.cos(direction) * distanceFromGoal),
+				(goalPoint.getY() + Math.sin(direction) * distanceFromGoal));
 	}
 
 	/**

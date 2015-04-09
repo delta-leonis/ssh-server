@@ -57,7 +57,7 @@ public class AttackMode extends Mode {
 	public void updateAttacker(RobotExecuter executer) {
 		Attacker attacker = (Attacker) executer.getLowLevelBehavior();
 		// TODO Update with normal values
-		attacker.update(null, ball.getPosition(), 0, false, 0);
+		attacker.update(0.0, 0, null, ball.getPosition());
 	}
 
 	@Override
@@ -82,6 +82,6 @@ public class AttackMode extends Mode {
 		// TODO check if keeper needs to move to the ball, if so, set goToKick to true
 		boolean goToKick = false;
 
-		keeper.update(distanceToGoal, goToKick, ball.getPosition(), executer.getRobot().getPosition());
+		keeper.update(distanceToGoal, goToKick, ball.getPosition());
 	}
 }

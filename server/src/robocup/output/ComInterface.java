@@ -22,11 +22,9 @@ public abstract class ComInterface {
 	/**
 	 * @param messageType, MessageType 0 => robot instruction
 	 * @param robotID The ID of the robot we want to send to.
-	 * @param direction 
-	 * @param directionSpeed , degrees/sec
-	 * @param travelDistance 
-	 * @param rotationAngle Not used.
-	 * @param rotationSpeed
+	 * @param direction The direction we want our robot to move towards.
+	 * @param directionSpeed The speed we want our robot to move at in mm/s
+	 * @param rotationSpeed The speed we want our robot to turn at in mm/s
 	 * @param kicker -1 to -100 for chipping, 1 to 100 for kicking.
 	 * @param dribble true to start the dribbler, false otherwise
 	 */
