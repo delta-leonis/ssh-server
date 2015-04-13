@@ -239,10 +239,10 @@ public class AttackMode extends Mode {
 		}
 
 		if (isUpdate) {
-			((Attacker) executer.getLowLevelBehavior()).update(shootDirection, chipKick, null, ball.getPosition());
+			((Attacker) executer.getLowLevelBehavior()).update(shootDirection, chipKick, ball.getPosition());
 		} else {
 			executer.setLowLevelBehavior(new Attacker(robot, ComInterface.getInstance(), shootDirection,
-					chipKick, null, ball.getPosition()));
+					chipKick, ball.getPosition()));
 		}
 	}
 
