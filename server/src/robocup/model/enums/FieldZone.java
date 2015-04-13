@@ -168,12 +168,12 @@ public enum FieldZone {
 	 * @return {@link FieldPoint} that indicates the center of the {@link FieldZone}.
 	 */
 	public FieldPoint getCenterPoint() {
-		double maxX = 0, minX = 0, maxY = 0, minY = 0;
+		double maxX = -Integer.MAX_VALUE, minX = Integer.MAX_VALUE, maxY = -Integer.MAX_VALUE, minY = Integer.MAX_VALUE;
 		for(FieldPoint vertex: vertices) {
-			maxX = (maxX > vertex.getX() ? maxX : vertex.getX());
-			minX = (minX < vertex.getX() ? minX : vertex.getX());
-			maxY = (maxY > vertex.getY() ? maxY : vertex.getY());
-			minY = (minY < vertex.getY() ? minY : vertex.getY());
+			minX = Math.min(minX, vertex.getX());
+			maxX = Math.max(maxX, vertex.getX());
+			minY = Math.min(minY, vertex.getY());
+			maxY = Math.max(maxY, vertex.getY());
 		}
 		return new FieldPoint((maxX+minX)/2, (maxY+minY)/2);
 	}
@@ -262,16 +262,22 @@ public enum FieldZone {
 				e.printStackTrace();
 			}
 		}
-		public static final FieldPoint a = new FieldPoint(properties.getProperty("fullsize.zonepoint.a"));
-		public static final FieldPoint b = new FieldPoint(properties.getProperty("fullsize.zonepoint.b"));
-		public static final FieldPoint c = new FieldPoint(properties.getProperty("fullsize.zonepoint.c"));
-		public static final FieldPoint d = new FieldPoint(properties.getProperty("fullsize.zonepoint.d"));
-		public static final FieldPoint e = new FieldPoint(properties.getProperty("fullsize.zonepoint.e"));
-		public static final FieldPoint f = new FieldPoint(properties.getProperty("fullsize.zonepoint.f"));
-		public static final FieldPoint g = new FieldPoint(properties.getProperty("fullsize.zonepoint.g"));
-		public static final FieldPoint h = new FieldPoint(properties.getProperty("fullsize.zonepoint.h"));
-		public static final FieldPoint i = new FieldPoint(properties.getProperty("fullsize.zonepoint.i"));
-		public static final FieldPoint j = new FieldPoint(properties.getProperty("fullsize.zonepoint.j"));
+
+		private static final int height = Integer.parseInt(properties.getProperty("fullsize.height"));
+		private static final int width = Integer.parseInt(properties.getProperty("fullsize.width"));
+		private static final int defenceRadius = Integer.parseInt(properties.getProperty("fullsize.defenceRadius"));
+		private static final int defenceStretch = Integer.parseInt(properties.getProperty("fullsize.defenceStretch"));
+
+		public static final FieldPoint a = new FieldPoint(width / 2, height / 2);
+		public static final FieldPoint b = new FieldPoint((width / 2 - defenceRadius) * 0.68, height / 2);
+		public static final FieldPoint c = new FieldPoint(0, height / 2);
+		public static final FieldPoint d = new FieldPoint(width / 2, defenceRadius + defenceStretch / 2);
+		public static final FieldPoint e = new FieldPoint(width / 2 - defenceRadius / 2, defenceRadius + defenceStretch / 2);
+		public static final FieldPoint f = new FieldPoint(width / 2 - defenceRadius, defenceStretch / 2 + defenceRadius * 0.4);
+		public static final FieldPoint g = new FieldPoint((width / 2 - defenceRadius) * 0.68, defenceStretch / 2 + defenceRadius * 0.4);
+		public static final FieldPoint h = new FieldPoint(0, defenceStretch / 2 + defenceRadius * 0.4);
+		public static final FieldPoint i = new FieldPoint(width / 2, 0);
+		public static final FieldPoint j = new FieldPoint(width / 2 - defenceRadius, 0);
 
 		/**
 		 * @param point The {@link FieldPoint} that represents the point in the first quadrant.

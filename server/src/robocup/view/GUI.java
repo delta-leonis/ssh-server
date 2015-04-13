@@ -20,6 +20,7 @@ import robocup.model.Robot;
 import robocup.model.World;
 import robocup.view.sections.ConsoleSection;
 import robocup.view.sections.ControlRobotSection;
+import robocup.view.sections.FieldControlSection;
 import robocup.view.sections.GameStatusSection;
 import robocup.view.sections.SettingsSection;
 import robocup.view.sections.VisibleRobotSection;
@@ -107,6 +108,7 @@ public class GUI extends JFrame {
 
 		sectionContainer.add(new GameStatusSection(), "growx");
 		sectionContainer.add(new VisibleRobotSection(), "growx");
+		sectionContainer.add(new FieldControlSection(), "growx");
 //		sectionContainer.add(new PathPlannerTestSection(), "growx");	// Comment "World.getInstance().getGUI().update("robotContainer");" in Main.initTeams() for this section to work.
 //		sectionContainer.add(new ControlRobotPacketTestSection(), "growx");
 		sectionContainer.add(new ControlRobotSection(), "growx");
