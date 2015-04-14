@@ -31,12 +31,15 @@ public class PlayfieldFrame extends JPanel {
 
 	private static int FIELDWIDTH_GUI = (int)(World.getInstance().getField().getWidth()*RATIO);
 	private static int FIELDHEIGHT_GUI = (int)(World.getInstance().getField().getHeight()*RATIO);
-	
+
+	private static int spaceBufferX = 15;
+	private static int spaceBufferY = 35;
+
 	private World world = World.getInstance();
 
 	public static void main(String [] args) {
 		JFrame frame = new JFrame();	
-		frame.setSize(FIELDWIDTH_GUI + 4, FIELDHEIGHT_GUI + 28);
+		frame.setSize(FIELDWIDTH_GUI + spaceBufferX, FIELDHEIGHT_GUI + spaceBufferY);
 		frame.setContentPane(new PlayfieldFrame());
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -250,134 +253,135 @@ public class PlayfieldFrame extends JPanel {
 		return invertedMap;
 	}
 
-	@SuppressWarnings("unused")
-	private void printMap(TreeMap<Double, Double> map){
-		System.out.println("  Y1 |   Y2");
-		System.out.println("-------------");
-		for(Entry<Double, Double> entry : map.entrySet())
-			System.out.println(entry.getKey().intValue() + " | " + entry.getValue().intValue());
-	}
-	
-    private TreeMap<Double, Double> mergeOverlappingValues(TreeMap<Double, Double> map){
+	/**
+	 * 
+	 * @param map
+	 * @return
+	 */
+	private TreeMap<Double, Double> mergeOverlappingValues(TreeMap<Double, Double> map) {
 		TreeMap<Double, Double> mergedMap = new TreeMap<Double, Double>();
-		Double prevY1 = null,
-				prevY2 = null;
-		for(Entry<Double, Double> entry : map.entrySet()){
-			if(prevY1 == null){
+		Double prevY1 = null, prevY2 = null;
+		for (Entry<Double, Double> entry : map.entrySet()) {
+			if (prevY1 == null) {
 				prevY1 = entry.getKey();
 				prevY2 = entry.getValue();
 				continue;
 			}
 			Double Y1 = entry.getKey();
 			Double Y2 = entry.getValue();
-			if(prevY2 >= Y1){
-				//meergeeee
+			if (prevY2 >= Y1) {
+				// merge
 				prevY1 = (prevY1 > Y1 ? Y1 : prevY1);
 				prevY2 = (prevY2 > Y2 ? prevY2 : Y2);
-			}else {
+			} else {
 				mergedMap.put((prevY1 < prevY2 ? prevY1 : prevY2), (prevY1 > prevY2 ? prevY1 : prevY2));
-				//no merge
+				// no merge
 				prevY1 = entry.getKey();
 				prevY2 = entry.getValue();
 			}
 		}
 		mergedMap.put((prevY1 < prevY2 ? prevY1 : prevY2), (prevY1 > prevY2 ? prevY1 : prevY2));
 		return mergedMap;
-    }
-   
-	private void drawLine(Graphics2D g2, Line2D.Double line){
+	}
+
+	private void drawLine(Graphics2D g2, Line2D.Double line) {
 		Point2D.Double p1 = new FieldPoint(line.getP1().getX(), line.getP1().getY()).toGUIPoint(RATIO);
 		Point2D.Double p2 = new FieldPoint(line.getP2().getX(), line.getP2().getY()).toGUIPoint(RATIO);
-		g2.drawLine((int)p1.getX(), (int)p1.getY(), (int)p2.getX(), (int)p2.getY());
+		g2.drawLine((int) p1.getX(), (int) p1.getY(), (int) p2.getX(), (int) p2.getY());
 	}
-	
-	private void drawOval(Graphics2D g2,int _x, int _y, int _width){
-		//g2.setStroke(new BasicStroke(1));
-		int width = (int) (_width*RATIO);
-		int x = (int) (_x*RATIO + getWidth()/2 - width/2);
-		int y = (int) (-1*_y*RATIO + getHeight()/2 - width/2);
+
+	private void drawOval(Graphics2D g2, int _x, int _y, int _width) {
+		int width = (int) (_width * RATIO);
+		int x = (int) (_x * RATIO + getWidth() / 2 - width / 2);
+		int y = (int) (-1 * _y * RATIO + getHeight() / 2 - width / 2);
 		g2.drawOval(x, y, width, width);
 	}
-    
-    private void drawFieldObjects(Graphics g) {
-    	Graphics2D g2 = (Graphics2D)g;
-    	g2.setColor(Color.cyan);
-		for(Robot robot : world.getAllRobots()){
-			drawOval(g2, (int) robot.getPosition().getX(), (int) robot.getPosition().getY(), Robot.DIAMETER);
+
+	private void drawFieldObjects(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setColor(Color.cyan);
+		for (Robot robot : world.getAllRobots()) {
+			drawOval(g2, (int) robot.getPosition().toPoint2D().getX(), (int) robot.getPosition().toPoint2D().getY(),
+					Robot.DIAMETER);
 		}
 
 		Ball ball = world.getBall();
 		g2.setColor(Color.orange);
-		drawOval(g2, (int) ball.getPosition().getX(), (int) ball.getPosition().getY(), 42);
+		drawOval(g2, (int) ball.getPosition().toPoint2D().getX(), (int) ball.getPosition().toPoint2D().getY(), 42);
 	}
 
 	private void drawRaster(Graphics g) {
-	    Graphics2D g2 = (Graphics2D) g;
+		Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(1));
 
-    	g2.setColor(Color.LIGHT_GRAY);
-    	for(double y=- getHeight() / 20; y < getWidth(); y += getHeight() / 10)
-    		g2.drawLine((int) y, 0, (int) y, getHeight());
+		g2.setColor(Color.LIGHT_GRAY);
+		for (double y = -getHeight() / 20; y < getWidth(); y += getHeight() / 10)
+			g2.drawLine((int) y, 0, (int) y, getHeight());
 
-    	for(double x = 0; x < getHeight(); x += getHeight() / 10)
-    		g2.drawLine(0, (int)x, getWidth(), (int)x);
-    	
-    	g2.setColor(Color.WHITE);
-    	g2.drawLine(getHeight() / 20 + 5, 15, getHeight() / 20 + getHeight() / 10 - 5, 15);
-    	g2.drawLine(getHeight() / 20 + 5, 10, getHeight() / 20 + 5, 20);
-    	g2.drawLine(getHeight() / 20 + getHeight() / 10 - 5, 10, getHeight() / 20 + getHeight() / 10 - 5, 20);
-    	String sizeDesc = String.format("%.1fcm",  (double)FIELDWIDTH_GUI / (double)(FIELDWIDTH_GUI / (FIELDHEIGHT_GUI / 10)) / 10);
-    	g2.drawString(sizeDesc, getHeight() / 10 + 5 - sizeDesc.length() * 7 / 2, 30);
-    }
-    
-    // must  be redone, zones now exist within the model.
-    private void drawZone(Graphics g, FieldZone fieldZone) {
-	    Graphics2D g2 = (Graphics2D) g;
+		for (double x = 0; x < getHeight(); x += getHeight() / 10)
+			g2.drawLine(0, (int) x, getWidth(), (int) x);
+
+		g2.setColor(Color.WHITE);
+		g2.drawLine(getHeight() / 20 + 5, 15, getHeight() / 20 + getHeight() / 10 - 5, 15);
+		g2.drawLine(getHeight() / 20 + 5, 10, getHeight() / 20 + 5, 20);
+		g2.drawLine(getHeight() / 20 + getHeight() / 10 - 5, 10, getHeight() / 20 + getHeight() / 10 - 5, 20);
+		String sizeDesc = String.format("%.1fcm", (double) FIELDWIDTH_GUI / RATIO
+				/ (double) (FIELDWIDTH_GUI / RATIO / (FIELDHEIGHT_GUI / RATIO / 10)) / 10);
+		g2.drawString(sizeDesc, getHeight() / 10 + 5 - sizeDesc.length() * 7 / 2, 30);
+	}
+
+	// must be redone, zones now exist within the model.
+	private void drawZone(Graphics g, FieldZone fieldZone) {
+		Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(1));
-		//zone.setOffset(getSize(), ratio);
-		//zone.calculateAbsolutePoints();
 
 		int[] scaledX = new int[fieldZone.getNumberOfVertices()];
 		int[] scaledY = new int[fieldZone.getNumberOfVertices()];
-		int index =0;
-		for(FieldPoint point : fieldZone.getVertices()){
+		int index = 0;
+		for (FieldPoint point : fieldZone.getVertices()) {
 			scaledX[index] = (int) (point.toGUIPoint(RATIO).getX());
 			scaledY[index] = (int) (point.toGUIPoint(RATIO).getY());
 			index++;
 		}
-		
+
 		g2.setColor(Color.BLUE);
 		g2.drawPolygon(scaledX, scaledY, fieldZone.getNumberOfVertices());
-		g2.drawString(fieldZone.name(), (int) (fieldZone.getCenterPoint().toGUIPoint(RATIO).getX() - fieldZone.name().length()*4), (int) (fieldZone.getCenterPoint().toGUIPoint(RATIO).getY()));
-    }
+		g2.drawString(fieldZone.name(), (int) (fieldZone.getCenterPoint().toGUIPoint(RATIO).getX() - fieldZone.name()
+				.length() * 4), (int) (fieldZone.getCenterPoint().toGUIPoint(RATIO).getY()));
+	}
 
 	private void drawPlayfield(Graphics g) {
-	    Graphics2D g2 = (Graphics2D) g;
+		Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(2));
 
-		//middle line
+		// center line
 		g.setColor(Color.WHITE);
 		g2.drawLine(getWidth() / 2, 0, getWidth() / 2, getHeight());
-		
-		//middle circle
-		g2.drawArc(getWidth() / 2 - getWidth() / 18, getHeight() / 2 - getWidth() / 18, getWidth() / 9, getWidth() / 9, 0, 360);
-		
-		//draw left goaly space
-		g2.drawArc(-getWidth() / 9, getHeight() / 2 - getWidth() / 9 - getWidth() / 18, (int) (getWidth() / 9.0 * 2), (int) (getWidth() / 9.0 * 2), 0, 90);
-		g2.drawArc(-getWidth() / 9, getHeight() / 2 - getWidth() / 9 + getWidth() / 18, (int) (getWidth() / 9.0 * 2), (int) (getWidth() / 9.0 * 2), 0, -90);
-		g2.drawLine(getWidth() / 9 + 1, getHeight() / 2 - getWidth() / 18, 
-					getWidth() / 9 + 1, getHeight() / 2 + getWidth() / 18);
 
-		//draw right goaly area thingy <insert footbalterm>
-		g2.drawArc((int) (getWidth() / 9.0 * 8), getHeight() / 2 - getWidth() / 9 - getWidth() / 18, (int) (getWidth() / 9.0 * 2), getWidth() / 9 * 2, 180, -90);
-		g2.drawArc((int) (getWidth() / 9.0 * 8), getHeight() / 2 - getWidth() / 9 + getWidth() / 18, (int) (getWidth() / 9.0 * 2), getWidth() / 9 * 2, 180, 90);
-		g2.drawLine((int) (getWidth() / 9.0 * 8), getHeight() / 2 - getWidth() / 18, 
-					(int) (getWidth() / 9.0 * 8), getHeight() / 2 + getWidth() / 18);
+		// center circle
+		g2.drawArc(getWidth() / 2 - getWidth() / 18, getHeight() / 2 - getWidth() / 18, getWidth() / 9, getWidth() / 9, 0, 360);
+
+		// draw left penalty area
+		g2.drawArc(-getWidth() / 9, getHeight() / 2 - getWidth() / 9 - getWidth() / 18, (int) (getWidth() / 9.0 * 2),
+				(int) (getWidth() / 9.0 * 2), 0, 90);
+		g2.drawArc(-getWidth() / 9, getHeight() / 2 - getWidth() / 9 + getWidth() / 18, (int) (getWidth() / 9.0 * 2),
+				(int) (getWidth() / 9.0 * 2), 0, -90);
+		g2.drawLine(getWidth() / 9 + 1, getHeight() / 2 - getWidth() / 18, getWidth() / 9 + 1, getHeight() / 2
+				+ getWidth() / 18);
+
+		// draw right penalty area
+		g2.drawArc((int) (getWidth() / 9.0 * 8), getHeight() / 2 - getWidth() / 9 - getWidth() / 18,
+				(int) (getWidth() / 9.0 * 2), getWidth() / 9 * 2, 180, -90);
+		g2.drawArc((int) (getWidth() / 9.0 * 8), getHeight() / 2 - getWidth() / 9 + getWidth() / 18,
+				(int) (getWidth() / 9.0 * 2), getWidth() / 9 * 2, 180, 90);
+		g2.drawLine((int) (getWidth() / 9.0 * 8), getHeight() / 2 - getWidth() / 18, (int) (getWidth() / 9.0 * 8),
+				getHeight() / 2 + getWidth() / 18);
+
 		g2.setStroke(new BasicStroke(5));
-		drawLine(g2, new Line2D.Double(world.getField().getEastGoal().getFrontSouth().toGUIPoint(RATIO),
-				world.getField().getEastGoal().getFrontNorth().toGUIPoint(RATIO)));
-		drawLine(g2, new Line2D.Double(world.getField().getWestGoal().getFrontSouth().toGUIPoint(RATIO),
-				world.getField().getWestGoal().getFrontNorth().toGUIPoint(RATIO)));
-		
+		drawLine(g2, new Line2D.Double(world.getField().getEastGoal().getFrontSouth().toPoint2D(), world.getField()
+				.getEastGoal().getFrontNorth().toPoint2D()));
+		drawLine(g2, new Line2D.Double(world.getField().getWestGoal().getFrontSouth().toPoint2D(), world.getField()
+				.getWestGoal().getFrontNorth().toPoint2D()));
+
 	}
 }

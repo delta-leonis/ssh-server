@@ -57,7 +57,7 @@ public class AttackMode extends Mode {
 	public void updateAttacker(RobotExecuter executer) {
 		Attacker attacker = (Attacker) executer.getLowLevelBehavior();
 		// TODO Update with normal values
-		attacker.update(0.0, 0, null, ball.getPosition());
+		attacker.update(0.0, 0, ball.getPosition());
 	}
 
 	@Override

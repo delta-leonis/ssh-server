@@ -12,10 +12,11 @@ import robocup.model.Ally;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
 
-public class DefenseMode extends Mode {
+public class StandardMode extends Mode {
 
-	public DefenseMode(Strategy strategy, ArrayList<RobotExecuter> executers) {
+	public StandardMode(Strategy strategy, ArrayList<RobotExecuter> executers) {
 		super(strategy, executers);
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -47,35 +48,36 @@ public class DefenseMode extends Mode {
 					robotsWithoutRole.get(0).setRole(role);
 					break;
 				default:
-					System.out.println("Unknown role used in setRoles, please add me in DefenseMode, role: " + role);
+					System.out.println("Unknown role used in setRoles, please add me in StandardMode, role: " + role);
 				}
 			}
 		}
+		
 	}
 
 	@Override
-	public void updateAttacker(RobotExecuter executer) {
+	protected void updateAttacker(RobotExecuter executer) {
 		Attacker attacker = (Attacker) executer.getLowLevelBehavior();
 		// TODO Update with normal values
-		attacker.update(0.0, 0, ball.getPosition());
+		attacker.update(0.0, 0, null);
 	}
 
 	@Override
-	public void updateCoverer(RobotExecuter executer) {
+	protected void updateCoverer(RobotExecuter executer) {
 		Coverer blocker = (Coverer) executer.getLowLevelBehavior();
 		// TODO Update with normal values
 		blocker.update(250, ball.getPosition(), executer.getRobot().getPosition(), null, 0);
 	}
 
 	@Override
-	public void updateKeeperDefender(RobotExecuter executer) {
+	protected void updateKeeperDefender(RobotExecuter executer) {
 		KeeperDefender keeperDefender = (KeeperDefender) executer.getLowLevelBehavior();
 		// TODO Update with normal values
 		keeperDefender.update(1200, false, ball.getPosition(), executer.getRobot().getPosition());
 	}
 
 	@Override
-	public void updateKeeper(RobotExecuter executer) {
+	protected void updateKeeper(RobotExecuter executer) {
 		Keeper keeper = (Keeper) executer.getLowLevelBehavior();
 
 		int distanceToGoal = 500;
@@ -84,4 +86,5 @@ public class DefenseMode extends Mode {
 
 		keeper.update(distanceToGoal, goToKick, ball.getPosition());
 	}
+
 }

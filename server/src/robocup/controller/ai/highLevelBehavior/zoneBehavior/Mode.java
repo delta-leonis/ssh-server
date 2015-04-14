@@ -100,7 +100,7 @@ public abstract class Mode {
 	private void handleAttacker(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof Attacker))
 			executer.setLowLevelBehavior(new Attacker(executer.getRobot(), ComInterface.getInstance(),
-					0.0, 0, null, null));
+					0.0, 0, null));
 
 		updateAttacker(executer);
 	}
