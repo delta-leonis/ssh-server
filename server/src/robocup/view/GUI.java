@@ -24,14 +24,11 @@ import robocup.view.sections.GameStatusSection;
 import robocup.view.sections.SettingsSection;
 import robocup.view.sections.VisibleRobotSection;
 import robocup.view.sections.RotateRobotSection;
-//import robocup.view.sections.PathPlannerTestSection;
 
 /**
- * Main GUI for controlling en monitoring the robots
+ * Main GUI for controlling en monitoring the robots<br>
  * The overal used Layout is a {@link MigLayout} for easier resizing,
- * and an easier way to implement modular sections
- * 
- * @author Jeroen
+ * and an easier way to implement modular sections.
  *
  */
 @SuppressWarnings("serial")
@@ -45,7 +42,7 @@ public class GUI extends JFrame {
 	private ArrayList<RobotBox> allRobotBoxes = new ArrayList<RobotBox>();
 
 	/**
-	 * Build the GUI
+	 * Build the GUI elements
 	 */
 	public GUI() {
 
@@ -66,7 +63,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Sets the Nimbus look and feel to make the GUI pretty (less ugly at least)
+	 * Tries to set the "nimbus" {@link LookAndFeel} to the {@link UIManager}
 	 */
 	private void setLookAndFeel() {
 		try {
@@ -82,7 +79,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Returns the id of the robot who's panel is selected 
+	 * Returns the id of the {@link Robot} who's {@link RobotBox} is selected 
 	 * @return robotId
 	 */
 	public int getSelectedRobotId() {
@@ -90,7 +87,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Adds a consoleSection at the bottom
+	 * Adds a {@link ConsoleSection} at the bottom of the GUI
 	 */
 	private void initConsoleContainer() {
 		console = new ConsoleSection();
@@ -98,7 +95,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Adds all sections to a container on the right
+	 * Adds all {@link SectionBox}es to a {@link JPanel} on the right of the GUI
 	 */
 	private void initSectionContainer() {
 		sectionContainer = new JPanel();
@@ -118,7 +115,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Adds all robot panels to a container on the left
+	 * Adds all {@link RobotBox} to a {@link JPanel} on the left
 	 */
 	private void initRobotContainer() {
 		JPanel wrapper = new JPanel();
@@ -144,7 +141,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Handler for selecting robot panels
+	 * Handler for selecting individual {@link Robot}s by clicking the corresponding {@link RobotBox}
 	 */
 	private class PanelClickListener implements MouseListener {
 
@@ -182,8 +179,12 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Update parts of the GUI
-	 * @param name of the containers that needs to be updated
+	 * Update gui elements such as specific {@link SectionBox}es or {@link RobotBox}es
+	 * @param desc of the containers that needs to be updated
+	 * 		<br><b>Possibilities:</b>
+	 * 		<br><b>robotContainer</b>	updates all individual {@link RobotBox}es
+	 * 		<br><b>robotBoxes</b>	updates all individual {@link RobotBox}es and removes them from the view if necessary
+	 * 		<br><b>sectionContainer</b>	updates all individual {@link SectionBox}es
 	 */
 	public void update(String desc) {
 		LOGGER.fine(String.format("Repainted GUI (%s)", desc));
@@ -205,6 +206,7 @@ public class GUI extends JFrame {
 			revalidate();
 			repaint();
 			break;
+
 		case "sectionContainer":
 			for (Component item : sectionContainer.getComponents()) {
 				if (item instanceof SectionBox){
@@ -214,6 +216,7 @@ public class GUI extends JFrame {
 			}
 
 			break;
+
 		default:
 			LOGGER.severe(String.format("Could not update %s", desc));
 			break;
