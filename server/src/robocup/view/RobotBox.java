@@ -12,15 +12,18 @@ import net.miginfocom.swing.MigLayout;
 import robocup.model.Ally;
 import robocup.model.Robot;
 
+/**
+ * A {@link JPanel} that displays the info for a single {@link Robot}<br>
+ *  when {@code update()} is called all information will be refreshed with the information in the corresponding {@link Robot} object 
+ */
+@SuppressWarnings("serial")
 public class RobotBox extends JPanel {
-	private static final long serialVersionUID = 1L;
-
 	private Robot robot;
 	private JLabel robotStatus, robotPosition, robotRole;
 
 	/**
-	 * Creates a JPanel with the information of a single robot
-	 * @param _robot
+	 * Creates a {@link JPanel} with the information of a single {@link Robot}
+	 * @param _robot a {@link Robot} object whose information will be displayed in this object
 	 */
 	public RobotBox(Robot _robot) {
 		robot = _robot;
@@ -46,28 +49,28 @@ public class RobotBox extends JPanel {
 	}
 
 	/**
-	 * @return robot object used in this panel
+	 * @return {@link Robot} used in this panel
 	 */
 	public Robot getRobot() {
 		return robot;
 	}
 
 	/**
-	 * Sets the robotstatus
-	 * @param desired status
+	 * Sets the label containing the robot status
+	 * @param online whether the robot is online
 	 */
 	private void setRobotStatus(boolean online) {
 		if (online) {
 			robotStatus.setText("Online");
-			robotStatus.setForeground(new Color(0, 0xFF, 0));
+			robotStatus.setForeground(Color.green);
 		} else {
 			robotStatus.setText("Offline");
-			robotStatus.setForeground(new Color(0xFF, 0, 0));
+			robotStatus.setForeground(Color.red);
 		}
 	}
 
 	/**
-	 * Updates all robot information, called upon SSL_DetectionFrame
+	 * Updates all {@link Robot} information, usually called upon {@code SSL_DetectionFrame}
 	 */
 	public void update() {
 		setRobotStatus(robot.isOnSight());

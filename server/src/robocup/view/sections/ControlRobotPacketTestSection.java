@@ -15,7 +15,9 @@ import robocup.Main;
 import robocup.output.ComInterface;
 import robocup.view.GUI;
 import robocup.view.SectionBox;
-
+/**
+ * TestSection to remotely send commands to a {@link Robot} whose {@link RobotBox} is selected in the {@link GUI}
+ */
 @SuppressWarnings("serial")
 public class ControlRobotPacketTestSection extends SectionBox{
 
@@ -28,7 +30,7 @@ public class ControlRobotPacketTestSection extends SectionBox{
 	private JTextField rotationSpeedField;
 	
 	/**
-	 * Create ControLRobotSection
+	 * Create ControlRobotSection
 	 */
 	public ControlRobotPacketTestSection() {
 		super("Control robot");
@@ -100,7 +102,7 @@ public class ControlRobotPacketTestSection extends SectionBox{
 
 
 	/**
-	 * Update the selected robot panel
+	 * Update the corresponding {@link RobotBox}
 	 */
 	@Override
 	public void update() {

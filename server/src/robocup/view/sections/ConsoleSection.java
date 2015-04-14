@@ -16,7 +16,9 @@ import javax.swing.table.DefaultTableModel;
 import net.miginfocom.swing.MigLayout;
 import robocup.Main;
 import robocup.view.SectionBox;
-
+/**
+ * instance of {@link SectionBox} that displays all messages send to the {@link Logger} (use {@code Logger.getLogger(Main.class.getName())} to acces the {@link Logger}
+ */
 @SuppressWarnings("serial")
 public class ConsoleSection extends SectionBox {
 
@@ -47,7 +49,7 @@ public class ConsoleSection extends SectionBox {
 	}
 
 	/**
-	 * Handler for LOGGER messages
+	 * Handler for {@link Logger} messages
 	 */
 	private class LoggerHandler extends Handler {
 		@Override
@@ -69,7 +71,7 @@ public class ConsoleSection extends SectionBox {
 
 
 	/**
-	 * ActionListener to set a different settings
+	 * ActionListener to clear the console
 	 *
 	 */
 	private class ButtonListener implements ActionListener {
@@ -95,11 +97,11 @@ public class ConsoleSection extends SectionBox {
 	}
 
 	/**
-	 * Format millis to readable output
-	 * @param milliseconds since 1970 (Unix)
-	 * @return String in HH:mm:ss format
+	 * Format {@link System.currentTimeMillis()} to readable output
+	 * @param millis milliseconds since 1970 (normal Unix timestamp)
+	 * @return {@link String} in HH:mm:ss format
 	 */
-	public String toTime(long millis) {
+	private String toTime(long millis) {
 		return (new SimpleDateFormat("HH:mm:ss")).format(new Date(millis));
 	}
 

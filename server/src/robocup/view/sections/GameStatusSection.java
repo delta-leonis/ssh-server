@@ -8,14 +8,12 @@ import robocup.model.World;
 import robocup.view.SectionBox;
 
 /**
- * TODO check whether it works at all,
- * way of updating has been copied from the previous GUI but well, 
- * that wasn't exactly perfect either
+ * Displays general information about the game and {@link Field}
  */
 @SuppressWarnings("serial")
 public class GameStatusSection extends SectionBox {
 
-	private JTextField fieldHalfField, timePlayedField, gameStatusField, refereeStatusField, goalsField, keeperIdField;
+	private JTextField fieldHalfField, timePlayedField, refereeStatusField, goalsField, keeperIdField;
 
 	/**
 	 * Creates section
@@ -30,8 +28,6 @@ public class GameStatusSection extends SectionBox {
 		fieldHalfField.setEnabled(false);
 		timePlayedField = new JTextField();
 		timePlayedField.setEnabled(false);
-		gameStatusField = new JTextField();
-		gameStatusField.setEnabled(false);
 		refereeStatusField = new JTextField();
 		refereeStatusField.setEnabled(false);
 		goalsField = new JTextField();
@@ -41,8 +37,6 @@ public class GameStatusSection extends SectionBox {
 		add(fieldHalfField, "growx");
 		add(new JLabel("Time played"));
 		add(timePlayedField, "growx");
-		add(new JLabel("Game status"));
-		add(gameStatusField, "growx");
 		add(new JLabel("Referee status"));
 		add(refereeStatusField, "growx");
 		add(new JLabel("Goals"));
@@ -69,9 +63,6 @@ public class GameStatusSection extends SectionBox {
 			fieldHalfField.setText("east");
 		else
 			fieldHalfField.setText("west");
-
-		// TODO Rob moet hier even aan verder werken, Jeroen wist t niet meer
-		gameStatusField.setText("NOT YET IMPLEMENTED");
 
 		refereeStatusField.setText(World.getInstance().getReferee().getStage().toString());
 		keeperIdField.setText(World.getInstance().getReferee().getAlly().getGoalie() + "");

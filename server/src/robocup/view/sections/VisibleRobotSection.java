@@ -13,14 +13,17 @@ import robocup.model.Robot;
 import robocup.model.World;
 import robocup.view.SectionBox;
 
+/**
+ * {@link SectionBox} that makes it possible to remove certain {@link RobotBox}es from the {@link GUI}.<br>
+ */
 @SuppressWarnings("serial")
 public class VisibleRobotSection extends SectionBox {
 
 	private ArrayList<JCheckBox> checkboxes = new ArrayList<JCheckBox>();
 
 	/**
-	 * Creates a check box for all robots and 
-	 * implements a anonymous button handler for selecting on sight robots
+	 * Creates a {@link JCheckBox} for every {@link Ally} and 
+	 * implements a {@code anonymous buttonhandler} for selecting {@link Ally}s that are currently recognized/visible
 	 */
 	public VisibleRobotSection() {
 		super("Visible robots");
@@ -36,8 +39,11 @@ public class VisibleRobotSection extends SectionBox {
 			add(checkbox, (numberOfRobots - 1 == i) ? "wrap" : "");
 		}
 
-		// Removes the visibility of all panels of robots that aren't onSight
 		add(new JButton(new AbstractAction("Autoselect") {
+			/**
+			 * Loops all existing {@link Ally}s, when {@link Robot} is not onsight it is 
+			 * removed from view
+			 */
 			public void actionPerformed(ActionEvent e) {
 				int i = 0;
 				for (Robot robot : World.getInstance().getReferee().getAlly().getRobots()) {
@@ -62,6 +68,9 @@ public class VisibleRobotSection extends SectionBox {
 		}
 	}
 
+	/**
+	 * currently unused
+	 */
 	@Override
 	public void update() {
 	}

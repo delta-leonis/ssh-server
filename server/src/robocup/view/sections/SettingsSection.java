@@ -15,6 +15,10 @@ import robocup.model.World;
 import robocup.output.ComInterface;
 import robocup.view.SectionBox;
 
+/**
+ * Section that controls general settings concerning the current game,<br>
+ * such as {@link Field} settings and general {@link Robot} settings
+ */
 @SuppressWarnings("serial")
 public class SettingsSection extends SectionBox {
 
@@ -25,7 +29,7 @@ public class SettingsSection extends SectionBox {
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 
 	/**
-	 * Creates the settingsSection
+	 * Creates the components for the GUI
 	 */
 	public SettingsSection() {
 		super("Settings");
@@ -113,7 +117,7 @@ public class SettingsSection extends SectionBox {
 	}
 
 	/**
-	 * When a SSL_DetectionFrame message is handled, the field half may be changed
+	 * When a {@code SSL_DetectionFrame} message is handled the field half may be changed
 	 */
 	@Override
 	public void update() {

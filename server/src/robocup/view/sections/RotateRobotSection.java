@@ -7,6 +7,7 @@ import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import robocup.Main;
@@ -14,15 +15,23 @@ import robocup.model.World;
 import robocup.output.ComInterface;
 import robocup.view.SectionBox;
 
-
+/**
+ * {@link SectionBox} used to spin the robot at a adjustable speed,
+ * every second it will revert the direction and spin the other way around
+ * 
+ * NOTE: mainly used for testing durability of the underlayment
+ */
 @SuppressWarnings("serial")
 public class RotateRobotSection extends SectionBox{
 
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private JTextField textField;
 	private boolean run = false;
-	private Timer wisselTimer;
+	private Timer revertTimer;
 	
+	/**
+	 * Create components for the GUI elements
+	 */
 	public RotateRobotSection(){
 		super("Rotate robot");
 		JButton spinButton = new JButton("spin");
@@ -32,17 +41,21 @@ public class RotateRobotSection extends SectionBox{
 		termButton.addActionListener(new ButtonListener());
 		add(termButton);
 		textField = new JTextField("500");
+		add(new JLabel("speed"));
 		add(textField);
 	}
 
-	  class RemindTask extends TimerTask {
+	/**
+	 * task that gets the current speed and inverts it, effectively inverting the direction of the spinning
+	 */
+	  class ReverseDirectionTask extends TimerTask {
 	    public void run() {
 	    	if(shouldBeRunning()){
 	    		textField.setText("" + (Integer.valueOf(textField.getText())*-1));
 	    		LOGGER.info("inverted rotation speed");
 				ComInterface.getInstance().send(1,  World.getInstance().getGUI().getSelectedRobotId(), 0, 0,  Integer.valueOf(textField.getText()),0, false);
-				wisselTimer = new Timer();
-				wisselTimer.schedule(new RemindTask(),  1000);
+				revertTimer = new Timer();
+				revertTimer.schedule(new ReverseDirectionTask(),  1000);
 	    	}else{
 	    		System.out.println("terminated");
 	    		ComInterface.getInstance().send(1,  World.getInstance().getGUI().getSelectedRobotId(), 0, 0, 0,0, false);
@@ -50,10 +63,18 @@ public class RotateRobotSection extends SectionBox{
 
 	    }
 	  }
+	
+	/**
+	 * @return true if the timer needs to be going
+	 */
 	private boolean shouldBeRunning(){
 		return run;
 	}
 	
+	/**
+	 * Handler for the Terminate and spin button,<br>
+	 * the spin button wil start a new {@link Timer} with the {@code ReverseDirectionTask()}
+	 */
 	private class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			switch (((JButton) e.getSource()).getText()) {
@@ -70,14 +91,17 @@ public class RotateRobotSection extends SectionBox{
 					run = true;
 					LOGGER.info("Spin robot #" +  World.getInstance().getGUI().getSelectedRobotId() + ", speed " + Integer.valueOf(textField.getText()));
 					ComInterface.getInstance().send(1,  World.getInstance().getGUI().getSelectedRobotId(), 0, 0, Integer.valueOf(textField.getText()),0, false);
-					wisselTimer = new Timer();
-					wisselTimer.schedule(new RemindTask(),  1000);
+					revertTimer = new Timer();
+					revertTimer.schedule(new ReverseDirectionTask(),  1000);
 				}
 			}
 		}
 	}
 
 
+	/**
+	 * unused
+	 */
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub

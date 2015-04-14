@@ -3,8 +3,6 @@ package robocup.view.sections;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
@@ -20,7 +18,9 @@ import robocup.model.FieldPoint;
 import robocup.output.ComInterface;
 import robocup.view.GUI;
 import robocup.view.SectionBox;
-
+/**
+ * TestSection to remotely send commands to a {@link Robot} whose {@link RobotBox} is selected in the {@link GUI}
+ */
 @SuppressWarnings("serial")
 public class ControlRobotSection extends SectionBox{
 
@@ -31,7 +31,7 @@ public class ControlRobotSection extends SectionBox{
 	private JTextField forwardBox;
 	
 	/**
-	 * Create ControLRobotSection
+	 * Create ControlRobotSection
 	 */
 	public ControlRobotSection() {
 		super("Control robot");
@@ -49,8 +49,6 @@ public class ControlRobotSection extends SectionBox{
 		JButton moveRightButton = new JButton("→");
 		JButton strafeLeftButton = new JButton("←←");
 		JButton strafeRightButton = new JButton("→→");
-		JButton slowDownTestButton = new JButton("Slow Down Test");
-		slowDownTestButton.setBackground(Color.MAGENTA);
 		JButton forwardTestButton = new JButton("Forward");
 		forwardTestButton.setBackground(Color.GREEN);
 		forwardBox = new JTextField("500");
@@ -63,7 +61,6 @@ public class ControlRobotSection extends SectionBox{
 		moveBackButton.addActionListener(buttonListener);
 		moveLeftButton.addActionListener(buttonListener);
 		moveRightButton.addActionListener(buttonListener);
-		slowDownTestButton.addActionListener(buttonListener);
 		forwardTestButton.addActionListener(buttonListener);
 		strafeLeftButton.addActionListener(buttonListener);
 		strafeRightButton.addActionListener(buttonListener);
@@ -80,15 +77,10 @@ public class ControlRobotSection extends SectionBox{
 		add(moveRightButton, "growx");
 		add(forwardBox, "growx");
 		add(forwardTestButton, "growx");
-		add(slowDownTestButton, "growx");
-
-		addKeyListener(new MoveKeyListener());
-		setFocusable(true);
-		requestFocusInWindow();
 	}
 
 	/**
-	 * Handler for chip and kick button
+	 * Handler for all actions for the {@link Robot}
 	 */
 	private class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
@@ -123,9 +115,6 @@ public class ControlRobotSection extends SectionBox{
 			case "→→":
 				ComInterface.getInstance().send(1, selectedRobotId, 90, 500, 0, 0, dribbling);
 				break;
-			case "Slow Down Test":
-				slowDownTest();
-				break;
 			case "Forward":
 				try{
 					ComInterface.getInstance().send(1, selectedRobotId, 0, Integer.parseInt(forwardBox.getText()), 0, 0, dribbling);
@@ -137,93 +126,12 @@ public class ControlRobotSection extends SectionBox{
 			}
 		}
 	}
-	
-	private class MoveKeyListener implements KeyListener {
-		@Override
-		public void keyPressed(KeyEvent e){
-			int code = e.getKeyCode();
-			
-			switch(code){
-				case KeyEvent.VK_W:
-					ComInterface.getInstance().send(1, selectedRobotId, 0, 750, 0, 0, dribbling);
-					break;
-				case KeyEvent.VK_S:
-					ComInterface.getInstance().send(1, selectedRobotId, 0, -750, 0, 0, dribbling);
-					break;
-				case KeyEvent.VK_A:
-					ComInterface.getInstance().send(1, selectedRobotId, 0, 0, -100, 0, dribbling);
-					break;
-				case KeyEvent.VK_D:
-					ComInterface.getInstance().send(1, selectedRobotId, 0, 0, 100, 0, dribbling);
-					break;
-				case KeyEvent.VK_E:
-					ComInterface.getInstance().send(1, selectedRobotId, 90, 500, 0, 0, dribbling);
-					break;
-					
-				case KeyEvent.VK_Q:
-					ComInterface.getInstance().send(1, selectedRobotId, -90, 500, 0, 0, dribbling);
-					break;
-					
-				case KeyEvent.VK_1:
-					ComInterface.getInstance().send(1, selectedRobotId, 0, 0, 0, -100, dribbling);
-					break;
-					
-				case KeyEvent.VK_2:
-					ComInterface.getInstance().send(1, selectedRobotId, 0, 0, 0, 100, dribbling);
-					break;	
-					
-				case KeyEvent.VK_R:
-					dribbling = !dribbling;
-					ComInterface.getInstance().send(1, selectedRobotId, 0, 0, 0, 0, dribbling);
-					break;
-
-				case KeyEvent.VK_ESCAPE:
-				case KeyEvent.VK_SPACE:
-					LOGGER.info("Send terminate command");
-					ComInterface.getInstance().send(1, selectedRobotId, 0, 0, 0, 0, false);
-					for(int i = 0; i < 12; ++i){
-						ComInterface.getInstance().send(1, i, 0, 0, 0,0, false);
-						System.out.println();
-					}
-					break;
-			}
-		}
-
-		@Override
-		public void keyReleased(KeyEvent e) {
-		}
-
-		@Override
-		public void keyTyped(KeyEvent e) {		
-		}
-	}
-	
-	private void slowDownTest(){
-		try{
-			GotoPosition go = new GotoPosition(new Ally(0, false, 0), ComInterface.getInstance(), new FieldPoint(0,0));
-			ComInterface.getInstance().send(1, selectedRobotId, 0, (int) go.getSpeed(500, 100), 0, 0, dribbling);
-			System.out.println("Test! " + go.getSpeed(500, 100));
-			Thread.sleep(500);
-			
-			for(int i = 0; i < 10; ++i){
-				ComInterface.getInstance().send(1, selectedRobotId, 0, (int) go.getSpeed(100 - (i*10), 100), 0, 0, dribbling);
-				System.out.println("Test! " + go.getSpeed(100 - (i*10), 100));
-				Thread.sleep(50);
-			}
-			ComInterface.getInstance().send(1, selectedRobotId, 0, 0, 0, 0, dribbling);
-
-			
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-	}
 
 	/**
-	 * Update the selected robot panel
+	 * Update the corresponding {@link RobotBox}
 	 */
 	@Override
 	public void update() {
-		//requestFocusInWindow();
 		selectedRobotId = ((GUI) SwingUtilities.getWindowAncestor((this))).getSelectedRobotId();
 		selectedRobotLabel.setText(String.format("Robot #%d selected", selectedRobotId));
 	}
