@@ -59,7 +59,7 @@ public class StandardMode extends Mode {
 	protected void updateAttacker(RobotExecuter executer) {
 		Attacker attacker = (Attacker) executer.getLowLevelBehavior();
 		// TODO Update with normal values
-		attacker.update(0.0, 0, null, ball.getPosition());
+		attacker.update(0.0, 0, null);
 	}
 
 	@Override
