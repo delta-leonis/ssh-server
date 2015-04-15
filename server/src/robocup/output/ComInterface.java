@@ -10,7 +10,7 @@ import java.nio.ByteOrder;
 import java.util.Properties;
 
 /**
- * TODO: Suggestion: Turn into Interface (instead of abstract class) and move singleton to {@link RobotCom}
+ * Singleton class whose instance allows to communicate to the basestation and thus to the individual robots on the field
  */
 public class ComInterface {
 	private DatagramSocket serverSocket;
@@ -19,6 +19,9 @@ public class ComInterface {
 
 	private static ComInterface instance;
 
+	/**
+	 * @return the singleton instance of {@link ComInterface}
+	 */
 	public static ComInterface getInstance() {
 		if (instance == null) {
 			instance = new ComInterface();
@@ -26,32 +29,33 @@ public class ComInterface {
 		return instance;
 	}
 	
+	/**
+	 * Constructs ComInterface by loading properties from 'config/config.properties'
+	 */
 	protected ComInterface(){
 		final Properties configFile = new Properties();
 		try {
 			configFile.load(new FileInputStream("config/config.properties"));
-			String ipAddress = configFile.getProperty("outputAddress");
-			int port = Integer.parseInt(configFile.getProperty("ownTeamOutputPort"));
-				this.ipAddress = InetAddress.getByName(ipAddress);
-			this.port = port;
-				serverSocket = new DatagramSocket();
+			ipAddress = InetAddress.getByName(configFile.getProperty("outputAddress"));
+			port = Integer.parseInt(configFile.getProperty("ownTeamOutputPort"));;
+			serverSocket = new DatagramSocket();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	/**
-	 * Sending a message with only one argument,
+	 * Sending a message to the basestation,<br>
 	 * mostly used with messagetype 127 (highest signed 8_int) for setting a new channel frequency
 	 *
-	 * @param messageType
-	 * @param channel_freq
+	 * @param messageType describes type of message
+	 * @param channel_freq new channel frequency
 	 */
 	public void send(int messageType, int channel_freq) {
 		send(messageType, 0, channel_freq,0,0,0,false);
 	}
 
 	/**
-	 * @param messageType, MessageType 0 => robot instruction
+	 * @param messageType MessageType 0 => robot instruction
 	 * @param robotID The ID of the robot we want to send to.
 	 * @param direction The direction we want our robot to move towards.
 	 * @param directionSpeed The speed we want our robot to move at in mm/s
@@ -67,11 +71,20 @@ public class ComInterface {
 		try {
 			serverSocket.send(sendPacket);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * @param messageType, MessageType 0 => robot instruction
+	 * @param robotID The ID of the robot we want to send to.
+	 * @param direction The direction we want our robot to move towards.
+	 * @param directionSpeed The speed we want our robot to move at in mm/s
+	 * @param rotationSpeed The speed we want our robot to turn at in mm/s
+	 * @param kicker -1 to -100 for chipping, 1 to 100 for kicking.
+	 * @param dribble true to start the dribbler, false otherwise
+	 * @return bytearray to send to the Basestation
+	 */
 	private byte[] createByteArray(int messageType, int robotID, int direction, int directionSpeed,
 			int rotationSpeed, int shootKicker, boolean dribble) {
 		ByteBuffer dataBuffer = ByteBuffer.allocate(15);
@@ -92,10 +105,9 @@ public class ComInterface {
 	}
 
 	/**
-	 * calculate checksum and add to array
+	 * calculate checksum and appends it to the {@link ByteBuffer}
 	 * 
-	 * @param array
-	 * @return
+	 * @param bytebuffer array that will be modified
 	 */
 	private void addChecksum(ByteBuffer bytebuffer) {
 		int checksum = 0;
