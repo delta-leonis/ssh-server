@@ -6,3 +6,4 @@ server/bin1/
 server/log/
 .metadata
 .recommenders
+server/Logging.txt*
