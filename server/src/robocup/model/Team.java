@@ -2,6 +2,7 @@ package robocup.model;
 
 import java.util.ArrayList;
 
+import robocup.controller.handlers.protohandlers.RefereeHandler;
 import robocup.model.enums.TeamColor;
 
 /**
@@ -27,10 +28,19 @@ public class Team {
 		this.onsiteTeamSize = onsiteTeamSize;
 		
 		remainingCardTimes = new ArrayList<Long>();
-		// add an empty arraylist, an empty team is better than nullpointer exeptions
 		robots = new ArrayList<Robot>();
 	}
 	
+	/**
+	 * Constructs a new Team
+	 * @param name			name of a team
+	 * @param color			{@link TeamColor} of a team
+	 * @param yellowCards	number of yellow cards
+	 * @param redCards		number of red cards
+	 * @param score			score for the team
+	 * @param timeoutsLeft	timeouts remaining
+	 * @param goalie		{@link Robot} ID that represents the goalie
+	 */
 	public Team(String name, TeamColor color, int yellowCards, int redCards, int score, int timeoutsLeft, int goalie) {
 		this.name = name;
 		this.color = color;
@@ -43,6 +53,15 @@ public class Team {
 		robots = new ArrayList<Robot>();
 	}
 
+	/**
+	 * update all fields (see {@link RefereeHandler})
+	 * @param name			name of a team
+	 * @param yellowCards	number of yellow cards
+	 * @param redCards		number of red cards
+	 * @param score			score for the team
+	 * @param timeoutsLeft	timeouts remaining
+	 * @param goalie		{@link Robot} ID that represents the goalie
+	 */
 	public void update(String name, int score, int redCards, int yellowCards, int timeoutsLeft, int goalie) {
 		this.name = name;
 		this.score = score;

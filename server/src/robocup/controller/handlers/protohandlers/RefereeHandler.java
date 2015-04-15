@@ -27,10 +27,10 @@ public class RefereeHandler {
 		// getStageTimeLeft
 
 		// Update Teams
-		world.getTeamByColor(TeamColor.valueOf("BLUE")).update(message.getBlue().getName(), message.getBlue().getScore(),
+		world.getTeamByColor(TeamColor.BLUE).update(message.getBlue().getName(), message.getBlue().getScore(),
 				message.getBlue().getRedCards(), message.getBlue().getYellowCards(), message.getBlue().getTimeouts(),
 				message.getBlue().getGoalie());
-		world.getTeamByColor(TeamColor.valueOf("YELLOW")).update(message.getYellow().getName(),
+		world.getTeamByColor(TeamColor.YELLOW).update(message.getYellow().getName(),
 				message.getYellow().getScore(), message.getYellow().getRedCards(),
 				message.getYellow().getYellowCards(), message.getYellow().getTimeouts(),
 				message.getYellow().getGoalie());
