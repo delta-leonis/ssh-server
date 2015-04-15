@@ -6,10 +6,18 @@ import robocup.model.enums.Command;
 import robocup.model.enums.Stage;
 import robocup.model.enums.TeamColor;
 
+/**
+ * Handles {@link SSL_Referee} messages,<br>
+ * processes messages for both Enemy as Ally {@link Team teams}. Other messages are pushed to the {@link robocup.model.Referee Referee} found in {@link World} object.
+ */
 public class RefereeHandler {
 
 	private World world;
 
+	/**
+	 * construct Referee for a specific {@link World}
+	 * @param world	world this RefereeHandler will affect
+	 */
 	public RefereeHandler(World world) {
 		this.world = world;
 	}

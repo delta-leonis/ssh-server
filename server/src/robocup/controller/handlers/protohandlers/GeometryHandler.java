@@ -3,20 +3,36 @@ package robocup.controller.handlers.protohandlers;
 import robocup.input.protobuf.MessagesRobocupSslGeometry.SSL_GeometryData;
 import robocup.input.protobuf.MessagesRobocupSslGeometry.SSL_GeometryFieldSize;
 import robocup.model.World;
-
+/**
+ * Handler for {@link SSL_GeometryData} messages. 
+ * updates the {@link Field} object from a {@link World} object
+ *
+ */
 public class GeometryHandler {
 
 	private World world;
 
+	/**
+	 * Constructs handler for {@link SSL_GeometryData} messages
+	 * @param world	that will be affected
+	 */
 	public GeometryHandler(World world) {
 		this.world = world;
 	}
 
+	/**
+	 * Process a {@link SSL_GeometryData} message
+	 * @param message to be processed
+	 */
 	public void process(SSL_GeometryData message) {
 		processFieldSize(message);
 		processCameraCalibration(message);
 	}
 
+	/**
+	 * Updates {@link Field} information
+	 * @param message with new information
+	 */
 	public void processFieldSize(SSL_GeometryData message) {
 		SSL_GeometryFieldSize f = message.getField();
 		world.getField().update(f.getLineWidth(), f.getFieldLength(), f.getFieldWidth(), f.getBoundaryWidth(),
@@ -25,7 +41,12 @@ public class GeometryHandler {
 				f.getPenaltySpotFromFieldLineDist(), f.getPenaltyLineFromSpotDist());
 	}
 
+	/**
+	 * processed camera calibration as notified by SSL_Vision
+	 * @param message
+	 * @deprecated not processing anything
+	 */
 	public void processCameraCalibration(SSL_GeometryData message) {
-
+		//TODO everything
 	}
 }
