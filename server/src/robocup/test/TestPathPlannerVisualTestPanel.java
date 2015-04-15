@@ -11,7 +11,9 @@ import javax.swing.JPanel;
 import robocup.model.FieldPoint;
 import robocup.view.SectionBox;
 
-
+/**
+ * SectionBox that visualizes various test for the {@link robocup.controller.ai.movement.DijkstraPathPlanner DijkstraPathPlanner}
+ */
 public class TestPathPlannerVisualTestPanel extends SectionBox implements ActionListener{
 	private static final long serialVersionUID = 1L;
 	private JButton randomButton;
@@ -21,6 +23,10 @@ public class TestPathPlannerVisualTestPanel extends SectionBox implements Action
 	private TestPathPlannerPanel plannerPanel;
 	private TestPathPlanner planner;
 	
+	/**
+	 * Initializes this class based on the given {@link TestPathPlanner}
+	 * @param planner The {@link TestPathPlanner} we want to perform our test on.
+	 */
 	public TestPathPlannerVisualTestPanel(TestPathPlanner planner){
 		super("Path Planner Test");
 		setLayout(new FlowLayout());
@@ -76,8 +82,5 @@ public class TestPathPlannerVisualTestPanel extends SectionBox implements Action
 	}
 
 	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void update() {	}
 }
