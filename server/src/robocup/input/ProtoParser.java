@@ -15,6 +15,9 @@ public class ProtoParser {
 	private static ProtoParser instance;
 	private LinkedTransferQueue<Object> inputBuffer;
 
+	/**
+	 * Instanciates protoparser by creating a {@link LinkedTransferQueue}
+	 */
 	private ProtoParser() {
 		inputBuffer = new LinkedTransferQueue<Object>();
 	}

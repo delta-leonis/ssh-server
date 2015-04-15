@@ -10,31 +10,27 @@ import java.util.logging.Logger;
 import robocup.Main;
 
 /**
- * abstract class UDPClient.
+ * abstract class UDPClient for receiving UDP packets via multicast group 
  * method startListining has to be overridden
  */
 public abstract class UDPClient implements Runnable {
 
 	protected ProtoParser protoParser;
-	private String host;
-	private int port;
+	private String multicastHost;
+	private int multipcastPort;
 	private MulticastSocket multicastSocket;
-	private InetAddress group;
+	private InetAddress multicastGroup;
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 
-	public UDPClient(String host, int port) {
-		protoParser = ProtoParser.getInstance();
-		init(host, port);
-	}
-
 	/**
-	 * Init
-	 * @param host
-	 * @param port
+	 * Constructs a new UDP client
+	 * @param multicasthost	current multicasthost
+	 * @param multicastport	port to listen to
 	 */
-	public void init(String host, int port) {
-		this.host = host;
-		this.port = port;
+	public UDPClient(String multicasthost, int multicastport) {
+		protoParser = ProtoParser.getInstance();
+		this.multicastHost = multicasthost;
+		this.multipcastPort = multicastport;
 	}
 
 	/**
@@ -59,9 +55,9 @@ public abstract class UDPClient implements Runnable {
 	public abstract void startListening() throws IOException;
 
 	public void connect() throws IOException {
-		group = InetAddress.getByName(host);
-		multicastSocket = new MulticastSocket(port);
-		multicastSocket.joinGroup(group);
+		multicastGroup = InetAddress.getByName(multicastHost);
+		multicastSocket = new MulticastSocket(multipcastPort);
+		multicastSocket.joinGroup(multicastGroup);
 	}
 
 	/**
@@ -69,7 +65,7 @@ public abstract class UDPClient implements Runnable {
 	 */
 	public void disconnect() {
 		try {
-			multicastSocket.leaveGroup(group);
+			multicastSocket.leaveGroup(multicastGroup);
 		} catch (IOException e) {
 			LOGGER.warning("Disconnecting not possible:");
 			LOGGER.warning(e.toString());
@@ -90,33 +86,33 @@ public abstract class UDPClient implements Runnable {
 	}
 
 	/**
-	 * @return the host
+	 * @return the multicasthost
 	 */
 	public String getHost() {
-		return host;
+		return multicastHost;
 	}
 
 	/**
-	 * @param host
-	 *            the host to set
+	 * @param multicasthost
+	 *            the multicasthost to set
 	 */
-	public void setHost(String host) {
-		this.host = host;
+	public void setHost(String multicasthost) {
+		this.multicastHost = multicasthost;
 	}
 
 	/**
-	 * @return the port
+	 * @return the multicastport
 	 */
 	public int getPort() {
-		return port;
+		return multipcastPort;
 	}
 
 	/**
-	 * @param port
-	 *            the port to set
+	 * @param multicastport
+	 *            the multicastport to set
 	 */
-	public void setPort(int port) {
-		this.port = port;
+	public void setPort(int multicastport) {
+		this.multipcastPort = multicastport;
 	}
 
 }
