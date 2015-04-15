@@ -1,5 +1,9 @@
 package robocup.model;
-
+/**
+ * Describes an object on the {@link Field}
+ * 
+ * TODO needs a rewrite and cleanup
+ */
 public abstract class FieldObject {
 
 	private FieldPoint positionCam0;
@@ -10,14 +14,11 @@ public abstract class FieldObject {
 	private double direction;
 	private double speed;
 
-	// private int lastCamUpdateNo;
-
 	public FieldObject() {
 		lastUpdateTime = 0;
 		position = new FieldPoint(0,0);
 		positionCam0 = null;
 		positionCam1 = null;
-		// lastCamUpdateNo = -1;
 	}
 
 	/**

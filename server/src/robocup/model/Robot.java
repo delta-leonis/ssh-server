@@ -1,6 +1,5 @@
 package robocup.model;
 
-
 /**
  * Represents a Robot on the {@link Field}.
  * This class is abstract, so make sure your Robot is either from the {@link Ally} or {@link Enemy} class.
@@ -9,20 +8,27 @@ public abstract class Robot extends FieldObject {
 
 	public static final int DIAMETER = 180;	//In millimeters.
 	private int robotId;
-	private boolean isKeeper;
+	/**
+	 * orientation is in degrees<br>
+	 * directions for refference: 0 = EAST, 90 = NORTH, 180 = WEST, -90 = SOUTH
+	 */
 	private double orientation;
 	private double height;
-	private long powerUpTime;
+	/** 
+	 * a robot is onsight when it is being seen by a camera
+	 */
 	private boolean onSight;
-	private boolean visible;		//true = visible in the GUI
+	private boolean visible = true;		//true = visible in the GUI
 
-
-	public Robot(int robotID, boolean isKeeper, double height) {
+	/**
+	 * Creates a new robot object
+	 * @param robotID	reference ID for the robot
+	 * @param height	height of the robot
+	 */
+	public Robot(int robotID,  double height) {
 		super();
 		this.robotId = robotID;
-		this.isKeeper = isKeeper;
 		this.height = height;
-		this.visible = true;
 	}
 
 	/**
@@ -54,11 +60,11 @@ public abstract class Robot extends FieldObject {
 
 	/**
 	 * {@inheritDoc}
-	 * @param degrees 
+	 * @param orientation in degrees (0 = EAST, 90 = NORTH, 180 = WEST, -90 = SOUTH)
 	 */
-	public void update(FieldPoint newPosition, double updateTime, double degrees, int lastCamUpdateNo) {
+	public void update(FieldPoint newPosition, double updateTime, double orientation, int lastCamUpdateNo) {
 		super.update(newPosition, updateTime, lastCamUpdateNo);
-		this.orientation = degrees; // setOrientation(orientation)
+		this.orientation = orientation; // setOrientation(orientation)
 	}
 
 	/**
@@ -79,40 +85,28 @@ public abstract class Robot extends FieldObject {
 	}
 
 	/**
-	 * TODO: what the hell is this
-	 * @return
+	 * @return true if robot is visible on the {@link Field}
 	 */
 	public boolean isOnSight() {
 		return onSight;
 	}
 
 	/**
-	 * TODO: Document
-	 * @param onSight
+	 * @param onSight robot visible on camera?
 	 */
 	public void setOnSight(boolean onSight) {
 		this.onSight = onSight;
 	}
 
 	/**
-	 * @param isKeeper the isKeeper to set
-	 * @deprecated use {@link #setRole()}
-	 */
-	public void setKeeper(boolean isKeeper) {
-		this.isKeeper = isKeeper;
-	}
-
-	/**
-	 * TODO: Document. What is the orientation? The direction the Robot is looking at? If so, is this value in degrees or radians?
-	 * @return the orientation
+	 * @return the orientation in degrees (0 = EAST, 90 = NORTH, 180 = WEST, -90 = SOUTH)
 	 */
 	public double getOrientation() {
 		return orientation;
 	}
 
 	/**
-	 * TODO: Document. What is the orientation? The direction the Robot is looking at? If so, is this value in degrees or radians?
-	 * @param orientation the orientation to set
+	 * @param orientation in degrees (0 = EAST, 90 = NORTH, 180 = WEST, -90 = SOUTH)
 	 */
 	public void setOrientation(int orientation) {
 		this.orientation = orientation;
@@ -134,18 +128,10 @@ public abstract class Robot extends FieldObject {
 		this.height = height;
 	}
 
-	/**
-	 * TODO: Document. Is this the time it takes to fully charge the Robot? If so, is the value in seconds or milliseconds?
-	 * @return the powerUpTime
-	 */
-	public long getPowerUpTime() {
-		return powerUpTime;
-	}
-
 
 	@Override
 	public String toString() {
-		return "robotID=" + robotId + ", isKeeper=" + isKeeper + ", orientation=" + orientation + ", height=" + height
+		return "robotID=" + robotId + ", isKeeper=" + (isKeeper() ? "true" : "false") + ", orientation=" + orientation + ", height=" + height
 				+ ", diameter=" + DIAMETER + ", " + super.toString() + "\r\n";
 	}
 }

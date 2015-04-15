@@ -7,26 +7,21 @@ import robocup.Main;
 
 /**
  * Specifies a point on the {@link Field}. 
- * The drawing underneath depicts what this point represents.
+ * The drawing underneath depicts what this point represents.<br>
+ * <img src="../../../images/fieldPoint.jpg" /><br>
  * 
- * (-x,y)________________________________	(x,y)
- * 		|								 |
- * 		|								 |
- *	    |				(0,0)		  	 |
- * 		|								 |
- * 		|________________________________|
- * 	 (-x,-y)								(+x,-y)
- * 
- * x being half the field-width.
+ * x being half the field-width.<br>
  * y being half the field-height.
- * 
- * TODO
- * Give Point2D and convert to a FieldPoint. Can be a static method
  */
 public class FieldPoint {
 	private double x;
 	private double y;
 	
+	/**
+	 * Constructs a new FieldPoint with given coordinates
+	 * @param x
+	 * @param y
+	 */
 	public FieldPoint(double x, double y) {
 		super();
 		this.x = x;
@@ -48,10 +43,6 @@ public class FieldPoint {
 		y = Double.parseDouble(xy[1]);
 	}
 
-	public Point2D.Double toPoint2D(){
-		return new Point2D.Double(x,y);
-	}
-
 	/**
 	 * @param ratio Ratio is percentage/100 that represents minification of the drawn field
 	 * @return The {@link FieldPoint} translated to a {@link Point2D.Double} for GUI use.
@@ -59,6 +50,13 @@ public class FieldPoint {
 	public Point2D.Double toGUIPoint(double ratio) {
 		return new Point2D.Double((x+(World.getInstance().getField().getWidth()/2))*ratio,
 				(-1*y+World.getInstance().getField().getHeight()/2)*ratio);
+	}
+	
+	/**
+	 * @return convert {@link FieldPoint} to a {@link Point2D.Double} for GUI purposes
+	 */
+	public Point2D.Double toPoint2D(){
+		return new Point2D.Double(x,y);
 	}
 
 	/**

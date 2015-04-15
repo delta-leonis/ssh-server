@@ -1,18 +1,24 @@
 package robocup.model;
 
+/**
+ * Describes a goal on the {@link Field}
+ */
 public class Goal {
 	private FieldPoint frontNorth;
 	private FieldPoint frontSouth;
 	private FieldPoint backNorth;
 	private FieldPoint backSouth;
-	private int wallWidth; // Width of goal post. Goal post is outside the
-							// defined goal area
+	private int wallWidth; //Goal posts are outside the defined goal area
 	private int height;
 
-	// _______________
-	// |W|<<<<>>>>|W|
-	// (W = wallWidth)
-
+	/**
+	 * @param frontNorth	most north point on facing the field
+	 * @param frontSouth	most south point on facing the field
+	 * @param backNorth		most north point on facing away from the field
+	 * @param backSouth		most south point on facing away from the field
+	 * @param wallWidth		width of the posts
+	 * @param height		height of the goal
+	 */
 	public Goal(FieldPoint frontNorth, FieldPoint frontSouth, FieldPoint backNorth, FieldPoint backSouth, int wallWidth, int height) {
 		this.frontNorth = frontNorth;
 		this.frontSouth = frontSouth;

@@ -6,14 +6,15 @@ import java.util.Observable;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
+import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.model.enums.Command;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.TeamColor;
 import robocup.view.GUI;
 
 /**
- * Model representation of the physical "world", including the field, all the
- * robots (even non playing robots) and the ball
+ * Model representation of the physical "world", including the {@link Field}, all the
+ * {@link Robot robots} (even non playing {@link Robot robots}) and the {@link Ball}
  */
 public class World extends Observable {
 
@@ -53,10 +54,10 @@ public class World extends Observable {
 		;
 
 		for (int i = 0; i < TOTAL_TEAM_SIZE; i++) {
-			allyTeam.add(new Ally(i, false, 150));
+			allyTeam.add(new Ally(i, 150));
 		}
 		for (int i = 0; i < TOTAL_TEAM_SIZE; i++) {
-			enemyTeam.add(new Enemy(i, false, 150));
+			enemyTeam.add(new Enemy(i, 150));
 		}
 		referee.initAllyTeam(allyTeam);
 		referee.initEnemyTeam(enemyTeam);
@@ -78,10 +79,9 @@ public class World extends Observable {
 	}
 
 	/**
-	 * Set used GUI
+	 * Set used {@link GUI}
 	 * 
-	 * @param current
-	 *            GUI object
+	 * @param current GUI 
 	 */
 	public void setGUI(GUI _gui) {
 		gui = _gui;
@@ -90,15 +90,15 @@ public class World extends Observable {
 	/**
 	 * mainly used to push updates
 	 * 
-	 * @return the gui object
+	 * @return the {@link GUI} object
 	 */
 	public GUI getGUI() {
 		return gui;
 	}
 
 	/**
-	 * 
-	 * @param message
+	 * Sends a notification to the observers of {@link World}
+	 * @param message appends to "HandlerFinished"
 	 */
 	public void HandlerFinished(String message) {
 		setChanged();
@@ -113,7 +113,7 @@ public class World extends Observable {
 	}
 
 	/**
-	 * @return the referee
+	 * @return the {@link Referee}
 	 */
 	public Referee getReferee() {
 		return referee;
@@ -137,28 +137,6 @@ public class World extends Observable {
 	 */
 	public Team getTeamByColor(TeamColor color) {
 		return referee.getTeamByColor(color);
-	}
-
-	/**
-	 * gets our team, this is a method from the old model, it bypasses the
-	 * referee
-	 * 
-	 * @return the ally {@link Team} in the current match.
-	 * @deprecated Get it from Referee
-	 */
-	public Team getAlly() {
-		return referee.getAlly();
-	}
-
-	/**
-	 * gets the enemy team, this is a method from the old model, it bypasses the
-	 * referee
-	 * 
-	 * @return the enemy {@link Team} in the current match.
-	 * @deprecated Get it from Referee
-	 */
-	public Team getEnemy() {
-		return referee.getEnemy();
 	}
 
 	/**
@@ -199,9 +177,9 @@ public class World extends Observable {
 	}
 
 	/**
-	 * Calculate if ally team is closer to the ball
+	 * Calculate if ally {@link Team} is closer to the {@link Ball}
 	 * 
-	 * @return true when the ally team is closer
+	 * @return true when the ally {@link Team} is closer
 	 */
 	public boolean allyHasBall() {
 		ArrayList<Robot> allies = getReferee().getAlly().getRobots();
@@ -214,10 +192,10 @@ public class World extends Observable {
 	}
 
 	/**
-	 * Count all attacking enemies. An enemy is attacking when it is located on
-	 * the same field half as our keeper.
+	 * Count all attacking {@link Enemy enemies}. An {@link Enemy} is attacking when it is located on
+	 * the same field half as our {@link Keeper}.
 	 * 
-	 * @return sum of all attacking enemy robots
+	 * @return sum of all attacking {@link Enemy enemies}
 	 */
 	public int getAttackingEnemiesCount() {
 		int count = 0;
@@ -233,10 +211,10 @@ public class World extends Observable {
 	}
 
 	/**
-	 * Get the closest robot to the ball. This can either be an ally or an enemy
+	 * Get the closest {@link Robot} to the {@link Ball}. This is either an {@link Ally} or an {@link Enemy}
 	 * robot.
 	 * 
-	 * @return the closest robot to the ball
+	 * @return the closest {@link Robot} to the {@link Ball}
 	 */
 	public Robot getClosestRobotToBall() {
 		ArrayList<Robot> robots = new ArrayList<Robot>();
@@ -264,11 +242,11 @@ public class World extends Observable {
 	}
 
 	/**
-	 * Get the distance from the closest robot in one team to the ball
+	 * Get the distance from the closest {@link Robot} in one {@link Team} to the {@link Ball}
 	 * 
 	 * @param robots
-	 *            the team of robots
-	 * @return the distance of the closest robot
+	 *            the team of {@link Robot robots}
+	 * @return the distance of the closest {@link Robot}
 	 */
 	private double getTeamDistanceToBall(ArrayList<Robot> robots) {
 		if (ball == null)
@@ -292,13 +270,13 @@ public class World extends Observable {
 
 	/**
 	 * method that returns a robot by checking vertex points of the given
-	 * fieldzone the closest robot will be returned
+	 * {@link FieldZone} the closest robot will be returned
 	 * 
-	 * this method is not yet finished, as robots "within" the zone should get
+	 * this method is not yet finished, as {@link Robot robots} "within" the {@link FieldZone} should get
 	 * priority, as should the center of the zone be more important
 	 * 
 	 * @param fieldZone
-	 * @return
+	 * @return	Robot without role in given {@link FieldZone}
 	 */
 	public Robot getClosestRobotToZoneWithoutRole(FieldZone fieldZone) {
 		Ally foundAlly = null;
@@ -320,12 +298,12 @@ public class World extends Observable {
 	}
 
 	/**
-	 * Helper function for referee commands, checks last command issued when the
+	 * Helper function for {@link Referee} {@link Command commands}, checks last {@Link Command} issued when the
 	 * robot may move because of the "keep 50 cm clearance" rule, pathfinding
-	 * must find a way from the ball
+	 * must find a way from the {@link Ball}
 	 * 
 	 * @param robotID
-	 * @return bool indicating if movement is allowed
+	 * @return <b>boolean</b> indicating if movement is allowed
 	 */
 	public boolean robotMayMove(int robotID) {
 		// Halt = all robots stop
@@ -348,12 +326,12 @@ public class World extends Observable {
 	}
 
 	/**
-	 * Method that retrieves all allies that are present within a zone
+	 * Method that retrieves all {@link Ally allies} that are present within a given polygon
 	 * 
 	 * @param argPoly
-	 *            the polygon in which the method looks for ally's, a point list
+	 *            the polygon in which the method looks for {@link Ally allies}, a point list
 	 *            with absolute locations
-	 * @return an list with all the ally robots
+	 * @return an list with all the ally {@link Robot robots}
 	 */
 	public ArrayList<Ally> getAllyRobotsInArea(FieldPoint[] argPoly) {
 		ArrayList<Ally> foundAllies = new ArrayList<Ally>();
@@ -371,7 +349,7 @@ public class World extends Observable {
 	 * @param argPoly
 	 *            the polygon in which the method looks for enemies, a point
 	 *            list with absolute locations
-	 * @return an list with all the enemy robots
+	 * @return an list with all the {@link Enemy enemies}
 	 */
 	public ArrayList<Enemy> getEnemyRobotsInArea(FieldPoint[] argPoly) {
 		ArrayList<Enemy> foundEnemies = new ArrayList<Enemy>();
@@ -384,12 +362,12 @@ public class World extends Observable {
 	}
 
 	/**
-	 * Method that retrieves all robots that are present within a zone
+	 * Method that retrieves all {@link Robot robots} that are present within a {@link FieldZone}
 	 * 
 	 * @param argPoly
-	 *            the polygon in which the method looks for robots, a point list
+	 *            the polygon in which the method looks for {@link Robot robots}, a {@link FieldPoint} list
 	 *            with absolute locations
-	 * @return an list with all the robots
+	 * @return an list with all the {@link Robot robots}
 	 */
 	public ArrayList<Robot> getAllRobotsInArea(FieldPoint... argPoly) {
 		ArrayList<Robot> foundRobots = new ArrayList<Robot>();
@@ -402,7 +380,7 @@ public class World extends Observable {
 	}
 
 	/**
-	 * Method that retrieves all allies that are present within a zone
+	 * Method that retrieves all allies that are present within a {@link FieldZone}
 	 * 
 	 * @param fieldZones
 	 *            array with all the zones where to look for robots
@@ -422,11 +400,11 @@ public class World extends Observable {
 	}
 
 	/**
-	 * Method that retrieves all enemies that are present within a zone
+	 * Method that retrieves all enemies that are present within a {@link FieldZone}
 	 * 
 	 * @param fieldZones
-	 *            array with all the zones where to look for robots
-	 * @return an list with all the found robots
+	 *            array with all the {@link FieldZone zones} where to look for {@link Robot robots}
+	 * @return an list with all the found {@link Robot robots}
 	 */
 	public ArrayList<Enemy> getEnemyRobotsInZones(ArrayList<FieldZone> fieldZones) {
 		ArrayList<Enemy> foundEnemies = new ArrayList<Enemy>();
@@ -443,12 +421,12 @@ public class World extends Observable {
 	}
 
 	/**
-	 * Method that locates an object and returns the field where the object is
+	 * Method that locates an {@link FieldObject} and returns the {@link Field} where the {@link FieldObject} is
 	 * (or null if not found)
 	 * 
 	 * @param fieldObject
 	 *            the object to locate
-	 * @return FieldZone where the given object is located
+	 * @return FieldZone where the given {@link FieldObject} is located
 	 */
 	public FieldZone locateFieldObject(FieldObject fieldObject) {
 		for (FieldZone fieldZone : FieldZone.values()) {
@@ -460,11 +438,11 @@ public class World extends Observable {
 	}
 
 	/**
-	 * Method that retrieves all robots that are present within given zones
+	 * Method that retrieves all {@link Robot robots} that are present within given {@link FieldZone zones}
 	 * 
 	 * @param fieldZones
-	 *            a list with FieldZones which have to be searched for robots
-	 * @return list containing all the found robots in the field zones
+	 *            a list with {@link FieldZone fieldzones} which have to be searched for {@link Robot robots}
+	 * @return list containing all the found {@link Robot robots} in the {@link FieldZone fieldzones} 
 	 */
 	public ArrayList<Robot> getAllRobotsInZones(ArrayList<FieldZone> fieldZones) {
 		ArrayList<Robot> foundRobots = new ArrayList<Robot>();
@@ -527,10 +505,8 @@ public class World extends Observable {
 	/**
 	 * a method that checks if a point falls within a polygon
 	 * 
-	 * @param argPoint
-	 *            the point
-	 * @param point
-	 *            [] the array with the locations of the polygon
+	 * @param argPoint the point
+	 * @param point [] the array with the locations of the polygon
 	 */
 	public boolean pointInPolygon(FieldPoint argPoint, FieldPoint[] areaPoly) {
 		boolean result = false;
@@ -546,19 +522,7 @@ public class World extends Observable {
 	}
 
 	/**
-	 * Returns the color of your own team. Suggestion: Rename to
-	 * getAllyTeamColor()
-	 * 
-	 * @Deprecated use Referee.getOwnTeamColor();
-	 * @return
-	 */
-	@Deprecated
-	public TeamColor getOwnTeamColor() {
-		return referee.getAllyTeamColor();
-	}
-
-	/**
-	 * Checks whether a ally has a free shot, will only be checked if the robot
+	 * Checks whether a {@link Robot} has a free shot, will only be checked if the {@link Robot}
 	 * is in one of the 6 center zones (due to accuracy) returns a
 	 * {@link FieldPoint} that represents the ideal shooting position Uses all
 	 * zones except for the 4 corners Uses a maximum of 5 obstacles
@@ -570,7 +534,7 @@ public class World extends Observable {
 	}
 
 	/**
-	 * Checks whether a ally has a free shot, will only be checked if the robot
+	 * Checks whether a {@link Robot} has a free shot, will only be checked if the  {@link Robot}
 	 * is in one of the 6 center zones (due to accuracy) returns a
 	 * {@link FieldPoint} that represents the ideal shooting position Uses all
 	 * zones except for the 4 corners
@@ -590,7 +554,7 @@ public class World extends Observable {
 	}
 
 	/**
-	 * Checks whether a ally has a free shot, will only be checked if the robot
+	 * Checks whether a {@link Robot} has a free shot, will only be checked if the {@link Robot}
 	 * is in one of the 6 center zones (due to accuracy) returns a
 	 * {@link FieldPoint} that represents the ideal shooting position
 	 * 
@@ -691,12 +655,9 @@ public class World extends Observable {
 	/**
 	 * Ensures all values are within given limits
 	 * 
-	 * @param map
-	 *            map that has to be processed
-	 * @param min
-	 *            minimum value
-	 * @param max
-	 *            maximum value
+	 * @param map map that has to be processed
+	 * @param min minimum value
+	 * @param max maximum value
 	 * @return map that honorers limits
 	 */
 	private TreeMap<Double, Double> minMax(TreeMap<Double, Double> map, double min, double max) {
@@ -711,11 +672,17 @@ public class World extends Observable {
 	}
 
 	/**
-	 * "inverts" a TreeMap, example: Y1 | Y2 16 | 100 120 | 130 returns: Y1 | Y2
-	 * 100 | 120
+	 * "inverts" a TreeMap, example:  <br>
+	 *  Y1 | Y2 <br>
+	 *  16 | 100  <br>
+	 * 120 | 130  <br><br>
+	 * 
+	 * returns: <br>
+	 *  Y1 | Y2 <br>
+	 * 100 | 120 <br>
 	 * 
 	 * @param map
-	 * @return
+	 * @return inverted map
 	 */
 	private TreeMap<Double, Double> invertMap(TreeMap<Double, Double> map) {
 		TreeMap<Double, Double> invertedMap = new TreeMap<Double, Double>();
@@ -733,11 +700,16 @@ public class World extends Observable {
 	}
 
 	/**
-	 * Merges a TreeMap that has overlapping values, example Y1 | Y2 16 | 100 80
-	 * | 130 will return: Y1 | Y2 16 | 130
+	 * Merges a TreeMap that has overlapping values, example  <br>
+	 * Y1 | Y2 <br>
+	 * 16 | 100 <br>
+	 * 80 | 130 <br> <br>
 	 * 
-	 * @param map
-	 *            to be processed
+	 * will return:  <br>
+	 * Y1 | Y2 <br>
+	 * 16 | 130 <br>
+	 * 
+	 * @param map to be processed
 	 * @return processed map
 	 */
 	private TreeMap<Double, Double> mergeOverlappingValues(TreeMap<Double, Double> map) {

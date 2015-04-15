@@ -1,8 +1,15 @@
 package robocup.model;
-
+/**
+ * Enemy instance of {@link Robot}<br>
+ * Used for differentiating teams without lookups and interference of {@link World}
+ */
 public class Enemy extends Robot {
-	public Enemy(int robotID, boolean isKeeper, double height) {
-		super(robotID, isKeeper, height);
+	/**
+	 * @param robotID	reference ID for the robot
+	 * @param height	height of the robot
+	 */
+	public Enemy(int robotID, double height) {
+		super(robotID, height);
 	}
 
 	@Override
