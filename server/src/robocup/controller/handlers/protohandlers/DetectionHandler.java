@@ -13,7 +13,9 @@ import robocup.model.Robot;
 import robocup.model.Team;
 import robocup.model.World;
 import robocup.model.enums.TeamColor;
-
+/**
+ * Handler for {@link SSL_DetectionFrame} messages, will process all {@link Robot Robots} and {@link Ball Balls}
+ */
 public class DetectionHandler {
 
 	private World world;
@@ -24,6 +26,10 @@ public class DetectionHandler {
 	Kalman enemyFilter[] = new Kalman[12];
 	Kalman ballFilter;
 
+	/**
+	 * Constructs detectionhandler. Also initiates {@link Kalman} filter for the {@link Ball}
+	 * @param world
+	 */
 	public DetectionHandler(World world) {
 		this.world = world;
 		Ball b = world.getBall();
@@ -75,8 +81,8 @@ public class DetectionHandler {
 	/**
 	 * call update for every robot in the message
 	 * 
-	 * @param blueList
-	 * @param yellowList
+	 * @param blueList		list with every {@link SSL_DetectionRobot} in blue team
+	 * @param yellowList	list with every {@link SSL_DetectionRobot} in yellow team
 	 */
 	public void processRobots(List<SSL_DetectionRobot> blueList, List<SSL_DetectionRobot> yellowList, double time,
 			int camNo) {
@@ -124,7 +130,7 @@ public class DetectionHandler {
 	}
 
 	/**
-	 * Updates position of existing robot or creates it.
+	 * Updates position of existing robot
 	 * 
 	 * @param color
 	 *            of the robot, to determine team.
@@ -144,11 +150,7 @@ public class DetectionHandler {
 
 		Robot robot = t.getRobotByID(robotMessage.getRobotId());
 
-// 		TODO remove this section, 
-// 		 is deprecated because team members are initialized at the start,
-// 		 and aren' t removed anymore
- 		 
- 		 
+		//add robot to filter if not so already
 		if (allyFilter[robotMessage.getRobotId()] == null) { // Create robot object
 			if (world.getReferee().getAllyTeamColor().equals(color)) {
 				for (int id : validRobotIDs) {
@@ -157,6 +159,7 @@ public class DetectionHandler {
 						// if the robot is validated add it to the ally's list
 						FieldPoint p = new FieldPoint(robotMessage.getX(), robotMessage.getY());
 						allyFilter[id] = new Kalman(p, 0, 0);
+						break;
 					}
 				}
 			} else {
