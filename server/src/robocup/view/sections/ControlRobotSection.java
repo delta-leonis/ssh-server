@@ -12,9 +12,6 @@ import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.Main;
-import robocup.controller.ai.movement.GotoPosition;
-import robocup.model.Ally;
-import robocup.model.FieldPoint;
 import robocup.output.ComInterface;
 import robocup.view.GUI;
 import robocup.view.SectionBox;
