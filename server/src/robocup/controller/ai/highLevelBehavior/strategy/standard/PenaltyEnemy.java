@@ -2,6 +2,8 @@ package robocup.controller.ai.highLevelBehavior.strategy.standard;
 
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.model.FieldPoint;
+import robocup.model.World;
+import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
 
 public class PenaltyEnemy extends Strategy {
@@ -20,8 +22,10 @@ public class PenaltyEnemy extends Strategy {
 	}
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
-		// TODO Auto-generated method stub
-		
+		if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
+			zonesForRole.put(RobotMode.COUNTER, FieldZone.WEST_MIDDLE);
+		} else {
+			zonesForRole.put(RobotMode.COUNTER, FieldZone.EAST_MIDDLE);
+		}	
 	}
-
 }
