@@ -10,7 +10,9 @@ import robocup.model.World;
 
 /**
  * Pathplanner class based on Dijkstra's algorithm
- * Converts model to a graph, find shortest path between two vertices using getRoute
+ * Converts model to a graph and finds shortest path between two vertices using getRoute.
+ * If the source or destination are too close to any other object, the planner will make 
+ * a small detour around the source or destination.
  */
 public class DijkstraPathPlanner {
 
@@ -245,7 +247,6 @@ public class DijkstraPathPlanner {
 	
 			// add positions to the route list
 			Vertex u = dest;
-	//		for(int i = 0; i < 50 && u.getPrevious() != null; i++) {
 			while (u.getPrevious() != null) {
 				route.push(u.getPosition());
 				u = u.getPrevious();
@@ -380,10 +381,10 @@ public class DijkstraPathPlanner {
 	}
 	
 	/**
-	 * checker method that returns if the robot is not placed in the danger zone of another robot
+	 * Checker method that returns if the robot is not placed in the danger zone of another robot
 	 * @param source the original position vertex
 	 * @param destination the destination position vertex
-	 * @return
+	 * @return true if the vertex is allowed to exist here, false otherwise.
 	 */
 	protected boolean isValidPosition(Vertex source, Vertex destination){
 		for(Rectangle2D rect : objects){
@@ -403,8 +404,8 @@ public class DijkstraPathPlanner {
 	}
 	
 	/**
-	 * a function that removes all vectors in the given rectangle
-	 * @param rect
+	 * Function that removes all vectors in the given rectangle
+	 * @param rect The area in which the vectors need to be removed.
 	 */
 	protected void removeAllVectorsInRect(Rectangle2D rect){
 		ArrayList<Vertex> removeVertices = new ArrayList<Vertex>();
@@ -417,10 +418,9 @@ public class DijkstraPathPlanner {
 	}
 
 	/**
-	 * Calculate the path
-	 * @param source first vertex on the path
-	 * @param u helper vertex, contains the vertex closest to the previously evaluated vertex
-	 * @param dest destination
+	 * Calculate the path based on Dijkstra's algorithm.
+	 * @param source A {@link Vertex} representing the source.
+	 * @param dest A {@link Vertex} of the destination.
 	 */
 	private void calculatePath(Vertex source, Vertex dest) {
 		Vertex u = source;
@@ -449,9 +449,9 @@ public class DijkstraPathPlanner {
 	
 
 	/**
-	 * Get the closest neighbour for the vertex u
-	 * @param u the vertex
-	 * @return closest neighbour vertex
+	 * Get the closest {@link Vertex} neighbor to the given {@link Vertex} u.
+	 * @param u The {@link Vertex} we want the closest neighbor to.
+	 * @return The closest {@link Vertex} neighbour to the given {@link Vertex}.
 	 */
 	private Vertex getMinDistNeighbour(Vertex u) {
 		double minDist = Double.MAX_VALUE;
@@ -469,9 +469,11 @@ public class DijkstraPathPlanner {
 	}
 
 	/**
-	 * check if a vertex has been used already
-	 * @param v the vertex
-	 * @return true when v is not present in the list of open vertices
+	 * Check if a {@link Vertex} has been used already.
+	 * {@link Vertex Vertices} get removed while the path is being calculated.
+	 * @param v The {@link Vertex} of which we want to know whether it has been used or not.
+	 * @return true if v is not present in the list of open vertices, false otherwise.
+	 * @see {@link DijkstraPathPlanner#calculatePath(Vertex, Vertex) calculatePath(Source, Destination)}
 	 */
 	private boolean isVertexClosed(Vertex v) {
 		for (Vertex u : vertices)
@@ -487,7 +489,9 @@ public class DijkstraPathPlanner {
 	 * WARNING: documentation for Rectangle2D.Double states the upper left corner should be specified,
      * use lower left corner instead
      * 
-	 * @param robotId the robot id of the robot who needs a path, no rectangle will be created for this robot
+	 * @param robotId 	the robot id of the {@link robocup.model.Robot Robot} who needs a path, 
+	 * 					no rectangle will be created for this robot in this function. 
+	 * 					This rectangle might be created in {@link DijkstraPathPlanner#setupSource(FieldPoint) setupSouce()}.
 	 */
 	protected void generateObjectList(int robotId) {
 		objects.clear();
@@ -523,10 +527,10 @@ public class DijkstraPathPlanner {
 	}
 	
 	/**
-	 * checker method that checks if the rectangle around the given point belongs to a non removable vertex
-	 * @param x center x position of the rectangle
-	 * @param y center y position of the rectanlge
-	 * @return
+	 * Checker method that checks if the rectangle around the given point belongs to a non removable vertex
+	 * @param x X value of the center of the given rectangle
+	 * @param y Y value of the center of the given rectangle
+	 * @returns true if the given center of the rectangle belongs to a not removable vertex. False otherwise.
 	 */
 	protected boolean isObjectNotRemovable(double x, double y) {
 		for(Vertex vertex : notRemovableVertices){
@@ -562,19 +566,16 @@ public class DijkstraPathPlanner {
 	}
 
 	/**
-	 * Get the distance between 2 vertices
-	 * @param vertex1
-	 * @param vertex2
-	 * @return distance
+	 * @returns the distance between the two given {@link Vertex vertices}.
 	 */
 	private double getDistance(Vertex vertex1, Vertex vertex2) {
 		return vertex1.getPosition().getDeltaDistance(vertex2.getPosition());
 	}
 
 	/**
-	 * calculate if there's an object between two vertices
-	 * @param source
-	 * @param destination
+	 * Calculate whether there's an object between two vertices
+	 * @param source The source {@link Vertex}
+	 * @param destination The destination {@link Vertex}
 	 * @return true when an object is found between the vertices
 	 */
 	protected boolean intersectsObject(Vertex source, Vertex destination) {
@@ -587,9 +588,9 @@ public class DijkstraPathPlanner {
 	}
 	
 	/**
-	 * checker method that checks if the given point is within a object
-	 * @param p point
-	 * @return true if point is in an object
+	 * Checker method that checks if the given rectangle intersects with any of the other rectangles.
+	 * @param r {@link Rectangle2D} we want to test for.
+	 * @return true if the {@link Rectangle2D} intersects with a rectangle on the field, false otherwise.
 	 */
 	protected boolean isInsideObject(Rectangle2D r) {
 		for(Rectangle2D rect : objects) {
@@ -600,15 +601,15 @@ public class DijkstraPathPlanner {
 	}
 
 	/**
-	 * method that returns a copy of the vertices
-	 * @return
+	 * Method that returns a copy of the vertices
+	 * @returns a copy of the {@link Vertex vertices}.
 	 */
 	public ArrayList<Vertex> getTestVertices() {
 		return testVertices;
 	}
 
 	/**
-	 * getter functions that returns all current objects
+	 * Getter function that returns all current {@link Rectangle2D rectangles}
 	 * @return all objects in the arraylist objects
 	 */
 	public ArrayList<Rectangle2D> getObjects() {
