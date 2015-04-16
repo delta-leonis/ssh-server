@@ -53,6 +53,7 @@ public class Field {
 		} catch (IOException | NullPointerException e) {
 			Logger.getLogger(Main.class.getName()).warning("Properties file is not correct");
 		}
+		Logger.getLogger(Main.class.getName()).info("Field is initialized");
 	}
 	
 	public void update(int lineWidth, int fieldLength, int fieldWidth, int boundaryWidth, int refereeWidth,

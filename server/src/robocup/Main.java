@@ -16,7 +16,6 @@ import javax.swing.JFrame;
 import robocup.controller.handlers.protohandlers.MainHandler;
 import robocup.input.RefereeClient;
 import robocup.input.SSLVisionClient;
-import robocup.model.Field;
 import robocup.model.World;
 import robocup.model.enums.TeamColor;
 
@@ -30,7 +29,6 @@ public class Main {
 
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private static Level debugLevel = Level.WARNING;
-	private static String fieldConfigName = "config/field.properties";
 	private static String teamConfig = "config/teams.properties";
 	private static String protobufConfig = "config/config.properties";
 
@@ -39,8 +37,6 @@ public class Main {
 		LOGGER.info("Program started");
 		initView();
 		LOGGER.info("View initialized");
-		initField();
-		LOGGER.info("Field initialized");
 		initTeams();
 		LOGGER.info("Teams initialized");
 		initProtoBuffClients();
@@ -76,67 +72,6 @@ public class Main {
 		World.getInstance().setGUI(new robocup.view.GUI());
 		World.getInstance().getGUI().setVisible(true);
 		World.getInstance().getGUI().setExtendedState(World.getInstance().getGUI().getExtendedState() | JFrame.MAXIMIZED_BOTH);
-	}
-
-	/**
-	 * Initialize the field using fieldConfigName
-	 * 
-	 */
-	public static void initField() {
-		Properties configFile = new Properties();
-		try {
-			configFile.load(new FileInputStream(fieldConfigName));
-			Field playingField = World.getInstance().getField();
-			
-			// The model always initializes its own subclasses, starting with default values
-			// All these lose variables should normally be "encapsulated" by a subclass
-			int fieldWidth = 
-					Integer.parseInt(configFile.getProperty("width"));
-			int fieldLength = 
-					Integer.parseInt(configFile.getProperty("length"));
-			int fieldLineWidth = 
-					Integer.parseInt(configFile.getProperty("lineWidth")); 
-			int fieldBoundaryWidth = 
-					Integer.parseInt(configFile.getProperty("boundaryWidth"));
-			int fieldRefereeWidth = 
-					Integer.parseInt(configFile.getProperty("refereeWidth"));
-			
-			int fieldCenterCircleRadius = 
-					Integer.parseInt(configFile.getProperty("centerCircleRadius"));
-			int fieldDefenceRadius = 
-					Integer.parseInt(configFile.getProperty("defenceRadius"));
-			int fieldDefenceStretch = 
-					Integer.parseInt(configFile.getProperty("defenceStretch"));
-			
-			int fieldFreeKickFromDefenceDistance = 
-					Integer.parseInt(configFile.getProperty("freeKickFromDefenceDistance"));
-			int fieldPenaltySpotFromFieldLineDistance = 
-					Integer.parseInt(configFile.getProperty("penaltySpotFromFieldLineDistance")); 
-			int fieldPenaltyLineFromSpotDistance = 
-					Integer.parseInt(configFile.getProperty("penaltyLineFromSpotDistance"));
-			
-			int fieldGoalWidth = 
-					Integer.parseInt(configFile.getProperty("goalWidth"));
-			int fieldGoalDepth = 
-					Integer.parseInt(configFile.getProperty("goalDepth"));
-			int fieldGoalWallWidth = 
-					Integer.parseInt(configFile.getProperty("goalWallWidth"));
-			int fieldGoalHeight = 
-					Integer.parseInt(configFile.getProperty("goalHeight"));
-			
-			int fieldCameraOverlapZoneWidth = 
-					Integer.parseInt(configFile.getProperty("cameraOverlapZoneWidth"));
-
-			playingField.setFieldProportions(fieldWidth, fieldLength, fieldLineWidth, fieldBoundaryWidth, fieldRefereeWidth);
-			playingField.setFieldZones(fieldCenterCircleRadius, fieldDefenceRadius, fieldDefenceStretch);
-			playingField.setRuleDistances(fieldFreeKickFromDefenceDistance, fieldPenaltySpotFromFieldLineDistance, fieldPenaltyLineFromSpotDistance);
-			playingField.setGoalProportions(fieldGoalWidth, fieldGoalDepth, fieldGoalWallWidth, fieldGoalHeight);
-			playingField.setCameraOverlapZoneWidth(fieldCameraOverlapZoneWidth);
-			
-		} catch (IOException e) {
-			LOGGER.severe("Field config cannot be read, please make sure the fieldConfig file exist and is correctly set");
-			System.exit(1);
-		}
 	}
 
 	/**
