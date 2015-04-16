@@ -4,15 +4,20 @@ import java.util.ArrayList;
 
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.controller.ai.lowLevelBehavior.Attacker;
+import robocup.controller.ai.lowLevelBehavior.Counter;
 import robocup.controller.ai.lowLevelBehavior.Coverer;
+import robocup.controller.ai.lowLevelBehavior.Disturber;
+import robocup.controller.ai.lowLevelBehavior.GoalPostCoverer;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
+import robocup.controller.ai.lowLevelBehavior.PenaltyKeeper;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Ally;
 import robocup.model.Ball;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.World;
+import robocup.model.enums.FieldZone;
 import robocup.output.ComInterface;
 
 public abstract class Mode {
@@ -76,20 +81,121 @@ public abstract class Mode {
 		case ATTACKER:
 			handleAttacker(executer);
 			break;
+		case COUNTER:
+			handleCounter(executer);
+			break;
 		case COVERER:
 			handleCoverer(executer);
+			break;
+		case DISTURBER:
+			handleDisturber(executer);
+			break;
+		case DISTURBER_COVERER:
+			FieldZone ballZone = world.locateFieldObject(ball);
+			FieldZone robotZone = world.locateFieldObject(executer.getRobot());
+			if(ballZone.equals(robotZone))
+				handleDisturber(executer);
+			else
+				handleCoverer(executer);
+			break;
+		case GOALPOSTCOVERER:
+			handleGoalPostCoverer(executer);
+			break;
+		case KEEPER:
+			handleKeeper(executer);
 			break;
 		case KEEPERDEFENDER:
 			handleKeeperDefender(executer);
 			break;
-		case KEEPER:
-			handleKeeper(executer);
+		case KEEPERDEFENDER_COVERER:
+			if((ball.getPosition().getY() > 0 && executer.getRobot().getPosition().getY() > 0)
+				|| (ball.getPosition().getY() <= 0 && executer.getRobot().getPosition().getY() <= 0))
+				handleKeeperDefender(executer);
+			else
+				handleCoverer(executer);
+			break;
+		case PENALTYKEEPER:
+			handlePenaltyKeeper(executer);
+			break;
+		case RUNNER:
 			break;
 		default:
 			System.out.println("Role used without handle function, please add me in Mode.java, role: "
 					+ ((Ally) executer.getRobot()).getRole());
 		}
 	}
+	/**
+	 * Handle the behavior of the Penalty Keeper.
+	 * A new Penalty Keeper behavior will be created if the current lowlevel behavior is not an Penalty Keeper.
+	 * Update the values of the Penalty Keeper afterwards.
+	 * @param executer the executer which needs to be handled
+	 */
+	private void handlePenaltyKeeper(RobotExecuter executer) {
+		if (!(executer.getLowLevelBehavior() instanceof Counter))
+			executer.setLowLevelBehavior(new PenaltyKeeper(executer.getRobot(), null, null, 0));
+		updatePenaltyKeeper(executer);
+	}
+
+	/**
+	 * Update the values of the Penalty Keeper behavior belonging to the executer.
+	 * @param executer the executer to update
+	 */
+	protected abstract void updatePenaltyKeeper(RobotExecuter executer);
+
+	/**
+	 * Handle the behavior of the GoalPost Coverer.
+	 * A new GoalPost Coverer behavior will be created if the current lowlevel behavior is not an GoalPost Coverer.
+	 * Update the values of the GoalPost Coverer afterwards.
+	 * @param executer the executer which needs to be handled
+	 */
+	private void handleGoalPostCoverer(RobotExecuter executer) {
+		if (!(executer.getLowLevelBehavior() instanceof Counter))
+			executer.setLowLevelBehavior(new GoalPostCoverer(executer.getRobot(), null, null));
+		updateGoalPostCoverer(executer);
+	}
+
+	/**
+	 * Update the values of the GoalPost Coverer behavior belonging to the executer.
+	 * @param executer the executer to update
+	 */
+	protected abstract void updateGoalPostCoverer(RobotExecuter executer);
+	
+	/**
+	 * Handle the behavior of the Disturber.
+	 * A new Disturber behavior will be created if the current lowlevel behavior is not an Disturber.
+	 * Update the values of the Disturber afterwards.
+	 * @param executer the executer which needs to be handled
+	 */
+	private void handleDisturber(RobotExecuter executer) {
+		if (!(executer.getLowLevelBehavior() instanceof Counter))
+			executer.setLowLevelBehavior(new Disturber(executer.getRobot(), 0, false, null, null));
+		updateDisturber(executer);
+	}
+
+	/**
+	 * Update the values of the Disturber behavior belonging to the executer.
+	 * @param executer the executer to update
+	 */
+	protected abstract void updateDisturber(RobotExecuter executer);
+
+	/**
+	 * Handle the behavior of the Counter.
+	 * A new Counter behavior will be created if the current lowlevel behavior is not an Counter.
+	 * Update the values of the Counter afterwards.
+	 * @param executer the executer which needs to be handled
+	 */
+	private void handleCounter(RobotExecuter executer) {
+		if (!(executer.getLowLevelBehavior() instanceof Counter))
+			executer.setLowLevelBehavior(new Counter(executer.getRobot(), null, null, null));
+		updateCounter(executer);
+	}
+
+	/**
+	 * Update the values of the Counter behavior belonging to the executer.
+	 * @param executer the executer to update
+	 */
+	protected abstract void updateCounter(RobotExecuter executer);
+	
 
 	/**
 	 * Handle the behavior of the Attacker.

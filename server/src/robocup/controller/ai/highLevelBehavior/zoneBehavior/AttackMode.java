@@ -84,4 +84,28 @@ public class AttackMode extends Mode {
 
 		keeper.update(distanceToGoal, goToKick, ball.getPosition());
 	}
+
+	@Override
+	protected void updatePenaltyKeeper(RobotExecuter executer) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void updateGoalPostCoverer(RobotExecuter executer) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void updateDisturber(RobotExecuter executer) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void updateCounter(RobotExecuter executer) {
+		// TODO Auto-generated method stub
+		
+	}
 }
