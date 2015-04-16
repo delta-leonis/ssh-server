@@ -27,8 +27,8 @@ import robocup.view.sections.VisibleRobotSection;
 import robocup.view.sections.RotateRobotSection;
 
 /**
- * Main GUI for controlling en monitoring the robots<br>
- * The overal used Layout is a {@link MigLayout} for easier resizing,
+ * Main GUI for controlling and monitoring the robots<br>
+ * The Layout that is used everywhere is a {@link MigLayout} for easier resizing,
  * and an easier way to implement modular sections.
  *
  */
@@ -64,7 +64,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Tries to set the "nimbus" {@link LookAndFeel} to the {@link UIManager}
+	 * Tries to set the "Nimbus" {@link LookAndFeel} to the {@link UIManager}
 	 */
 	private void setLookAndFeel() {
 		try {

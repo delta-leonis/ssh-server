@@ -36,6 +36,7 @@ public class FieldPanel extends JPanel {
 	
 	private boolean showFreeShot;
 	private boolean showRaster;
+	private boolean showRobots;
 
 	/**
 	 * Constructor of {@link FieldPanel}. The panel size is set and the mouseListener is added for 
@@ -84,12 +85,13 @@ public class FieldPanel extends JPanel {
 
 		double ratio = (double)((SwingUtilities.getWindowAncestor(this)).getWidth() - spaceBufferX * 2)
 				/ (double)FIELDWIDTH;
-		
+
+		drawRaster(g, ratio);
 		for (FieldZone fieldZone : FieldZone.values())
 			drawZone(g, fieldZone, ratio);
 		drawPlayfield(g, ratio);
 		drawFreeShot(g, ratio);
-		drawRaster(g, ratio);
+		drawRobots(g, ratio);
 	}
 
 	/**
@@ -173,6 +175,9 @@ public class FieldPanel extends JPanel {
 		g2.drawArc(width - ((int) (world.getField().getPenaltyLineFromSpotDistance() * ratio)) + spaceBufferX - 1,
 				(int) ((new FieldPoint(0, 0)).toGUIPoint(ratio).getY()) + spaceBufferY - 1, 3, 3, 0, 360);
 
+		// center spot
+		g2.drawArc(width / 2 + spaceBufferX - 1, height / 2 + spaceBufferY - 1, 3, 3, 0, 360);
+
 		// goals
 		g2.setStroke(new BasicStroke(10));
 		g2.drawLine((int) world.getField().getWestGoal().getFrontSouth().toGUIPoint(ratio).getX() + spaceBufferX - 5,
@@ -185,8 +190,12 @@ public class FieldPanel extends JPanel {
 				(int) world.getField().getEastGoal().getFrontNorth().toGUIPoint(ratio).getY() + spaceBufferY);
 	}
 
+	/**
+	 * Toggles the boolean {@link FieldPanel#showFreeShot} and repaints.
+	 */
 	public void toggleShowFreeShot() {
 		showFreeShot = !showFreeShot;
+		repaint();
 	}
 
 	private void drawFreeShot(Graphics g, double ratio2) {
@@ -195,13 +204,50 @@ public class FieldPanel extends JPanel {
 		// TODO draw free shot
 	}
 
+	/**
+	 * Toggles the boolean {@link FieldPanel#showFreeShot} and repaints.
+	 */
 	public void toggleShowRaster() {
 		showRaster = !showRaster;
+		repaint();
 	}
 
-	private void drawRaster(Graphics g, double ratio2) {
-		if(!showRaster)
+	/**
+	 * Draws a raster all over the {@link FieldPanel}. The raster size in cm is displayed in the left top of the {@link FieldPanel}.
+	 * @param g {@link Graphics} to draw to
+	 * @param ratio A {@link double} indicating the ratio for the sizing. (Screen width / real width)
+	 */
+	private void drawRaster(Graphics g, double ratio) {
+		if (!showRaster)
 			return;
-		// TODO draw raster
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setStroke(new BasicStroke(1));
+		g2.setColor(new Color(0, 140, 0));
+
+		double width = (double) FIELDWIDTH * ratio;
+		double height = (double) FIELDHEIGHT * ratio;
+		double rasterSize = width / 16.0;
+
+		for (double x = spaceBufferX - 5 * rasterSize; x < getWidth() + spaceBufferX; x += rasterSize)
+			g2.drawLine((int) x, 0, (int) x, getHeight());
+
+		for (double y = height / 2 + spaceBufferY; y > 0; y -= rasterSize)
+			g2.drawLine(0, (int) y, getWidth(), (int) y);
+
+		for (double y = height / 2 + spaceBufferY; y < getHeight(); y += rasterSize)
+			g2.drawLine(0, (int) y, getWidth(), (int) y);
+
+		g2.setColor(Color.WHITE);
+		String sizeDesc = String.format("rastersize: %.1fcm", (double) FIELDWIDTH / 16.0 / 10.0);
+		g2.drawString(sizeDesc, getHeight() / 10 + 5 - sizeDesc.length() * 7 / 2, 30);
+	}
+
+	public void toggleShowRobots() {
+		showRobots = !showRobots;
+		repaint();
+	}
+
+	private void drawRobots(Graphics g, double ratio2) {
+		// TODO draw robots
 	}
 }
