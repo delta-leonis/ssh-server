@@ -7,7 +7,7 @@ import robocup.model.enums.Stage;
 import robocup.model.enums.TeamColor;
 
 /**
- * Model representation of the "game", including the teams and rules
+ * Model representation of the game, including the teams and rules
  */
 public class Referee {
 
@@ -27,7 +27,7 @@ public class Referee {
 	private Team westTeam;
 
 	/**
-	 * constructor that initializes the default values, takes no argument
+	 * Constructor that initializes the default values, takes no argument
 	 * most variables remain undeclared
 	 */
 	public Referee() {

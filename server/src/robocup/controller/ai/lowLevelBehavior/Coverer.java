@@ -8,7 +8,7 @@ import robocup.model.enums.RobotMode;
 import robocup.output.ComInterface;
 
 /**
- * Describes the low-level behaviour for a Coverer robot.
+ * Describes the low-level behavior for a Coverer robot.
  * These Robots attempt to interrupt the enemy by getting in between the enemy {@link Robot} and the {@link Ball}
  */
 public class Coverer extends LowLevelBehavior {

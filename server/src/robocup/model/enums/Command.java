@@ -2,7 +2,8 @@ package robocup.model.enums;
 
 /**
  * A number of commands that will be send by the Referee during a match,
- * For documentation see "Eindverslag versie 1.0.pdf" chapter "6.7 Referee". Also see {@link robocup.input.protobuf.Referee Referee}
+ * For documentation see "Eindverslag versie 1.0.pdf" chapter "6.7 Referee". 
+ * @see {@link robocup.input.protobuf.Referee Referee}
  */
 public enum Command {
 	HALT,

@@ -2,7 +2,8 @@ package robocup.model.enums;
 
 /**
  * Describes different Stages a game can have.<br>
- * For documentation see "Eindverslag versie 1.0.pdf" chapter "6.7 Referee", and see {@link robocup.input.protobuf.Referee Referee}
+ * For documentation see "Eindverslag versie 1.0.pdf" chapter "6.7 Referee".
+ * @see {@link robocup.input.protobuf.Referee Referee}
  */
 public enum Stage {
 	NORMAL_FIRST_HALF_PRE,

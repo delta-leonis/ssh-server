@@ -8,18 +8,18 @@ public class Goal {
 	private FieldPoint frontSouth;
 	private FieldPoint backNorth;
 	private FieldPoint backSouth;
-	private int wallWidth; //Goal posts are outside the defined goal area
-	private int height;
+	private double wallWidth; //Goal posts are outside the defined goal area
+	private double height;
 
 	/**
-	 * @param frontNorth	most north point on facing the field
-	 * @param frontSouth	most south point on facing the field
-	 * @param backNorth		most north point on facing away from the field
-	 * @param backSouth		most south point on facing away from the field
+	 * @param frontNorth	most northern point of the goal facing the field
+	 * @param frontSouth	most southern point of the goal facing the field
+	 * @param backNorth		most northern point of the goal facing away from the field
+	 * @param backSouth		most southern point of the goal facing away from the field
 	 * @param wallWidth		width of the posts
 	 * @param height		height of the goal
 	 */
-	public Goal(FieldPoint frontNorth, FieldPoint frontSouth, FieldPoint backNorth, FieldPoint backSouth, int wallWidth, int height) {
+	public Goal(FieldPoint frontNorth, FieldPoint frontSouth, FieldPoint backNorth, FieldPoint backSouth, double wallWidth, double height) {
 		this.frontNorth = frontNorth;
 		this.frontSouth = frontSouth;
 		this.backNorth = backNorth;
@@ -36,84 +36,86 @@ public class Goal {
 	}
 
 	/**
-	 * @return the wallWidth
+	 * @return the width of the posts in millimeters
 	 */
-	public int getWallWidth() {
+	public double getWallWidth() {
 		return wallWidth;
 	}
 
 	/**
-	 * @param wallWidth the wallWidth to set
+	 * Sets the width of the posts.
+	 * @param wallWidth The width of the posts in millimeters
 	 */
-	public void setWallWidth(int wallWidth) {
+	public void setWallWidth(double wallWidth) {
 		this.wallWidth = wallWidth;
 	}
 
 	/**
-	 * @return the height
+	 * @return the height of the goal in millimeters.
 	 */
-	public int getHeight() {
+	public double getHeight() {
 		return height;
 	}
 
 	/**
-	 * @param height the height to set
+	 * Sets the height of the goal.
+	 * @param height The height of the goal in millimeters.
 	 */
-	public void setHeight(int height) {
+	public void setHeight(double height) {
 		this.height = height;
 	}
 
 	/**
-	 * @return the frontNorth
+	 * @return the most northern point of the goal facing the field
 	 */
 	public FieldPoint getFrontNorth() {
 		return frontNorth;
 	}
 
 	/**
-	 * @param frontNorth the frontNorth to set
+	 * @param frontNorth the most northern point of the goal facing the field
 	 */
 	public void setFrontNorth(FieldPoint frontNorth) {
 		this.frontNorth = frontNorth;
 	}
 
 	/**
-	 * @return the frontSouth
+	 * @return the most southern point of the goal facing the field
 	 */
 	public FieldPoint getFrontSouth() {
 		return frontSouth;
 	}
 
 	/**
-	 * @param frontSouth the frontSouth to set
+	 * @param frontSouth the most southern point of the goal facing the field
 	 */
 	public void setFrontSouth(FieldPoint frontSouth) {
 		this.frontSouth = frontSouth;
 	}
 
 	/**
-	 * @return the backNorth
+	 * @return the most northern point of the goal facing away from the field
 	 */
 	public FieldPoint getBackNorth() {
 		return backNorth;
 	}
 
 	/**
-	 * @param backNorth the backNorth to set
+	 * @param backNorth the most northern point of the goal facing away from the field
 	 */
 	public void setBackNorth(FieldPoint backNorth) {
 		this.backNorth = backNorth;
 	}
 
 	/**
-	 * @return the backSouth
+	 * @return the most southern point of the goal facing away from the field
 	 */
 	public FieldPoint getBackSouth() {
 		return backSouth;
 	}
 
 	/**
-	 * @param backSouth the backSouth to set
+	 * @param backSouth the most southern point of the goal facing away from the field
 	 */
 	public void setBackSouth(FieldPoint backSouth) {
 		this.backSouth = backSouth;

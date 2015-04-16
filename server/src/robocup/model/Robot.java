@@ -9,13 +9,13 @@ public abstract class Robot extends FieldObject {
 	public static final int DIAMETER = 180;	//In millimeters.
 	private int robotId;
 	/**
-	 * orientation is in degrees<br>
-	 * directions for refference: 0 = EAST, 90 = NORTH, 180 = WEST, -90 = SOUTH
+	 * Orientation is in degrees<br>
+	 * Directions for reference: 0 = EAST, 90 = NORTH, 180 = WEST, -90 = SOUTH
 	 */
 	private double orientation;
 	private double height;
 	/** 
-	 * a robot is onsight when it is being seen by a camera
+	 * A robot is on sight if the camera currently detects it.
 	 */
 	private boolean onSight;
 	private boolean visible = true;		//true = visible in the GUI
@@ -32,14 +32,14 @@ public abstract class Robot extends FieldObject {
 	}
 
 	/**
-	 * @return if the robot should be visible on the GUI
+	 * @return whether the robot should be visible on the GUI
 	 */
 	public boolean isVisible(){
 		return visible;
 	}
 	
 	/**
-	 * @param whether to show the robot 
+	 * @param True if the robot should be visible in the GUI, false otherwise.
 	 */
 	public void setVisible(boolean _visible){
 		visible = _visible;

@@ -87,28 +87,28 @@ public class FieldPoint {
 	}
 
 	/**
-	 * @return the x co-ordinate of this {@link FieldPoint}
+	 * @return the x co-ordinate of this {@link FieldPoint} in millimeters
 	 */
 	public double getX() {
 		return x;
 	}
 
 	/**
-	 * @param x the x co-ordinate to set for this {@link FieldPoint}
+	 * @param x the x co-ordinate to set for this {@link FieldPoint} in millimeters
 	 */
 	public void setX(double x) {
 		this.x = x;
 	}
 
 	/**
-	 * @return the y co-ordinate of this {@link FieldPoint}
+	 * @return the y co-ordinate of this {@link FieldPoint} in millimeters
 	 */
 	public double getY() {
 		return y;
 	}
 
 	/**
-	 * @param y the y co-ordinate to set for this {@link FieldPoint}
+	 * @param y the y co-ordinate to set for this {@link FieldPoint} in millimeters
 	 */
 	public void setY(double y) {
 		this.y = y;
