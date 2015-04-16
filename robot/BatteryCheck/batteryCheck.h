@@ -42,11 +42,6 @@ public:
     batteryCheck(PinName batteryPin);
 
     /**
-        Destructor
-    */
-    ~batteryCheck();
-
-    /**
         Gets the battery voltage
 
         @return the battery voltage

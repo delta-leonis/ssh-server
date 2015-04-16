@@ -78,7 +78,7 @@ void kickThread(void const *args);
 void checkBatteryVoltageThread(void const *args);
 void showDebugInformation();
 void showPacketDebug(RobotPacket *packet,bool checksumCheck,int checksum,int rxDataCnt);
-int getWifiChannel(char channel);
+int getFrequency(char channel);
 void turnOffSolenoids(void);
 
 
@@ -87,7 +87,7 @@ int packetsize          = 16;                               // packetsize used f
 int actualSize          = 11;                               // The amount of bytes of data we'll be receiving. Change this variable when adding arguments to packet. 
 int datarate            = NRF24L01P_DATARATE_2_MBPS;        // datarate used for NRF communications
 int frequency           = 2525;                             // frequency used for NRF communications
-int robotID             = 0x1;                              // hardcoded robotID (NOTE: This must be changed to a dynamic ID controlled from server)
+int robotID             = 0x1;                              // will be read by DIP switches
 int failedPacketCounter = 0;                                // counter for packets with checksumfail
 int temp                = 0;                                // none essential variable which can be used when needed
 Watchdog wdt;                                               // make new watchdog timer
@@ -104,10 +104,11 @@ bool dribbelSet     = false;                                // This flag is set 
 bool kicked = false;
 bool logData = false;
 
-char charArray[16];                                         //
-char MAArray[16];                                           // Arrays are used for sending data to Wireless module
-char MBArray[16];                                           //
-char MCArray[16];                                           //
+//Arrays are used for sending data to Wireless module
+char charArray[16];
+char MAArray[16];
+char MBArray[16];
+char MCArray[16];
 
 RobotController *rc;                                        // make an instance of motorcontroller
 
@@ -190,7 +191,7 @@ void init(void)
     char highByte = (cmd[0]&0x70)>>4;
     char lowByte = cmd[0]&0x0F;
     robotID = lowByte;
-    frequency = getWifiChannel(highByte);
+    frequency = getFrequency(highByte);
     printf("robotID: %d, frequency: %d", robotID, frequency);
 
 
@@ -222,15 +223,12 @@ void init(void)
     dribbler.write(0); //handled with hardware pull down resistor
 }
 
-int getWifiChannel(char channel)
+//changes channel identifier (0-5) to a frequency (like 2525)
+int getFrequency(char channel)
 {
-    //channel 0 : 4 
-    if(channel < 5){
-        return frequencies[channel];   
-    }
-    else{
+    if(channel > 5)
         return 2525;
-    }
+    return frequencies[channel];
 }
 
 // Constantly called by the main() function.
@@ -326,10 +324,9 @@ void fillLogData()
     flag = true;
 }
 
-
+//remove all characters from buffer
 void flushSerialBuffer(Serial mSerial)
 {
-    //remove all characters from buffer
     while (mSerial.readable()) {
         mSerial.getc();
     }
@@ -423,18 +420,9 @@ void kickThread(void const *args)
     while(true) {
         Thread::signal_wait(0x4);
         float pwmValue = abs(chipkickSpeed)/100.0;
-        if(chipkickSpeed < 0) {
-            chipper.write(pwmValue);
-        } else if(chipkickSpeed > 0) {
-            kicker.write(pwmValue);
-        }
+        PwmOut solanoid = (chipKickSpeed > 0) ? kicker : chipper;
+        solanoid.write(pwmValue);
         wait_ms(10);
-        turnOffSolenoids();
+        solanoid.write(0);
     }
-}
-
-void turnOffSolenoids()
-{
-    kicker.write(0);
-    chipper.write(0);
 }
