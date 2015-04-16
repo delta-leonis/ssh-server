@@ -114,8 +114,8 @@ public class Field {
 		eastGoal = new Goal(frontNorth, frontSouth, backNorth, backSouth, goalWallWidth, goalHeigth);
 
 		// Adding Goal B
-		westGoal = new Goal(frontSouth.diagMirror(), frontNorth.diagMirror(), backSouth.diagMirror(), backNorth
-				.diagMirror(), goalWallWidth, goalHeigth);
+		westGoal = new Goal(frontNorth.mirror(), frontSouth.mirror(), backNorth.mirror(), backSouth.mirror(), goalWallWidth, goalHeigth);
+
 	}
 
 	/**

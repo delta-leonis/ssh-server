@@ -78,13 +78,13 @@ public class FieldPoint {
 	}
 
 	/**
-	 * Creates a new diagonally mirrored point
-	 * @return diagmirrored point
+	 * Creates a new mirrored {@link FieldPoint} in x=0
+	 * @return mirrored {@link FieldPoint}
 	 */
-	public FieldPoint diagMirror() {
-		return new FieldPoint(-x, -y);
-	}
 
+	public FieldPoint mirror() {
+		return new FieldPoint(-x, y);
+	}
 	/**
 	 * @return the x co-ordinate of this {@link FieldPoint}
 	 */
