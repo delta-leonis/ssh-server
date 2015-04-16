@@ -45,8 +45,7 @@ public class Coverer extends LowLevelBehavior {
 	 * @param subjectPosition center position of the opponent / enemy. See {@link FieldPoint}
 	 * @param subjectId The Id of the opponent this Robot is trying to interrupt.
 	 */
-	public void update(int distanceToSubject, FieldPoint objectPosition, FieldPoint defenderPosition,
-			FieldPoint subjectPosition, int subjectId) {
+	public void update(int distanceToSubject, FieldPoint objectPosition, FieldPoint subjectPosition, int subjectId) {
 		this.distanceToSubject = distanceToSubject;
 		this.objectPosition = objectPosition;
 		this.subjectPosition = subjectPosition;

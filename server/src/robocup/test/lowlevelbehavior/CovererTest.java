@@ -3,6 +3,8 @@
  */
 package robocup.test.lowlevelbehavior;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -36,7 +38,10 @@ public class CovererTest {
 	public final void testCoverer() {
 		setUp();
 		
-		objectPosition = new FieldPoint(0, 0);
-		
+		objectPosition = new FieldPoint(-500, 0);
+		subjectPosition = new FieldPoint(500, 0);
+		covererBehavior.update(200, objectPosition, subjectPosition, 0);
+		covererBehavior.calculate();
+		assertEquals(new FieldPoint(300, 0), covererBehavior.getGotoPosition().getDestination());
 	}
 }

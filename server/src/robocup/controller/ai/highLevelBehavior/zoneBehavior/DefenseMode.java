@@ -64,7 +64,7 @@ public class DefenseMode extends Mode {
 	public void updateCoverer(RobotExecuter executer) {
 		Coverer blocker = (Coverer) executer.getLowLevelBehavior();
 		// TODO Update with normal values
-		blocker.update(250, ball.getPosition(), executer.getRobot().getPosition(), null, 0);
+		blocker.update(250, ball.getPosition(), null, 0);
 	}
 
 	@Override
