@@ -4,7 +4,6 @@ import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.enums.RobotMode;
-import robocup.output.ComInterface;
 
 public class Keeper extends LowLevelBehavior {
 
@@ -16,13 +15,12 @@ public class Keeper extends LowLevelBehavior {
 	/**
 	 * Create a keeper
 	 * @param robot the keeper {@link Robot} in the model.
-	 * @param output Used to send data to the Robot
 	 * @param distanceToGoal defense radius size, 500 ideal in most situations
 	 * @param goToChip if true, move to ball and chip it away
 	 * @param ballPosition current position of the ball
 	 * @param centerGoalPosition center of the goal on the correct side of the playing field
 	 */
-	public Keeper(Robot robot, ComInterface output, int distanceToGoal, boolean goToChip, FieldPoint ballPosition,
+	public Keeper(Robot robot, int distanceToGoal, boolean goToChip, FieldPoint ballPosition,
 			FieldPoint centerGoalPosition) {
 		super(robot);
 		this.distanceToObject = distanceToGoal;
@@ -30,7 +28,7 @@ public class Keeper extends LowLevelBehavior {
 		this.ballPosition = ballPosition;
 		this.centerGoalPosition = centerGoalPosition;
 		this.role = RobotMode.KEEPER;
-		go = new GotoPosition(robot, output, centerGoalPosition, ballPosition, 3000);
+		go = new GotoPosition(robot, centerGoalPosition, ballPosition, 3000);
 	}
 
 	/**

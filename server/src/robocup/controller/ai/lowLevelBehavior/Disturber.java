@@ -2,13 +2,12 @@ package robocup.controller.ai.lowLevelBehavior;
 
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
-import robocup.output.ComInterface;
 
 public class Disturber extends Keeper {
 
-	public Disturber(Robot robot, ComInterface output, int distanceToBall, boolean goToKick, FieldPoint ballPosition,
+	public Disturber(Robot robot, int distanceToBall, boolean goToKick, FieldPoint ballPosition,
 			FieldPoint centerGoalPosition) {
-		super(robot, output, distanceToBall, goToKick, centerGoalPosition, centerGoalPosition);
+		super(robot, distanceToBall, goToKick, centerGoalPosition, centerGoalPosition);
 	}
 
 	/**

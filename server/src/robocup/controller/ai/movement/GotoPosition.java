@@ -35,12 +35,11 @@ public class GotoPosition {
 	/**
 	 * Go to target position
 	 * @param robot RobotObject
-	 * @param output Output Connection
 	 * @param destination Destination Position
 	 */
-	public GotoPosition(Robot robot, ComInterface output, FieldPoint destination) {
+	public GotoPosition(Robot robot, FieldPoint destination) {
 		this.robot = robot;
-		this.output = output;
+		output = ComInterface.getInstance();
 		this.destination = destination;
 		this.target = destination;
 	}
@@ -48,12 +47,11 @@ public class GotoPosition {
 	/**
 	 * Go to target object
 	 * @param robot RobotObject
-	 * @param output Output Connection
 	 * @param target Target to look at (usually the ball)
 	 */
-	public GotoPosition(Robot robot, ComInterface output, FieldObject target) {
+	public GotoPosition(Robot robot, FieldObject target) {
 		this.robot = robot;
-		this.output = output;
+		output = ComInterface.getInstance();
 		this.destination = target.getPosition();
 		this.target = this.destination;
 	}
@@ -61,13 +59,12 @@ public class GotoPosition {
 	/**
 	 * Go to goalPosition and `look` towards the destination
 	 * @param robot RobotObject
-	 * @param output Output Connection
 	 * @param destination Position to drive to
 	 * @param target Target to look at	(usually the ball)
 	 */
-	public GotoPosition(Robot robot, ComInterface output, FieldPoint destination, FieldPoint target) {
+	public GotoPosition(Robot robot, FieldPoint destination, FieldPoint target) {
 		this.robot = robot;
-		this.output = output;
+		output = ComInterface.getInstance();
 		this.destination = destination;
 		this.target = target;
 	}
@@ -75,14 +72,13 @@ public class GotoPosition {
 	/**
 	 * Go to goalPosition with a `forced` speed and `look` towards the destination
 	 * @param robot RobotObject
-	 * @param output Output Connection
 	 * @param destination Position to drive to
 	 * @param target Position to look at
 	 * @param forcedSpeed Speed to drive with
 	 */
-	public GotoPosition(Robot robot, ComInterface output, FieldPoint destination, FieldPoint target, int forcedSpeed) {
+	public GotoPosition(Robot robot, FieldPoint destination, FieldPoint target, int forcedSpeed) {
 		this.robot = robot;
-		this.output = output;
+		output = ComInterface.getInstance();
 		this.destination = destination;
 		this.target = target;
 		this.forcedSpeed = forcedSpeed;

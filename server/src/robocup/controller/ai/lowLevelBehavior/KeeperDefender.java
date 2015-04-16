@@ -12,10 +12,10 @@ public class KeeperDefender extends Keeper {
 
 	public KeeperDefender(Robot robot, ComInterface output, int distanceToGoal, boolean goToKick,
 			FieldPoint ballPosition, FieldPoint centerGoalPosition, FieldPoint offset) {
-		super(robot, output, distanceToGoal, goToKick, ballPosition, centerGoalPosition);
+		super(robot, distanceToGoal, goToKick, ballPosition, centerGoalPosition);
 		this.offset = offset;
 		this.role = RobotMode.KEEPERDEFENDER;
-		go = new GotoPosition(robot, output, centerGoalPosition, ballPosition, 2000);
+		go = new GotoPosition(robot, centerGoalPosition, ballPosition, 2000);
 	}
 
 	/**

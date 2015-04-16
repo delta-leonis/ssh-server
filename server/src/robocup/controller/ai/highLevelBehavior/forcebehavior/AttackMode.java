@@ -241,8 +241,7 @@ public class AttackMode extends Mode {
 		if (isUpdate) {
 			((Attacker) executer.getLowLevelBehavior()).update(shootDirection, chipKick, ball.getPosition());
 		} else {
-			executer.setLowLevelBehavior(new Attacker(robot, ComInterface.getInstance(), shootDirection,
-					chipKick, ball.getPosition()));
+			executer.setLowLevelBehavior(new Attacker(robot, shootDirection, chipKick, ball.getPosition()));
 		}
 	}
 
@@ -256,8 +255,8 @@ public class AttackMode extends Mode {
 			((Coverer) executer.getLowLevelBehavior()).update(distanceToOpponent, ball.getPosition(),
 					opponent.getPosition(), opponent.getRobotId());
 		} else {
-			executer.setLowLevelBehavior(new Coverer(robot, ComInterface.getInstance(), distanceToOpponent, ball
-					.getPosition(), opponent.getPosition(), opponent.getRobotId()));
+			executer.setLowLevelBehavior(new Coverer(robot, distanceToOpponent, ball.getPosition(), opponent
+					.getPosition(), opponent.getRobotId()));
 		}
 	}
 
@@ -278,8 +277,8 @@ public class AttackMode extends Mode {
 		if (isUpdate) {
 			((Keeper) executer.getLowLevelBehavior()).update(distanceToGoal, false, ball.getPosition());
 		} else {
-			executer.setLowLevelBehavior(new Keeper(robot, ComInterface.getInstance(), distanceToGoal,
-					false, ball.getPosition(), robot.getPosition().getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE));
+			executer.setLowLevelBehavior(new Keeper(robot, distanceToGoal, false, ball.getPosition(), robot
+					.getPosition().getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE));
 		}
 	}
 }

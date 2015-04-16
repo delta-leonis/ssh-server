@@ -4,7 +4,6 @@ import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.enums.RobotMode;
-import robocup.output.ComInterface;
 
 public class Runner extends LowLevelBehavior {
 
@@ -19,12 +18,12 @@ public class Runner extends LowLevelBehavior {
 	 * @param ballPosition the position of the ball
 	 * @param freePosition a free position where the runner needs to go
 	 */
-	public Runner(Robot robot, ComInterface output, FieldPoint ballPosition, FieldPoint freePosition) {
+	public Runner(Robot robot, FieldPoint ballPosition, FieldPoint freePosition) {
 		super(robot);
 		this.ballPosition = ballPosition;
 		this.freePosition = freePosition;
 		this.role = RobotMode.RUNNER;
-		go = new GotoPosition(robot, output, freePosition, ballPosition);
+		go = new GotoPosition(robot, freePosition, ballPosition);
 	}
 
 	/**

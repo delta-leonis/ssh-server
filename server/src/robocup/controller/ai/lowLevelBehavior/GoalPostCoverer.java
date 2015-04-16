@@ -4,7 +4,6 @@ import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.enums.RobotMode;
-import robocup.output.ComInterface;
 
 /**
  * Paaldekker
@@ -31,12 +30,12 @@ public class GoalPostCoverer extends Keeper {
 	 * @param enemyRobot the Robot that matters most to this {@link LowLevelBehaviour}
 	 * @param paalPosition the position of the ball
 	 */
-	public GoalPostCoverer(Robot robot, ComInterface output, Robot enemyRobot, FieldPoint paalPosition) {
-		super(robot, output, 0, false, null, null);
+	public GoalPostCoverer(Robot robot, Robot enemyRobot, FieldPoint paalPosition) {
+		super(robot, 0, false, null, null);
 		this.enemyRobot = enemyRobot;
 		this.paalPosition = paalPosition;
 		this.role = RobotMode.GOALPOSTCOVERER;
-		go = new GotoPosition(robot, output, null, enemyRobot.getPosition());
+		go = new GotoPosition(robot, null, enemyRobot.getPosition());
 	}
 
 	/**

@@ -4,7 +4,6 @@ import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.enums.RobotMode;
-import robocup.output.ComInterface;
 
 public class Attacker extends LowLevelBehavior {
 
@@ -21,13 +20,13 @@ public class Attacker extends LowLevelBehavior {
 	 * @param chipKick kick and chip strength in percentages. max kick = -100% , max chip = 100% . if chipKick = 0, do nothing
 	 * @param ballPosition the position of the ball
 	 */
-	public Attacker(Robot robot, ComInterface output, double shootDirection, int chipKick, FieldPoint ballPosition) {
+	public Attacker(Robot robot, double shootDirection, int chipKick, FieldPoint ballPosition) {
 		super(robot);
 		this.ballPosition = ballPosition;
 		this.chipKick = chipKick;
 		this.shootDirection = shootDirection;
 		this.role = RobotMode.ATTACKER;
-		go = new GotoPosition(robot, output, robot.getPosition(), ballPosition);
+		go = new GotoPosition(robot, robot.getPosition(), ballPosition);
 	}
 
 	/**

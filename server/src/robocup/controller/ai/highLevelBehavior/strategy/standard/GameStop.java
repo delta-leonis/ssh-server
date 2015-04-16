@@ -2,7 +2,6 @@ package robocup.controller.ai.highLevelBehavior.strategy.standard;
 
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.model.FieldPoint;
-import robocup.model.World;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
 

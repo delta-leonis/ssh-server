@@ -99,8 +99,7 @@ public abstract class Mode {
 	 */
 	private void handleAttacker(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof Attacker))
-			executer.setLowLevelBehavior(new Attacker(executer.getRobot(), ComInterface.getInstance(),
-					0.0, 0, null));
+			executer.setLowLevelBehavior(new Attacker(executer.getRobot(), 0.0, 0, null));
 
 		updateAttacker(executer);
 	}
@@ -119,8 +118,7 @@ public abstract class Mode {
 	 */
 	private void handleCoverer(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof Coverer))
-			executer.setLowLevelBehavior(new Coverer(executer.getRobot(), ComInterface.getInstance(),
-					250, null, null, 0));
+			executer.setLowLevelBehavior(new Coverer(executer.getRobot(), 250, null, null, 0));
 
 		updateCoverer(executer);
 	}
@@ -162,8 +160,8 @@ public abstract class Mode {
 
 		// TODO determine field half in a better way
 		if (!(executer.getLowLevelBehavior() instanceof Keeper))
-			executer.setLowLevelBehavior(new Keeper(keeper, ComInterface.getInstance(), 500, false, ball
-					.getPosition(), keeper.getPosition().getX() < 0 ? MID_GOAL_NEGATIVE : MID_GOAL_POSITIVE));
+			executer.setLowLevelBehavior(new Keeper(keeper, 500, false, ball.getPosition(),
+					keeper.getPosition().getX() < 0 ? MID_GOAL_NEGATIVE : MID_GOAL_POSITIVE));
 
 		updateKeeper(executer);
 	}

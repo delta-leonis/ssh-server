@@ -13,7 +13,6 @@ import org.junit.Test;
 import robocup.controller.ai.lowLevelBehavior.Runner;
 import robocup.model.Ally;
 import robocup.model.FieldPoint;
-import robocup.output.ComInterface;
 
 public class RunnerTest {
 
@@ -31,7 +30,7 @@ public class RunnerTest {
 		runnerRobot = new Ally(0, 180);
 		runnerRobot.update(new FieldPoint(0, 0), 0, 0, 0);
 		ballPosition = new FieldPoint(-100, 100);
-		runnerBehavior = new Runner(runnerRobot, ComInterface.getInstance(), ballPosition, null);
+		runnerBehavior = new Runner(runnerRobot, ballPosition, null);
 	}
 
 	@Test

@@ -14,7 +14,6 @@ import robocup.controller.ai.lowLevelBehavior.Attacker;
 import robocup.model.Ally;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
-import robocup.output.ComInterface;
 
 public class AttackerTest {
 
@@ -31,33 +30,33 @@ public class AttackerTest {
 	@Before
 	public void setUp() {
 		ballPosition = new FieldPoint(100, 100);
-		attackBehavior = new Attacker(attackRobot, ComInterface.getInstance(), 0.0, 0, ballPosition);
+		attackBehavior = new Attacker(attackRobot, 0.0, 0, ballPosition);
 	}
 
 	@Test
 	public final void testDestination() {
 		setUp();
 		
-		// Test if robot finds a shooting position in the correct direction when shooting towards EAST
+		// Test if attacker robot finds a shooting position in the correct direction when shooting towards EAST
 		attackRobot.update(new FieldPoint(0, 0), 0, 0, 0);
 		attackBehavior.update(0.0, 0, ballPosition);
 		attackBehavior.calculate();
 		assertEquals(attackBehavior.getGotoPosition().getDestination(), new FieldPoint(ballPosition.getX()
 				- Robot.DIAMETER / 2, ballPosition.getY()));
 
-		// Test if robot finds a shooting position in the correct direction when shooting towards NORTH
+		// Test if attacker robot finds a shooting position in the correct direction when shooting towards NORTH
 		attackBehavior.update(90.0, 0, ballPosition);
 		attackBehavior.calculate();
 		assertEquals(attackBehavior.getGotoPosition().getDestination(), new FieldPoint(ballPosition.getX(),
 				ballPosition.getY() - Robot.DIAMETER / 2));
 
-		// Test if robot finds a shooting position in the correct direction when shooting towards WEST
+		// Test if attacker robot finds a shooting position in the correct direction when shooting towards WEST
 		attackBehavior.update(180.0, 0, ballPosition);
 		attackBehavior.calculate();
 		assertEquals(attackBehavior.getGotoPosition().getDestination(), new FieldPoint(ballPosition.getX()
 				+ Robot.DIAMETER / 2, ballPosition.getY()));
 
-		// Test if robot finds a shooting position in the correct direction when shooting towards SOUTH
+		// Test if attacker robot finds a shooting position in the correct direction when shooting towards SOUTH
 		attackBehavior.update(-90.0, 0, ballPosition);
 		attackBehavior.calculate();
 		assertEquals(attackBehavior.getGotoPosition().getDestination(), new FieldPoint(ballPosition.getX(),

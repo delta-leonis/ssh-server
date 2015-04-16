@@ -14,7 +14,6 @@ import robocup.controller.ai.lowLevelBehavior.Counter;
 import robocup.model.Ally;
 import robocup.model.FieldPoint;
 import robocup.model.enums.FieldZone;
-import robocup.output.ComInterface;
 
 public class CounterTest {
 
@@ -34,21 +33,19 @@ public class CounterTest {
 	@Before
 	public void setUp() {
 		freePosition = null;
-		counterBehavior = new Counter(counterRobot, ComInterface.getInstance(), null, ballPosition, freePosition);
+		counterBehavior = new Counter(counterRobot, null, ballPosition, freePosition);
 	}
 
 	@Before
 	public void setUpEast() {
 		freePosition = null;
-		counterBehavior = new Counter(counterRobot, ComInterface.getInstance(), FieldZone.EAST_MIDDLE, ballPosition,
-				freePosition);
+		counterBehavior = new Counter(counterRobot, FieldZone.EAST_MIDDLE, ballPosition, freePosition);
 	}
 
 	@Before
 	public void setUpWest() {
 		freePosition = null;
-		counterBehavior = new Counter(counterRobot, ComInterface.getInstance(), FieldZone.WEST_MIDDLE, ballPosition,
-				freePosition);
+		counterBehavior = new Counter(counterRobot, FieldZone.WEST_MIDDLE, ballPosition, freePosition);
 	}
 
 	@Test
@@ -90,21 +87,21 @@ public class CounterTest {
 		} catch (Exception e) {
 			fail();
 		}
-		
+
 		// Test if counter robot throws an exception when the freeposition and ball position are null
 		counterRobot.setPosition(new FieldPoint(400, 800));
 		counterBehavior.update(FieldZone.WEST_MIDDLE, null, null);
-		
+
 		try {
 			counterBehavior.calculate();
 		} catch (Exception e) {
 			fail();
 		}
-		
+
 		// Test if counter robot throws an exception when the zone is null
 		counterRobot.setPosition(new FieldPoint(400, 800));
 		counterBehavior.update(null, ballPosition, freePosition);
-		
+
 		try {
 			counterBehavior.calculate();
 		} catch (Exception e) {

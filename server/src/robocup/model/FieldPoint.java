@@ -124,4 +124,13 @@ public class FieldPoint {
 		FieldPoint p = (FieldPoint) point;
 		return p.getX() == x && p.getY() == y;
 	}
+	
+	/**
+	 * Same functionality as {@link #equals(Object)} but values are rounded before comparing.
+	 * Can be useful when a {@link FieldPoint} needs to be compared, but not too precise.
+	 */
+	public boolean equalsRounded(Object point) {
+		FieldPoint p = (FieldPoint) point;
+		return Math.round(p.getX()) == Math.round(x) && Math.round(p.getY()) == Math.round(y);
+	}
 }
