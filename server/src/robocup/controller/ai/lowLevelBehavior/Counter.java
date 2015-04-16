@@ -49,10 +49,11 @@ public class Counter extends LowLevelBehavior {
 
 		if (freePosition != null)
 			go.setDestination(freePosition);
-		else
+		else if (zone != null)
 			// try to go to center point if no free position is given
 			go.setDestination(zone.getCenterPoint());
 
-		go.calculate();
+		if (robot.getPosition() != null)
+			go.calculate();
 	}
 }

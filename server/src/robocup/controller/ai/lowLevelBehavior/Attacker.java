@@ -44,19 +44,22 @@ public class Attacker extends LowLevelBehavior {
 
 	@Override
 	public void calculate() {
-		FieldPoint newDestination = ballPosition;
+		if (robot.getPosition() != null && ballPosition != null) {
+			FieldPoint newDestination = ballPosition;
 
-		// find a shooting position
-		newDestination = getShootingPosition(shootDirection, ballPosition);
+			// find a shooting position
+			newDestination = getShootingPosition(shootDirection, ballPosition);
 
-		if (chipKick != 0) {
-			// kick or chip when the orientation is good and the attacker is close to the ball
-			if (Math.abs(robot.getOrientation() - robot.getPosition().getAngle(ballPosition)) < 2.0
-					&& robot.getPosition().getDeltaDistance(ballPosition) < 100)
-				go.setKick(chipKick);
+			if (chipKick != 0) {
+				// kick or chip when the orientation is good and the attacker is close to the ball
+				if (Math.abs(robot.getOrientation() - robot.getPosition().getAngle(ballPosition)) < 2.0
+						&& robot.getPosition().getDeltaDistance(ballPosition) < 100) {
+					go.setKick(chipKick);
+				}
+			}
+
+			changeDestination(newDestination);
 		}
-
-		changeDestination(newDestination);
 	}
 
 	/**
@@ -64,10 +67,8 @@ public class Attacker extends LowLevelBehavior {
 	 * @param newDestination the new destination
 	 */
 	private void changeDestination(FieldPoint newDestination) {
-		if (newDestination != null) {
-			go.setDestination(newDestination);
-			go.setTarget(ballPosition);
-			go.calculate();
-		}
+		go.setDestination(newDestination);
+		go.setTarget(ballPosition);
+		go.calculate();
 	}
 }
