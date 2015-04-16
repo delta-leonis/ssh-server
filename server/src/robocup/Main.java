@@ -197,7 +197,7 @@ public class Main {
 	 * Create the handler threads for handling data from the SSLVISION client
 	 */
 	public static void initHandlers() {
-		MainHandler handler = new MainHandler(World.getInstance());
+		MainHandler handler = new MainHandler();
 		Thread handlerThread = new Thread(handler);
 		handlerThread.start();
 	}
