@@ -33,9 +33,9 @@ public class GotoPosition {
 	private static final int MAX_VELOCITY =2000;
 
 	/**
-	 * Go to target position
-	 * @param robot RobotObject
-	 * @param destination Destination Position
+	 * Setup this object to function for the given {@link Robot} and {@link FieldPoint destination}
+	 * @param robot The {@link Robot} we wish to move.
+	 * @param destination The {@link FieldPoint destination} we wish to move to.
 	 */
 	public GotoPosition(Robot robot, FieldPoint destination) {
 		this.robot = robot;
@@ -45,8 +45,9 @@ public class GotoPosition {
 	}
 
 	/**
-	 * Go to target object
-	 * @param robot RobotObject
+	 * Setup this object to function for the given {@link Robot} and {@link FieldPoint target}
+	 * Makes the given {@link Robot} turn towards the given {@link FieldObject target}
+	 * @param robot The {@link Robot} we wish to move.
 	 * @param target Target to look at (usually the ball)
 	 */
 	public GotoPosition(Robot robot, FieldObject target) {
@@ -57,10 +58,10 @@ public class GotoPosition {
 	}
 
 	/**
-	 * Go to goalPosition and `look` towards the destination
-	 * @param robot RobotObject
-	 * @param destination Position to drive to
-	 * @param target Target to look at	(usually the ball)
+	 * Go to the given {@link FieldPoint destination} and face the given {@link FieldPoint target}
+	 * @param robot The {@link Robot} we wish to control.
+	 * @param destination The {@link FieldPoint destination} we wish to move to.
+	 * @param target The {@link FieldPoint target} we wish to face. (usually the ball)
 	 */
 	public GotoPosition(Robot robot, FieldPoint destination, FieldPoint target) {
 		this.robot = robot;
@@ -70,11 +71,11 @@ public class GotoPosition {
 	}
 
 	/**
-	 * Go to goalPosition with a `forced` speed and `look` towards the destination
-	 * @param robot RobotObject
-	 * @param destination Position to drive to
-	 * @param target Position to look at
-	 * @param forcedSpeed Speed to drive with
+	 * Move towards {@link FieldPoint destination} with a forced speed facing the {@link FieldPoint destination}
+	 * @param robot The {@link Robot} we wish to move.
+	 * @param destination The {@link FieldPoint destination} we wish to go to.
+	 * @param target The {@link FieldPoint target} we wish to face.
+	 * @param forcedSpeed The speed in mm/s we wish to drive at. (Overrules the speed calculate by {@link #calculate()})
 	 */
 	public GotoPosition(Robot robot, FieldPoint destination, FieldPoint target, int forcedSpeed) {
 		this.robot = robot;
@@ -85,7 +86,7 @@ public class GotoPosition {
 	}
 
 	/**
-	 * @return TargetPoint the target we wish our robot to look at
+	 * @return TargetPoint the {@link FieldPoint target} we wish our {@link Robot} to look at
 	 */
 	public FieldPoint getTarget() {
 		return target;
@@ -108,8 +109,7 @@ public class GotoPosition {
 	}
 
 	/**
-	 * Get Destination
-	 * @return
+	 * @returns The {@link FieldPoint destination} our {@link Robot} will attempt to move towards.
 	 */
 	public FieldPoint getDestination() {
 		return destination;
@@ -193,8 +193,8 @@ public class GotoPosition {
 	}
 
 	/**
-	 * Get travel distance
-	 * @return
+	 * @returns the distance in millimeters between the {@link Robot} and the first {@link FieldPoint} calculated in the route.
+	 * @see {@link #calculate()}
 	 */
 	private double getDistance() {
 		double distance = 0;
@@ -226,8 +226,8 @@ public class GotoPosition {
 	
 	/**
 	 * Calculate the needed rotation to destination
-	 * @param newPoint
-	 * @return
+	 * @param newPoint The {@link FieldPoint} we wish to face.
+	 * @return The rotation we need to make to face the given {@link FieldPoint}
 	 */
 	private double rotationToDest(FieldPoint newPoint) {
 		// angle vector between old and new
@@ -245,7 +245,7 @@ public class GotoPosition {
 	}
 
 	/**
-	 * @return the dribble
+	 * @return The value we wish our {@link Robot} to dribble at.
 	 */
 	public boolean getDribble() {
 		return dribble;
