@@ -78,11 +78,12 @@ public class FieldPoint {
 	}
 
 	/**
-	 * Creates a new diagonally mirrored point
+	 * Creates a new mirrored {@link FieldPoint} in x=0
 	 * @return The current {@link FieldPoint} only mirrored across the middle.
 	 */
-	public FieldPoint diagMirror() {
-		return new FieldPoint(-x, -y);
+
+	public FieldPoint mirror() {
+		return new FieldPoint(-x, y);
 	}
 
 	/**
