@@ -10,8 +10,8 @@ import java.util.logging.Logger;
 import robocup.Main;
 
 /**
- * abstract class UDPClient for receiving UDP packets via multicast group 
- * method startListining has to be overridden
+ * Abstract class UDPClient for receiving UDP packets via multicast group 
+ * Method startListining has to be overridden
  */
 public abstract class UDPClient implements Runnable {
 
@@ -34,7 +34,7 @@ public abstract class UDPClient implements Runnable {
 	}
 
 	/**
-	 * connect when the Thread is started.
+	 * Connect when the Thread is started.
 	 * When something fails the Thread is stopped.
 	 */
 	@Override
@@ -49,7 +49,7 @@ public abstract class UDPClient implements Runnable {
 	}
 
 	/**
-	 * this method has to be override
+	 * This method has to be override
 	 * @throws IOException 
 	 */
 	public abstract void startListening() throws IOException;
@@ -73,8 +73,8 @@ public abstract class UDPClient implements Runnable {
 	}
 
 	/**
-	 * receive an UDP packet
-	 * @return
+	 * Receive an UDP packet
+	 * @return A ByteArrayInputStream of the received UDP Packet
 	 * @throws IOException
 	 */
 	public ByteArrayInputStream receive() throws IOException {
@@ -86,15 +86,15 @@ public abstract class UDPClient implements Runnable {
 	}
 
 	/**
-	 * @return the multicasthost
+	 * @return the multicasthost name
 	 */
 	public String getHost() {
 		return multicastHost;
 	}
 
 	/**
-	 * @param multicasthost
-	 *            the multicasthost to set
+	 * Changes the host name.
+	 * @param multicasthost the multicasthost name to set
 	 */
 	public void setHost(String multicasthost) {
 		this.multicastHost = multicasthost;
@@ -108,8 +108,8 @@ public abstract class UDPClient implements Runnable {
 	}
 
 	/**
-	 * @param multicastport
-	 *            the multicastport to set
+	 * Changes the port number.
+	 * @param multicastport The new port number.
 	 */
 	public void setPort(int multicastport) {
 		this.multipcastPort = multicastport;

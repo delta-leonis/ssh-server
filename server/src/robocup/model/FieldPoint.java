@@ -10,8 +10,8 @@ import robocup.Main;
  * The drawing underneath depicts what this point represents.<br>
  * <img src="../../../images/fieldPoint.jpg" /><br>
  * 
- * x being half the field-width.<br>
- * y being half the field-height.
+ * x being half the field-width in millimeters.<br>
+ * y being half the field-height in millimeters.
  */
 public class FieldPoint {
 	private double x;
@@ -19,8 +19,8 @@ public class FieldPoint {
 	
 	/**
 	 * Constructs a new FieldPoint with given coordinates
-	 * @param x
-	 * @param y
+	 * @param x The x coordinate in millimeters
+	 * @param y The y coordinate in millimeters.
 	 */
 	public FieldPoint(double x, double y) {
 		super();
@@ -29,7 +29,7 @@ public class FieldPoint {
 	}
 
 	/**
-	 * Constructor for {@link FieldPoint} where x and y are initialized on basis of a String
+	 * Constructor for {@link FieldPoint} where x and y are initialized based off a String
 	 * coordinate.
 	 * @param coordinate The x and y coordinates separated by a comma. Like: 200,40
 	 */
@@ -60,8 +60,8 @@ public class FieldPoint {
 	}
 
 	/**
-	 * Calculate angle between 2 points
-	 * @param target
+	 * Calculate angle between this point and the given {@link FieldPoint}
+	 * @param target The target {@link FieldPoint}
 	 * @return Angle in degrees between this and target
 	 */
 	public double getAngle(FieldPoint target) {
@@ -70,19 +70,20 @@ public class FieldPoint {
 
 	/**
 	 * Calculates distance between 2 points
-	 * @param target
-	 * @return Distance between this and target
+	 * @param target The target {@link FieldPoint}
+	 * @return Distance between this and target in millimeters
 	 */
 	public double getDeltaDistance(FieldPoint target) {
 		return Math.sqrt((target.getX() - x) * (target.getX() - x) + (target.getY() - y) * (target.getY() - y));
 	}
 
 	/**
-	 * Creates a new diagonally mirrored point
-	 * @return diagmirrored point
+	 * Creates a new mirrored {@link FieldPoint} in x=0
+	 * @return The current {@link FieldPoint} only mirrored across the middle.
 	 */
-	public FieldPoint diagMirror() {
-		return new FieldPoint(-x, -y);
+
+	public FieldPoint mirror() {
+		return new FieldPoint(-x, y);
 	}
 
 	/**

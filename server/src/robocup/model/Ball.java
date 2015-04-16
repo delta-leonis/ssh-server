@@ -9,7 +9,7 @@ public class Ball extends FieldObject {
 	private Robot owner;
 
 	/**
-	 * create object
+	 * Create object that describes a Ball on the {@link Field}
 	 */
 	public Ball() {
 		super();
@@ -19,7 +19,7 @@ public class Ball extends FieldObject {
 	 * Update parameters of the ball object
 	 * @param newTime	Update timestamp
 	 * @param p			new {@link FieldPoint} position
-	 * @param posZ		new Z position for object
+	 * @param posZ		new Z position for object, also known the be the current height of the ball.
 	 */
 	public void update(double newTime, FieldPoint p, double posZ, int lastCamUpdateNo) {
 		super.update(p, newTime, lastCamUpdateNo);
@@ -27,7 +27,7 @@ public class Ball extends FieldObject {
 	}
 
 	/**
-	 * @return current Z-position 
+	 * @return current Z-position (Elevation off the ground)
 	 */
 	public double getPosZ() {
 		return posZ;

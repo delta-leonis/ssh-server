@@ -28,16 +28,15 @@ public class DetectionHandler {
 
 	/**
 	 * Constructs DetectionHandler. Also initiates {@link Kalman} filter for the {@link Ball}
-	 * @param world that will be affected
 	 */
-	public DetectionHandler(World world) {
-		this.world = world;
+	public DetectionHandler() {
+		world = World.getInstance();
 		Ball b = world.getBall();
 		ballFilter = new Kalman(new FieldPoint(b.getPosition().getX(), b.getPosition().getY()), 0, 0);
 	}
 
 	/**
-	 * Process a Detection frame
+	 * Process a {@link SSL_DetectionFrame}, which is a message from the Robocup SSL Vision program.
 	 */
 	public void process(SSL_DetectionFrame message) {
 		processRobots(message.getRobotsBlueList(), message.getRobotsYellowList(), message.getTCapture(),
@@ -50,9 +49,11 @@ public class DetectionHandler {
 	}
 
 	/**
-	 * process all balls
+	 * Process all balls given by the SSL Vision Program.
 	 * 
-	 * @param balls
+	 * @param balls The balls currently on the field
+	 * @param time The time of detection.
+	 * @param camNo The ID of the camera that detected the ball
 	 */
 	public void processBalls(List<SSL_DetectionBall> balls, double time, int camNo) {
 		for (SSL_DetectionBall ball : balls) {
@@ -61,9 +62,11 @@ public class DetectionHandler {
 	}
 
 	/**
-	 * setPosition of ball
+	 * Updates position of the {@link Ball} in the {@link World}
 	 * 
-	 * @param ball
+	 * @param balls The balls currently on the field
+	 * @param time The time of detection.
+	 * @param camNo The ID of the camera that detected the ball
 	 */
 	public void updateBall(SSL_DetectionBall ball, double time, int camNo) {
 		FieldPoint filterPoint = new FieldPoint(ball.getX(), ball.getY());
@@ -79,7 +82,7 @@ public class DetectionHandler {
 	}
 
 	/**
-	 * call update for every robot in the message
+	 * Update every {@link Robot} in {@link World} 
 	 * 
 	 * @param blueList		list with every {@link SSL_DetectionRobot} in blue team
 	 * @param yellowList	list with every {@link SSL_DetectionRobot} in yellow team
@@ -112,8 +115,8 @@ public class DetectionHandler {
 	}
 	
 	/**
-	 * Updates the ally team's robots to be set "onSight"  or not onSight.
-	 * Setting this variable to true in a robot will allow the GUI to display it as "Online"
+	 * Updates the ally {@link Team}'s {@link Robot robots} to be set "onSight"  or not onSight.
+	 * Setting this variable to true in a {@link Robot} will allow the GUI to display it as "Online"
 	 * @param robotList A list with the Detected Robots from the ally team.
 	 */
 	public void updateOnSight(List<SSL_DetectionRobot> robotList){
@@ -130,14 +133,11 @@ public class DetectionHandler {
 	}
 
 	/**
-	 * Updates position of existing robot
+	 * Updates position of existing {@link Robot} in the {@link World}
 	 * 
-	 * @param color
-	 *            of the robot, to determine team.
-	 * @param robotMessage
-	 *            the actual message
-	 * @param updateTime
-	 *            time of update
+	 * @param color {@link TeamColor} of the robot to determine to which {@link Team} it belongs.    
+	 * @param robotMessage The {@link SSL_DetectionRobot} message sent by the SSL Vision Program.
+	 * @param updateTime time of update in seconds.
 	 */
 	public void updateRobot(TeamColor color, SSL_DetectionRobot robotMessage, double updateTime, int camNo) {
 		Team t = world.getTeamByColor(color);
@@ -145,8 +145,6 @@ public class DetectionHandler {
 		if (t == null || robotMessage.hasRobotId() == false) {
 			return;
 		}
-
-//		boolean robotAdded = false;
 
 		Robot robot = t.getRobotByID(robotMessage.getRobotId());
 

@@ -8,7 +8,7 @@ import robocup.model.enums.RobotMode;
 public class Ally extends Robot {
 	private boolean dribble;
 	/**
-	 * timestamp when kicker was activated for the last time
+	 * Timestamp of when kicker or chipper was last activated
 	 */
 	private long lastKicked;
 	private RobotMode role;
@@ -24,14 +24,14 @@ public class Ally extends Robot {
 	}
 
 	/**
-	 * @return true if robot has a activated dribbeler
+	 * @return true if robot's dribbler is running
 	 */
 	public boolean isDribble() {
 		return dribble;
 	}
 
 	/**
-	 * @param dribble the dribble to set
+	 * @param dribble True to start the dribbler, false to stop it
 	 */
 	public void setDribble(boolean dribble) {
 		this.dribble = dribble;
@@ -61,7 +61,7 @@ public class Ally extends Robot {
 	}
 
 	/**
-	 * set a new timestamp that describes last time that kicker has been activated
+	 * Set a new timestamp that describes last time that kicker or chipper has been activated
 	 * @param lastKicked new timestamp
 	 */
 	public void setLastKicked(long lastKicked) {
