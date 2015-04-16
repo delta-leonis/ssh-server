@@ -130,8 +130,7 @@ public class World extends Observable {
 	 * Returns the {@link Team} with the given color. this method is an adapter
 	 * from the old model, so its better to use referee getTeambyColor
 	 * 
-	 * @param color
-	 *            the color of the {@link Team}
+	 * @param color the {@link TeamColor} of the {@link Team}
 	 * @return the {@link Team} with the given color. Returns null if there is
 	 *         no {@link Team} with the given color.
 	 */

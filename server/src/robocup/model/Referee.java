@@ -27,7 +27,7 @@ public class Referee {
 	private Team westTeam;
 
 	/**
-	 * constructor that initializes the default values, takes no argument
+	 * Constructor that initializes the default values, takes no argument
 	 * most variables remain undeclared
 	 */
 	public Referee() {
