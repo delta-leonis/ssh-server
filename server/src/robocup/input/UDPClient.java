@@ -10,8 +10,8 @@ import java.util.logging.Logger;
 import robocup.Main;
 
 /**
- * abstract class UDPClient.
- * method startListining has to be overridden
+ * Abstract class UDPClient.
+ * Method startListining has to be overridden
  */
 public abstract class UDPClient implements Runnable {
 
@@ -28,9 +28,9 @@ public abstract class UDPClient implements Runnable {
 	}
 
 	/**
-	 * Init
-	 * @param host
-	 * @param port
+	 * Initiate the UDPClient
+	 * @param host Host name
+	 * @param port Port number
 	 */
 	public void init(String host, int port) {
 		this.host = host;
@@ -38,7 +38,7 @@ public abstract class UDPClient implements Runnable {
 	}
 
 	/**
-	 * connect when the Thread is started.
+	 * Connect when the Thread is started.
 	 * When something fails the Thread is stopped.
 	 */
 	@Override
@@ -53,7 +53,7 @@ public abstract class UDPClient implements Runnable {
 	}
 
 	/**
-	 * this method has to be override
+	 * This method has to be override
 	 * @throws IOException 
 	 */
 	public abstract void startListening() throws IOException;
@@ -77,8 +77,8 @@ public abstract class UDPClient implements Runnable {
 	}
 
 	/**
-	 * receive an UDP packet
-	 * @return
+	 * Receive an UDP packet
+	 * @return A ByteArrayInputStream of the received UDP Packet
 	 * @throws IOException
 	 */
 	public ByteArrayInputStream receive() throws IOException {
@@ -90,30 +90,30 @@ public abstract class UDPClient implements Runnable {
 	}
 
 	/**
-	 * @return the host
+	 * @return The host name.
 	 */
 	public String getHost() {
 		return host;
 	}
 
 	/**
-	 * @param host
-	 *            the host to set
+	 * Changes the host name.
+	 * @param host The new host name.
 	 */
 	public void setHost(String host) {
 		this.host = host;
 	}
 
 	/**
-	 * @return the port
+	 * @return The port number.
 	 */
 	public int getPort() {
 		return port;
 	}
 
 	/**
-	 * @param port
-	 *            the port to set
+	 * Changes the port number.
+	 * @param port The new port number.
 	 */
 	public void setPort(int port) {
 		this.port = port;

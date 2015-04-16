@@ -11,9 +11,4 @@ public abstract class Behavior {
 
 	public abstract void execute(ArrayList<RobotExecuter> executers);
 
-	/**
-	 * @deprecated same functionality as execute
-	 * TODO merge updateExecuters with execute in ForceBehavior
-	 */
-	public abstract void updateExecuters(ArrayList<RobotExecuter> executers);
 }

@@ -260,12 +260,4 @@ public class ZoneBehavior extends Behavior {
 
 		return returnMode;
 	}
-
-	/**
-	 * @deprecated use execute instead.
-	 */
-	@Override
-	public void updateExecuters(ArrayList<RobotExecuter> executers) {
-		// Use execute instead, this is deprecated
-	}
 }

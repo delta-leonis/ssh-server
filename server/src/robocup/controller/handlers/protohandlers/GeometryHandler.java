@@ -6,7 +6,6 @@ import robocup.model.World;
 /**
  * Handler for {@link SSL_GeometryData} messages. 
  * updates the {@link Field} object from a {@link World} object
- *
  */
 public class GeometryHandler {
 
@@ -14,10 +13,9 @@ public class GeometryHandler {
 
 	/**
 	 * Constructs handler for {@link SSL_GeometryData} messages
-	 * @param world	that will be affected
 	 */
-	public GeometryHandler(World world) {
-		this.world = world;
+	public GeometryHandler() {
+		this.world = World.getInstance();
 	}
 
 	/**
@@ -42,8 +40,8 @@ public class GeometryHandler {
 	}
 
 	/**
-	 * processed camera calibration as notified by SSL_Vision
-	 * @param message
+	 * Process camera calibration as notified by SSL_Vision
+	 * @param message A {@link SSL_GeometryData} message used to update the {@link Field}
 	 * @deprecated not processing anything
 	 */
 	public void processCameraCalibration(SSL_GeometryData message) {

@@ -2,7 +2,7 @@ package robocup.model;
 /**
  * Describes an object on the {@link Field}
  * 
- * TODO needs a rewrite and cleanup
+ * TODO needs a rewrite and cleanup. Data might be different with 4 cameras.
  */
 public abstract class FieldObject {
 
@@ -23,8 +23,8 @@ public abstract class FieldObject {
 
 	/**
 	 * Updates FieldObject
-	 * @param updateTime Update timestamp
-	 * @param newPosition New positiont point.
+	 * @param updateTime Update timestamp given by the SSL Vision program
+	 * @param newPosition New {@link FieldPoint}
 	 * @post Updated position, direction and speed.
 	 */
 	public void update(FieldPoint newPosition, double updateTime, int camUpdateNo) {
@@ -102,7 +102,7 @@ public abstract class FieldObject {
 	}
 
 	/**
-	 * @param direction the direction to set
+	 * @param direction Sets the direction on this object based on its last position.
 	 */
 	public void setDirection(FieldPoint newPosition) {
 		if (position != null) {
@@ -116,56 +116,56 @@ public abstract class FieldObject {
 	}
 
 	/**
-	 * @return the direction
+	 * @return the direction this object is facing in degrees
 	 */
 	public double getDirection() {
 		return direction;
 	}
 
 	/**
-	 * Calculates speed of FieldObject using
-	 * @param updateTime
-	 * @param newPosition
+	 * Calculates speed of this FieldObject based on its {@link FieldPoint previous position}, {@link FieldPoint current position} and the current time.
+	 * @param updateTime The current time in seconds
+	 * @param newPosition The {@link FieldPoint current position} of this object.
 	 */
 	private void setSpeed(double updateTime, FieldPoint newPosition) {
 		double deltaDistance = position.getDeltaDistance(newPosition);
 		double deltaTime = updateTime - lastUpdateTime;
 		if (deltaDistance > 1.5) {
-			speed = Math.abs((deltaDistance / deltaTime));// Ik hoop dat dit
-															// gaat werken
+			speed = Math.abs((deltaDistance / deltaTime));
 		}
 	}
 
 	/**
-	 * @return the speed
+	 * @return The speed in millimeters/seconds
 	 */
 	public double getSpeed() {
 		return speed;
 	}
 
 	/**
-	 * @return the lastUpdateTime
+	 * @return The last time this object got updated in seconds.
 	 */
 	public double getLastUpdateTime() {
 		return lastUpdateTime;
 	}
 
 	/**
-	 * @param lastUpdateTime the lastUpdateTime to set
+	 * Updates the time this object has last been updated.
+	 * @param lastUpdateTime The time this object has last been updated in seconds. (Given by the SSL Vision program)
 	 */
 	public void setLastUpdateTime(long lastUpdateTime) {
 		this.lastUpdateTime = lastUpdateTime;
 	}
 
 	/**
-	 * @return the position
+	 * @return The {@link FieldPoint} describing the position of this object.
 	 */
 	public FieldPoint getPosition() {
 		return position;
 	}
 
 	/**
-	 * @param position the position to set
+	 * @param The {@link FieldPoint current position} of this object.
 	 */
 	public void setPosition(FieldPoint position) {
 		this.position = position;

@@ -53,12 +53,6 @@ public class ForceBehavior extends Behavior {
 		currentMode.execute(executers);
 	}
 
-	// !TODO Mooiere manier verzinnen
-	public void updateExecuters(ArrayList<RobotExecuter> executers) {
-		currentMode = determineMode();
-		currentMode.updateExecuters(executers);
-	}
-
 	/**
 	 * Calculate if ally team is closer to the ball
 	 * 

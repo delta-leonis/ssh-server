@@ -15,11 +15,11 @@ public class RefereeHandler {
 	private World world;
 
 	/**
-	 * construct Referee for a specific {@link World}
+	 * Construct Referee for a specific {@link World}
 	 * @param world	world this RefereeHandler will affect
 	 */
-	public RefereeHandler(World world) {
-		this.world = world;
+	public RefereeHandler() {
+		this.world = World.getInstance();
 	}
 
 	/**
