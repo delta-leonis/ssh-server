@@ -6,7 +6,28 @@ import robocup.model.World;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
 
+/**
+ * {@link PenaltyAlly} is a standard strategy that is used when our team can take a penalty shootout.
+ * One robot stands near the ball to shoot it {@link RobotMode#ATTACKER} and 2 {@link RobotMode#RUNNER}s 
+ * stand on the edge of the allowed playfield near the enemy goal (to retrieve the ball if the penalty misses).
+ * There are also the standard defensive roles, consisting of a {@link RobotMode#KEEPER} and 2 {@link RobotMode#KEEPERDEFENDER}s.
+ * <br><br>
+ * <img src="../../../../../../../images/situationPenalty.png" />
+ * <br><br>
+ * For more information about the strategy and roles see TactiekDocument
+ */
 public class PenaltyAlly extends Strategy {
+	/**
+	 * Roles in the {@link PenaltyAlly} strategy are assigned in the following order:<br>
+	 * <ol>
+	 * <li>{@link RobotMode#KEEPER}</li>
+	 * <li>{@link RobotMode#ATTACKER}</li>
+	 * <li>{@link RobotMode#RUNNER}</li>
+	 * <li>{@link RobotMode#RUNNER}</li>
+	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
+	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
+	 * </ol>
+	 */
 	public PenaltyAlly () {
 		super();
 		roles.add(RobotMode.KEEPER);
@@ -18,7 +39,11 @@ public class PenaltyAlly extends Strategy {
 		
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.KEEPERDEFENDER);
-	}
+	}	
+	
+	/**
+	 * Method that declares the zones for all the roles in this strategy
+	 */
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
 		if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {

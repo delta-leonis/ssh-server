@@ -6,7 +6,29 @@ import robocup.model.World;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
 
+/**
+ * {@link ThrowInDefend} is a standard strategy that is used when the enemy team may throw the ball in.
+ * One {@link RobotMode#COVERER} stands near the enemy throwing the ball in, blocking the way to our goal.
+ * A {@link RobotMode#DISTURBER} covers the most dangerous robot of the opposing team.
+ * There are also the standard defensive roles, consisting of a {@link RobotMode#KEEPER} and 2 {@link RobotMode#KEEPERDEFENDER}s.
+ * An {@link RobotMode#GOALPOSTCOVERER} blocks off the opposing side of our goal against a one-two attack.
+ * <br><br>
+ * <img src="../../../../../../../images/situationThrowIn.png" />
+ * <br><br>
+ * For more information about the strategy and roles see TactiekDocument
+ */
 public class ThrowInDefend extends Strategy {
+	/**
+	 * Roles in the {@link ThrowInDefend} strategy are assigned in the following order:<br>
+	 * <ol>
+	 * <li>{@link RobotMode#KEEPER}</li>
+	 * <li>{@link RobotMode#GOALPOSTCOVERER}</li>
+	 * <li>{@link RobotMode#DISTURBER}</li>
+	 * <li>{@link RobotMode#COVERER}</li>
+	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
+	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
+	 * </ol>
+	 */
 	public ThrowInDefend () {
 		super();
 		roles.add(RobotMode.KEEPER);
@@ -20,6 +42,10 @@ public class ThrowInDefend extends Strategy {
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.KEEPERDEFENDER);
 	}
+	
+	/**
+	 * Method that declares the zones for all the roles in this strategy
+	 */
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
 		if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {

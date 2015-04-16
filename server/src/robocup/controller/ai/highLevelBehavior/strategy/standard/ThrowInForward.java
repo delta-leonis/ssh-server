@@ -6,7 +6,27 @@ import robocup.model.World;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
 
+/**
+ * {@link ThrowInForward} is a standard strategy that is used when our team may throw the ball in.
+ * One {@link RobotMode#ATTACKER} stands throws the ball in, two {@link RobotMode#RUNNER}s will try to create an opening at the top and bottom of the field.
+ * There are also the standard defensive roles, consisting of a {@link RobotMode#KEEPER} and 2 {@link RobotMode#KEEPERDEFENDER}s.
+ * <br><br>
+ * <img src="../../../../../../../images/situationThrowIn.png" />
+ * <br><br>
+ * For more information about the strategy and roles see TactiekDocument
+ */
 public class ThrowInForward extends Strategy {
+	/**
+	 * Roles in the {@link ThrowInForward} strategy are assigned in the following order:<br>
+	 * <ol>
+	 * <li>{@link RobotMode#KEEPER}</li>
+	 * <li>{@link RobotMode#ATTACKER}</li>
+	 * <li>{@link RobotMode#RUNNER}</li>
+	 * <li>{@link RobotMode#RUNNER}</li>
+	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
+	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
+	 * </ol>
+	 */
 	public ThrowInForward () {
 		super();
 		roles.add(RobotMode.KEEPER);
@@ -20,6 +40,9 @@ public class ThrowInForward extends Strategy {
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.KEEPERDEFENDER);
 	}
+	/**
+	 * Method that declares the zones for all the roles in this strategy
+	 */
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
 		if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {

@@ -4,18 +4,36 @@ import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.model.FieldPoint;
 import robocup.model.enums.RobotMode;
 
+/**
+ * {@link GameHalt} is a strategy that is assigned when the entire team has to freeze in place.
+ * Robots should not be able to move while this strategy is active.
+ * <br><br>
+ * For more information about the strategy and roles see TactiekDocument
+ */
 public class GameHalt extends Strategy {
+	/**
+	 * Robot roles do not really matter because robots do not move while this strategy is active.
+	 * Roles in the {@link GameHalt} strategy are assigned in the following order:<br>
+	 * <ol>
+	 * <li>{@link RobotMode#KEEPER}</li>
+	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
+	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
+	 * <li>{@link RobotMode#RUNNER}</li>
+	 * <li>{@link RobotMode#RUNNER}</li>
+	 * <li>{@link RobotMode#RUNNER}</li>
+	 * </ol>
+	 */
 	public GameHalt () {
 		super();
 		roles.add(RobotMode.KEEPER);
-		// two robots stand as close to the ball as possible, because we might get the ball
-		roles.add(RobotMode.DISTURBER);
-		roles.add(RobotMode.DISTURBER);
-		// one robot stands ready for the counter attack (or to cover an enemy when they get the ball)
-		roles.add(RobotMode.COUNTER);
-		// two robots defend
+
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.KEEPERDEFENDER);
+		
+		roles.add(RobotMode.RUNNER);
+		roles.add(RobotMode.RUNNER);
+		roles.add(RobotMode.RUNNER);
+		
 	}
 	
 	@Override
