@@ -4,6 +4,7 @@
 package robocup.test.lowlevelbehavior;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -23,13 +24,13 @@ public class CovererTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		covererRobot = new Ally(0, 180);
-		covererRobot.update(new FieldPoint(0, 0), 0, 0, 0);
 		objectPosition = null;
 		subjectPosition = null;
 	}
 
 	@Before
 	public void setUp() {
+		covererRobot.update(new FieldPoint(0, 0), 0, 0, 0);
 		covererBehavior = new Coverer(covererRobot, 0, null, null, 0);
 	}
 
@@ -68,6 +69,54 @@ public class CovererTest {
 
 	@Test
 	public final void testNull() {
+		setUp();
 
+		// Test if Coverer robot throws an exception when the robot position is null
+		covererRobot.setPosition(null);
+		objectPosition = new FieldPoint(-500, 0);
+		subjectPosition = new FieldPoint(500, 0);
+		covererBehavior.update(200, objectPosition, subjectPosition, 0);
+
+		try {
+			covererBehavior.calculate();
+		} catch (Exception e) {
+			fail();
+		}
+
+		// Test if Coverer robot throws an exception when the object and subject position are null
+		covererRobot.setPosition(new FieldPoint(500, 0));
+		objectPosition = null;
+		subjectPosition = null;
+		covererBehavior.update(200, objectPosition, subjectPosition, 0);
+
+		try {
+			covererBehavior.calculate();
+		} catch (Exception e) {
+			fail();
+		}
+
+		// Test if Coverer robot throws an exception when the subject position is null
+		covererRobot.setPosition(new FieldPoint(500, 0));
+		objectPosition = new FieldPoint(-500, 0);
+		subjectPosition = null;
+		covererBehavior.update(200, objectPosition, subjectPosition, 0);
+
+		try {
+			covererBehavior.calculate();
+		} catch (Exception e) {
+			fail();
+		}
+
+		// Test if Coverer robot throws an exception when the object position is null
+		covererRobot.setPosition(new FieldPoint(500, 0));
+		objectPosition = null;
+		subjectPosition = new FieldPoint(-500, 0);
+		covererBehavior.update(200, objectPosition, subjectPosition, 0);
+
+		try {
+			covererBehavior.calculate();
+		} catch (Exception e) {
+			fail();
+		}
 	}
 }

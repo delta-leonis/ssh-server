@@ -25,8 +25,8 @@ public class Coverer extends LowLevelBehavior {
 	 * @param subjectPosition current position of the subject. See {@link FieldPoint}
 	 * @param subjectId The Id of the subject this Robot is trying to interrupt.
 	 */
-	public Coverer(Robot robot, int distanceToSubject, FieldPoint objectPosition,
-			FieldPoint subjectPosition, int subjectId) {
+	public Coverer(Robot robot, int distanceToSubject, FieldPoint objectPosition, FieldPoint subjectPosition,
+			int subjectId) {
 		super(robot);
 		this.subjectPosition = subjectPosition;
 		this.objectPosition = objectPosition;
@@ -62,7 +62,9 @@ public class Coverer extends LowLevelBehavior {
 			go.setDestination(newDestination);
 
 		go.setTarget(objectPosition);
-		go.calculate();
+
+		if (robot.getPosition() != null)
+			go.calculate();
 	}
 
 	/**
