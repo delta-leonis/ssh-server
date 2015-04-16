@@ -27,7 +27,7 @@ public class DetectionHandler {
 	Kalman ballFilter;
 
 	/**
-	 * Constructs detectionhandler. Also initiates {@link Kalman} filter for the {@link Ball}
+	 * Constructs DetectionHandler. Also initiates {@link Kalman} filter for the {@link Ball}
 	 */
 	public DetectionHandler() {
 		world = World.getInstance();
