@@ -15,18 +15,15 @@ public class Keeper extends LowLevelBehavior {
 	/**
 	 * Create a keeper
 	 * @param robot the keeper {@link Robot} in the model.
-	 * @param distanceToGoal defense radius size, 500 ideal in most situations
-	 * @param goToChip if true, move to ball and chip it away
-	 * @param ballPosition current position of the ball
 	 * @param centerGoalPosition center of the goal on the correct side of the playing field
 	 */
-	public Keeper(Robot robot, int distanceToGoal, boolean goToChip, FieldPoint ballPosition,
-			FieldPoint centerGoalPosition) {
+	public Keeper(Robot robot, FieldPoint centerGoalPosition) {
 		super(robot);
-		this.distanceToObject = distanceToGoal;
-		this.goToKick = goToChip;
-		this.ballPosition = ballPosition;
+		distanceToObject = 0;
+		goToKick = false;
+		ballPosition = null;
 		this.centerGoalPosition = centerGoalPosition;
+
 		this.role = RobotMode.KEEPER;
 		go = new GotoPosition(robot, centerGoalPosition, ballPosition, 3000);
 	}

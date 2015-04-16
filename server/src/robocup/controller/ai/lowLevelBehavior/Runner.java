@@ -15,13 +15,11 @@ public class Runner extends LowLevelBehavior {
 	 * A runner will try to move to a free position given by the high level behavior
 	 * @param robot the Runner {@link Robot} in the model
 	 * @param output Used to send data to the Robot
-	 * @param ballPosition the position of the ball
-	 * @param freePosition a free position where the runner needs to go
 	 */
-	public Runner(Robot robot, FieldPoint ballPosition, FieldPoint freePosition) {
+	public Runner(Robot robot) {
 		super(robot);
-		this.ballPosition = ballPosition;
-		this.freePosition = freePosition;
+		ballPosition = null;
+		freePosition = null;
 		this.role = RobotMode.RUNNER;
 		go = new GotoPosition(robot, freePosition, ballPosition);
 	}

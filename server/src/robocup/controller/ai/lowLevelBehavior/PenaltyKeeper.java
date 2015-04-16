@@ -15,15 +15,13 @@ public class PenaltyKeeper extends LowLevelBehavior {
 	 * Create a penalty keeper.
 	 * The penalty keeper will drive towards a point on the goal line in an attempt to block a penalty.
 	 * @param robot the penalty keeper {@link Robot} in the model.
-	 * @param ballPosition the position of the ball
-	 * @param enemy the enemy penalty taker
 	 * @param fieldLength the length of the field, needed to calculate a point on the goal line
 	 */
-	public PenaltyKeeper(Robot robot, FieldPoint ballPosition, Robot enemy, double fieldLength) {
+	public PenaltyKeeper(Robot robot, double fieldLength) {
 		super(robot);
 		maxX = fieldLength / 2;
-		this.ballPosition = ballPosition;
-		this.enemy = enemy;
+		ballPosition = null;
+		enemy = null;
 		this.role = RobotMode.PENALTYKEEPER;
 		go = new GotoPosition(robot, robot.getPosition(), ballPosition, 1500);
 	}

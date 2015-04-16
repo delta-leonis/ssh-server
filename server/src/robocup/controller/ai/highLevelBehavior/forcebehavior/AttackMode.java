@@ -16,7 +16,6 @@ import robocup.model.Robot;
 import robocup.model.World;
 import robocup.model.enums.Command;
 import robocup.model.enums.RobotMode;
-import robocup.output.ComInterface;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -241,7 +240,7 @@ public class AttackMode extends Mode {
 		if (isUpdate) {
 			((Attacker) executer.getLowLevelBehavior()).update(shootDirection, chipKick, ball.getPosition());
 		} else {
-			executer.setLowLevelBehavior(new Attacker(robot, shootDirection, chipKick, ball.getPosition()));
+			executer.setLowLevelBehavior(new Attacker(robot));
 		}
 	}
 
@@ -255,8 +254,7 @@ public class AttackMode extends Mode {
 			((Coverer) executer.getLowLevelBehavior()).update(distanceToOpponent, ball.getPosition(),
 					opponent.getPosition(), opponent.getRobotId());
 		} else {
-			executer.setLowLevelBehavior(new Coverer(robot, distanceToOpponent, ball.getPosition(), opponent
-					.getPosition(), opponent.getRobotId()));
+			executer.setLowLevelBehavior(new Coverer(robot));
 		}
 	}
 
@@ -266,9 +264,8 @@ public class AttackMode extends Mode {
 			((KeeperDefender) executer.getLowLevelBehavior()).update(distanceToGoal, false, ball.getPosition(),
 					robot.getPosition());
 		} else {
-			executer.setLowLevelBehavior(new KeeperDefender(robot, ComInterface.getInstance(),
-					distanceToGoal, false, ball.getPosition(), robot.getPosition().getX() > 0 ? MID_GOAL_POSITIVE
-							: MID_GOAL_NEGATIVE, offset));
+			executer.setLowLevelBehavior(new KeeperDefender(robot, robot.getPosition().getX() > 0 ? MID_GOAL_POSITIVE
+					: MID_GOAL_NEGATIVE));
 		}
 	}
 
@@ -277,7 +274,7 @@ public class AttackMode extends Mode {
 		if (isUpdate) {
 			((Keeper) executer.getLowLevelBehavior()).update(distanceToGoal, false, ball.getPosition());
 		} else {
-			executer.setLowLevelBehavior(new Keeper(robot, distanceToGoal, false, ball.getPosition(), robot
+			executer.setLowLevelBehavior(new Keeper(robot, robot
 					.getPosition().getX() > 0 ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE));
 		}
 	}

@@ -26,16 +26,16 @@ public class GoalPostCoverer extends Keeper {
 	/**
 	 * Create a Paaldekker LowLevelBehaviour
 	 * @param robot the paaldekker {@link Robot} in the model.
-	 * @param output Used to send data to the Robot
-	 * @param enemyRobot the Robot that matters most to this {@link LowLevelBehaviour}
 	 * @param paalPosition the position of the ball
+	 * @param output Used to send data to the Robot
 	 */
-	public GoalPostCoverer(Robot robot, Robot enemyRobot, FieldPoint paalPosition) {
-		super(robot, 0, false, null, null);
-		this.enemyRobot = enemyRobot;
+	public GoalPostCoverer(Robot robot, FieldPoint paalPosition) {
+		super(robot, paalPosition);
+		enemyRobot = null;
 		this.paalPosition = paalPosition;
+
 		this.role = RobotMode.GOALPOSTCOVERER;
-		go = new GotoPosition(robot, null, enemyRobot.getPosition());
+		go = new GotoPosition(robot, null, null);
 	}
 
 	/**

@@ -33,19 +33,19 @@ public class CounterTest {
 	@Before
 	public void setUp() {
 		freePosition = null;
-		counterBehavior = new Counter(counterRobot, null, ballPosition, freePosition);
+		counterBehavior = new Counter(counterRobot);
 	}
 
 	@Before
 	public void setUpEast() {
 		freePosition = null;
-		counterBehavior = new Counter(counterRobot, FieldZone.EAST_MIDDLE, ballPosition, freePosition);
+		counterBehavior = new Counter(counterRobot);
 	}
 
 	@Before
 	public void setUpWest() {
 		freePosition = null;
-		counterBehavior = new Counter(counterRobot, FieldZone.WEST_MIDDLE, ballPosition, freePosition);
+		counterBehavior = new Counter(counterRobot);
 	}
 
 	@Test

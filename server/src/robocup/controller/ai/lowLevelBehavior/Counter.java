@@ -17,14 +17,13 @@ public class Counter extends LowLevelBehavior {
 	 * A counter tries to move to a given free position,
 	 * if no free position is given try to move to the center point of his assigned zone 
 	 * @param robot the Counter {@link Robot} in the model
-	 * @param ballPosition the position of the ball
-	 * @param freePosition a free position within the zone
 	 */
-	public Counter(Robot robot, FieldZone zone, FieldPoint ballPosition, FieldPoint freePosition) {
+	public Counter(Robot robot) {
 		super(robot);
-		this.zone = zone;
-		this.ballPosition = ballPosition;
-		this.freePosition = freePosition;
+		zone = null;
+		ballPosition = null;
+		freePosition = null;
+
 		this.role = RobotMode.COUNTER;
 		go = new GotoPosition(robot, null, ballPosition);
 	}

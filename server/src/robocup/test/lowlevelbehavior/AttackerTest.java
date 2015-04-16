@@ -30,7 +30,7 @@ public class AttackerTest {
 	@Before
 	public void setUp() {
 		ballPosition = new FieldPoint(100, 100);
-		attackBehavior = new Attacker(attackRobot, 0.0, 0, ballPosition);
+		attackBehavior = new Attacker(attackRobot);
 	}
 
 	@Test

@@ -18,7 +18,6 @@ import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.World;
 import robocup.model.enums.FieldZone;
-import robocup.output.ComInterface;
 
 public abstract class Mode {
 
@@ -132,7 +131,7 @@ public abstract class Mode {
 	 */
 	private void handlePenaltyKeeper(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof Counter))
-			executer.setLowLevelBehavior(new PenaltyKeeper(executer.getRobot(), null, null, 0));
+			executer.setLowLevelBehavior(new PenaltyKeeper(executer.getRobot(), 0));
 		updatePenaltyKeeper(executer);
 	}
 
@@ -150,7 +149,7 @@ public abstract class Mode {
 	 */
 	private void handleGoalPostCoverer(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof Counter))
-			executer.setLowLevelBehavior(new GoalPostCoverer(executer.getRobot(), null, null));
+			executer.setLowLevelBehavior(new GoalPostCoverer(executer.getRobot(), null));
 		updateGoalPostCoverer(executer);
 	}
 
@@ -168,7 +167,7 @@ public abstract class Mode {
 	 */
 	private void handleDisturber(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof Counter))
-			executer.setLowLevelBehavior(new Disturber(executer.getRobot(), 0, false, null, null));
+			executer.setLowLevelBehavior(new Disturber(executer.getRobot(), null));
 		updateDisturber(executer);
 	}
 
@@ -186,7 +185,7 @@ public abstract class Mode {
 	 */
 	private void handleCounter(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof Counter))
-			executer.setLowLevelBehavior(new Counter(executer.getRobot(), null, null, null));
+			executer.setLowLevelBehavior(new Counter(executer.getRobot()));
 		updateCounter(executer);
 	}
 
@@ -205,7 +204,7 @@ public abstract class Mode {
 	 */
 	private void handleAttacker(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof Attacker))
-			executer.setLowLevelBehavior(new Attacker(executer.getRobot(), 0.0, 0, null));
+			executer.setLowLevelBehavior(new Attacker(executer.getRobot()));
 
 		updateAttacker(executer);
 	}
@@ -224,7 +223,7 @@ public abstract class Mode {
 	 */
 	private void handleCoverer(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof Coverer))
-			executer.setLowLevelBehavior(new Coverer(executer.getRobot(), 250, null, null, 0));
+			executer.setLowLevelBehavior(new Coverer(executer.getRobot()));
 
 		updateCoverer(executer);
 	}
@@ -243,8 +242,7 @@ public abstract class Mode {
 	 */
 	private void handleKeeperDefender(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof KeeperDefender))
-			executer.setLowLevelBehavior(new KeeperDefender(executer.getRobot(), ComInterface
-					.getInstance(), 1200, false, null, null, null));
+			executer.setLowLevelBehavior(new KeeperDefender(executer.getRobot(), null));
 
 		updateKeeperDefender(executer);
 	}
@@ -266,8 +264,7 @@ public abstract class Mode {
 
 		// TODO determine field half in a better way
 		if (!(executer.getLowLevelBehavior() instanceof Keeper))
-			executer.setLowLevelBehavior(new Keeper(keeper, 500, false, ball.getPosition(),
-					keeper.getPosition().getX() < 0 ? MID_GOAL_NEGATIVE : MID_GOAL_POSITIVE));
+			executer.setLowLevelBehavior(new Keeper(keeper, keeper.getPosition().getX() < 0 ? MID_GOAL_NEGATIVE : MID_GOAL_POSITIVE));
 
 		updateKeeper(executer);
 	}

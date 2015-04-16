@@ -20,19 +20,15 @@ public class Coverer extends LowLevelBehavior {
 	/**
 	 * Create a defender (stands between "target" enemy and the ball)
 	 * @param robot The {@link Robot} that describes the blocker.
-	 * @param distanceToSubject The distance the coverer keeps from the subject in millimeters
-	 * @param objectPosition current position of the object the coverer needs to cover. See {@link FieldPoint}
-	 * @param subjectPosition current position of the subject. See {@link FieldPoint}
-	 * @param subjectId The Id of the subject this Robot is trying to interrupt.
 	 */
-	public Coverer(Robot robot, int distanceToSubject, FieldPoint objectPosition, FieldPoint subjectPosition,
-			int subjectId) {
+	public Coverer(Robot robot) {
 		super(robot);
-		this.subjectPosition = subjectPosition;
-		this.objectPosition = objectPosition;
-		this.distanceToSubject = distanceToSubject;
+		distanceToSubject = 0;
+		objectPosition = null;
+		subjectPosition = null;
+		subjectId = 0;
+
 		this.role = RobotMode.COVERER;
-		this.subjectId = subjectId;
 		go = new GotoPosition(robot, robot.getPosition(), objectPosition, 400);
 	}
 

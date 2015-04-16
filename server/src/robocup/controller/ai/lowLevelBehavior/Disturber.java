@@ -5,9 +5,8 @@ import robocup.model.Robot;
 
 public class Disturber extends Keeper {
 
-	public Disturber(Robot robot, int distanceToBall, boolean goToKick, FieldPoint ballPosition,
-			FieldPoint centerGoalPosition) {
-		super(robot, distanceToBall, goToKick, centerGoalPosition, centerGoalPosition);
+	public Disturber(Robot robot, FieldPoint centerGoalPosition) {
+		super(robot, centerGoalPosition);
 	}
 
 	/**
