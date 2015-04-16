@@ -420,7 +420,7 @@ void kickThread(void const *args)
     while(true) {
         Thread::signal_wait(0x4);
         float pwmValue = abs(chipkickSpeed)/100.0;
-        PwmOut solanoid = (chipKickSpeed > 0) ? kicker : chipper;
+        PwmOut solanoid = (chipkickSpeed > 0) ? kicker : chipper;
         solanoid.write(pwmValue);
         wait_ms(10);
         solanoid.write(0);
