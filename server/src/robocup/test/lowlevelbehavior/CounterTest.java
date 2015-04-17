@@ -40,12 +40,14 @@ public class CounterTest {
 	public void setUpEast() {
 		freePosition = null;
 		counterBehavior = new Counter(counterRobot);
+		counterBehavior.update(FieldZone.EAST_MIDDLE, ballPosition, freePosition);
 	}
 
 	@Before
 	public void setUpWest() {
 		freePosition = null;
 		counterBehavior = new Counter(counterRobot);
+		counterBehavior.update(FieldZone.WEST_MIDDLE, ballPosition, freePosition);
 	}
 
 	@Test
