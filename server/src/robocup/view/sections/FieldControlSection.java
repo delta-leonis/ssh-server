@@ -28,7 +28,7 @@ public class FieldControlSection extends SectionBox {
 		frame = new JFrame();
 		fieldPanel = new FieldPanel();
 
-		this.setLayout(new MigLayout("", "[grow]", "[grow]"));
+		this.setLayout(new MigLayout("wrap 4", "[grow]", "[grow][grow][grow]"));
 
 		add(new JButton(new AbstractAction("Show field") {
 			private static final long serialVersionUID = 1L;
@@ -42,6 +42,14 @@ public class FieldControlSection extends SectionBox {
 			}
 		}), "growx");
 
+		add(new JButton(new AbstractAction("Zones") {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
+				fieldPanel.toggleShowZones();
+			}
+		}), "growx");
+
 		add(new JButton(new AbstractAction("Raster") {
 			private static final long serialVersionUID = 1L;
 
@@ -50,11 +58,19 @@ public class FieldControlSection extends SectionBox {
 			}
 		}), "growx");
 
-		add(new JButton(new AbstractAction("Show robots") {
+		add(new JButton(new AbstractAction("Robots") {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
 				fieldPanel.toggleShowRobots();
+			}
+		}), "growx");
+
+		add(new JButton(new AbstractAction("Ball") {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
+				fieldPanel.toggleShowBall();
 			}
 		}), "growx");
 
