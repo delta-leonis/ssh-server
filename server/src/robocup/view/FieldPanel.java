@@ -36,7 +36,9 @@ public class FieldPanel extends JPanel {
 	private static int spaceBufferY = 30;
 
 	private World world = World.getInstance();
-	
+
+	private int updateCounter;
+
 	private boolean showFreeShot;
 	private boolean showRaster;
 	private boolean showRobots;
@@ -51,6 +53,7 @@ public class FieldPanel extends JPanel {
 		setSize(FIELDWIDTH_GUI, FIELDHEIGHT_GUI);
 		showFreeShot = false;
 		showRaster = false;
+		updateCounter = 0;
 
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent me) {
@@ -101,6 +104,16 @@ public class FieldPanel extends JPanel {
 		drawFreeShot(g, ratio);
 		drawRobots(g, ratio);
 		drawBall(g, ratio);
+	}
+
+	/**
+	 * Function for updating the position of 
+	 */
+	public void update() {
+		updateCounter ++;
+		if (updateCounter % 30 != 0)
+			return;
+		repaint();
 	}
 
 	/**
