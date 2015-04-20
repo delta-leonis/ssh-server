@@ -54,8 +54,10 @@ public class FieldPanel extends JPanel {
 
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent me) {
-				double x = me.getX() - getWidth() / 2;
-				double y = -1 * me.getY() + getHeight() / 2;
+				double ratio = (double)((SwingUtilities.getWindowAncestor(me.getComponent())).getWidth() - spaceBufferX * 2)
+						/ (double)FIELDWIDTH;
+				double x = - FIELDWIDTH / 2 + (me.getX() - spaceBufferX) / ratio;
+				double y = -1 * (- (FIELDHEIGHT) / 2 + (me.getY() - spaceBufferY) / ratio);
 				world.getBall().setPosition(new FieldPoint(x, y));
 				repaint();
 			}
@@ -226,10 +228,15 @@ public class FieldPanel extends JPanel {
 		g2.setStroke(new BasicStroke(2));
 		g2.setColor(Color.orange);
 
-		g2.drawLine((int) world.hasFreeShot().toGUIPoint(ratio).getX() + spaceBufferX, (int) world.hasFreeShot()
+		try {
+			g2.drawLine((int) world.hasFreeShot().toGUIPoint(ratio).getX() + spaceBufferX, (int) world.hasFreeShot()
 				.toGUIPoint(ratio).getY()
 				+ spaceBufferY, (int) world.getBall().getPosition().toGUIPoint(ratio).getX() + spaceBufferX,
 				(int) world.getBall().getPosition().toGUIPoint(ratio).getY() + spaceBufferY);
+		} catch (NullPointerException e) {
+			// no free shot
+		}
+		
 	}
 
 	/**
