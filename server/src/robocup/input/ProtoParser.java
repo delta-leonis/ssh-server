@@ -16,7 +16,7 @@ public class ProtoParser {
 	private LinkedTransferQueue<Object> inputBuffer;
 
 	/**
-	 * Instanciates protoparser by creating a {@link LinkedTransferQueue}
+	 * Instantiates protoparser by creating a {@link LinkedTransferQueue}
 	 */
 	private ProtoParser() {
 		inputBuffer = new LinkedTransferQueue<Object>();
@@ -30,9 +30,9 @@ public class ProtoParser {
 	}
 
 	/**
-	 * parse a byte array to a detection or a geometry object
+	 * Parse a byte array to a detection or a geometry object
 	 * 
-	 * @param data
+	 * @param data : {@link ByteArrayInputStream} of data received from {@link SSLVisionClient}
 	 */
 	public void parseVision(ByteArrayInputStream data) {
 
@@ -52,8 +52,7 @@ public class ProtoParser {
 	/**
 	 * Parse a byte array to a referee message object
 	 * 
-	 * @param input
-	 *            ByteArrayInputStream with UDP packet
+	 * @param input A {@link ByteArrayInputStream} with UDP packet received from {@link RefereeClient}
 	 */
 	public void parseReferee(ByteArrayInputStream input) {
 		try {
@@ -67,7 +66,7 @@ public class ProtoParser {
 	/**
 	 * Returns Head of message inputBuffer in FIFO manner
 	 * 
-	 * @return MessageFrame object as Object
+	 * @return MessageFrame object as Object. May return null.
 	 */
 	public Object getHeadObject() {
 		Object retValue = null;
@@ -83,7 +82,7 @@ public class ProtoParser {
 	/**
 	 * Add Object to inputBuffer
 	 * 
-	 * @param Object
+	 * @param Object The Object we wish to add to the inputBuffer.
 	 */
 	public void addObject(Object o) {
 		inputBuffer.add(o);
