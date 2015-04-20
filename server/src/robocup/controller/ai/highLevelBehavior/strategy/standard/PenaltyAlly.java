@@ -1,5 +1,7 @@
 package robocup.controller.ai.highLevelBehavior.strategy.standard;
 
+import org.apache.commons.math3.util.Pair;
+
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.model.FieldPoint;
 import robocup.model.World;
@@ -17,6 +19,7 @@ import robocup.model.enums.RobotMode;
  * For more information about the strategy and roles see TactiekDocument
  */
 public class PenaltyAlly extends Strategy {
+
 	/**
 	 * Roles in the {@link PenaltyAlly} strategy are assigned in the following order:<br>
 	 * <ol>
@@ -28,7 +31,7 @@ public class PenaltyAlly extends Strategy {
 	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
 	 * </ol>
 	 */
-	public PenaltyAlly () {
+	public PenaltyAlly() {
 		super();
 		roles.add(RobotMode.KEEPER);
 		// the robot that takes the penalty, the referee needs to be notified about this robot 
@@ -36,24 +39,24 @@ public class PenaltyAlly extends Strategy {
 		// Try to stand as near to the enemy goal as is allowed, to get the ball if the penalty is blocked
 		roles.add(RobotMode.RUNNER);
 		roles.add(RobotMode.RUNNER);
-		
+
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.KEEPERDEFENDER);
-	}	
-	
+	}
+
 	/**
 	 * Method that declares the zones for all the roles in this strategy
 	 */
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
-		if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
-			zonesForRole.put(RobotMode.ATTACKER, FieldZone.WEST_CENTER);
-			zonesForRole.put(RobotMode.RUNNER, FieldZone.WEST_MIDDLE);
-			zonesForRole.put(RobotMode.RUNNER, FieldZone.WEST_MIDDLE);
+		if (World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.ATTACKER, FieldZone.WEST_CENTER));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_MIDDLE));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_MIDDLE));
 		} else {
-			zonesForRole.put(RobotMode.ATTACKER, FieldZone.EAST_CENTER);
-			zonesForRole.put(RobotMode.RUNNER, FieldZone.EAST_MIDDLE);
-			zonesForRole.put(RobotMode.RUNNER, FieldZone.EAST_MIDDLE);
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.ATTACKER, FieldZone.EAST_CENTER));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_MIDDLE));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_MIDDLE));
 		}
 	}
 }

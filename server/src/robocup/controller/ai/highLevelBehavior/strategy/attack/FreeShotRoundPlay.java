@@ -1,5 +1,7 @@
 package robocup.controller.ai.highLevelBehavior.strategy.attack;
 
+import org.apache.commons.math3.util.Pair;
+
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.model.FieldPoint;
 import robocup.model.World;
@@ -43,17 +45,17 @@ public class FreeShotRoundPlay extends Strategy {
 		roles.add(RobotMode.ATTACKER);
 		roles.add(RobotMode.ATTACKER);
 	}
-	
+
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
-		if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
-			zonesForRole.put(RobotMode.ATTACKER, FieldZone.WEST_CENTER);
-			zonesForRole.put(RobotMode.ATTACKER, FieldZone.WEST_NORTH_SECONDPOST);
-			zonesForRole.put(RobotMode.ATTACKER, FieldZone.WEST_SOUTH_SECONDPOST);
+		if (World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.ATTACKER, FieldZone.WEST_CENTER));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.ATTACKER, FieldZone.WEST_NORTH_SECONDPOST));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.ATTACKER, FieldZone.WEST_SOUTH_SECONDPOST));
 		} else {
-			zonesForRole.put(RobotMode.ATTACKER, FieldZone.EAST_CENTER);
-			zonesForRole.put(RobotMode.ATTACKER, FieldZone.EAST_NORTH_SECONDPOST);
-			zonesForRole.put(RobotMode.ATTACKER, FieldZone.EAST_SOUTH_SECONDPOST);
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.ATTACKER, FieldZone.EAST_CENTER));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.ATTACKER, FieldZone.EAST_NORTH_SECONDPOST));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.ATTACKER, FieldZone.EAST_SOUTH_SECONDPOST));
 		}
 	}
 }

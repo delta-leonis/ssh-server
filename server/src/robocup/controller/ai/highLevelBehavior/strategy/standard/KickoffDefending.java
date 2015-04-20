@@ -1,5 +1,7 @@
 package robocup.controller.ai.highLevelBehavior.strategy.standard;
 
+import org.apache.commons.math3.util.Pair;
+
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.model.FieldPoint;
 import robocup.model.World;
@@ -17,6 +19,7 @@ import robocup.model.enums.RobotMode;
  * For more information about the strategy and roles see TactiekDocument
  */
 public class KickoffDefending extends Strategy {
+
 	/**
 	 * Roles in the {@link KickoffDefending} strategy are assigned in the following order:<br>
 	 * <ol>
@@ -28,7 +31,7 @@ public class KickoffDefending extends Strategy {
 	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
 	 * </ol>
 	 */
-	public KickoffDefending () {
+	public KickoffDefending() {
 		super();
 		roles.add(RobotMode.KEEPER);
 		// Center robot coverer
@@ -37,24 +40,24 @@ public class KickoffDefending extends Strategy {
 		roles.add(RobotMode.COVERER);
 		// Bottom side field coverer
 		roles.add(RobotMode.COVERER);
-		
+
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.KEEPERDEFENDER);
 	}
-	
+
 	/**
 	 * Method that declares the zones for all the roles in this strategy
 	 */
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
-		if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
-			zonesForRole.put(RobotMode.COVERER, FieldZone.EAST_NORTH_FRONT);
-			zonesForRole.put(RobotMode.COVERER, FieldZone.EAST_SOUTH_FRONT);
-			zonesForRole.put(RobotMode.COVERER, FieldZone.EAST_MIDDLE);
+		if (World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.EAST_NORTH_FRONT));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.EAST_SOUTH_FRONT));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.EAST_MIDDLE));
 		} else {
-			zonesForRole.put(RobotMode.COVERER, FieldZone.WEST_SOUTH_FRONT);
-			zonesForRole.put(RobotMode.COVERER, FieldZone.WEST_SOUTH_FRONT);
-			zonesForRole.put(RobotMode.COVERER, FieldZone.WEST_MIDDLE);
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.WEST_SOUTH_FRONT));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.WEST_SOUTH_FRONT));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.WEST_MIDDLE));
 		}
 	}
 }

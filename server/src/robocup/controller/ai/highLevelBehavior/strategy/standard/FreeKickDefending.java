@@ -1,5 +1,7 @@
 package robocup.controller.ai.highLevelBehavior.strategy.standard;
 
+import org.apache.commons.math3.util.Pair;
+
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.model.FieldPoint;
 import robocup.model.World;
@@ -18,6 +20,7 @@ import robocup.model.enums.RobotMode;
  * For more information about the strategy and roles see TactiekDocument
  */
 public class FreeKickDefending extends Strategy {
+
 	/**
 	 * Roles in the {@link FreeKickDefending} strategy are assigned in the following order:<br>
 	 * <ol>
@@ -29,7 +32,7 @@ public class FreeKickDefending extends Strategy {
 	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
 	 * </ol>
 	 */
-	public FreeKickDefending () {
+	public FreeKickDefending() {
 		super();
 		roles.add(RobotMode.KEEPER);
 		// Second pole defender
@@ -38,35 +41,39 @@ public class FreeKickDefending extends Strategy {
 		roles.add(RobotMode.DISTURBER);
 		// covers the enemy that may kick the ball
 		roles.add(RobotMode.COVERER);
-		
+
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.KEEPERDEFENDER);
 	}
-	
+
 	/**
 	 * Method that declares the zones for all the roles in this strategy
 	 */
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
-		if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
-			if(ballPosition.getY() <= 0.0) {
-				zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.EAST_SOUTH_SECONDPOST);
-				zonesForRole.put(RobotMode.DISTURBER, FieldZone.EAST_SOUTH_FRONT);
-				zonesForRole.put(RobotMode.COVERER, FieldZone.EAST_NORTH_FRONT);
+		if (World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
+			if (ballPosition.getY() <= 0.0) {
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.GOALPOSTCOVERER,
+						FieldZone.EAST_SOUTH_SECONDPOST));
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.DISTURBER, FieldZone.EAST_SOUTH_FRONT));
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.EAST_NORTH_FRONT));
 			} else {
-				zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.EAST_NORTH_SECONDPOST);
-				zonesForRole.put(RobotMode.DISTURBER, FieldZone.EAST_NORTH_FRONT);
-				zonesForRole.put(RobotMode.COVERER, FieldZone.EAST_SOUTH_FRONT);
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.GOALPOSTCOVERER,
+						FieldZone.EAST_NORTH_SECONDPOST));
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.DISTURBER, FieldZone.EAST_NORTH_FRONT));
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.EAST_SOUTH_FRONT));
 			}
 		} else {
-			if(ballPosition.getY() <= 0.0) {
-				zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.WEST_SOUTH_SECONDPOST);
-				zonesForRole.put(RobotMode.DISTURBER, FieldZone.WEST_SOUTH_FRONT);
-				zonesForRole.put(RobotMode.COVERER, FieldZone.WEST_NORTH_FRONT);
+			if (ballPosition.getY() <= 0.0) {
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.GOALPOSTCOVERER,
+						FieldZone.WEST_SOUTH_SECONDPOST));
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.DISTURBER, FieldZone.WEST_SOUTH_FRONT));
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.WEST_NORTH_FRONT));
 			} else {
-				zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.WEST_NORTH_SECONDPOST);
-				zonesForRole.put(RobotMode.DISTURBER, FieldZone.WEST_NORTH_FRONT);
-				zonesForRole.put(RobotMode.COVERER, FieldZone.WEST_SOUTH_FRONT);
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.GOALPOSTCOVERER,
+						FieldZone.WEST_NORTH_SECONDPOST));
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.DISTURBER, FieldZone.WEST_NORTH_FRONT));
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.WEST_SOUTH_FRONT));
 			}
 		}
 	}

@@ -1,5 +1,7 @@
 package robocup.controller.ai.highLevelBehavior.strategy.defense;
 
+import org.apache.commons.math3.util.Pair;
+
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.model.FieldPoint;
 import robocup.model.World;
@@ -36,18 +38,17 @@ public class ForwardDefending extends Strategy {
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.KEEPERDEFENDER);
 
-
 		roles.add(RobotMode.COUNTER);
 		roles.add(RobotMode.COVERER);
 		roles.add(RobotMode.COVERER);
 	}
-	
+
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
-		if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
-			zonesForRole.put(RobotMode.COUNTER, FieldZone.WEST_CENTER);
+		if (World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COUNTER, FieldZone.WEST_CENTER));
 		} else {
-			zonesForRole.put(RobotMode.COUNTER, FieldZone.EAST_CENTER);
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COUNTER, FieldZone.EAST_CENTER));
 		}
 	}
 }

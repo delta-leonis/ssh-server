@@ -1,5 +1,7 @@
 package robocup.controller.ai.highLevelBehavior.strategy.defense;
 
+import org.apache.commons.math3.util.Pair;
+
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.model.FieldPoint;
 import robocup.model.World;
@@ -39,26 +41,31 @@ public class BarricadeDefending extends Strategy {
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.KEEPERDEFENDER);
 
-
 		roles.add(RobotMode.COUNTER);
 		roles.add(RobotMode.GOALPOSTCOVERER);
 		roles.add(RobotMode.DISTURBER);
 	}
-	
+
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
-		if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
-			zonesForRole.put(RobotMode.COUNTER, FieldZone.WEST_CENTER);
-			if(ballPosition.getY() <= 0.0)
-				zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.EAST_SOUTH_SECONDPOST);
+		if (World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COUNTER, FieldZone.WEST_CENTER));
+
+			if (ballPosition.getY() <= 0.0)
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.GOALPOSTCOVERER,
+						FieldZone.EAST_SOUTH_SECONDPOST));
 			else
-				zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.EAST_NORTH_SECONDPOST);
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.GOALPOSTCOVERER,
+						FieldZone.EAST_NORTH_SECONDPOST));
 		} else {
-			zonesForRole.put(RobotMode.COUNTER, FieldZone.EAST_CENTER);
-			if(ballPosition.getY() <= 0.0)
-				zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.EAST_SOUTH_SECONDPOST);
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COUNTER, FieldZone.EAST_CENTER));
+
+			if (ballPosition.getY() <= 0.0)
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.GOALPOSTCOVERER,
+						FieldZone.EAST_SOUTH_SECONDPOST));
 			else
-				zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.EAST_NORTH_SECONDPOST);
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.GOALPOSTCOVERER,
+						FieldZone.EAST_NORTH_SECONDPOST));
 		}
 	}
 }
