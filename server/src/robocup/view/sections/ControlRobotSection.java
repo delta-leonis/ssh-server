@@ -68,8 +68,10 @@ public class ControlRobotSection extends SectionBox{
 		strafeRightButton.addActionListener(buttonListener);
 
 
-		add(chipButton, "growx");
-		add(kickButton, "growx");
+		add(chipStrength, "growx");
+		add(chipButton, "growx, wrap");
+		add(kickStrength, "growx");
+		add(kickButton, "growx, wrap");
 		add(dribbleToggleButton, "growx");
 		add(strafeLeftButton, "growx");
 		add(moveForwardButton, "growx");
