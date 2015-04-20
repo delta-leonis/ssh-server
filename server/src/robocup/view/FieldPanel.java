@@ -107,7 +107,8 @@ public class FieldPanel extends JPanel {
 	}
 
 	/**
-	 * Function for updating the position of 
+	 * Function for updating the {@link FieldPanel}. Updates with a result of 2 times
+	 * per second at a frame rate of 60 fps
 	 */
 	public void update() {
 		updateCounter ++;
