@@ -25,7 +25,10 @@ public class ControlRobotSection extends SectionBox{
 	private JLabel selectedRobotLabel;
 	private int selectedRobotId;
 	private boolean dribbling = false;
-	private JTextField forwardBox;
+	private JTextField forwardBox,
+						kickStrength,
+						chipStrength;
+	
 	
 	/**
 	 * Create ControlRobotSection
@@ -49,6 +52,8 @@ public class ControlRobotSection extends SectionBox{
 		JButton forwardTestButton = new JButton("Forward");
 		forwardTestButton.setBackground(Color.GREEN);
 		forwardBox = new JTextField("500");
+		kickStrength = new JTextField("100");
+		chipStrength = new JTextField("100");
 		
 		ButtonListener buttonListener = new ButtonListener();
 		chipButton.addActionListener(buttonListener);
@@ -85,10 +90,10 @@ public class ControlRobotSection extends SectionBox{
 			LOGGER.info(String.format("%s commando send to robot #%d", buttonText.split("\\s+" )[0], selectedRobotId));
 			switch (buttonText) {
 			case "Chippen":
-				ComInterface.getInstance().send(1, selectedRobotId,0, 0, 0, 100, dribbling);
+				ComInterface.getInstance().send(1, selectedRobotId,0, 0, 0, Integer.valueOf(chipStrength.getText()), dribbling);
 				break;
 			case "Kicken":
-				ComInterface.getInstance().send(1, selectedRobotId, 0, 0, 0, -100, dribbling);
+				ComInterface.getInstance().send(1, selectedRobotId, 0, 0, 0, -1*Integer.valueOf(kickStrength.getText()), dribbling);
 				break;
 			case "Dribble toggle":
 				dribbling = !dribbling;
