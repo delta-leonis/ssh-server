@@ -98,51 +98,53 @@ public abstract class Mode {
 	 */
 	private void updateExecuter(RobotExecuter executer) {
 		// Execute handle functions based on role
-		switch (((Ally) executer.getRobot()).getRole()) {
-		case ATTACKER:
-			handleAttacker(executer);
-			break;
-		case COUNTER:
-			handleCounter(executer);
-			break;
-		case COVERER:
-			handleCoverer(executer);
-			break;
-		case DISTURBER:
-			handleDisturber(executer);
-			break;
-		case DISTURBER_COVERER:
-			FieldZone ballZone = world.locateFieldObject(ball);
-			FieldZone robotZone = world.locateFieldObject(executer.getRobot());
-			if (ballZone.equals(robotZone))
+		if (((Ally) executer.getRobot()).getRole() != null) {
+			switch (((Ally) executer.getRobot()).getRole()) {
+			case ATTACKER:
+				handleAttacker(executer);
+				break;
+			case COUNTER:
+				handleCounter(executer);
+				break;
+			case COVERER:
+				handleCoverer(executer);
+				break;
+			case DISTURBER:
 				handleDisturber(executer);
-			else
-				handleCoverer(executer);
-			break;
-		case GOALPOSTCOVERER:
-			handleGoalPostCoverer(executer);
-			break;
-		case KEEPER:
-			handleKeeper(executer);
-			break;
-		case KEEPERDEFENDER:
-			handleKeeperDefender(executer);
-			break;
-		case KEEPERDEFENDER_COVERER:
-			if ((ball.getPosition().getY() > 0 && executer.getRobot().getPosition().getY() > 0)
-					|| (ball.getPosition().getY() <= 0 && executer.getRobot().getPosition().getY() <= 0))
+				break;
+			case DISTURBER_COVERER:
+				FieldZone ballZone = world.locateFieldObject(ball);
+				FieldZone robotZone = world.locateFieldObject(executer.getRobot());
+				if (ballZone.equals(robotZone))
+					handleDisturber(executer);
+				else
+					handleCoverer(executer);
+				break;
+			case GOALPOSTCOVERER:
+				handleGoalPostCoverer(executer);
+				break;
+			case KEEPER:
+				handleKeeper(executer);
+				break;
+			case KEEPERDEFENDER:
 				handleKeeperDefender(executer);
-			else
-				handleCoverer(executer);
-			break;
-		case PENALTYKEEPER:
-			handlePenaltyKeeper(executer);
-			break;
-		case RUNNER:
-			break;
-		default:
-			System.out.println("Role used without handle function, please add me in Mode.java, role: "
-					+ ((Ally) executer.getRobot()).getRole());
+				break;
+			case KEEPERDEFENDER_COVERER:
+				if ((ball.getPosition().getY() > 0 && executer.getRobot().getPosition().getY() > 0)
+						|| (ball.getPosition().getY() <= 0 && executer.getRobot().getPosition().getY() <= 0))
+					handleKeeperDefender(executer);
+				else
+					handleCoverer(executer);
+				break;
+			case PENALTYKEEPER:
+				handlePenaltyKeeper(executer);
+				break;
+			case RUNNER:
+				break;
+			default:
+				System.out.println("Role used without handle function, please add me in Mode.java, role: "
+						+ ((Ally) executer.getRobot()).getRole());
+			}
 		}
 	}
 

@@ -78,17 +78,17 @@ public class ZoneBehavior extends Behavior {
 	}
 
 	/**
-	 * Determine which Mode needs to be used.
+	 * Determine which Mode needs to be u
+			default:sed.
 	 * @param executers All the {@link robocup.controller.ai.lowLevelBehavior.RobotExecuter executers} that control our {@link robocup.model.Robot robots}
 	 * @return {@link AttackMode} when our team is closer to the ball. {@link DefenseMode} when the enemy team is closer to the ball.
 	 */
 	private void determineMode(ArrayList<RobotExecuter> executers) {
 		Event event = events.getNewEvent();
 
-		if (event != null)
+		if (event != null) {
+			LOGGER.info("Event: " + event.name());
 			switch (event) {
-			default:
-				LOGGER.info("Event: " + event.name());
 			case BALL_ALLY_CAPTURE:
 				currentMode = chooseAttackStrategy(executers);
 				break;
@@ -127,6 +127,7 @@ public class ZoneBehavior extends Behavior {
 					currentMode = chooseDefenseStrategy(executers);
 				break;
 			}
+		}
 
 		// Check in case of missed event
 		if (world.getReferee().getCommand() == Command.NORMAL_START) {

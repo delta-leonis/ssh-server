@@ -40,7 +40,7 @@ public abstract class Strategy {
 		// remove zone role to prevent assigning the same zone twice
 		zonesForRole.remove(toRet);
 
-		return toRet.getSecond();
+		return toRet == null ? null : toRet.getSecond();
 	}
 
 	/**
