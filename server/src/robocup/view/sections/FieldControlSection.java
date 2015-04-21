@@ -85,6 +85,7 @@ public class FieldControlSection extends SectionBox {
 
 	@Override
 	public void update() {
+		fieldPanel.update();
 	}
 
 }

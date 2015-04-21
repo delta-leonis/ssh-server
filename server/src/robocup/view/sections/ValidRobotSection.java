@@ -34,7 +34,7 @@ public class ValidRobotSection extends SectionBox {
 		for (int i = 0; i < numberOfRobots; i++) {
 			JCheckBox checkbox = new JCheckBox("#" + i);
 			checkbox.addActionListener(new checkHandler());
-			checkbox.setSelected(World.getInstance().getValidRobotIDs().contains(World.getInstance().getReferee().getAlly().getRobotByID(i)));
+			checkbox.setSelected(World.getInstance().getValidRobotIDs().contains(i));
 			checkboxes.add(checkbox);
 			add(checkbox, (numberOfRobots - 1 == i) ? "wrap" : "");
 		}

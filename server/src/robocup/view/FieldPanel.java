@@ -112,9 +112,10 @@ public class FieldPanel extends JPanel {
 	 */
 	public void update() {
 		updateCounter ++;
-		if (updateCounter % 30 != 0)
+		if(updateCounter < 10)
 			return;
 		repaint();
+		updateCounter = 0;
 	}
 
 	/**

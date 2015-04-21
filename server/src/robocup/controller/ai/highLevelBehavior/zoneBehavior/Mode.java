@@ -334,7 +334,7 @@ public abstract class Mode {
 	private ArrayList<Ally> getAllyRobotsWithoutRole() {
 		ArrayList<Ally> robotsWithoutRole = new ArrayList<Ally>();
 
-		for (Robot robot : world.getReferee().getAlly().getRobots())
+		for (Robot robot : world.getReferee().getAlly().getRobotsOnSight())
 			if (((Ally) robot).getRole() == null)
 				robotsWithoutRole.add((Ally) robot);
 
