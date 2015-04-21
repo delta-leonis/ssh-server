@@ -124,11 +124,17 @@ public class DefenseMode extends Mode {
 	protected void updateGoalPostCoverer(RobotExecuter executer) {
 		GoalPostCoverer goalPostCoverer = (GoalPostCoverer) executer.getLowLevelBehavior();
 
-		int distanceToGoal = 1200;
+		int distanceToPole = world.getField().getDefenceRadius() + world.getField().getDefenceStretch() / 2 + 50;
 		boolean goToKick = false;
+
+		double XPoint = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? world.getField()
+				.getWidth() / 2 : -world.getField().getWidth() / 2;
+		double YPoint = ball.getPosition().getY() / Math.abs(ball.getPosition().getY())
+				* world.getField().getEastGoal().getWidth() / 4 * -1;
+		Robot enemyRobot = world.getClosestEnemyRobotToPoint(new FieldPoint(XPoint, YPoint));
 		FieldPoint ballPosition = ball.getPosition();
 
-		goalPostCoverer.update(distanceToGoal, goToKick, ballPosition);
+		goalPostCoverer.update(distanceToPole, goToKick, enemyRobot, ballPosition);
 	}
 
 	@Override

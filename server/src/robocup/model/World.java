@@ -250,6 +250,33 @@ public class World extends Observable {
 
 		return minDistanceRobot;
 	}
+	
+	/**
+	 * Get the closest {@link Robot} to a {@link FieldPoint}. This is an {@link Enemy} robot.
+	 * @return the closest {@link Enemy} to the {@link FieldPoint}
+	 */
+	public Robot getClosestEnemyRobotToPoint(FieldPoint point) {
+		ArrayList<Robot> robots = getReferee().getEnemy().getRobotsOnSight();
+
+		double minDistance = -1.0;
+		Robot minDistanceRobot = null;
+
+		for (Robot robot : robots) {
+			if (minDistance == -1.0) {
+				minDistanceRobot = robot;
+				minDistance = robot.getPosition().getDeltaDistance(point);
+			} else {
+				double distance = robot.getPosition().getDeltaDistance(point);
+
+				if (distance < minDistance) {
+					minDistanceRobot = robot;
+					minDistance = distance;
+				}
+			}
+		}
+
+		return minDistanceRobot;
+	}
 
 	/**
 	 * Get the distance from the closest {@link Robot} in one {@link Team} to the {@link Ball}
