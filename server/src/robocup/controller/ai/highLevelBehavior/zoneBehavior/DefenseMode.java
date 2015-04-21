@@ -115,9 +115,8 @@ public class DefenseMode extends Mode {
 	@Override
 	protected void updatePenaltyKeeper(RobotExecuter executer) {
 		PenaltyKeeper penalKeeper = (PenaltyKeeper) executer.getLowLevelBehavior();
-		// TODO Auto-generated method stub
-		FieldPoint ballPosition = null;
-		Robot enemy = null;
+		FieldPoint ballPosition = ball.getPosition();
+		Robot enemy = world.getClosestRobotToBall();
 		penalKeeper.update(ballPosition, enemy);
 	}
 
