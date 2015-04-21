@@ -4,10 +4,17 @@ import java.util.ArrayList;
 
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.controller.ai.lowLevelBehavior.Attacker;
+import robocup.controller.ai.lowLevelBehavior.Counter;
 import robocup.controller.ai.lowLevelBehavior.Coverer;
+import robocup.controller.ai.lowLevelBehavior.Disturber;
+import robocup.controller.ai.lowLevelBehavior.GoalPostCoverer;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
+import robocup.controller.ai.lowLevelBehavior.PenaltyKeeper;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
+import robocup.model.FieldPoint;
+import robocup.model.Robot;
+import robocup.model.enums.FieldZone;
 
 public class DefenseMode extends Mode {
 
@@ -19,21 +26,32 @@ public class DefenseMode extends Mode {
 	public void updateAttacker(RobotExecuter executer) {
 		Attacker attacker = (Attacker) executer.getLowLevelBehavior();
 		// TODO Update with normal values
-		attacker.update(0.0, 0, ball.getPosition());
+		double shootDirection = 0.0;
+		int chipKick = 0;
+		FieldPoint ballPosition = ball.getPosition();
+		attacker.update(shootDirection, chipKick, ballPosition);
 	}
 
 	@Override
 	public void updateCoverer(RobotExecuter executer) {
 		Coverer blocker = (Coverer) executer.getLowLevelBehavior();
 		// TODO Update with normal values
-		blocker.update(250, ball.getPosition(), null, 0);
+		int distanceToSubject = 250;
+		FieldPoint objectPosition = ball.getPosition();
+		FieldPoint subjectPosition = null;
+		int subjectId = 0;
+		blocker.update(distanceToSubject, objectPosition, subjectPosition, subjectId);
 	}
 
 	@Override
 	public void updateKeeperDefender(RobotExecuter executer) {
 		KeeperDefender keeperDefender = (KeeperDefender) executer.getLowLevelBehavior();
 		// TODO Update with normal values
-		keeperDefender.update(1200, false, ball.getPosition(), executer.getRobot().getPosition());
+		int distanceToGoal = 1200;
+		boolean goToKick = false;
+		FieldPoint ballPosition = ball.getPosition();
+		FieldPoint offset = null;
+		keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset);
 	}
 
 	@Override
@@ -43,31 +61,50 @@ public class DefenseMode extends Mode {
 		int distanceToGoal = 500;
 		// TODO check if keeper needs to move to the ball, if so, set goToKick to true
 		boolean goToKick = false;
-
-		keeper.update(distanceToGoal, goToKick, ball.getPosition());
+		FieldPoint ballPosition = ball.getPosition();
+		keeper.update(distanceToGoal, goToKick, ballPosition);
 	}
 
 	@Override
 	protected void updatePenaltyKeeper(RobotExecuter executer) {
+		PenaltyKeeper penalKeeper = (PenaltyKeeper) executer.getLowLevelBehavior();
 		// TODO Auto-generated method stub
-		
+		FieldPoint ballPosition = null;
+		Robot enemy = null;
+		penalKeeper.update(ballPosition, enemy);
 	}
 
 	@Override
 	protected void updateGoalPostCoverer(RobotExecuter executer) {
-		// TODO Auto-generated method stub
-		
+		GoalPostCoverer goalPostCoverer = (GoalPostCoverer) executer.getLowLevelBehavior();
+
+		int distanceToGoal = 1200;
+		boolean goToKick = false;
+		FieldPoint ballPosition = ball.getPosition();
+
+		goalPostCoverer.update(distanceToGoal, goToKick, ballPosition);
 	}
 
 	@Override
 	protected void updateDisturber(RobotExecuter executer) {
-		// TODO Auto-generated method stub
-		
+		Disturber disturber = (Disturber) executer.getLowLevelBehavior();
+
+		int distanceToObject = 300;
+		boolean goToKick = false;
+		FieldPoint objectPosition = ball.getPosition();
+
+		disturber.update(distanceToObject, goToKick, objectPosition);
 	}
 
 	@Override
 	protected void updateCounter(RobotExecuter executer) {
-		// TODO Auto-generated method stub
-		
+		Counter counter = (Counter) executer.getLowLevelBehavior();
+
+		FieldZone zone = world.getReferee().getAlly().equals(world.getReferee().getEastTeam()) ? FieldZone.WEST_MIDDLE
+				: FieldZone.EAST_MIDDLE;
+		FieldPoint ballPosition = ball.getPosition();
+		FieldPoint freePosition = null;
+
+		counter.update(zone, ballPosition, freePosition);
 	}
 }
