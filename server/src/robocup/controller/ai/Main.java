@@ -5,7 +5,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import robocup.controller.ai.highLevelBehavior.Behavior;
-import robocup.controller.ai.highLevelBehavior.ForceBehavior;
+import robocup.controller.ai.highLevelBehavior.ZoneBehavior;
 import robocup.controller.ai.lowLevelBehavior.LowLevelBehavior;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Robot;
@@ -27,7 +27,7 @@ public class Main implements Observer {
 		world.addObserver(this);
 		initExecutors();
 
-		behavior = new ForceBehavior(robotExecuters);
+		behavior = new ZoneBehavior(robotExecuters);
 
 		// behaviors = new ArrayList<Behavior>();
 		// behaviors.add(new TestKeepingBehavior(1, null));
