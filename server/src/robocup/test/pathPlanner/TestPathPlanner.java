@@ -1,4 +1,4 @@
-package robocup.test;
+package robocup.test.pathPlanner;
 
 
 import static org.junit.Assert.assertNull;

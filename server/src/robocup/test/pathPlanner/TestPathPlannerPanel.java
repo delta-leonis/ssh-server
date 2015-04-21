@@ -1,4 +1,4 @@
-package robocup.test;
+package robocup.test.pathPlanner;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
