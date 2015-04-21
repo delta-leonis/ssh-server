@@ -33,10 +33,10 @@ public class GeometryHandler {
 	 */
 	public void processFieldSize(SSL_GeometryData message) {
 		SSL_GeometryFieldSize f = message.getField();
-		world.getField().update(f.getLineWidth(), f.getFieldLength(), f.getFieldWidth(), f.getBoundaryWidth(),
-				f.getRefereeWidth(), f.getGoalWallWidth(), f.getGoalDepth(), f.getGoalWallWidth(),
-				f.getCenterCircleRadius(), f.getDefenseRadius(), f.getDefenseStretch(), f.getFreeKickFromDefenseDist(),
-				f.getPenaltySpotFromFieldLineDist(), f.getPenaltyLineFromSpotDist());
+//		world.getField().update(f.getLineWidth(), f.getFieldLength(), f.getFieldWidth(), f.getBoundaryWidth(),
+//				f.getRefereeWidth(), f.getGoalWallWidth(), f.getGoalDepth(), f.getGoalWallWidth(),
+//				f.getCenterCircleRadius(), f.getDefenseRadius(), f.getDefenseStretch(), f.getFreeKickFromDefenseDist(),
+//				f.getPenaltySpotFromFieldLineDist(), f.getPenaltyLineFromSpotDist());
 	}
 
 	/**
