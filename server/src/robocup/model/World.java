@@ -1,5 +1,6 @@
 package robocup.model;
 
+import java.awt.Container;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Observable;
@@ -37,6 +38,8 @@ public class World extends Observable {
 	private final int STOP_BALL_DISTANCE = 500; // in mm
 
 	public GUI gui;
+
+	private ArrayList<Integer> validRobotIDs = new ArrayList<Integer>();
 
 	/**
 	 * Constructor for the {@link World} Can only be called as a singleton.
@@ -735,5 +738,12 @@ public class World extends Observable {
 		}
 		mergedMap.put((prevY1 < prevY2 ? prevY1 : prevY2), (prevY1 > prevY2 ? prevY1 : prevY2));
 		return mergedMap;
+	}
+
+	/**
+	 * @return list with robots that are valid for processing by {@link DetectionHandler}
+	 */
+	public ArrayList<Integer> getValidRobotIDs() {
+		return validRobotIDs;
 	}
 }

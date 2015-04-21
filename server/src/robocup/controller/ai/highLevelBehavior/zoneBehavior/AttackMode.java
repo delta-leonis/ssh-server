@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.controller.ai.lowLevelBehavior.Attacker;
 import robocup.controller.ai.lowLevelBehavior.Coverer;
+import robocup.controller.ai.lowLevelBehavior.GoalPostCoverer;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
@@ -55,7 +56,10 @@ public class AttackMode extends Mode {
 
 	@Override
 	protected void updateGoalPostCoverer(RobotExecuter executer) {
-		// TODO Auto-generated method stub
+		GoalPostCoverer goalPostCoverer = (GoalPostCoverer) executer.getLowLevelBehavior();
+		boolean goToKick = false; //TODO determine
+		int distanceToGoal = 800;
+		goalPostCoverer.update(distanceToGoal, goToKick, ball.getPosition());
 		
 	}
 
