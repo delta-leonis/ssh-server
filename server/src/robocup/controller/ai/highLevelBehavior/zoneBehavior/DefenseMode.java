@@ -8,6 +8,7 @@ import robocup.controller.ai.lowLevelBehavior.Coverer;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
+import robocup.model.FieldPoint;
 
 public class DefenseMode extends Mode {
 
@@ -19,21 +20,32 @@ public class DefenseMode extends Mode {
 	public void updateAttacker(RobotExecuter executer) {
 		Attacker attacker = (Attacker) executer.getLowLevelBehavior();
 		// TODO Update with normal values
-		attacker.update(0.0, 0, ball.getPosition());
+		double shootDirection = 0.0;
+		int chipKick = 0;
+		FieldPoint ballPosition = ball.getPosition();
+		attacker.update(shootDirection, chipKick, ballPosition);
 	}
 
 	@Override
 	public void updateCoverer(RobotExecuter executer) {
 		Coverer blocker = (Coverer) executer.getLowLevelBehavior();
 		// TODO Update with normal values
-		blocker.update(250, ball.getPosition(), null, 0);
+		int distanceToSubject = 250;
+		FieldPoint objectPosition = ball.getPosition();
+		FieldPoint subjectPosition = null;
+		int subjectId = 0;
+		blocker.update(distanceToSubject, objectPosition, subjectPosition, subjectId);
 	}
 
 	@Override
 	public void updateKeeperDefender(RobotExecuter executer) {
 		KeeperDefender keeperDefender = (KeeperDefender) executer.getLowLevelBehavior();
 		// TODO Update with normal values
-		keeperDefender.update(1200, false, ball.getPosition(), executer.getRobot().getPosition());
+		distanceToGoal
+		goToKick
+		ballPosition
+		offset
+		keeperDefender.update(1200/*distanceToGoal*/, false/*goToKick*/, ball.getPosition()/*ballPosition*/, executer.getRobot().getPosition()/*offset*/);
 	}
 
 	@Override
