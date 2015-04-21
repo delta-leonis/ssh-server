@@ -55,5 +55,4 @@ public class KickoffPrepare extends Strategy {
 			zonesForRole.put(RobotMode.ATTACKER, FieldZone.WEST_MIDDLE);
 		}
 	}
-
 }

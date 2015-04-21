@@ -469,17 +469,18 @@ public class World extends Observable {
 	 */
 	public boolean areaContainsCircle(FieldPoint argPoint, FieldPoint[] areaPoly, double radius) {
 		boolean result = false;
-
-		for (int edges = 0; edges < areaPoly.length - 1; edges++) {
-			if (pointToLineDistance(new FieldPoint(areaPoly[edges].getX() + (fieldWidth / 2), areaPoly[edges].getY()
+		if (argPoint != null){
+			for (int edges = 0; edges < areaPoly.length - 1; edges++) {
+				if (pointToLineDistance(new FieldPoint(areaPoly[edges].getX() + (fieldWidth / 2), areaPoly[edges].getY()
 					+ (fieldHeight / 2)), new FieldPoint(areaPoly[edges + 1].getX() + (fieldWidth / 2),
 					areaPoly[edges + 1].getY() + (fieldHeight / 2)), new FieldPoint(argPoint.getX() + (fieldWidth / 2),
 					argPoint.getY() + (fieldHeight / 2))) < radius) {
-				result = true;
+					result = true;
+				}
 			}
+			result = result || pointInPolygon(argPoint, areaPoly);
 		}
 
-		result = result || pointInPolygon(argPoint, areaPoly);
 		return result;
 	}
 

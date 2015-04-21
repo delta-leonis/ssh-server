@@ -103,7 +103,7 @@ public class Main {
 			LOGGER.severe(e.toString());
 		}
 		
-		World.getInstance().getGUI().update("widgetContainer");		//TURN OFF FOR TESTPATHPLANNERWIDGET
+		//World.getInstance().getGUI().update("widgetContainer");		//TURN OFF FOR TESTPATHPLANNERWIDGET & world JUNIT test
 	}
 
 	/**

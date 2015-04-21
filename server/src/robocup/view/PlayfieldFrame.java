@@ -143,6 +143,9 @@ public class PlayfieldFrame extends JPanel {
 
 		drawLine(g2, new Line2D.Double(enemyGoal.getFrontSouth().toPoint2D(), ball.getPosition().toPoint2D()));
 		drawLine(g2, new Line2D.Double(enemyGoal.getFrontNorth().toPoint2D(), ball.getPosition().toPoint2D()));
+		
+		System.out.println("Now calling getallrobotsinarea");
+		//*************************************************************************************************************************************
 		ArrayList<Robot> obstacles = world.getAllRobotsInArea(enemyGoal.getFrontSouth(), enemyGoal.getFrontNorth(),
 				ball.getPosition());
 
@@ -301,8 +304,10 @@ public class PlayfieldFrame extends JPanel {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(Color.cyan);
 		for (Robot robot : world.getAllRobots()) {
-			drawOval(g2, (int) robot.getPosition().toPoint2D().getX(), (int) robot.getPosition().toPoint2D().getY(),
+			if (robot.getPosition() != null){
+				drawOval(g2, (int) robot.getPosition().toPoint2D().getX(), (int) robot.getPosition().toPoint2D().getY(),
 					Robot.DIAMETER);
+			}
 		}
 
 		Ball ball = world.getBall();

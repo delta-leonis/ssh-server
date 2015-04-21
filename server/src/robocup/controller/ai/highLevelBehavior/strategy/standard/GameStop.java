@@ -8,7 +8,7 @@ import robocup.model.enums.RobotMode;
 
 /**
  * {@link GameStop} The strategy that is selected when the game is halted.
- * Two robots stand near the ball {@link RobotMode#RUNNER} and one {@link RobotMode#COUNTER} tries to stand in an open position to receive the ball.
+ * Two robots stand near the ball {@link RobotMode#RUNNER} and one {@link RobotMode#COUNTER} tries to go to an open position to receive the ball.
  * There are also the standard defensive roles, consisting of a {@link RobotMode#KEEPER} and 2 {@link RobotMode#KEEPERDEFENDER}s.
  * <br><br>
  * For more information about the strategy and roles see TactiekDocument

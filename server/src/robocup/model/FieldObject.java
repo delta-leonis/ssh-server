@@ -16,7 +16,7 @@ public abstract class FieldObject {
 
 	public FieldObject() {
 		lastUpdateTime = 0;
-		position = new FieldPoint(0,0);
+		position = null;
 		positionCam0 = null;
 		positionCam1 = null;
 	}
