@@ -23,10 +23,9 @@ import robocup.controller.ai.highLevelBehavior.strategy.standard.PenaltyAlly;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.PenaltyEnemy;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.AttackMode;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.DefenseMode;
-import robocup.controller.ai.highLevelBehavior.zoneBehavior.StandardMode;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.Mode;
+import robocup.controller.ai.highLevelBehavior.zoneBehavior.StandardMode;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
-import robocup.model.Ball;
 import robocup.model.World;
 import robocup.model.enums.Command;
 import robocup.model.enums.Event;
@@ -37,7 +36,6 @@ public class ZoneBehavior extends Behavior {
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private World world;
 	private Mode currentMode;	// AttackMode or DefenseMode
-	private Ball ball;
 
 	private EventSystem events;
 	private ArrayList<AttackMode> attackModes;
@@ -53,7 +51,6 @@ public class ZoneBehavior extends Behavior {
 	 */
 	public ZoneBehavior(ArrayList<RobotExecuter> executers) {
 		world = World.getInstance();
-		ball = world.getBall();
 		events = new EventSystem();
 
 		attackModes = new ArrayList<AttackMode>();
@@ -98,7 +95,7 @@ public class ZoneBehavior extends Behavior {
 			break;
 		case BALL_ALLY_CHANGEOWNER:
 		case BALL_ENEMY_CHANGEOWNER:
-			currentMode.setRoles(executers);
+			currentMode.assignRoles(executers);
 			break;
 		case BALL_MOVESPAST_MIDLINE:
 			if (world.allyHasBall())
@@ -107,8 +104,7 @@ public class ZoneBehavior extends Behavior {
 				currentMode = chooseDefenseStrategy(executers);
 			break;
 		case BALL_MOVESPAST_NORTHSOUTH:
-			currentMode.getStrategy().updateZones(ball.getPosition());
-			currentMode.setRoles(executers);
+			currentMode.assignRoles(executers);
 			break;
 		case REFEREE_NEWCOMMAND:
 			if(world.getReferee().getCommand() == Command.NORMAL_START || world.getReferee().getCommand() == Command.FORCE_START)
@@ -146,7 +142,6 @@ public class ZoneBehavior extends Behavior {
 	 */
 	private AttackMode chooseAttackStrategy(ArrayList<RobotExecuter> executers) {
 		AttackMode mode = attackModes.get((int) (Math.random() * attackModes.size()));
-		mode.getStrategy().updateZones(ball.getPosition());
 		LOGGER.info("strategy: " + mode.getStrategy().getClass().getName());
 		return mode;
 	}
@@ -158,7 +153,6 @@ public class ZoneBehavior extends Behavior {
 	 */
 	private DefenseMode chooseDefenseStrategy(ArrayList<RobotExecuter> executers) {
 		DefenseMode mode = defenseModes.get((int) (Math.random() * defenseModes.size()));
-		mode.getStrategy().updateZones(ball.getPosition());
 		LOGGER.info("strategy: " + mode.getStrategy().getClass().getName());
 		return mode;
 	}

@@ -45,6 +45,8 @@ public class GameStop extends Strategy {
 	 */
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
+		super.updateZones(ballPosition);
+
 		if (ballPosition.getX() <= 0.0) {
 			if (ballPosition.getY() <= 0.0) {
 				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_NORTH_FRONT));
