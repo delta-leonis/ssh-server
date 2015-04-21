@@ -63,11 +63,42 @@ public class DefenseMode extends Mode {
 	@Override
 	public void updateKeeperDefender(RobotExecuter executer) {
 		KeeperDefender keeperDefender = (KeeperDefender) executer.getLowLevelBehavior();
-		// TODO Update with normal values
-		int distanceToGoal = 1200;
+
+		int distanceToGoal = world.getField().getDefenceRadius() + world.getField().getDefenceStretch() / 2 + 50;
 		boolean goToKick = false;
 		FieldPoint ballPosition = ball.getPosition();
+
+		Ally robot = (Ally) executer.getRobot();
+		ArrayList<Ally> keeperDefenders = new ArrayList<Ally>();
+
+		for (RobotExecuter itExecuter : executers)
+			if (itExecuter.getLowLevelBehavior() instanceof KeeperDefender)
+				keeperDefenders.add((Ally) itExecuter.getRobot());
+
 		FieldPoint offset = null;
+
+		switch (keeperDefenders.size()) {
+		case 2:
+			if (robot.getPosition().getY() == Math.max(keeperDefenders.get(0).getPosition().getY(), keeperDefenders
+					.get(1).getPosition().getY()))
+				offset = new FieldPoint(0, 150);
+			else
+				offset = new FieldPoint(0, -150);
+			break;
+		case 3:
+			if (robot.getPosition().getY() == Math.max(keeperDefenders.get(0).getPosition().getY(),
+					Math.max(keeperDefenders.get(1).getPosition().getY(), keeperDefenders.get(2).getPosition().getY())))
+				offset = new FieldPoint(0, 150);
+			else if (robot.getPosition().getY() == Math.min(keeperDefenders.get(0).getPosition().getY(),
+					Math.min(keeperDefenders.get(1).getPosition().getY(), keeperDefenders.get(2).getPosition().getY())))
+				offset = new FieldPoint(0, -150);
+			else
+				offset = new FieldPoint(0, 0);
+			break;
+		default:
+			break;
+		}
+
 		keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset);
 	}
 
