@@ -106,9 +106,8 @@ public class DefenseMode extends Mode {
 	public void updateKeeper(RobotExecuter executer) {
 		Keeper keeper = (Keeper) executer.getLowLevelBehavior();
 
-		int distanceToGoal = 500;
-		// TODO check if keeper needs to move to the ball, if so, set goToKick to true
-		boolean goToKick = false;
+		int distanceToGoal = (int) world.getField().getEastGoal().getWidth() / 2;
+		boolean goToKick = world.getClosestRobotToBall().equals(executer.getRobot());
 		FieldPoint ballPosition = ball.getPosition();
 		keeper.update(distanceToGoal, goToKick, ballPosition);
 	}
