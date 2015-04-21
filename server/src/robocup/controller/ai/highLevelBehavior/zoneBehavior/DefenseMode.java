@@ -10,8 +10,10 @@ import robocup.controller.ai.lowLevelBehavior.Disturber;
 import robocup.controller.ai.lowLevelBehavior.GoalPostCoverer;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
+import robocup.controller.ai.lowLevelBehavior.PenaltyKeeper;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.FieldPoint;
+import robocup.model.Robot;
 import robocup.model.enums.FieldZone;
 
 public class DefenseMode extends Mode {
@@ -45,11 +47,11 @@ public class DefenseMode extends Mode {
 	public void updateKeeperDefender(RobotExecuter executer) {
 		KeeperDefender keeperDefender = (KeeperDefender) executer.getLowLevelBehavior();
 		// TODO Update with normal values
-		distanceToGoal
-		goToKick
-		ballPosition
-		offset
-		keeperDefender.update(1200/*distanceToGoal*/, false/*goToKick*/, ball.getPosition()/*ballPosition*/, executer.getRobot().getPosition()/*offset*/);
+		int distanceToGoal = 1200;
+		boolean goToKick = false;
+		FieldPoint ballPosition = ball.getPosition();
+		FieldPoint offset = null;
+		keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset);
 	}
 
 	@Override
@@ -59,14 +61,17 @@ public class DefenseMode extends Mode {
 		int distanceToGoal = 500;
 		// TODO check if keeper needs to move to the ball, if so, set goToKick to true
 		boolean goToKick = false;
-
-		keeper.update(distanceToGoal, goToKick, ball.getPosition());
+		FieldPoint ballPosition = ball.getPosition();
+		keeper.update(distanceToGoal, goToKick, ballPosition);
 	}
 
 	@Override
 	protected void updatePenaltyKeeper(RobotExecuter executer) {
+		PenaltyKeeper penalKeeper = (PenaltyKeeper) executer.getLowLevelBehavior();
 		// TODO Auto-generated method stub
-		
+		FieldPoint ballPosition = null;
+		Robot enemy = null;
+		penalKeeper.update(ballPosition, enemy);
 	}
 
 	@Override
