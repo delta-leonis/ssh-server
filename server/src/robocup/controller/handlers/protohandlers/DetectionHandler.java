@@ -20,8 +20,9 @@ public class DetectionHandler {
 
 	private World world;
 	// TODO: read in validRobotId's from somewhere else / no more hardcoded id's
-	int validRobotIDs[] = { 6 };
-	int validEnemyRobotIDs[] = {  };
+//	int validRobotIDs[] = { 6 };
+//	int validEnemyRobotIDs[] = {  };
+
 	Kalman allyFilter[] = new Kalman[12];
 	Kalman enemyFilter[] = new Kalman[12];
 	Kalman ballFilter;
@@ -91,7 +92,7 @@ public class DetectionHandler {
 			int camNo) {
 
 		for (SSL_DetectionRobot robot : blueList) {
-			for (int id : validEnemyRobotIDs) {
+			for (int id : World.getInstance().getValidRobotIDs()) {
 				if (robot.getRobotId() == id) {
 					updateRobot(TeamColor.BLUE, robot, time, camNo);
 				}
@@ -99,7 +100,7 @@ public class DetectionHandler {
 		}
 
 		for (SSL_DetectionRobot robot : yellowList) {
-			for (int id : validRobotIDs) {
+			for (int id : World.getInstance().getValidRobotIDs()) {
 				if (robot.getRobotId() == id) {
 					updateRobot(TeamColor.YELLOW, robot, time, camNo);
 				}
@@ -151,7 +152,7 @@ public class DetectionHandler {
 		//add robot to filter if not so already
 		if (allyFilter[robotMessage.getRobotId()] == null) { // Create robot object
 			if (world.getReferee().getAllyTeamColor().equals(color)) {
-				for (int id : validRobotIDs) {
+				for (int id : World.getInstance().getValidRobotIDs()) {
 					// filter out all robots that should not be available
 					if (robotMessage.getRobotId() == id) {
 						// if the robot is validated add it to the ally's list

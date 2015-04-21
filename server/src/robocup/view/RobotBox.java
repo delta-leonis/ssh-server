@@ -74,7 +74,7 @@ public class RobotBox extends JPanel {
 	 */
 	public void update() {
 		setRobotStatus(robot.isOnSight());
-		robotRole.setText(((Ally)robot).getRole().toString());
+		robotRole.setText(((Ally)robot).getRole() == null ? "Undefined" : ((Ally)robot).getRole().toString());
 		robotPosition.setText((int)robot.getPosition().getX() + ", " + (int)robot.getPosition().getY());
 	}
 }

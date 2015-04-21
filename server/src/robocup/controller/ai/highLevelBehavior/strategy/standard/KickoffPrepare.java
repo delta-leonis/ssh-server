@@ -48,6 +48,8 @@ public class KickoffPrepare extends Strategy {
 	 */
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
+		super.updateZones(ballPosition);
+
 		if (World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
 			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_NORTH_FRONT));
 			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_SOUTH_FRONT));

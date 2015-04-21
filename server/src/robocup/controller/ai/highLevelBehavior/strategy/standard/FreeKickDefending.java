@@ -51,6 +51,8 @@ public class FreeKickDefending extends Strategy {
 	 */
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
+		super.updateZones(ballPosition);
+
 		if (World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
 			if (ballPosition.getY() <= 0.0) {
 				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.GOALPOSTCOVERER,

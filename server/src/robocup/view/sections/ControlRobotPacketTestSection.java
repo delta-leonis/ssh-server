@@ -24,7 +24,6 @@ public class ControlRobotPacketTestSection extends SectionBox{
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private JLabel selectedRobotLabel;
 	private int selectedRobotId;
-	private boolean dribbling = false;
 	private JTextField directionField;
 	private JTextField directionSpeedField;
 	private JTextField rotationSpeedField;
@@ -93,7 +92,7 @@ public class ControlRobotPacketTestSection extends SectionBox{
 			int directionSpeedInt = Integer.parseInt(directionSpeed);
 			int rotationSpeedInt = Integer.parseInt(rotationSpeed);
 			
-			ComInterface.getInstance().send(1, selectedRobotId, directionInt, directionSpeedInt, rotationSpeedInt, 100, dribbling);
+			ComInterface.getInstance().send(1, selectedRobotId, directionInt, directionSpeedInt, rotationSpeedInt, 0, false);
 
 		}catch(NumberFormatException e){
 			LOGGER.severe("Number Format Exception");

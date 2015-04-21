@@ -2,11 +2,12 @@ package robocup.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map.Entry;
 import java.util.Observable;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 
 import robocup.controller.ai.lowLevelBehavior.Keeper;
+import robocup.controller.handlers.protohandlers.DetectionHandler;
 import robocup.model.enums.Command;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.TeamColor;
@@ -38,10 +39,20 @@ public class World extends Observable {
 
 	public GUI gui;
 
+	private ArrayList<Integer> validRobotIDs = new ArrayList<Integer>();
+
 	/**
 	 * Constructor for the {@link World} Can only be called as a singleton.
 	 */
 	private World() {
+		
+		validRobotIDs.add(1);
+		validRobotIDs.add(2);
+		validRobotIDs.add(3);
+		validRobotIDs.add(4);
+		validRobotIDs.add(6);
+		validRobotIDs.add(7);
+		
 		ball = new Ball();
 		// set a ball position to prevent null pointers
 		ball.setPosition(new FieldPoint(400, 200));
@@ -65,7 +76,6 @@ public class World extends Observable {
 		robotList = new ArrayList<Robot>();
 		robotList.addAll(allyTeam);
 		robotList.addAll(enemyTeam);
-
 	}
 
 	/**
@@ -239,6 +249,33 @@ public class World extends Observable {
 
 		return minDistanceRobot;
 	}
+	
+	/**
+	 * Get the closest {@link Robot} to a {@link FieldPoint}. This is an {@link Enemy} robot.
+	 * @return the closest {@link Enemy} to the {@link FieldPoint}
+	 */
+	public Robot getClosestEnemyRobotToPoint(FieldPoint point) {
+		ArrayList<Robot> robots = getReferee().getEnemy().getRobotsOnSight();
+
+		double minDistance = -1.0;
+		Robot minDistanceRobot = null;
+
+		for (Robot robot : robots) {
+			if (minDistance == -1.0) {
+				minDistanceRobot = robot;
+				minDistance = robot.getPosition().getDeltaDistance(point);
+			} else {
+				double distance = robot.getPosition().getDeltaDistance(point);
+
+				if (distance < minDistance) {
+					minDistanceRobot = robot;
+					minDistance = distance;
+				}
+			}
+		}
+
+		return minDistanceRobot;
+	}
 
 	/**
 	 * Get the distance from the closest {@link Robot} in one {@link Team} to the {@link Ball}
@@ -381,8 +418,7 @@ public class World extends Observable {
 	/**
 	 * Method that retrieves all allies that are present within a {@link FieldZone}
 	 * 
-	 * @param fieldZones
-	 *            array with all the zones where to look for robots
+	 * @param fieldZones array with all the zones where to look for robots
 	 * @return an list with all the found robots
 	 */
 	public ArrayList<Ally> getAllyRobotsInZones(ArrayList<FieldZone> fieldZones) {
@@ -395,15 +431,15 @@ public class World extends Observable {
 				}
 			}
 		}
+
 		return foundAllies;
 	}
 
 	/**
-	 * Method that retrieves all enemies that are present within a {@link FieldZone}
+	 * Method that retrieves all enemies that are present within an arraylist of {@link FieldZone FieldZones}
 	 * 
-	 * @param fieldZones
-	 *            array with all the {@link FieldZone zones} where to look for {@link Robot robots}
-	 * @return an list with all the found {@link Robot robots}
+	 * @param fieldZones arraylist with all the {@link FieldZone zones} where to look for {@link Robot robots}
+	 * @return a list with all the found {@link Robot robots}
 	 */
 	public ArrayList<Enemy> getEnemyRobotsInZones(ArrayList<FieldZone> fieldZones) {
 		ArrayList<Enemy> foundEnemies = new ArrayList<Enemy>();
@@ -413,9 +449,25 @@ public class World extends Observable {
 				if (fieldZone.contains(enemy.getPosition())) {
 					foundEnemies.add((Enemy) enemy);
 				}
-				;
 			}
 		}
+
+		return foundEnemies;
+	}
+	
+	/**
+	 * Method that retrieves all enemies that are present within a {@link FieldZone}
+	 * 
+	 * @param fieldZone a {@link FieldZone} where to look for {@link Robot}
+	 * @return a list with all the found {@link Robot robots}
+	 */
+	public ArrayList<Enemy> getEnemyRobotsInZone(FieldZone fieldZone) {
+		ArrayList<Enemy> foundEnemies = new ArrayList<Enemy>();
+
+		for (Robot enemy : enemyTeam)
+			if (fieldZone.contains(enemy.getPosition()))
+				foundEnemies.add((Enemy) enemy);
+
 		return foundEnemies;
 	}
 
@@ -736,5 +788,12 @@ public class World extends Observable {
 		}
 		mergedMap.put((prevY1 < prevY2 ? prevY1 : prevY2), (prevY1 > prevY2 ? prevY1 : prevY2));
 		return mergedMap;
+	}
+
+	/**
+	 * @return list with robots that are valid for processing by {@link DetectionHandler}
+	 */
+	public ArrayList<Integer> getValidRobotIDs() {
+		return validRobotIDs;
 	}
 }

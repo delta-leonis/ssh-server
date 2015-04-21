@@ -3,9 +3,10 @@ package robocup.controller.ai;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Logger;
 
 import robocup.controller.ai.highLevelBehavior.Behavior;
-import robocup.controller.ai.highLevelBehavior.ForceBehavior;
+import robocup.controller.ai.highLevelBehavior.ZoneBehavior;
 import robocup.controller.ai.lowLevelBehavior.LowLevelBehavior;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Robot;
@@ -21,13 +22,15 @@ public class Main implements Observer {
 	private ArrayList<RobotExecuter> robotExecuters = new ArrayList<RobotExecuter>();
 	@SuppressWarnings("unused")
 	private ArrayList<LowLevelBehavior> lowLevelBehaviors;
+	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
+
 
 	public Main() {
 		world = World.getInstance();
 		world.addObserver(this);
 		initExecutors();
 
-		behavior = new ForceBehavior(robotExecuters);
+		behavior = new ZoneBehavior(robotExecuters);
 
 		// behaviors = new ArrayList<Behavior>();
 		// behaviors.add(new TestKeepingBehavior(1, null));
@@ -36,7 +39,7 @@ public class Main implements Observer {
 		// behaviors.add(new TestAttackerBehavior(1, -100));
 		// behaviors.add(new TestAttackerBehavior(3, 0));
 		// robotExecuters = new ArrayList<RobotExecuter>();
-		 initExecutors();
+		// initExecutors();
 		// lowLevelBehaviors = new ArrayList<LowLevelBehavior>();
 
 	}
@@ -51,12 +54,17 @@ public class Main implements Observer {
 		}
 	}
 
+	/**
+	 * Initializes the {@RobotExecuter executers} for the {@link Robot robots}, 
+	 * whether they're on sight or not.
+	 */
 	private void initExecutors() {
 
 		ArrayList<RobotExecuter> updatedRobotExecuters = new ArrayList<RobotExecuter>();
 
 		Team team = world.getReferee().getAlly();
-		for (Robot robot : team.getRobotsOnSight()) {
+
+		for (Robot robot : team.getRobots()) {
 			boolean executerFound = false;
 
 			if (robotExecuters != null) {

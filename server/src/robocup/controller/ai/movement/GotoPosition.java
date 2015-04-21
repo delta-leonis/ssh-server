@@ -1,7 +1,10 @@
 package robocup.controller.ai.movement;
 
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import robocup.Main;
 import robocup.model.FieldObject;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
@@ -20,6 +23,8 @@ public class GotoPosition {
 
 	// TODO find a better solution
 	private static final double DISTANCE_ROTATIONSPEED_COEFFICIENT = 3;
+	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
+
 	private FieldPoint destination;
 	private FieldPoint target;
 	private Robot robot;
@@ -27,8 +32,11 @@ public class GotoPosition {
 	private int forcedSpeed = 0;
 	private int chipKick = 0;
 	private boolean dribble = false;
-	private DijkstraPathPlanner dplanner = new DijkstraPathPlanner();
+	private DijkstraPathPlanner dplanner;
 	private LinkedList<FieldPoint> route;
+	
+	// calculate total circumference of robot
+	private static final double circumference = (Robot.DIAMETER * Math.PI);
 	
 	private static final int MAX_VELOCITY =2000;
 
@@ -42,6 +50,7 @@ public class GotoPosition {
 		output = ComInterface.getInstance();
 		this.destination = destination;
 		this.target = destination;
+		dplanner = new DijkstraPathPlanner();
 	}
 
 	/**
@@ -55,6 +64,7 @@ public class GotoPosition {
 		output = ComInterface.getInstance();
 		this.destination = target.getPosition();
 		this.target = this.destination;
+		dplanner = new DijkstraPathPlanner();
 	}
 
 	/**
@@ -68,6 +78,7 @@ public class GotoPosition {
 		output = ComInterface.getInstance();
 		this.destination = destination;
 		this.target = target;
+		dplanner = new DijkstraPathPlanner();
 	}
 
 	/**
@@ -83,6 +94,7 @@ public class GotoPosition {
 		this.destination = destination;
 		this.target = target;
 		this.forcedSpeed = forcedSpeed;
+		dplanner = new DijkstraPathPlanner();
 	}
 
 	/**
@@ -137,7 +149,12 @@ public class GotoPosition {
 			// Calculate parameters
 		} else {
 			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), false);
-			
+			if(route == null){
+				LOGGER.severe("Robot #" + robot.getRobotId() + " can't reach destination.");
+				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+				return;
+			}
+				
 			if (route.size() > 0 && route.get(0) != null) {
 				destination = route.get(0);
 			} else {
@@ -165,13 +182,32 @@ public class GotoPosition {
 			// rotationSpeed inverted because the motors spin in opposite
 			// direction
 			output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, chipKick, dribble);
+			LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + "," + chipKick + "," + dribble);
 			
-
 			// Set kick back to 0 to prevent kicking twice in a row
 			chipKick = 0;
 		}
 	}
 
+//	/**
+//	 * Get rotationSpeed, calculates the speed at which to rotate based on degrees left to rotate
+//	 * Precondition: -180 <= rotation <= 180
+//	 * @param rotation
+//	 * @return
+//	 */
+//	private double getRotationSpeed(double rotation) {
+//
+//
+//		// must be between 0 and 50 percent, if it's higher than 50% rotating to
+//		// the other direction is faster
+//		double rotationPercent = rotation / 360;
+//
+//		// distance needed to rotate in mm
+//		double rotationDistance = circumference * rotationPercent;
+//
+//		return (rotationDistance * DISTANCE_ROTATIONSPEED_COEFFICIENT);
+//	}
+	
 	/**
 	 * Get rotationSpeed, calculates the speed at which to rotate based on degrees left to rotate
 	 * Precondition: -180 <= rotation <= 180
@@ -179,17 +215,16 @@ public class GotoPosition {
 	 * @return
 	 */
 	private double getRotationSpeed(double rotation) {
-		// calculate total circumference of robot
-		double circumference = (Robot.DIAMETER * Math.PI);
-
-		// must be between 0 and 50 percent, if it's higher than 50% rotating to
-		// the other direction is faster
-		double rotationPercent = rotation / 360;
-
-		// distance needed to rotate in mm
-		double rotationDistance = circumference * rotationPercent;
-
-		return (rotationDistance * DISTANCE_ROTATIONSPEED_COEFFICIENT);
+		return rotation/3.60;
+//
+//		// must be between 0 and 50 percent, if it's higher than 50% rotating to
+//		// the other direction is faster
+//		double rotationPercent = rotation / 360;
+//
+//		// distance needed to rotate in mm
+//		double rotationDistance = circumference * rotationPercent;
+//
+//		return (rotationDistance * DISTANCE_ROTATIONSPEED_COEFFICIENT);
 	}
 
 	/**
@@ -218,7 +253,7 @@ public class GotoPosition {
 	 * @param distanceToSlowDown If the robot has less distance to travel than the distance to slow down, the robot should slow down.
 	 * @return The speed in mm/s
 	 */
-	public double getSpeed(double d, int distanceToSlowDown) {
+	private double getSpeed(double d, int distanceToSlowDown) {
 		if(d > distanceToSlowDown)
 			return MAX_VELOCITY;
 		return ((d / distanceToSlowDown) * MAX_VELOCITY);
@@ -238,7 +273,7 @@ public class GotoPosition {
 			rot -= 360;
 		}
 
-		if (rot <= -180) {
+		if (rot < -180) {
 			rot += 360;
 		}
 		return rot;
