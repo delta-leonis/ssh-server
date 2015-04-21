@@ -36,7 +36,6 @@ public class ZoneBehavior extends Behavior {
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private World world;
 	private Mode currentMode; // AttackMode or DefenseMode
-
 	private EventSystem events;
 	private ArrayList<AttackMode> attackModes;
 	private ArrayList<DefenseMode> defenseModes;
@@ -146,6 +145,7 @@ public class ZoneBehavior extends Behavior {
 	 */
 	private AttackMode chooseAttackStrategy(ArrayList<RobotExecuter> executers) {
 		AttackMode mode = attackModes.get((int) (Math.random() * attackModes.size()));
+		mode.assignRoles(executers);
 		LOGGER.info("strategy: " + mode.getStrategy().getClass().getName());
 		return mode;
 	}
@@ -157,6 +157,7 @@ public class ZoneBehavior extends Behavior {
 	 */
 	private DefenseMode chooseDefenseStrategy(ArrayList<RobotExecuter> executers) {
 		DefenseMode mode = defenseModes.get((int) (Math.random() * defenseModes.size()));
+		mode.assignRoles(executers);
 		LOGGER.info("strategy: " + mode.getStrategy().getClass().getName());
 		return mode;
 	}
@@ -262,6 +263,9 @@ public class ZoneBehavior extends Behavior {
 			returnMode = null;
 			break;
 		}
+
+		if (returnMode != null)
+			returnMode.assignRoles(executers);
 
 		return returnMode;
 	}

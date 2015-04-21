@@ -44,9 +44,6 @@ public abstract class Mode {
 	 */
 	public void execute(ArrayList<RobotExecuter> executers) {
 		try {
-			strategy.updateZones(ball.getPosition());
-			assignRoles(executers);
-
 			for (RobotExecuter executer : executers)
 				updateExecuter(executer);
 
@@ -68,6 +65,8 @@ public abstract class Mode {
 	 * Set the roles for all executers based on current strategy and mode.
 	 */
 	public void assignRoles(ArrayList<RobotExecuter> executers) {
+		strategy.updateZones(ball.getPosition());
+		
 		// clear executers so we start clean
 		for (RobotExecuter executer : executers) {
 			((Ally) executer.getRobot()).setRole(null);
