@@ -4,11 +4,15 @@ import java.util.ArrayList;
 
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.controller.ai.lowLevelBehavior.Attacker;
+import robocup.controller.ai.lowLevelBehavior.Counter;
 import robocup.controller.ai.lowLevelBehavior.Coverer;
+import robocup.controller.ai.lowLevelBehavior.Disturber;
+import robocup.controller.ai.lowLevelBehavior.GoalPostCoverer;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.FieldPoint;
+import robocup.model.enums.FieldZone;
 
 public class DefenseMode extends Mode {
 
@@ -67,19 +71,35 @@ public class DefenseMode extends Mode {
 
 	@Override
 	protected void updateGoalPostCoverer(RobotExecuter executer) {
-		// TODO Auto-generated method stub
-		
+		GoalPostCoverer goalPostCoverer = (GoalPostCoverer) executer.getLowLevelBehavior();
+
+		int distanceToGoal = 1200;
+		boolean goToKick = false;
+		FieldPoint ballPosition = ball.getPosition();
+
+		goalPostCoverer.update(distanceToGoal, goToKick, ballPosition);
 	}
 
 	@Override
 	protected void updateDisturber(RobotExecuter executer) {
-		// TODO Auto-generated method stub
-		
+		Disturber disturber = (Disturber) executer.getLowLevelBehavior();
+
+		int distanceToObject = 300;
+		boolean goToKick = false;
+		FieldPoint objectPosition = ball.getPosition();
+
+		disturber.update(distanceToObject, goToKick, objectPosition);
 	}
 
 	@Override
 	protected void updateCounter(RobotExecuter executer) {
-		// TODO Auto-generated method stub
-		
+		Counter counter = (Counter) executer.getLowLevelBehavior();
+
+		FieldZone zone = world.getReferee().getAlly().equals(world.getReferee().getEastTeam()) ? FieldZone.WEST_MIDDLE
+				: FieldZone.EAST_MIDDLE;
+		FieldPoint ballPosition = ball.getPosition();
+		FieldPoint freePosition = null;
+
+		counter.update(zone, ballPosition, freePosition);
 	}
 }
