@@ -45,6 +45,14 @@ public class World extends Observable {
 	 * Constructor for the {@link World} Can only be called as a singleton.
 	 */
 	private World() {
+		
+		validRobotIDs.add(1);
+		validRobotIDs.add(2);
+		validRobotIDs.add(3);
+		validRobotIDs.add(4);
+		validRobotIDs.add(6);
+		validRobotIDs.add(7);
+		
 		ball = new Ball();
 		// set a ball position to prevent null pointers
 		ball.setPosition(new FieldPoint(400, 200));
@@ -68,15 +76,6 @@ public class World extends Observable {
 		robotList = new ArrayList<Robot>();
 		robotList.addAll(allyTeam);
 		robotList.addAll(enemyTeam);
-		
-		validRobotIDs.add(1);
-		validRobotIDs.add(2);
-		validRobotIDs.add(3);
-		validRobotIDs.add(4);
-		validRobotIDs.add(6);
-		validRobotIDs.add(7);
-
-
 	}
 
 	/**
