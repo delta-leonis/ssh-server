@@ -38,6 +38,8 @@ public class GameHalt extends Strategy {
 
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
+		super.updateZones(ballPosition);
+
 		// TODO Auto-generated method stub
 	}
 }

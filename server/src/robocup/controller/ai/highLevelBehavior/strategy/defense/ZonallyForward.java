@@ -49,6 +49,8 @@ public class ZonallyForward extends Strategy {
 
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
+		super.updateZones(ballPosition);
+
 		if (World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
 			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.DISTURBER_COVERER, FieldZone.EAST_NORTH_FRONT));
 			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.DISTURBER_COVERER, FieldZone.EAST_SOUTH_FRONT));

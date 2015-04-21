@@ -1,5 +1,6 @@
 package robocup.model;
 
+import java.awt.Container;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Observable;
@@ -38,6 +39,8 @@ public class World extends Observable {
 
 	public GUI gui;
 
+	private ArrayList<Integer> validRobotIDs = new ArrayList<Integer>();
+
 	/**
 	 * Constructor for the {@link World} Can only be called as a singleton.
 	 */
@@ -65,6 +68,14 @@ public class World extends Observable {
 		robotList = new ArrayList<Robot>();
 		robotList.addAll(allyTeam);
 		robotList.addAll(enemyTeam);
+		
+		validRobotIDs.add(1);
+		validRobotIDs.add(2);
+		validRobotIDs.add(3);
+		validRobotIDs.add(4);
+		validRobotIDs.add(6);
+		validRobotIDs.add(7);
+
 
 	}
 
@@ -735,5 +746,12 @@ public class World extends Observable {
 		}
 		mergedMap.put((prevY1 < prevY2 ? prevY1 : prevY2), (prevY1 > prevY2 ? prevY1 : prevY2));
 		return mergedMap;
+	}
+
+	/**
+	 * @return list with robots that are valid for processing by {@link DetectionHandler}
+	 */
+	public ArrayList<Integer> getValidRobotIDs() {
+		return validRobotIDs;
 	}
 }
