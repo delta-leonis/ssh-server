@@ -136,8 +136,8 @@ public class DefenseMode extends Mode {
 		Disturber disturber = (Disturber) executer.getLowLevelBehavior();
 
 		int distanceToObject = 300;
-		boolean goToKick = false;
 		FieldPoint objectPosition = ball.getPosition();
+		boolean goToKick = world.getClosestRobotToBall().getPosition().getDeltaDistance(objectPosition) > Robot.DIAMETER + 50;
 
 		disturber.update(distanceToObject, goToKick, objectPosition);
 	}
