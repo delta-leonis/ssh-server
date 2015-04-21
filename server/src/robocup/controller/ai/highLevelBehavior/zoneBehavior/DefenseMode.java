@@ -12,6 +12,8 @@ import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.PenaltyKeeper;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
+import robocup.model.Ally;
+import robocup.model.Enemy;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.enums.FieldZone;
@@ -24,6 +26,8 @@ public class DefenseMode extends Mode {
 
 	@Override
 	public void updateAttacker(RobotExecuter executer) {
+		// Unused in DefenseMode
+
 		Attacker attacker = (Attacker) executer.getLowLevelBehavior();
 		// TODO Update with normal values
 		double shootDirection = 0.0;
@@ -35,11 +39,24 @@ public class DefenseMode extends Mode {
 	@Override
 	public void updateCoverer(RobotExecuter executer) {
 		Coverer blocker = (Coverer) executer.getLowLevelBehavior();
-		// TODO Update with normal values
+		Ally allyRobot = (Ally) executer.getRobot();
+
 		int distanceToSubject = 250;
 		FieldPoint objectPosition = ball.getPosition();
 		FieldPoint subjectPosition = null;
 		int subjectId = 0;
+
+		ArrayList<Enemy> enemyRobots = world.getEnemyRobotsInZone(allyRobot.getPreferredZone());
+
+		if (enemyRobots.size() > 0) {
+			Enemy enemyRobot = enemyRobots.get(0);
+			subjectPosition = enemyRobot == null ? null : enemyRobot.getPosition();
+			subjectId = enemyRobot == null ? 0 : enemyRobot.getRobotId();
+		} else {
+			if (allyRobot.getPreferredZone() != null)
+				subjectPosition = allyRobot.getPreferredZone().getCenterPoint();
+		}
+
 		blocker.update(distanceToSubject, objectPosition, subjectPosition, subjectId);
 	}
 

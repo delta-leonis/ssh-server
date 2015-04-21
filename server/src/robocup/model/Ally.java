@@ -1,5 +1,6 @@
 package robocup.model;
 
+import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
 
 /**
@@ -12,6 +13,7 @@ public class Ally extends Robot {
 	 */
 	private long lastKicked;
 	private RobotMode role;
+	private FieldZone preferredZone;
 
 	/**
 	 * Construct a new {@link Ally}
@@ -72,5 +74,19 @@ public class Ally extends Robot {
 	public String toString() {
 		return "Ally [dribble=" + dribble + ", lastKicked=" + lastKicked + ", "
 				+ super.toString();
+	}
+
+	/**
+	 * @return the preferredZone
+	 */
+	public FieldZone getPreferredZone() {
+		return preferredZone;
+	}
+
+	/**
+	 * @param preferredZone the preferredZone to set
+	 */
+	public void setPreferredZone(FieldZone preferredZone) {
+		this.preferredZone = preferredZone;
 	}
 }
