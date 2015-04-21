@@ -20,7 +20,7 @@ public class DetectionHandler {
 
 	private World world;
 	// TODO: read in validRobotId's from somewhere else / no more hardcoded id's
-	int validRobotIDs[] = { 6 };
+	int validRobotIDs[] = { 1, 2, 3, 4, 6, 7 };
 	int validEnemyRobotIDs[] = {  };
 	Kalman allyFilter[] = new Kalman[12];
 	Kalman enemyFilter[] = new Kalman[12];
