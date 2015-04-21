@@ -18,6 +18,7 @@ import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.World;
 import robocup.model.enums.FieldZone;
+import robocup.model.enums.RobotMode;
 
 public abstract class Mode {
 
@@ -43,7 +44,8 @@ public abstract class Mode {
 	 */
 	public void execute(ArrayList<RobotExecuter> executers) {
 		try {
-			setRoles(executers);
+			strategy.updateZones(ball.getPosition());
+			assignRoles(executers);
 
 			for (RobotExecuter executer : executers)
 				updateExecuter(executer);
@@ -63,10 +65,31 @@ public abstract class Mode {
 	}
 
 	/**
-	 * TODO: Rename to updateRoles()?
 	 * Set the roles for all executers based on current strategy and mode.
 	 */
-	public abstract void setRoles(ArrayList<RobotExecuter> executers);
+	public void assignRoles(ArrayList<RobotExecuter> executers) {
+		// clear executers so we start clean
+		for (RobotExecuter executer : executers) {
+			((Ally) executer.getRobot()).setRole(null);
+		}
+
+		for (RobotMode role : strategy.getRoles()) {
+			FieldZone zone = strategy.getZoneForRole(role);
+
+			if (role == RobotMode.KEEPER) {
+				// Find executer belonging to the goalie and set role
+				((Ally) findExecuter(world.getReferee().getAlly().getGoalie(), executers).getRobot())
+						.setRole(role);
+			} else if (zone != null) {
+				Ally closestRobot = getClosestAllyToZoneWithoutRole(zone);
+				closestRobot.setRole(role);
+			} else {
+				ArrayList<Ally> allyRobots = getAllyRobotsWithoutRole();
+				Ally robot = allyRobots.get((int) (Math.random() * allyRobots.size()));
+				robot.setRole(role);
+			}
+		}
+	}
 
 	/**
 	 * Update an executer.
@@ -92,7 +115,7 @@ public abstract class Mode {
 		case DISTURBER_COVERER:
 			FieldZone ballZone = world.locateFieldObject(ball);
 			FieldZone robotZone = world.locateFieldObject(executer.getRobot());
-			if(ballZone.equals(robotZone))
+			if (ballZone.equals(robotZone))
 				handleDisturber(executer);
 			else
 				handleCoverer(executer);
@@ -107,8 +130,8 @@ public abstract class Mode {
 			handleKeeperDefender(executer);
 			break;
 		case KEEPERDEFENDER_COVERER:
-			if((ball.getPosition().getY() > 0 && executer.getRobot().getPosition().getY() > 0)
-				|| (ball.getPosition().getY() <= 0 && executer.getRobot().getPosition().getY() <= 0))
+			if ((ball.getPosition().getY() > 0 && executer.getRobot().getPosition().getY() > 0)
+					|| (ball.getPosition().getY() <= 0 && executer.getRobot().getPosition().getY() <= 0))
 				handleKeeperDefender(executer);
 			else
 				handleCoverer(executer);
@@ -123,6 +146,7 @@ public abstract class Mode {
 					+ ((Ally) executer.getRobot()).getRole());
 		}
 	}
+
 	/**
 	 * Handle the behavior of the Penalty Keeper.
 	 * A new Penalty Keeper behavior will be created if the current lowlevel behavior is not an Penalty Keeper.
@@ -158,7 +182,7 @@ public abstract class Mode {
 	 * @param executer the executer to update
 	 */
 	protected abstract void updateGoalPostCoverer(RobotExecuter executer);
-	
+
 	/**
 	 * Handle the behavior of the Disturber.
 	 * A new Disturber behavior will be created if the current lowlevel behavior is not an Disturber.
@@ -194,7 +218,6 @@ public abstract class Mode {
 	 * @param executer the executer to update
 	 */
 	protected abstract void updateCounter(RobotExecuter executer);
-	
 
 	/**
 	 * Handle the behavior of the Attacker.
@@ -264,7 +287,8 @@ public abstract class Mode {
 
 		// TODO determine field half in a better way
 		if (!(executer.getLowLevelBehavior() instanceof Keeper))
-			executer.setLowLevelBehavior(new Keeper(keeper, keeper.getPosition().getX() < 0 ? MID_GOAL_NEGATIVE : MID_GOAL_POSITIVE));
+			executer.setLowLevelBehavior(new Keeper(keeper, keeper.getPosition().getX() < 0 ? MID_GOAL_NEGATIVE
+					: MID_GOAL_POSITIVE));
 
 		updateKeeper(executer);
 	}
@@ -276,10 +300,33 @@ public abstract class Mode {
 	protected abstract void updateKeeper(RobotExecuter executer);
 
 	/**
+	 * Get the closest robot to a zone
+	 * @param zone 
+	 * @return
+	 */
+	private Ally getClosestAllyToZoneWithoutRole(FieldZone zone) {
+		double minDistance = Double.MAX_VALUE;
+		Ally minDistRobot = null;
+
+		for (Ally robot : getAllyRobotsWithoutRole()) {
+			if (robot.getPosition() != null && zone != null) {
+				double dist = robot.getPosition().getDeltaDistance(zone.getCenterPoint());
+
+				if (dist < minDistance) {
+					minDistance = dist;
+					minDistRobot = robot;
+				}
+			}
+		}
+
+		return minDistRobot;
+	}
+
+	/**
 	 * Get all Robots without a role
 	 * @return ArrayList containing all Ally robots without a role
 	 */
-	protected ArrayList<Ally> getAllyRobotsWithoutRole() {
+	private ArrayList<Ally> getAllyRobotsWithoutRole() {
 		ArrayList<Ally> robotsWithoutRole = new ArrayList<Ally>();
 
 		for (Robot robot : world.getReferee().getAlly().getRobots())

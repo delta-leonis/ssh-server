@@ -48,6 +48,8 @@ public class FreeShotRoundPlay extends Strategy {
 
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
+		super.updateZones(ballPosition);
+
 		if (World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
 			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.ATTACKER, FieldZone.WEST_CENTER));
 			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.ATTACKER, FieldZone.WEST_NORTH_SECONDPOST));

@@ -44,6 +44,7 @@ public class SecondPostKickIn extends Strategy {
 
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
+		super.updateZones(ballPosition);
 
 	}
 }

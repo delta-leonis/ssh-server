@@ -8,49 +8,11 @@ import robocup.controller.ai.lowLevelBehavior.Coverer;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
-import robocup.model.Ally;
-import robocup.model.enums.FieldZone;
-import robocup.model.enums.RobotMode;
 
 public class AttackMode extends Mode {
 
 	public AttackMode(Strategy strategy, ArrayList<RobotExecuter> executers) {
 		super(strategy, executers);
-	}
-
-	@Override
-	public void setRoles(ArrayList<RobotExecuter> executers) {
-		// clear executers so we start clean
-		for (RobotExecuter executer : executers) {
-			((Ally) executer.getRobot()).setRole(null);
-		}
-
-		for (RobotMode role : strategy.getRoles()) {
-			FieldZone zone = strategy.getZoneForRole(role);
-
-			if (role == RobotMode.KEEPER) {
-				// Find executer belonging to the goalie and set role
-				((Ally) findExecuter(world.getReferee().getAlly().getGoalie(), executers).getRobot())
-						.setRole(RobotMode.KEEPER);
-			} else if (zone != null) {
-				//	find robot near or in this zone and assign role
-				//	Ally robot = world.getClosestAllyRobotToZoneWithoutRole(zone).get(0);
-				//	robot.setRole(role);
-			} else {
-				// assign remaining roles
-				ArrayList<Ally> robotsWithoutRole = getAllyRobotsWithoutRole();
-
-				switch (role) {
-				case KEEPERDEFENDER:
-					// TODO move keeperdefenders to specific zone?
-				case DISTURBER:
-					robotsWithoutRole.get(0).setRole(role);
-					break;
-				default:
-					System.out.println("Unknown role used in setRoles, please add me in AttackMode, role: " + role);
-				}
-			}
-		}
 	}
 
 	@Override

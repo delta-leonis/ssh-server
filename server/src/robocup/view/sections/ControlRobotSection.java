@@ -71,7 +71,7 @@ public class ControlRobotSection extends SectionBox{
 		add(chipStrength, "growx");
 		add(chipButton, "growx, wrap");
 		add(kickStrength, "growx");
-		add(kickButton, "growx, wrap");
+		add(kickButton, "growx");
 		add(dribbleToggleButton, "growx");
 		add(strafeLeftButton, "growx");
 		add(moveForwardButton, "growx");
