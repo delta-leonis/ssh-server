@@ -5,6 +5,7 @@ package robocup.model;
  */
 public class Ball extends FieldObject {
 
+	public final int SIZE = 43;	//in millimeter
 	private double posZ;
 	private Robot owner;
 

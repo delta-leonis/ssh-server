@@ -23,7 +23,6 @@ import robocup.model.enums.FieldZone;
 public class TestWorld {
 	private static final boolean LOGGING = true;
 
-	
 	/**
 	 * Run as application to get a visual representation of the path planner.
 	 */
@@ -47,28 +46,93 @@ public class TestWorld {
 	@Before
 	public void setUp() throws Exception {
 		Main.initTeams();
-		System.out.println("Hooooi");
+		System.out.println("\"Before\" setUp method");
 	}
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		System.out.println("\"BeforeClass\" setUpBeforeClass method");
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		System.out.println("\"AfterClass\" tearDownAfterClass method");
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		System.out.println("\"After\" tearDown method");
 	}
 	
 	@Test
-	public void testMethod() {
+	public void circlesInConcave() {
 		if (LOGGING) {
-			System.out.println("\nTest Intersect 3\nTest East");
+			System.out.println("running test \"circlesInConcave\"");
+		}	
+	}
+	@Test
+	public void circlesOutConcave() {
+		if (LOGGING) {
+			System.out.println("running test \"circlesOutConcave\"");
+		}	
+	}
+	@Test
+	public void circlesNextToConcave() {
+		if (LOGGING) {
+			System.out.println("running test \"circlesNextToConcave\"");
+		}	
+	}
+	@Test
+	public void circlesInAndOutConcave() {
+		if (LOGGING) {
+			System.out.println("running test \"circlesInAndOutConcave\"");
 		}	
 	}
 	
+	
+	
+	@Test
+	public void circlesInConvex() {
+		if (LOGGING) {
+			System.out.println("running test \"circlesInConvex\"");
+		}	
+	}
+	@Test
+	public void circlesOutConvex() {
+		if (LOGGING) {
+			System.out.println("running test \"circlesOutConvex\"");
+		}	
+	}
+	@Test
+	public void circlesNextToConvex() {
+		if (LOGGING) {
+			System.out.println("running test \"circlesNextToConvex\"");
+		}	
+	}
+	@Test
+	public void circlesInAndOutConvex() {
+		if (LOGGING) {
+			System.out.println("running test \"circlesInAndOutConvex\"");
+		}	
+	}
 
 
+	@Test
+	public void lineShape() {
+		if (LOGGING) {
+			System.out.println("running test \"lineShape\"");
+		}	
+	}
+	@Test
+	public void pointShape() {
+		if (LOGGING) {
+			System.out.println("running test \"pointShape\"");
+		}	
+	}
+	@Test
+	public void nullShape() {
+		if (LOGGING) {
+			System.out.println("running test \"nullShape\"");
+		}	
+	}
 }

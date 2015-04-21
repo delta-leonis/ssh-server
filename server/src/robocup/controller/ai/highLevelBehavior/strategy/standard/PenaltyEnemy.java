@@ -1,5 +1,7 @@
 package robocup.controller.ai.highLevelBehavior.strategy.standard;
 
+import org.apache.commons.math3.util.Pair;
+
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.model.FieldPoint;
 import robocup.model.World;
@@ -17,6 +19,7 @@ import robocup.model.enums.RobotMode;
  * For more information about the strategy and roles see TactiekDocument
  */
 public class PenaltyEnemy extends Strategy {
+
 	/**
 	 * Roles in the {@link PenaltyEnemy} strategy are assigned in the following order:<br>
 	 * <ol>
@@ -28,7 +31,7 @@ public class PenaltyEnemy extends Strategy {
 	 * <li>{@link RobotMode#COUNTER}</li>
 	 * </ol>
 	 */
-	public PenaltyEnemy () {
+	public PenaltyEnemy() {
 		super();
 		roles.add(RobotMode.KEEPER);
 		// create a wall to regain the ball after a failed penalty
@@ -36,20 +39,20 @@ public class PenaltyEnemy extends Strategy {
 		roles.add(RobotMode.RUNNER);
 		roles.add(RobotMode.RUNNER);
 		roles.add(RobotMode.RUNNER);
-		
+
 		// stands in a position for the counter attack
 		roles.add(RobotMode.COUNTER);
 	}
-	
+
 	/**
 	 * Method that declares the zones for all the roles in this strategy
 	 */
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
-		if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
-			zonesForRole.put(RobotMode.COUNTER, FieldZone.WEST_MIDDLE);
+		if (World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COUNTER, FieldZone.WEST_MIDDLE));
 		} else {
-			zonesForRole.put(RobotMode.COUNTER, FieldZone.EAST_MIDDLE);
-		}	
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COUNTER, FieldZone.EAST_MIDDLE));
+		}
 	}
 }

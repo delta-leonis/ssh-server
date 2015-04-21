@@ -4,7 +4,6 @@ import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.enums.RobotMode;
-import robocup.output.ComInterface;
 
 public class Attacker extends LowLevelBehavior {
 
@@ -17,17 +16,16 @@ public class Attacker extends LowLevelBehavior {
 	 * The attacker will try to get into a shooting position for the given shoot direction.
 	 * @param robot the attacker {@link Robot} in the model.
 	 * @param output Used to send data to the Robot
-	 * @param shootDirection direction where the attacker needs to shoot, relative to the field. Values between -180 and 180. 0 degrees facing east. 90 degrees facing north.
-	 * @param chipKick kick and chip strength in percentages. max kick = -100% , max chip = 100% . if chipKick = 0, do nothing
-	 * @param ballPosition the position of the ball
 	 */
-	public Attacker(Robot robot, ComInterface output, double shootDirection, int chipKick, FieldPoint ballPosition) {
+	public Attacker(Robot robot) {
 		super(robot);
-		this.ballPosition = ballPosition;
-		this.chipKick = chipKick;
-		this.shootDirection = shootDirection;
+		shootDirection = 0.0;
+		chipKick = 0;
+		ballPosition = null;
+		ballPosition = null;
+
 		this.role = RobotMode.ATTACKER;
-		go = new GotoPosition(robot, output, robot.getPosition(), ballPosition);
+		go = new GotoPosition(robot, robot.getPosition(), ballPosition);
 	}
 
 	/**

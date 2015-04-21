@@ -1,8 +1,9 @@
 package robocup.controller.ai.highLevelBehavior.strategy.standard;
 
+import org.apache.commons.math3.util.Pair;
+
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.model.FieldPoint;
-import robocup.model.World;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
 
@@ -14,6 +15,7 @@ import robocup.model.enums.RobotMode;
  * For more information about the strategy and roles see TactiekDocument
  */
 public class GameStop extends Strategy {
+
 	/**
 	 * Roles in the {@link GameStop} strategy are assigned in the following order:<br>
 	 * <ol>
@@ -25,7 +27,7 @@ public class GameStop extends Strategy {
 	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
 	 * </ol>
 	 */
-	public GameStop () {
+	public GameStop() {
 		super();
 		roles.add(RobotMode.KEEPER);
 		// two robots stand as close to the ball as possible, because we might have to kick off or defend
@@ -37,31 +39,35 @@ public class GameStop extends Strategy {
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.KEEPERDEFENDER);
 	}
-	
+
 	/**
 	 * Method that declares the zones for all the roles in this strategy
 	 */
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
 		if (ballPosition.getX() <= 0.0) {
-			if(ballPosition.getY() <= 0.0) {
-				zonesForRole.put(RobotMode.RUNNER, FieldZone.WEST_NORTH_FRONT);
-				zonesForRole.put(RobotMode.RUNNER, FieldZone.WEST_NORTH_FRONT);
-				zonesForRole.put(RobotMode.COUNTER, FieldZone.WEST_SOUTH_FRONT);
+			if (ballPosition.getY() <= 0.0) {
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_NORTH_FRONT));
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_NORTH_FRONT));
+				// TODO counter achterin? waarom geen runner?
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COUNTER, FieldZone.WEST_SOUTH_FRONT));
 			} else {
-				zonesForRole.put(RobotMode.RUNNER, FieldZone.WEST_SOUTH_FRONT);
-				zonesForRole.put(RobotMode.RUNNER, FieldZone.WEST_SOUTH_FRONT);
-				zonesForRole.put(RobotMode.COUNTER, FieldZone.WEST_NORTH_FRONT);
-			}			
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_SOUTH_FRONT));
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_SOUTH_FRONT));
+				// TODO counter achterin? waarom geen runner?
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COUNTER, FieldZone.WEST_NORTH_FRONT));
+			}
 		} else {
-			if(ballPosition.getY() <= 0.0) {
-				zonesForRole.put(RobotMode.RUNNER, FieldZone.EAST_NORTH_FRONT);
-				zonesForRole.put(RobotMode.RUNNER, FieldZone.EAST_NORTH_FRONT);
-				zonesForRole.put(RobotMode.COUNTER, FieldZone.EAST_SOUTH_FRONT);
+			if (ballPosition.getY() <= 0.0) {
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_NORTH_FRONT));
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_NORTH_FRONT));
+				// TODO counter achterin? waarom geen runner?
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COUNTER, FieldZone.EAST_SOUTH_FRONT));
 			} else {
-				zonesForRole.put(RobotMode.RUNNER, FieldZone.EAST_SOUTH_FRONT);
-				zonesForRole.put(RobotMode.RUNNER, FieldZone.EAST_SOUTH_FRONT);
-				zonesForRole.put(RobotMode.COUNTER, FieldZone.EAST_NORTH_FRONT);
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_SOUTH_FRONT));
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_SOUTH_FRONT));
+				// TODO counter achterin? waarom geen runner?
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COUNTER, FieldZone.EAST_NORTH_FRONT));
 			}
 		}
 	}

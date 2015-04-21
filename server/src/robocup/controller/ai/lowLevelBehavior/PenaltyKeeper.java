@@ -4,7 +4,6 @@ import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.enums.RobotMode;
-import robocup.output.ComInterface;
 
 public class PenaltyKeeper extends LowLevelBehavior {
 
@@ -16,18 +15,15 @@ public class PenaltyKeeper extends LowLevelBehavior {
 	 * Create a penalty keeper.
 	 * The penalty keeper will drive towards a point on the goal line in an attempt to block a penalty.
 	 * @param robot the penalty keeper {@link Robot} in the model.
-	 * @param output Used to send data to the Robot
-	 * @param ballPosition the position of the ball
-	 * @param enemy the enemy penalty taker
 	 * @param fieldLength the length of the field, needed to calculate a point on the goal line
 	 */
-	public PenaltyKeeper(Robot robot, ComInterface output, FieldPoint ballPosition, Robot enemy, double fieldLength) {
+	public PenaltyKeeper(Robot robot, double fieldLength) {
 		super(robot);
 		maxX = fieldLength / 2;
-		this.ballPosition = ballPosition;
-		this.enemy = enemy;
+		ballPosition = null;
+		enemy = null;
 		this.role = RobotMode.PENALTYKEEPER;
-		go = new GotoPosition(robot, output, robot.getPosition(), ballPosition, 1500);
+		go = new GotoPosition(robot, robot.getPosition(), ballPosition, 1500);
 	}
 
 	@Override

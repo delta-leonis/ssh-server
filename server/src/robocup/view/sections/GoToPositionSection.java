@@ -10,13 +10,11 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
-
 import robocup.Main;
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.Ally;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
-import robocup.output.ComInterface;
 import robocup.view.SectionBox;
 
 /**
@@ -80,7 +78,7 @@ public class GoToPositionSection extends SectionBox implements ActionListener{
 		if(a.getSource() == startButton){
 			Robot robot = new Ally(2,2);
 			robot.setPosition(new FieldPoint(Integer.parseInt(xRobotField.getText()), Integer.parseInt(yRobotField.getText())));
-			go = new GotoPosition(robot, ComInterface.getInstance(), new FieldPoint(Integer.parseInt(xDestinationField.getText()), Integer.parseInt(yDestinationField.getText())));
+			go = new GotoPosition(robot, new FieldPoint(Integer.parseInt(xDestinationField.getText()), Integer.parseInt(yDestinationField.getText())));
 			for(int i = 0; i < 1000; ++i){
 				go.calculate();
 				try {

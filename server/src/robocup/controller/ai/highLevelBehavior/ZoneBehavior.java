@@ -1,7 +1,9 @@
 package robocup.controller.ai.highLevelBehavior;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
+import robocup.Main;
 import robocup.controller.ai.highLevelBehavior.events.EventSystem;
 import robocup.controller.ai.highLevelBehavior.strategy.attack.CornerToCornerAttack;
 import robocup.controller.ai.highLevelBehavior.strategy.attack.FreeShotRoundPlay;
@@ -27,10 +29,12 @@ import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Ball;
 import robocup.model.World;
 import robocup.model.enums.Command;
+import robocup.model.enums.Event;
 import robocup.model.enums.TeamColor;
 
 public class ZoneBehavior extends Behavior {
 
+	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private World world;
 	private Mode currentMode;	// AttackMode or DefenseMode
 	private Ball ball;
@@ -82,7 +86,10 @@ public class ZoneBehavior extends Behavior {
 	 * @return {@link AttackMode} when our team is closer to the ball. {@link DefenseMode} when the enemy team is closer to the ball.
 	 */
 	private void determineMode(ArrayList<RobotExecuter> executers) {
-		switch (events.getNewEvent()) {
+		Event event = events.getNewEvent();
+		switch (event) {
+		default:
+			LOGGER.info("Event: " + event.name());
 		case BALL_ALLY_CAPTURE:
 			currentMode = chooseAttackStrategy(executers);
 			break;
@@ -120,8 +127,6 @@ public class ZoneBehavior extends Behavior {
 				// choose normal defense strategy
 				currentMode = chooseDefenseStrategy(executers);
 			break;
-		default:
-			break;
 		}
 
 		// Check in case of missed event
@@ -142,6 +147,7 @@ public class ZoneBehavior extends Behavior {
 	private AttackMode chooseAttackStrategy(ArrayList<RobotExecuter> executers) {
 		AttackMode mode = attackModes.get((int) (Math.random() * attackModes.size()));
 		mode.getStrategy().updateZones(ball.getPosition());
+		LOGGER.info("strategy: " + mode.getStrategy().getClass().getName());
 		return mode;
 	}
 
@@ -153,6 +159,7 @@ public class ZoneBehavior extends Behavior {
 	private DefenseMode chooseDefenseStrategy(ArrayList<RobotExecuter> executers) {
 		DefenseMode mode = defenseModes.get((int) (Math.random() * defenseModes.size()));
 		mode.getStrategy().updateZones(ball.getPosition());
+		LOGGER.info("strategy: " + mode.getStrategy().getClass().getName());
 		return mode;
 	}
 

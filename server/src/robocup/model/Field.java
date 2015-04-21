@@ -8,6 +8,11 @@ import java.util.logging.Logger;
 import robocup.Main;
 import robocup.model.enums.FieldZone;
 
+/**
+ * Class that describes all the properties of the Field we play on.
+ * These properties are retrieved from config/field.properties
+ * 
+ */
 public class Field {
 	private int height;
 	private int width;

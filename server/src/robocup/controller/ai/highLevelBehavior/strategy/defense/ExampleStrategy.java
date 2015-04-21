@@ -1,5 +1,7 @@
 package robocup.controller.ai.highLevelBehavior.strategy.defense;
 
+import org.apache.commons.math3.util.Pair;
+
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.model.FieldPoint;
 import robocup.model.enums.FieldZone;
@@ -27,14 +29,14 @@ public class ExampleStrategy extends Strategy {
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.DISTURBER);
-		
+
 		// TODO move outside to a class which has acces to model
 		updateZones(null);
 	}
-	
+
 	public void updateZones(FieldPoint ballposition) {
 		// TODO bepaal waar de bal is, assign zones op basis hiervan
-		zonesForRole.put(RobotMode.GOALPOSTCOVERER, FieldZone.WEST_NORTH_SECONDPOST);
-		zonesForRole.put(RobotMode.COUNTER, FieldZone.EAST_CENTER);
+		zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.GOALPOSTCOVERER, FieldZone.WEST_NORTH_SECONDPOST));
+		zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COUNTER, FieldZone.EAST_CENTER));
 	}
 }

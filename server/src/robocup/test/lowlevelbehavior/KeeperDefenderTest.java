@@ -34,7 +34,7 @@ public class KeeperDefenderTest {
 	}
 
 	/**
-	 * Test method for {@link robocup.controller.ai.lowLevelBehavior.KeeperDefender#KeeperDefender(robocup.model.Robot, robocup.output.ComInterface, int, boolean, robocup.model.FieldPoint, robocup.model.FieldPoint, robocup.model.FieldPoint)}.
+	 * Test method for {@link robocup.controller.ai.lowLevelBehavior.KeeperDefender#KeeperDefender(robocup.model.Robot, robocup.model.FieldPoint)}.
 	 */
 	@Test
 	public final void testKeeperDefender() {

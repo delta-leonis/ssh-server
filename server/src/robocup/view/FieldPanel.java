@@ -11,7 +11,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import robocup.model.Ball;
 import robocup.model.FieldPoint;
+import robocup.model.Robot;
+import robocup.model.Team;
 import robocup.model.World;
 import robocup.model.enums.FieldZone;
 
@@ -33,10 +36,14 @@ public class FieldPanel extends JPanel {
 	private static int spaceBufferY = 30;
 
 	private World world = World.getInstance();
-	
+
+	private int updateCounter;
+
 	private boolean showFreeShot;
 	private boolean showRaster;
 	private boolean showRobots;
+	private boolean showZones;
+	private boolean showBall;
 
 	/**
 	 * Constructor of {@link FieldPanel}. The panel size is set and the mouseListener is added for 
@@ -46,11 +53,14 @@ public class FieldPanel extends JPanel {
 		setSize(FIELDWIDTH_GUI, FIELDHEIGHT_GUI);
 		showFreeShot = false;
 		showRaster = false;
+		updateCounter = 0;
 
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent me) {
-				double x = me.getX() - getWidth() / 2;
-				double y = -1 * me.getY() + getHeight() / 2;
+				double ratio = (double)((SwingUtilities.getWindowAncestor(me.getComponent())).getWidth() - spaceBufferX * 2)
+						/ (double)FIELDWIDTH;
+				double x = - FIELDWIDTH / 2 + (me.getX() - spaceBufferX) / ratio;
+				double y = -1 * (- (FIELDHEIGHT) / 2 + (me.getY() - spaceBufferY) / ratio);
 				world.getBall().setPosition(new FieldPoint(x, y));
 				repaint();
 			}
@@ -87,11 +97,32 @@ public class FieldPanel extends JPanel {
 				/ (double)FIELDWIDTH;
 
 		drawRaster(g, ratio);
-		for (FieldZone fieldZone : FieldZone.values())
-			drawZone(g, fieldZone, ratio);
+		if (showZones)
+			for (FieldZone fieldZone : FieldZone.values())
+				drawZone(g, fieldZone, ratio);
 		drawPlayfield(g, ratio);
 		drawFreeShot(g, ratio);
 		drawRobots(g, ratio);
+		drawBall(g, ratio);
+	}
+
+	/**
+	 * Function for updating the {@link FieldPanel}. Updates with a result of 2 times
+	 * per second at a frame rate of 60 fps
+	 */
+	public void update() {
+		updateCounter ++;
+		if (updateCounter % 30 != 0)
+			return;
+		repaint();
+	}
+
+	/**
+	 * Toggles the boolean {@link FieldPanel#showZones} and repaints.
+	 */
+	public void toggleShowZones() {
+		showZones = !showZones;
+		repaint();
 	}
 
 	/**
@@ -198,10 +229,54 @@ public class FieldPanel extends JPanel {
 		repaint();
 	}
 
-	private void drawFreeShot(Graphics g, double ratio2) {
+	/**
+	 * Draws the possible free shot in the {@link FieldPanel}. The {@link FieldPoint} for the free shot is retrieved
+	 * by calling {@link World#hasFreeShot()}.
+	 * @param g {@link Graphics} to draw to
+	 * @param ratio A {@link double} indicating the ratio for the sizing. (Screen width / real width)
+	 */
+	private void drawFreeShot(Graphics g, double ratio) {
 		if(!showFreeShot)
 			return;
-		// TODO draw free shot
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setStroke(new BasicStroke(2));
+		g2.setColor(Color.orange);
+
+		try {
+			g2.drawLine((int) world.hasFreeShot().toGUIPoint(ratio).getX() + spaceBufferX, (int) world.hasFreeShot()
+				.toGUIPoint(ratio).getY()
+				+ spaceBufferY, (int) world.getBall().getPosition().toGUIPoint(ratio).getX() + spaceBufferX,
+				(int) world.getBall().getPosition().toGUIPoint(ratio).getY() + spaceBufferY);
+		} catch (NullPointerException e) {
+			// no free shot
+		}
+		
+	}
+
+	/**
+	 * Toggles the boolean {@link FieldPanel#showFreeShot} and repaints.
+	 */
+	public void toggleShowBall() {
+		showBall = !showBall;
+		repaint();
+	}
+
+	/**
+	 * Draws the {@link Ball} in the {@link FieldPanel}.
+	 * @param g {@link Graphics} to draw to
+	 * @param ratio A {@link double} indicating the ratio for the sizing. (Screen width / real width)
+	 */
+	private void drawBall(Graphics g, double ratio) {
+		if(!showBall)
+			return;
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setStroke(new BasicStroke(2));
+		g2.setColor(Color.orange);
+		Ball ball = world.getBall();
+
+		g2.fillOval((int) (ball.getPosition().toGUIPoint(ratio).getX() + spaceBufferX - (double) ball.SIZE / 2.0
+				* ratio), (int) (ball.getPosition().toGUIPoint(ratio).getY() + spaceBufferY - (double) ball.SIZE / 2.0
+				* ratio), (int) (ball.SIZE * ratio), (int) (ball.SIZE * ratio));
 	}
 
 	/**
@@ -242,12 +317,82 @@ public class FieldPanel extends JPanel {
 		g2.drawString(sizeDesc, getHeight() / 10 + 5 - sizeDesc.length() * 7 / 2, 30);
 	}
 
+	/**
+	 * Toggles the boolean {@link FieldPanel#showRobots} and repaints.
+	 */
 	public void toggleShowRobots() {
 		showRobots = !showRobots;
 		repaint();
 	}
 
-	private void drawRobots(Graphics g, double ratio2) {
-		// TODO draw robots
+	/**
+	 * Draws all the {@link Robot}s in the {@link FieldPanel} in their team color. {@link Robot}s point are oriented as their
+	 * {@link Robot#getOrientation()} describes.
+	 * @param g {@link Graphics} to draw to
+	 * @param ratio A {@link double} indicating the ratio for the sizing. (Screen width / real width)
+	 */
+	private void drawRobots(Graphics g, double ratio) {
+		if (!showRobots)
+			return;
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setStroke(new BasicStroke(4));
+
+		Team allyTeam = world.getReferee().getAlly();
+		g2.setColor(allyTeam.getColor().toColor());
+		for (Robot robot : allyTeam.getRobots()) {
+			// draw round part of robot
+			g2.drawArc(
+					(int) (robot.getPosition().toGUIPoint(ratio).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
+					(int) (robot.getPosition().toGUIPoint(ratio).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
+					(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio), (int) robot.getOrientation() + 45,
+					270);
+
+			// draw flat front part of robot
+			FieldPoint left = new FieldPoint(robot.getPosition().getX()
+					+ Math.cos(Math.toRadians(robot.getOrientation() + 45.0)) * Robot.DIAMETER / 2.0, robot
+					.getPosition().getY()
+					+ Math.sin(Math.toRadians(robot.getOrientation() + 45.0))
+					* Robot.DIAMETER
+					/ 2.0);
+			FieldPoint right = new FieldPoint(robot.getPosition().getX()
+					+ Math.cos(Math.toRadians(robot.getOrientation() - 45.0)) * Robot.DIAMETER / 2.0, robot
+					.getPosition().getY()
+					+ Math.sin(Math.toRadians(robot.getOrientation() - 45.0))
+					* Robot.DIAMETER
+					/ 2.0);
+			g2.drawLine((int) (left.toGUIPoint(ratio).getX() + spaceBufferX),
+					(int) (left.toGUIPoint(ratio).getY() + spaceBufferY),
+					(int) (right.toGUIPoint(ratio).getX() + spaceBufferX),
+					(int) (right.toGUIPoint(ratio).getY() + spaceBufferY));
+		}
+
+		Team enemyTeam = world.getReferee().getEnemy();
+		g2.setColor(enemyTeam.getColor().toColor());
+		for (Robot robot : enemyTeam.getRobots()) {
+			// draw round part of robot
+			g2.drawArc(
+					(int) (robot.getPosition().toGUIPoint(ratio).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
+					(int) (robot.getPosition().toGUIPoint(ratio).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
+					(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio), (int) robot.getOrientation() + 45,
+					270);
+
+			// draw flat front part of robot
+			FieldPoint left = new FieldPoint(robot.getPosition().getX()
+					+ Math.cos(Math.toRadians(robot.getOrientation() + 45.0)) * Robot.DIAMETER / 2.0, robot
+					.getPosition().getY()
+					+ Math.sin(Math.toRadians(robot.getOrientation() + 45.0))
+					* Robot.DIAMETER
+					/ 2.0);
+			FieldPoint right = new FieldPoint(robot.getPosition().getX()
+					+ Math.cos(Math.toRadians(robot.getOrientation() - 45.0)) * Robot.DIAMETER / 2.0, robot
+					.getPosition().getY()
+					+ Math.sin(Math.toRadians(robot.getOrientation() - 45.0))
+					* Robot.DIAMETER
+					/ 2.0);
+			g2.drawLine((int) (left.toGUIPoint(ratio).getX() + spaceBufferX),
+					(int) (left.toGUIPoint(ratio).getY() + spaceBufferY),
+					(int) (right.toGUIPoint(ratio).getX() + spaceBufferX),
+					(int) (right.toGUIPoint(ratio).getY() + spaceBufferY));
+		}
 	}
 }

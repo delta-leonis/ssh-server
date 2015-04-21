@@ -1,5 +1,7 @@
 package robocup.controller.ai.highLevelBehavior.strategy.defense;
 
+import org.apache.commons.math3.util.Pair;
+
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.model.FieldPoint;
 import robocup.model.World;
@@ -38,23 +40,23 @@ public class ZonallyForward extends Strategy {
 		roles.add(RobotMode.KEEPER);
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.KEEPERDEFENDER);
-		
+
 		roles.add(RobotMode.COUNTER);
-		
+
 		roles.add(RobotMode.DISTURBER_COVERER);
 		roles.add(RobotMode.DISTURBER_COVERER);
 	}
 
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
-		if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
-			zonesForRole.put(RobotMode.DISTURBER_COVERER, FieldZone.EAST_NORTH_FRONT);
-			zonesForRole.put(RobotMode.DISTURBER_COVERER, FieldZone.EAST_SOUTH_FRONT);
-			zonesForRole.put(RobotMode.COUNTER, FieldZone.WEST_CENTER);
+		if (World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.DISTURBER_COVERER, FieldZone.EAST_NORTH_FRONT));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.DISTURBER_COVERER, FieldZone.EAST_SOUTH_FRONT));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COUNTER, FieldZone.WEST_CENTER));
 		} else {
-			zonesForRole.put(RobotMode.DISTURBER_COVERER, FieldZone.WEST_SOUTH_FRONT);
-			zonesForRole.put(RobotMode.DISTURBER_COVERER, FieldZone.WEST_NORTH_FRONT);
-			zonesForRole.put(RobotMode.COUNTER, FieldZone.EAST_CENTER);
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.DISTURBER_COVERER, FieldZone.WEST_SOUTH_FRONT));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.DISTURBER_COVERER, FieldZone.WEST_NORTH_FRONT));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COUNTER, FieldZone.EAST_CENTER));
 		}
 	}
 }

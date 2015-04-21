@@ -1,8 +1,8 @@
 package robocup.controller.ai.highLevelBehavior.strategy;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+
+import org.apache.commons.math3.util.Pair;
 
 import robocup.model.FieldPoint;
 import robocup.model.enums.FieldZone;
@@ -11,7 +11,7 @@ import robocup.model.enums.RobotMode;
 public abstract class Strategy {
 
 	protected ArrayList<RobotMode> roles = new ArrayList<RobotMode>();
-	protected Map<RobotMode, FieldZone> zonesForRole = new HashMap<RobotMode, FieldZone>();
+	protected ArrayList<Pair<RobotMode, FieldZone>> zonesForRole = new ArrayList<Pair<RobotMode, FieldZone>>();
 
 	/**
 	 * Create a strategy with specified roles and zones connected to these roles.
@@ -19,7 +19,7 @@ public abstract class Strategy {
 	 * @param zonesForRole the zones which are connected to specific roles
 	 */
 	public Strategy() {
-		
+
 	}
 
 	/**
@@ -28,7 +28,19 @@ public abstract class Strategy {
 	 * @return Zone for this role when this role has a specified zone. null when no zone is specified.
 	 */
 	public FieldZone getZoneForRole(RobotMode role) {
-		return zonesForRole.get(role);
+		Pair<RobotMode, FieldZone> toRet = null;
+
+		for (Pair<RobotMode, FieldZone> pair : zonesForRole) {
+			if (pair.getFirst() == role) {
+				toRet = pair;
+				break;
+			}
+		}
+
+		// remove zone role to prevent assigning the same zone twice
+		zonesForRole.remove(toRet);
+
+		return toRet.getSecond();
 	}
 
 	/**

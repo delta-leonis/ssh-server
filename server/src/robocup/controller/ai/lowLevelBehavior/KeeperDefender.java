@@ -4,18 +4,17 @@ import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.enums.RobotMode;
-import robocup.output.ComInterface;
 
 public class KeeperDefender extends Keeper {
 
 	private FieldPoint offset;
 
-	public KeeperDefender(Robot robot, ComInterface output, int distanceToGoal, boolean goToKick,
-			FieldPoint ballPosition, FieldPoint centerGoalPosition, FieldPoint offset) {
-		super(robot, output, distanceToGoal, goToKick, ballPosition, centerGoalPosition);
-		this.offset = offset;
+	public KeeperDefender(Robot robot, FieldPoint centerGoalPosition) {
+		super(robot, centerGoalPosition);
+		offset = null;
+
 		this.role = RobotMode.KEEPERDEFENDER;
-		go = new GotoPosition(robot, output, centerGoalPosition, ballPosition, 2000);
+		go = new GotoPosition(robot, centerGoalPosition, ballPosition, 2000);
 	}
 
 	/**

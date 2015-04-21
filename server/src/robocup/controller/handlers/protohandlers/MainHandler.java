@@ -4,7 +4,6 @@ import robocup.input.ProtoParser;
 import robocup.input.protobuf.MessagesRobocupSslDetection.SSL_DetectionFrame;
 import robocup.input.protobuf.MessagesRobocupSslGeometry.SSL_GeometryData;
 import robocup.input.protobuf.Referee.SSL_Referee;
-import robocup.model.World;
 /**
  * Handler that gets all generic protobuf messages from the {@link ProtoParser}
  * these messages will be send to the individual handlers.<br>

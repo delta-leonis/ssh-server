@@ -5,7 +5,6 @@ import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
-import robocup.output.ComInterface;
 
 public class Counter extends LowLevelBehavior {
 
@@ -18,17 +17,15 @@ public class Counter extends LowLevelBehavior {
 	 * A counter tries to move to a given free position,
 	 * if no free position is given try to move to the center point of his assigned zone 
 	 * @param robot the Counter {@link Robot} in the model
-	 * @param output Used to send data to the Robot
-	 * @param ballPosition the position of the ball
-	 * @param freePosition a free position within the zone
 	 */
-	public Counter(Robot robot, ComInterface output, FieldZone zone, FieldPoint ballPosition, FieldPoint freePosition) {
+	public Counter(Robot robot) {
 		super(robot);
-		this.zone = zone;
-		this.ballPosition = ballPosition;
-		this.freePosition = freePosition;
+		zone = null;
+		ballPosition = null;
+		freePosition = null;
+
 		this.role = RobotMode.COUNTER;
-		go = new GotoPosition(robot, output, null, ballPosition);
+		go = new GotoPosition(robot, null, ballPosition);
 	}
 
 	/**

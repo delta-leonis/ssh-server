@@ -5,7 +5,6 @@ import robocup.model.Ball;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.enums.RobotMode;
-import robocup.output.ComInterface;
 
 /**
  * Describes the low-level behavior for a Coverer robot.
@@ -21,21 +20,16 @@ public class Coverer extends LowLevelBehavior {
 	/**
 	 * Create a defender (stands between "target" enemy and the ball)
 	 * @param robot The {@link Robot} that describes the blocker.
-	 * @param output The {@link RobotCom} that sends the commands to the physical Robot.
-	 * @param distanceToSubject The distance the coverer keeps from the subject in millimeters
-	 * @param objectPosition current position of the object the coverer needs to cover. See {@link FieldPoint}
-	 * @param subjectPosition current position of the subject. See {@link FieldPoint}
-	 * @param subjectId The Id of the subject this Robot is trying to interrupt.
 	 */
-	public Coverer(Robot robot, ComInterface output, int distanceToSubject, FieldPoint objectPosition,
-			FieldPoint subjectPosition, int subjectId) {
+	public Coverer(Robot robot) {
 		super(robot);
-		this.subjectPosition = subjectPosition;
-		this.objectPosition = objectPosition;
-		this.distanceToSubject = distanceToSubject;
+		distanceToSubject = 0;
+		objectPosition = null;
+		subjectPosition = null;
+		subjectId = 0;
+
 		this.role = RobotMode.COVERER;
-		this.subjectId = subjectId;
-		go = new GotoPosition(robot, output, robot.getPosition(), objectPosition, 400);
+		go = new GotoPosition(robot, robot.getPosition(), objectPosition, 400);
 	}
 
 	/**
@@ -64,7 +58,9 @@ public class Coverer extends LowLevelBehavior {
 			go.setDestination(newDestination);
 
 		go.setTarget(objectPosition);
-		go.calculate();
+
+		if (robot.getPosition() != null)
+			go.calculate();
 	}
 
 	/**
@@ -86,13 +82,12 @@ public class Coverer extends LowLevelBehavior {
 
 			double angle = subjectPosition.getAngle(objectPosition);
 
-			double dx = (Math.sin(angle) * distanceToSubject);
-			double dy = (Math.cos(angle) * distanceToSubject);
+			double dx = Math.cos(Math.toRadians(angle)) * distanceToSubject;
+			double dy = Math.sin(Math.toRadians(angle)) * distanceToSubject;
 
 			newDestination = new FieldPoint(subjectPosition.getX() + dx, subjectPosition.getY() + dy);
 		}
 
 		return newDestination;
 	}
-
 }
