@@ -12,6 +12,8 @@ import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.PenaltyKeeper;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
+import robocup.model.Ally;
+import robocup.model.Enemy;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.enums.FieldZone;
@@ -24,6 +26,8 @@ public class DefenseMode extends Mode {
 
 	@Override
 	public void updateAttacker(RobotExecuter executer) {
+		// Unused in DefenseMode
+
 		Attacker attacker = (Attacker) executer.getLowLevelBehavior();
 		// TODO Update with normal values
 		double shootDirection = 0.0;
@@ -35,22 +39,66 @@ public class DefenseMode extends Mode {
 	@Override
 	public void updateCoverer(RobotExecuter executer) {
 		Coverer blocker = (Coverer) executer.getLowLevelBehavior();
-		// TODO Update with normal values
+		Ally allyRobot = (Ally) executer.getRobot();
+
 		int distanceToSubject = 250;
 		FieldPoint objectPosition = ball.getPosition();
 		FieldPoint subjectPosition = null;
 		int subjectId = 0;
+
+		ArrayList<Enemy> enemyRobots = world.getEnemyRobotsInZone(allyRobot.getPreferredZone());
+
+		if (enemyRobots.size() > 0) {
+			Enemy enemyRobot = enemyRobots.get(0);
+			subjectPosition = enemyRobot == null ? null : enemyRobot.getPosition();
+			subjectId = enemyRobot == null ? 0 : enemyRobot.getRobotId();
+		} else {
+			if (allyRobot.getPreferredZone() != null)
+				subjectPosition = allyRobot.getPreferredZone().getCenterPoint();
+		}
+
 		blocker.update(distanceToSubject, objectPosition, subjectPosition, subjectId);
 	}
 
 	@Override
 	public void updateKeeperDefender(RobotExecuter executer) {
 		KeeperDefender keeperDefender = (KeeperDefender) executer.getLowLevelBehavior();
-		// TODO Update with normal values
-		int distanceToGoal = 1200;
+
+		int distanceToGoal = world.getField().getDefenceRadius() + world.getField().getDefenceStretch() / 2 + 50;
 		boolean goToKick = false;
 		FieldPoint ballPosition = ball.getPosition();
+
+		Ally robot = (Ally) executer.getRobot();
+		ArrayList<Ally> keeperDefenders = new ArrayList<Ally>();
+
+		for (RobotExecuter itExecuter : executers)
+			if (itExecuter.getLowLevelBehavior() instanceof KeeperDefender)
+				keeperDefenders.add((Ally) itExecuter.getRobot());
+
 		FieldPoint offset = null;
+
+		switch (keeperDefenders.size()) {
+		case 2:
+			if (robot.getPosition().getY() == Math.max(keeperDefenders.get(0).getPosition().getY(), keeperDefenders
+					.get(1).getPosition().getY()))
+				offset = new FieldPoint(0, 150);
+			else
+				offset = new FieldPoint(0, -150);
+			break;
+		case 3:
+			if (robot.getPosition().getY() == Math.max(keeperDefenders.get(0).getPosition().getY(),
+					Math.max(keeperDefenders.get(1).getPosition().getY(), keeperDefenders.get(2).getPosition().getY())))
+				offset = new FieldPoint(0, 150);
+			else if (robot.getPosition().getY() == Math.min(keeperDefenders.get(0).getPosition().getY(),
+					Math.min(keeperDefenders.get(1).getPosition().getY(), keeperDefenders.get(2).getPosition().getY())))
+				offset = new FieldPoint(0, -150);
+			else
+				offset = new FieldPoint(0, 0);
+			break;
+		default:
+			break;
+		}
+
 		keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset);
 	}
 
@@ -58,9 +106,8 @@ public class DefenseMode extends Mode {
 	public void updateKeeper(RobotExecuter executer) {
 		Keeper keeper = (Keeper) executer.getLowLevelBehavior();
 
-		int distanceToGoal = 500;
-		// TODO check if keeper needs to move to the ball, if so, set goToKick to true
-		boolean goToKick = false;
+		int distanceToGoal = (int) world.getField().getEastGoal().getWidth() / 2;
+		boolean goToKick = world.getClosestRobotToBall().equals(executer.getRobot());
 		FieldPoint ballPosition = ball.getPosition();
 		keeper.update(distanceToGoal, goToKick, ballPosition);
 	}
@@ -68,9 +115,8 @@ public class DefenseMode extends Mode {
 	@Override
 	protected void updatePenaltyKeeper(RobotExecuter executer) {
 		PenaltyKeeper penalKeeper = (PenaltyKeeper) executer.getLowLevelBehavior();
-		// TODO Auto-generated method stub
-		FieldPoint ballPosition = null;
-		Robot enemy = null;
+		FieldPoint ballPosition = ball.getPosition();
+		Robot enemy = world.getClosestRobotToBall();
 		penalKeeper.update(ballPosition, enemy);
 	}
 
@@ -90,8 +136,8 @@ public class DefenseMode extends Mode {
 		Disturber disturber = (Disturber) executer.getLowLevelBehavior();
 
 		int distanceToObject = 300;
-		boolean goToKick = false;
 		FieldPoint objectPosition = ball.getPosition();
+		boolean goToKick = world.getClosestRobotToBall().getPosition().getDeltaDistance(objectPosition) > Robot.DIAMETER + 50;
 
 		disturber.update(distanceToObject, goToKick, objectPosition);
 	}

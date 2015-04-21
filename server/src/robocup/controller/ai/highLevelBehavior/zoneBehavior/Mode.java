@@ -25,6 +25,7 @@ public abstract class Mode {
 	protected World world;
 	protected Ball ball;
 	protected Strategy strategy;
+	protected ArrayList<RobotExecuter> executers;
 
 	/** Co-ordinates of the goal on the left side of the field */
 	private static final FieldPoint MID_GOAL_NEGATIVE = new FieldPoint(-(World.getInstance().getField().getHeight() / 2), 0);
@@ -35,6 +36,7 @@ public abstract class Mode {
 		world = World.getInstance();
 		ball = world.getBall();
 		this.strategy = strategy;
+		this.executers = executers;
 	}
 
 	/**
@@ -42,7 +44,7 @@ public abstract class Mode {
 	 * New roles will be assigned to every robot and their lowlevel behaviors will be updated.
 	 * @param executers
 	 */
-	public void execute(ArrayList<RobotExecuter> executers) {
+	public void execute() {
 		try {
 			for (RobotExecuter executer : executers)
 				updateExecuter(executer);
@@ -64,12 +66,13 @@ public abstract class Mode {
 	/**
 	 * Set the roles for all executers based on current strategy and mode.
 	 */
-	public void assignRoles(ArrayList<RobotExecuter> executers) {
+	public void assignRoles() {
 		strategy.updateZones(ball.getPosition());
 		
 		// clear executers so we start clean
 		for (RobotExecuter executer : executers) {
 			((Ally) executer.getRobot()).setRole(null);
+			((Ally) executer.getRobot()).setPreferredZone(null);
 		}
 
 		for (RobotMode role : strategy.getRoles()) {
@@ -82,6 +85,7 @@ public abstract class Mode {
 			} else if (zone != null) {
 				Ally closestRobot = getClosestAllyToZoneWithoutRole(zone);
 				closestRobot.setRole(role);
+				closestRobot.setPreferredZone(zone);
 			} else {
 				ArrayList<Ally> allyRobots = getAllyRobotsWithoutRole();
 				Ally robot = allyRobots.get((int) (Math.random() * allyRobots.size()));

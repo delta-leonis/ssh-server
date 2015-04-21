@@ -74,7 +74,7 @@ public class ZoneBehavior extends Behavior {
 		determineMode(executers);
 
 		if (currentMode != null)
-			currentMode.execute(executers);
+			currentMode.execute();
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class ZoneBehavior extends Behavior {
 				break;
 			case BALL_ALLY_CHANGEOWNER:
 			case BALL_ENEMY_CHANGEOWNER:
-				currentMode.assignRoles(executers);
+				currentMode.assignRoles();
 				break;
 			case BALL_MOVESPAST_MIDLINE:
 				if (world.allyHasBall())
@@ -106,7 +106,7 @@ public class ZoneBehavior extends Behavior {
 					currentMode = chooseDefenseStrategy(executers);
 				break;
 			case BALL_MOVESPAST_NORTHSOUTH:
-				currentMode.assignRoles(executers);
+				currentMode.assignRoles();
 				break;
 			case REFEREE_NEWCOMMAND:
 				if (world.getReferee().getCommand() == Command.NORMAL_START
@@ -146,7 +146,7 @@ public class ZoneBehavior extends Behavior {
 	 */
 	private AttackMode chooseAttackStrategy(ArrayList<RobotExecuter> executers) {
 		AttackMode mode = attackModes.get((int) (Math.random() * attackModes.size()));
-		mode.assignRoles(executers);
+		mode.assignRoles();
 		LOGGER.info("strategy: " + mode.getStrategy().getClass().getName());
 		return mode;
 	}
@@ -158,7 +158,7 @@ public class ZoneBehavior extends Behavior {
 	 */
 	private DefenseMode chooseDefenseStrategy(ArrayList<RobotExecuter> executers) {
 		DefenseMode mode = defenseModes.get((int) (Math.random() * defenseModes.size()));
-		mode.assignRoles(executers);
+		mode.assignRoles();
 		LOGGER.info("strategy: " + mode.getStrategy().getClass().getName());
 		return mode;
 	}
@@ -266,7 +266,7 @@ public class ZoneBehavior extends Behavior {
 		}
 
 		if (returnMode != null)
-			returnMode.assignRoles(executers);
+			returnMode.assignRoles();
 
 		return returnMode;
 	}

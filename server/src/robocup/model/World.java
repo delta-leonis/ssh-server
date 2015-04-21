@@ -1,13 +1,13 @@
 package robocup.model;
 
-import java.awt.Container;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map.Entry;
 import java.util.Observable;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 
 import robocup.controller.ai.lowLevelBehavior.Keeper;
+import robocup.controller.handlers.protohandlers.DetectionHandler;
 import robocup.model.enums.Command;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.TeamColor;
@@ -391,8 +391,7 @@ public class World extends Observable {
 	/**
 	 * Method that retrieves all allies that are present within a {@link FieldZone}
 	 * 
-	 * @param fieldZones
-	 *            array with all the zones where to look for robots
+	 * @param fieldZones array with all the zones where to look for robots
 	 * @return an list with all the found robots
 	 */
 	public ArrayList<Ally> getAllyRobotsInZones(ArrayList<FieldZone> fieldZones) {
@@ -405,15 +404,15 @@ public class World extends Observable {
 				}
 			}
 		}
+
 		return foundAllies;
 	}
 
 	/**
-	 * Method that retrieves all enemies that are present within a {@link FieldZone}
+	 * Method that retrieves all enemies that are present within an arraylist of {@link FieldZone FieldZones}
 	 * 
-	 * @param fieldZones
-	 *            array with all the {@link FieldZone zones} where to look for {@link Robot robots}
-	 * @return an list with all the found {@link Robot robots}
+	 * @param fieldZones arraylist with all the {@link FieldZone zones} where to look for {@link Robot robots}
+	 * @return a list with all the found {@link Robot robots}
 	 */
 	public ArrayList<Enemy> getEnemyRobotsInZones(ArrayList<FieldZone> fieldZones) {
 		ArrayList<Enemy> foundEnemies = new ArrayList<Enemy>();
@@ -423,9 +422,25 @@ public class World extends Observable {
 				if (fieldZone.contains(enemy.getPosition())) {
 					foundEnemies.add((Enemy) enemy);
 				}
-				;
 			}
 		}
+
+		return foundEnemies;
+	}
+	
+	/**
+	 * Method that retrieves all enemies that are present within a {@link FieldZone}
+	 * 
+	 * @param fieldZone a {@link FieldZone} where to look for {@link Robot}
+	 * @return a list with all the found {@link Robot robots}
+	 */
+	public ArrayList<Enemy> getEnemyRobotsInZone(FieldZone fieldZone) {
+		ArrayList<Enemy> foundEnemies = new ArrayList<Enemy>();
+
+		for (Robot enemy : enemyTeam)
+			if (fieldZone.contains(enemy.getPosition()))
+				foundEnemies.add((Enemy) enemy);
+
 		return foundEnemies;
 	}
 
