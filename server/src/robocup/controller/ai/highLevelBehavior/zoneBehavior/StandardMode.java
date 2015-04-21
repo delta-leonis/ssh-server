@@ -72,4 +72,10 @@ public class StandardMode extends Mode {
 		
 	}
 
+	@Override
+	public void updateRunner(RobotExecuter executor) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

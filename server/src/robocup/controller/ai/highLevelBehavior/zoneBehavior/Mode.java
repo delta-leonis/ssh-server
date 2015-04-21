@@ -12,6 +12,7 @@ import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.PenaltyKeeper;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
+import robocup.controller.ai.lowLevelBehavior.Runner;
 import robocup.model.Ally;
 import robocup.model.Ball;
 import robocup.model.FieldPoint;
@@ -144,6 +145,7 @@ public abstract class Mode {
 				handlePenaltyKeeper(executer);
 				break;
 			case RUNNER:
+				handleRunner(executer);
 				break;
 			default:
 				System.out.println("Role used without handle function, please add me in Mode.java, role: "
@@ -236,6 +238,15 @@ public abstract class Mode {
 
 		updateAttacker(executer);
 	}
+
+	private void handleRunner(RobotExecuter executer) {
+		if (!(executer.getLowLevelBehavior() instanceof Runner))
+			executer.setLowLevelBehavior(new Runner(executer.getRobot()));
+
+		updateAttacker(executer);
+	}
+
+	public abstract void updateRunner(RobotExecuter executor);
 
 	/**
 	 * Update the values of the Attacker behavior belonging to the executer.

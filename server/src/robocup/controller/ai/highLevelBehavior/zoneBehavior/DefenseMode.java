@@ -12,6 +12,7 @@ import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.PenaltyKeeper;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
+import robocup.controller.ai.lowLevelBehavior.Runner;
 import robocup.model.Ally;
 import robocup.model.Enemy;
 import robocup.model.FieldPoint;
@@ -34,6 +35,47 @@ public class DefenseMode extends Mode {
 		int chipKick = 0;
 		FieldPoint ballPosition = ball.getPosition();
 		attacker.update(shootDirection, chipKick, ballPosition);
+	}
+
+	@Override
+	public void updateRunner(RobotExecuter executer) {
+		Runner runner = (Runner) executer.getLowLevelBehavior();
+		
+		Ally robot = (Ally) executer.getRobot();
+		
+		FieldPoint ballPosition = ball.getPosition();
+		FieldPoint freePosition = robot.getPreferredZone() != null ? robot.getPreferredZone().getCenterPoint() : findFreePosition(robot);
+		
+		runner.update(ballPosition, freePosition);
+	}
+
+	private FieldPoint findFreePosition(Ally robot) {
+		switch(strategy.getClass().getCanonicalName()) {
+		case "CornerToCornerAttack":
+		case "FreeShotRoundPlay":
+		case "PenaltyAreaKickIn":
+		case "SecondPostKickIn":
+			// TODO assign positions
+			return new FieldPoint(0, 0);
+		case "BarricadeDefending":
+		case "ForwardDefending":
+		case "ZonallyBackward":
+		case "ZonallyForward":
+			return new FieldPoint(0, 0);
+		case "FreeKickDefending":
+		case "FreeKickForward":
+		case "GameHalt":
+		case "GameStop":
+		case "KickoffDefending":
+		case "PenaltyAlly":
+		case "PenaltyEnemy":
+		case "ThrowInDefend":
+		case "ThrowInForward":
+			// TODO assign positions
+			return new FieldPoint(0, 0);
+		}
+		
+		return null;
 	}
 
 	@Override

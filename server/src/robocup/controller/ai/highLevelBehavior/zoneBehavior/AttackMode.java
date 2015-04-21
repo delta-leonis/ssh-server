@@ -74,4 +74,10 @@ public class AttackMode extends Mode {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void updateRunner(RobotExecuter executor) {
+		// TODO Auto-generated method stub
+		
+	}
 }
