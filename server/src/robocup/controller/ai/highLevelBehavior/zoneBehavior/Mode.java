@@ -89,8 +89,12 @@ public abstract class Mode {
 				closestRobot.setPreferredZone(zone);
 			} else {
 				ArrayList<Ally> allyRobots = getAllyRobotsWithoutRole();
-				Ally robot = allyRobots.get((int) (Math.random() * allyRobots.size()));
-				robot.setRole(role);
+				if(allyRobots.size() != 0){
+					Ally robot = allyRobots.get((int) (Math.random() * allyRobots.size()));
+					robot.setRole(role);
+				}
+				else
+					System.out.println("0 Robots without Role.");
 			}
 		}
 	}
