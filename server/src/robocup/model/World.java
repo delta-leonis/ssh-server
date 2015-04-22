@@ -210,7 +210,7 @@ public class World extends Observable {
 		int count = 0;
 		FieldPoint keeperPosition = referee.getAlly().getRobotByID(referee.getAlly().getGoalie()).getPosition();
 
-		for (Robot r : referee.getEnemy().getRobots()) {
+		for (Robot r : referee.getEnemy().getRobotsOnSight()) {
 			if (r.getPosition().getX() > 0.0 && keeperPosition.getX() > 0.0 || r.getPosition().getX() < 0.0
 					&& keeperPosition.getX() < 0.0)
 				count++;
@@ -227,8 +227,8 @@ public class World extends Observable {
 	 */
 	public Robot getClosestRobotToBall() {
 		ArrayList<Robot> robots = new ArrayList<Robot>();
-		robots.addAll(getReferee().getAlly().getRobots());
-		robots.addAll(getReferee().getEnemy().getRobots());
+		robots.addAll(getReferee().getAlly().getRobotsOnSight());
+		robots.addAll(getReferee().getEnemy().getRobotsOnSight());
 
 		double minDistance = -1.0;
 		Robot minDistanceRobot = null;

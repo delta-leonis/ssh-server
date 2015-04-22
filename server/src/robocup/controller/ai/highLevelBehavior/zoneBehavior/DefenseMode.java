@@ -28,12 +28,10 @@ public class DefenseMode extends Mode {
 	@Override
 	public void updateAttacker(RobotExecuter executer) {
 		// Unused in DefenseMode
-
 		Attacker attacker = (Attacker) executer.getLowLevelBehavior();
-		// TODO Update with normal values
-		double shootDirection = 0.0;
-		int chipKick = 0;
+		int chipKick = 40;
 		FieldPoint ballPosition = ball.getPosition();
+		double shootDirection = ballPosition.getAngle(world.hasFreeShot());
 		attacker.update(shootDirection, chipKick, ballPosition);
 	}
 
@@ -162,7 +160,8 @@ public class DefenseMode extends Mode {
 		Robot enemyRobot = world.getClosestEnemyRobotToPoint(new FieldPoint(XPoint, YPoint));
 		FieldPoint ballPosition = ball.getPosition();
 
-		goalPostCoverer.update(distanceToPole, goToKick, enemyRobot, ballPosition);
+		goalPostCoverer.update(distanceToPole, goToKick, enemyRobot == null ? ((Ally) executer.getRobot())
+				.getPreferredZone().getCenterPoint() : enemyRobot.getPosition(), ballPosition);
 	}
 
 	@Override
