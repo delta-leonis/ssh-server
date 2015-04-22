@@ -151,7 +151,7 @@ public abstract class Mode {
 				handleRunner(executer);
 				break;
 			default:
-				System.out.println("Role used without handle function, please add me in Mode.java, role: "
+				LOGGER.severe("Role used without handle function, please add me in Mode.java, role: "
 						+ ((Ally) executer.getRobot()).getRole());
 			}
 		}
