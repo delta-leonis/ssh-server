@@ -31,11 +31,6 @@ public abstract class Mode {
 	protected ArrayList<RobotExecuter> executers;
 	protected Logger LOGGER = Logger.getLogger(Main.class.getName());
 
-	/** Co-ordinates of the goal on the left side of the field */
-	private static final FieldPoint MID_GOAL_NEGATIVE = new FieldPoint(-(World.getInstance().getField().getHeight() / 2), 0);
-	/** Co-ordinates of the goal on the right side of the field */
-	private static final FieldPoint MID_GOAL_POSITIVE = new FieldPoint(World.getInstance().getField().getHeight() / 2, 0);
-
 	public Mode(Strategy strategy, ArrayList<RobotExecuter> executers) {
 		world = World.getInstance();
 		ball = world.getBall();
@@ -72,7 +67,7 @@ public abstract class Mode {
 	 */
 	public void assignRoles() {
 		strategy.updateZones(ball.getPosition());
-		
+
 		// clear executers so we start clean
 		for (RobotExecuter executer : executers) {
 			((Ally) executer.getRobot()).setRole(null);
@@ -84,24 +79,21 @@ public abstract class Mode {
 
 			if (role == RobotMode.KEEPER) {
 				// Find executer belonging to the goalie and set role
-				((Ally) findExecuter(world.getReferee().getAlly().getGoalie(), executers).getRobot())
-						.setRole(role);
+				((Ally) findExecuter(world.getReferee().getAlly().getGoalie(), executers).getRobot()).setRole(role);
 			} else if (zone != null) {
 				Ally closestRobot = getClosestAllyToZoneWithoutRole(zone);
-				if(closestRobot != null){
+				if (closestRobot != null) {
 					closestRobot.setRole(role);
 					closestRobot.setPreferredZone(zone);
-				}
-				else{
+				} else {
 					System.out.println("Not enough robots to fill entire team.");
 				}
 			} else {
 				ArrayList<Ally> allyRobots = getAllyRobotsWithoutRole();
-				if(allyRobots.size() != 0){
+				if (allyRobots.size() != 0) {
 					Ally robot = allyRobots.get((int) (Math.random() * allyRobots.size()));
 					robot.setRole(role);
-				}
-				else
+				} else
 					System.out.println("0 Robots without Role.");
 			}
 		}
@@ -174,7 +166,7 @@ public abstract class Mode {
 	 */
 	private void handlePenaltyKeeper(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof Counter))
-			executer.setLowLevelBehavior(new PenaltyKeeper(executer.getRobot(), 0));
+			executer.setLowLevelBehavior(new PenaltyKeeper(executer.getRobot(), world.getField().getWidth()));
 		updatePenaltyKeeper(executer);
 	}
 
@@ -191,8 +183,14 @@ public abstract class Mode {
 	 * @param executer the executer which needs to be handled
 	 */
 	private void handleGoalPostCoverer(RobotExecuter executer) {
-		if (!(executer.getLowLevelBehavior() instanceof Counter))
-			executer.setLowLevelBehavior(new GoalPostCoverer(executer.getRobot(), null));
+		if (!(executer.getLowLevelBehavior() instanceof Counter)) {
+			double XPoint = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? world.getField()
+					.getWidth() / 2 : -world.getField().getWidth() / 2;
+			double YPoint = ball.getPosition().getY() / Math.abs(ball.getPosition().getY())
+					* world.getField().getEastGoal().getWidth() / 4 * -1;
+
+			executer.setLowLevelBehavior(new GoalPostCoverer(executer.getRobot(), new FieldPoint(XPoint, YPoint)));
+		}
 		updateGoalPostCoverer(executer);
 	}
 
@@ -209,8 +207,11 @@ public abstract class Mode {
 	 * @param executer the executer which needs to be handled
 	 */
 	private void handleDisturber(RobotExecuter executer) {
-		if (!(executer.getLowLevelBehavior() instanceof Counter))
-			executer.setLowLevelBehavior(new Disturber(executer.getRobot(), null));
+		if (!(executer.getLowLevelBehavior() instanceof Counter)) {
+			FieldPoint centerGoalPosition = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? new FieldPoint(
+					world.getField().getWidth() / 2, 0) : new FieldPoint(-world.getField().getWidth() / 2, 0);
+			executer.setLowLevelBehavior(new Disturber(executer.getRobot(), centerGoalPosition));
+		}
 		updateDisturber(executer);
 	}
 
@@ -292,8 +293,11 @@ public abstract class Mode {
 	 * @param executer the executer which needs to be handled
 	 */
 	private void handleKeeperDefender(RobotExecuter executer) {
-		if (!(executer.getLowLevelBehavior() instanceof KeeperDefender))
-			executer.setLowLevelBehavior(new KeeperDefender(executer.getRobot(), null));
+		if (!(executer.getLowLevelBehavior() instanceof KeeperDefender)) {
+			FieldPoint centerGoalPosition = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? new FieldPoint(
+					world.getField().getWidth() / 2, 0) : new FieldPoint(-world.getField().getWidth() / 2, 0);
+			executer.setLowLevelBehavior(new KeeperDefender(executer.getRobot(), centerGoalPosition));
+		}
 
 		updateKeeperDefender(executer);
 	}
@@ -314,9 +318,11 @@ public abstract class Mode {
 		Robot keeper = executer.getRobot();
 
 		// TODO determine field half in a better way
-		if (!(executer.getLowLevelBehavior() instanceof Keeper))
-			executer.setLowLevelBehavior(new Keeper(keeper, keeper.getPosition().getX() < 0 ? MID_GOAL_NEGATIVE
-					: MID_GOAL_POSITIVE));
+		if (!(executer.getLowLevelBehavior() instanceof Keeper)) {
+			FieldPoint centerGoalPosition = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? new FieldPoint(
+					world.getField().getWidth() / 2, 0) : new FieldPoint(-world.getField().getWidth() / 2, 0);
+			executer.setLowLevelBehavior(new Keeper(keeper, centerGoalPosition));
+		}
 
 		updateKeeper(executer);
 	}
