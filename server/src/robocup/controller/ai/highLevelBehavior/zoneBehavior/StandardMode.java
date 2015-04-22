@@ -18,6 +18,7 @@ import robocup.model.Enemy;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.enums.FieldZone;
+import robocup.model.enums.RobotMode;
 
 public class StandardMode extends Mode {
 
@@ -50,18 +51,86 @@ public class StandardMode extends Mode {
 	}
 
 	private FieldPoint findFreePosition(Ally robot) {
+		ArrayList<Ally> runners = new ArrayList<Ally>();
+
+		for (RobotExecuter executer : executers) {
+			Ally ally = (Ally) executer.getRobot();
+
+			if (ally.getRole() == RobotMode.RUNNER)
+				runners.add(ally);
+		}
+
+		boolean isEastTeam = world.getReferee().getEastTeam().equals(world.getReferee().getAlly());
+
 		switch (strategy.getClass().getCanonicalName()) {
-		case "FreeKickDefending":
-		case "FreeKickForward":
-		case "GameHalt":
-		case "GameStop":
-		case "KickoffDefending":
-		case "PenaltyAlly":
-		case "PenaltyEnemy":
-		case "ThrowInDefend":
-		case "ThrowInForward":
-			// TODO assign positions
-			return new FieldPoint(0, 0);
+		case "DirectFreeKickDefense":
+			return null;
+		case "DirectFreeKickAttack":
+			// TODO handle situation where a keeper takes the free kick
+			if (runners.size() == 2) {
+				double maxY = Math.max(runners.get(0).getPosition().getY(), runners.get(1).getPosition().getY());
+
+				if (ball.getPosition().getY() > FieldZone.FieldPointPaletteZones.h.getY()) {
+					// ball in north zone
+					if (isEastTeam) {
+						if (robot.getPosition().getY() == maxY)
+							return FieldZone.WEST_MIDDLE.getCenterPoint();
+						else
+							return FieldZone.WEST_SOUTH_SECONDPOST.getCenterPoint();
+					} else {
+						if (robot.getPosition().getY() == maxY)
+							return FieldZone.EAST_MIDDLE.getCenterPoint();
+						else
+							return FieldZone.EAST_SOUTH_SECONDPOST.getCenterPoint();
+					}
+				} else if (ball.getPosition().getY() < -FieldZone.FieldPointPaletteZones.h.getY()) {
+					// ball in south zone
+					if (isEastTeam) {
+						if (robot.getPosition().getY() == maxY)
+							return FieldZone.WEST_NORTH_SECONDPOST.getCenterPoint();
+						else
+							return FieldZone.WEST_MIDDLE.getCenterPoint();
+					} else {
+						if (robot.getPosition().getY() == maxY)
+							return FieldZone.EAST_NORTH_SECONDPOST.getCenterPoint();
+						else
+							return FieldZone.EAST_MIDDLE.getCenterPoint();
+					}
+				} else {
+					// ball in mid zone
+					if (isEastTeam) {
+						if (robot.getPosition().getY() == maxY)
+							return FieldZone.WEST_NORTH_SECONDPOST.getCenterPoint();
+						else
+							return FieldZone.WEST_SOUTH_SECONDPOST.getCenterPoint();
+					} else {
+						if (robot.getPosition().getY() == maxY)
+							return FieldZone.EAST_NORTH_SECONDPOST.getCenterPoint();
+						else
+							return FieldZone.EAST_SOUTH_SECONDPOST.getCenterPoint();
+					}
+				}
+			} else
+				return new FieldPoint(0, 0);
+		case "IndirectFreeKickDefense":
+			return null;
+		case "IndirectFreeKickAttack":
+			// TODO
+		case "KickOffDefense":
+			return null;
+		case "KickOffAttack":
+			// TODO
+		case "PenaltyDefense":
+			return null;
+		case "PenaltyAttack":
+			// TODO
+		case "Stop":
+			return null;
+		case "TimeOut":
+			if (isEastTeam)
+				return new FieldPoint(robot.getRobotId() * (Robot.DIAMETER + 50), 2000);
+			else
+				return new FieldPoint(-robot.getRobotId() * (Robot.DIAMETER + 50), 2000);
 		default:
 			LOGGER.severe("Unknown strategy used. Strategy: " + strategy.getClass().getCanonicalName());
 			return new FieldPoint(0, 0);
