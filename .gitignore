@@ -7,3 +7,6 @@ server/log/
 .metadata
 .recommenders
 server/Logging.txt*
+cutecom-0.22.1/
+refbox/
+graphicalClient/
