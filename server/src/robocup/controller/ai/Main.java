@@ -50,7 +50,8 @@ public class Main implements Observer {
 			return;
 		}
 		if ("detectionHandlerFinished".equals(arg)) {
-			behavior.execute(robotExecuters);
+			if(World.getInstance().getStart())
+				behavior.execute(robotExecuters);
 		}
 	}
 
@@ -84,4 +85,5 @@ public class Main implements Observer {
 		}
 		robotExecuters = updatedRobotExecuters;
 	}
+
 }

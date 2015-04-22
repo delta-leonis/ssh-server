@@ -90,28 +90,34 @@ public class GoToPositionSection extends SectionBox implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent a) {
 		if(a.getSource() == startButton){
-			Team allyTeam = World.getInstance().getReferee().getAlly();
-			Robot robot = allyTeam.getRobotByID(selectedRobotId);
-			robot.setPosition(new FieldPoint(Integer.parseInt(xRobotField.getText()), Integer.parseInt(yRobotField.getText())));
-			robot.setOnSight(true);
+//			Team allyTeam = World.getInstance().getReferee().getAlly();
+//			Robot robot = allyTeam.getRobotByID(selectedRobotId);
+//			robot.setPosition(new FieldPoint(Integer.parseInt(xRobotField.getText()), Integer.parseInt(yRobotField.getText())));
+//			robot.setOnSight(true);
 			
-			go = new GotoPosition(World.getInstance().getReferee().getAlly().getRobotByID(selectedRobotId),
-									new FieldPoint(Integer.parseInt(xDestinationField.getText()), Integer.parseInt(yDestinationField.getText())),
-									new FieldPoint(Integer.parseInt(xTargetField.getText()), Integer.parseInt(yTargetField.getText())));
-			for(int i = 0; i < 10; ++i){
+//			go = new GotoPosition(World.getInstance().getReferee().getAlly().getRobotByID(selectedRobotId),
+//									new FieldPoint(Integer.parseInt(xDestinationField.getText()), Integer.parseInt(yDestinationField.getText())),
+//									new FieldPoint(Integer.parseInt(xTargetField.getText()), Integer.parseInt(yTargetField.getText())));
+//			
+
+//			System.out.println("Id: " + selectedRobotId + " Destination [" + xDestinationField + "," + yDestinationField +"]");
+//			System.out.println("RobotPosition: " + World.getInstance().getReferee().getAlly().getRobotByID(selectedRobotId).getPosition());
+			for(int i = 0; i < 50; ++i){
+				go = new GotoPosition(World.getInstance().getReferee().getAlly().getRobotByID(selectedRobotId), 
+						World.getInstance().getReferee().getAlly().getRobotByID(selectedRobotId).getPosition(),
+						 World.getInstance().getBall().getPosition());
 				go.calculate();
+				System.out.println("Ball pos: " +  World.getInstance().getBall().getPosition());
 				try {
-					Thread.sleep(100);
+					Thread.sleep(250);
 				} catch (InterruptedException e) {
 					LOGGER.warning("Error in GoToPositionSection: " + e.getMessage());
 				}
 			}
 			System.out.println("Stop");
 			ComInterface.getInstance().send(1, selectedRobotId, 0, 0, 0, 0, false);
-			System.out.println("Stop");
-			ComInterface.getInstance().send(1, selectedRobotId, 0, 0, 0, 0, false);System.out.println("Stop");
-			ComInterface.getInstance().send(1, selectedRobotId, 0, 0, 0, 0, false);System.out.println("Stop");
 			ComInterface.getInstance().send(1, selectedRobotId, 0, 0, 0, 0, false);
+			
 		}
 	}
 	

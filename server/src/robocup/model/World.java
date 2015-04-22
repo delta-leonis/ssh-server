@@ -40,12 +40,15 @@ public class World extends Observable {
 	public GUI gui;
 
 	private ArrayList<Integer> validRobotIDs = new ArrayList<Integer>();
+	
+	private boolean start = false;		// True for start, false for stop
 
 	/**
 	 * Constructor for the {@link World} Can only be called as a singleton.
 	 */
 	private World() {
 		
+		validRobotIDs.add(0);
 		validRobotIDs.add(1);
 		validRobotIDs.add(2);
 		validRobotIDs.add(3);
@@ -55,7 +58,7 @@ public class World extends Observable {
 		
 		ball = new Ball();
 		// set a ball position to prevent null pointers
-		ball.setPosition(new FieldPoint(400, 200));
+		ball.setPosition(new FieldPoint(-500, -500));
 		referee = new Referee();
 		field = new Field();
 
@@ -211,9 +214,10 @@ public class World extends Observable {
 		FieldPoint keeperPosition = referee.getAlly().getRobotByID(referee.getAlly().getGoalie()).getPosition();
 
 		for (Robot r : referee.getEnemy().getRobotsOnSight()) {
-			if (r.getPosition().getX() > 0.0 && keeperPosition.getX() > 0.0 || r.getPosition().getX() < 0.0
-					&& keeperPosition.getX() < 0.0)
-				count++;
+			if(r.getPosition()!=null)
+				if (r.getPosition().getX() > 0.0 && keeperPosition.getX() > 0.0 || r.getPosition().getX() < 0.0
+						&& keeperPosition.getX() < 0.0)
+					count++;
 		}
 
 		return count;
@@ -238,11 +242,13 @@ public class World extends Observable {
 				minDistanceRobot = robot;
 				minDistance = robot.getPosition().getDeltaDistance(ball.getPosition());
 			} else {
-				double distance = robot.getPosition().getDeltaDistance(ball.getPosition());
-
-				if (distance < minDistance) {
-					minDistanceRobot = robot;
-					minDistance = distance;
+				if(robot.getPosition() != null){
+					double distance = robot.getPosition().getDeltaDistance(ball.getPosition());
+	
+					if (distance < minDistance) {
+						minDistanceRobot = robot;
+						minDistance = distance;
+					}
 				}
 			}
 		}
@@ -795,5 +801,18 @@ public class World extends Observable {
 	 */
 	public ArrayList<Integer> getValidRobotIDs() {
 		return validRobotIDs;
+	}
+	
+	
+	public void start(){
+		start = true;
+	}
+	
+	public void stop(){
+		start = false;
+	}
+	
+	public boolean getStart(){
+		return start;
 	}
 }

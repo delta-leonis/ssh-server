@@ -1,19 +1,26 @@
 package robocup.view.sections;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.model.World;
+import robocup.output.ComInterface;
 import robocup.view.SectionBox;
 
 /**
  * Displays general information about the game and {@link Field}
  */
 @SuppressWarnings("serial")
-public class GameStatusSection extends SectionBox {
+public class GameStatusSection extends SectionBox implements ActionListener{
 
 	private JTextField fieldHalfField, timePlayedField, refereeStatusField, goalsField, keeperIdField;
+	private JButton startButton;
+	private JButton stopButton;
 
 	/**
 	 * Creates section
@@ -32,6 +39,12 @@ public class GameStatusSection extends SectionBox {
 		refereeStatusField.setEnabled(false);
 		goalsField = new JTextField();
 		goalsField.setEnabled(false);
+		
+		startButton = new JButton("Start");
+		stopButton = new JButton("Stop");
+		
+		startButton.addActionListener(this);
+		stopButton.addActionListener(this);
 
 		add(new JLabel("Field half"));
 		add(fieldHalfField, "growx");
@@ -43,6 +56,9 @@ public class GameStatusSection extends SectionBox {
 		add(goalsField, "growx");
 		add(new JLabel("Keeper id"));
 		add(keeperIdField, "growx");
+		add(startButton, "growx");
+		add(stopButton, "growx");
+		
 		update();
 	}
 
@@ -68,6 +84,25 @@ public class GameStatusSection extends SectionBox {
 		keeperIdField.setText(World.getInstance().getReferee().getAlly().getGoalie() + "");
 		goalsField.setText(World.getInstance().getReferee().getAlly().getScore() + "");
 
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == startButton){
+			World.getInstance().start();
+		}
+		if(e.getSource() == stopButton){
+			World.getInstance().stop();
+			for(int i = 0; i < 11; ++i){
+				ComInterface.getInstance().send(1, i,0, 0, 0, 0, false);
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		}
 	}
 
 }

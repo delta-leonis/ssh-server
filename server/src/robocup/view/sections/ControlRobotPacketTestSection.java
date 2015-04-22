@@ -105,7 +105,7 @@ public class ControlRobotPacketTestSection extends SectionBox{
 	 */
 	@Override
 	public void update() {
-		requestFocusInWindow();
+//		requestFocusInWindow();
 		selectedRobotId = ((GUI) SwingUtilities.getWindowAncestor((this))).getSelectedRobotId();
 		selectedRobotLabel.setText(String.format("Robot #%d selected", selectedRobotId));
 	}

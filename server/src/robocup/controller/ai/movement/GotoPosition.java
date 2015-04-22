@@ -215,8 +215,9 @@ public class GotoPosition {
 	 * @return
 	 */
 	private double getRotationSpeed(double rotation) {
-		return rotation/3.60;
-//
+		System.out.println("ROTATION: " + rotation);
+		return (rotation +20) * -2.5;
+
 //		// must be between 0 and 50 percent, if it's higher than 50% rotating to
 //		// the other direction is faster
 //		double rotationPercent = rotation / 360;
