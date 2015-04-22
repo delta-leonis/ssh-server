@@ -50,8 +50,14 @@ public class Main implements Observer {
 			return;
 		}
 		if ("detectionHandlerFinished".equals(arg)) {
-			if(World.getInstance().getStart())
+			if(World.getInstance().getStart()){
 				behavior.execute(robotExecuters);
+			}
+			else{
+				for(RobotExecuter robot : robotExecuters){
+					robot.stop(true);
+				}
+			}
 		}
 	}
 

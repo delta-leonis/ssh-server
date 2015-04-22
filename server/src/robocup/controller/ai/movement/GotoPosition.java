@@ -168,9 +168,9 @@ public class GotoPosition {
 			double rotationToGoal = rotationToDest(destination);
 			double speed;
 			if(route.size() > 1)							//If we're not at our destination
-				speed = getSpeed(getDistance()+50, 100);	//Don't slow down as much
+				speed = getSpeed(getDistance()+25, 50);	//Don't slow down as much
 			else
-				speed = getSpeed(getDistance(), 100);
+				speed = getSpeed(getDistance(), 50);
 			
 			double rotationSpeed = getRotationSpeed(rotationToTarget);
 
@@ -178,7 +178,10 @@ public class GotoPosition {
 			if (forcedSpeed > 0) {
 				speed = forcedSpeed;
 			}
-
+			//TODO: remove test code
+			System.out.println("ID: " + robot.getRobotId() + "\n\tDirection: " + rotationToGoal
+								+ "\n\tSpeed: " + speed + "\n\tRotationSpeed: " + rotationSpeed 
+								+ "\n\tTarget: " + target + "\n\tDestination: " + destination);
 			// Send commands to robot
 			// direction and rotationAngle do nothing, set to 0
 			// rotationSpeed inverted because the motors spin in opposite
@@ -218,7 +221,7 @@ public class GotoPosition {
 	 */
 	private double getRotationSpeed(double rotation) {
 		System.out.println("ROTATION: " + rotation);
-		return (rotation +20) * -2.5;
+		return (rotation > 0 ? rotation +20 : rotation -20) * -8;
 
 //		// must be between 0 and 50 percent, if it's higher than 50% rotating to
 //		// the other direction is faster
@@ -227,7 +230,7 @@ public class GotoPosition {
 //		// distance needed to rotate in mm
 //		double rotationDistance = circumference * rotationPercent;
 //
-//		return (rotationDistance * DISTANCE_ROTATIONSPEED_COEFFICIENT);
+//		return (rotationDistance * DISTANCE_ROTATIONSPEED_COEFFICIENT * -1);
 	}
 
 	/**
@@ -257,6 +260,8 @@ public class GotoPosition {
 	 * @return The speed in mm/s
 	 */
 	private double getSpeed(double d, int distanceToSlowDown) {
+		
+//		return MAX_VELOCITY;
 		if(d > distanceToSlowDown)
 			return MAX_VELOCITY;
 		return ((d / distanceToSlowDown) * MAX_VELOCITY);

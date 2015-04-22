@@ -102,14 +102,14 @@ public class GoToPositionSection extends SectionBox implements ActionListener{
 
 //			System.out.println("Id: " + selectedRobotId + " Destination [" + xDestinationField + "," + yDestinationField +"]");
 //			System.out.println("RobotPosition: " + World.getInstance().getReferee().getAlly().getRobotByID(selectedRobotId).getPosition());
-			for(int i = 0; i < 50; ++i){
+			for(int i = 0; i < 500; ++i){
 				go = new GotoPosition(World.getInstance().getReferee().getAlly().getRobotByID(selectedRobotId), 
 						World.getInstance().getReferee().getAlly().getRobotByID(selectedRobotId).getPosition(),
 						 World.getInstance().getBall().getPosition());
 				go.calculate();
-				System.out.println("Ball pos: " +  World.getInstance().getBall().getPosition());
+//				System.out.println("Ball pos: " +  World.getInstance().getBall().getPosition());
 				try {
-					Thread.sleep(250);
+					Thread.sleep(100);
 				} catch (InterruptedException e) {
 					LOGGER.warning("Error in GoToPositionSection: " + e.getMessage());
 				}
