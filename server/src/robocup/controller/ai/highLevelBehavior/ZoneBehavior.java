@@ -13,8 +13,6 @@ import robocup.controller.ai.highLevelBehavior.strategy.defense.BarricadeDefendi
 import robocup.controller.ai.highLevelBehavior.strategy.defense.ForwardDefending;
 import robocup.controller.ai.highLevelBehavior.strategy.defense.ZonallyBackward;
 import robocup.controller.ai.highLevelBehavior.strategy.defense.ZonallyForward;
-import robocup.controller.ai.highLevelBehavior.strategy.standard.FreeKickDefending;
-import robocup.controller.ai.highLevelBehavior.strategy.standard.FreeKickForward;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.GameStop;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.KickOffDefense;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.KickOffAttack;
@@ -207,16 +205,16 @@ public class ZoneBehavior extends Behavior {
 			break;
 		case INDIRECT_FREE_BLUE:
 			if (world.getReferee().getAllyTeamColor() == TeamColor.BLUE) {
-				returnMode = new StandardMode(new FreeKickForward(), executers);
+				returnMode = new StandardMode(new PenaltyAttack(), executers);
 			} else {
-				returnMode = new StandardMode(new FreeKickDefending(), executers);
+				returnMode = new StandardMode(new PenaltyAttack(), executers);
 			}
 			break;
 		case INDIRECT_FREE_YELLOW:
 			if (world.getReferee().getAllyTeamColor() == TeamColor.YELLOW) {
-				returnMode = new StandardMode(new FreeKickForward(), executers);
+				returnMode = new StandardMode(new PenaltyAttack(), executers);
 			} else {
-				returnMode = new StandardMode(new FreeKickDefending(), executers);
+				returnMode = new StandardMode(new PenaltyAttack(), executers);
 			}
 			break;
 		case NORMAL_START:
@@ -224,16 +222,16 @@ public class ZoneBehavior extends Behavior {
 			break;
 		case PREPARE_KICKOFF_BLUE:
 			if (world.getReferee().getAllyTeamColor() == TeamColor.BLUE) {
-				returnMode = new StandardMode(new FreeKickForward(), executers);
+				returnMode = new StandardMode(new PenaltyAttack(), executers);
 			} else {
-				returnMode = new StandardMode(new FreeKickDefending(), executers);
+				returnMode = new StandardMode(new PenaltyAttack(), executers);
 			}
 			break;
 		case PREPARE_KICKOFF_YELLOW:
 			if (world.getReferee().getAllyTeamColor() == TeamColor.YELLOW) {
-				returnMode = new StandardMode(new FreeKickForward(), executers);
+				returnMode = new StandardMode(new PenaltyAttack(), executers);
 			} else {
-				returnMode = new StandardMode(new FreeKickDefending(), executers);
+				returnMode = new StandardMode(new PenaltyAttack(), executers);
 			}
 			break;
 		case PREPARE_PENALTY_BLUE:
