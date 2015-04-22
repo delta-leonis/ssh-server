@@ -148,6 +148,8 @@ public class GotoPosition {
 
 			// Calculate parameters
 		} else {
+			// TODO enable me to be able to dribble
+			// dribble = Math.abs(robot.getOrientation() - robot.getPosition().getAngle(World.getInstance().getBall().getPosition())) < 20 && robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition()) < Robot.DIAMETER / 2 + 200;
 			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), false);
 			if(route == null){
 				LOGGER.severe("Robot #" + robot.getRobotId() + " can't reach destination.");
