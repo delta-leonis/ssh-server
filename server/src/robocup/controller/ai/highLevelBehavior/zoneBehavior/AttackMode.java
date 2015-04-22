@@ -50,25 +50,35 @@ public class AttackMode extends Mode {
 
 	private FieldPoint findFreePosition(Ally robot) {
 		ArrayList<Ally> runners = new ArrayList<Ally>();
-		Ally attacker = null;
 
 		for (RobotExecuter executer : executers) {
 			Ally ally = (Ally) executer.getRobot();
 
 			if (ally.getRole() == RobotMode.RUNNER)
 				runners.add(ally);
-
-			if (ally.getRole() == RobotMode.ATTACKER)
-				attacker = ally;
 		}
 
 		switch (strategy.getClass().getCanonicalName()) {
 		case "CornerToCornerAttack":
+			// TODO assign positions
 			return new FieldPoint(0, 0);
 		case "FreeShotRoundPlay":
-
-			return new FieldPoint(0, 0);
+			FieldPoint topRunner = new FieldPoint(robot.getPosition().getX(), robot.getPosition().getY() + Robot.DIAMETER / 2);
+			FieldPoint bottomRunner = new FieldPoint(robot.getPosition().getX(), robot.getPosition().getY() - Robot.DIAMETER / 2);
+			FieldPoint topBaller = new FieldPoint(world.getClosestRobotToBall().getPosition().getX(), world.getClosestRobotToBall().getPosition().getY() + Robot.DIAMETER / 2);
+			FieldPoint bottomBaller = new FieldPoint(world.getClosestRobotToBall().getPosition().getX(), world.getClosestRobotToBall().getPosition().getY() - Robot.DIAMETER / 2);
+			if(world.getAllRobotsInArea(topRunner, topBaller, bottomBaller, bottomRunner).size() > 0) {
+				return robot.getPosition();
+			} else {
+				if (robot.getPreferredZone().getCenterPoint().getX() < robot.getPosition().getX()) {
+					return new FieldPoint(robot.getPosition().getX() + Robot.DIAMETER, robot.getPosition().getY());
+				} else {
+					return new FieldPoint(robot.getPosition().getX() - Robot.DIAMETER, robot.getPosition().getY());
+				}
+					
+			}
 		case "PenaltyAreaKickIn":
+			// TODO assign positions
 			return new FieldPoint(0, 0);
 		case "SecondPostKickIn":
 			// TODO assign positions
