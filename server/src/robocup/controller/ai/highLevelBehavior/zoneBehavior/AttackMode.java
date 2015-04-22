@@ -18,6 +18,7 @@ import robocup.model.Enemy;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.enums.FieldZone;
+import robocup.model.enums.RobotMode;
 
 public class AttackMode extends Mode {
 
@@ -48,10 +49,27 @@ public class AttackMode extends Mode {
 	}
 
 	private FieldPoint findFreePosition(Ally robot) {
+		ArrayList<Ally> runners = new ArrayList<Ally>();
+		Ally attacker = null;
+
+		for (RobotExecuter executer : executers) {
+			Ally ally = (Ally) executer.getRobot();
+
+			if (ally.getRole() == RobotMode.RUNNER)
+				runners.add(ally);
+
+			if (ally.getRole() == RobotMode.ATTACKER)
+				attacker = ally;
+		}
+
 		switch (strategy.getClass().getCanonicalName()) {
 		case "CornerToCornerAttack":
+			return new FieldPoint(0, 0);
 		case "FreeShotRoundPlay":
+
+			return new FieldPoint(0, 0);
 		case "PenaltyAreaKickIn":
+			return new FieldPoint(0, 0);
 		case "SecondPostKickIn":
 			// TODO assign positions
 			return new FieldPoint(0, 0);
