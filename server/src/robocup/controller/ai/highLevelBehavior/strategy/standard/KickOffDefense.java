@@ -4,16 +4,16 @@ import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.model.FieldPoint;
 import robocup.model.enums.RobotMode;
 
-public class GameStop extends Strategy {
+public class KickOffDefense extends Strategy {
 
-	public GameStop() {
+	public KickOffDefense() {
 		super();
 		roles.add(RobotMode.KEEPER);
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.KEEPERDEFENDER);
-		roles.add(RobotMode.COUNTER);
 		roles.add(RobotMode.DISTURBER);
-		roles.add(RobotMode.DISTURBER);
+		roles.add(RobotMode.RUNNER);
+		roles.add(RobotMode.RUNNER);
 	}
 
 	@Override
