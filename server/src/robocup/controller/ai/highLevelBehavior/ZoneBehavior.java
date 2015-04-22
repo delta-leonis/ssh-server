@@ -15,7 +15,6 @@ import robocup.controller.ai.highLevelBehavior.strategy.defense.ZonallyBackward;
 import robocup.controller.ai.highLevelBehavior.strategy.defense.ZonallyForward;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.FreeKickDefending;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.FreeKickForward;
-import robocup.controller.ai.highLevelBehavior.strategy.standard.GameHalt;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.GameStop;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.KickoffDefending;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.KickoffPrepare;
@@ -204,7 +203,7 @@ public class ZoneBehavior extends Behavior {
 			}
 			break;
 		case HALT:
-			returnMode = new StandardMode(new GameHalt(), executers);
+			returnMode = new StandardMode(new PenaltyAlly(), executers);
 			break;
 		case INDIRECT_FREE_BLUE:
 			if (world.getReferee().getAllyTeamColor() == TeamColor.BLUE) {

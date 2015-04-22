@@ -51,16 +51,20 @@ public class StandardMode extends Mode {
 
 	private FieldPoint findFreePosition(Ally robot) {
 		switch (strategy.getClass().getCanonicalName()) {
-		case "FreeKickDefending":
+		
 		case "FreeKickForward":
-		case "GameHalt":
+			// TODO set the two runners in a free position in each enemy front zone
 		case "GameStop":
-		case "KickoffDefending":
+			// TODO set the two runners at ... millimeters from the ball
 		case "PenaltyAlly":
-		case "PenaltyEnemy":
-		case "ThrowInDefend":
+			// TODO set the two runners at ... millimeter from enemy achterlijn at the y of 1500 and -1500
+
 		case "ThrowInForward":
-			// TODO assign positions
+		case "KickoffDefending":
+		case "PenaltyEnemy":
+		case "FreeKickDefending":
+		case "ThrowInDefend":
+			// no runners are used in defending
 			return new FieldPoint(0, 0);
 		default:
 			LOGGER.severe("Unknown strategy used. Strategy: " + strategy.getClass().getCanonicalName());
