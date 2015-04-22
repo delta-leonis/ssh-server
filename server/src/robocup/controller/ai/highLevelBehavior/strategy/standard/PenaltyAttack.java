@@ -1,11 +1,7 @@
 package robocup.controller.ai.highLevelBehavior.strategy.standard;
 
-import org.apache.commons.math3.util.Pair;
-
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.model.FieldPoint;
-import robocup.model.World;
-import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
 
 /**
@@ -50,13 +46,5 @@ public class PenaltyAttack extends Strategy {
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
 		super.updateZones(ballPosition);
-
-		if (World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
-			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_MIDDLE));
-			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_MIDDLE));
-		} else {
-			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_MIDDLE));
-			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_MIDDLE));
-		}
 	}
 }

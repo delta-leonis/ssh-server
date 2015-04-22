@@ -123,7 +123,45 @@ public class StandardMode extends Mode {
 		case "PenaltyDefense":
 			return null;
 		case "PenaltyAttack":
-			// TODO
+			double maxY = Math.max(runners.get(0).getPosition().getY(), runners.get(1).getPosition().getY());
+
+			if (isEastTeam) {
+				if (robot.getPosition().getY() == maxY) {
+					FieldPoint point = FieldZone.WEST_NORTH_SECONDPOST.getCenterPoint();
+
+					point.setX(Math.max(point.getX(), -world.getField().getWidth() / 2
+							+ world.getField().getPenaltyLineFromSpotDistance()
+							+ world.getField().getPenaltySpotFromFieldLineDistance()));
+
+					return point;
+				} else {
+					FieldPoint point = FieldZone.WEST_SOUTH_SECONDPOST.getCenterPoint();
+
+					point.setX(Math.max(point.getX(), -world.getField().getWidth() / 2
+							+ world.getField().getPenaltyLineFromSpotDistance()
+							+ world.getField().getPenaltySpotFromFieldLineDistance()));
+
+					return point;
+				}
+			} else {
+				if (robot.getPosition().getY() == maxY) {
+					FieldPoint point = FieldZone.EAST_NORTH_SECONDPOST.getCenterPoint();
+
+					point.setX(Math.max(point.getX(), world.getField().getWidth() / 2
+							- world.getField().getPenaltyLineFromSpotDistance()
+							- world.getField().getPenaltySpotFromFieldLineDistance()));
+
+					return point;
+				} else {
+					FieldPoint point = FieldZone.EAST_SOUTH_SECONDPOST.getCenterPoint();
+
+					point.setX(Math.max(point.getX(), world.getField().getWidth() / 2
+							- world.getField().getPenaltyLineFromSpotDistance()
+							- world.getField().getPenaltySpotFromFieldLineDistance()));
+
+					return point;
+				}
+			}
 		case "Stop":
 			return null;
 		case "TimeOut":
