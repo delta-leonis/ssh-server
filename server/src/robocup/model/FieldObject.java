@@ -163,6 +163,10 @@ public abstract class FieldObject {
 	public FieldPoint getPosition() {
 		return position;
 	}
+	
+	public boolean isNearPosition(FieldPoint argPos, int argMinDist) {
+		return (position.getDeltaDistance(argPos) <= argMinDist);
+	}
 
 	/**
 	 * @param The {@link FieldPoint current position} of this object.
