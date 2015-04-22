@@ -9,19 +9,19 @@ import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
 
 /**
- * {@link KickoffPrepare} is a standard strategy that is used when our team can kickoff.
+ * {@link PenaltyAttack} is a standard strategy that is used when our team can take a penalty shootout.
  * One robot stands near the ball to shoot it {@link RobotMode#ATTACKER} and 2 {@link RobotMode#RUNNER}s 
- * stand on both sides of the kicking robot, trying to create an opening.
+ * stand on the edge of the allowed playfield near the enemy goal (to retrieve the ball if the penalty misses).
  * There are also the standard defensive roles, consisting of a {@link RobotMode#KEEPER} and 2 {@link RobotMode#KEEPERDEFENDER}s.
  * <br><br>
- * <img src="../../../../../../../images/situationKickoff.png" />
+ * <img src="../../../../../../../images/situationPenalty.png" />
  * <br><br>
  * For more information about the strategy and roles see TactiekDocument
  */
-public class KickoffPrepare extends Strategy {
+public class PenaltyAttack extends Strategy {
 
 	/**
-	 * Roles in the {@link KickoffPrepare} strategy are assigned in the following order:<br>
+	 * Roles in the {@link PenaltyAttack} strategy are assigned in the following order:<br>
 	 * <ol>
 	 * <li>{@link RobotMode#KEEPER}</li>
 	 * <li>{@link RobotMode#ATTACKER}</li>
@@ -31,11 +31,12 @@ public class KickoffPrepare extends Strategy {
 	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
 	 * </ol>
 	 */
-	public KickoffPrepare() {
+	public PenaltyAttack() {
 		super();
 		roles.add(RobotMode.KEEPER);
-
+		// the robot that takes the penalty, the referee needs to be notified about this robot 
 		roles.add(RobotMode.ATTACKER);
+		// Try to stand as near to the enemy goal as is allowed, to get the ball if the penalty is blocked
 		roles.add(RobotMode.RUNNER);
 		roles.add(RobotMode.RUNNER);
 
@@ -51,14 +52,11 @@ public class KickoffPrepare extends Strategy {
 		super.updateZones(ballPosition);
 
 		if (World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
-			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_NORTH_FRONT));
-			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_SOUTH_FRONT));
-			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.ATTACKER, FieldZone.EAST_MIDDLE));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_MIDDLE));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_MIDDLE));
 		} else {
-			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_SOUTH_FRONT));
-			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_SOUTH_FRONT));
-			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.ATTACKER, FieldZone.WEST_MIDDLE));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_MIDDLE));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_MIDDLE));
 		}
 	}
-
 }

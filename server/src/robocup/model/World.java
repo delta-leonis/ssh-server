@@ -210,7 +210,7 @@ public class World extends Observable {
 		int count = 0;
 		FieldPoint keeperPosition = referee.getAlly().getRobotByID(referee.getAlly().getGoalie()).getPosition();
 
-		for (Robot r : referee.getEnemy().getRobots()) {
+		for (Robot r : referee.getEnemy().getRobotsOnSight()) {
 			if (r.getPosition().getX() > 0.0 && keeperPosition.getX() > 0.0 || r.getPosition().getX() < 0.0
 					&& keeperPosition.getX() < 0.0)
 				count++;
@@ -227,8 +227,8 @@ public class World extends Observable {
 	 */
 	public Robot getClosestRobotToBall() {
 		ArrayList<Robot> robots = new ArrayList<Robot>();
-		robots.addAll(getReferee().getAlly().getRobots());
-		robots.addAll(getReferee().getEnemy().getRobots());
+		robots.addAll(getReferee().getAlly().getRobotsOnSight());
+		robots.addAll(getReferee().getEnemy().getRobotsOnSight());
 
 		double minDistance = -1.0;
 		Robot minDistanceRobot = null;
@@ -521,17 +521,18 @@ public class World extends Observable {
 	 */
 	public boolean areaContainsCircle(FieldPoint argPoint, FieldPoint[] areaPoly, double radius) {
 		boolean result = false;
-
-		for (int edges = 0; edges < areaPoly.length - 1; edges++) {
-			if (pointToLineDistance(new FieldPoint(areaPoly[edges].getX() + (fieldWidth / 2), areaPoly[edges].getY()
+		if (argPoint != null){
+			for (int edges = 0; edges < areaPoly.length - 1; edges++) {
+				if (pointToLineDistance(new FieldPoint(areaPoly[edges].getX() + (fieldWidth / 2), areaPoly[edges].getY()
 					+ (fieldHeight / 2)), new FieldPoint(areaPoly[edges + 1].getX() + (fieldWidth / 2),
 					areaPoly[edges + 1].getY() + (fieldHeight / 2)), new FieldPoint(argPoint.getX() + (fieldWidth / 2),
 					argPoint.getY() + (fieldHeight / 2))) < radius) {
-				result = true;
+					result = true;
+				}
 			}
+			result = result || pointInPolygon(argPoint, areaPoly);
 		}
 
-		result = result || pointInPolygon(argPoint, areaPoly);
 		return result;
 	}
 

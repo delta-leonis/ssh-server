@@ -4,10 +4,21 @@ import java.util.ArrayList;
 
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.controller.ai.lowLevelBehavior.Attacker;
+import robocup.controller.ai.lowLevelBehavior.Counter;
 import robocup.controller.ai.lowLevelBehavior.Coverer;
+import robocup.controller.ai.lowLevelBehavior.Disturber;
+import robocup.controller.ai.lowLevelBehavior.GoalPostCoverer;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
+import robocup.controller.ai.lowLevelBehavior.PenaltyKeeper;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
+import robocup.controller.ai.lowLevelBehavior.Runner;
+import robocup.model.Ally;
+import robocup.model.Enemy;
+import robocup.model.FieldPoint;
+import robocup.model.Robot;
+import robocup.model.enums.FieldZone;
+import robocup.model.enums.RobotMode;
 
 public class StandardMode extends Mode {
 
@@ -17,59 +28,237 @@ public class StandardMode extends Mode {
 	}
 
 	@Override
-	protected void updateAttacker(RobotExecuter executer) {
+	public void updateAttacker(RobotExecuter executer) {
+		// Unused in DefenseMode
 		Attacker attacker = (Attacker) executer.getLowLevelBehavior();
-		// TODO Update with normal values
-		attacker.update(0.0, 0, null);
+		int chipKick = 40;
+		FieldPoint ballPosition = ball.getPosition();
+		double shootDirection = ballPosition.getAngle(world.hasFreeShot());
+		attacker.update(shootDirection, chipKick, ballPosition);
 	}
 
 	@Override
-	protected void updateCoverer(RobotExecuter executer) {
+	public void updateRunner(RobotExecuter executer) {
+		Runner runner = (Runner) executer.getLowLevelBehavior();
+
+		Ally robot = (Ally) executer.getRobot();
+
+		FieldPoint ballPosition = ball.getPosition();
+		FieldPoint freePosition = robot.getPreferredZone() != null ? robot.getPreferredZone().getCenterPoint()
+				: findFreePosition(robot);
+
+		runner.update(ballPosition, freePosition);
+	}
+
+	private FieldPoint findFreePosition(Ally robot) {
+		ArrayList<Ally> runners = new ArrayList<Ally>();
+
+		for (RobotExecuter executer : executers) {
+			Ally ally = (Ally) executer.getRobot();
+
+			if (ally.getRole() == RobotMode.RUNNER)
+				runners.add(ally);
+		}
+
+		boolean isEastTeam = world.getReferee().getEastTeam().equals(world.getReferee().getAlly());
+
+		switch (strategy.getClass().getCanonicalName()) {
+		case "DirectFreeKickDefense":
+			return null;
+		case "DirectFreeKickAttack":
+			// TODO handle situation where a keeper takes the free kick
+			if (runners.size() == 2) {
+				double maxY = Math.max(runners.get(0).getPosition().getY(), runners.get(1).getPosition().getY());
+
+				if (ball.getPosition().getY() > FieldZone.FieldPointPaletteZones.h.getY()) {
+					// ball in north zone
+					if (isEastTeam) {
+						if (robot.getPosition().getY() == maxY)
+							return FieldZone.WEST_MIDDLE.getCenterPoint();
+						else
+							return FieldZone.WEST_SOUTH_SECONDPOST.getCenterPoint();
+					} else {
+						if (robot.getPosition().getY() == maxY)
+							return FieldZone.EAST_MIDDLE.getCenterPoint();
+						else
+							return FieldZone.EAST_SOUTH_SECONDPOST.getCenterPoint();
+					}
+				} else if (ball.getPosition().getY() < -FieldZone.FieldPointPaletteZones.h.getY()) {
+					// ball in south zone
+					if (isEastTeam) {
+						if (robot.getPosition().getY() == maxY)
+							return FieldZone.WEST_NORTH_SECONDPOST.getCenterPoint();
+						else
+							return FieldZone.WEST_MIDDLE.getCenterPoint();
+					} else {
+						if (robot.getPosition().getY() == maxY)
+							return FieldZone.EAST_NORTH_SECONDPOST.getCenterPoint();
+						else
+							return FieldZone.EAST_MIDDLE.getCenterPoint();
+					}
+				} else {
+					// ball in mid zone
+					if (isEastTeam) {
+						if (robot.getPosition().getY() == maxY)
+							return FieldZone.WEST_NORTH_SECONDPOST.getCenterPoint();
+						else
+							return FieldZone.WEST_SOUTH_SECONDPOST.getCenterPoint();
+					} else {
+						if (robot.getPosition().getY() == maxY)
+							return FieldZone.EAST_NORTH_SECONDPOST.getCenterPoint();
+						else
+							return FieldZone.EAST_SOUTH_SECONDPOST.getCenterPoint();
+					}
+				}
+			} else
+				return new FieldPoint(0, 0);
+		case "IndirectFreeKickDefense":
+			return null;
+		case "IndirectFreeKickAttack":
+			// TODO
+		case "KickOffDefense":
+			return null;
+		case "KickOffAttack":
+			// TODO
+		case "PenaltyDefense":
+			return null;
+		case "PenaltyAttack":
+			// TODO
+		case "Stop":
+			return null;
+		case "TimeOut":
+			if (isEastTeam)
+				return new FieldPoint(robot.getRobotId() * (Robot.DIAMETER + 50), 2000);
+			else
+				return new FieldPoint(-robot.getRobotId() * (Robot.DIAMETER + 50), 2000);
+		default:
+			LOGGER.severe("Unknown strategy used. Strategy: " + strategy.getClass().getCanonicalName());
+			return new FieldPoint(0, 0);
+		}
+	}
+
+	@Override
+	public void updateCoverer(RobotExecuter executer) {
 		Coverer blocker = (Coverer) executer.getLowLevelBehavior();
-		// TODO Update with normal values
-		blocker.update(250, ball.getPosition(), null, 0);
+		Ally allyRobot = (Ally) executer.getRobot();
+
+		int distanceToSubject = 250;
+		FieldPoint objectPosition = ball.getPosition();
+		FieldPoint subjectPosition = null;
+		int subjectId = 0;
+
+		ArrayList<Enemy> enemyRobots = world.getEnemyRobotsInZone(allyRobot.getPreferredZone());
+
+		if (enemyRobots.size() > 0) {
+			Enemy enemyRobot = enemyRobots.get(0);
+			subjectPosition = enemyRobot == null ? null : enemyRobot.getPosition();
+			subjectId = enemyRobot == null ? 0 : enemyRobot.getRobotId();
+		} else {
+			if (allyRobot.getPreferredZone() != null)
+				subjectPosition = allyRobot.getPreferredZone().getCenterPoint();
+		}
+
+		blocker.update(distanceToSubject, objectPosition, subjectPosition, subjectId);
 	}
 
 	@Override
-	protected void updateKeeperDefender(RobotExecuter executer) {
+	public void updateKeeperDefender(RobotExecuter executer) {
 		KeeperDefender keeperDefender = (KeeperDefender) executer.getLowLevelBehavior();
-		// TODO Update with normal values
-		keeperDefender.update(1200, false, ball.getPosition(), executer.getRobot().getPosition());
+
+		int distanceToGoal = world.getField().getDefenceRadius() + world.getField().getDefenceStretch() / 2 + 50;
+		boolean goToKick = false;
+		FieldPoint ballPosition = ball.getPosition();
+
+		Ally robot = (Ally) executer.getRobot();
+		ArrayList<Ally> keeperDefenders = new ArrayList<Ally>();
+
+		for (RobotExecuter itExecuter : executers)
+			if (itExecuter.getLowLevelBehavior() instanceof KeeperDefender)
+				keeperDefenders.add((Ally) itExecuter.getRobot());
+
+		FieldPoint offset = null;
+
+		switch (keeperDefenders.size()) {
+		case 2:
+			if (robot.getPosition().getY() == Math.max(keeperDefenders.get(0).getPosition().getY(), keeperDefenders
+					.get(1).getPosition().getY()))
+				offset = new FieldPoint(0, 150);
+			else
+				offset = new FieldPoint(0, -150);
+			break;
+		case 3:
+			if (robot.getPosition().getY() == Math.max(keeperDefenders.get(0).getPosition().getY(),
+					Math.max(keeperDefenders.get(1).getPosition().getY(), keeperDefenders.get(2).getPosition().getY())))
+				offset = new FieldPoint(0, 150);
+			else if (robot.getPosition().getY() == Math.min(keeperDefenders.get(0).getPosition().getY(),
+					Math.min(keeperDefenders.get(1).getPosition().getY(), keeperDefenders.get(2).getPosition().getY())))
+				offset = new FieldPoint(0, -150);
+			else
+				offset = new FieldPoint(0, 0);
+			break;
+		default:
+			break;
+		}
+
+		keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset);
 	}
 
 	@Override
-	protected void updateKeeper(RobotExecuter executer) {
+	public void updateKeeper(RobotExecuter executer) {
 		Keeper keeper = (Keeper) executer.getLowLevelBehavior();
 
-		int distanceToGoal = 500;
-		// TODO check if keeper needs to move to the ball, if so, set goToKick to true
-		boolean goToKick = false;
-
-		keeper.update(distanceToGoal, goToKick, ball.getPosition());
+		int distanceToGoal = (int) world.getField().getEastGoal().getWidth() / 2;
+		boolean goToKick = world.getClosestRobotToBall().equals(executer.getRobot());
+		FieldPoint ballPosition = ball.getPosition();
+		keeper.update(distanceToGoal, goToKick, ballPosition);
 	}
 
 	@Override
 	protected void updatePenaltyKeeper(RobotExecuter executer) {
-		// TODO Auto-generated method stub
-		
+		PenaltyKeeper penalKeeper = (PenaltyKeeper) executer.getLowLevelBehavior();
+		FieldPoint ballPosition = ball.getPosition();
+		Robot enemy = world.getClosestRobotToBall();
+		penalKeeper.update(ballPosition, enemy);
 	}
 
 	@Override
 	protected void updateGoalPostCoverer(RobotExecuter executer) {
-		// TODO Auto-generated method stub
-		
+		GoalPostCoverer goalPostCoverer = (GoalPostCoverer) executer.getLowLevelBehavior();
+
+		int distanceToPole = world.getField().getDefenceRadius() + world.getField().getDefenceStretch() / 2 + 50;
+		boolean goToKick = false;
+
+		double XPoint = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? world.getField()
+				.getWidth() / 2 : -world.getField().getWidth() / 2;
+		double YPoint = ball.getPosition().getY() / Math.abs(ball.getPosition().getY())
+				* world.getField().getEastGoal().getWidth() / 4 * -1;
+		Robot enemyRobot = world.getClosestEnemyRobotToPoint(new FieldPoint(XPoint, YPoint));
+		FieldPoint ballPosition = ball.getPosition();
+
+		goalPostCoverer.update(distanceToPole, goToKick, enemyRobot == null ? ((Ally) executer.getRobot())
+				.getPreferredZone().getCenterPoint() : enemyRobot.getPosition(), ballPosition);
 	}
 
 	@Override
 	protected void updateDisturber(RobotExecuter executer) {
-		// TODO Auto-generated method stub
-		
+		Disturber disturber = (Disturber) executer.getLowLevelBehavior();
+
+		int distanceToObject = 300;
+		FieldPoint objectPosition = ball.getPosition();
+		boolean goToKick = world.getClosestRobotToBall().getPosition().getDeltaDistance(objectPosition) > Robot.DIAMETER;
+
+		disturber.update(distanceToObject, goToKick, objectPosition);
 	}
 
 	@Override
 	protected void updateCounter(RobotExecuter executer) {
-		// TODO Auto-generated method stub
-		
-	}
+		Counter counter = (Counter) executer.getLowLevelBehavior();
 
+		FieldZone zone = world.getReferee().getAlly().equals(world.getReferee().getEastTeam()) ? FieldZone.WEST_MIDDLE
+				: FieldZone.EAST_MIDDLE;
+		FieldPoint ballPosition = ball.getPosition();
+		FieldPoint freePosition = null;
+
+		counter.update(zone, ballPosition, freePosition);
+	}
 }

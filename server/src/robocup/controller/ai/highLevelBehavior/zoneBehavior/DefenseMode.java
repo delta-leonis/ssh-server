@@ -12,6 +12,7 @@ import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.PenaltyKeeper;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
+import robocup.controller.ai.lowLevelBehavior.Runner;
 import robocup.model.Ally;
 import robocup.model.Enemy;
 import robocup.model.FieldPoint;
@@ -27,13 +28,38 @@ public class DefenseMode extends Mode {
 	@Override
 	public void updateAttacker(RobotExecuter executer) {
 		// Unused in DefenseMode
-
 		Attacker attacker = (Attacker) executer.getLowLevelBehavior();
-		// TODO Update with normal values
-		double shootDirection = 0.0;
-		int chipKick = 0;
+		int chipKick = 40;
 		FieldPoint ballPosition = ball.getPosition();
+		double shootDirection = ballPosition.getAngle(world.hasFreeShot());
 		attacker.update(shootDirection, chipKick, ballPosition);
+	}
+
+	@Override
+	public void updateRunner(RobotExecuter executer) {
+		Runner runner = (Runner) executer.getLowLevelBehavior();
+
+		Ally robot = (Ally) executer.getRobot();
+
+		FieldPoint ballPosition = ball.getPosition();
+		FieldPoint freePosition = robot.getPreferredZone() != null ? robot.getPreferredZone().getCenterPoint()
+				: findFreePosition(robot);
+
+		runner.update(ballPosition, freePosition);
+	}
+
+	private FieldPoint findFreePosition(Ally robot) {
+		switch (strategy.getClass().getCanonicalName()) {
+		case "BarricadeDefending":
+		case "ForwardDefending":
+		case "ZonallyBackward":
+		case "ZonallyForward":
+			// no runners are used in defending
+			return new FieldPoint(0, 0);
+		default:
+			LOGGER.severe("Unknown strategy used. Strategy: " + strategy.getClass().getCanonicalName());
+			return new FieldPoint(0, 0);
+		}
 	}
 
 	@Override
@@ -134,7 +160,8 @@ public class DefenseMode extends Mode {
 		Robot enemyRobot = world.getClosestEnemyRobotToPoint(new FieldPoint(XPoint, YPoint));
 		FieldPoint ballPosition = ball.getPosition();
 
-		goalPostCoverer.update(distanceToPole, goToKick, enemyRobot, ballPosition);
+		goalPostCoverer.update(distanceToPole, goToKick, enemyRobot == null ? ((Ally) executer.getRobot())
+				.getPreferredZone().getCenterPoint() : enemyRobot.getPosition(), ballPosition);
 	}
 
 	@Override
@@ -143,7 +170,7 @@ public class DefenseMode extends Mode {
 
 		int distanceToObject = 300;
 		FieldPoint objectPosition = ball.getPosition();
-		boolean goToKick = world.getClosestRobotToBall().getPosition().getDeltaDistance(objectPosition) > Robot.DIAMETER + 50;
+		boolean goToKick = world.getClosestRobotToBall().getPosition().getDeltaDistance(objectPosition) > Robot.DIAMETER;
 
 		disturber.update(distanceToObject, goToKick, objectPosition);
 	}

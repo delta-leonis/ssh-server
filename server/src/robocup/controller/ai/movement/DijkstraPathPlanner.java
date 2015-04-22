@@ -222,14 +222,12 @@ public class DijkstraPathPlanner {
 		// add source and dest to vertices list
 		Vertex source = setupSource(beginNode);
 		if(source == null){
-			System.out.println("#" + robotId + " locked in source");
 			if(testMode)
 				testVertices = (ArrayList<Vertex>)vertices.clone();
 			return null;					//Locked in
 		}
 		Vertex dest = setupDestination(destination);
 		if(dest == null){
-			System.out.println("#" + robotId + " locked in destination");
 			if(testMode)
 				testVertices = (ArrayList<Vertex>)vertices.clone();
 			return null;					//Locked in

@@ -1,7 +1,9 @@
 package robocup.controller.ai.highLevelBehavior.zoneBehavior;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
+import robocup.Main;
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.controller.ai.lowLevelBehavior.Attacker;
 import robocup.controller.ai.lowLevelBehavior.Counter;
@@ -12,6 +14,7 @@ import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.PenaltyKeeper;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
+import robocup.controller.ai.lowLevelBehavior.Runner;
 import robocup.model.Ally;
 import robocup.model.Ball;
 import robocup.model.FieldPoint;
@@ -26,6 +29,7 @@ public abstract class Mode {
 	protected Ball ball;
 	protected Strategy strategy;
 	protected ArrayList<RobotExecuter> executers;
+	protected Logger LOGGER = Logger.getLogger(Main.class.getName());
 
 	/** Co-ordinates of the goal on the left side of the field */
 	private static final FieldPoint MID_GOAL_NEGATIVE = new FieldPoint(-(World.getInstance().getField().getHeight() / 2), 0);
@@ -84,12 +88,21 @@ public abstract class Mode {
 						.setRole(role);
 			} else if (zone != null) {
 				Ally closestRobot = getClosestAllyToZoneWithoutRole(zone);
-				closestRobot.setRole(role);
-				closestRobot.setPreferredZone(zone);
+				if(closestRobot != null){
+					closestRobot.setRole(role);
+					closestRobot.setPreferredZone(zone);
+				}
+				else{
+					System.out.println("Not enough robots to fill entire team.");
+				}
 			} else {
 				ArrayList<Ally> allyRobots = getAllyRobotsWithoutRole();
-				Ally robot = allyRobots.get((int) (Math.random() * allyRobots.size()));
-				robot.setRole(role);
+				if(allyRobots.size() != 0){
+					Ally robot = allyRobots.get((int) (Math.random() * allyRobots.size()));
+					robot.setRole(role);
+				}
+				else
+					System.out.println("0 Robots without Role.");
 			}
 		}
 	}
@@ -144,9 +157,10 @@ public abstract class Mode {
 				handlePenaltyKeeper(executer);
 				break;
 			case RUNNER:
+				handleRunner(executer);
 				break;
 			default:
-				System.out.println("Role used without handle function, please add me in Mode.java, role: "
+				LOGGER.severe("Role used without handle function, please add me in Mode.java, role: "
 						+ ((Ally) executer.getRobot()).getRole());
 			}
 		}
@@ -236,6 +250,15 @@ public abstract class Mode {
 
 		updateAttacker(executer);
 	}
+
+	private void handleRunner(RobotExecuter executer) {
+		if (!(executer.getLowLevelBehavior() instanceof Runner))
+			executer.setLowLevelBehavior(new Runner(executer.getRobot()));
+
+		updateAttacker(executer);
+	}
+
+	public abstract void updateRunner(RobotExecuter executor);
 
 	/**
 	 * Update the values of the Attacker behavior belonging to the executer.

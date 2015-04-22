@@ -4,20 +4,20 @@ import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.model.FieldPoint;
 import robocup.model.enums.RobotMode;
 
-public class GameStop extends Strategy {
+public class DirectFreeKickDefense extends Strategy {
 
-	public GameStop() {
+	public DirectFreeKickDefense() {
 		super();
 		roles.add(RobotMode.KEEPER);
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.KEEPERDEFENDER);
+		roles.add(RobotMode.KEEPERDEFENDER);
+		roles.add(RobotMode.GOALPOSTCOVERER);
 		roles.add(RobotMode.COUNTER);
-		roles.add(RobotMode.DISTURBER);
-		roles.add(RobotMode.DISTURBER);
 	}
 
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
-		
+
 	}
 }
