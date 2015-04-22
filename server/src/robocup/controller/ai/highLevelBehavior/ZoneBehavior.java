@@ -14,8 +14,8 @@ import robocup.controller.ai.highLevelBehavior.strategy.defense.ForwardDefending
 import robocup.controller.ai.highLevelBehavior.strategy.defense.ZonallyBackward;
 import robocup.controller.ai.highLevelBehavior.strategy.defense.ZonallyForward;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.GameStop;
-import robocup.controller.ai.highLevelBehavior.strategy.standard.KickOffDefense;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.KickOffAttack;
+import robocup.controller.ai.highLevelBehavior.strategy.standard.KickOffDefense;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.PenaltyAttack;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.PenaltyDefense;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.AttackMode;

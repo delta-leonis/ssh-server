@@ -113,13 +113,9 @@ public class StandardMode extends Mode {
 			} else
 				return new FieldPoint(0, 0);
 		case "IndirectFreeKickDefense":
-			return null;
 		case "IndirectFreeKickAttack":
-			// TODO
 		case "KickOffDefense":
-			return null;
 		case "KickOffAttack":
-			// TODO
 		case "PenaltyDefense":
 			return null;
 		case "PenaltyAttack":
