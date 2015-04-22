@@ -1,7 +1,9 @@
 package robocup.controller.ai.highLevelBehavior.zoneBehavior;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
+import robocup.Main;
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.controller.ai.lowLevelBehavior.Attacker;
 import robocup.controller.ai.lowLevelBehavior.Counter;
@@ -27,6 +29,7 @@ public abstract class Mode {
 	protected Ball ball;
 	protected Strategy strategy;
 	protected ArrayList<RobotExecuter> executers;
+	protected Logger LOGGER = Logger.getLogger(Main.class.getName());
 
 	/** Co-ordinates of the goal on the left side of the field */
 	private static final FieldPoint MID_GOAL_NEGATIVE = new FieldPoint(-(World.getInstance().getField().getHeight() / 2), 0);
