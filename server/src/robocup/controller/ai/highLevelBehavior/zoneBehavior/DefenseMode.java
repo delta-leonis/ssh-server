@@ -56,6 +56,7 @@ public class DefenseMode extends Mode {
 		case "ForwardDefending":
 		case "ZonallyBackward":
 		case "ZonallyForward":
+			// no runners are used in defending
 			return new FieldPoint(0, 0);
 		default:
 			LOGGER.severe("Unknown strategy used. Strategy: " + strategy.getClass().getCanonicalName());
