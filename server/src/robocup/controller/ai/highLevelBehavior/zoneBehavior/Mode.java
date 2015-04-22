@@ -85,8 +85,13 @@ public abstract class Mode {
 						.setRole(role);
 			} else if (zone != null) {
 				Ally closestRobot = getClosestAllyToZoneWithoutRole(zone);
-				closestRobot.setRole(role);
-				closestRobot.setPreferredZone(zone);
+				if(closestRobot != null){
+					closestRobot.setRole(role);
+					closestRobot.setPreferredZone(zone);
+				}
+				else{
+					System.out.println("Not enough robots to fill entire team.");
+				}
 			} else {
 				ArrayList<Ally> allyRobots = getAllyRobotsWithoutRole();
 				if(allyRobots.size() != 0){
