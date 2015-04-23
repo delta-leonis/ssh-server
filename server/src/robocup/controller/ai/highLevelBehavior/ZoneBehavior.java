@@ -144,7 +144,7 @@ public class ZoneBehavior extends Behavior {
 	private AttackMode chooseAttackStrategy(ArrayList<RobotExecuter> executers) {
 		AttackMode mode = attackModes.get((int) (Math.random() * attackModes.size()));
 		mode.assignRoles();
-		LOGGER.info("strategy: " + mode.getStrategy().getClass().getName());
+		LOGGER.info("strategy: " + mode.getStrategy().getClass().getSimpleName());
 		return mode;
 	}
 
@@ -156,7 +156,7 @@ public class ZoneBehavior extends Behavior {
 	private DefenseMode chooseDefenseStrategy(ArrayList<RobotExecuter> executers) {
 		DefenseMode mode = defenseModes.get((int) (Math.random() * defenseModes.size()));
 		mode.assignRoles();
-		LOGGER.info("strategy: " + mode.getStrategy().getClass().getName());
+		LOGGER.info("strategy: " + mode.getStrategy().getClass().getSimpleName());
 		return mode;
 	}
 

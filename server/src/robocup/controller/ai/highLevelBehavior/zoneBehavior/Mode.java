@@ -256,7 +256,7 @@ public abstract class Mode {
 		if (!(executer.getLowLevelBehavior() instanceof Runner))
 			executer.setLowLevelBehavior(new Runner(executer.getRobot()));
 
-		updateAttacker(executer);
+		updateRunner(executer);
 	}
 
 	public abstract void updateRunner(RobotExecuter executor);

@@ -58,16 +58,22 @@ public class AttackMode extends Mode {
 				runners.add(ally);
 		}
 
-		switch (strategy.getClass().getCanonicalName()) {
+		switch (strategy.getClass().getSimpleName()) {
 		case "CornerToCornerAttack":
 			// TODO assign positions
 			return new FieldPoint(0, 0);
 		case "FreeShotRoundPlay":
-			FieldPoint topRunner = new FieldPoint(robot.getPosition().getX(), robot.getPosition().getY() + Robot.DIAMETER / 2);
-			FieldPoint bottomRunner = new FieldPoint(robot.getPosition().getX(), robot.getPosition().getY() - Robot.DIAMETER / 2);
-			FieldPoint topBaller = new FieldPoint(world.getClosestRobotToBall().getPosition().getX(), world.getClosestRobotToBall().getPosition().getY() + Robot.DIAMETER / 2);
-			FieldPoint bottomBaller = new FieldPoint(world.getClosestRobotToBall().getPosition().getX(), world.getClosestRobotToBall().getPosition().getY() - Robot.DIAMETER / 2);
-			if(world.getAllRobotsInArea(topRunner, topBaller, bottomBaller, bottomRunner).size() > 0) {
+			FieldPoint topRunner = new FieldPoint(robot.getPosition().getX(), robot.getPosition().getY()
+					+ Robot.DIAMETER / 2);
+			FieldPoint bottomRunner = new FieldPoint(robot.getPosition().getX(), robot.getPosition().getY()
+					- Robot.DIAMETER / 2);
+			FieldPoint topBaller = new FieldPoint(world.getClosestRobotToBall().getPosition().getX(), world
+					.getClosestRobotToBall().getPosition().getY()
+					+ Robot.DIAMETER / 2);
+			FieldPoint bottomBaller = new FieldPoint(world.getClosestRobotToBall().getPosition().getX(), world
+					.getClosestRobotToBall().getPosition().getY()
+					- Robot.DIAMETER / 2);
+			if (world.getAllRobotsInArea(topRunner, topBaller, bottomBaller, bottomRunner).size() > 0) {
 				return robot.getPosition();
 			} else {
 				if (robot.getPreferredZone().getCenterPoint().getX() < robot.getPosition().getX()) {
@@ -75,7 +81,7 @@ public class AttackMode extends Mode {
 				} else {
 					return new FieldPoint(robot.getPosition().getX() - Robot.DIAMETER, robot.getPosition().getY());
 				}
-					
+
 			}
 		case "PenaltyAreaKickIn":
 			// TODO assign positions
@@ -84,7 +90,8 @@ public class AttackMode extends Mode {
 			// TODO assign positions
 			return new FieldPoint(0, 0);
 		default:
-			LOGGER.severe("Unknown strategy used. Strategy: " + strategy.getClass().getCanonicalName());
+			LOGGER.severe("Unknown strategy used in AttackMode. Strategy: " + strategy.getClass().getSimpleName());
+
 			return new FieldPoint(0, 0);
 		}
 	}
@@ -126,30 +133,37 @@ public class AttackMode extends Mode {
 
 		for (RobotExecuter itExecuter : executers)
 			if (itExecuter.getLowLevelBehavior() instanceof KeeperDefender)
-				keeperDefenders.add((Ally) itExecuter.getRobot());
+				if (itExecuter.getRobot().getPosition() != null)
+					keeperDefenders.add((Ally) itExecuter.getRobot());
 
 		FieldPoint offset = null;
 
-		switch (keeperDefenders.size()) {
-		case 2:
-			if (robot.getPosition().getY() == Math.max(keeperDefenders.get(0).getPosition().getY(), keeperDefenders
-					.get(1).getPosition().getY()))
-				offset = new FieldPoint(0, 150);
-			else
-				offset = new FieldPoint(0, -150);
-			break;
-		case 3:
-			if (robot.getPosition().getY() == Math.max(keeperDefenders.get(0).getPosition().getY(),
-					Math.max(keeperDefenders.get(1).getPosition().getY(), keeperDefenders.get(2).getPosition().getY())))
-				offset = new FieldPoint(0, 150);
-			else if (robot.getPosition().getY() == Math.min(keeperDefenders.get(0).getPosition().getY(),
-					Math.min(keeperDefenders.get(1).getPosition().getY(), keeperDefenders.get(2).getPosition().getY())))
-				offset = new FieldPoint(0, -150);
-			else
-				offset = new FieldPoint(0, 0);
-			break;
-		default:
-			break;
+		if (robot.getPosition() != null) {
+			switch (keeperDefenders.size()) {
+			case 2:
+				if (robot.getPosition().getY() == Math.max(keeperDefenders.get(0).getPosition().getY(), keeperDefenders
+						.get(1).getPosition().getY()))
+					offset = new FieldPoint(0, 150);
+				else
+					offset = new FieldPoint(0, -150);
+				break;
+			case 3:
+				if (robot.getPosition().getY() == Math.max(
+						keeperDefenders.get(0).getPosition().getY(),
+						Math.max(keeperDefenders.get(1).getPosition().getY(), keeperDefenders.get(2).getPosition()
+								.getY())))
+					offset = new FieldPoint(0, 150);
+				else if (robot.getPosition().getY() == Math.min(
+						keeperDefenders.get(0).getPosition().getY(),
+						Math.min(keeperDefenders.get(1).getPosition().getY(), keeperDefenders.get(2).getPosition()
+								.getY())))
+					offset = new FieldPoint(0, -150);
+				else
+					offset = new FieldPoint(0, 0);
+				break;
+			default:
+				break;
+			}
 		}
 
 		keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset);

@@ -33,7 +33,7 @@ public class KeeperDefender extends Keeper {
 	protected FieldPoint getNewKeeperDestination(FieldPoint objectPosition, FieldPoint subjectPosition, int distance) {
 		FieldPoint newDestination = super.getNewKeeperDestination(objectPosition, subjectPosition, distance);
 
-		if (newDestination != null) {
+		if (newDestination != null && offset != null) {
 			newDestination.setX(newDestination.getX() + offset.getX());
 			newDestination.setY(newDestination.getY() + offset.getY());
 		}
