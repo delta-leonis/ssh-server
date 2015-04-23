@@ -5,14 +5,8 @@ import java.util.logging.Logger;
 
 import robocup.Main;
 import robocup.controller.ai.highLevelBehavior.events.EventSystem;
-import robocup.controller.ai.highLevelBehavior.strategy.attack.CornerToCornerAttack;
 import robocup.controller.ai.highLevelBehavior.strategy.attack.FreeShotRoundPlay;
-import robocup.controller.ai.highLevelBehavior.strategy.attack.PenaltyAreaKickIn;
-import robocup.controller.ai.highLevelBehavior.strategy.attack.SecondPostKickIn;
 import robocup.controller.ai.highLevelBehavior.strategy.defense.BarricadeDefending;
-import robocup.controller.ai.highLevelBehavior.strategy.defense.ForwardDefending;
-import robocup.controller.ai.highLevelBehavior.strategy.defense.ZonallyBackward;
-import robocup.controller.ai.highLevelBehavior.strategy.defense.ZonallyForward;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.GameStop;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.KickOffAttack;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.KickOffDefense;
@@ -50,16 +44,16 @@ public class ZoneBehavior extends Behavior {
 		events = new EventSystem();
 
 		attackModes = new ArrayList<AttackMode>();
-		attackModes.add(new AttackMode(new CornerToCornerAttack(), executers));
+//		attackModes.add(new AttackMode(new CornerToCornerAttack(), executers));
 		attackModes.add(new AttackMode(new FreeShotRoundPlay(), executers));
-		attackModes.add(new AttackMode(new PenaltyAreaKickIn(), executers));
-		attackModes.add(new AttackMode(new SecondPostKickIn(), executers));
+//		attackModes.add(new AttackMode(new PenaltyAreaKickIn(), executers));
+//		attackModes.add(new AttackMode(new SecondPostKickIn(), executers));
 
 		defenseModes = new ArrayList<DefenseMode>();
 		defenseModes.add(new DefenseMode(new BarricadeDefending(), executers));
-		defenseModes.add(new DefenseMode(new ForwardDefending(), executers));
-		defenseModes.add(new DefenseMode(new ZonallyBackward(), executers));
-		defenseModes.add(new DefenseMode(new ZonallyForward(), executers));
+//		defenseModes.add(new DefenseMode(new ForwardDefending(), executers));
+//		defenseModes.add(new DefenseMode(new ZonallyBackward(), executers));
+//		defenseModes.add(new DefenseMode(new ZonallyForward(), executers));
 	}
 
 	/**
