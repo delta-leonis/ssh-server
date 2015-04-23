@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 
 import robocup.Main;
 import robocup.model.Robot;
+import robocup.model.World;
 
 public class RobotExecuter implements Runnable {
 
@@ -21,7 +22,8 @@ public class RobotExecuter implements Runnable {
 	public void run() {
 		while (true) {
 			if (stop) {
-				lowLevelBehavior.go.setDestination(null);
+				if(lowLevelBehavior != null)
+					lowLevelBehavior.go.setDestination(null);
 			} else if (robot.getPosition() != null)
 				executeBehavior();
 			try {

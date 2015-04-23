@@ -86,15 +86,12 @@ public abstract class Mode {
 					closestRobot.setRole(role);
 					closestRobot.setPreferredZone(zone);
 				} else {
-					System.out.println("Not enough robots to fill entire team.");
-				}
 			} else {
 				ArrayList<Ally> allyRobots = getAllyRobotsWithoutRole();
 				if (allyRobots.size() != 0) {
 					Ally robot = allyRobots.get((int) (Math.random() * allyRobots.size()));
 					robot.setRole(role);
 				} else
-					System.out.println("0 Robots without Role.");
 			}
 		}
 	}
@@ -165,7 +162,7 @@ public abstract class Mode {
 	 * @param executer the executer which needs to be handled
 	 */
 	private void handlePenaltyKeeper(RobotExecuter executer) {
-		if (!(executer.getLowLevelBehavior() instanceof Counter))
+		if (!(executer.getLowLevelBehavior() instanceof PenaltyKeeper))
 			executer.setLowLevelBehavior(new PenaltyKeeper(executer.getRobot(), world.getField().getWidth()));
 		updatePenaltyKeeper(executer);
 	}
@@ -183,7 +180,7 @@ public abstract class Mode {
 	 * @param executer the executer which needs to be handled
 	 */
 	private void handleGoalPostCoverer(RobotExecuter executer) {
-		if (!(executer.getLowLevelBehavior() instanceof Counter)) {
+		if (!(executer.getLowLevelBehavior() instanceof GoalPostCoverer))
 			double XPoint = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? world.getField()
 					.getWidth() / 2 : -world.getField().getWidth() / 2;
 			double YPoint = ball.getPosition().getY() / Math.abs(ball.getPosition().getY())
@@ -207,7 +204,7 @@ public abstract class Mode {
 	 * @param executer the executer which needs to be handled
 	 */
 	private void handleDisturber(RobotExecuter executer) {
-		if (!(executer.getLowLevelBehavior() instanceof Counter)) {
+		if (!(executer.getLowLevelBehavior() instanceof Disturber))
 			FieldPoint centerGoalPosition = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? new FieldPoint(
 					world.getField().getWidth() / 2, 0) : new FieldPoint(-world.getField().getWidth() / 2, 0);
 			executer.setLowLevelBehavior(new Disturber(executer.getRobot(), centerGoalPosition));

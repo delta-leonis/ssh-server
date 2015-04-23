@@ -53,6 +53,7 @@ public class World extends Observable {
 		validRobotIDs.add(2);
 		validRobotIDs.add(3);
 		validRobotIDs.add(4);
+		validRobotIDs.add(5);
 		validRobotIDs.add(6);
 		validRobotIDs.add(7);
 		
