@@ -13,12 +13,10 @@ import javax.swing.SwingUtilities;
 import net.miginfocom.swing.MigLayout;
 import robocup.Main;
 import robocup.controller.ai.movement.GotoPosition;
-import robocup.model.FieldPoint;
-import robocup.model.Robot;
-import robocup.model.Team;
 import robocup.model.World;
 import robocup.output.ComInterface;
 import robocup.view.GUI;
+import robocup.view.RobotBox;
 import robocup.view.SectionBox;
 
 /**

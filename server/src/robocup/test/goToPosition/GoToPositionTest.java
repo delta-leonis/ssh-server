@@ -1,9 +1,7 @@
 package robocup.test.goToPosition;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
-import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;

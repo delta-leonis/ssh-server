@@ -2,7 +2,6 @@ package robocup.view;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.ScrollPane;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -12,6 +11,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.TitledBorder;
@@ -24,10 +24,10 @@ import robocup.view.sections.ConsoleSection;
 import robocup.view.sections.ControlRobotSection;
 import robocup.view.sections.FieldControlSection;
 import robocup.view.sections.GameStatusSection;
+import robocup.view.sections.RotateRobotSection;
 import robocup.view.sections.SettingsSection;
 import robocup.view.sections.ValidRobotSection;
 import robocup.view.sections.VisibleRobotSection;
-import robocup.view.sections.RotateRobotSection;
 
 /**
  * Main GUI for controlling and monitoring the robots<br>

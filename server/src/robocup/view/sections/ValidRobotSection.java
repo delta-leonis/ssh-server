@@ -4,11 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-import javax.swing.AbstractAction;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 
 import net.miginfocom.swing.MigLayout;
+import robocup.controller.handlers.protohandlers.DetectionHandler;
+import robocup.model.Ally;
 import robocup.model.Robot;
 import robocup.model.World;
 import robocup.view.SectionBox;
