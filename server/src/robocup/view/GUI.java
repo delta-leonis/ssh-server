@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.TitledBorder;
@@ -43,25 +44,29 @@ public class GUI extends JFrame {
 	private int selectedRobotId = -1;
 	private ArrayList<RobotBox> allRobotBoxes = new ArrayList<RobotBox>();
 
+
+	JPanel container = new JPanel();
+	JScrollPane scrollPane = new JScrollPane(container);
 	/**
 	 * Build the GUI elements
 	 */
 	public GUI() {
 
 		setLookAndFeel();
+		container.setBackground(UIManager.getColor("Panel.background"));
+		add(scrollPane);
 
-		getContentPane().setBackground(UIManager.getColor("Panel.background"));
-		this.setLayout(new MigLayout("wrap 2", "[500][grow]", "[][grow]"));
-		this.setSize(800, 830);
+		container.setLayout(new MigLayout("wrap 2", "[500][grow]", "[][grow]"));
 
 		initRobotContainer();
 		initSectionContainer();
 		initConsoleContainer();
 
-		LOGGER.info("GUI is started and initialized");
 		setTitle("User interface RoboCup SSH");
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-		setLocationRelativeTo(null); 
+		setLocationRelativeTo(null);
+
+		LOGGER.info("GUI is started and initialized");
 	}
 
 	/**
@@ -93,7 +98,7 @@ public class GUI extends JFrame {
 	 */
 	private void initConsoleContainer() {
 		console = new ConsoleSection();
-		add(console, "span, growy, growx");
+		container.add(console, "span, growy, growx");
 	}
 
 	/**
@@ -115,7 +120,7 @@ public class GUI extends JFrame {
 	//	sectionContainer.add(new PenguinSection(), "growx, growy");
 		sectionContainer.add(new RotateRobotSection(), "growx, growy");
 
-		this.add(sectionContainer, "growy, growx");
+		container.add(sectionContainer, "growy, growx");
 	}
 
 	/**
@@ -141,7 +146,7 @@ public class GUI extends JFrame {
 
 		robotContainer.add(new JPanel(), "growy, span 2");
 		wrapper.add(robotContainer, "growy");
-		this.add(wrapper, "growy");
+		container.add(wrapper, "growy");
 	}
 
 	/**

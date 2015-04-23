@@ -74,6 +74,12 @@ public class SettingsSection extends SectionBox {
 		add(new JLabel("Minimum logger level"));
 		add(levelBox);
 		add(setLevelButton, "span 2");
+
+		if (World.getInstance().getReferee()
+					.isEastTeamColor(World.getInstance().getReferee().getAlly().getColor()))
+			fieldHalfBox.setSelectedItem("east");
+		else
+			fieldHalfBox.setSelectedItem("west");
 	}
 
 	/**
@@ -121,12 +127,5 @@ public class SettingsSection extends SectionBox {
 	 */
 	@Override
 	public void update() {
-		/*
-		 if (World.getInstance().getReferee()
-		 				.isEastTeamColor(World.getInstance().getReferee().getAlly().getColor()))
-			fieldHalfBox.setSelectedItem("east");
-		else
-			fieldHalfBox.setSelectedItem("west");
-			*/
 	}
 }
