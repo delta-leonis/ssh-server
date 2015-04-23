@@ -341,59 +341,61 @@ public class FieldPanel extends JPanel {
 		Team allyTeam = world.getReferee().getAlly();
 		g2.setColor(allyTeam.getColor().toColor());
 		for (Robot robot : allyTeam.getRobots()) {
-			// draw round part of robot
-			g2.drawArc(
-					(int) (robot.getPosition().toGUIPoint(ratio).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
-					(int) (robot.getPosition().toGUIPoint(ratio).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
-					(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio), (int) robot.getOrientation() + 45,
-					270);
+			if (robot.getPosition() != null) {
+				// draw round part of robot
+				g2.drawArc(
+						(int) (robot.getPosition().toGUIPoint(ratio).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
+						(int) (robot.getPosition().toGUIPoint(ratio).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
+						(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio),
+						(int) robot.getOrientation() + 45, 270);
 
-			// draw flat front part of robot
-			FieldPoint left = new FieldPoint(robot.getPosition().getX()
-					+ Math.cos(Math.toRadians(robot.getOrientation() + 45.0)) * Robot.DIAMETER / 2.0, robot
-					.getPosition().getY()
-					+ Math.sin(Math.toRadians(robot.getOrientation() + 45.0))
-					* Robot.DIAMETER
-					/ 2.0);
-			FieldPoint right = new FieldPoint(robot.getPosition().getX()
-					+ Math.cos(Math.toRadians(robot.getOrientation() - 45.0)) * Robot.DIAMETER / 2.0, robot
-					.getPosition().getY()
-					+ Math.sin(Math.toRadians(robot.getOrientation() - 45.0))
-					* Robot.DIAMETER
-					/ 2.0);
-			g2.drawLine((int) (left.toGUIPoint(ratio).getX() + spaceBufferX),
-					(int) (left.toGUIPoint(ratio).getY() + spaceBufferY),
-					(int) (right.toGUIPoint(ratio).getX() + spaceBufferX),
-					(int) (right.toGUIPoint(ratio).getY() + spaceBufferY));
+				// draw flat front part of robot
+				FieldPoint left = new FieldPoint(robot.getPosition().getX()
+						+ Math.cos(Math.toRadians(robot.getOrientation() + 45.0)) * Robot.DIAMETER / 2.0, robot
+						.getPosition().getY()
+						+ Math.sin(Math.toRadians(robot.getOrientation() + 45.0))
+						* Robot.DIAMETER / 2.0);
+				FieldPoint right = new FieldPoint(robot.getPosition().getX()
+						+ Math.cos(Math.toRadians(robot.getOrientation() - 45.0)) * Robot.DIAMETER / 2.0, robot
+						.getPosition().getY()
+						+ Math.sin(Math.toRadians(robot.getOrientation() - 45.0))
+						* Robot.DIAMETER / 2.0);
+				g2.drawLine((int) (left.toGUIPoint(ratio).getX() + spaceBufferX),
+						(int) (left.toGUIPoint(ratio).getY() + spaceBufferY),
+						(int) (right.toGUIPoint(ratio).getX() + spaceBufferX),
+						(int) (right.toGUIPoint(ratio).getY() + spaceBufferY));
+				g2.drawString(String.valueOf(robot.getRobotId()), (int) robot.getPosition().getX() - 2, (int) robot
+						.getPosition().getY() - 2);
+			}
 		}
 
 		Team enemyTeam = world.getReferee().getEnemy();
 		g2.setColor(enemyTeam.getColor().toColor());
 		for (Robot robot : enemyTeam.getRobots()) {
-			// draw round part of robot
-			g2.drawArc(
-					(int) (robot.getPosition().toGUIPoint(ratio).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
-					(int) (robot.getPosition().toGUIPoint(ratio).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
-					(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio), (int) robot.getOrientation() + 45,
-					270);
+			if (robot.getPosition() != null) {
+				// draw round part of robot
+				g2.drawArc(
+						(int) (robot.getPosition().toGUIPoint(ratio).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
+						(int) (robot.getPosition().toGUIPoint(ratio).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
+						(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio),
+						(int) robot.getOrientation() + 45, 270);
 
-			// draw flat front part of robot
-			FieldPoint left = new FieldPoint(robot.getPosition().getX()
-					+ Math.cos(Math.toRadians(robot.getOrientation() + 45.0)) * Robot.DIAMETER / 2.0, robot
-					.getPosition().getY()
-					+ Math.sin(Math.toRadians(robot.getOrientation() + 45.0))
-					* Robot.DIAMETER
-					/ 2.0);
-			FieldPoint right = new FieldPoint(robot.getPosition().getX()
-					+ Math.cos(Math.toRadians(robot.getOrientation() - 45.0)) * Robot.DIAMETER / 2.0, robot
-					.getPosition().getY()
-					+ Math.sin(Math.toRadians(robot.getOrientation() - 45.0))
-					* Robot.DIAMETER
-					/ 2.0);
-			g2.drawLine((int) (left.toGUIPoint(ratio).getX() + spaceBufferX),
-					(int) (left.toGUIPoint(ratio).getY() + spaceBufferY),
-					(int) (right.toGUIPoint(ratio).getX() + spaceBufferX),
-					(int) (right.toGUIPoint(ratio).getY() + spaceBufferY));
+				// draw flat front part of robot
+				FieldPoint left = new FieldPoint(robot.getPosition().getX()
+						+ Math.cos(Math.toRadians(robot.getOrientation() + 45.0)) * Robot.DIAMETER / 2.0, robot
+						.getPosition().getY()
+						+ Math.sin(Math.toRadians(robot.getOrientation() + 45.0))
+						* Robot.DIAMETER / 2.0);
+				FieldPoint right = new FieldPoint(robot.getPosition().getX()
+						+ Math.cos(Math.toRadians(robot.getOrientation() - 45.0)) * Robot.DIAMETER / 2.0, robot
+						.getPosition().getY()
+						+ Math.sin(Math.toRadians(robot.getOrientation() - 45.0))
+						* Robot.DIAMETER / 2.0);
+				g2.drawLine((int) (left.toGUIPoint(ratio).getX() + spaceBufferX),
+						(int) (left.toGUIPoint(ratio).getY() + spaceBufferY),
+						(int) (right.toGUIPoint(ratio).getX() + spaceBufferX),
+						(int) (right.toGUIPoint(ratio).getY() + spaceBufferY));
+			}
 		}
 	}
 }
