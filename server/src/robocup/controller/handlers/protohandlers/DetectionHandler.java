@@ -121,11 +121,12 @@ public class DetectionHandler {
 	 * @param robotList A list with the Detected Robots from the ally team.
 	 */
 	public void updateOnSight(List<SSL_DetectionRobot> robotList){
-		ArrayList<Robot> team = World.getInstance().getAllRobots();
+		ArrayList<Robot> team = World.getInstance().getReferee().getAlly().getRobots();
 		for(Robot ally : team){
 			ally.setOnSight(false);
 			for(SSL_DetectionRobot allyMsg: robotList){
 				if(ally.getRobotId() == allyMsg.getRobotId()){
+//					System.out.println("On sight ID: " + allyMsg.getRobotId());
 					ally.setOnSight(true);
 					break;
 				}

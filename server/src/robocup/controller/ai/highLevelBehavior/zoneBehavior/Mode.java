@@ -92,17 +92,12 @@ public abstract class Mode {
 					closestRobot.setRole(role);
 					closestRobot.setPreferredZone(zone);
 				}
-				else{
-					System.out.println("Not enough robots to fill entire team.");
-				}
 			} else {
 				ArrayList<Ally> allyRobots = getAllyRobotsWithoutRole();
 				if(allyRobots.size() != 0){
 					Ally robot = allyRobots.get((int) (Math.random() * allyRobots.size()));
 					robot.setRole(role);
 				}
-				else
-					System.out.println("0 Robots without Role.");
 			}
 		}
 	}
@@ -173,7 +168,7 @@ public abstract class Mode {
 	 * @param executer the executer which needs to be handled
 	 */
 	private void handlePenaltyKeeper(RobotExecuter executer) {
-		if (!(executer.getLowLevelBehavior() instanceof Counter))
+		if (!(executer.getLowLevelBehavior() instanceof PenaltyKeeper))
 			executer.setLowLevelBehavior(new PenaltyKeeper(executer.getRobot(), 0));
 		updatePenaltyKeeper(executer);
 	}
@@ -191,7 +186,7 @@ public abstract class Mode {
 	 * @param executer the executer which needs to be handled
 	 */
 	private void handleGoalPostCoverer(RobotExecuter executer) {
-		if (!(executer.getLowLevelBehavior() instanceof Counter))
+		if (!(executer.getLowLevelBehavior() instanceof GoalPostCoverer))
 			executer.setLowLevelBehavior(new GoalPostCoverer(executer.getRobot(), null));
 		updateGoalPostCoverer(executer);
 	}
@@ -209,7 +204,7 @@ public abstract class Mode {
 	 * @param executer the executer which needs to be handled
 	 */
 	private void handleDisturber(RobotExecuter executer) {
-		if (!(executer.getLowLevelBehavior() instanceof Counter))
+		if (!(executer.getLowLevelBehavior() instanceof Disturber))
 			executer.setLowLevelBehavior(new Disturber(executer.getRobot(), null));
 		updateDisturber(executer);
 	}
@@ -356,7 +351,6 @@ public abstract class Mode {
 	 */
 	private ArrayList<Ally> getAllyRobotsWithoutRole() {
 		ArrayList<Ally> robotsWithoutRole = new ArrayList<Ally>();
-
 		for (Robot robot : world.getReferee().getAlly().getRobotsOnSight())
 			if (((Ally) robot).getRole() == null)
 				robotsWithoutRole.add((Ally) robot);

@@ -55,7 +55,7 @@ public class Main implements Observer {
 			}
 			else{
 				for(RobotExecuter robot : robotExecuters){
-					robot.stop(true);
+					robot.setLowLevelBehavior(null);
 				}
 			}
 		}

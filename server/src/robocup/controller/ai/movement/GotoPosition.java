@@ -168,20 +168,22 @@ public class GotoPosition {
 			double rotationToGoal = rotationToDest(destination);
 			double speed;
 			if(route.size() > 1)							//If we're not at our destination
-				speed = getSpeed(getDistance()+25, 50);	//Don't slow down as much
+				speed = getSpeed(getDistance()+100, 200, MAX_VELOCITY);	//Don't slow down as much
 			else
-				speed = getSpeed(getDistance(), 50);
+				speed = getSpeed(getDistance(), 200, MAX_VELOCITY);
 			
 			double rotationSpeed = getRotationSpeed(rotationToTarget);
 
 			// Overrule speed
 			if (forcedSpeed > 0) {
-				speed = forcedSpeed;
+//				speed = forcedSpeed;
+				speed = getSpeed(getDistance()+10, 20, forcedSpeed);
 			}
 			//TODO: remove test code
-			System.out.println("ID: " + robot.getRobotId() + "\n\tDirection: " + rotationToGoal
-								+ "\n\tSpeed: " + speed + "\n\tRotationSpeed: " + rotationSpeed 
-								+ "\n\tTarget: " + target + "\n\tDestination: " + destination);
+//			System.out.println("ID: " + robot.getRobotId() + "\n\tDirection: " + rotationToGoal
+//								+ "\n\tRobotPosition: " + robot.getPosition() 
+//								+ "\n\tSpeed: " + speed + "\n\tRotationSpeed: " + rotationSpeed 
+//								+ "\n\tTarget: " + target + "\n\tDestination: " + destination);
 			// Send commands to robot
 			// direction and rotationAngle do nothing, set to 0
 			// rotationSpeed inverted because the motors spin in opposite
@@ -220,7 +222,6 @@ public class GotoPosition {
 	 * @return
 	 */
 	private double getRotationSpeed(double rotation) {
-		System.out.println("ROTATION: " + rotation);
 		return (rotation > 0 ? rotation +20 : rotation -20) * -8;
 
 //		// must be between 0 and 50 percent, if it's higher than 50% rotating to
@@ -259,12 +260,12 @@ public class GotoPosition {
 	 * @param distanceToSlowDown If the robot has less distance to travel than the distance to slow down, the robot should slow down.
 	 * @return The speed in mm/s
 	 */
-	private double getSpeed(double d, int distanceToSlowDown) {
-		
+	private double getSpeed(double d, int distanceToSlowDown, int speed) {
+//		System.out.println("D: " + d + " slow down: " + distanceToSlowDown);
 //		return MAX_VELOCITY;
 		if(d > distanceToSlowDown)
-			return MAX_VELOCITY;
-		return ((d / distanceToSlowDown) * MAX_VELOCITY);
+			return speed;
+		return ((d / distanceToSlowDown) * speed);
 	}
 	
 	/**
