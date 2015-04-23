@@ -364,8 +364,9 @@ public class FieldPanel extends JPanel {
 						(int) (left.toGUIPoint(ratio).getY() + spaceBufferY),
 						(int) (right.toGUIPoint(ratio).getX() + spaceBufferX),
 						(int) (right.toGUIPoint(ratio).getY() + spaceBufferY));
-				g2.drawString(String.valueOf(robot.getRobotId()), (int) robot.getPosition().getX() - 2, (int) robot
-						.getPosition().getY() - 2);
+				g2.drawString("" + robot.getRobotId(), (int) robot
+						.getPosition().toGUIPoint(ratio).getX() - 2 + spaceBufferX,
+						(int) robot.getPosition().toGUIPoint(ratio).getY() - 2 + spaceBufferY);
 			}
 		}
 
