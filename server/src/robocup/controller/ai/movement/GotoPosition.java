@@ -177,7 +177,7 @@ public class GotoPosition {
 			// Overrule speed
 			if (forcedSpeed > 0) {
 //				speed = forcedSpeed;
-				speed = getSpeed(getDistance()+10, 20, forcedSpeed);
+				speed = getSpeed(getDistance(), 30, forcedSpeed);
 			}
 			//TODO: remove test code
 //			System.out.println("ID: " + robot.getRobotId() + "\n\tDirection: " + rotationToGoal
@@ -222,7 +222,7 @@ public class GotoPosition {
 	 * @return
 	 */
 	private double getRotationSpeed(double rotation) {
-		return (rotation > 0 ? rotation +20 : rotation -20) * -8;
+		return (rotation > 0 ? rotation +20 : rotation -20) * -5;
 
 //		// must be between 0 and 50 percent, if it's higher than 50% rotating to
 //		// the other direction is faster

@@ -30,6 +30,12 @@ public abstract class Mode {
 	protected Strategy strategy;
 	protected ArrayList<RobotExecuter> executers;
 	protected Logger LOGGER = Logger.getLogger(Main.class.getName());
+	
+    /** Co-ordinates of the goal on the left side of the field */
+    private static final FieldPoint MID_GOAL_NEGATIVE = new FieldPoint(-3000, 0);
+    /** Co-ordinates of the goal on the right side of the field */
+    private static final FieldPoint MID_GOAL_POSITIVE = new FieldPoint(3000, 0);
+
 
 	public Mode(Strategy strategy, ArrayList<RobotExecuter> executers) {
 		world = World.getInstance();
@@ -205,8 +211,7 @@ public abstract class Mode {
 	 */
 	private void handleDisturber(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof Disturber)) {
-			FieldPoint centerGoalPosition = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? new FieldPoint(
-					world.getField().getWidth() / 2, 0) : new FieldPoint(-world.getField().getWidth() / 2, 0);
+			FieldPoint centerGoalPosition = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE;
 			executer.setLowLevelBehavior(new Disturber(executer.getRobot(), centerGoalPosition));
 		}
 
@@ -292,8 +297,7 @@ public abstract class Mode {
 	 */
 	private void handleKeeperDefender(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof KeeperDefender)) {
-			FieldPoint centerGoalPosition = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? new FieldPoint(
-					world.getField().getWidth() / 2, 0) : new FieldPoint(-world.getField().getWidth() / 2, 0);
+			FieldPoint centerGoalPosition = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE;
 			executer.setLowLevelBehavior(new KeeperDefender(executer.getRobot(), centerGoalPosition));
 		}
 
@@ -317,8 +321,7 @@ public abstract class Mode {
 
 		// TODO determine field half in a better way
 		if (!(executer.getLowLevelBehavior() instanceof Keeper)) {
-			FieldPoint centerGoalPosition = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? new FieldPoint(
-					world.getField().getWidth() / 2, 0) : new FieldPoint(-world.getField().getWidth() / 2, 0);
+			FieldPoint centerGoalPosition = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE;
 			executer.setLowLevelBehavior(new Keeper(keeper, centerGoalPosition));
 		}
 
