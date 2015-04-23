@@ -121,10 +121,12 @@ public class SettingsSection extends SectionBox {
 	 */
 	@Override
 	public void update() {
-		if (World.getInstance().getReferee()
-				.isEastTeamColor(World.getInstance().getReferee().getAlly().getColor()))
+		/*
+		 if (World.getInstance().getReferee()
+		 				.isEastTeamColor(World.getInstance().getReferee().getAlly().getColor()))
 			fieldHalfBox.setSelectedItem("east");
 		else
 			fieldHalfBox.setSelectedItem("west");
+			*/
 	}
 }
