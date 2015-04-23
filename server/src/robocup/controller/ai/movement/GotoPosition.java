@@ -177,7 +177,7 @@ public class GotoPosition {
 			// Overrule speed
 			if (forcedSpeed > 0) {
 //				speed = forcedSpeed;
-				speed = getSpeed(getDistance()+10, 20, forcedSpeed);
+				speed = getSpeed(getDistance(), 30, forcedSpeed);
 			}
 			//TODO: remove test code
 //			System.out.println("ID: " + robot.getRobotId() + "\n\tDirection: " + rotationToGoal
