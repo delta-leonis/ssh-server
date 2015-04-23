@@ -85,13 +85,13 @@ public abstract class Mode {
 				if (closestRobot != null) {
 					closestRobot.setRole(role);
 					closestRobot.setPreferredZone(zone);
-				} else {
+				}
 			} else {
 				ArrayList<Ally> allyRobots = getAllyRobotsWithoutRole();
 				if (allyRobots.size() != 0) {
 					Ally robot = allyRobots.get((int) (Math.random() * allyRobots.size()));
 					robot.setRole(role);
-				} else
+				}
 			}
 		}
 	}
@@ -180,7 +180,7 @@ public abstract class Mode {
 	 * @param executer the executer which needs to be handled
 	 */
 	private void handleGoalPostCoverer(RobotExecuter executer) {
-		if (!(executer.getLowLevelBehavior() instanceof GoalPostCoverer))
+		if (!(executer.getLowLevelBehavior() instanceof GoalPostCoverer)) {
 			double XPoint = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? world.getField()
 					.getWidth() / 2 : -world.getField().getWidth() / 2;
 			double YPoint = ball.getPosition().getY() / Math.abs(ball.getPosition().getY())
@@ -204,11 +204,12 @@ public abstract class Mode {
 	 * @param executer the executer which needs to be handled
 	 */
 	private void handleDisturber(RobotExecuter executer) {
-		if (!(executer.getLowLevelBehavior() instanceof Disturber))
+		if (!(executer.getLowLevelBehavior() instanceof Disturber)) {
 			FieldPoint centerGoalPosition = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? new FieldPoint(
 					world.getField().getWidth() / 2, 0) : new FieldPoint(-world.getField().getWidth() / 2, 0);
 			executer.setLowLevelBehavior(new Disturber(executer.getRobot(), centerGoalPosition));
 		}
+
 		updateDisturber(executer);
 	}
 
