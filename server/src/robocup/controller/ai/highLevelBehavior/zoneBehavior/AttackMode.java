@@ -31,8 +31,11 @@ public class AttackMode extends Mode {
 		Attacker attacker = (Attacker) executer.getLowLevelBehavior();
 		int chipKick = 40;
 		FieldPoint ballPosition = ball.getPosition();
-		double shootDirection = ballPosition.getAngle(world.hasFreeShot());
-		attacker.update(shootDirection, chipKick, ballPosition);
+		FieldPoint freeShot = world.hasFreeShot();
+		if(freeShot != null){
+			double shootDirection = ballPosition.getAngle(freeShot);
+			attacker.update(shootDirection, chipKick, ballPosition);
+		}
 	}
 
 	@Override
