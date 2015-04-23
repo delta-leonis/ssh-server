@@ -162,9 +162,9 @@ public class StandardMode extends Mode {
 			return null;
 		case "TimeOut":
 			if (isEastTeam)
-				return new FieldPoint(robot.getRobotId() * (Robot.DIAMETER + 50), -2000);
+				return new FieldPoint(robot.getRobotId() * (Robot.DIAMETER + 50), -1800);
 			else
-				return new FieldPoint(-robot.getRobotId() * (Robot.DIAMETER + 50), -2000);
+				return new FieldPoint(-(robot.getRobotId() + 1) * (Robot.DIAMETER - 50), -1800);
 		default:
 			LOGGER.severe("Unknown strategy used in StandardMode. Strategy: " + strategy.getClass().getSimpleName());
 			return new FieldPoint(0, 0);
