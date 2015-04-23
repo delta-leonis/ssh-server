@@ -70,8 +70,9 @@ public class Main {
 	 */
 	public static void initView() {
 		World.getInstance().setGUI(new robocup.view.GUI());
-		World.getInstance().getGUI().setVisible(true);
+
 		World.getInstance().getGUI().setExtendedState(World.getInstance().getGUI().getExtendedState() | JFrame.MAXIMIZED_BOTH);
+		World.getInstance().getGUI().setVisible(true);
 	}
 
 	/**
