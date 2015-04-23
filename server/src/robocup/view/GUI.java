@@ -2,6 +2,7 @@ package robocup.view;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.ScrollPane;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class GUI extends JFrame {
 
 		setLookAndFeel();
 		container.setBackground(UIManager.getColor("Panel.background"));
+		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 		add(scrollPane);
 
 		container.setLayout(new MigLayout("wrap 2", "[500][grow]", "[][grow]"));

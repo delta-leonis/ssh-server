@@ -18,6 +18,7 @@ import robocup.model.Enemy;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.enums.FieldZone;
+import robocup.model.enums.RobotMode;
 
 public class DefenseMode extends Mode {
 
@@ -31,8 +32,26 @@ public class DefenseMode extends Mode {
 		Attacker attacker = (Attacker) executer.getLowLevelBehavior();
 		int chipKick = 40;
 		FieldPoint ballPosition = ball.getPosition();
-		double shootDirection = ballPosition.getAngle(world.hasFreeShot());
-		attacker.update(shootDirection, chipKick, ballPosition);
+		FieldPoint freeShot = world.hasFreeShot();
+
+		if (freeShot != null) {
+			double shootDirection = ballPosition.getAngle(world.hasFreeShot());
+			attacker.update(shootDirection, chipKick, ballPosition);
+		} else {
+			ArrayList<Ally> runners = new ArrayList<Ally>();
+
+			for (RobotExecuter itExecuter : executers) {
+				Ally robot = (Ally) itExecuter.getRobot();
+
+				if (robot.getRole() == RobotMode.RUNNER)
+					runners.add(robot);
+			}
+
+			if (runners.size() > 0 && runners.get(0).getPosition() != null) {
+				double shootDirection = ballPosition.getAngle(runners.get(0).getPosition());
+				attacker.update(shootDirection, chipKick, ballPosition);
+			}
+		}
 	}
 
 	@Override
