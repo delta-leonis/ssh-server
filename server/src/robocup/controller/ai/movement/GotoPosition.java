@@ -22,7 +22,7 @@ import robocup.output.ComInterface;
 public class GotoPosition {
 
 	// TODO find a better solution
-	private static final double DISTANCE_ROTATIONSPEED_COEFFICIENT = 3;
+	private static final double DISTANCE_ROTATIONSPEED_COEFFICIENT = 8;
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 
 	private FieldPoint destination;
@@ -196,25 +196,6 @@ public class GotoPosition {
 		}
 	}
 
-//	/**
-//	 * Get rotationSpeed, calculates the speed at which to rotate based on degrees left to rotate
-//	 * Precondition: -180 <= rotation <= 180
-//	 * @param rotation
-//	 * @return
-//	 */
-//	private double getRotationSpeed(double rotation) {
-//
-//
-//		// must be between 0 and 50 percent, if it's higher than 50% rotating to
-//		// the other direction is faster
-//		double rotationPercent = rotation / 360;
-//
-//		// distance needed to rotate in mm
-//		double rotationDistance = circumference * rotationPercent;
-//
-//		return (rotationDistance * DISTANCE_ROTATIONSPEED_COEFFICIENT);
-//	}
-	
 	/**
 	 * Get rotationSpeed, calculates the speed at which to rotate based on degrees left to rotate
 	 * Precondition: -180 <= rotation <= 180
@@ -222,16 +203,16 @@ public class GotoPosition {
 	 * @return
 	 */
 	private double getRotationSpeed(double rotation) {
-		return (rotation > 0 ? rotation +20 : rotation -20) * -5;
 
-//		// must be between 0 and 50 percent, if it's higher than 50% rotating to
-//		// the other direction is faster
-//		double rotationPercent = rotation / 360;
-//
-//		// distance needed to rotate in mm
-//		double rotationDistance = circumference * rotationPercent;
-//
-//		return (rotationDistance * DISTANCE_ROTATIONSPEED_COEFFICIENT * -1);
+
+		// must be between 0 and 50 percent, if it's higher than 50% rotating to
+		// the other direction is faster
+		double rotationPercent = rotation / 360;
+
+		// distance needed to rotate in mm
+		double rotationDistance = circumference * rotationPercent;
+
+		return -(rotationDistance * DISTANCE_ROTATIONSPEED_COEFFICIENT);
 	}
 
 	/**
@@ -261,8 +242,6 @@ public class GotoPosition {
 	 * @return The speed in mm/s
 	 */
 	private double getSpeed(double d, int distanceToSlowDown, int speed) {
-//		System.out.println("D: " + d + " slow down: " + distanceToSlowDown);
-//		return MAX_VELOCITY;
 		if(d > distanceToSlowDown)
 			return speed;
 		return ((d / distanceToSlowDown) * speed);

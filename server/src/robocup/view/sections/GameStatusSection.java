@@ -96,7 +96,7 @@ public class GameStatusSection extends SectionBox implements ActionListener{
 			for(int i = 0; i < 11; ++i){
 				ComInterface.getInstance().send(1, i,0, 0, 0, 0, false);
 				try {
-					Thread.sleep(50);
+					Thread.sleep(10);
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

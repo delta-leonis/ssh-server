@@ -704,7 +704,7 @@ public class World extends Observable {
 			if (entry.getValue() - entry.getKey() > availableArea.get(biggestKey) - biggestKey)
 				biggestKey = entry.getKey();
 
-		System.out.println("Size: " + biggestKey + availableArea.get(biggestKey));
+//		System.out.println("Size: " + biggestKey + availableArea.get(biggestKey));
 
 		// return point that lies in the center of the biggest point
 		FieldPoint hitmarker = new FieldPoint(x, (biggestKey / 2 + availableArea.get(biggestKey) / 2));
