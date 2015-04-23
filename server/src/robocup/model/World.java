@@ -298,7 +298,7 @@ public class World extends Observable {
 		double minDistance = -1.0;
 
 		for (Robot r : robots) {
-			if (minDistance == -1.0)
+			if (minDistance == -1.0 && r.getPosition() !=null && ball.getPosition() != null)
 				minDistance = r.getPosition().getDeltaDistance(ball.getPosition());
 			else if (r.getPosition() != null && ball.getPosition() != null) {
 				double distance = r.getPosition().getDeltaDistance(ball.getPosition());

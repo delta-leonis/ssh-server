@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import robocup.Main;
 import robocup.model.Robot;
 import robocup.model.World;
+import robocup.output.ComInterface;
 
 public class RobotExecuter implements Runnable {
 
@@ -21,16 +22,31 @@ public class RobotExecuter implements Runnable {
 
 	public void run() {
 		while (true) {
-			if (stop) {
-				if(lowLevelBehavior != null)
-					lowLevelBehavior.go.setDestination(null);
-			} else if (robot.getPosition() != null)
-				executeBehavior();
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+			try{
+				if (stop) {
+					if(lowLevelBehavior != null)
+						lowLevelBehavior.go.setDestination(null);
+				} else if (robot.getPosition() != null)
+					executeBehavior();
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}catch(Exception e){
+				LOGGER.severe("NULL POINTER IN ROBOTEXECUTER");
 				e.printStackTrace();
+				World.getInstance().stop();
+				for(int i = 0; i < 11; ++i){
+					ComInterface.getInstance().send(1, i,0, 0, 0, 0, false);
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
 			}
 		}
 	}

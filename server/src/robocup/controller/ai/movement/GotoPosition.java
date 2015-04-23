@@ -222,7 +222,7 @@ public class GotoPosition {
 	 * @return
 	 */
 	private double getRotationSpeed(double rotation) {
-		return (rotation > 0 ? rotation +20 : rotation -20) * -8;
+		return (rotation > 0 ? rotation +20 : rotation -20) * -5;
 
 //		// must be between 0 and 50 percent, if it's higher than 50% rotating to
 //		// the other direction is faster
