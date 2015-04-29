@@ -3,7 +3,6 @@ package robocup.controller.ai;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Logger;
 
 import robocup.controller.ai.highLevelBehavior.Behavior;
 import robocup.controller.ai.highLevelBehavior.ZoneBehavior;
@@ -21,9 +20,7 @@ public class Main implements Observer {
 	private ArrayList<RobotExecuter> robotExecuters = new ArrayList<RobotExecuter>();
 	@SuppressWarnings("unused")
 	private ArrayList<LowLevelBehavior> lowLevelBehaviors;
-	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
-
-
+	
 	public Main() {
 		world = World.getInstance();
 		world.addObserver(this);

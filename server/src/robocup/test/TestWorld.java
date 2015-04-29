@@ -1,24 +1,12 @@
 package robocup.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-
-import java.awt.geom.Line2D;
-
-import javax.swing.JFrame;
-
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import robocup.Main;
-import robocup.model.FieldPoint;
-import robocup.model.World;
-import robocup.model.enums.FieldZone;
 
 public class TestWorld {
 	private static final boolean LOGGING = true;
