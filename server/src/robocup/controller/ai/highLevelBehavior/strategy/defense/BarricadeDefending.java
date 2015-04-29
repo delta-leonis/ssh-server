@@ -41,8 +41,8 @@ public class BarricadeDefending extends Strategy {
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.KEEPERDEFENDER);
 
-		roles.add(RobotMode.COUNTER);
-		roles.add(RobotMode.GOALPOSTCOVERER);
+//		roles.add(RobotMode.COUNTER);
+//		roles.add(RobotMode.GOALPOSTCOVERER);
 		roles.add(RobotMode.DISTURBER);
 	}
 

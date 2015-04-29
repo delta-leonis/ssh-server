@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -81,6 +82,34 @@ public class FieldControlSection extends SectionBox {
 				fieldPanel.toggleShowFreeShot();
 			}
 		}), "growx");
+		
+		add(new JLabel());
+		add(new JLabel());
+		
+		add(new JButton(new AbstractAction("Path Planner") {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
+				fieldPanel.toggleShowPathPlanner();
+			}
+		}), "growx");
+		
+		add(new JButton(new AbstractAction("Neighbours") {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
+				fieldPanel.toggleDrawNeighbours();
+			}
+		}), "growx");
+		
+		add(new JButton(new AbstractAction("Vertices") {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
+				fieldPanel.toggleDrawVertices();
+			}
+		}), "growx");
+
 	}
 
 	@Override

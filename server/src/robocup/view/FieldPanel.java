@@ -6,11 +6,19 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
+import robocup.controller.ai.movement.DijkstraPathPlanner;
+import robocup.controller.ai.movement.DijkstraPathPlanner.Vertex;
 import robocup.model.Ball;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
@@ -44,6 +52,10 @@ public class FieldPanel extends JPanel {
 	private boolean showRobots;
 	private boolean showZones;
 	private boolean showBall;
+	
+	private boolean showPathPlanner;
+	private boolean drawNeighbours;
+	private boolean drawVertices;
 
 	/**
 	 * Constructor of {@link FieldPanel}. The panel size is set and the mouseListener is added for 
@@ -104,6 +116,7 @@ public class FieldPanel extends JPanel {
 		drawFreeShot(g, ratio);
 		drawRobots(g, ratio);
 		drawBall(g, ratio);
+		drawPathPlanner(g, ratio);
 	}
 
 	/**
@@ -398,5 +411,102 @@ public class FieldPanel extends JPanel {
 						(int) (right.toGUIPoint(ratio).getY() + spaceBufferY));
 			}
 		}
+	}
+	
+	/**
+	 * Toggles the boolean {@link FieldPanel#showPathPlanner} and repaints.
+	 */
+	public void toggleShowPathPlanner() {
+		showPathPlanner = !showPathPlanner;
+		repaint();
+	}
+	
+	/**
+	 * Toggles whether the neighbours of the {@link Vertex vertices} of the 
+	 * {@link DijkstraPathPlanner pathplanner} are shown.
+	 */
+	public void toggleDrawNeighbours(){
+		drawNeighbours = !drawNeighbours;
+		repaint();
+	}
+	
+	public void toggleDrawVertices(){
+		drawVertices = !drawVertices;
+		repaint();
+	}
+
+	/**
+	 * Draws all the paths that the current {@link Robot robots} have planned.
+	 * @param g {@link Graphics} to draw to
+	 * @param ratio A {@link double} indicating the ratio for the sizing. (Screen width / real width)
+	 */
+	private void drawPathPlanner(Graphics g, double ratio) {
+		if (!showPathPlanner)
+			return;
+		
+		ArrayList<RobotExecuter> robotExecuters = World.getInstance().getRobotExecuters();
+		
+		for(RobotExecuter executer : robotExecuters){
+			if(executer.getLowLevelBehavior() != null)
+				drawIndividualPath(g, ratio, executer.getLowLevelBehavior().getGotoPosition().getPath());
+		}
+		
+	}
+	
+	private void drawIndividualPath(Graphics g, double ratio, DijkstraPathPlanner pathPlanner){
+		if(pathPlanner != null){
+			LinkedList<FieldPoint> path = pathPlanner.getCurrentRoute();
+			if(drawVertices){
+				ArrayList<Vertex> vertices = pathPlanner.getTestVertices();
+				for (Vertex vertex : vertices) {
+					g.setColor(Color.MAGENTA);
+				
+					int x = (int)vertex.getPosition().toGUIPoint(ratio).getX() + spaceBufferX;
+					int y = (int)vertex.getPosition().toGUIPoint(ratio).getY() + spaceBufferY;
+						
+					if(!vertex.isRemovable()){
+						g.drawString("nRmvbl", x, y);
+					}
+					g.drawOval(x - 5, y - 5, 10, 10);
+					if (drawNeighbours) {
+						g.setColor(new Color((int) (Math.random() * 255),
+								(int) (Math.random() * 255), (int) (Math
+										.random() * 255)));
+						for (Vertex neighbour : vertex.getNeighbours()) {
+							int x2 = (int) neighbour.getPosition().toGUIPoint(ratio).getX() + spaceBufferX;
+							int y2 = (int) neighbour.getPosition().toGUIPoint(ratio).getY() + spaceBufferY;
+							g.drawLine(x, y, x2, y2);
+						}
+					}
+				}
+			}		
+
+			if(path != null && !path.isEmpty())
+				drawPath(g, path, pathPlanner.getSource(), pathPlanner.getDestination(), ratio);
+		}
+	}
+	
+	public void drawPath(Graphics g, LinkedList<FieldPoint> path, FieldPoint start, FieldPoint destination, double ratio) {
+		Graphics2D g2 = (Graphics2D)g;
+		
+		g.setColor(Color.ORANGE);
+		g2.setStroke(new BasicStroke(3));
+		Point2D.Double previous = start.toGUIPoint(ratio);
+		for (FieldPoint p : path) {
+			int x = (int) p.toGUIPoint(ratio).getX() + spaceBufferX;
+			int y = (int) p.toGUIPoint(ratio).getY() + spaceBufferY;
+			int x2 = (int) previous.getX() + spaceBufferX;
+			int y2 = (int) previous.getY() + spaceBufferY;
+			g.drawLine(x, y, x2, y2);
+			g2.draw(new Line2D.Double(x, y, x2, y2));
+			previous = p.toGUIPoint(ratio);
+		}
+		// Draw point to destination
+		int x = (int) previous.getX() + spaceBufferX;
+		int y = (int) previous.getY() + spaceBufferY;
+		int x2 = (int) destination.toGUIPoint(ratio).getX() + spaceBufferX;
+		int y2 = (int) destination.toGUIPoint(ratio).getY() + spaceBufferY;
+		g.drawLine(x, y, x2, y2);
+		g2.draw(new Line2D.Float(x, y, x2, y2));
 	}
 }

@@ -7,6 +7,7 @@ import java.util.Observable;
 import java.util.TreeMap;
 
 import robocup.controller.ai.lowLevelBehavior.Keeper;
+import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.controller.handlers.protohandlers.DetectionHandler;
 import robocup.model.enums.Command;
 import robocup.model.enums.FieldZone;
@@ -42,6 +43,8 @@ public class World extends Observable {
 	private ArrayList<Integer> validRobotIDs = new ArrayList<Integer>();
 	
 	private boolean start = false;		// True for start, false for stop
+	
+	private ArrayList<RobotExecuter> robotExecuters;
 
 	/**
 	 * Constructor for the {@link World} Can only be called as a singleton.
@@ -80,6 +83,8 @@ public class World extends Observable {
 		robotList = new ArrayList<Robot>();
 		robotList.addAll(allyTeam);
 		robotList.addAll(enemyTeam);
+		
+		initExecutors();
 	}
 
 	/**
@@ -815,5 +820,40 @@ public class World extends Observable {
 	
 	public boolean getStart(){
 		return start;
+	}
+	
+	/**
+	 * Initializes the {@RobotExecuter executers} for the {@link Robot robots}, 
+	 * whether they're on sight or not.
+	 */
+	private void initExecutors() {
+
+		ArrayList<RobotExecuter> updatedRobotExecuters = new ArrayList<RobotExecuter>();
+
+		Team team = referee.getAlly();
+
+		for (Robot robot : team.getRobots()) {
+			boolean executerFound = false;
+
+			if (robotExecuters != null) {
+				for (RobotExecuter exec : robotExecuters) {
+					if (exec.getRobot().getRobotId() == robot.getRobotId()) {
+						updatedRobotExecuters.add(exec);
+						executerFound = true;
+					}
+				}
+			}
+
+			if (!executerFound) {
+				RobotExecuter executer = new RobotExecuter(robot);
+				new Thread(executer).start();
+				updatedRobotExecuters.add(executer);
+			}
+		}
+		robotExecuters = updatedRobotExecuters;
+	}
+	
+	public ArrayList<RobotExecuter> getRobotExecuters(){
+		return robotExecuters;
 	}
 }

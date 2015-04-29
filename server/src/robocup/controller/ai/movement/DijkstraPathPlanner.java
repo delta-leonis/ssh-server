@@ -28,6 +28,9 @@ public class DijkstraPathPlanner {
 	private ArrayList<Vertex> testVertices = null;
 	protected ArrayList<Vertex> notRemovableVertices; 	//Contains the source and destination.
 	
+	private LinkedList<FieldPoint> currentRoute;
+	private FieldPoint source;
+	private FieldPoint destination;
 
 	/**
 	 * Constructor that creates the pathplanner object
@@ -201,6 +204,8 @@ public class DijkstraPathPlanner {
 	public LinkedList<FieldPoint> getRoute(FieldPoint beginNode, FieldPoint destination, int robotId, boolean testMode) {
 		LinkedList<FieldPoint> route = new LinkedList<FieldPoint>();
 		boolean found = false;
+		source = beginNode;
+		this.destination = destination;
 
 		generateObjectList(robotId);
 
@@ -210,6 +215,7 @@ public class DijkstraPathPlanner {
 			found = true;
 			if(!testMode){
 				reset();
+				currentRoute = route;
 				return route;
 			}
 		}
@@ -255,6 +261,7 @@ public class DijkstraPathPlanner {
 				reset();
 			}
 		}
+		currentRoute = route;
 		return route;
 	}
 	
@@ -612,5 +619,17 @@ public class DijkstraPathPlanner {
 	 */
 	public ArrayList<Rectangle2D> getObjects() {
 		return objects;
+	}
+	
+	public LinkedList<FieldPoint> getCurrentRoute(){
+		return currentRoute;
+	}
+	
+	public FieldPoint getSource(){
+		return source;
+	}
+	
+	public FieldPoint getDestination(){
+		return destination;
 	}
 }
