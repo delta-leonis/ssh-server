@@ -280,4 +280,8 @@ public class GotoPosition {
 	public void setDribble(boolean dribble) {
 		this.dribble = dribble;
 	}
+	
+	public DijkstraPathPlanner getPathPlanner(){
+		return dplanner;
+	}
 }
