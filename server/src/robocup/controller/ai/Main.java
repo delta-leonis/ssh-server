@@ -8,8 +8,9 @@ import robocup.controller.ai.highLevelBehavior.Behavior;
 import robocup.controller.ai.highLevelBehavior.ZoneBehavior;
 import robocup.controller.ai.lowLevelBehavior.LowLevelBehavior;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
+import robocup.model.Robot;
+import robocup.model.Team;
 import robocup.model.World;
-import robocup.test.testBehaviors.TestBehaviour;
 
 public class Main implements Observer {
 
@@ -24,11 +25,10 @@ public class Main implements Observer {
 	public Main() {
 		world = World.getInstance();
 		world.addObserver(this);
-		robotExecuters = world.getRobotExecuters();
+		initExecutors();
 
-//		behavior = new ZoneBehavior(robotExecuters);
-		behavior = new TestBehaviour(robotExecuters);
-		
+		behavior = new ZoneBehavior(robotExecuters);
+
 		// behaviors = new ArrayList<Behavior>();
 		// behaviors.add(new TestKeepingBehavior(1, null));
 		// behaviors.add(new TestKeepingBehavior(1, new Point(0, 0)));
@@ -58,4 +58,36 @@ public class Main implements Observer {
 		}
 	}
 
+	/**
+	 * Initializes the {@RobotExecuter executers} for the {@link Robot robots}, 
+	 * whether they're on sight or not.
+	 */
+	private void initExecutors() {
+
+		ArrayList<RobotExecuter> updatedRobotExecuters = new ArrayList<RobotExecuter>();
+
+		Team team = world.getReferee().getAlly();
+
+		for (Robot robot : team.getRobots()) {
+			boolean executerFound = false;
+
+			if (robotExecuters != null) {
+				for (RobotExecuter exec : robotExecuters) {
+					if (exec.getRobot().getRobotId() == robot.getRobotId()) {
+						updatedRobotExecuters.add(exec);
+						executerFound = true;
+					}
+				}
+			}
+
+			if (!executerFound) {
+				RobotExecuter executer = new RobotExecuter(robot);
+				new Thread(executer).start();
+				updatedRobotExecuters.add(executer);
+			}
+		}
+		robotExecuters = updatedRobotExecuters;
+	}
+
 }
+
