@@ -86,7 +86,7 @@ public class SettingsSection extends SectionBox {
 		add(setFrequencyButton, "span 2, growx");
 		add(new JLabel("Minimum logger level"));
 		add(levelBox);
-		add(setLevelButton, "span 2");
+		add(setLevelButton, "span 2, growx");
 		add(new JLabel("GUI Updates per second"), "span 2, growx");
 		add(framesPerSecond, "span 2, growx");
 
