@@ -5,6 +5,8 @@ import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
@@ -44,6 +46,8 @@ public class GUI extends JFrame {
 	private ConsoleSection console;
 	private int selectedRobotId = -1;
 	private ArrayList<RobotBox> allRobotBoxes = new ArrayList<RobotBox>();
+	private Timer updateTimer;
+	private int updateFrequency = 60; //update frequency in Hertz
 
 
 	JPanel container = new JPanel();
@@ -69,8 +73,29 @@ public class GUI extends JFrame {
 		setLocationRelativeTo(null);
 
 		LOGGER.info("GUI is started and initialized");
+		updateTimer = new Timer();
+		updateTimer.schedule(new updateGUITask(), 1000/updateFrequency);
 	}
 
+	/**
+	 * TimerTask specifically for updating all GUI elements at a set frecuency
+	 */
+	class updateGUITask extends TimerTask {
+		public void run() {
+			update("robotContainer");
+			update("sectionContainer");
+			updateTimer.schedule(new updateGUITask(), 1000/updateFrequency);
+		}
+	}
+	
+	/**
+	 * Set a new updateFrequency for the GUI elements
+	 * @param frequency a new update frequency in Hz
+	 */
+	public void setUpdateFrequency(int frequency){
+		updateFrequency = frequency;
+	}
+	
 	/**
 	 * Tries to set the "Nimbus" {@link LookAndFeel} to the {@link UIManager}
 	 */
@@ -169,7 +194,7 @@ public class GUI extends JFrame {
 			}
 
 			selectedRobotId = ((RobotBox) arg0.getSource()).getRobot().getRobotId();
-			update("sectionContainer");
+			//update("sectionContainer");
 		}
 
 		@Override
@@ -189,6 +214,8 @@ public class GUI extends JFrame {
 		}
 	}
 
+	
+	
 	/**
 	 * Update gui elements such as specific {@link SectionBox}es or {@link RobotBox}es
 	 * @param desc of the containers that needs to be updated
@@ -208,12 +235,9 @@ public class GUI extends JFrame {
 			
 		case "robotBoxes":
 			robotContainer.removeAll();
-			for (RobotBox box : allRobotBoxes) {
-				box.repaint();
-				if (box.getRobot().isVisible())
-					robotContainer.add(box);
-			}
-
+			for (RobotBox box : allRobotBoxes)
+					if(box.getRobot().isVisible())
+						robotContainer.add(box);
 			revalidate();
 			repaint();
 			break;
@@ -233,5 +257,4 @@ public class GUI extends JFrame {
 			break;
 		}
 	}
-
 }

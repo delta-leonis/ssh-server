@@ -8,6 +8,9 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.Main;
@@ -63,17 +66,29 @@ public class SettingsSection extends SectionBox {
 		JButton setFrequencyButton = new JButton("Set frequency");
 		setFrequencyButton.addActionListener(new ButtonListener());
 
+		JSlider framesPerSecond = new JSlider(JSlider.HORIZONTAL,
+                0, 60, 30);
+		framesPerSecond.addChangeListener(new SliderListener());
+
+		//Turn on labels at major tick marks.
+		framesPerSecond.setMajorTickSpacing(10);
+		framesPerSecond.setMinorTickSpacing(1);
+		framesPerSecond.setPaintTicks(true);
+		framesPerSecond.setPaintLabels(true);
+		
 		JButton setLevelButton = new JButton("Set logger level");
 		setLevelButton.addActionListener(new ButtonListener());
 		add(new JLabel("Field half"));
 		add(fieldHalfBox);
-		add(setHalfButton, "span 2");
+		add(setHalfButton, "span 2, growx");
 		add(new JLabel("Field frequency"));
 		add(frequencyBox);
-		add(setFrequencyButton, "span 2");
+		add(setFrequencyButton, "span 2, growx");
 		add(new JLabel("Minimum logger level"));
 		add(levelBox);
 		add(setLevelButton, "span 2");
+		add(new JLabel("GUI Updates per second"), "span 2, growx");
+		add(framesPerSecond, "span 2, growx");
 
 		if (World.getInstance().getReferee()
 					.isEastTeamColor(World.getInstance().getReferee().getAlly().getColor()))
@@ -82,6 +97,18 @@ public class SettingsSection extends SectionBox {
 			fieldHalfBox.setSelectedItem("west");
 	}
 
+
+	/**
+	 * ChangeListener for update-frequency slider in GUI
+	 */
+	private class SliderListener implements ChangeListener {
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			int newFrequency = Math.max(((JSlider)e.getSource()).getValue(), 1); //minimum of 1 update a second
+			World.getInstance().getGUI().setUpdateFrequency(newFrequency);
+		}
+	}
+	
 	/**
 	 * ActionListener to set a different settings
 	 *
@@ -116,7 +143,6 @@ public class SettingsSection extends SectionBox {
 				else
 					World.getInstance().getReferee()
 							.setWestTeam(World.getInstance().getReferee().getEnemy());
-				World.getInstance().getGUI().update("sectionContainer");
 				break;
 			}
 		}

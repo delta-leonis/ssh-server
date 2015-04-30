@@ -50,8 +50,6 @@ public class ValidRobotSection extends SectionBox {
 				World.getInstance().getValidRobotIDs().add(Integer.valueOf(checkbox.getText().substring(1)));
 			else
 				World.getInstance().getValidRobotIDs().remove(Integer.valueOf(checkbox.getText().substring(1)));
-
-			World.getInstance().gui.update("robotBoxes");
 		}
 	}
 

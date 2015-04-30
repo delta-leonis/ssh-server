@@ -64,7 +64,7 @@ public class VisibleRobotSection extends SectionBox {
 			JCheckBox checkbox = ((JCheckBox) e.getSource());
 			World.getInstance().getReferee().getAlly().getRobotByID(Integer.valueOf(checkbox.getText().substring(1)))
 					.setVisible(checkbox.isSelected());
-			World.getInstance().gui.update("robotBoxes");
+			World.getInstance().getGUI().update("robotBoxes");
 		}
 	}
 

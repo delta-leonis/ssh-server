@@ -42,7 +42,5 @@ public class RefereeHandler {
 				message.getYellow().getScore(), message.getYellow().getRedCards(),
 				message.getYellow().getYellowCards(), message.getYellow().getTimeouts(),
 				message.getYellow().getGoalie());
-
-		World.getInstance().getGUI().update("sectionContainer");
 	}
 }

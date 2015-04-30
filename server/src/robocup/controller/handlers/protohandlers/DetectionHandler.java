@@ -44,9 +44,6 @@ public class DetectionHandler {
 				message.getCameraId());
 		processBalls(message.getBallsList(), message.getTCapture(), message.getCameraId());
 		world.HandlerFinished("detection");
-
-		World.getInstance().getGUI().update("robotContainer");
-		World.getInstance().getGUI().update("sectionContainer");
 	}
 
 	/**
