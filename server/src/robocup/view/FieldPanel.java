@@ -238,18 +238,25 @@ public class FieldPanel extends JPanel {
 		
 	}
 	
+	/**
+	 * Toggle to show coordinates of both {@link Robot robots} and the field.
+	 */
 	public void toggleCoords(){
 		showCoords = !showCoords;
 		repaint();
 	}
 	
+	/**
+	 * Draws the co-ordinates of the edges of the field.
+	 * @param g The graphics to draw on
+	 * @param ratio The current ratio.
+	 */
 	public void drawCoords(Graphics g, double ratio){
 		if(showCoords){
 			g.drawString("[" + -(FIELDWIDTH/2) + "," + (FIELDHEIGHT/2) + "]", spaceBufferX, spaceBufferY);	//NW
 			g.drawString("[" + (FIELDWIDTH/2) + "," + (FIELDHEIGHT/2) + "]", spaceBufferX + (int)(FIELDWIDTH * ratio), spaceBufferY);	//NE
 			g.drawString("[" + (FIELDWIDTH/2) + "," + -(FIELDHEIGHT/2) + "]", spaceBufferX + (int)(FIELDWIDTH * ratio), spaceBufferY + (int)(FIELDHEIGHT * ratio));	//SE
 			g.drawString("[" + -(FIELDWIDTH/2) + "," + -(FIELDHEIGHT/2) + "]", spaceBufferX, spaceBufferY + (int)(FIELDHEIGHT * ratio));	//SE
-
 		}
 	}
 
@@ -398,6 +405,11 @@ public class FieldPanel extends JPanel {
 				g2.drawString("" + robot.getRobotId(), (int) robot
 						.getPosition().toGUIPoint(ratio).getX() - 2 + spaceBufferX,
 						(int) robot.getPosition().toGUIPoint(ratio).getY() - 2 + spaceBufferY);
+				if(showCoords){
+					g2.drawString("[" + robot.getPosition().getX() + "," + robot.getPosition().getY() + "]", (int) robot
+							.getPosition().toGUIPoint(ratio).getX() - 2 + spaceBufferX - 15,
+							(int) robot.getPosition().toGUIPoint(ratio).getY() - 2 + spaceBufferY - 15);
+				}
 			}
 		}
 

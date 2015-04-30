@@ -28,6 +28,7 @@ public class Main {
 	
 
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
+	/** The level used to log in logging.txt. Use LOGGER.warning() for debugging. */
 	private static Level debugLevel = Level.WARNING;
 	private static String teamConfig = "config/teams.properties";
 	private static String protobufConfig = "config/config.properties";
