@@ -1,6 +1,7 @@
 package robocup.view.sections;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -8,7 +9,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import net.miginfocom.swing.MigLayout;
-
 import robocup.view.FieldPanel;
 import robocup.view.SectionBox;
 
@@ -31,93 +31,100 @@ public class FieldControlSection extends SectionBox {
 
 		this.setLayout(new MigLayout("wrap 4", "[grow]", "[grow][grow][grow]"));
 
-		add(new JButton(new AbstractAction("Show field") {
-			private static final long serialVersionUID = 1L;
+		ActionListener buttonListener = new ButtonListener();
+		JButton showField = new JButton("Show field");
+		showField.addActionListener(buttonListener);
+		add(showField, "growx");
 
-			public void actionPerformed(ActionEvent e) {
-				frame.setTitle("Field");
-				frame.setSize(fieldPanel.getFrameSizeX(), fieldPanel.getFrameSizeY());
-				frame.setContentPane(fieldPanel);
-				frame.setVisible(true);
-				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			}
-		}), "growx");
+		JButton showRaster = new JButton("Show raster");
+		showRaster.addActionListener(buttonListener);
+		add(showRaster, "growx");
 
-		add(new JButton(new AbstractAction("Zones") {
-			private static final long serialVersionUID = 1L;
+		JButton showZones = new JButton("Show zones");
+		showZones.addActionListener(buttonListener);
+		add(showZones, "growx");
 
-			public void actionPerformed(ActionEvent e) {
-				fieldPanel.toggleShowZones();
-			}
-		}), "growx");
+		JButton showRobots = new JButton("Show robots");
+		showRobots.addActionListener(buttonListener);
+		add(showRobots, "growx");
 
-		add(new JButton(new AbstractAction("Raster") {
-			private static final long serialVersionUID = 1L;
+		JButton showBall = new JButton("Show ball");
+		showBall.addActionListener(buttonListener);
+		add(showBall, "growx");
 
-			public void actionPerformed(ActionEvent e) {
-				fieldPanel.toggleShowRaster();
-			}
-		}), "growx");
+		JButton drawFreeShot = new JButton("Draw free shot");
+		drawFreeShot.addActionListener(buttonListener);
+		add(drawFreeShot, "growx");
 
-		add(new JButton(new AbstractAction("Robots") {
-			private static final long serialVersionUID = 1L;
+		JButton drawCoords = new JButton("Draw coordinates");
+		drawCoords.addActionListener(buttonListener);
+		add(drawCoords, "growx");
 
-			public void actionPerformed(ActionEvent e) {
-				fieldPanel.toggleShowRobots();
-			}
-		}), "growx");
+		JButton drawPaths = new JButton("Draw paths");
+		drawPaths.addActionListener(buttonListener);
+		add(drawPaths, "growx");
 
-		add(new JButton(new AbstractAction("Ball") {
-			private static final long serialVersionUID = 1L;
+		JButton drawNeighbours = new JButton("Draw All paths");
+		drawNeighbours.addActionListener(buttonListener);
+		add(drawNeighbours, "growx");
 
-			public void actionPerformed(ActionEvent e) {
-				fieldPanel.toggleShowBall();
-			}
-		}), "growx");
-
-		add(new JButton(new AbstractAction("Free shot") {
-			private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent e) {
-				fieldPanel.toggleShowFreeShot();
-			}
-		}), "growx");
-		
-		add(new JButton(new AbstractAction("Co-ordinates") {
-			private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent e) {
-				fieldPanel.toggleCoords();
-			}
-		}), "growx");
-		add(new JLabel());
-		
-		add(new JButton(new AbstractAction("Path Planner") {
-			private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent e) {
-				fieldPanel.toggleShowPathPlanner();
-			}
-		}), "growx");
-		
-		add(new JButton(new AbstractAction("Neighbours") {
-			private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent e) {
-				fieldPanel.toggleDrawNeighbours();
-			}
-		}), "growx");
-		
-		add(new JButton(new AbstractAction("Vertices") {
-			private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent e) {
-				fieldPanel.toggleDrawVertices();
-			}
-		}), "growx");
+		JButton drawVertices = new JButton("Draw vertices");
+		drawVertices.addActionListener(buttonListener);
+		add(drawVertices, "growx");
 
 	}
+	
+	private class ButtonListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			String buttonText = ((JButton) e.getSource()).getText();
+			switch (buttonText) {
+				case "Show field":
+					frame.setTitle("Field");
+					frame.setSize(fieldPanel.getFrameSizeX(), fieldPanel.getFrameSizeY());
+					frame.setContentPane(fieldPanel);
+					frame.setVisible(true);
+					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				break;
 
+				case "Show raster":
+					fieldPanel.toggleShowRaster();
+				break;
+
+				case "Show zones":
+					fieldPanel.toggleShowZones();
+				break;
+
+				case "Show robots":
+					fieldPanel.toggleShowRobots();
+				break;
+
+				case "Show ball":
+					fieldPanel.toggleShowBall();
+				break;
+
+				case "Draw free shot":
+					fieldPanel.toggleShowFreeShot();
+				break;
+
+				case "Draw coordinates":
+					fieldPanel.toggleCoords();
+				break;
+
+				case "Draw paths":
+					fieldPanel.toggleShowPathPlanner();
+				break;
+
+				case "Draw All paths":
+					fieldPanel.toggleDrawNeighbours();
+				break;
+
+				case "Draw vertices":
+					fieldPanel.toggleDrawVertices();
+				break;
+			}
+			
+		}
+	}
 	@Override
 	public void update() {
 		fieldPanel.update();
