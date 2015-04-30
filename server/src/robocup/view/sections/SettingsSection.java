@@ -67,7 +67,7 @@ public class SettingsSection extends SectionBox {
 		setFrequencyButton.addActionListener(new ButtonListener());
 
 		JSlider framesPerSecond = new JSlider(JSlider.HORIZONTAL,
-                0, 60, 30);
+                0, 144, 144);
 		framesPerSecond.addChangeListener(new SliderListener());
 
 		//Turn on labels at major tick marks.
