@@ -253,6 +253,7 @@ public class FieldPanel extends JPanel {
 	 */
 	public void drawCoords(Graphics g, double ratio){
 		if(showCoords){
+			g.setColor(Color.WHITE);
 			g.drawString("[" + -(FIELDWIDTH/2) + "," + (FIELDHEIGHT/2) + "]", spaceBufferX, spaceBufferY);	//NW
 			g.drawString("[" + (FIELDWIDTH/2) + "," + (FIELDHEIGHT/2) + "]", spaceBufferX + (int)(FIELDWIDTH * ratio), spaceBufferY);	//NE
 			g.drawString("[" + (FIELDWIDTH/2) + "," + -(FIELDHEIGHT/2) + "]", spaceBufferX + (int)(FIELDWIDTH * ratio), spaceBufferY + (int)(FIELDHEIGHT * ratio));	//SE
