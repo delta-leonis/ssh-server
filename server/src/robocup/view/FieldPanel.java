@@ -52,6 +52,7 @@ public class FieldPanel extends JPanel {
 	private boolean showRobots;
 	private boolean showZones;
 	private boolean showBall;
+	private boolean showCoords;
 	
 	private boolean showPathPlanner;
 	private boolean drawNeighbours;
@@ -117,6 +118,7 @@ public class FieldPanel extends JPanel {
 		drawRobots(g, ratio);
 		drawBall(g, ratio);
 		drawPathPlanner(g, ratio);
+		drawCoords(g, ratio);
 	}
 
 	/**
@@ -233,6 +235,22 @@ public class FieldPanel extends JPanel {
 				(int) world.getField().getEastGoal().getFrontSouth().toGUIPoint(ratio).getY() + spaceBufferY,
 				(int) world.getField().getEastGoal().getFrontNorth().toGUIPoint(ratio).getX() + spaceBufferX + 5,
 				(int) world.getField().getEastGoal().getFrontNorth().toGUIPoint(ratio).getY() + spaceBufferY);
+		
+	}
+	
+	public void toggleCoords(){
+		showCoords = !showCoords;
+		repaint();
+	}
+	
+	public void drawCoords(Graphics g, double ratio){
+		if(showCoords){
+			g.drawString("[" + -(FIELDWIDTH/2) + "," + (FIELDHEIGHT/2) + "]", spaceBufferX, spaceBufferY);	//NW
+			g.drawString("[" + (FIELDWIDTH/2) + "," + (FIELDHEIGHT/2) + "]", spaceBufferX + (int)(FIELDWIDTH * ratio), spaceBufferY);	//NE
+			g.drawString("[" + (FIELDWIDTH/2) + "," + -(FIELDHEIGHT/2) + "]", spaceBufferX + (int)(FIELDWIDTH * ratio), spaceBufferY + (int)(FIELDHEIGHT * ratio));	//SE
+			g.drawString("[" + -(FIELDWIDTH/2) + "," + -(FIELDHEIGHT/2) + "]", spaceBufferX, spaceBufferY + (int)(FIELDHEIGHT * ratio));	//SE
+
+		}
 	}
 
 	/**

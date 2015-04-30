@@ -83,7 +83,13 @@ public class FieldControlSection extends SectionBox {
 			}
 		}), "growx");
 		
-		add(new JLabel());
+		add(new JButton(new AbstractAction("Co-ordinates") {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
+				fieldPanel.toggleCoords();
+			}
+		}), "growx");
 		add(new JLabel());
 		
 		add(new JButton(new AbstractAction("Path Planner") {
