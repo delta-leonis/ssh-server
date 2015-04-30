@@ -43,8 +43,7 @@ public class GUI extends JFrame {
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private JPanel robotContainer;
 	private JPanel sectionContainer;
-	private ConsoleSection console;
-	private int selectedRobotId = -1;
+	private int selectedRobotId = 0;
 	private ArrayList<RobotBox> allRobotBoxes = new ArrayList<RobotBox>();
 	private Timer updateTimer;
 	private int updateFrequency = 60; //update frequency in Hertz
@@ -66,7 +65,6 @@ public class GUI extends JFrame {
 
 		initRobotContainer();
 		initSectionContainer();
-		initConsoleContainer();
 
 		setTitle("User interface RoboCup SSH");
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -121,14 +119,6 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Adds a {@link ConsoleSection} at the bottom of the GUI
-	 */
-	private void initConsoleContainer() {
-		console = new ConsoleSection();
-		container.add(console, "span, growy, growx");
-	}
-
-	/**
 	 * Adds all {@link SectionBox}es to a {@link JPanel} on the right of the GUI
 	 */
 	private void initSectionContainer() {
@@ -136,17 +126,16 @@ public class GUI extends JFrame {
 		//sectionContainer.setBorder(BorderFactory.createTitledBorder("Sections"));
 		sectionContainer.setLayout(new MigLayout("wrap 1", "[grow]"));
 
-		sectionContainer.add(new GameStatusSection(), "growx");
-		sectionContainer.add(new ValidRobotSection(), "growx");
-		sectionContainer.add(new VisibleRobotSection(), "growx");
+		sectionContainer.add(new SettingsSection(), "growx");
 		sectionContainer.add(new FieldControlSection(), "growx");
 //		sectionContainer.add(new PathPlannerTestSection(), "growx");	// Comment "World.getInstance().getGUI().update("robotContainer");" in Main.initTeams() for this section to work.
 //		sectionContainer.add(new ControlRobotPacketTestSection(), "growx");
 		sectionContainer.add(new ControlRobotSection(), "growx");
-		sectionContainer.add(new SettingsSection(), "growx");
 	//	sectionContainer.add(new PenguinSection(), "growx, growy");
-		sectionContainer.add(new RotateRobotSection(), "growx, growy");
+		sectionContainer.add(new RotateRobotSection(), "growx");
 
+		sectionContainer.add(new ValidRobotSection(), "growx");
+		sectionContainer.add(new ConsoleSection(), "growx, growy");
 		container.add(sectionContainer, "growy, growx");
 	}
 
@@ -172,7 +161,9 @@ public class GUI extends JFrame {
 		}
 
 		robotContainer.add(new JPanel(), "growy, span 2");
+		wrapper.add(new GameStatusSection(), "growx");
 		wrapper.add(robotContainer, "growy");
+		wrapper.add(new VisibleRobotSection(), "growx");
 		container.add(wrapper, "growy");
 	}
 
