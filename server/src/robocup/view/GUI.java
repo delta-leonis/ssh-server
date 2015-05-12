@@ -250,7 +250,13 @@ public class GUI extends JFrame {
 			break;
 
 		case "sectionContainer":
-			for (Component item : rightContainer.getComponents()) {
+			for (Component item : leftContainer.getComponents()) {
+				if (item instanceof SectionBox){
+					LOGGER.fine("Updated: " + ((SectionBox) item).getTitle());
+					((SectionBox) item).update();
+				}
+			}
+			for (Component item : sectionContainer.getComponents()) {
 				if (item instanceof SectionBox){
 					LOGGER.fine("Updated: " + ((SectionBox) item).getTitle());
 					((SectionBox) item).update();
