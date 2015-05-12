@@ -14,7 +14,7 @@ import robocup.model.enums.FieldZone;
  * 
  */
 public class Field {
-	private int height;
+	private int length;
 	private int width;
 
 	private int lineWidth;
@@ -38,7 +38,7 @@ public class Field {
 		Properties properties = new Properties();
 		try {
 			properties.load(new FileInputStream("config/field.properties"));
-			height = Integer.parseInt(properties.getProperty("fullsize.height"));
+			length = Integer.parseInt(properties.getProperty("fullsize.length"));
 			width = Integer.parseInt(properties.getProperty("fullsize.width"));
 			lineWidth = Integer.parseInt(properties.getProperty("fullsize.lineWidth"));
 			boundaryWidth = Integer.parseInt(properties.getProperty("fullsize.boundaryWidth"));
@@ -65,45 +65,66 @@ public class Field {
 			int goalWidth, int goalDepth, int goalWallWidth, int centerCircleRadius, int defenseRadius,
 			int defenseStretch, int freeKickFromDefenceDistance, int penaltySpotFromFieldLineDist,
 			int penaltyLineFromSpotDistance) {
-		boolean changed = false;
+		boolean goalChanged = false;
+		boolean fieldZoneChanged = false;
+		
 		if (this.lineWidth != lineWidth)
 			this.lineWidth = lineWidth;
-		if (this.height != fieldLength) {
-			this.height = fieldLength;
-			changed = true;
-		}
-		if (this.width != fieldWidth)
+		
+		if (this.width != fieldWidth) {
 			this.width = fieldWidth;
+			fieldZoneChanged = true;
+		}
+		
+		if (this.length != fieldLength) {
+			this.length = fieldLength;
+			fieldZoneChanged = true;
+			goalChanged = true;
+		}
+		
 		if (this.boundaryWidth != boundaryWidth)
 			this.boundaryWidth = boundaryWidth;
 		if (this.refereeWidth != refereeWidth)
 			this.refereeWidth = refereeWidth;
+		
 		if (this.goalWidth != goalWidth) {
 			this.goalWidth = goalWidth;
-			changed = true;
+			goalChanged = true;
 		}
+		
 		if (this.goalDepth != goalDepth) {
 			this.goalDepth = goalDepth;
-			changed = true;
+			goalChanged = true;
 		}
+		
 		if (this.goalWallWidth != goalWallWidth) {
 			this.goalWallWidth = goalWallWidth;
-			changed = true;
+			goalChanged = true;
 		}
+		
 		if (this.centerCircleRadius != centerCircleRadius)
 			this.centerCircleRadius = centerCircleRadius;
-		if (this.defenceRadius != defenseRadius)
+		
+		if (this.defenceRadius != defenseRadius) {
 			this.defenceRadius = defenseRadius;
-		if (this.defenceStretch != defenseStretch)
+			fieldZoneChanged = true;
+		}
+		
+		if (this.defenceStretch != defenseStretch) {
 			this.defenceStretch = defenseStretch;
+			fieldZoneChanged = true;
+		}
+		
 		if (this.freeKickFromDefenceDistance != freeKickFromDefenceDistance)
 			this.freeKickFromDefenceDistance = freeKickFromDefenceDistance;
 		if (this.penaltyLineFromSpotDistance != penaltyLineFromSpotDistance)
 			this.penaltyLineFromSpotDistance = penaltyLineFromSpotDistance;
 		if (this.penaltySpotFromFieldLineDistance != penaltySpotFromFieldLineDist)
 			this.penaltySpotFromFieldLineDistance = penaltySpotFromFieldLineDist;
-		if (changed)
+		if (goalChanged)
 			createGoals(goalWidth, goalDepth, goalWallWidth, goalHeight);
+		if (fieldZoneChanged)
+			FieldZone.FieldPointPaletteZones.update();
 	}
 
 	/**
@@ -111,8 +132,8 @@ public class Field {
 	 * goalWallWidth, goalHeigth, length
 	 */
 	private void createGoals(int goalWidth, int goalDepth, int goalWallWidth, int goalHeigth) {
-		FieldPoint frontNorth = new FieldPoint(width / 2, goalWidth / 2);
-		FieldPoint frontSouth = new FieldPoint(width / 2, goalWidth / -2);
+		FieldPoint frontNorth = new FieldPoint(length / 2, goalWidth / 2);
+		FieldPoint frontSouth = new FieldPoint(length / 2, goalWidth / -2);
 		FieldPoint backNorth = new FieldPoint(frontNorth.getX() + goalDepth, frontNorth.getY());
 		FieldPoint backSouth = new FieldPoint(frontSouth.getX() + goalDepth, frontSouth.getY());
 
@@ -127,15 +148,8 @@ public class Field {
 	/**
 	 * @return the length
 	 */
-	public int getHeight() {
-		return height;
-	}
-
-	/**
-	 * @param length the length to set
-	 */
-	public void setHeight(int height) {
-		this.height = height;
+	public int getLength() {
+		return length;
 	}
 
 	/**
@@ -143,13 +157,6 @@ public class Field {
 	 */
 	public int getWidth() {
 		return width;
-	}
-
-	/**
-	 * @param width the width to set
-	 */
-	public void setWidth(int width) {
-		this.width = width;
 	}
 
 	/**
@@ -293,9 +300,9 @@ public class Field {
 		this.cameraOverlapZoneWidth = cameraOverlapZoneWith;
 	}
 	
-	public void setFieldProportions(int width, int length, int lineWidth, int boundaryWidth, int refereeWidth) {
+	public void setFieldProportions(int length, int width, int lineWidth, int boundaryWidth, int refereeWidth) {
+		this.length = length;
 		this.width = width;
-		this.height = length;
 		this.lineWidth = lineWidth;
 		this.boundaryWidth = boundaryWidth;
 		this.refereeWidth = refereeWidth;
@@ -327,7 +334,7 @@ public class Field {
 
 	@Override
 	public String toString() {
-		return "Field [length=" + height + "\r\n width=" + width + "\r\n lineWidth=" + lineWidth
+		return "Field [length=" + length + "\r\n width=" + width + "\r\n lineWidth=" + lineWidth
 				+ "\r\n boundaryWidth=" + boundaryWidth + "\r\n refereeWidth=" + refereeWidth + "\r\n goalWidth="
 				+ goalWidth + "\r\n goalDepth=" + goalDepth + "\r\n goalWallWidth=" + goalWallWidth
 				+ "\r\n goalHeight=" + goalHeight + "\r\n centerCircleRadius=" + centerCircleRadius
