@@ -32,9 +32,6 @@ public class World extends Observable {
 
 	private int robotRadius = Robot.DIAMETER / 2;
 
-	private int fieldHeight;
-	private int fieldWidth;
-
 	private static final int TOTAL_TEAM_SIZE = 11;
 	private final int STOP_BALL_DISTANCE = 500; // in mm
 
@@ -69,7 +66,6 @@ public class World extends Observable {
 		// initialize all robots
 		allyTeam = new ArrayList<Robot>();
 		enemyTeam = new ArrayList<Robot>();
-		;
 
 		for (int i = 0; i < TOTAL_TEAM_SIZE; i++) {
 			allyTeam.add(new Ally(i, 150));
@@ -531,14 +527,14 @@ public class World extends Observable {
 	 * @param radius
 	 *            the radius of the circle
 	 */
-	public boolean areaContainsCircle(FieldPoint argPoint, FieldPoint[] areaPoly, double radius) {
+	private boolean areaContainsCircle(FieldPoint argPoint, FieldPoint[] areaPoly, double radius) {
 		boolean result = false;
 		if (argPoint != null){
 			for (int edges = 0; edges < areaPoly.length - 1; edges++) {
-				if (pointToLineDistance(new FieldPoint(areaPoly[edges].getX() + (fieldWidth / 2), areaPoly[edges].getY()
-					+ (fieldHeight / 2)), new FieldPoint(areaPoly[edges + 1].getX() + (fieldWidth / 2),
-					areaPoly[edges + 1].getY() + (fieldHeight / 2)), new FieldPoint(argPoint.getX() + (fieldWidth / 2),
-					argPoint.getY() + (fieldHeight / 2))) < radius) {
+				if (pointToLineDistance(new FieldPoint(areaPoly[edges].getX() + (field.getLength() / 2), areaPoly[edges].getY()
+					+ (field.getWidth() / 2)), new FieldPoint(areaPoly[edges + 1].getX() + (field.getLength() / 2),
+					areaPoly[edges + 1].getY() + (field.getWidth() / 2)), new FieldPoint(argPoint.getX() + (field.getLength() / 2),
+					argPoint.getY() + (field.getWidth() / 2))) < radius) {
 					result = true;
 				}
 			}

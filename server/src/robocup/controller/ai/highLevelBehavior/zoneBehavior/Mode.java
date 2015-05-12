@@ -169,7 +169,7 @@ public abstract class Mode {
 	 */
 	private void handlePenaltyKeeper(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof PenaltyKeeper))
-			executer.setLowLevelBehavior(new PenaltyKeeper(executer.getRobot(), world.getField().getWidth()));
+			executer.setLowLevelBehavior(new PenaltyKeeper(executer.getRobot(), world.getField().getLength()));
 		updatePenaltyKeeper(executer);
 	}
 
@@ -188,7 +188,7 @@ public abstract class Mode {
 	private void handleGoalPostCoverer(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof GoalPostCoverer)) {
 			double XPoint = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? world.getField()
-					.getWidth() / 2 : -world.getField().getWidth() / 2;
+					.getLength() / 2 : -world.getField().getLength() / 2;
 			double YPoint = ball.getPosition().getY() / Math.abs(ball.getPosition().getY())
 					* world.getField().getEastGoal().getWidth() / 4 * -1;
 

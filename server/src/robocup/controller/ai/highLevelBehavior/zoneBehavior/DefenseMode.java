@@ -180,7 +180,7 @@ public class DefenseMode extends Mode {
 		boolean goToKick = false;
 
 		double XPoint = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? world.getField()
-				.getWidth() / 2 : -world.getField().getWidth() / 2;
+				.getLength() / 2 : -world.getField().getLength() / 2;
 		double YPoint = ball.getPosition().getY() / Math.abs(ball.getPosition().getY())
 				* world.getField().getEastGoal().getWidth() / 4 * -1;
 		Robot enemyRobot = world.getClosestEnemyRobotToPoint(new FieldPoint(XPoint, YPoint));

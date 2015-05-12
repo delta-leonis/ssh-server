@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 import robocup.model.FieldPoint;
+import robocup.model.World;
 
 /**
  * An enumeration that describes zones on the field. The plan of the zones is
@@ -262,22 +263,41 @@ public enum FieldZone {
 				e.printStackTrace();
 			}
 		}
+		
 
-		private static final int height = Integer.parseInt(properties.getProperty("fullsize.height"));
-		private static final int width = Integer.parseInt(properties.getProperty("fullsize.width"));
-		private static final int defenceRadius = Integer.parseInt(properties.getProperty("fullsize.defenceRadius"));
-		private static final int defenceStretch = Integer.parseInt(properties.getProperty("fullsize.defenceStretch"));
+		private static int length = World.getInstance().getField().getLength();
+		private static int width = World.getInstance().getField().getWidth();
+		private static int defenceRadius = World.getInstance().getField().getDefenceRadius();
+		private static int defenceStretch = World.getInstance().getField().getDefenceStretch();
 
-		public static final FieldPoint a = new FieldPoint(width / 2, height / 2);
-		public static final FieldPoint b = new FieldPoint((width / 2 - defenceRadius) * 0.68, height / 2);
-		public static final FieldPoint c = new FieldPoint(0, height / 2);
-		public static final FieldPoint d = new FieldPoint(width / 2, defenceRadius + defenceStretch / 2);
-		public static final FieldPoint e = new FieldPoint(width / 2 - defenceRadius / 2, defenceRadius + defenceStretch / 2);
-		public static final FieldPoint f = new FieldPoint(width / 2 - defenceRadius, defenceStretch / 2 + defenceRadius * 0.4);
-		public static final FieldPoint g = new FieldPoint((width / 2 - defenceRadius) * 0.68, defenceStretch / 2 + defenceRadius * 0.4);
-		public static final FieldPoint h = new FieldPoint(0, defenceStretch / 2 + defenceRadius * 0.4);
-		public static final FieldPoint i = new FieldPoint(width / 2, 0);
-		public static final FieldPoint j = new FieldPoint(width / 2 - defenceRadius, 0);
+		public static FieldPoint a = new FieldPoint(length / 2, width / 2);
+		public static FieldPoint b = new FieldPoint((length / 2 - defenceRadius) * 0.68, width / 2);
+		public static FieldPoint c = new FieldPoint(0, width / 2);
+		public static FieldPoint d = new FieldPoint(length / 2, defenceRadius + defenceStretch / 2);
+		public static FieldPoint e = new FieldPoint(length / 2 - defenceRadius / 2, defenceRadius + defenceStretch / 2);
+		public static FieldPoint f = new FieldPoint(length / 2 - defenceRadius, defenceStretch / 2 + defenceRadius * 0.4);
+		public static FieldPoint g = new FieldPoint((length / 2 - defenceRadius) * 0.68, defenceStretch / 2 + defenceRadius * 0.4);
+		public static FieldPoint h = new FieldPoint(0, defenceStretch / 2 + defenceRadius * 0.4);
+		public static FieldPoint i = new FieldPoint(length / 2, 0);
+		public static FieldPoint j = new FieldPoint(length / 2 - defenceRadius, 0);
+		
+		public static void update() {
+			length = World.getInstance().getField().getLength();
+			width = World.getInstance().getField().getWidth();
+			defenceRadius = World.getInstance().getField().getDefenceRadius();
+			defenceStretch = World.getInstance().getField().getDefenceStretch();
+
+			a = new FieldPoint(length / 2, width / 2);
+			b = new FieldPoint((length / 2 - defenceRadius) * 0.68, width / 2);
+			c = new FieldPoint(0, width / 2);
+			d = new FieldPoint(length / 2, defenceRadius + defenceStretch / 2);
+			e = new FieldPoint(length / 2 - defenceRadius / 2, defenceRadius + defenceStretch / 2);
+			f = new FieldPoint(length / 2 - defenceRadius, defenceStretch / 2 + defenceRadius * 0.4);
+			g = new FieldPoint((length / 2 - defenceRadius) * 0.68, defenceStretch / 2 + defenceRadius * 0.4);
+			h = new FieldPoint(0, defenceStretch / 2 + defenceRadius * 0.4);
+			i = new FieldPoint(length / 2, 0);
+			j = new FieldPoint(length / 2 - defenceRadius, 0);
+		}
 
 		/**
 		 * @param point The {@link FieldPoint} that represents the point in the first quadrant.
