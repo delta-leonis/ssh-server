@@ -1,9 +1,5 @@
 package robocup.model.enums;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
-
 import robocup.model.FieldPoint;
 import robocup.model.World;
 
@@ -137,6 +133,129 @@ public enum FieldZone {
 			FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.c),
 			FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.c),
 			FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.a));
+	
+	public static void update() {
+		WEST_NORTH_CORNER.setVertices(
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.a),
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.b),
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.e),
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.d));
+		WEST_NORTH_SECONDPOST.setVertices(
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.e),
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.b),
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.g),
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.f));
+		WEST_NORTH_FRONT.setVertices(
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.b),
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.c),
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.h),
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.g));
+		WEST_NORTH_GOAL.setVertices(
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.d),
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.e),
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.f),
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.j),
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.i));
+
+		WEST_CENTER.setVertices(
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.f),
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.g),
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.g),
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.f));
+		WEST_MIDDLE.setVertices(
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.g),
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.h),
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.h),
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.g));
+
+		WEST_SOUTH_CORNER.setVertices(
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.a),
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.b),
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.e),
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.d));
+		WEST_SOUTH_SECONDPOST.setVertices(
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.b),
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.g),
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.f),
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.e));
+		WEST_SOUTH_FRONT.setVertices(
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.b),
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.c),
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.h),
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.g));
+		WEST_SOUTH_GOAL.setVertices(
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.i),
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.j),
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.f),
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.e),
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.d));
+
+		EAST_NORTH_CORNER.setVertices(
+				FieldPointPaletteZones.a,
+				FieldPointPaletteZones.b,
+				FieldPointPaletteZones.e,
+				FieldPointPaletteZones.d);
+		EAST_NORTH_SECONDPOST.setVertices(
+				FieldPointPaletteZones.e,
+				FieldPointPaletteZones.b,
+				FieldPointPaletteZones.g,
+				FieldPointPaletteZones.f);
+		EAST_NORTH_FRONT.setVertices(
+				FieldPointPaletteZones.b,
+				FieldPointPaletteZones.c,
+				FieldPointPaletteZones.h,
+				FieldPointPaletteZones.g);
+		EAST_NORTH_GOAL.setVertices(
+				FieldPointPaletteZones.d,
+				FieldPointPaletteZones.e,
+				FieldPointPaletteZones.f,
+				FieldPointPaletteZones.j,
+				FieldPointPaletteZones.i);
+
+		EAST_CENTER.setVertices(
+				FieldPointPaletteZones.f,
+				FieldPointPaletteZones.g,
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.g),
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.f));
+		EAST_MIDDLE.setVertices(
+				FieldPointPaletteZones.g,
+				FieldPointPaletteZones.h,
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.h),
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.g));
+
+		EAST_SOUTH_CORNER.setVertices(
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.a),
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.b),
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.e),
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.d));
+		EAST_SOUTH_SECONDPOST.setVertices(
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.b),
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.g),
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.f),
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.e));
+		EAST_SOUTH_FRONT.setVertices(
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.b),
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.c),
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.h),
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.g));
+		EAST_SOUTH_GOAL.setVertices(
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.i),
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.j),
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.f),
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.e),
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.d));
+
+		EAST.setVertices(
+				FieldPointPaletteZones.a,
+				FieldPointPaletteZones.c,
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.c),
+				FieldPointPaletteZones.getFourthQuadrant(FieldPointPaletteZones.a));
+		WEST.setVertices(
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.a),
+				FieldPointPaletteZones.getSecondQuadrant(FieldPointPaletteZones.c),
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.c),
+				FieldPointPaletteZones.getThirdQuadrant(FieldPointPaletteZones.a));
+	}
 
 	private FieldPoint[] vertices;
 
@@ -147,6 +266,10 @@ public enum FieldZone {
 	 */
 	FieldZone(FieldPoint... points) {
 		vertices = points;
+	}
+
+	public void setVertices(FieldPoint... vertices) {
+		this.vertices = vertices;
 	}
 
 	/**
@@ -255,16 +378,6 @@ public enum FieldZone {
 	 * <img src="../../../../images/zones.jpg" />
 	 */
 	public static class FieldPointPaletteZones {
-		private static final Properties properties = new Properties();
-		static {
-			try {
-				properties.load(new FileInputStream("config/field.properties"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-
 		private static int length = World.getInstance().getField().getLength();
 		private static int width = World.getInstance().getField().getWidth();
 		private static int defenceRadius = World.getInstance().getField().getDefenceRadius();

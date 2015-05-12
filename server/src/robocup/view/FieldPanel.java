@@ -34,9 +34,6 @@ public class FieldPanel extends JPanel {
 
 	private static double RATIO = 0.10;
 
-	private static int FIELDLENGTH_GUI = (int)(World.getInstance().getField().getLength()*RATIO);
-	private static int FIELDWIDTH_GUI = (int)(World.getInstance().getField().getWidth()*RATIO);
-
 	private static int spaceBufferX = 140;
 	private static int spaceBufferY = 30;
 
@@ -60,7 +57,7 @@ public class FieldPanel extends JPanel {
 	 * the ball position.
 	 */
 	public FieldPanel() {
-		setSize(FIELDLENGTH_GUI, FIELDWIDTH_GUI);
+		setSize((int) (World.getInstance().getField().getLength()*RATIO), (int) (World.getInstance().getField().getWidth()*RATIO));
 		showFreeShot = false;
 		showRaster = false;
 		updateCounter = 0;
@@ -83,7 +80,7 @@ public class FieldPanel extends JPanel {
 	 * @return width of the {@link JFrame} the {@link FieldPanel} should be in.
 	 */
 	public int getFrameSizeX() {
-		return FIELDLENGTH_GUI + spaceBufferX*2;
+		return (int) (World.getInstance().getField().getLength()*RATIO + spaceBufferX*2);
 	}
 
 	/**
@@ -91,7 +88,7 @@ public class FieldPanel extends JPanel {
 	 * @return height of the {@link JFrame} the {@link FieldPanel} should be in.
 	 */
 	public int getFrameSizeY() {
-		return FIELDWIDTH_GUI + spaceBufferY*2;
+		return (int) (World.getInstance().getField().getWidth()*RATIO + spaceBufferY*2);
 	}
 	/**
 	 * Paints the whole screen/field green. Draws the pitch by calling {@link FieldPanel#drawPlayfield(Graphics, double)}.
@@ -176,51 +173,51 @@ public class FieldPanel extends JPanel {
 		int lineWidth = Math.max(1, (int) (world.getField().getLineWidth() * ratio));
 		g2.setStroke(new BasicStroke(lineWidth));
 
-		int width = (int) (world.getField().getLength() * ratio);
-		int height = (int) (world.getField().getWidth() * ratio);
+		int length = (int) (world.getField().getLength() * ratio);
+		int width = (int) (world.getField().getWidth() * ratio);
 		int penalRadius = (int) (world.getField().getDefenceRadius() * ratio);
 		int penalStretch = (int) (world.getField().getDefenceStretch() * ratio);
 		int centerRadius = (int) (world.getField().getCenterCircleRadius() * ratio);
 
 		// center line
 		g.setColor(Color.WHITE);
-		g2.drawLine(width / 2 + spaceBufferX, 0 + spaceBufferY, width / 2 + spaceBufferX, height + spaceBufferY);
+		g2.drawLine(length / 2 + spaceBufferX, 0 + spaceBufferY, length / 2 + spaceBufferX, width + spaceBufferY);
 
 		// borders
-		g2.drawLine(spaceBufferX, spaceBufferY, width + spaceBufferX, spaceBufferY);
-		g2.drawLine(spaceBufferX, height + spaceBufferY, width + spaceBufferX, height + spaceBufferY);
-		g2.drawLine(spaceBufferX, spaceBufferY, spaceBufferX, height + spaceBufferY);
-		g2.drawLine(width + spaceBufferX, spaceBufferY, width + spaceBufferX, height + spaceBufferY);
+		g2.drawLine(spaceBufferX, spaceBufferY, length + spaceBufferX, spaceBufferY);
+		g2.drawLine(spaceBufferX, width + spaceBufferY, length + spaceBufferX, width + spaceBufferY);
+		g2.drawLine(spaceBufferX, spaceBufferY, spaceBufferX, width + spaceBufferY);
+		g2.drawLine(length + spaceBufferX, spaceBufferY, length + spaceBufferX, width + spaceBufferY);
 
 		// center circle
-		g2.drawArc(width / 2 - centerRadius + spaceBufferX, height / 2 - centerRadius + spaceBufferY, centerRadius * 2,
+		g2.drawArc(length / 2 - centerRadius + spaceBufferX, width / 2 - centerRadius + spaceBufferY, centerRadius * 2,
 				centerRadius * 2, 0, 360);
 
 		// draw west penalty area
-		g2.drawArc(spaceBufferX - penalRadius, height / 2 - penalRadius - penalStretch / 2 + spaceBufferY,
+		g2.drawArc(spaceBufferX - penalRadius, width / 2 - penalRadius - penalStretch / 2 + spaceBufferY,
 				(int) (penalRadius * 2), (int) (penalRadius * 2), 0, 90);
-		g2.drawArc(spaceBufferX - penalRadius, height / 2 - penalRadius + penalStretch / 2 + spaceBufferY,
+		g2.drawArc(spaceBufferX - penalRadius, width / 2 - penalRadius + penalStretch / 2 + spaceBufferY,
 				(int) (penalRadius * 2), (int) (penalRadius * 2), 0, -90);
-		g2.drawLine(spaceBufferX + penalRadius, height / 2 - penalStretch / 2 + spaceBufferY, spaceBufferX
-				+ penalRadius, height / 2 + penalStretch / 2 + spaceBufferY);
+		g2.drawLine(spaceBufferX + penalRadius, width / 2 - penalStretch / 2 + spaceBufferY, spaceBufferX
+				+ penalRadius, width / 2 + penalStretch / 2 + spaceBufferY);
 
 		// draw east penalty area
-		g2.drawArc(width + spaceBufferX - penalRadius, height / 2 - penalRadius - penalStretch / 2 + spaceBufferY,
+		g2.drawArc(length + spaceBufferX - penalRadius, width / 2 - penalRadius - penalStretch / 2 + spaceBufferY,
 				(int) (penalRadius * 2), (int) (penalRadius * 2), 180, -90);
-		g2.drawArc(width + spaceBufferX - penalRadius, height / 2 - penalRadius + penalStretch / 2 + spaceBufferY,
+		g2.drawArc(length + spaceBufferX - penalRadius, width / 2 - penalRadius + penalStretch / 2 + spaceBufferY,
 				(int) (penalRadius * 2), (int) (penalRadius * 2), 180, 90);
-		g2.drawLine(width + spaceBufferX - penalRadius, height / 2 - penalStretch / 2 + spaceBufferY, width
-				+ spaceBufferX - penalRadius, height / 2 + penalStretch / 2 + spaceBufferY);
+		g2.drawLine(length + spaceBufferX - penalRadius, width / 2 - penalStretch / 2 + spaceBufferY, length
+				+ spaceBufferX - penalRadius, width / 2 + penalStretch / 2 + spaceBufferY);
 
 		// west penalty spot
 		g2.drawArc((int) (world.getField().getPenaltyLineFromSpotDistance() * ratio) + spaceBufferX - 1,
 				(int) ((new FieldPoint(0, 0)).toGUIPoint(ratio).getY()) + spaceBufferY - 1, 3, 3, 0, 360);
 		// east penalty spot
-		g2.drawArc(width - ((int) (world.getField().getPenaltyLineFromSpotDistance() * ratio)) + spaceBufferX - 1,
+		g2.drawArc(length - ((int) (world.getField().getPenaltyLineFromSpotDistance() * ratio)) + spaceBufferX - 1,
 				(int) ((new FieldPoint(0, 0)).toGUIPoint(ratio).getY()) + spaceBufferY - 1, 3, 3, 0, 360);
 
 		// center spot
-		g2.drawArc(width / 2 + spaceBufferX - 1, height / 2 + spaceBufferY - 1, 3, 3, 0, 360);
+		g2.drawArc(length / 2 + spaceBufferX - 1, width / 2 + spaceBufferY - 1, 3, 3, 0, 360);
 
 		// goals
 		g2.setStroke(new BasicStroke(10));
