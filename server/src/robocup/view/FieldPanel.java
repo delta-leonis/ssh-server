@@ -24,6 +24,7 @@ import robocup.model.Robot;
 import robocup.model.Team;
 import robocup.model.World;
 import robocup.model.enums.FieldZone;
+import robocup.model.enums.TeamColor;
 
 /**
  * {@link FieldPanel} is a {@link JPanel} that shows the field.
@@ -223,14 +224,22 @@ public class FieldPanel extends JPanel {
 
 		// goals
 		g2.setStroke(new BasicStroke(10));
-		g2.drawLine((int) world.getField().getWestGoal().getFrontSouth().toGUIPoint(ratio).getX() + spaceBufferX - 5,
-				(int) world.getField().getWestGoal().getFrontSouth().toGUIPoint(ratio).getY() + spaceBufferY,
-				(int) world.getField().getWestGoal().getFrontNorth().toGUIPoint(ratio).getX() + spaceBufferX - 5,
-				(int) world.getField().getWestGoal().getFrontNorth().toGUIPoint(ratio).getY() + spaceBufferY);
+		if (World.getInstance().getReferee().getEastTeam().isColor(TeamColor.YELLOW))
+			g.setColor(Color.YELLOW);
+		else
+			g.setColor(Color.BLUE);
 		g2.drawLine((int) world.getField().getEastGoal().getFrontSouth().toGUIPoint(ratio).getX() + spaceBufferX + 5,
 				(int) world.getField().getEastGoal().getFrontSouth().toGUIPoint(ratio).getY() + spaceBufferY,
 				(int) world.getField().getEastGoal().getFrontNorth().toGUIPoint(ratio).getX() + spaceBufferX + 5,
 				(int) world.getField().getEastGoal().getFrontNorth().toGUIPoint(ratio).getY() + spaceBufferY);
+		if (World.getInstance().getReferee().getEastTeam().isColor(TeamColor.YELLOW))
+			g.setColor(Color.BLUE);
+		else
+			g.setColor(Color.YELLOW);
+		g2.drawLine((int) world.getField().getWestGoal().getFrontSouth().toGUIPoint(ratio).getX() + spaceBufferX - 5,
+				(int) world.getField().getWestGoal().getFrontSouth().toGUIPoint(ratio).getY() + spaceBufferY,
+				(int) world.getField().getWestGoal().getFrontNorth().toGUIPoint(ratio).getX() + spaceBufferX - 5,
+				(int) world.getField().getWestGoal().getFrontNorth().toGUIPoint(ratio).getY() + spaceBufferY);
 		
 	}
 	

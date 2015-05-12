@@ -42,38 +42,28 @@ import robocup.view.sections.VisibleRobotSection;
 public class GUI extends JFrame {
 
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
-	private JPanel robotContainer;
+	private JPanel robotContainer,
+				   rightContainer,
+				   leftContainer,
+				   sectionContainer;
+	private JScrollPane scrollPane;
 	private int selectedRobotId = 0;
 	private ArrayList<RobotBox> allRobotBoxes = new ArrayList<RobotBox>();
 	private Timer updateTimer;
 	private int updateFrequency = 30; //update frequency in Hertz
 
-
-	JPanel rightContainer;
-	JPanel leftContainer;
-	JPanel sectionContainer;
-	JScrollPane scrollPane;
 	/**
 	 * Build the GUI elements
 	 */
 	public GUI() {
 		setLookAndFeel();
-		rightContainer = new JPanel();
-		leftContainer = new JPanel();
-		sectionContainer = new JPanel();
-		sectionContainer.setLayout(new MigLayout("wrap 1", "[grow]"));
 		setLayout(new MigLayout("wrap 2", "[550][grow]", "[][grow]"));
-		scrollPane = new JScrollPane(sectionContainer);
-		scrollPane.setBorder(null);
-		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-		add(leftContainer, "growy");
-		rightContainer.setLayout(new MigLayout("wrap 1", "[grow]"));
-		rightContainer.add(scrollPane, "growx");
-		add(rightContainer, "growx");
 
-		initRobotContainer();
-		initSectionContainer();
-		initConsoleContainer();
+		initLeftContainer();
+		initRightContainer();
+
+		add(leftContainer, "growy");
+		add(rightContainer, "growx");
 
 		setTitle("User interface RoboCup SSH");
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -84,8 +74,30 @@ public class GUI extends JFrame {
 		updateTimer.schedule(new updateGUITask(), 1000/updateFrequency);
 	}
 
-	
-	private void initConsoleContainer(){
+	/**
+	 * Initialize leftContainer and all components 
+	 */
+	private void initLeftContainer(){
+		leftContainer = new JPanel();
+		leftContainer.setLayout(new MigLayout("wrap 1", "[550]"));
+		leftContainer.add(new GameStatusSection(), "growx");
+		leftContainer.add(new VisibleRobotSection(), "growx");
+		initRobotContainer();
+	}
+	/**
+	 * Initialize rightContainer and all components 
+	 */
+	private void initRightContainer(){
+		rightContainer = new JPanel();
+		rightContainer.setLayout(new MigLayout("wrap 1", "[grow]"));
+
+		initSectionContainer();
+
+		scrollPane = new JScrollPane(sectionContainer);
+		scrollPane.setBorder(null);
+		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
+
+		rightContainer.add(scrollPane, "growx");
 		rightContainer.add(new ConsoleSection(), "growx, growy");
 	}
 	
@@ -137,28 +149,23 @@ public class GUI extends JFrame {
 	 * Adds all {@link SectionBox}es to a {@link JPanel} on the right of the GUI
 	 */
 	private void initSectionContainer() {
+		sectionContainer = new JPanel();
 		sectionContainer.setLayout(new MigLayout("wrap 1", "[grow]"));
-		//sectionContainer.setBorder(BorderFactory.createTitledBorder("Sections"));
-		//sectionContainer.setLayout(new MigLayout("wrap 1", "[grow]"));
 
 		sectionContainer.add(new SettingsSection(), "growx");
 		sectionContainer.add(new FieldControlSection(), "growx");
-//		rightContainer.add(new PathPlannerTestSection(), "growx");	// Comment "World.getInstance().getGUI().update("robotContainer");" in Main.initTeams() for this section to work.
-//		rightContainer.add(new ControlRobotPacketTestSection(), "growx");
+		//rightContainer.add(new PathPlannerTestSection(), "growx");	// Comment "World.getInstance().getGUI().update("robotContainer");" in Main.initTeams() for this section to work.
+		//rightContainer.add(new ControlRobotPacketTestSection(), "growx");
+		//rightContainer.add(new PenguinSection(), "growx, growy");
 		sectionContainer.add(new ControlRobotSection(), "growx");
-	//	rightContainer.add(new PenguinSection(), "growx, growy");
 		sectionContainer.add(new RotateRobotSection(), "growx");
-
 		sectionContainer.add(new ValidRobotSection(), "growx");
 	}
-
+	
 	/**
 	 * Adds all {@link RobotBox} to a {@link JPanel} on the left
 	 */
 	private void initRobotContainer() {
-		JPanel wrapper = new JPanel();
-		wrapper.setLayout(new MigLayout("wrap 1", "[grow]", "[][][grow][]"));
-		
 		robotContainer = new JPanel();
 		robotContainer.setLayout(new MigLayout("wrap 2", "[250]related[250]"));
 		robotContainer.setBorder(BorderFactory.createTitledBorder("Robots"));
@@ -174,10 +181,7 @@ public class GUI extends JFrame {
 		}
 
 		robotContainer.add(new JPanel(), "growy, span 2");
-		wrapper.add(new GameStatusSection(), "growx");
-		wrapper.add(new VisibleRobotSection(), "growx");
-		wrapper.add(robotContainer, "growx");
-		leftContainer.add(wrapper, "growy");
+		leftContainer.add(robotContainer, "growx");
 	}
 
 	/**
@@ -248,7 +252,7 @@ public class GUI extends JFrame {
 		case "sectionContainer":
 			for (Component item : rightContainer.getComponents()) {
 				if (item instanceof SectionBox){
-					LOGGER.fine("Updated: " + ((TitledBorder)(((SectionBox) item).getBorder())).getTitle());
+					LOGGER.fine("Updated: " + ((SectionBox) item).getTitle());
 					((SectionBox) item).update();
 				}
 			}

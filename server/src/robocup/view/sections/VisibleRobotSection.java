@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.model.Robot;
