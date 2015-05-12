@@ -48,8 +48,8 @@ public class FieldPoint {
 	 * @return The {@link FieldPoint} translated to a {@link Point2D.Double} for GUI use.
 	 */
 	public Point2D.Double toGUIPoint(double ratio) {
-		return new Point2D.Double((x+(World.getInstance().getField().getWidth()/2))*ratio,
-				(-1*y+World.getInstance().getField().getHeight()/2)*ratio);
+		return new Point2D.Double((x+(World.getInstance().getField().getLength()/2))*ratio,
+				(-1*y+World.getInstance().getField().getWidth()/2)*ratio);
 	}
 	
 	/**

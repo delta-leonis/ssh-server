@@ -143,7 +143,7 @@ public class StandardMode extends Mode {
 				if (robot.getPosition().getY() == maxY) {
 					FieldPoint point = FieldZone.WEST_NORTH_SECONDPOST.getCenterPoint();
 
-					point.setX(Math.max(point.getX(), -world.getField().getWidth() / 2
+					point.setX(Math.max(point.getX(), -world.getField().getLength() / 2
 							+ world.getField().getPenaltyLineFromSpotDistance()
 							+ world.getField().getPenaltySpotFromFieldLineDistance()));
 
@@ -151,7 +151,7 @@ public class StandardMode extends Mode {
 				} else {
 					FieldPoint point = FieldZone.WEST_SOUTH_SECONDPOST.getCenterPoint();
 
-					point.setX(Math.max(point.getX(), -world.getField().getWidth() / 2
+					point.setX(Math.max(point.getX(), -world.getField().getLength() / 2
 							+ world.getField().getPenaltyLineFromSpotDistance()
 							+ world.getField().getPenaltySpotFromFieldLineDistance()));
 
@@ -161,7 +161,7 @@ public class StandardMode extends Mode {
 				if (robot.getPosition().getY() == maxY) {
 					FieldPoint point = FieldZone.EAST_NORTH_SECONDPOST.getCenterPoint();
 
-					point.setX(Math.max(point.getX(), world.getField().getWidth() / 2
+					point.setX(Math.max(point.getX(), world.getField().getLength() / 2
 							- world.getField().getPenaltyLineFromSpotDistance()
 							- world.getField().getPenaltySpotFromFieldLineDistance()));
 
@@ -169,7 +169,7 @@ public class StandardMode extends Mode {
 				} else {
 					FieldPoint point = FieldZone.EAST_SOUTH_SECONDPOST.getCenterPoint();
 
-					point.setX(Math.max(point.getX(), world.getField().getWidth() / 2
+					point.setX(Math.max(point.getX(), world.getField().getLength() / 2
 							- world.getField().getPenaltyLineFromSpotDistance()
 							- world.getField().getPenaltySpotFromFieldLineDistance()));
 
@@ -288,7 +288,7 @@ public class StandardMode extends Mode {
 		boolean goToKick = false;
 
 		double XPoint = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? world.getField()
-				.getWidth() / 2 : -world.getField().getWidth() / 2;
+				.getLength() / 2 : -world.getField().getLength() / 2;
 		double YPoint = ball.getPosition().getY() / Math.abs(ball.getPosition().getY())
 				* world.getField().getEastGoal().getWidth() / 4 * -1;
 		Robot enemyRobot = world.getClosestEnemyRobotToPoint(new FieldPoint(XPoint, YPoint));

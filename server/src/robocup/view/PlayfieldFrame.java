@@ -29,8 +29,8 @@ public class PlayfieldFrame extends JPanel {
 
 	private static double RATIO = 0.10;
 
+	private static int FIELDLENGTH_GUI = (int)(World.getInstance().getField().getLength()*RATIO);
 	private static int FIELDWIDTH_GUI = (int)(World.getInstance().getField().getWidth()*RATIO);
-	private static int FIELDHEIGHT_GUI = (int)(World.getInstance().getField().getHeight()*RATIO);
 
 	private static int spaceBufferX = 15;
 	private static int spaceBufferY = 35;
@@ -39,7 +39,7 @@ public class PlayfieldFrame extends JPanel {
 
 	public static void main(String [] args) {
 		JFrame frame = new JFrame();	
-		frame.setSize(FIELDWIDTH_GUI + spaceBufferX, FIELDHEIGHT_GUI + spaceBufferY);
+		frame.setSize(FIELDLENGTH_GUI + spaceBufferX, FIELDWIDTH_GUI + spaceBufferY);
 		frame.setContentPane(new PlayfieldFrame());
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -50,7 +50,7 @@ public class PlayfieldFrame extends JPanel {
 	 * the ball position and a situation is initialized via {@link #initFieldObjects()}.
 	 */
 	public PlayfieldFrame() {
-		setSize(FIELDWIDTH_GUI, FIELDHEIGHT_GUI);
+		setSize(FIELDLENGTH_GUI, FIELDWIDTH_GUI);
 		initFieldObjects();
 		
 		addMouseListener(new MouseAdapter() {
@@ -330,8 +330,8 @@ public class PlayfieldFrame extends JPanel {
 		g2.drawLine(getHeight() / 20 + 5, 15, getHeight() / 20 + getHeight() / 10 - 5, 15);
 		g2.drawLine(getHeight() / 20 + 5, 10, getHeight() / 20 + 5, 20);
 		g2.drawLine(getHeight() / 20 + getHeight() / 10 - 5, 10, getHeight() / 20 + getHeight() / 10 - 5, 20);
-		String sizeDesc = String.format("%.1fcm", (double) FIELDWIDTH_GUI / RATIO
-				/ (double) (FIELDWIDTH_GUI / RATIO / (FIELDHEIGHT_GUI / RATIO / 10)) / 10);
+		String sizeDesc = String.format("%.1fcm", (double) FIELDLENGTH_GUI / RATIO
+				/ (double) (FIELDLENGTH_GUI / RATIO / (FIELDWIDTH_GUI / RATIO / 10)) / 10);
 		g2.drawString(sizeDesc, getHeight() / 10 + 5 - sizeDesc.length() * 7 / 2, 30);
 	}
 
