@@ -67,10 +67,23 @@ public class Keeper extends LowLevelBehavior {
 	 * @return the new keeper destination
 	 */
 	protected FieldPoint getNewKeeperDestination(FieldPoint objectPosition, FieldPoint subjectPosition, int distance) {
+		return getNewKeeperDestination(objectPosition, subjectPosition, distance, 0);
+	}
+	
+	/**
+	 * Calculate a new Keeper destination.
+	 * The destination will be a point between the object and the subject position with a specified distance to the object position.
+	 * @param objectPosition the position of the point this keeper is defending.
+	 * @param subjectPosition the point which needs to be blocked
+	 * @param distance the distance to the object position
+	 * @param offset the offset for this keeper in degrees
+	 * @return the new keeper destination
+	 */
+	protected FieldPoint getNewKeeperDestination(FieldPoint objectPosition, FieldPoint subjectPosition, int distance, int offset) {
 		FieldPoint newDestination = null;
 
 		if (objectPosition != null && subjectPosition != null) {
-			double angle = objectPosition.getAngle(subjectPosition);
+			double angle = objectPosition.getAngle(subjectPosition) + offset;
 			double dx = Math.cos(Math.toRadians(angle)) * distance;
 			double dy = Math.sin(Math.toRadians(angle)) * distance;
 
