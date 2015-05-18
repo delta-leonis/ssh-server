@@ -1,23 +1,17 @@
 package robocup.test.testBehaviors;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
-import robocup.Main;
 import robocup.controller.ai.highLevelBehavior.Behavior;
 import robocup.controller.ai.highLevelBehavior.strategy.defense.BarricadeDefending;
-import robocup.controller.ai.highLevelBehavior.zoneBehavior.DefenseMode;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.Mode;
 import robocup.controller.ai.lowLevelBehavior.Attacker;
-import robocup.controller.ai.lowLevelBehavior.KeeperDefender;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.FieldPoint;
 import robocup.model.World;
-import robocup.model.enums.RobotMode;
 
 public class TestBehaviour extends Behavior {
 
-	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private World world;
 	private Mode currentMode; // AttackMode or DefenseMode
 

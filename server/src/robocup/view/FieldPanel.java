@@ -34,12 +34,6 @@ public class FieldPanel extends JPanel {
 
 	private static double RATIO = 0.10;
 
-	private static int FIELDWIDTH = World.getInstance().getField().getWidth();
-	private static int FIELDHEIGHT = World.getInstance().getField().getHeight();
-
-	private static int FIELDWIDTH_GUI = (int)(World.getInstance().getField().getWidth()*RATIO);
-	private static int FIELDHEIGHT_GUI = (int)(World.getInstance().getField().getHeight()*RATIO);
-
 	private static int spaceBufferX = 140;
 	private static int spaceBufferY = 30;
 
@@ -63,7 +57,7 @@ public class FieldPanel extends JPanel {
 	 * the ball position.
 	 */
 	public FieldPanel() {
-		setSize(FIELDWIDTH_GUI, FIELDHEIGHT_GUI);
+		setSize((int) (World.getInstance().getField().getLength()*RATIO), (int) (World.getInstance().getField().getWidth()*RATIO));
 		showFreeShot = false;
 		showRaster = false;
 		updateCounter = 0;
@@ -71,9 +65,9 @@ public class FieldPanel extends JPanel {
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent me) {
 				double ratio = (double)((SwingUtilities.getWindowAncestor(me.getComponent())).getWidth() - spaceBufferX * 2)
-						/ (double)FIELDWIDTH;
-				double x = - FIELDWIDTH / 2 + (me.getX() - spaceBufferX) / ratio;
-				double y = -1 * (- (FIELDHEIGHT) / 2 + (me.getY() - spaceBufferY) / ratio);
+						/ (double) world.getField().getLength();
+				double x = - world.getField().getLength() / 2 + (me.getX() - spaceBufferX) / ratio;
+				double y = -1 * (- (world.getField().getWidth()) / 2 + (me.getY() - spaceBufferY) / ratio);
 				world.getBall().setPosition(new FieldPoint(x, y));
 				repaint();
 			}
@@ -86,7 +80,7 @@ public class FieldPanel extends JPanel {
 	 * @return width of the {@link JFrame} the {@link FieldPanel} should be in.
 	 */
 	public int getFrameSizeX() {
-		return FIELDWIDTH_GUI + spaceBufferX*2;
+		return (int) (World.getInstance().getField().getLength()*RATIO + spaceBufferX*2);
 	}
 
 	/**
@@ -94,7 +88,7 @@ public class FieldPanel extends JPanel {
 	 * @return height of the {@link JFrame} the {@link FieldPanel} should be in.
 	 */
 	public int getFrameSizeY() {
-		return FIELDHEIGHT_GUI + spaceBufferY*2;
+		return (int) (World.getInstance().getField().getWidth()*RATIO + spaceBufferY*2);
 	}
 	/**
 	 * Paints the whole screen/field green. Draws the pitch by calling {@link FieldPanel#drawPlayfield(Graphics, double)}.
@@ -107,7 +101,7 @@ public class FieldPanel extends JPanel {
 		g.fillRect(0, 0, getWidth(), getHeight());
 
 		double ratio = (double)((SwingUtilities.getWindowAncestor(this)).getWidth() - spaceBufferX * 2)
-				/ (double)FIELDWIDTH;
+				/ (double) world.getField().getLength();
 
 		drawRaster(g, ratio);
 		if (showZones)
@@ -179,51 +173,51 @@ public class FieldPanel extends JPanel {
 		int lineWidth = Math.max(1, (int) (world.getField().getLineWidth() * ratio));
 		g2.setStroke(new BasicStroke(lineWidth));
 
-		int width = (int) (FIELDWIDTH * ratio);
-		int height = (int) (FIELDHEIGHT * ratio);
+		int length = (int) (world.getField().getLength() * ratio);
+		int width = (int) (world.getField().getWidth() * ratio);
 		int penalRadius = (int) (world.getField().getDefenceRadius() * ratio);
 		int penalStretch = (int) (world.getField().getDefenceStretch() * ratio);
 		int centerRadius = (int) (world.getField().getCenterCircleRadius() * ratio);
 
 		// center line
 		g.setColor(Color.WHITE);
-		g2.drawLine(width / 2 + spaceBufferX, 0 + spaceBufferY, width / 2 + spaceBufferX, height + spaceBufferY);
+		g2.drawLine(length / 2 + spaceBufferX, 0 + spaceBufferY, length / 2 + spaceBufferX, width + spaceBufferY);
 
 		// borders
-		g2.drawLine(spaceBufferX, spaceBufferY, width + spaceBufferX, spaceBufferY);
-		g2.drawLine(spaceBufferX, height + spaceBufferY, width + spaceBufferX, height + spaceBufferY);
-		g2.drawLine(spaceBufferX, spaceBufferY, spaceBufferX, height + spaceBufferY);
-		g2.drawLine(width + spaceBufferX, spaceBufferY, width + spaceBufferX, height + spaceBufferY);
+		g2.drawLine(spaceBufferX, spaceBufferY, length + spaceBufferX, spaceBufferY);
+		g2.drawLine(spaceBufferX, width + spaceBufferY, length + spaceBufferX, width + spaceBufferY);
+		g2.drawLine(spaceBufferX, spaceBufferY, spaceBufferX, width + spaceBufferY);
+		g2.drawLine(length + spaceBufferX, spaceBufferY, length + spaceBufferX, width + spaceBufferY);
 
 		// center circle
-		g2.drawArc(width / 2 - centerRadius + spaceBufferX, height / 2 - centerRadius + spaceBufferY, centerRadius * 2,
+		g2.drawArc(length / 2 - centerRadius + spaceBufferX, width / 2 - centerRadius + spaceBufferY, centerRadius * 2,
 				centerRadius * 2, 0, 360);
 
 		// draw west penalty area
-		g2.drawArc(spaceBufferX - penalRadius, height / 2 - penalRadius - penalStretch / 2 + spaceBufferY,
+		g2.drawArc(spaceBufferX - penalRadius, width / 2 - penalRadius - penalStretch / 2 + spaceBufferY,
 				(int) (penalRadius * 2), (int) (penalRadius * 2), 0, 90);
-		g2.drawArc(spaceBufferX - penalRadius, height / 2 - penalRadius + penalStretch / 2 + spaceBufferY,
+		g2.drawArc(spaceBufferX - penalRadius, width / 2 - penalRadius + penalStretch / 2 + spaceBufferY,
 				(int) (penalRadius * 2), (int) (penalRadius * 2), 0, -90);
-		g2.drawLine(spaceBufferX + penalRadius, height / 2 - penalStretch / 2 + spaceBufferY, spaceBufferX
-				+ penalRadius, height / 2 + penalStretch / 2 + spaceBufferY);
+		g2.drawLine(spaceBufferX + penalRadius, width / 2 - penalStretch / 2 + spaceBufferY, spaceBufferX
+				+ penalRadius, width / 2 + penalStretch / 2 + spaceBufferY);
 
 		// draw east penalty area
-		g2.drawArc(width + spaceBufferX - penalRadius, height / 2 - penalRadius - penalStretch / 2 + spaceBufferY,
+		g2.drawArc(length + spaceBufferX - penalRadius, width / 2 - penalRadius - penalStretch / 2 + spaceBufferY,
 				(int) (penalRadius * 2), (int) (penalRadius * 2), 180, -90);
-		g2.drawArc(width + spaceBufferX - penalRadius, height / 2 - penalRadius + penalStretch / 2 + spaceBufferY,
+		g2.drawArc(length + spaceBufferX - penalRadius, width / 2 - penalRadius + penalStretch / 2 + spaceBufferY,
 				(int) (penalRadius * 2), (int) (penalRadius * 2), 180, 90);
-		g2.drawLine(width + spaceBufferX - penalRadius, height / 2 - penalStretch / 2 + spaceBufferY, width
-				+ spaceBufferX - penalRadius, height / 2 + penalStretch / 2 + spaceBufferY);
+		g2.drawLine(length + spaceBufferX - penalRadius, width / 2 - penalStretch / 2 + spaceBufferY, length
+				+ spaceBufferX - penalRadius, width / 2 + penalStretch / 2 + spaceBufferY);
 
 		// west penalty spot
 		g2.drawArc((int) (world.getField().getPenaltyLineFromSpotDistance() * ratio) + spaceBufferX - 1,
 				(int) ((new FieldPoint(0, 0)).toGUIPoint(ratio).getY()) + spaceBufferY - 1, 3, 3, 0, 360);
 		// east penalty spot
-		g2.drawArc(width - ((int) (world.getField().getPenaltyLineFromSpotDistance() * ratio)) + spaceBufferX - 1,
+		g2.drawArc(length - ((int) (world.getField().getPenaltyLineFromSpotDistance() * ratio)) + spaceBufferX - 1,
 				(int) ((new FieldPoint(0, 0)).toGUIPoint(ratio).getY()) + spaceBufferY - 1, 3, 3, 0, 360);
 
 		// center spot
-		g2.drawArc(width / 2 + spaceBufferX - 1, height / 2 + spaceBufferY - 1, 3, 3, 0, 360);
+		g2.drawArc(length / 2 + spaceBufferX - 1, width / 2 + spaceBufferY - 1, 3, 3, 0, 360);
 
 		// goals
 		g2.setStroke(new BasicStroke(10));
@@ -262,10 +256,10 @@ public class FieldPanel extends JPanel {
 	public void drawCoords(Graphics g, double ratio){
 		if(showCoords){
 			g.setColor(Color.WHITE);
-			g.drawString("[" + -(FIELDWIDTH/2) + "," + (FIELDHEIGHT/2) + "]", spaceBufferX, spaceBufferY);	//NW
-			g.drawString("[" + (FIELDWIDTH/2) + "," + (FIELDHEIGHT/2) + "]", spaceBufferX + (int)(FIELDWIDTH * ratio), spaceBufferY);	//NE
-			g.drawString("[" + (FIELDWIDTH/2) + "," + -(FIELDHEIGHT/2) + "]", spaceBufferX + (int)(FIELDWIDTH * ratio), spaceBufferY + (int)(FIELDHEIGHT * ratio));	//SE
-			g.drawString("[" + -(FIELDWIDTH/2) + "," + -(FIELDHEIGHT/2) + "]", spaceBufferX, spaceBufferY + (int)(FIELDHEIGHT * ratio));	//SE
+			g.drawString("[" + -(world.getField().getLength() / 2) + "," + (world.getField().getWidth()/2) + "]", spaceBufferX, spaceBufferY);	//NW
+			g.drawString("[" + (world.getField().getLength()/2) + "," + (world.getField().getWidth()/2) + "]", spaceBufferX + (int)(world.getField().getLength() * ratio), spaceBufferY);	//NE
+			g.drawString("[" + (world.getField().getLength()/2) + "," + -(world.getField().getWidth()/2) + "]", spaceBufferX + (int)(world.getField().getLength() * ratio), spaceBufferY + (int)(world.getField().getWidth() * ratio));	//SE
+			g.drawString("[" + -(world.getField().getLength()/2) + "," + -(world.getField().getWidth()/2) + "]", spaceBufferX, spaceBufferY + (int)(world.getField().getWidth() * ratio));	//SE
 		}
 	}
 
@@ -347,21 +341,21 @@ public class FieldPanel extends JPanel {
 		g2.setStroke(new BasicStroke(1));
 		g2.setColor(new Color(0, 140, 0));
 
-		double width = (double) FIELDWIDTH * ratio;
-		double height = (double) FIELDHEIGHT * ratio;
-		double rasterSize = width / 16.0;
+		double length = (double) world.getField().getLength() * ratio;
+		double width = (double) world.getField().getWidth() * ratio;
+		double rasterSize = length / 16.0;
 
 		for (double x = spaceBufferX - 5 * rasterSize; x < getWidth() + spaceBufferX; x += rasterSize)
 			g2.drawLine((int) x, 0, (int) x, getHeight());
 
-		for (double y = height / 2 + spaceBufferY; y > 0; y -= rasterSize)
+		for (double y = width / 2 + spaceBufferY; y > 0; y -= rasterSize)
 			g2.drawLine(0, (int) y, getWidth(), (int) y);
 
-		for (double y = height / 2 + spaceBufferY; y < getHeight(); y += rasterSize)
+		for (double y = width / 2 + spaceBufferY; y < getHeight(); y += rasterSize)
 			g2.drawLine(0, (int) y, getWidth(), (int) y);
 
 		g2.setColor(Color.WHITE);
-		String sizeDesc = String.format("rastersize: %.1fcm", (double) FIELDWIDTH / 16.0 / 10.0);
+		String sizeDesc = String.format("rastersize: %.1fcm", (double) world.getField().getLength() / 16.0 / 10.0);
 		g2.drawString(sizeDesc, getHeight() / 10 + 5 - sizeDesc.length() * 7 / 2, 30);
 	}
 
@@ -483,7 +477,7 @@ public class FieldPanel extends JPanel {
 		if (!showPathPlanner)
 			return;
 		
-		ArrayList<RobotExecuter> robotExecuters = World.getInstance().getRobotExecuters();
+		ArrayList<RobotExecuter> robotExecuters = world.getRobotExecuters();
 		
 		for(RobotExecuter executer : robotExecuters){
 			if(executer.getLowLevelBehavior() != null)

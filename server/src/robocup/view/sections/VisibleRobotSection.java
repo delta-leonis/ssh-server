@@ -9,8 +9,11 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 
 import net.miginfocom.swing.MigLayout;
+import robocup.model.Ally;
 import robocup.model.Robot;
 import robocup.model.World;
+import robocup.view.GUI;
+import robocup.view.RobotBox;
 import robocup.view.SectionBox;
 
 /**

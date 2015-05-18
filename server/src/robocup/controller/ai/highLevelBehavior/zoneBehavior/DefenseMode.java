@@ -121,35 +121,40 @@ public class DefenseMode extends Mode {
 				if (itExecuter.getRobot().getPosition() != null)
 					keeperDefenders.add((Ally) itExecuter.getRobot());
 
-		FieldPoint offset = null;
+		int offset = 0;
 
 		if (robot.getPosition() != null) {
 			switch (keeperDefenders.size()) {
 			case 2:
 				if (robot.getPosition().getY() == Math.max(keeperDefenders.get(0).getPosition().getY(), keeperDefenders
 						.get(1).getPosition().getY()))
-					offset = new FieldPoint(0, 150);
+					offset = -5;
 				else
-					offset = new FieldPoint(0, -150);
+					offset = 5;
 				break;
 			case 3:
 				if (robot.getPosition().getY() == Math.max(
 						keeperDefenders.get(0).getPosition().getY(),
 						Math.max(keeperDefenders.get(1).getPosition().getY(), keeperDefenders.get(2).getPosition()
 								.getY())))
-					offset = new FieldPoint(0, 150);
+					offset = -5;
 				else if (robot.getPosition().getY() == Math.min(
 						keeperDefenders.get(0).getPosition().getY(),
 						Math.min(keeperDefenders.get(1).getPosition().getY(), keeperDefenders.get(2).getPosition()
 								.getY())))
-					offset = new FieldPoint(0, -150);
+					offset = 5;
 				else
-					offset = new FieldPoint(0, 0);
+					offset = 0;
 				break;
 			default:
 				break;
 			}
 		}
+
+		// Invert offset when on the left side of the field.
+		// This is done because the offset moves the other way on this side. 
+		if (robot.getPosition().getX() < 0)
+			offset = -offset;
 
 		keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset);
 	}
@@ -180,7 +185,7 @@ public class DefenseMode extends Mode {
 		boolean goToKick = false;
 
 		double XPoint = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? world.getField()
-				.getWidth() / 2 : -world.getField().getWidth() / 2;
+				.getLength() / 2 : -world.getField().getLength() / 2;
 		double YPoint = ball.getPosition().getY() / Math.abs(ball.getPosition().getY())
 				* world.getField().getEastGoal().getWidth() / 4 * -1;
 		Robot enemyRobot = world.getClosestEnemyRobotToPoint(new FieldPoint(XPoint, YPoint));
