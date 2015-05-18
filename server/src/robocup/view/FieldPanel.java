@@ -126,9 +126,9 @@ public class FieldPanel extends JPanel {
 	 * per second at a frame rate of 60 fps
 	 */
 	public void update() {
-		updateCounter ++;
-		if(updateCounter < 10)
-			return;
+//		updateCounter ++;
+//		if(updateCounter < 10)
+//			return;
 		repaint();
 		updateCounter = 0;
 	}
