@@ -1,12 +1,17 @@
 package robocup.view.sections;
 
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
+import robocup.Main;
 import robocup.view.FieldPanel;
 import robocup.view.SectionBox;
 
@@ -20,11 +25,14 @@ public class FieldControlSection extends SectionBox {
 
 	private JFrame frame;
 	private FieldPanel fieldPanel;
+	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 
 	public FieldControlSection() {
 		super("Field Conrol Section");
 
-		frame = new JFrame();
+		GraphicsDevice fieldMonitor = getSecondaryMonitor();
+
+		frame = new JFrame(fieldMonitor.getConfigurations()[0]);
 		fieldPanel = new FieldPanel();
 
 		this.setLayout(new MigLayout("wrap 4", "[grow]", "[grow][grow][grow]"));
@@ -76,11 +84,36 @@ public class FieldControlSection extends SectionBox {
 
 	}
 	
+	/**
+	 * @return Monitor as GraphicsDevice for the fieldframe to be placed
+	 */
+	private GraphicsDevice getSecondaryMonitor() {
+		GraphicsDevice[] monitors = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+		GraphicsDevice secondaryMonitor = null;
+		try{
+		String mainMonitor = ((JFrame) SwingUtilities.getWindowAncestor(this)).getGraphicsConfiguration().getDevice().getIDstring();
+		for(GraphicsDevice monitor : monitors){
+			if(mainMonitor.equals(monitor.getIDstring()))
+				continue;
+			secondaryMonitor = monitor;
+			break;
+		}
+		LOGGER.info("Set '" + mainMonitor + "' as primary display.");
+		LOGGER.info("Set '" + secondaryMonitor.getIDstring() + "' as secondary display.");
+		}catch(Exception e){
+			//error found? return first monitor
+			secondaryMonitor = monitors[0];
+			LOGGER.info("Only one monitor found");
+		}
+		return secondaryMonitor;
+	}
+
 	private class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			String buttonText = ((JButton) e.getSource()).getText();
 			switch (buttonText) {
 				case "Show field":
+					frame.setLocation(getSecondaryMonitor().getDefaultConfiguration().getBounds().x, 50);
 					frame.setTitle("Field");
 					frame.setSize(fieldPanel.getFrameSizeX(), fieldPanel.getFrameSizeY());
 					frame.setContentPane(fieldPanel);
