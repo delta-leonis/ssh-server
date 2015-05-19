@@ -13,11 +13,11 @@ public class IndirectFreeKickAttack extends Strategy {
 	public IndirectFreeKickAttack() {
 		super();
 		roles.add(RobotMode.KEEPER);
-		roles.add(RobotMode.KEEPERDEFENDER);
-		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.ATTACKER);
 		roles.add(RobotMode.RUNNER);
 		roles.add(RobotMode.RUNNER);
+		roles.add(RobotMode.KEEPERDEFENDER);
+		roles.add(RobotMode.KEEPERDEFENDER);
 	}
 
 	@Override
@@ -28,11 +28,11 @@ public class IndirectFreeKickAttack extends Strategy {
 				.equals(World.getInstance().getReferee().getAlly());
 
 		if (isEastTeam) {
-			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_NORTH_FRONT));
-			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_SOUTH_FRONT));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_NORTH_SECONDPOST));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_SOUTH_SECONDPOST));
 		} else {
-			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_NORTH_FRONT));
-			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_SOUTH_FRONT));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_NORTH_SECONDPOST));
+			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_SOUTH_SECONDPOST));
 		}
 	}
 }

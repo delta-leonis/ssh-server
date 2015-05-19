@@ -11,11 +11,11 @@ import robocup.controller.ai.highLevelBehavior.strategy.standard.DirectFreeKickA
 import robocup.controller.ai.highLevelBehavior.strategy.standard.DirectFreeKickDefense;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.GameStop;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.IndirectFreeKickAttack;
+import robocup.controller.ai.highLevelBehavior.strategy.standard.IndirectFreeKickDefense;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.KickOffAttack;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.KickOffDefense;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.PenaltyAttack;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.PenaltyDefense;
-import robocup.controller.ai.highLevelBehavior.strategy.standard.TimeOut;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.AttackMode;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.DefenseMode;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.Mode;
@@ -159,7 +159,6 @@ public class ZoneBehavior extends Behavior {
 
 	/**
 	 * Choose a standard strategy based on referee command
-	 * TODO create the corresponding strategy classes
 	 * @return The mode containing the chosen strategy
 	 */
 	private Mode chooseStandardStrategy(ArrayList<RobotExecuter> executers) {
@@ -181,21 +180,11 @@ public class ZoneBehavior extends Behavior {
 			}
 			break;
 		case FORCE_START:
-			// Cannot be reached as this command is already been handled, so return null
+			// Cannot be reached as this command is already handled, so return null
 			break;
 		case GOAL_BLUE:
-			if (world.getReferee().getAllyTeamColor() == TeamColor.BLUE) {
-				returnMode = new StandardMode(new KickOffDefense(), executers);
-			} else {
-				returnMode = new StandardMode(new KickOffAttack(), executers);
-			}
-			break;
 		case GOAL_YELLOW:
-			if (world.getReferee().getAllyTeamColor() == TeamColor.YELLOW) {
-				returnMode = new StandardMode(new KickOffDefense(), executers);
-			} else {
-				returnMode = new StandardMode(new KickOffAttack(), executers);
-			}
+			returnMode = new StandardMode(new GameStop(), executers);
 			break;
 		case HALT:
 			returnMode = new StandardMode(new GameStop(), executers);
@@ -204,18 +193,18 @@ public class ZoneBehavior extends Behavior {
 			if (world.getReferee().getAllyTeamColor() == TeamColor.BLUE) {
 				returnMode = new StandardMode(new IndirectFreeKickAttack(), executers);
 			} else {
-				returnMode = new DefenseMode(new BarricadeDefending(), executers);
+				returnMode = new DefenseMode(new IndirectFreeKickDefense(), executers);
 			}
 			break;
 		case INDIRECT_FREE_YELLOW:
 			if (world.getReferee().getAllyTeamColor() == TeamColor.YELLOW) {
 				returnMode = new StandardMode(new IndirectFreeKickAttack(), executers);
 			} else {
-				returnMode = new StandardMode(new BarricadeDefending(), executers);
+				returnMode = new StandardMode(new IndirectFreeKickDefense(), executers);
 			}
 			break;
 		case NORMAL_START:
-			// Cannot be reached as this command is already been handled, so return null
+			// Cannot be reached as this command is already handled, so return null
 			break;
 		case PREPARE_KICKOFF_BLUE:
 			if (world.getReferee().getAllyTeamColor() == TeamColor.BLUE) {
@@ -246,13 +235,9 @@ public class ZoneBehavior extends Behavior {
 			}
 			break;
 		case STOP:
-			returnMode = new StandardMode(new GameStop(), executers);
-			break;
 		case TIMEOUT_BLUE:
-			returnMode = new StandardMode(new TimeOut(), executers);
-			break;
 		case TIMEOUT_YELLOW:
-			returnMode = new StandardMode(new TimeOut(), executers);
+			returnMode = new StandardMode(new GameStop(), executers);
 			break;
 		default:
 			returnMode = null;

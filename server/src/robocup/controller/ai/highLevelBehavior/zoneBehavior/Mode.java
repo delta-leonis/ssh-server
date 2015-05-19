@@ -83,7 +83,7 @@ public abstract class Mode {
 		for (RobotMode role : strategy.getRoles()) {
 			FieldZone zone = strategy.getZoneForRole(role);
 
-			if (role == RobotMode.KEEPER) {
+			if (role == RobotMode.KEEPER || role == RobotMode.PENALTYKEEPER) {
 				// Find executer belonging to the goalie and set role
 				((Ally) findExecuter(world.getReferee().getAlly().getGoalie(), executers).getRobot()).setRole(role);
 			} else if (zone != null) {
