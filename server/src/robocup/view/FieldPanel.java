@@ -450,8 +450,8 @@ public class FieldPanel extends JPanel {
 						(int) (robot.getPosition().toGUIPoint(ratio, mirror).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
 						(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio),
 						(int) robot.getOrientation() + (mirror ?  225: 45), 270);
-				g2.fillPolygon(new int[] {(int) right.toGUIPoint(ratio, mirror).getX(), (int) left.toGUIPoint(ratio, mirror).getX(), (int) robot.getPosition().toGUIPoint(ratio, mirror).getX()},
-						new int[] {(int) right.toGUIPoint(ratio, mirror).getY(), (int) left.toGUIPoint(ratio, mirror).getY(), (int) robot.getPosition().toGUIPoint(ratio, mirror).getY()}, 3);
+				g2.fillPolygon(new int[] {(int) right.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) left.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) robot.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX},
+						new int[] {(int) right.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) left.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) robot.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY}, 3);
 				
 				//BORDERS
 				g2.setColor(g2.getColor().darker());
