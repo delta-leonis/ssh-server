@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.Main;
+import robocup.model.World;
 import robocup.view.FieldPanel;
 import robocup.view.SectionBox;
 
@@ -113,7 +114,8 @@ public class FieldControlSection extends SectionBox {
 			String buttonText = ((JButton) e.getSource()).getText();
 			switch (buttonText) {
 				case "Show field":
-					frame.setLocation(getSecondaryMonitor().getDefaultConfiguration().getBounds().x, 50);
+					frame.setLocation(getSecondaryMonitor().getDefaultConfiguration().getBounds().x, getSecondaryMonitor().getDefaultConfiguration().getBounds().y);
+					frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 					frame.setTitle("Field");
 					frame.setSize(fieldPanel.getFrameSizeX(), fieldPanel.getFrameSizeY());
 					frame.setContentPane(fieldPanel);

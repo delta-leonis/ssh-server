@@ -1,14 +1,15 @@
 package robocup.test.testBehaviors;
 
 import java.util.ArrayList;
+
 import robocup.controller.ai.highLevelBehavior.Behavior;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.Mode;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 
 
 public class TestBehaviour extends Behavior {
-	private World world;
 	private Mode currentMode; // AttackMode or DefenseMode
+    public static final int ROBOT_ID = 1;    //Robot we want to test
 
 	/**
 	 * Create a ZoneBehavior.
