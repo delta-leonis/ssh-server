@@ -115,7 +115,7 @@ public class FieldControlSection extends SectionBox {
 			switch (buttonText) {
 				case "Show field":
 					frame.setLocation(getSecondaryMonitor().getDefaultConfiguration().getBounds().x, getSecondaryMonitor().getDefaultConfiguration().getBounds().y);
-					frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+					frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 					frame.setTitle("Field");
 					frame.setSize(fieldPanel.getFrameSizeX(), fieldPanel.getFrameSizeY());
 					frame.setContentPane(fieldPanel);
