@@ -261,9 +261,10 @@ public class GotoPosition {
 	 * @return The speed in mm/s
 	 */
 	private double getSpeed(double d, int distanceToSlowDown, int speed) {
-		if(d > distanceToSlowDown)
+		if(d > distanceToSlowDown){
 			return speed;
-		return -((d / distanceToSlowDown) * speed);
+		}
+		return (d / distanceToSlowDown) * speed;
 	}
 	
 	/**
