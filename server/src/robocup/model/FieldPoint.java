@@ -48,8 +48,17 @@ public class FieldPoint {
 	 * @return The {@link FieldPoint} translated to a {@link Point2D.Double} for GUI use.
 	 */
 	public Point2D.Double toGUIPoint(double ratio) {
-		return new Point2D.Double((x+(World.getInstance().getField().getLength()/2))*ratio,
-				(-1*y+World.getInstance().getField().getWidth()/2)*ratio);
+		return toGUIPoint(ratio, false);
+	}
+	
+	/**
+	 * @param ratio Ratio is percentage/100 that represents minification of the drawn field
+	 * @param mirror When Mirror is true, the returned point will be mirrored horizontally and vertically
+	 * @return The {@link FieldPoint} translated to a {@link Point2D.Double} for GUI use.
+	 */
+	public Point2D.Double toGUIPoint(double ratio, boolean mirror){
+		return new Point2D.Double(((mirror ? -1 : 1)*x+(World.getInstance().getField().getLength()/2))*ratio,
+				((mirror ? 1 : -1)*y+World.getInstance().getField().getWidth()/2)*ratio);
 	}
 	
 	/**

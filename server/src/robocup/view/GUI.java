@@ -11,13 +11,11 @@ import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.border.TitledBorder;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.Main;
@@ -191,17 +189,7 @@ public class GUI extends JFrame {
 
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
-			// loop all RobotBoxes, and change the background color
-			for (Component item : robotContainer.getComponents()) {
-				if (item instanceof RobotBox) {
-					if (((RobotBox) item).equals(((RobotBox) arg0.getSource())))
-						((RobotBox) item).setBackground(Color.LIGHT_GRAY);
-					else
-						((RobotBox) item).setBackground(UIManager.getColor("Panel.background"));
-				}
-			}
-
-			selectedRobotId = ((RobotBox) arg0.getSource()).getRobot().getRobotId();
+			selectRobotId(((RobotBox) arg0.getSource()).getRobot().getRobotId());
 		}
 
 		@Override
@@ -221,7 +209,19 @@ public class GUI extends JFrame {
 		}
 	}
 
-	
+	public void selectRobotId(int robotId){
+		// loop all RobotBoxes, and change the background color
+		for (Component item : robotContainer.getComponents()) {
+			if (item instanceof RobotBox) {
+				if (((RobotBox) item).getRobot().getRobotId() == robotId)
+					((RobotBox) item).setBackground(Color.LIGHT_GRAY);
+				else
+					((RobotBox) item).setBackground(UIManager.getColor("Panel.background"));
+			}
+		}
+
+		selectedRobotId = robotId;
+	}
 	
 	/**
 	 * Update gui elements such as specific {@link SectionBox}es or {@link RobotBox}es

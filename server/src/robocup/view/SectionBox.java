@@ -20,7 +20,7 @@ public abstract class SectionBox extends JPanel {
 	public JLabel panelTitle;
 	private boolean visible = true;
 	private JPanel contentpanel = new JPanel();
-	private LayoutManager layoutmgr = contentpanel.getLayout();
+//	private LayoutManager layoutmgr = contentpanel.getLayout();
 	
 	/**
 	 * Create a sectionBox

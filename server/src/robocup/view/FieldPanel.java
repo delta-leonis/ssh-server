@@ -20,6 +20,7 @@ import robocup.controller.ai.movement.DijkstraPathPlanner;
 import robocup.controller.ai.movement.DijkstraPathPlanner.Vertex;
 import robocup.model.Ball;
 import robocup.model.FieldPoint;
+import robocup.model.Goal;
 import robocup.model.Robot;
 import robocup.model.Team;
 import robocup.model.World;
@@ -34,9 +35,6 @@ public class FieldPanel extends JPanel {
 
 	private static double RATIO = 0.10;
 
-	private static int FIELDLENGTH_GUI = (int)(World.getInstance().getField().getLength()*RATIO);
-	private static int FIELDWIDTH_GUI = (int)(World.getInstance().getField().getWidth()*RATIO);
-
 	private static int spaceBufferX = 140;
 	private static int spaceBufferY = 30;
 
@@ -50,6 +48,7 @@ public class FieldPanel extends JPanel {
 	private boolean showZones;
 	private boolean showBall;
 	private boolean showCoords;
+	private boolean mirror;
 	
 	private boolean showPathPlanner;
 	private boolean drawNeighbours;
@@ -60,9 +59,10 @@ public class FieldPanel extends JPanel {
 	 * the ball position.
 	 */
 	public FieldPanel() {
-		setSize(FIELDLENGTH_GUI, FIELDWIDTH_GUI);
+		setSize((int) (World.getInstance().getField().getLength()*RATIO), (int) (World.getInstance().getField().getWidth()*RATIO));
 		showFreeShot = false;
 		showRaster = false;
+		mirror = false;
 		updateCounter = 0;
 
 		addMouseListener(new MouseAdapter() {
@@ -83,7 +83,7 @@ public class FieldPanel extends JPanel {
 	 * @return width of the {@link JFrame} the {@link FieldPanel} should be in.
 	 */
 	public int getFrameSizeX() {
-		return FIELDLENGTH_GUI + spaceBufferX*2;
+		return (int) (World.getInstance().getField().getLength()*RATIO + spaceBufferX*2);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class FieldPanel extends JPanel {
 	 * @return height of the {@link JFrame} the {@link FieldPanel} should be in.
 	 */
 	public int getFrameSizeY() {
-		return FIELDWIDTH_GUI + spaceBufferY*2;
+		return (int) (World.getInstance().getField().getWidth()*RATIO + spaceBufferY*2);
 	}
 	/**
 	 * Paints the whole screen/field green. Draws the pitch by calling {@link FieldPanel#drawPlayfield(Graphics, double)}.
@@ -152,15 +152,15 @@ public class FieldPanel extends JPanel {
 		int[] scaledY = new int[fieldZone.getNumberOfVertices()];
 		int index = 0;
 		for (FieldPoint point : fieldZone.getVertices()) {
-			scaledX[index] = (int) (point.toGUIPoint(ratio).getX()) + spaceBufferX;
-			scaledY[index] = (int) (point.toGUIPoint(ratio).getY()) + spaceBufferY;
+			scaledX[index] = (int) (point.toGUIPoint(ratio, mirror).getX()) + spaceBufferX;
+			scaledY[index] = (int) (point.toGUIPoint(ratio, mirror).getY()) + spaceBufferY;
 			index++;
 		}
 
 		g2.setColor(Color.BLUE);
 		g2.drawPolygon(scaledX, scaledY, fieldZone.getNumberOfVertices());
-		g2.drawString(fieldZone.name(), (int) (fieldZone.getCenterPoint().toGUIPoint(ratio).getX() - fieldZone.name()
-				.length() * 4) + spaceBufferX, (int) (fieldZone.getCenterPoint().toGUIPoint(ratio).getY())
+		g2.drawString(fieldZone.name(), (int) (fieldZone.getCenterPoint().toGUIPoint(ratio, mirror).getX() - fieldZone.name()
+				.length() * 4) + spaceBufferX, (int) (fieldZone.getCenterPoint().toGUIPoint(ratio, mirror).getY())
 				+ spaceBufferY);
 	}
 
@@ -176,71 +176,73 @@ public class FieldPanel extends JPanel {
 		int lineWidth = Math.max(1, (int) (world.getField().getLineWidth() * ratio));
 		g2.setStroke(new BasicStroke(lineWidth));
 
-		int width = (int) (world.getField().getLength() * ratio);
-		int height = (int) (world.getField().getWidth() * ratio);
+		int length = (int) (world.getField().getLength() * ratio);
+		int width = (int) (world.getField().getWidth() * ratio);
 		int penalRadius = (int) (world.getField().getDefenceRadius() * ratio);
 		int penalStretch = (int) (world.getField().getDefenceStretch() * ratio);
 		int centerRadius = (int) (world.getField().getCenterCircleRadius() * ratio);
 
 		// center line
 		g.setColor(Color.WHITE);
-		g2.drawLine(width / 2 + spaceBufferX, 0 + spaceBufferY, width / 2 + spaceBufferX, height + spaceBufferY);
+		g2.drawLine(length / 2 + spaceBufferX, 0 + spaceBufferY, length / 2 + spaceBufferX, width + spaceBufferY);
 
 		// borders
-		g2.drawLine(spaceBufferX, spaceBufferY, width + spaceBufferX, spaceBufferY);
-		g2.drawLine(spaceBufferX, height + spaceBufferY, width + spaceBufferX, height + spaceBufferY);
-		g2.drawLine(spaceBufferX, spaceBufferY, spaceBufferX, height + spaceBufferY);
-		g2.drawLine(width + spaceBufferX, spaceBufferY, width + spaceBufferX, height + spaceBufferY);
+		g2.drawLine(spaceBufferX, spaceBufferY, length + spaceBufferX, spaceBufferY);
+		g2.drawLine(spaceBufferX, width + spaceBufferY, length + spaceBufferX, width + spaceBufferY);
+		g2.drawLine(spaceBufferX, spaceBufferY, spaceBufferX, width + spaceBufferY);
+		g2.drawLine(length + spaceBufferX, spaceBufferY, length + spaceBufferX, width + spaceBufferY);
 
 		// center circle
-		g2.drawArc(width / 2 - centerRadius + spaceBufferX, height / 2 - centerRadius + spaceBufferY, centerRadius * 2,
+		g2.drawArc(length / 2 - centerRadius + spaceBufferX, width / 2 - centerRadius + spaceBufferY, centerRadius * 2,
 				centerRadius * 2, 0, 360);
 
 		// draw west penalty area
-		g2.drawArc(spaceBufferX - penalRadius, height / 2 - penalRadius - penalStretch / 2 + spaceBufferY,
+		g2.drawArc(spaceBufferX - penalRadius, width / 2 - penalRadius - penalStretch / 2 + spaceBufferY,
 				(int) (penalRadius * 2), (int) (penalRadius * 2), 0, 90);
-		g2.drawArc(spaceBufferX - penalRadius, height / 2 - penalRadius + penalStretch / 2 + spaceBufferY,
+		g2.drawArc(spaceBufferX - penalRadius, width / 2 - penalRadius + penalStretch / 2 + spaceBufferY,
 				(int) (penalRadius * 2), (int) (penalRadius * 2), 0, -90);
-		g2.drawLine(spaceBufferX + penalRadius, height / 2 - penalStretch / 2 + spaceBufferY, spaceBufferX
-				+ penalRadius, height / 2 + penalStretch / 2 + spaceBufferY);
+		g2.drawLine(spaceBufferX + penalRadius, width / 2 - penalStretch / 2 + spaceBufferY, spaceBufferX
+				+ penalRadius, width / 2 + penalStretch / 2 + spaceBufferY);
 
 		// draw east penalty area
-		g2.drawArc(width + spaceBufferX - penalRadius, height / 2 - penalRadius - penalStretch / 2 + spaceBufferY,
+		g2.drawArc(length + spaceBufferX - penalRadius, width / 2 - penalRadius - penalStretch / 2 + spaceBufferY,
 				(int) (penalRadius * 2), (int) (penalRadius * 2), 180, -90);
-		g2.drawArc(width + spaceBufferX - penalRadius, height / 2 - penalRadius + penalStretch / 2 + spaceBufferY,
+		g2.drawArc(length + spaceBufferX - penalRadius, width / 2 - penalRadius + penalStretch / 2 + spaceBufferY,
 				(int) (penalRadius * 2), (int) (penalRadius * 2), 180, 90);
-		g2.drawLine(width + spaceBufferX - penalRadius, height / 2 - penalStretch / 2 + spaceBufferY, width
-				+ spaceBufferX - penalRadius, height / 2 + penalStretch / 2 + spaceBufferY);
+		g2.drawLine(length + spaceBufferX - penalRadius, width / 2 - penalStretch / 2 + spaceBufferY, length
+				+ spaceBufferX - penalRadius, width / 2 + penalStretch / 2 + spaceBufferY);
 
 		// west penalty spot
 		g2.drawArc((int) (world.getField().getPenaltyLineFromSpotDistance() * ratio) + spaceBufferX - 1,
-				(int) ((new FieldPoint(0, 0)).toGUIPoint(ratio).getY()) + spaceBufferY - 1, 3, 3, 0, 360);
+				(int) ((new FieldPoint(0, 0)).toGUIPoint(ratio, mirror).getY()) + spaceBufferY - 1, 3, 3, 0, 360);
 		// east penalty spot
-		g2.drawArc(width - ((int) (world.getField().getPenaltyLineFromSpotDistance() * ratio)) + spaceBufferX - 1,
-				(int) ((new FieldPoint(0, 0)).toGUIPoint(ratio).getY()) + spaceBufferY - 1, 3, 3, 0, 360);
+		g2.drawArc(length - ((int) (world.getField().getPenaltyLineFromSpotDistance() * ratio)) + spaceBufferX - 1,
+				(int) ((new FieldPoint(0, 0)).toGUIPoint(ratio, mirror).getY()) + spaceBufferY - 1, 3, 3, 0, 360);
 
 		// center spot
-		g2.drawArc(width / 2 + spaceBufferX - 1, height / 2 + spaceBufferY - 1, 3, 3, 0, 360);
+		g2.drawArc(length / 2 + spaceBufferX - 1, width / 2 + spaceBufferY - 1, 3, 3, 0, 360);
 
 		// goals
-		g2.setStroke(new BasicStroke(10));
+		//g2.setStroke(new BasicStroke(10));
 		if (World.getInstance().getReferee().getEastTeam().isColor(TeamColor.YELLOW))
 			g.setColor(Color.YELLOW);
 		else
 			g.setColor(Color.BLUE);
-		g2.drawLine((int) world.getField().getEastGoal().getFrontSouth().toGUIPoint(ratio).getX() + spaceBufferX + 5,
-				(int) world.getField().getEastGoal().getFrontSouth().toGUIPoint(ratio).getY() + spaceBufferY,
-				(int) world.getField().getEastGoal().getFrontNorth().toGUIPoint(ratio).getX() + spaceBufferX + 5,
-				(int) world.getField().getEastGoal().getFrontNorth().toGUIPoint(ratio).getY() + spaceBufferY);
-		if (World.getInstance().getReferee().getEastTeam().isColor(TeamColor.YELLOW))
-			g.setColor(Color.BLUE);
-		else
-			g.setColor(Color.YELLOW);
-		g2.drawLine((int) world.getField().getWestGoal().getFrontSouth().toGUIPoint(ratio).getX() + spaceBufferX - 5,
-				(int) world.getField().getWestGoal().getFrontSouth().toGUIPoint(ratio).getY() + spaceBufferY,
-				(int) world.getField().getWestGoal().getFrontNorth().toGUIPoint(ratio).getX() + spaceBufferX - 5,
-				(int) world.getField().getWestGoal().getFrontNorth().toGUIPoint(ratio).getY() + spaceBufferY);
+
+		drawGoal(g2, world.getField().getEastGoal(), ratio);
+		g.setColor((g.getColor().equals(Color.BLUE)) ? Color.YELLOW : Color.BLUE);
+		drawGoal(g2, world.getField().getWestGoal(), ratio);
 		
+	}
+	
+	private void drawGoal(Graphics2D g2, Goal goal, double ratio){
+		Point2D.Double backNorth = goal.getBackNorth().toGUIPoint(ratio, mirror);
+		Point2D.Double frontNorth = goal.getFrontNorth().toGUIPoint(ratio, mirror);
+		Point2D.Double backSouth = goal.getBackSouth().toGUIPoint(ratio, mirror);
+		Point2D.Double frontSouth = goal.getFrontSouth().toGUIPoint(ratio, mirror);
+		g2.drawLine((int) backNorth.getX() + spaceBufferX,(int)  backNorth.getY() + spaceBufferY, (int) frontNorth.getX() + spaceBufferX, (int) frontNorth.getY() + spaceBufferY);
+		g2.drawLine((int) backNorth.getX() + spaceBufferX,(int)  backNorth.getY() + spaceBufferY, (int) backSouth.getX() + spaceBufferX, (int) backSouth.getY() + spaceBufferY);
+		g2.drawLine((int) backSouth.getX() + spaceBufferX,(int)  backSouth.getY() + spaceBufferY, (int) frontSouth.getX() + spaceBufferX, (int) frontSouth.getY() + spaceBufferY);
 	}
 	
 	/**
@@ -252,6 +254,14 @@ public class FieldPanel extends JPanel {
 	}
 	
 	/**
+	 * Toggle to mirror the field horizontally
+	 */
+	public void toggleMirror(){
+		mirror = !mirror;
+		repaint();
+	}
+	
+	/**
 	 * Draws the co-ordinates of the edges of the field.
 	 * @param g The graphics to draw on
 	 * @param ratio The current ratio.
@@ -259,11 +269,38 @@ public class FieldPanel extends JPanel {
 	public void drawCoords(Graphics g, double ratio){
 		if(showCoords){
 			g.setColor(Color.WHITE);
-			g.drawString("[" + -(world.getField().getLength() / 2) + "," + (world.getField().getWidth()/2) + "]", spaceBufferX, spaceBufferY);	//NW
-			g.drawString("[" + (world.getField().getLength()/2) + "," + (world.getField().getWidth()/2) + "]", spaceBufferX + (int)(world.getField().getLength() * ratio), spaceBufferY);	//NE
-			g.drawString("[" + (world.getField().getLength()/2) + "," + -(world.getField().getWidth()/2) + "]", spaceBufferX + (int)(world.getField().getLength() * ratio), spaceBufferY + (int)(world.getField().getWidth() * ratio));	//SE
-			g.drawString("[" + -(world.getField().getLength()/2) + "," + -(world.getField().getWidth()/2) + "]", spaceBufferX, spaceBufferY + (int)(world.getField().getWidth() * ratio));	//SE
+			FieldPoint northWest = new FieldPoint(-1* world.getField().getLength() / 2, world.getField().getWidth() / 2);
+			FieldPoint northEast = new FieldPoint(world.getField().getLength() / 2, world.getField().getWidth() / 2);
+			FieldPoint southWest= new FieldPoint(world.getField().getLength() / 2, -1*world.getField().getWidth() / 2);
+			FieldPoint southEast = new FieldPoint(-1*world.getField().getLength() / 2, -1*world.getField().getWidth() / 2);
+			drawCoord(g, northWest, ratio);
+			drawCoord(g, northEast, ratio);
+			drawCoord(g, southWest, ratio);
+			drawCoord(g, southEast, ratio);
 		}
+	}
+	
+	/**
+	 * Draw a coordinate as a string
+	 * @param g		Graphics to draw on
+	 * @param point	{@link FieldPoint} to be drawn
+	 * @param ratio The current ratio
+	 * @param yoffset An optional offset so the text isn't written over the actual point
+	 */
+	private void drawCoord(Graphics g, FieldPoint point, double ratio, int yoffset){
+		Point2D.Double guiPoint = point.toGUIPoint(ratio, mirror);
+		String coordinate = String.format("[%.0f, %.0f]", point.getX(), point.getY());
+		g.drawString(coordinate, (int)guiPoint.getX() - (coordinate.length()/2)*7  + spaceBufferX, (int)guiPoint.getY() + yoffset + (yoffset > 0 ? 5 : 0) + spaceBufferY);
+	}
+	
+	/**
+	 * Draw a coordinate as a string
+	 * @param g		Graphics to draw on
+	 * @param point	{@link FieldPoint} to be drawn
+	 * @param ratio The current ratio
+	 */
+	private void drawCoord(Graphics g, FieldPoint point, double ratio){
+		drawCoord(g, point, ratio, 0);
 	}
 
 	/**
@@ -286,16 +323,14 @@ public class FieldPanel extends JPanel {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(2));
 		g2.setColor(Color.orange);
-
-		try {
-			g2.drawLine((int) world.hasFreeShot().toGUIPoint(ratio).getX() + spaceBufferX, (int) world.hasFreeShot()
-				.toGUIPoint(ratio).getY()
-				+ spaceBufferY, (int) world.getBall().getPosition().toGUIPoint(ratio).getX() + spaceBufferX,
-				(int) world.getBall().getPosition().toGUIPoint(ratio).getY() + spaceBufferY);
-		} catch (NullPointerException e) {
-			// no free shot
-		}
+		FieldPoint target = world.hasFreeShot();
 		
+		if(target == null)
+			return;
+		g2.drawLine((int) target.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) target
+				.toGUIPoint(ratio, mirror).getY()
+				+ spaceBufferY, (int) world.getBall().getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX,
+				(int) world.getBall().getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY);
 	}
 
 	/**
@@ -319,9 +354,11 @@ public class FieldPanel extends JPanel {
 		g2.setColor(Color.orange);
 		Ball ball = world.getBall();
 
-		g2.fillOval((int) (ball.getPosition().toGUIPoint(ratio).getX() + spaceBufferX - (double) ball.SIZE / 2.0
-				* ratio), (int) (ball.getPosition().toGUIPoint(ratio).getY() + spaceBufferY - (double) ball.SIZE / 2.0
+		g2.fillOval((int) (ball.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX - (double) ball.SIZE / 2.0
+				* ratio), (int) (ball.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY - (double) ball.SIZE / 2.0
 				* ratio), (int) (ball.SIZE * ratio), (int) (ball.SIZE * ratio));
+		if(showCoords)
+			drawCoord(g2, ball.getPosition(), ratio, (int) (ball.SIZE*ratio));
 	}
 
 	/**
@@ -346,7 +383,7 @@ public class FieldPanel extends JPanel {
 
 		double length = (double) world.getField().getLength() * ratio;
 		double width = (double) world.getField().getWidth() * ratio;
-		double rasterSize = length / 16.0;
+		double rasterSize = length / 12.0;
 
 		for (double x = spaceBufferX - 5 * rasterSize; x < getWidth() + spaceBufferX; x += rasterSize)
 			g2.drawLine((int) x, 0, (int) x, getHeight());
@@ -358,8 +395,8 @@ public class FieldPanel extends JPanel {
 			g2.drawLine(0, (int) y, getWidth(), (int) y);
 
 		g2.setColor(Color.WHITE);
-		String sizeDesc = String.format("rastersize: %.1fcm", (double) world.getField().getLength() / 16.0 / 10.0);
-		g2.drawString(sizeDesc, getHeight() / 10 + 5 - sizeDesc.length() * 7 / 2, 30);
+		String sizeDesc = String.format("rastersize: %.1fcm", (double) world.getField().getLength() / 12.0 / 10.0);
+		g2.drawString(sizeDesc, getHeight() / 10 + 5 - sizeDesc.length() * 7 / 2, 20);
 	}
 
 	/**
@@ -388,10 +425,10 @@ public class FieldPanel extends JPanel {
 			if (robot.getPosition() != null) {
 				// draw round part of robot
 				g2.drawArc(
-						(int) (robot.getPosition().toGUIPoint(ratio).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
-						(int) (robot.getPosition().toGUIPoint(ratio).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
+						(int) (robot.getPosition().toGUIPoint(ratio, mirror).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
+						(int) (robot.getPosition().toGUIPoint(ratio, mirror).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
 						(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio),
-						(int) robot.getOrientation() + 45, 270);
+						(int) robot.getOrientation() + (mirror ?  225: 45), 270);
 
 				// draw flat front part of robot
 				FieldPoint left = new FieldPoint(robot.getPosition().getX()
@@ -400,22 +437,19 @@ public class FieldPanel extends JPanel {
 						+ Math.sin(Math.toRadians(robot.getOrientation() + 45.0))
 						* Robot.DIAMETER / 2.0);
 				FieldPoint right = new FieldPoint(robot.getPosition().getX()
-						+ Math.cos(Math.toRadians(robot.getOrientation() - 45.0)) * Robot.DIAMETER / 2.0, robot
+						+ Math.cos(Math.toRadians(robot.getOrientation() -45.0)) * Robot.DIAMETER / 2.0, robot
 						.getPosition().getY()
-						+ Math.sin(Math.toRadians(robot.getOrientation() - 45.0))
+						+ Math.sin(Math.toRadians(robot.getOrientation() -45.0))
 						* Robot.DIAMETER / 2.0);
-				g2.drawLine((int) (left.toGUIPoint(ratio).getX() + spaceBufferX),
-						(int) (left.toGUIPoint(ratio).getY() + spaceBufferY),
-						(int) (right.toGUIPoint(ratio).getX() + spaceBufferX),
-						(int) (right.toGUIPoint(ratio).getY() + spaceBufferY));
+				g2.drawLine((int) (left.toGUIPoint(ratio, mirror).getX() + spaceBufferX),
+						(int) (left.toGUIPoint(ratio, mirror).getY() + spaceBufferY),
+						(int) (right.toGUIPoint(ratio, mirror).getX() + spaceBufferX),
+						(int) (right.toGUIPoint(ratio, mirror).getY() + spaceBufferY));
 				g2.drawString("" + robot.getRobotId(), (int) robot
-						.getPosition().toGUIPoint(ratio).getX() - 2 + spaceBufferX,
-						(int) robot.getPosition().toGUIPoint(ratio).getY() - 2 + spaceBufferY);
-				if(showCoords){
-					g2.drawString("[" + robot.getPosition().getX() + "," + robot.getPosition().getY() + "]", (int) robot
-							.getPosition().toGUIPoint(ratio).getX() - 2 + spaceBufferX - 15,
-							(int) robot.getPosition().toGUIPoint(ratio).getY() - 2 + spaceBufferY - 15);
-				}
+						.getPosition().toGUIPoint(ratio, mirror).getX() -(robot.getRobotId()/10 + 1)*2+ spaceBufferX,
+						(int) robot.getPosition().toGUIPoint(ratio, mirror).getY() +2+ spaceBufferY);
+				if(showCoords)
+					drawCoord(g2, robot.getPosition(), ratio, (int) (Robot.DIAMETER*ratio));
 			}
 		}
 
@@ -425,10 +459,10 @@ public class FieldPanel extends JPanel {
 			if (robot.getPosition() != null) {
 				// draw round part of robot
 				g2.drawArc(
-						(int) (robot.getPosition().toGUIPoint(ratio).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
-						(int) (robot.getPosition().toGUIPoint(ratio).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
+						(int) (robot.getPosition().toGUIPoint(ratio, mirror).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
+						(int) (robot.getPosition().toGUIPoint(ratio, mirror).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
 						(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio),
-						(int) robot.getOrientation() + 45, 270);
+						(int) robot.getOrientation() + (mirror ?  225: 45), 270);
 
 				// draw flat front part of robot
 				FieldPoint left = new FieldPoint(robot.getPosition().getX()
@@ -441,10 +475,15 @@ public class FieldPanel extends JPanel {
 						.getPosition().getY()
 						+ Math.sin(Math.toRadians(robot.getOrientation() - 45.0))
 						* Robot.DIAMETER / 2.0);
-				g2.drawLine((int) (left.toGUIPoint(ratio).getX() + spaceBufferX),
-						(int) (left.toGUIPoint(ratio).getY() + spaceBufferY),
-						(int) (right.toGUIPoint(ratio).getX() + spaceBufferX),
-						(int) (right.toGUIPoint(ratio).getY() + spaceBufferY));
+				g2.drawLine((int) (left.toGUIPoint(ratio, mirror).getX() + spaceBufferX),
+						(int) (left.toGUIPoint(ratio, mirror).getY() + spaceBufferY),
+						(int) (right.toGUIPoint(ratio, mirror).getX() + spaceBufferX),
+						(int) (right.toGUIPoint(ratio, mirror).getY() + spaceBufferY));
+				g2.drawString("" + robot.getRobotId(), (int) robot
+						.getPosition().toGUIPoint(ratio, mirror).getX() -(robot.getRobotId()/10 + 1)*2+ spaceBufferX,
+						(int) robot.getPosition().toGUIPoint(ratio, mirror).getY() +2+ spaceBufferY);
+				if(showCoords)
+					drawCoord(g2, robot.getPosition(), ratio, (int) (Robot.DIAMETER*ratio));
 			}
 		}
 	}
@@ -497,8 +536,8 @@ public class FieldPanel extends JPanel {
 				for (Vertex vertex : vertices) {
 					g.setColor(Color.MAGENTA);
 				
-					int x = (int)vertex.getPosition().toGUIPoint(ratio).getX() + spaceBufferX;
-					int y = (int)vertex.getPosition().toGUIPoint(ratio).getY() + spaceBufferY;
+					int x = (int)vertex.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX;
+					int y = (int)vertex.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY;
 						
 					if(!vertex.isRemovable()){
 						g.drawString("nRmvbl", x, y);
@@ -509,8 +548,8 @@ public class FieldPanel extends JPanel {
 								(int) (Math.random() * 255), (int) (Math
 										.random() * 255)));
 						for (Vertex neighbour : vertex.getNeighbours()) {
-							int x2 = (int) neighbour.getPosition().toGUIPoint(ratio).getX() + spaceBufferX;
-							int y2 = (int) neighbour.getPosition().toGUIPoint(ratio).getY() + spaceBufferY;
+							int x2 = (int) neighbour.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX;
+							int y2 = (int) neighbour.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY;
 							g.drawLine(x, y, x2, y2);
 						}
 					}
@@ -527,21 +566,21 @@ public class FieldPanel extends JPanel {
 		
 		g.setColor(Color.ORANGE);
 		g2.setStroke(new BasicStroke(3));
-		Point2D.Double previous = start.toGUIPoint(ratio);
+		Point2D.Double previous = start.toGUIPoint(ratio, mirror);
 		for (FieldPoint p : path) {
-			int x = (int) p.toGUIPoint(ratio).getX() + spaceBufferX;
-			int y = (int) p.toGUIPoint(ratio).getY() + spaceBufferY;
+			int x = (int) p.toGUIPoint(ratio, mirror).getX() + spaceBufferX;
+			int y = (int) p.toGUIPoint(ratio, mirror).getY() + spaceBufferY;
 			int x2 = (int) previous.getX() + spaceBufferX;
 			int y2 = (int) previous.getY() + spaceBufferY;
 			g.drawLine(x, y, x2, y2);
 			g2.draw(new Line2D.Double(x, y, x2, y2));
-			previous = p.toGUIPoint(ratio);
+			previous = p.toGUIPoint(ratio, mirror);
 		}
 		// Draw point to destination
 		int x = (int) previous.getX() + spaceBufferX;
 		int y = (int) previous.getY() + spaceBufferY;
-		int x2 = (int) destination.toGUIPoint(ratio).getX() + spaceBufferX;
-		int y2 = (int) destination.toGUIPoint(ratio).getY() + spaceBufferY;
+		int x2 = (int) destination.toGUIPoint(ratio, mirror).getX() + spaceBufferX;
+		int y2 = (int) destination.toGUIPoint(ratio, mirror).getY() + spaceBufferY;
 		g.drawLine(x, y, x2, y2);
 		g2.draw(new Line2D.Float(x, y, x2, y2));
 	}

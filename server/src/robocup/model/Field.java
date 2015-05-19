@@ -51,6 +51,11 @@ public class Field {
 			penaltyLineFromSpotDistance = Integer.parseInt(properties.getProperty("fullsize.penaltyLineFromSpotDistance"));
 			cameraOverlapZoneWidth = Integer.parseInt(properties.getProperty("fullsize.cameraOverlapZoneWidth"));
 			
+			goalWidth = Integer.parseInt(properties.getProperty("fullsize.goal.width"));
+			goalDepth = Integer.parseInt(properties.getProperty("fullsize.goal.depth"));
+			goalWallWidth = Integer.parseInt(properties.getProperty("fullsize.goal.wallWidth"));
+			goalHeight = Integer.parseInt(properties.getProperty("fullsize.goal.height"));
+			
 			createGoals(Integer.parseInt(properties.getProperty("fullsize.goal.width")),
 					Integer.parseInt(properties.getProperty("fullsize.goal.depth")),
 					Integer.parseInt(properties.getProperty("fullsize.goal.wallWidth")),
@@ -67,64 +72,74 @@ public class Field {
 			int penaltyLineFromSpotDistance) {
 		boolean goalChanged = false;
 		boolean fieldZoneChanged = false;
-		
+
 		if (this.lineWidth != lineWidth)
 			this.lineWidth = lineWidth;
-		
-		if (this.width != fieldWidth) {
-			this.width = fieldWidth;
-			fieldZoneChanged = true;
-		}
-		
+
 		if (this.length != fieldLength) {
 			this.length = fieldLength;
 			fieldZoneChanged = true;
 			goalChanged = true;
 		}
-		
+
+		if (this.width != fieldWidth) {
+			this.width = fieldWidth;
+			fieldZoneChanged = true;
+		}
+
 		if (this.boundaryWidth != boundaryWidth)
 			this.boundaryWidth = boundaryWidth;
 		if (this.refereeWidth != refereeWidth)
 			this.refereeWidth = refereeWidth;
-		
+
 		if (this.goalWidth != goalWidth) {
 			this.goalWidth = goalWidth;
 			goalChanged = true;
 		}
-		
+
 		if (this.goalDepth != goalDepth) {
+			System.out.println("GoalDepth changed from " + this.goalDepth + " to " + goalDepth);
 			this.goalDepth = goalDepth;
 			goalChanged = true;
 		}
-		
+
 		if (this.goalWallWidth != goalWallWidth) {
 			this.goalWallWidth = goalWallWidth;
 			goalChanged = true;
 		}
-		
+
 		if (this.centerCircleRadius != centerCircleRadius)
 			this.centerCircleRadius = centerCircleRadius;
-		
+
 		if (this.defenceRadius != defenseRadius) {
 			this.defenceRadius = defenseRadius;
 			fieldZoneChanged = true;
 		}
-		
-		if (this.defenceStretch != defenseStretch) {
-			this.defenceStretch = defenseStretch;
-			fieldZoneChanged = true;
-		}
-		
+
+		// defenceStretch is only sent by legacy SSL-Vision
+		//	if (this.defenceStretch != defenseStretch) {
+		//		System.out.println("DefenceStretch changed from " + this.defenceStretch + " to " + defenseStretch);
+		//		this.defenceStretch = defenseStretch;
+		//		fieldZoneChanged = true;
+		//	}
+
 		if (this.freeKickFromDefenceDistance != freeKickFromDefenceDistance)
 			this.freeKickFromDefenceDistance = freeKickFromDefenceDistance;
+
 		if (this.penaltyLineFromSpotDistance != penaltyLineFromSpotDistance)
 			this.penaltyLineFromSpotDistance = penaltyLineFromSpotDistance;
-		if (this.penaltySpotFromFieldLineDistance != penaltySpotFromFieldLineDist)
-			this.penaltySpotFromFieldLineDistance = penaltySpotFromFieldLineDist;
+
+		// penaltySpotFromFieldLineDistance is only sent by legacy SSL-Vision
+		//	if (this.penaltySpotFromFieldLineDistance != penaltySpotFromFieldLineDist) {
+		//		this.penaltySpotFromFieldLineDistance = penaltySpotFromFieldLineDist;
+		//	}
+
 		if (goalChanged)
 			createGoals(goalWidth, goalDepth, goalWallWidth, goalHeight);
-		if (fieldZoneChanged)
+		if (fieldZoneChanged) {
 			FieldZone.FieldPointPaletteZones.update();
+			FieldZone.update();
+		}
 	}
 
 	/**
@@ -298,14 +313,6 @@ public class Field {
 	
 	public void setCameraOverlapZoneWidth(int cameraOverlapZoneWith) {
 		this.cameraOverlapZoneWidth = cameraOverlapZoneWith;
-	}
-	
-	public void setFieldProportions(int length, int width, int lineWidth, int boundaryWidth, int refereeWidth) {
-		this.length = length;
-		this.width = width;
-		this.lineWidth = lineWidth;
-		this.boundaryWidth = boundaryWidth;
-		this.refereeWidth = refereeWidth;
 	}
 	
 	public void setFieldZones(int centerCircleRadius, int defenceRadius, int defenceStretch) {

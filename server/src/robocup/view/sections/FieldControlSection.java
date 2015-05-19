@@ -3,10 +3,8 @@ package robocup.view.sections;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.view.FieldPanel;
@@ -51,6 +49,10 @@ public class FieldControlSection extends SectionBox {
 		JButton showBall = new JButton("Show ball");
 		showBall.addActionListener(buttonListener);
 		add(showBall, "growx");
+		
+		JButton mirrorField = new JButton("Mirror North/South");
+		mirrorField.addActionListener(buttonListener);
+		add(mirrorField, "growx");
 
 		JButton drawFreeShot = new JButton("Draw free shot");
 		drawFreeShot.addActionListener(buttonListener);
@@ -102,6 +104,10 @@ public class FieldControlSection extends SectionBox {
 					fieldPanel.toggleShowBall();
 				break;
 
+				case "Mirror North/South":
+					fieldPanel.toggleMirror();
+				break;
+				
 				case "Draw free shot":
 					fieldPanel.toggleShowFreeShot();
 				break;
