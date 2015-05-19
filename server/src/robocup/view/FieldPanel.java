@@ -532,25 +532,25 @@ public class FieldPanel extends JPanel {
 		if(pathPlanner != null){
 			LinkedList<FieldPoint> path = pathPlanner.getCurrentRoute();
 			if(drawVertices){
-				ArrayList<Vertex> vertices = pathPlanner.getTestVertices();
-				for (Vertex vertex : vertices) {
-					g.setColor(Color.MAGENTA);
-				
-					int x = (int)vertex.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX;
-					int y = (int)vertex.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY;
-						
-					if(!vertex.isRemovable()){
-						g.drawString("nRmvbl", x, y);
-					}
-					g.drawOval(x - 5, y - 5, 10, 10);
-					if (drawNeighbours) {
-						g.setColor(new Color((int) (Math.random() * 255),
-								(int) (Math.random() * 255), (int) (Math
-										.random() * 255)));
-						for (Vertex neighbour : vertex.getNeighbours()) {
-							int x2 = (int) neighbour.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX;
-							int y2 = (int) neighbour.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY;
-							g.drawLine(x, y, x2, y2);
+				ArrayList<Vertex> vertices = pathPlanner.getAllVertices();
+				if(vertices != null){
+					for (Vertex vertex : vertices) {
+						g.setColor(Color.MAGENTA);
+					
+						int x = (int)vertex.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX;
+						int y = (int)vertex.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY;
+							
+						if(!vertex.isRemovable()){
+							g.drawString("nRmvbl", x, y);
+						}
+						g.drawOval(x - 5, y - 5, 10, 10);
+						if (drawNeighbours) {
+							g.setColor(new Color(50, 100, 200));
+							for (Vertex neighbour : vertex.getNeighbours()) {
+								int x2 = (int) neighbour.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX;
+								int y2 = (int) neighbour.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY;
+								g.drawLine(x, y, x2, y2);
+							}
 						}
 					}
 				}
@@ -565,7 +565,7 @@ public class FieldPanel extends JPanel {
 		Graphics2D g2 = (Graphics2D)g;
 		
 		g.setColor(Color.ORANGE);
-		g2.setStroke(new BasicStroke(3));
+		g2.setStroke(new BasicStroke(20));
 		Point2D.Double previous = start.toGUIPoint(ratio, mirror);
 		for (FieldPoint p : path) {
 			int x = (int) p.toGUIPoint(ratio, mirror).getX() + spaceBufferX;

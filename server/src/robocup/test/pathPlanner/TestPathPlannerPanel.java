@@ -50,15 +50,15 @@ public class TestPathPlannerPanel extends JPanel{
 		this.drawNeighbours = drawNeighbours;
 		this.drawPath = drawPath;
 		this.planner = planner;
-		this.path = planner.getRoute(World.getInstance().getAllRobots().get(0).getPosition(), destination, 0, true);
-		vertices = planner.getTestVertices();
+		this.path = planner.getRoute(World.getInstance().getAllRobots().get(0).getPosition(), destination, 0);
+		vertices = planner.getAllVertices();
 		setPreferredSize(new Dimension((int)(WIDTH * RATIO), (int)(HEIGHT * RATIO)));
 	}
 	
 	public void refresh(FieldPoint destination){
 		this.destination = destination;
-		this.path = planner.getRoute(World.getInstance().getAllRobots().get(0).getPosition(), destination, 0, true);
-		vertices = planner.getTestVertices();
+		this.path = planner.getRoute(World.getInstance().getAllRobots().get(0).getPosition(), destination, 0);
+		vertices = planner.getAllVertices();
 	}
 	
 	@Override

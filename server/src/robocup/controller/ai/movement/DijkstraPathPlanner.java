@@ -19,13 +19,13 @@ public class DijkstraPathPlanner {
 	// distance from the middle of the robot to the vertices around it
 	// Basically the "Danger zone" for the Robot. A normal Robot has a radius of 90mm, so if DISTANCE_TO_ROBOT == 130mm,
 	// then it means we don't want to get within (180mm - 90mm = ) 90mm of any other Robot.
-	public static final int DISTANCE_TO_ROBOT = 90;
+	public static final int DISTANCE_TO_ROBOT = 180;
 	// This value is used to determine the vertex points, which are VERTEX_DISTANCE_TO_ROBOT from the middle points of the robots.
-	public static final int VERTEX_DISTANCE_TO_ROBOT = 300;
+	public static final int VERTEX_DISTANCE_TO_ROBOT = 350;
 	private World world;
 	private ArrayList<Rectangle2D> objects;
 	protected ArrayList<Vertex> vertices;
-	private ArrayList<Vertex> testVertices = null;
+	private ArrayList<Vertex> allVertices = null;		//Vertices used for drawing.
 	protected ArrayList<Vertex> notRemovableVertices; 	//Contains the source and destination.
 	
 	private LinkedList<FieldPoint> currentRoute;
@@ -201,7 +201,7 @@ public class DijkstraPathPlanner {
 	 * @return list with points forming the shortest route
 	 */
 	@SuppressWarnings("unchecked")
-	public LinkedList<FieldPoint> getRoute(FieldPoint beginNode, FieldPoint destination, int robotId, boolean testMode) {
+	public LinkedList<FieldPoint> getRoute(FieldPoint beginNode, FieldPoint destination, int robotId) {
 		LinkedList<FieldPoint> route = new LinkedList<FieldPoint>();
 		boolean found = false;
 		source = beginNode;
@@ -213,11 +213,9 @@ public class DijkstraPathPlanner {
 		if (!intersectsObject(new Vertex(beginNode), new Vertex(destination))) {
 			route.push(destination);
 			found = true;
-			if(!testMode){
-				reset();
-				currentRoute = route;
-				return route;
-			}
+			reset();
+			currentRoute = route;
+			return route;
 		}
 
 		// generate vertices around robots and remove vertices colliding with
@@ -228,22 +226,19 @@ public class DijkstraPathPlanner {
 		// add source and dest to vertices list
 		Vertex source = setupSource(beginNode);
 		if(source == null){
-			if(testMode)
-				testVertices = (ArrayList<Vertex>)vertices.clone();
+			allVertices = (ArrayList<Vertex>)vertices.clone();
 			return null;					//Locked in
 		}
 		Vertex dest = setupDestination(destination);
 		if(dest == null){
-			if(testMode)
-				testVertices = (ArrayList<Vertex>)vertices.clone();
+			allVertices = (ArrayList<Vertex>)vertices.clone();
 			return null;					//Locked in
 		}
 		
 		// calculate neighbours for every vertex
 		generateNeighbours();
 		
-		if(testMode)
-			testVertices = (ArrayList<Vertex>)vertices.clone();
+		allVertices = (ArrayList<Vertex>)vertices.clone();
 		
 		if(!found){
 			// calculate the shortest path through the graph
@@ -254,11 +249,8 @@ public class DijkstraPathPlanner {
 				route.push(u.getPosition());
 				u = u.getPrevious();
 			}
-
-			// reset lists so we can use the same pathplanner object multiple times
-			if(!testMode){
-				reset();
-			}
+			reset();
+			
 		}
 		currentRoute = route;
 		return route;
@@ -582,7 +574,7 @@ public class DijkstraPathPlanner {
 	 */
 	protected boolean intersectsObject(Vertex source, Vertex destination) {
 		for (Rectangle2D rect : objects){
-			if(destination != null)
+			if(destination.getPosition() != null)
 				if (rect.intersectsLine(source.getPosition().getX(), source.getPosition().getY(), destination.getPosition()
 						.getX(), destination.getPosition().getY())){
 					return true;
@@ -608,8 +600,8 @@ public class DijkstraPathPlanner {
 	 * Method that returns a copy of the vertices
 	 * @returns a copy of the {@link Vertex vertices}.
 	 */
-	public ArrayList<Vertex> getTestVertices() {
-		return testVertices;
+	public ArrayList<Vertex> getAllVertices() {
+		return allVertices;
 	}
 
 	/**

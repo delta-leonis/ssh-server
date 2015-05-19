@@ -141,7 +141,7 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 		TestPathPlanner planner = new TestPathPlanner();
 		planner.setupLockedInSource(destination, true);
 		System.out.println("\nTest Locked In Source...");
-		assertNull("Test Locked In Source", planner.getRoute(new FieldPoint(0,0), destination, 0, true));
+		assertNull("Test Locked In Source", planner.getRoute(new FieldPoint(0,0), destination, 0));
 		System.out.println("Succeeded");
 	}
 	
@@ -154,7 +154,7 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 		TestPathPlanner planner = new TestPathPlanner();
 		planner.setupLockedInDestination(destination, true);
 		System.out.println("\nTest Locked In Destination...");
-		assertNull("Test Locked In Source", planner.getRoute(new FieldPoint(0,0), destination, 0, true));
+		assertNull("Test Locked In Source", planner.getRoute(new FieldPoint(0,0), destination, 0));
 		System.out.println("Succeeded");
 	}
 
