@@ -47,6 +47,7 @@ public class FieldPanel extends JPanel {
 	private boolean showZones;
 	private boolean showBall;
 	private boolean showCoords;
+	private boolean mirror;
 	
 	private boolean showPathPlanner;
 	private boolean drawNeighbours;
@@ -60,6 +61,7 @@ public class FieldPanel extends JPanel {
 		setSize((int) (World.getInstance().getField().getLength()*RATIO), (int) (World.getInstance().getField().getWidth()*RATIO));
 		showFreeShot = false;
 		showRaster = false;
+		mirror = false;
 		updateCounter = 0;
 
 		addMouseListener(new MouseAdapter() {
@@ -249,6 +251,14 @@ public class FieldPanel extends JPanel {
 	}
 	
 	/**
+	 * Toggle to mirror the field horizontally
+	 */
+	public void toggleMirror(){
+		mirror = !mirror;
+		repaint();
+	}
+	
+	/**
 	 * Draws the co-ordinates of the edges of the field.
 	 * @param g The graphics to draw on
 	 * @param ratio The current ratio.
@@ -283,16 +293,14 @@ public class FieldPanel extends JPanel {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(2));
 		g2.setColor(Color.orange);
-
-		try {
-			g2.drawLine((int) world.hasFreeShot().toGUIPoint(ratio).getX() + spaceBufferX, (int) world.hasFreeShot()
+		FieldPoint target = world.hasFreeShot();
+		
+		if(target == null)
+			return;
+		g2.drawLine((int) target.toGUIPoint(ratio).getX() + spaceBufferX, (int) target
 				.toGUIPoint(ratio).getY()
 				+ spaceBufferY, (int) world.getBall().getPosition().toGUIPoint(ratio).getX() + spaceBufferX,
 				(int) world.getBall().getPosition().toGUIPoint(ratio).getY() + spaceBufferY);
-		} catch (NullPointerException e) {
-			// no free shot
-		}
-		
 	}
 
 	/**
