@@ -9,6 +9,7 @@ public class Disturber extends Keeper {
 
 	public Disturber(Robot robot, FieldPoint centerGoalPosition) {
 		super(robot, centerGoalPosition);
+		offset = 0;
 	}
 
 	/**

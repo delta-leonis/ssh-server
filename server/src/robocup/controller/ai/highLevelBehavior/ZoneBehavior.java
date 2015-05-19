@@ -15,7 +15,6 @@ import robocup.controller.ai.highLevelBehavior.strategy.standard.KickOffAttack;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.KickOffDefense;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.PenaltyAttack;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.PenaltyDefense;
-import robocup.controller.ai.highLevelBehavior.strategy.standard.TimeOut;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.AttackMode;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.DefenseMode;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.Mode;
@@ -184,18 +183,8 @@ public class ZoneBehavior extends Behavior {
 			// Cannot be reached as this command is already been handled, so return null
 			break;
 		case GOAL_BLUE:
-			if (world.getReferee().getAllyTeamColor() == TeamColor.BLUE) {
-				returnMode = new StandardMode(new KickOffDefense(), executers);
-			} else {
-				returnMode = new StandardMode(new KickOffAttack(), executers);
-			}
-			break;
 		case GOAL_YELLOW:
-			if (world.getReferee().getAllyTeamColor() == TeamColor.YELLOW) {
-				returnMode = new StandardMode(new KickOffDefense(), executers);
-			} else {
-				returnMode = new StandardMode(new KickOffAttack(), executers);
-			}
+			returnMode = new StandardMode(new GameStop(), executers);
 			break;
 		case HALT:
 			returnMode = new StandardMode(new GameStop(), executers);
@@ -246,13 +235,9 @@ public class ZoneBehavior extends Behavior {
 			}
 			break;
 		case STOP:
-			returnMode = new StandardMode(new GameStop(), executers);
-			break;
 		case TIMEOUT_BLUE:
-			returnMode = new StandardMode(new TimeOut(), executers);
-			break;
 		case TIMEOUT_YELLOW:
-			returnMode = new StandardMode(new TimeOut(), executers);
+			returnMode = new StandardMode(new GameStop(), executers);
 			break;
 		default:
 			returnMode = null;

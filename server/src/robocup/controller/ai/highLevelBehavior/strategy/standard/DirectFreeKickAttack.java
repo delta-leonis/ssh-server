@@ -13,11 +13,11 @@ public class DirectFreeKickAttack extends Strategy {
 	public DirectFreeKickAttack() {
 		super();
 		roles.add(RobotMode.KEEPER);
-		roles.add(RobotMode.KEEPERDEFENDER);
-		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.ATTACKER);
 		roles.add(RobotMode.RUNNER);
 		roles.add(RobotMode.RUNNER);
+		roles.add(RobotMode.KEEPERDEFENDER);
+		roles.add(RobotMode.KEEPERDEFENDER);
 	}
 
 	@Override

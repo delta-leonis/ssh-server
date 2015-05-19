@@ -29,29 +29,22 @@ public class StandardMode extends Mode {
 
 	@Override
 	public void updateAttacker(RobotExecuter executer) {
-		// Unused in DefenseMode
 		Attacker attacker = (Attacker) executer.getLowLevelBehavior();
-		int chipKick = 40;
+		int chipKick = 0;
 		FieldPoint ballPosition = ball.getPosition();
-		FieldPoint freeShot = world.hasFreeShot();
 
-		if (freeShot != null) {
-			double shootDirection = ballPosition.getAngle(freeShot);
+		ArrayList<Ally> runners = new ArrayList<Ally>();
+
+		for (RobotExecuter itExecuter : executers) {
+			Ally robot = (Ally) itExecuter.getRobot();
+
+			if (robot.getRole() == RobotMode.RUNNER)
+				runners.add(robot);
+		}
+
+		if (runners.size() > 0 && runners.get(0).getPosition() != null) {
+			double shootDirection = ballPosition.getAngle(runners.get(0).getPosition());
 			attacker.update(shootDirection, chipKick, ballPosition);
-		} else {
-			ArrayList<Ally> runners = new ArrayList<Ally>();
-
-			for (RobotExecuter itExecuter : executers) {
-				Ally robot = (Ally) itExecuter.getRobot();
-
-				if (robot.getRole() == RobotMode.RUNNER)
-					runners.add(robot);
-			}
-
-			if (runners.size() > 0 && runners.get(0).getPosition() != null) {
-				double shootDirection = ballPosition.getAngle(runners.get(0).getPosition());
-				attacker.update(shootDirection, chipKick, ballPosition);
-			}
 		}
 	}
 
