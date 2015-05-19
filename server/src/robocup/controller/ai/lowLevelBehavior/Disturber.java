@@ -5,6 +5,8 @@ import robocup.model.Robot;
 
 public class Disturber extends Keeper {
 
+	private int offset;
+
 	public Disturber(Robot robot, FieldPoint centerGoalPosition) {
 		super(robot, centerGoalPosition);
 	}
@@ -14,14 +16,16 @@ public class Disturber extends Keeper {
 	 * @param distanceToObject
 	 * @param goToKick
 	 * @param objectPosition
+	 * @param offset
 	 */
-	public void update(int distanceToObject, boolean goToKick, FieldPoint objectPosition) {
+	public void update(int distanceToObject, boolean goToKick, FieldPoint objectPosition, int offset) {
 		super.update(distanceToObject, goToKick, objectPosition);
+		this.offset = offset;
 	}
 
 	@Override
 	public void calculate() {
-		FieldPoint newDestination = getNewKeeperDestination(ballPosition, centerGoalPosition, distanceToObject);
+		FieldPoint newDestination = getNewKeeperDestination(ballPosition, centerGoalPosition, distanceToObject, offset);
 		changeDestination(newDestination, ballPosition);
 	}
 }
