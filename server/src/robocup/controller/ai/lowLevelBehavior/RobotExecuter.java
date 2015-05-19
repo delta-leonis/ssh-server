@@ -23,9 +23,8 @@ public class RobotExecuter implements Runnable {
 	public void run() {
 		while (true) {
 			try{
-				if (stop) {
-					if(lowLevelBehavior != null)
-						lowLevelBehavior.go.setDestination(null);
+				if(lowLevelBehavior != null){
+					lowLevelBehavior.go.setDestination(null);
 				} else if (robot.getPosition() != null)
 					executeBehavior();
 				try {
@@ -52,7 +51,7 @@ public class RobotExecuter implements Runnable {
 	}
 
 	public void executeBehavior() {
-		if (lowLevelBehavior == null) {
+		if (lowLevelBehavior == null || stop) {
 			return;
 		}
 		lowLevelBehavior.calculate();

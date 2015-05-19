@@ -23,6 +23,8 @@ public class GotoPosition {
 
 	// TODO find a better solution
 	private static final double DISTANCE_ROTATIONSPEED_COEFFICIENT = 8;
+	private static final int MAX_ROTATION_SPEED = 1100;	//in mm/s
+	private static final int START_UP_SPEED = 100; // Speed added to rotation. Robot only starts rotating if it receives a value higher than 200 
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 
 	private FieldPoint destination;
@@ -38,7 +40,7 @@ public class GotoPosition {
 	// calculate total circumference of robot
 	private static final double circumference = (Robot.DIAMETER * Math.PI);
 	
-	private static final int MAX_VELOCITY =2000;
+	private static final int MAX_VELOCITY =1800;
 
 	/**
 	 * Setup this object to function for the given {@link Robot} and {@link FieldPoint destination}
@@ -142,10 +144,13 @@ public class GotoPosition {
 	 */
 	public void calculate() {
 		robot.setOnSight(true);
-		if (destination == null || target == null) {
-			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
-			return;
-
+		if (destination == null) {
+			if(target == null){
+				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+			}
+			else{
+				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(target)), 0, false);
+			}
 			// Calculate parameters
 		} else {
 			// TODO enable me to be able to dribble
@@ -203,16 +208,27 @@ public class GotoPosition {
 	 * @return
 	 */
 	private double getRotationSpeed(double rotation) {
-
-
 		// must be between 0 and 50 percent, if it's higher than 50% rotating to
 		// the other direction is faster
 		double rotationPercent = rotation / 360;
 
 		// distance needed to rotate in mm
 		double rotationDistance = circumference * rotationPercent;
-
-		return -(rotationDistance * DISTANCE_ROTATIONSPEED_COEFFICIENT);
+		rotationDistance *= DISTANCE_ROTATIONSPEED_COEFFICIENT;
+		if(Math.abs(rotationDistance) > MAX_ROTATION_SPEED){
+			if(rotationDistance < 0){
+				rotationDistance = -MAX_ROTATION_SPEED;
+			}
+			else{
+				rotationDistance = MAX_ROTATION_SPEED;
+			}
+		}
+		if(rotationDistance < 0){
+			return -(rotationDistance - START_UP_SPEED);
+		}
+		else{
+			return -(rotationDistance + START_UP_SPEED);
+		}
 	}
 
 	/**
@@ -244,7 +260,7 @@ public class GotoPosition {
 	private double getSpeed(double d, int distanceToSlowDown, int speed) {
 		if(d > distanceToSlowDown)
 			return speed;
-		return ((d / distanceToSlowDown) * speed);
+		return -((d / distanceToSlowDown) * speed);
 	}
 	
 	/**

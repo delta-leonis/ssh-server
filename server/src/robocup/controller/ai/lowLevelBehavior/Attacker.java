@@ -22,7 +22,6 @@ public class Attacker extends LowLevelBehavior {
 		shootDirection = 0.0;
 		chipKick = 0;
 		ballPosition = null;
-		ballPosition = null;
 
 		this.role = RobotMode.ATTACKER;
 		go = new GotoPosition(robot, robot.getPosition(), ballPosition);

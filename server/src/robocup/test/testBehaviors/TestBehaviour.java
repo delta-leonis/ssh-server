@@ -1,17 +1,12 @@
 package robocup.test.testBehaviors;
 
 import java.util.ArrayList;
-
 import robocup.controller.ai.highLevelBehavior.Behavior;
-import robocup.controller.ai.highLevelBehavior.strategy.defense.BarricadeDefending;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.Mode;
-import robocup.controller.ai.lowLevelBehavior.Attacker;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
-import robocup.model.FieldPoint;
-import robocup.model.World;
+
 
 public class TestBehaviour extends Behavior {
-
 	private World world;
 	private Mode currentMode; // AttackMode or DefenseMode
 
@@ -23,18 +18,11 @@ public class TestBehaviour extends Behavior {
 	 * @see {@link #chooseDefenseStrategy(ArrayList)}
 	 * @param executers the list containing all RobotExecuters
 	 */
-	public TestBehaviour(ArrayList<RobotExecuter> executers) {
-		world = World.getInstance();
-		
+	public TestBehaviour() {		
 		// WARNING: TestMode overwrites execute. This means that the given
 		// strategy doesn't matter at all.
-		currentMode = new TestMode(new BarricadeDefending(), executers);
-		
-		RobotExecuter exec = world.getRobotExecuters().get(0);
-		exec.setLowLevelBehavior(new Attacker(exec.getRobot()));
-		exec.getRobot().setVisible(true);
-		exec.getRobot().setPosition(new FieldPoint(0,0));
-		exec.getLowLevelBehavior().calculate();
+		currentMode = new TestMode(new TestStrategy());
+
 	}
 
 	/**

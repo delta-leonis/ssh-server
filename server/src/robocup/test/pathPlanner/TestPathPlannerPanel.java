@@ -100,7 +100,7 @@ public class TestPathPlannerPanel extends JPanel{
 					(int) rect.getCenterX(),
 					(int) rect.getCenterY(),
 					90,
-					DijkstraPathPlanner.DISTANCE_TO_ROBOT,
+					(int)rect.getWidth(),
 					DijkstraPathPlanner.VERTEX_DISTANCE_TO_ROBOT,
 					"[" + (int) rect.getCenterX() + ","
 							+ (int) rect.getCenterY() + "]");

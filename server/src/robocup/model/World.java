@@ -807,10 +807,16 @@ public class World extends Observable {
 	
 	
 	public void start(){
+		for(RobotExecuter executer : getRobotExecuters()){
+			executer.stop(false);
+		}
 		start = true;
 	}
 	
 	public void stop(){
+		for(RobotExecuter executer : getRobotExecuters()){
+			executer.stop(true);
+		}
 		start = false;
 	}
 	
