@@ -102,7 +102,7 @@ public class ControlRobotSection extends SectionBox{
 				ComInterface.getInstance().send(1, selectedRobotId, 0, 0, 0, 0, dribbling);
 				break;
 			case "↑":
-				ComInterface.getInstance().send(1, selectedRobotId,0, 5000, 0, 0, dribbling);
+				ComInterface.getInstance().send(1, selectedRobotId,0, 2000, 0, 0, dribbling);
 				break;
 			case "↓":
 				ComInterface.getInstance().send(1, selectedRobotId, 0, -2000, 0, 0, dribbling);
@@ -137,7 +137,6 @@ public class ControlRobotSection extends SectionBox{
 	@Override
 	public void update() {
 		selectedRobotId = ((GUI) SwingUtilities.getWindowAncestor((this))).getSelectedRobotId();
-		System.out.println(selectedRobotId);
 		selectedRobotLabel.setText(String.format("Robot #%d selected", selectedRobotId));
 	}
 

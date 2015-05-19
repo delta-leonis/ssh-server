@@ -35,11 +35,19 @@ public abstract class LowLevelBehavior {
 	}
 	
 	/**
-	 * Get the GotoPosition associated to this lowlevel behavior
-	 * @return the {@link GotoPosition} associated to this lowlevel behavior
+	 * Get the {@link GotoPosition} associated to this {@link LowLevelBehaviour}
+	 * @return the {@link GotoPosition} associated to this {@link LowLevelBehaviour}
 	 */
 	public GotoPosition getGotoPosition() {
 		return go;
+	}
+	
+	/**
+	 * Sets the {@link GotoPosition} for this {@link LowLevelBehaviour}
+	 * @param go The {@link GotoPosition} this {@link LowLevelBehaviour} should use.
+	 */
+	public void setGotoPosition(GotoPosition go){
+		this.go = go;
 	}
 
 	/**

@@ -205,7 +205,10 @@ public class Team {
 	public ArrayList<Robot> getRobotsOnSight(){
 		ArrayList<Robot> onsight = new ArrayList<Robot>();
 		for( Robot robot : robots){
-			if(robot.isOnSight())
+			if(robot.getPosition() != null){
+				onsight.add(robot);
+			}
+			else if(robot.isOnSight())
 				onsight.add(robot);
 		}
 		return onsight;

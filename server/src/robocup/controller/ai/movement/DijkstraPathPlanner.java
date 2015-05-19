@@ -19,9 +19,9 @@ public class DijkstraPathPlanner {
 	// distance from the middle of the robot to the vertices around it
 	// Basically the "Danger zone" for the Robot. A normal Robot has a radius of 90mm, so if DISTANCE_TO_ROBOT == 130mm,
 	// then it means we don't want to get within (180mm - 90mm = ) 90mm of any other Robot.
-	public static final int DISTANCE_TO_ROBOT = 180;
+	public static final int DISTANCE_TO_ROBOT = 90;
 	// This value is used to determine the vertex points, which are VERTEX_DISTANCE_TO_ROBOT from the middle points of the robots.
-	public static final int VERTEX_DISTANCE_TO_ROBOT = 400;
+	public static final int VERTEX_DISTANCE_TO_ROBOT = 300;
 	private World world;
 	private ArrayList<Rectangle2D> objects;
 	protected ArrayList<Vertex> vertices;
@@ -248,14 +248,13 @@ public class DijkstraPathPlanner {
 		if(!found){
 			// calculate the shortest path through the graph
 			calculatePath(source, dest);
-	
 			// add positions to the route list
 			Vertex u = dest;
 			while (u.getPrevious() != null) {
 				route.push(u.getPosition());
 				u = u.getPrevious();
 			}
-			
+
 			// reset lists so we can use the same pathplanner object multiple times
 			if(!testMode){
 				reset();
@@ -503,13 +502,11 @@ public class DijkstraPathPlanner {
 		for (Robot r : world.getReferee().getAlly().getRobotsOnSight())
 			if (r.getPosition() != null)
 				if (r.getRobotId() != robotId)
-					objects.add(new Rectangle2D.Double(r.getPosition().getX() - DISTANCE_TO_ROBOT, r.getPosition()
-							.getY() - DISTANCE_TO_ROBOT, DISTANCE_TO_ROBOT*2, DISTANCE_TO_ROBOT*2));
+					objects.add(r.getDangerRectangle(DISTANCE_TO_ROBOT));
 
 		for (Robot r : world.getReferee().getEnemy().getRobotsOnSight())
 			if (r.getPosition() != null)
-				objects.add(new Rectangle2D.Double(r.getPosition().getX() - DISTANCE_TO_ROBOT, r.getPosition()
-						.getY() - DISTANCE_TO_ROBOT, DISTANCE_TO_ROBOT * 2, DISTANCE_TO_ROBOT * 2));
+				objects.add(r.getDangerRectangle(DISTANCE_TO_ROBOT));
 	}
 
 	/**
@@ -584,11 +581,12 @@ public class DijkstraPathPlanner {
 	 * @return true when an object is found between the vertices
 	 */
 	protected boolean intersectsObject(Vertex source, Vertex destination) {
-		for (Rectangle2D rect : objects)
+		for (Rectangle2D rect : objects){
 			if (rect.intersectsLine(source.getPosition().getX(), source.getPosition().getY(), destination.getPosition()
-					.getX(), destination.getPosition().getY()))
+					.getX(), destination.getPosition().getY())){
 				return true;
-		
+			}
+		}
 		return false;
 	}
 	

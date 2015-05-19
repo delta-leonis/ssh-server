@@ -7,16 +7,14 @@ import robocup.controller.ai.highLevelBehavior.zoneBehavior.Mode;
 import robocup.controller.ai.lowLevelBehavior.Attacker;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.controller.ai.movement.GotoPosition;
-import robocup.model.Ally;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.World;
 import robocup.model.enums.FieldZone;
-import robocup.model.enums.RobotMode;
 
 public class TestMode extends Mode {
-	private Robot robot;
-	private ArrayList<Robot> robots;
+	private RobotExecuter robot;
+	private ArrayList<RobotExecuter> robots;
 	private GotoPosition go;
 	private ArrayList<GotoPosition> goes;
 	
@@ -25,55 +23,65 @@ public class TestMode extends Mode {
     /** Co-ordinates of the goal on the right side of the field */
     private static final FieldPoint MID_GOAL_POSITIVE = new FieldPoint(3000, 0);
 	
-	public TestMode(Strategy strategy, ArrayList<RobotExecuter> executers) {
-		super(strategy, executers);
+	public TestMode(Strategy strategy) {
+		super(strategy, World.getInstance().getRobotExecuters());
 		
 		initializeOneRobot();
 	}
 	
 	public void initializeOneRobot(){
-		robot = executers.get(0).getRobot();
+		robot = executers.get(TestBehaviour.ROBOT_ID);
 	}
 	
 	public void initializeThreeRobots(){
-		robots = new ArrayList<Robot>();
+		robots = new ArrayList<RobotExecuter>();
 		robots.add(robot);
-		robots.add(executers.get(1).getRobot());
-		robots.add(executers.get(2).getRobot());
+		robots.add(executers.get(1));
+		robots.add(executers.get(2));
 	}
 	
 	@Override
 	public void execute(){
-		testFollowBallFacing(robot);
+		if(World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).getLowLevelBehavior() == null){
+			World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).setLowLevelBehavior(new Attacker(robot.getRobot()));
+		}
+		
+		testFollowBallMovementFacing(robot);
 	}
 	
 	/**
 	 * Function that let's the given robot face the ball continuously.
 	 */
-	public void testFollowBallFacing(Robot robot){
-		go = new GotoPosition(World.getInstance().getReferee().getAlly().getRobotByID(robot.getRobotId()), 
-				robot.getPosition(),
-				 World.getInstance().getBall().getPosition());
+	public void testFollowBallFacing(RobotExecuter robot){
+		
+		robot.getLowLevelBehavior().setGotoPosition(new GotoPosition(robot.getRobot(), 
+				/*robot.getPosition()*/ null,
+				 World.getInstance().getBall().getPosition()));
+		World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).getLowLevelBehavior().setGotoPosition(go);
+
 		go.calculate();
 	}
 	
 	/**
 	 * Function that makes the robot follow the ball without trying to face it.
 	 */
-	public void testFollowBallMovement(Robot robot){
-		go = new GotoPosition(World.getInstance().getReferee().getAlly().getRobotByID(robot.getRobotId()), 
+	public void testFollowBallMovement(RobotExecuter robot){
+		robot.getLowLevelBehavior().setGotoPosition(new GotoPosition(World.getInstance().getReferee().getAlly().getRobotByID(robot.getRobot().getRobotId()), 
 				World.getInstance().getBall().getPosition(),
-				 new FieldPoint(0,0));
+				 new FieldPoint(0,0)));
+		World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).getLowLevelBehavior().setGotoPosition(go);
+
 		go.calculate();
 	}
 	
 	/**
 	 * Function that makes the robot follow the ball without trying to face it.
 	 */
-	public void testFollowBallMovementFacing(Robot robot){
-		go = new GotoPosition(World.getInstance().getReferee().getAlly().getRobotByID(robot.getRobotId()), 
+	public void testFollowBallMovementFacing(RobotExecuter robot){		
+		go = new GotoPosition(robot.getRobot(), 
 				World.getInstance().getBall().getPosition(),
 				World.getInstance().getBall().getPosition());
+		World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).getLowLevelBehavior().setGotoPosition(go);
 		go.calculate();
 	}
 	
@@ -82,10 +90,12 @@ public class TestMode extends Mode {
 	 * @param robot The {@link Robot} we wish to move.
 	 * @param zone The {@link Zone} we wish to move towards.
 	 */
-	public void testMoveToZone(Robot robot, FieldZone zone){
-		go = new GotoPosition(World.getInstance().getReferee().getAlly().getRobotByID(robot.getRobotId()), 
+	public void testMoveToZone(RobotExecuter robot, FieldZone zone){
+		robot.getLowLevelBehavior().setGotoPosition(new GotoPosition(World.getInstance().getReferee().getAlly().getRobotByID(robot.getRobot().getRobotId()), 
 				zone.getCenterPoint(),
-				new FieldPoint(0,0));
+				new FieldPoint(0,0)));
+		World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).getLowLevelBehavior().setGotoPosition(go);
+
 		go.calculate();
 	}
 	
@@ -138,30 +148,6 @@ public class TestMode extends Mode {
 
 	@Override
 	public void updateAttacker(RobotExecuter executer) {
-		// Unused in DefenseMode
-		Attacker attacker = (Attacker) executer.getLowLevelBehavior();
-		int chipKick = 40;
-		FieldPoint ballPosition = ball.getPosition();
-		FieldPoint freeShot = world.hasFreeShot();
-
-		if (freeShot != null) {
-			double shootDirection = ballPosition.getAngle(world.hasFreeShot());
-			attacker.update(shootDirection, chipKick, ballPosition);
-		} else {
-			ArrayList<Ally> runners = new ArrayList<Ally>();
-
-			for (RobotExecuter itExecuter : executers) {
-				Ally robot = (Ally) itExecuter.getRobot();
-
-				if (robot.getRole() == RobotMode.RUNNER)
-					runners.add(robot);
-			}
-
-			if (runners.size() > 0 && runners.get(0).getPosition() != null) {
-				double shootDirection = ballPosition.getAngle(runners.get(0).getPosition());
-				attacker.update(shootDirection, chipKick, ballPosition);
-			}
-		}
 	}
 
 	@Override
