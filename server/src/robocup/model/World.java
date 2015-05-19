@@ -12,6 +12,7 @@ import robocup.controller.handlers.protohandlers.DetectionHandler;
 import robocup.model.enums.Command;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.TeamColor;
+import robocup.output.ComInterface;
 import robocup.view.GUI;
 
 /**
@@ -814,8 +815,10 @@ public class World extends Observable {
 	}
 	
 	public void stop(){
+		int i = 0;
 		for(RobotExecuter executer : getRobotExecuters()){
 			executer.stop(true);
+			ComInterface.getInstance().send(1, i++, 0, 0, 0, 0, false);
 		}
 		start = false;
 	}
