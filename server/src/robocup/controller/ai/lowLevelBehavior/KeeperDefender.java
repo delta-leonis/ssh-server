@@ -7,11 +7,11 @@ import robocup.model.enums.RobotMode;
 
 public class KeeperDefender extends Keeper {
 
-	private FieldPoint offset;
+	private int offset;
 
 	public KeeperDefender(Robot robot, FieldPoint centerGoalPosition) {
 		super(robot, centerGoalPosition);
-		offset = null;
+		offset = 0;
 
 		this.role = RobotMode.KEEPERDEFENDER;
 		go = new GotoPosition(robot, centerGoalPosition, ballPosition, 2000);
@@ -22,22 +22,15 @@ public class KeeperDefender extends Keeper {
 	 * @param distanceToGoal
 	 * @param goToKick
 	 * @param ballPosition
-	 * @param offset the offset Position
+	 * @param offset the offset for this keeper defender in degrees
 	 */
-	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, FieldPoint offset) {
+	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, int offset) {
 		super.update(distanceToGoal, goToKick, ballPosition);
 		this.offset = offset;
 	}
 
 	@Override
 	protected FieldPoint getNewKeeperDestination(FieldPoint objectPosition, FieldPoint subjectPosition, int distance) {
-		FieldPoint newDestination = super.getNewKeeperDestination(objectPosition, subjectPosition, distance);
-
-		if (newDestination != null && offset != null) {
-			newDestination.setX(newDestination.getX() + offset.getX());
-			newDestination.setY(newDestination.getY() + offset.getY());
-		}
-
-		return newDestination;
+		return super.getNewKeeperDestination(objectPosition, subjectPosition, distance, offset);
 	}
 }

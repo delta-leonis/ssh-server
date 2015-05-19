@@ -73,8 +73,7 @@ public class ZoneBehavior extends Behavior {
 	}
 
 	/**
-	 * Determine which Mode needs to be u
-			default:sed.
+	 * Determine which Mode needs to be used.
 	 * @param executers All the {@link robocup.controller.ai.lowLevelBehavior.RobotExecuter executers} that control our {@link robocup.model.Robot robots}
 	 * @return {@link AttackMode} when our team is closer to the ball. {@link DefenseMode} when the enemy team is closer to the ball.
 	 */

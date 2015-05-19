@@ -137,7 +137,6 @@ public class ControlRobotSection extends SectionBox{
 	@Override
 	public void update() {
 		selectedRobotId = ((GUI) SwingUtilities.getWindowAncestor((this))).getSelectedRobotId();
-		System.out.println(selectedRobotId);
 		selectedRobotLabel.setText(String.format("Robot #%d selected", selectedRobotId));
 	}
 
