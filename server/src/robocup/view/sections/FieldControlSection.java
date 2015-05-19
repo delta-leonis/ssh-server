@@ -12,7 +12,6 @@ import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.Main;
-import robocup.model.World;
 import robocup.view.FieldPanel;
 import robocup.view.SectionBox;
 

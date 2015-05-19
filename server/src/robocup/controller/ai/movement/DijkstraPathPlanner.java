@@ -582,10 +582,11 @@ public class DijkstraPathPlanner {
 	 */
 	protected boolean intersectsObject(Vertex source, Vertex destination) {
 		for (Rectangle2D rect : objects){
-			if (rect.intersectsLine(source.getPosition().getX(), source.getPosition().getY(), destination.getPosition()
-					.getX(), destination.getPosition().getY())){
-				return true;
-			}
+			if(destination != null)
+				if (rect.intersectsLine(source.getPosition().getX(), source.getPosition().getY(), destination.getPosition()
+						.getX(), destination.getPosition().getY())){
+					return true;
+				}
 		}
 		return false;
 	}

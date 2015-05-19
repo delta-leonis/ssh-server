@@ -46,7 +46,8 @@ public class TestMode extends Mode {
 			World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).setLowLevelBehavior(new Attacker(robot.getRobot()));
 		}
 		
-		testFollowBallMovementFacing(robot);
+//		testFollowBallMovementFacing(robot);
+		testFollowBallMovement(robot);
 	}
 	
 	/**
@@ -66,9 +67,9 @@ public class TestMode extends Mode {
 	 * Function that makes the robot follow the ball without trying to face it.
 	 */
 	public void testFollowBallMovement(RobotExecuter robot){
-		robot.getLowLevelBehavior().setGotoPosition(new GotoPosition(World.getInstance().getReferee().getAlly().getRobotByID(robot.getRobot().getRobotId()), 
+		go = new GotoPosition(World.getInstance().getReferee().getAlly().getRobotByID(robot.getRobot().getRobotId()), 
 				World.getInstance().getBall().getPosition(),
-				 new FieldPoint(0,0)));
+				 new FieldPoint(0,0));
 		World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).getLowLevelBehavior().setGotoPosition(go);
 
 		go.calculate();

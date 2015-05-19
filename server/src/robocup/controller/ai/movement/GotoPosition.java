@@ -155,6 +155,9 @@ public class GotoPosition {
 		} else {
 			// TODO enable me to be able to dribble
 			// dribble = Math.abs(robot.getOrientation() - robot.getPosition().getAngle(World.getInstance().getBall().getPosition())) < 20 && robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition()) < Robot.DIAMETER / 2 + 200;
+			if(destination == null){
+				System.out.println("Test!  FOUT: Destination kan niet null zijn.");
+			}
 			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), false);
 			if(route == null){
 				LOGGER.severe("Robot #" + robot.getRobotId() + " can't reach destination.");
@@ -224,10 +227,10 @@ public class GotoPosition {
 			}
 		}
 		if(rotationDistance < 0){
-			return -(rotationDistance - START_UP_SPEED);
+			return rotationDistance - START_UP_SPEED;
 		}
 		else{
-			return -(rotationDistance + START_UP_SPEED);
+			return rotationDistance + START_UP_SPEED;
 		}
 	}
 
@@ -269,18 +272,22 @@ public class GotoPosition {
 	 * @return The rotation we need to make to face the given {@link FieldPoint}
 	 */
 	private double rotationToDest(FieldPoint newPoint) {
-		// angle vector between old and new
-		double newangle = robot.getPosition().getAngle(newPoint);
-		double rot = (newangle - robot.getOrientation());
-
-		if (rot > 180) {
-			rot -= 360;
+		if(newPoint != null){
+			// angle vector between old and new
+			double newangle = robot.getPosition().getAngle(newPoint);
+			double rot = robot.getOrientation() - newangle;
+	
+			if (rot > 180) {
+				rot -= 360;
+			}
+	
+			if (rot < -180) {
+				rot += 360;
+			}
+			return rot;
+		}else{
+			return 0;
 		}
-
-		if (rot < -180) {
-			rot += 360;
-		}
-		return rot;
 	}
 
 	/**
