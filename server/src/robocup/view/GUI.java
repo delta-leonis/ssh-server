@@ -135,7 +135,7 @@ public class GUI extends JFrame {
 		}
 	}
 
-	/**
+	/**world.getBall()
 	 * Returns the id of the {@link Robot} who's {@link RobotBox} is selected 
 	 * @return robotId
 	 */
