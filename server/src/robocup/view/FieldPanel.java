@@ -420,7 +420,6 @@ public class FieldPanel extends JPanel {
 		g2.setStroke(new BasicStroke(4));
 
 		Team allyTeam = world.getReferee().getAlly();
-		g2.setColor(allyTeam.getColor().toColor());
 		for (Robot robot : allyTeam.getRobots()) {
 			if (robot.getPosition() != null) {
 				// draw round part of robot
@@ -441,6 +440,19 @@ public class FieldPanel extends JPanel {
 						.getPosition().getY()
 						+ Math.sin(Math.toRadians(robot.getOrientation() -45.0))
 						* Robot.DIAMETER / 2.0);
+
+				//SOLID COLOR
+				g2.setColor(allyTeam.getColor().toColor());
+				g2.fillArc(
+						(int) (robot.getPosition().toGUIPoint(ratio, mirror).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
+						(int) (robot.getPosition().toGUIPoint(ratio, mirror).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
+						(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio),
+						(int) robot.getOrientation() + (mirror ?  225: 45), 270);
+				g2.fillPolygon(new int[] {(int) right.toGUIPoint(ratio, mirror).getX(), (int) left.toGUIPoint(ratio, mirror).getX(), (int) robot.getPosition().toGUIPoint(ratio, mirror).getX()},
+						new int[] {(int) right.toGUIPoint(ratio, mirror).getY(), (int) left.toGUIPoint(ratio, mirror).getY(), (int) robot.getPosition().toGUIPoint(ratio, mirror).getY()}, 3);
+				
+				//BORDERS
+				g2.setColor(allyTeam.getColor().toColor().darker());
 				g2.drawLine((int) (left.toGUIPoint(ratio, mirror).getX() + spaceBufferX),
 						(int) (left.toGUIPoint(ratio, mirror).getY() + spaceBufferY),
 						(int) (right.toGUIPoint(ratio, mirror).getX() + spaceBufferX),
@@ -448,8 +460,12 @@ public class FieldPanel extends JPanel {
 				g2.drawString("" + robot.getRobotId(), (int) robot
 						.getPosition().toGUIPoint(ratio, mirror).getX() -(robot.getRobotId()/10 + 1)*2+ spaceBufferX,
 						(int) robot.getPosition().toGUIPoint(ratio, mirror).getY() +2+ spaceBufferY);
+				
 				if(showCoords)
 					drawCoord(g2, robot.getPosition(), ratio, (int) (Robot.DIAMETER*ratio));
+				
+
+				
 			}
 		}
 
