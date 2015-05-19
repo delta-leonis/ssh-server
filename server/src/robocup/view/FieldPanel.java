@@ -287,7 +287,6 @@ public class FieldPanel extends JPanel {
 	 * @param ratio The current ratio
 	 */
 	private void drawCoord(Graphics g, FieldPoint point, double ratio){
-		g.setColor(Color.WHITE);
 		Point2D.Double guiPoint = point.toGUIPoint(ratio, mirror);
 		g.drawString(String.format("[%.0f, %.0f]", point.getX(), point.getY()), (int)guiPoint.getX() + spaceBufferX, (int)guiPoint.getY() + spaceBufferY);
 	}
