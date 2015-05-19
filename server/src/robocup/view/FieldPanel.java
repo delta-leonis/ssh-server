@@ -2,6 +2,7 @@ package robocup.view;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
@@ -452,6 +453,8 @@ public class FieldPanel extends JPanel {
 						(int) (left.toGUIPoint(ratio, mirror).getY() + spaceBufferY),
 						(int) (right.toGUIPoint(ratio, mirror).getX() + spaceBufferX),
 						(int) (right.toGUIPoint(ratio, mirror).getY() + spaceBufferY));
+
+				g2.setFont(new Font(g2.getFont().getFontName(), Font.BOLD, g2.getFont().getSize()));
 				g2.drawString("" + robot.getRobotId(), (int) robot
 						.getPosition().toGUIPoint(ratio, mirror).getX() -(robot.getRobotId()/10 + 1)*2+ spaceBufferX,
 						(int) robot.getPosition().toGUIPoint(ratio, mirror).getY() +2+ spaceBufferY);
@@ -460,7 +463,7 @@ public class FieldPanel extends JPanel {
 						(int) (robot.getPosition().toGUIPoint(ratio, mirror).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
 						(int) (robot.getPosition().toGUIPoint(ratio, mirror).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
 						(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio),
-						(int) robot.getOrientation() + (mirror ?  225: 45), 270);
+						(int) robot.getOrientation() + (mirror ?  224 : 46), 271);
 				
 				if(showCoords)
 					drawCoord(g2, robot.getPosition(), ratio, (int) (Robot.DIAMETER*ratio));
