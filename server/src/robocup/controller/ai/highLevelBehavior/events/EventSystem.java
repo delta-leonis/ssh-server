@@ -50,7 +50,7 @@ public class EventSystem {
 	 */
 	public Event getNewEvent() {
 		previousBallPosition = currentBallPosition;
-		currentBallPosition = world.getBall().getPosition();
+		currentBallPosition = ball.getPosition();
 
 		previousCommand = currentCommand;
 		currentCommand = referee.getCommand();
