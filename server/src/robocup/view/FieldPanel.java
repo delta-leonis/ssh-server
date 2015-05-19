@@ -343,7 +343,7 @@ public class FieldPanel extends JPanel {
 
 		double length = (double) world.getField().getLength() * ratio;
 		double width = (double) world.getField().getWidth() * ratio;
-		double rasterSize = length / 16.0;
+		double rasterSize = length / 12.0;
 
 		for (double x = spaceBufferX - 5 * rasterSize; x < getWidth() + spaceBufferX; x += rasterSize)
 			g2.drawLine((int) x, 0, (int) x, getHeight());
@@ -355,7 +355,7 @@ public class FieldPanel extends JPanel {
 			g2.drawLine(0, (int) y, getWidth(), (int) y);
 
 		g2.setColor(Color.WHITE);
-		String sizeDesc = String.format("rastersize: %.1fcm", (double) world.getField().getLength() / 16.0 / 10.0);
+		String sizeDesc = String.format("rastersize: %.1fcm", (double) world.getField().getLength() / 12.0 / 10.0);
 		g2.drawString(sizeDesc, getHeight() / 10 + 5 - sizeDesc.length() * 7 / 2, 30);
 	}
 
