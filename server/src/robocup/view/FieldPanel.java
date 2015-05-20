@@ -24,7 +24,6 @@ import robocup.model.Ball;
 import robocup.model.FieldPoint;
 import robocup.model.Goal;
 import robocup.model.Robot;
-import robocup.model.Team;
 import robocup.model.World;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.TeamColor;
@@ -443,7 +442,7 @@ public class FieldPanel extends JPanel {
 						(int) (robot.getPosition().toGUIPoint(ratio, mirror).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
 						(int) (robot.getPosition().toGUIPoint(ratio, mirror).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
 						(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio),
-						(int) robot.getOrientation() + (mirror ?  225: 45), 270);
+						(int) robot.getOrientation() + (mirror ?  215: 35), 295);
 				g2.fillPolygon(new int[] {(int) right.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) left.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) robot.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX},
 						new int[] {(int) right.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) left.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) robot.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY}, 3);
 				

@@ -24,7 +24,7 @@ public class DijkstraPathPlanner {
 	public static final int VERTEX_DISTANCE_TO_ROBOT = 350;
 	private World world;
 	private ArrayList<Rectangle2D> objects;
-	protected ArrayList<Vertex> vertices;
+	protected ArrayList<Vertex> vertices = new ArrayList<Vertex>();
 	private ArrayList<Vertex> allVertices = null;		//Vertices used for drawing.
 	protected ArrayList<Vertex> notRemovableVertices; 	//Contains the source and destination.
 	
@@ -38,8 +38,7 @@ public class DijkstraPathPlanner {
 	 */
 	public DijkstraPathPlanner() {
 		world = World.getInstance();
-		objects = new ArrayList<Rectangle2D>();
-		vertices = new ArrayList<Vertex>();
+		objects = new ArrayList<Rectangle2D>(); 
 		notRemovableVertices = new ArrayList<Vertex>();
 	}
 
@@ -275,7 +274,7 @@ public class DijkstraPathPlanner {
 			double x = beginNode.getX();
 			double y = beginNode.getY();
 			// North east
-			Vertex neighbour = new Vertex(new FieldPoint(x + VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT));
+			Vertex neighbour = new Vertex(new FieldPoint(x + Math.cos(45) * VERTEX_DISTANCE_TO_ROBOT, y + Math.sin(45) * VERTEX_DISTANCE_TO_ROBOT));
 			if(isValidPosition(source, neighbour)) {
 				lockedIn = false;
 				vertices.add(neighbour);
@@ -512,10 +511,15 @@ public class DijkstraPathPlanner {
 			double y = rect.getCenterY();
 
 			if(!isObjectNotRemovable(x,y)){	//Avoid double vertices from pre-generated vertices in source and dest.
-				vertices.add(new Vertex(new FieldPoint(x + VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT)));
-				vertices.add(new Vertex(new FieldPoint(x + VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT)));
-				vertices.add(new Vertex(new FieldPoint(x - VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT)));
-				vertices.add(new Vertex(new FieldPoint(x - VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT)));
+				vertices.add(new Vertex(new FieldPoint(x + Math.cos(45) * VERTEX_DISTANCE_TO_ROBOT, y + Math.sin(45) * VERTEX_DISTANCE_TO_ROBOT)));
+				vertices.add(new Vertex(new FieldPoint(x + Math.cos(135) * VERTEX_DISTANCE_TO_ROBOT, y + Math.sin(135) * VERTEX_DISTANCE_TO_ROBOT)));
+				vertices.add(new Vertex(new FieldPoint(x + Math.cos(-45) * VERTEX_DISTANCE_TO_ROBOT, y + Math.sin(-45) * VERTEX_DISTANCE_TO_ROBOT)));
+				vertices.add(new Vertex(new FieldPoint(x + Math.cos(-135) * VERTEX_DISTANCE_TO_ROBOT, y + Math.sin(-135) * VERTEX_DISTANCE_TO_ROBOT)));
+				
+				vertices.add(new Vertex(new FieldPoint(x + VERTEX_DISTANCE_TO_ROBOT, y)));
+				vertices.add(new Vertex(new FieldPoint(x, y - VERTEX_DISTANCE_TO_ROBOT)));
+				vertices.add(new Vertex(new FieldPoint(x - VERTEX_DISTANCE_TO_ROBOT, y)));
+				vertices.add(new Vertex(new FieldPoint(x, y + VERTEX_DISTANCE_TO_ROBOT)));
 			}
 		}
 	}
