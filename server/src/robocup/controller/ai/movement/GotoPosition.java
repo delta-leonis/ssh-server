@@ -40,7 +40,7 @@ public class GotoPosition {
 	// calculate total circumference of robot
 	private static final double circumference = (Robot.DIAMETER * Math.PI);
 	
-	private static final int MAX_VELOCITY =1800;
+	private static final int MAX_VELOCITY =2500;
 
 	/**
 	 * Setup this object to function for the given {@link Robot} and {@link FieldPoint destination}
@@ -176,16 +176,16 @@ public class GotoPosition {
 			double rotationToGoal = rotationToDest(destination);
 			double speed;
 			if(route.size() > 1)							//If we're not at our destination
-				speed = getSpeed(getDistance()+100, 200, MAX_VELOCITY);	//Don't slow down as much TODO: Base this on angle of turn
+				speed = getSpeed(getDistance()+250, 500, MAX_VELOCITY);	//Don't slow down as much TODO: Base this on angle of turn
 			else
-				speed = getSpeed(getDistance(), 200, MAX_VELOCITY);
+				speed = getSpeed(getDistance(), 500, MAX_VELOCITY);
 			
 			double rotationSpeed = getRotationSpeed(rotationToTarget, speed);
 
 			// Overrule speed
 			if (forcedSpeed > 0) {
 //				speed = forcedSpeed;
-				speed = getSpeed(getDistance(), 30, forcedSpeed);
+				speed = getSpeed(getDistance(), 200, forcedSpeed);
 			}
 			//TODO: remove test code
 //			System.out.println("ID: " + robot.getRobotId() + "\n\tDirection: " + rotationToGoal
@@ -219,7 +219,7 @@ public class GotoPosition {
 		// distance needed to rotate in mm
 		double rotationDistance = circumference * rotationPercent;
 		rotationDistance *= DISTANCE_ROTATIONSPEED_COEFFICIENT;
-		rotationDistance *= 1 - speed/5000;
+		rotationDistance *= 1 - speed/4000;
 		if(Math.abs(rotationDistance) > MAX_ROTATION_SPEED){
 			if(rotationDistance < 0){
 				rotationDistance = -MAX_ROTATION_SPEED;

@@ -19,10 +19,10 @@ public class DijkstraPathPlanner {
 	// distance from the middle of the robot to the vertices around it
 	// Basically the "Danger zone" for the Robot. A normal Robot has a radius of 90mm, so if DISTANCE_TO_ROBOT == 130mm,
 	// then it means we don't want to get within (180mm - 90mm = ) 90mm of any other Robot.
-	public static final int DISTANCE_TO_ROBOT = 90;
+	public static final int DISTANCE_TO_ROBOT = 170;
 	// This value is used to determine the vertex points, which are VERTEX_DISTANCE_TO_ROBOT from the middle points of the robots.
-	public static final int MIN_VERTEX_DISTANCE_TO_ROBOT = 180;
-	public static final int MAX_VERTEX_DISTANCE_TO_ROBOT = 350;
+	public static final int MIN_VERTEX_DISTANCE_TO_ROBOT = 240;
+	public static final int MAX_VERTEX_DISTANCE_TO_ROBOT = 400;
 	private World world;
 	private ArrayList<Rectangle2D> objects;
 	protected ArrayList<Vertex> vertices = new ArrayList<Vertex>();
@@ -628,11 +628,22 @@ public class DijkstraPathPlanner {
 	 */
 	protected boolean intersectsObject(Vertex source, Vertex destination) {
 		for (Rectangle2D rect : objects){
-			if(destination.getPosition() != null)
+			if(destination.getPosition() != null){
+//				double angle = source.getPosition().getAngle(destination.getPosition());
 				if (rect.intersectsLine(source.getPosition().getX(), source.getPosition().getY(), destination.getPosition()
 						.getX(), destination.getPosition().getY())){
 					return true;
 				}
+				
+//				if (rect.intersectsLine(source.getPosition().getX() + DISTANCE_TO_ROBOT * Math.cos(Math.toRadians(90 + angle)), source.getPosition().getY()  + DISTANCE_TO_ROBOT * Math.sin(Math.toRadians(90 + angle)), 
+//						destination.getPosition().getX()  + DISTANCE_TO_ROBOT * Math.cos(Math.toRadians(90 + angle)), destination.getPosition().getY() +  + DISTANCE_TO_ROBOT * Math.sin(Math.toRadians(90 + angle)))){
+//					return true;
+//				}
+//				if (rect.intersectsLine(source.getPosition().getX() + DISTANCE_TO_ROBOT * Math.cos(Math.toRadians(90 - angle)), source.getPosition().getY()  + DISTANCE_TO_ROBOT * Math.sin(Math.toRadians(90 - angle)), 
+//						destination.getPosition().getX()  + DISTANCE_TO_ROBOT * Math.cos(Math.toRadians(90 - angle)), destination.getPosition().getY() +  + DISTANCE_TO_ROBOT * Math.sin(Math.toRadians(90 - angle)))){
+//					return true;
+//				}
+			}
 		}
 		return false;
 	}
