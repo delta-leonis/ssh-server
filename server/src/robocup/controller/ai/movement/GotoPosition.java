@@ -158,7 +158,7 @@ public class GotoPosition {
 			if(destination == null){
 				System.out.println("Test!  FOUT: Destination kan niet null zijn.");
 			}
-			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), false);
+			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId());
 			if(route == null){
 				LOGGER.severe("Robot #" + robot.getRobotId() + " can't reach destination.");
 				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
