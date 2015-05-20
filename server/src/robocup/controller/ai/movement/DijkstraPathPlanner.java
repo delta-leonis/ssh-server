@@ -19,9 +19,10 @@ public class DijkstraPathPlanner {
 	// distance from the middle of the robot to the vertices around it
 	// Basically the "Danger zone" for the Robot. A normal Robot has a radius of 90mm, so if DISTANCE_TO_ROBOT == 130mm,
 	// then it means we don't want to get within (180mm - 90mm = ) 90mm of any other Robot.
-	public static final int DISTANCE_TO_ROBOT = 180;
+	public static final int DISTANCE_TO_ROBOT = 90;
 	// This value is used to determine the vertex points, which are VERTEX_DISTANCE_TO_ROBOT from the middle points of the robots.
-	public static final int VERTEX_DISTANCE_TO_ROBOT = 350;
+	public static final int MIN_VERTEX_DISTANCE_TO_ROBOT = 180;
+	public static final int MAX_VERTEX_DISTANCE_TO_ROBOT = 350;
 	private World world;
 	private ArrayList<Rectangle2D> objects;
 	protected ArrayList<Vertex> vertices = new ArrayList<Vertex>();
@@ -274,28 +275,28 @@ public class DijkstraPathPlanner {
 			double x = beginNode.getX();
 			double y = beginNode.getY();
 			// North east
-			Vertex neighbour = new Vertex(new FieldPoint(x + Math.cos(45) * VERTEX_DISTANCE_TO_ROBOT, y + Math.sin(45) * VERTEX_DISTANCE_TO_ROBOT));
+			Vertex neighbour = new Vertex(new FieldPoint(x + Math.cos(45) * MAX_VERTEX_DISTANCE_TO_ROBOT, y + Math.sin(45) * MAX_VERTEX_DISTANCE_TO_ROBOT));
 			if(isValidPosition(source, neighbour)) {
 				lockedIn = false;
 				vertices.add(neighbour);
 				source.addNeighbour(neighbour);
 			}
 			// South east
-			neighbour = new Vertex(new FieldPoint(x + VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT));
+			neighbour = new Vertex(new FieldPoint(x + MAX_VERTEX_DISTANCE_TO_ROBOT, y - MAX_VERTEX_DISTANCE_TO_ROBOT));
 			if(isValidPosition(source, neighbour)){
 				lockedIn = false;
 				vertices.add(neighbour);
 				source.addNeighbour(neighbour);
 			}
 			// North west
-			neighbour = new Vertex(new FieldPoint(x - VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT));
+			neighbour = new Vertex(new FieldPoint(x - MAX_VERTEX_DISTANCE_TO_ROBOT, y + MAX_VERTEX_DISTANCE_TO_ROBOT));
 			if(isValidPosition(source, neighbour)){
 				lockedIn = false;
 				vertices.add(neighbour);
 				source.addNeighbour(neighbour);
 			}
 			// South west
-			neighbour = new Vertex(new FieldPoint(x - VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT));
+			neighbour = new Vertex(new FieldPoint(x - MAX_VERTEX_DISTANCE_TO_ROBOT, y - MAX_VERTEX_DISTANCE_TO_ROBOT));
 			if(isValidPosition(source, neighbour)){
 				lockedIn = false;
 				vertices.add(neighbour);
@@ -306,7 +307,7 @@ public class DijkstraPathPlanner {
 			if(lockedIn)
 				return null;
 			
-			removeAllVectorsInRect(new Rectangle2D.Double(x - VERTEX_DISTANCE_TO_ROBOT + 1, y - VERTEX_DISTANCE_TO_ROBOT + 1, VERTEX_DISTANCE_TO_ROBOT * 2 - 2, VERTEX_DISTANCE_TO_ROBOT * 2 - 2));
+			removeAllVectorsInRect(new Rectangle2D.Double(x - MAX_VERTEX_DISTANCE_TO_ROBOT + 1, y - MAX_VERTEX_DISTANCE_TO_ROBOT + 1, MAX_VERTEX_DISTANCE_TO_ROBOT * 2 - 2, MAX_VERTEX_DISTANCE_TO_ROBOT * 2 - 2));
 		}
 		
 		return source;
@@ -317,52 +318,97 @@ public class DijkstraPathPlanner {
 	 * @param endNode A {@link FieldPoint} that specifies the position of where you want to go.
 	 * @return The endNode in Vertex form.
 	 */
-	protected Vertex setupDestination(FieldPoint endNode){
+	protected Vertex setupDestination(FieldPoint endNode) {
 		boolean lockedIn = true;
 		Vertex destination = new Vertex(endNode);
 		destination.setRemovable(false);
 		vertices.add(destination);
-		
-		//TODO: Create new destination if we collide with something
 
-		if(isInsideObject(destination.toRect())){
+		// TODO: Create new destination if we collide with something
+
+		if (isInsideObject(destination.toRect())) {
 			destination.setStuck(true);
 			double x = endNode.getX();
 			double y = endNode.getY();
-			
+
 			// North east
-			Vertex neighbour = new Vertex(new FieldPoint(x + VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT));
-			if(isValidPosition(destination, neighbour)){
+			Vertex neighbour = new Vertex(new FieldPoint(x
+					+ MAX_VERTEX_DISTANCE_TO_ROBOT, y
+					+ MAX_VERTEX_DISTANCE_TO_ROBOT));
+			if (isValidPosition(destination, neighbour)) {
 				lockedIn = false;
 				vertices.add(neighbour);
 				neighbour.addNeighbour(destination);
 			}
 			// South east
-			neighbour = new Vertex(new FieldPoint(x + VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT));
-			if(isValidPosition(destination, neighbour)){
+			neighbour = new Vertex(new FieldPoint(x
+					+ MAX_VERTEX_DISTANCE_TO_ROBOT, y
+					- MAX_VERTEX_DISTANCE_TO_ROBOT));
+			if (isValidPosition(destination, neighbour)) {
 				lockedIn = false;
 				vertices.add(neighbour);
 				neighbour.addNeighbour(destination);
 			}
-			// North west		
-			neighbour = new Vertex(new FieldPoint(x - VERTEX_DISTANCE_TO_ROBOT, y + VERTEX_DISTANCE_TO_ROBOT));
-			if(isValidPosition(destination, neighbour)){
+			// North west
+			neighbour = new Vertex(new FieldPoint(x
+					- MAX_VERTEX_DISTANCE_TO_ROBOT, y
+					+ MAX_VERTEX_DISTANCE_TO_ROBOT));
+			if (isValidPosition(destination, neighbour)) {
 				lockedIn = false;
 				vertices.add(neighbour);
 				neighbour.addNeighbour(destination);
 			}
 			// South west
-			neighbour =new Vertex(new FieldPoint(x - VERTEX_DISTANCE_TO_ROBOT, y - VERTEX_DISTANCE_TO_ROBOT));
-			if(isValidPosition(destination, neighbour)){
+			neighbour = new Vertex(new FieldPoint(x
+					- MAX_VERTEX_DISTANCE_TO_ROBOT, y
+					- MAX_VERTEX_DISTANCE_TO_ROBOT));
+			if (isValidPosition(destination, neighbour)) {
 				lockedIn = false;
 				vertices.add(neighbour);
 				neighbour.addNeighbour(destination);
 			}
 
-			if(lockedIn)
+			// East
+			neighbour = new Vertex(new FieldPoint(x
+					+ MAX_VERTEX_DISTANCE_TO_ROBOT, y));
+			if (isValidPosition(destination, neighbour)) {
+				lockedIn = false;
+				vertices.add(neighbour);
+				neighbour.addNeighbour(destination);
+			}
+			// South
+			neighbour = new Vertex(new FieldPoint(x, y
+					- MAX_VERTEX_DISTANCE_TO_ROBOT));
+			if (isValidPosition(destination, neighbour)) {
+				lockedIn = false;
+				vertices.add(neighbour);
+				neighbour.addNeighbour(destination);
+			}
+			// West
+			neighbour = new Vertex(new FieldPoint(x
+					- MAX_VERTEX_DISTANCE_TO_ROBOT, y));
+			if (isValidPosition(destination, neighbour)) {
+				lockedIn = false;
+				vertices.add(neighbour);
+				neighbour.addNeighbour(destination);
+			}
+			// North
+			neighbour = new Vertex(new FieldPoint(x, y
+					+ MAX_VERTEX_DISTANCE_TO_ROBOT));
+			if (isValidPosition(destination, neighbour)) {
+				lockedIn = false;
+				vertices.add(neighbour);
+				neighbour.addNeighbour(destination);
+			}
+
+			if (lockedIn)
 				return null;
-			
-			removeAllVectorsInRect(new Rectangle2D.Double(x - VERTEX_DISTANCE_TO_ROBOT + 1, y - VERTEX_DISTANCE_TO_ROBOT + 1, VERTEX_DISTANCE_TO_ROBOT * 2 -2, VERTEX_DISTANCE_TO_ROBOT * 2 -2));
+
+			removeAllVectorsInRect(new Rectangle2D.Double(x
+					- MAX_VERTEX_DISTANCE_TO_ROBOT + 1, y
+					- MAX_VERTEX_DISTANCE_TO_ROBOT + 1,
+					MAX_VERTEX_DISTANCE_TO_ROBOT * 2 - 2,
+					MAX_VERTEX_DISTANCE_TO_ROBOT * 2 - 2));
 		}
 		return destination;
 	}
@@ -506,20 +552,24 @@ public class DijkstraPathPlanner {
 	 */
 	protected void generateVertices() {
 		vertices.clear();
-		for (Rectangle2D rect : getObjects()) {
-			double x = rect.getCenterX();
-			double y = rect.getCenterY();
-
-			if(!isObjectNotRemovable(x,y)){	//Avoid double vertices from pre-generated vertices in source and dest.
-				vertices.add(new Vertex(new FieldPoint(x + Math.cos(45) * VERTEX_DISTANCE_TO_ROBOT, y + Math.sin(45) * VERTEX_DISTANCE_TO_ROBOT)));
-				vertices.add(new Vertex(new FieldPoint(x + Math.cos(135) * VERTEX_DISTANCE_TO_ROBOT, y + Math.sin(135) * VERTEX_DISTANCE_TO_ROBOT)));
-				vertices.add(new Vertex(new FieldPoint(x + Math.cos(-45) * VERTEX_DISTANCE_TO_ROBOT, y + Math.sin(-45) * VERTEX_DISTANCE_TO_ROBOT)));
-				vertices.add(new Vertex(new FieldPoint(x + Math.cos(-135) * VERTEX_DISTANCE_TO_ROBOT, y + Math.sin(-135) * VERTEX_DISTANCE_TO_ROBOT)));
-				
-				vertices.add(new Vertex(new FieldPoint(x + VERTEX_DISTANCE_TO_ROBOT, y)));
-				vertices.add(new Vertex(new FieldPoint(x, y - VERTEX_DISTANCE_TO_ROBOT)));
-				vertices.add(new Vertex(new FieldPoint(x - VERTEX_DISTANCE_TO_ROBOT, y)));
-				vertices.add(new Vertex(new FieldPoint(x, y + VERTEX_DISTANCE_TO_ROBOT)));
+		for (Robot robot : world.getAllRobotsOnSight()) {
+			if(robot.getPosition() != null){
+				double x = robot.getPosition().getX();
+				double y = robot.getPosition().getY();
+				double vertexDistance = MIN_VERTEX_DISTANCE_TO_ROBOT + 
+						((MAX_VERTEX_DISTANCE_TO_ROBOT - MIN_VERTEX_DISTANCE_TO_ROBOT) * (Math.abs(robot.getSpeed()) / 5000));
+	
+				if(!isObjectNotRemovable(x,y)){	//Avoid double vertices from pre-generated vertices in source and dest.
+					vertices.add(new Vertex(new FieldPoint(x + Math.cos(45) * vertexDistance, y + Math.sin(45) * vertexDistance)));
+					vertices.add(new Vertex(new FieldPoint(x - Math.cos(45) * vertexDistance, y - Math.sin(45) * vertexDistance)));
+					vertices.add(new Vertex(new FieldPoint(x + Math.cos(-45) * vertexDistance, y + Math.sin(-45) * vertexDistance)));
+					vertices.add(new Vertex(new FieldPoint(x - Math.cos(-45) * vertexDistance, y - Math.sin(-45) * vertexDistance)));
+					
+					vertices.add(new Vertex(new FieldPoint(x + vertexDistance, y)));
+					vertices.add(new Vertex(new FieldPoint(x, y - vertexDistance)));
+					vertices.add(new Vertex(new FieldPoint(x - vertexDistance, y)));
+					vertices.add(new Vertex(new FieldPoint(x, y + vertexDistance)));
+				}
 			}
 		}
 	}

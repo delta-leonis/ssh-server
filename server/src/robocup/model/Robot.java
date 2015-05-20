@@ -138,7 +138,7 @@ public abstract class Robot extends FieldObject {
 	public Rectangle2D getDangerRectangle(int DISTANCE_TO_ROBOT){
 		double x = getPosition().getX();
 		double y = getPosition().getY();
-		double actualDistance = DISTANCE_TO_ROBOT /** (getSpeed() / 5000)*/;
+		double actualDistance = DISTANCE_TO_ROBOT;
 		return new Rectangle2D.Double(x - actualDistance, y - actualDistance, actualDistance*2, actualDistance*2);
 	}
 

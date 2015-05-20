@@ -149,7 +149,7 @@ public class GotoPosition {
 				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
 			}
 			else{
-				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(target)), 0, false);
+				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(target),0), 0, false);
 			}
 			// Calculate parameters
 		} else {
@@ -176,11 +176,11 @@ public class GotoPosition {
 			double rotationToGoal = rotationToDest(destination);
 			double speed;
 			if(route.size() > 1)							//If we're not at our destination
-				speed = getSpeed(getDistance()+100, 200, MAX_VELOCITY);	//Don't slow down as much
+				speed = getSpeed(getDistance()+100, 200, MAX_VELOCITY);	//Don't slow down as much TODO: Base this on angle of turn
 			else
 				speed = getSpeed(getDistance(), 200, MAX_VELOCITY);
 			
-			double rotationSpeed = getRotationSpeed(rotationToTarget);
+			double rotationSpeed = getRotationSpeed(rotationToTarget, speed);
 
 			// Overrule speed
 			if (forcedSpeed > 0) {
@@ -207,10 +207,11 @@ public class GotoPosition {
 	/**
 	 * Get rotationSpeed, calculates the speed at which to rotate based on degrees left to rotate
 	 * Precondition: -180 <= rotation <= 180
-	 * @param rotation
-	 * @return
+	 * @param rotation The rotation we want to make
+	 * @param speed The speed of the {@link Robot}
+	 * @return the speed at which the {@link Robot} should turn.
 	 */
-	private double getRotationSpeed(double rotation) {
+	private double getRotationSpeed(double rotation, double speed) {
 		// must be between 0 and 50 percent, if it's higher than 50% rotating to
 		// the other direction is faster
 		double rotationPercent = rotation / 360;
@@ -218,6 +219,7 @@ public class GotoPosition {
 		// distance needed to rotate in mm
 		double rotationDistance = circumference * rotationPercent;
 		rotationDistance *= DISTANCE_ROTATIONSPEED_COEFFICIENT;
+		rotationDistance *= 1 - speed/5000;
 		if(Math.abs(rotationDistance) > MAX_ROTATION_SPEED){
 			if(rotationDistance < 0){
 				rotationDistance = -MAX_ROTATION_SPEED;
