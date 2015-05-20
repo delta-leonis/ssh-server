@@ -17,6 +17,7 @@ public class TestMode extends Mode {
 	private ArrayList<RobotExecuter> robots;
 	private GotoPosition go;
 	private ArrayList<GotoPosition> goes;
+	private static final int[] robotIDs = new int[]{0,1,2};
 	
     /** Co-ordinates of the goal on the left side of the field */
     private static final FieldPoint MID_GOAL_NEGATIVE = new FieldPoint(-3000, 0);
@@ -35,9 +36,9 @@ public class TestMode extends Mode {
 	
 	public void initializeThreeRobots(){
 		robots = new ArrayList<RobotExecuter>();
-		robots.add(robot);
-		robots.add(executers.get(1));
-		robots.add(executers.get(2));
+		for(int i = 0; i < robotIDs.length; ++i){
+			robots.add(World.getInstance().getRobotExecuters().get(robotIDs[i]));
+		}
 	}
 	
 	@Override
@@ -45,9 +46,9 @@ public class TestMode extends Mode {
 		if(World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).getLowLevelBehavior() == null){
 			World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).setLowLevelBehavior(new Attacker(robot.getRobot()));
 		}
-		
+		testFollowBallFacing(robot);
 //		testFollowBallMovementFacing(robot);
-		testFollowBallMovement(robot);
+//		testFollowBallMovement(robot);
 	}
 	
 	/**
@@ -102,10 +103,10 @@ public class TestMode extends Mode {
 	
 	/**
 	 * Function that tests whether three {@link Robot robots} can defend the given point.
-	 * @param robots The {@link Robot robots} we wish to test.
+	 * @param robotExecs The {@link Robot robots} we wish to test.
 	 * @param pointToDefend
 	 */
-	public void testThreeKeeperDefenders(ArrayList<Robot> robots, FieldPoint pointToDefend){
+	public void testThreeKeeperDefenders(ArrayList<RobotExecuter> robotExecs, FieldPoint pointToDefend){
 		FieldPoint newDestination = null;
 		int distance = world.getField().getDefenceRadius() + world.getField().getDefenceStretch() / 2 + 50;
 		FieldPoint objectPosition = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE;
@@ -114,15 +115,15 @@ public class TestMode extends Mode {
 		int i = 0;
 		
 		if (objectPosition != null && subjectPosition != null) {
-			for(Robot robot : robots){
-				if (robot.getPosition().getY() == Math.max(
-						robots.get(0).getPosition().getY(),
-						Math.max(robots.get(1).getPosition().getY(), robots.get(2).getPosition()
+			for(RobotExecuter robot : robotExecs){
+				if (robot.getRobot().getPosition().getY() == Math.max(
+						robotExecs.get(0).getRobot().getPosition().getY(),
+						Math.max(robotExecs.get(1).getRobot().getPosition().getY(), robotExecs.get(2).getRobot().getPosition()
 								.getY())))
 					offset = new FieldPoint(0, 150);
-				else if (robot.getPosition().getY() == Math.min(
-						robots.get(0).getPosition().getY(),
-						Math.min(robots.get(1).getPosition().getY(), robots.get(2).getPosition()
+				else if (robot.getRobot().getPosition().getY() == Math.min(
+						robotExecs.get(0).getRobot().getPosition().getY(),
+						Math.min(robotExecs.get(1).getRobot().getPosition().getY(), robotExecs.get(2).getRobot().getPosition()
 								.getY())))
 					offset = new FieldPoint(0, -150);
 				else
@@ -138,7 +139,7 @@ public class TestMode extends Mode {
 				newDestination.setX(newDestination.getX() + offset.getX());
 				newDestination.setY(newDestination.getY() + offset.getY());
 				
-				goes.set(i, new GotoPosition(robot, newDestination, subjectPosition));
+				goes.set(i, new GotoPosition(robot.getRobot(), newDestination, subjectPosition));
 				goes.get(i).calculate();
 				
 				i++;

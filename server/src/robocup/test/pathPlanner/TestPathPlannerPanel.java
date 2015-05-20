@@ -67,28 +67,29 @@ public class TestPathPlannerPanel extends JPanel{
 		Graphics2D g2 = (Graphics2D) g;
 			
 		drawField(g);
-	
-		for (Vertex vertex : vertices) {
-			g.setColor(Color.MAGENTA);
-	
-			int x = (int) (X_OFFSET + vertex.getPosition().getX()
-					* RATIO);
-			int y = (int) (Y_OFFSET - vertex.getPosition().getY()
-					* RATIO);
-			if(!vertex.isRemovable()){
-				g.drawString("nRmvbl", x, y);
-			}
-			g.drawOval(x - 5, y - 5, 10, 10);
-			if (drawNeighbours) {
-				g.setColor(new Color((int) (Math.random() * 255),
-						(int) (Math.random() * 255), (int) (Math
-								.random() * 255)));
-				for (Vertex neighbour : vertex.getNeighbours()) {
-					int x2 = (int) (X_OFFSET + neighbour.getPosition()
-							.getX() * RATIO);
-					int y2 = (int) (Y_OFFSET - neighbour.getPosition()
-							.getY() * RATIO);
-					g.drawLine(x, y, x2, y2);
+		if(vertices != null){
+			for (Vertex vertex : vertices) {
+				g.setColor(Color.MAGENTA);
+		
+				int x = (int) (X_OFFSET + vertex.getPosition().getX()
+						* RATIO);
+				int y = (int) (Y_OFFSET - vertex.getPosition().getY()
+						* RATIO);
+				if(!vertex.isRemovable()){
+					g.drawString("nRmvbl", x, y);
+				}
+				g.drawOval(x - 5, y - 5, 10, 10);
+				if (drawNeighbours) {
+					g.setColor(new Color((int) (Math.random() * 255),
+							(int) (Math.random() * 255), (int) (Math
+									.random() * 255)));
+					for (Vertex neighbour : vertex.getNeighbours()) {
+						int x2 = (int) (X_OFFSET + neighbour.getPosition()
+								.getX() * RATIO);
+						int y2 = (int) (Y_OFFSET - neighbour.getPosition()
+								.getY() * RATIO);
+						g.drawLine(x, y, x2, y2);
+					}
 				}
 			}
 		}
