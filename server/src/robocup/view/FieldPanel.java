@@ -507,7 +507,7 @@ public class FieldPanel extends JPanel {
 		ArrayList<RobotExecuter> robotExecuters = world.getRobotExecuters();
 		
 		for(RobotExecuter executer : robotExecuters){
-			if(executer.getLowLevelBehavior() != null)
+			if(executer.getLowLevelBehavior() != null && executer.getLowLevelBehavior().getGotoPosition() != null)
 				drawIndividualPath(g, ratio, executer.getLowLevelBehavior().getGotoPosition().getPathPlanner());
 		}
 		
