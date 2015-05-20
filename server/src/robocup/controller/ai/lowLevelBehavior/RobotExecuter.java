@@ -23,9 +23,7 @@ public class RobotExecuter implements Runnable {
 	public void run() {
 		while (true) {
 			try{
-				if(lowLevelBehavior != null){
-					lowLevelBehavior.go.setDestination(null);
-				} else if (robot.getPosition() != null)
+				if (robot.getPosition() != null)
 					executeBehavior();
 				try {
 					Thread.sleep(10);
