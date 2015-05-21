@@ -456,17 +456,19 @@ public class FieldPanel extends JPanel {
 						(int) (right.toGUIPoint(ratio, mirror).getX() + spaceBufferX),
 						(int) (right.toGUIPoint(ratio, mirror).getY() + spaceBufferY));
 
-				g2.setFont(new Font(g2.getFont().getFontName(), Font.BOLD, g2.getFont().getSize()));
-				g2.drawString("" + robot.getRobotId(), (int) robot
-						.getPosition().toGUIPoint(ratio, mirror).getX() -(robot.getRobotId()/10 + 1)*2+ spaceBufferX,
-						(int) robotPosition.toGUIPoint(ratio, mirror).getY() +2+ spaceBufferY);
 				// draw round part of robot
 				g2.drawArc(
 						(int) (robotPosition.toGUIPoint(ratio, mirror).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
 						(int) (robotPosition.toGUIPoint(ratio, mirror).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
 						(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio),
 						(int) robotOrientation + (mirror ?  225 : 45), 270);
-				
+
+				g2.setColor(Color.BLACK);
+				g2.setFont(new Font(g2.getFont().getFontName(), Font.BOLD, (int) (Robot.DIAMETER*ratio)/2));
+				g2.drawString("" + robot.getRobotId(), (int) robot
+						.getPosition().toGUIPoint(ratio, mirror).getX() -(robot.getRobotId()/10 + 1)*(g2.getFont().getSize()/3)+ spaceBufferX,
+						(int) robotPosition.toGUIPoint(ratio, mirror).getY() +(g2.getFont().getSize()/3)+ spaceBufferY);
+
 				if(showCoords)
 					drawCoord(g2, robotPosition, ratio, (int) (Robot.DIAMETER*ratio));
 			}
