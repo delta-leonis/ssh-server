@@ -477,7 +477,7 @@ public class FieldPanel extends JPanel {
 	}
 	
 	private boolean isWindows() {
-		return System.getProperty("os.name").contains("windows");
+		return System.getProperty("os.name").toLowerCase().contains("windows");
 	}
 
 	/**
