@@ -14,6 +14,7 @@ public class Referee {
 	private long timeoutTimeLeft;
 	private int stagetimeLeft;
 	private Stage stage;
+	private Command previousCommand;
 	private Command command;
 	private int commandCounter;
 	private long lastCommandTimestamp;
@@ -33,7 +34,8 @@ public class Referee {
 	public Referee() {
 		commandCounter = 0;
 		lastCommandTimestamp = 0;
-		command = Command.STOP;
+		previousCommand = Command.HALT;
+		command = Command.HALT;
 		stage = Stage.POST_GAME;
 	}
 
@@ -58,7 +60,7 @@ public class Referee {
 	}
 
 	/**
-	 * a method that is called every time a protobuff message arrives from the handler
+	 * a method that is called every time a protobuf message arrives from the handler
 	 * the arguments send the new declared values
 	 * @param command the referee command enumeration,  every time there is a change it will be handled
 	 * @param commandCounter the id of the command, identifies commands from each other
@@ -67,6 +69,9 @@ public class Referee {
 	 * @param stageTimeLeft the time left for the current stage
 	 */
 	public void update(Command command, int commandCounter, long commandTimeStamp, Stage stage, int stageTimeLeft) {
+		if (previousCommand != this.command)
+			previousCommand = this.command;
+
 		this.command = command;
 		this.commandCounter = commandCounter;
 		this.lastCommandTimestamp = commandTimeStamp;
@@ -127,6 +132,14 @@ public class Referee {
 	 */
 	public Command getCommand() {
 		return command;
+	}
+	
+	/**
+	 * getter method that returns the previous command given by the referee
+	 * @return the previous command
+	 */
+	public Command getPreviousCommand() {
+		return previousCommand;
 	}
 
 	/**
