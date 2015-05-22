@@ -18,7 +18,7 @@ public class TestMode extends Mode {
 	private ArrayList<RobotExecuter> robots;
 	private GotoPosition go;
 	private ArrayList<GotoPosition> goes;
-	private static final int[] robotIDs = new int[]{0,1,2};
+	private static final int[] robotIDs = new int[]{0,3,6};
 	
     /** Co-ordinates of the goal on the left side of the field */
     private static final FieldPoint MID_GOAL_NEGATIVE = new FieldPoint(-3000, 0);
@@ -28,11 +28,20 @@ public class TestMode extends Mode {
 	public TestMode(Strategy strategy) {
 		super(strategy, World.getInstance().getRobotExecuters());
 		
-		initializeOneRobot();
+//		initializeOneRobot();
+		initializeTwoRobots();
+//		initializeThreeRobots();
 	}
 	
 	public void initializeOneRobot(){
 		robot = executers.get(TestBehaviour.ROBOT_ID);
+	}
+	
+	public void initializeTwoRobots(){
+		robots = new ArrayList<RobotExecuter>();
+		for(int i = 0; i < robotIDs.length -1; ++i){
+			robots.add(World.getInstance().getRobotExecuters().get(robotIDs[i]));
+		}
 	}
 	
 	public void initializeThreeRobots(){
@@ -44,13 +53,40 @@ public class TestMode extends Mode {
 	
 	@Override
 	public void execute(){
-		if(World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).getLowLevelBehavior() == null){
-			World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).setLowLevelBehavior(new Attacker(robot.getRobot()));
-		}
+//		if(World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).getLowLevelBehavior() == null){
+//			World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).setLowLevelBehavior(new Attacker(robot.getRobot()));
+//		}
 //		testAttacker();
 //		testFollowBallFacing(robot);
-		testFollowBallMovementFacing(robot);
+//		testFollowBallMovementFacing(robot);
+//		testThreeKeeperDefenders(robots, MID_GOAL_NEGATIVE);
 //		testFollowBallMovement(robot);
+		testTwoRobotFollowBall();
+	}
+	
+	public void testTwoRobotFollowBall(){
+		if(World.getInstance().getRobotExecuters().get(robotIDs[0]).getLowLevelBehavior() == null){
+			World.getInstance().getRobotExecuters().get(robotIDs[0]).setLowLevelBehavior(new Attacker(robots.get(0).getRobot()));
+		}
+		if(World.getInstance().getRobotExecuters().get(robotIDs[1]).getLowLevelBehavior() == null){
+			World.getInstance().getRobotExecuters().get(robotIDs[1]).setLowLevelBehavior(new Attacker(robots.get(1).getRobot()));
+		}
+		
+		FieldPoint ballPos = World.getInstance().getBall().getPosition();
+		FieldPoint pos0 = new FieldPoint(ballPos.getX(), ballPos.getY() + 250);
+		FieldPoint pos1 = new FieldPoint(ballPos.getX(), ballPos.getY() - 250);
+
+		go = new GotoPosition(robots.get(0).getRobot(), 
+				pos0,
+				World.getInstance().getBall().getPosition());
+		World.getInstance().getRobotExecuters().get(robotIDs[0]).getLowLevelBehavior().setGotoPosition(go);
+		go.calculate(false);
+		
+		go = new GotoPosition(robots.get(1).getRobot(), 
+				pos1,
+				World.getInstance().getBall().getPosition());
+		World.getInstance().getRobotExecuters().get(robotIDs[1]).getLowLevelBehavior().setGotoPosition(go);
+		go.calculate(false);
 	}
 	
 	public void testAttacker(){
@@ -115,28 +151,32 @@ public class TestMode extends Mode {
 	 * @param robotExecs The {@link Robot robots} we wish to test.
 	 * @param pointToDefend
 	 */
-	public void testThreeKeeperDefenders(ArrayList<RobotExecuter> robotExecs, FieldPoint pointToDefend){
+	public void testThreeKeeperDefenders(ArrayList<RobotExecuter> robotExecs, FieldPoint objectPosition){
 		FieldPoint newDestination = null;
 		int distance = world.getField().getDefenceRadius() + world.getField().getDefenceStretch() / 2 + 50;
-		FieldPoint objectPosition = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE;
+//		FieldPoint objectPosition = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE;
 		FieldPoint subjectPosition = world.getBall().getPosition();
-		FieldPoint offset;
+		FieldPoint offset = null;
 		int i = 0;
 		
 		if (objectPosition != null && subjectPosition != null) {
 			for(RobotExecuter robot : robotExecs){
+				if(World.getInstance().getRobotExecuters().get(robotIDs[i]).getLowLevelBehavior() == null){
+					World.getInstance().getRobotExecuters().get(robotIDs[i]).setLowLevelBehavior(new Attacker(robot.getRobot()));
+				}
+				
 				if (robot.getRobot().getPosition().getY() == Math.max(
 						robotExecs.get(0).getRobot().getPosition().getY(),
 						Math.max(robotExecs.get(1).getRobot().getPosition().getY(), robotExecs.get(2).getRobot().getPosition()
 								.getY())))
-					offset = new FieldPoint(0, 150);
+					offset = new FieldPoint(0, 250);
 				else if (robot.getRobot().getPosition().getY() == Math.min(
 						robotExecs.get(0).getRobot().getPosition().getY(),
 						Math.min(robotExecs.get(1).getRobot().getPosition().getY(), robotExecs.get(2).getRobot().getPosition()
 								.getY())))
-					offset = new FieldPoint(0, -150);
-				else
-					offset = new FieldPoint(0, 0);
+					offset = new FieldPoint(0, -250);
+//				else
+//					offset = new FieldPoint(0, 0);
 				
 				double angle = objectPosition.getAngle(subjectPosition);
 				double dx = Math.cos(Math.toRadians(angle)) * distance;
@@ -145,12 +185,19 @@ public class TestMode extends Mode {
 				double destX = objectPosition.getX() + dx;
 				double destY = objectPosition.getY() + dy;
 				newDestination = new FieldPoint(destX, destY);
-				newDestination.setX(newDestination.getX() + offset.getX());
-				newDestination.setY(newDestination.getY() + offset.getY());
+				if(offset!=null){
+					newDestination.setX(newDestination.getX() + offset.getX());
+					newDestination.setY(newDestination.getY() + offset.getY());
+				}
 				
-				goes.set(i, new GotoPosition(robot.getRobot(), newDestination, subjectPosition));
-				goes.get(i).calculate(false);
 				
+				go = new GotoPosition(robot.getRobot(), newDestination, subjectPosition);
+				World.getInstance().getRobotExecuters().get(robotIDs[i]).getLowLevelBehavior().setGotoPosition(go);
+				go.calculate(false);
+				
+//				goes.set(i, new GotoPosition(robot.getRobot(), newDestination, subjectPosition));
+//				goes.get(i).calculate(false);
+//				
 				i++;
 			}
 		}

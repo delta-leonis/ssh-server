@@ -575,5 +575,7 @@ public class FieldPanel extends JPanel {
 		int y2 = (int) destination.toGUIPoint(ratio, mirror).getY() + spaceBufferY;
 		g.drawLine(x, y, x2, y2);
 		g2.draw(new Line2D.Float(x, y, x2, y2));
+		g2.setStroke(new BasicStroke(1));
+
 	}
 }
