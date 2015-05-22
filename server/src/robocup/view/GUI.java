@@ -174,10 +174,7 @@ public class GUI extends JFrame {
 
 		for (Robot robot : World.getInstance().getReferee().getAlly().getRobots()) {
 			RobotBox box = new RobotBox(robot);
-			box.setBackground(getRoleColor(((Ally)robot).getRole()));
 			box.addMouseListener(new PanelClickListener());
-			if (robot.getRobotId() == selectedRobotId)
-				box.setBackground(box.getBackground().darker());
 			if (robot.isVisible())
 				robotContainer.add(box);
 			allRobotBoxes.add(box);
@@ -185,11 +182,6 @@ public class GUI extends JFrame {
 
 		robotContainer.add(new JPanel(), "growy, span 2");
 		leftContainer.add(robotContainer, "growx");
-	}
-
-	private Color getRoleColor(RobotMode robotMode) {
-		Color[] colors = {Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA, Color.ORANGE, Color.YELLOW};
-		return colors[Math.min(robotMode.ordinal(), colors.length-1)];
 	}
 
 	/**
@@ -220,16 +212,8 @@ public class GUI extends JFrame {
 	}
 
 	public void selectRobotId(int robotId){
-		// loop all RobotBoxes, and change the background color
-		for (Component item : robotContainer.getComponents()) {
-			if (item instanceof RobotBox) {
-				if (((RobotBox) item).getRobot().getRobotId() == robotId)
-					((RobotBox) item).setBackground(((RobotBox) item).getBackground().darker());
-				else
-					((RobotBox) item).setBackground(getRoleColor(((Ally)((RobotBox) item).getRobot()).getRole()));
-			}
-		}
-
+		if(robotId == selectedRobotId)
+			return;
 		selectedRobotId = robotId;
 	}
 	
