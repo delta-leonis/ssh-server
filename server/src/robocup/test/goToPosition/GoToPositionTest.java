@@ -28,7 +28,7 @@ public class GoToPositionTest{
 	public void test1ID(){
 		System.out.println("test1ID");
 		setupOneRobot(1, new FieldPoint(0,0), new FieldPoint(0,0), new FieldPoint(0,0));
-		go.calculate();
+		go.calculate(false);
 		assertTrue(message.split(",")[0].equals("1"));
 		System.out.println("Message: " + message);
 		System.out.println();
@@ -38,7 +38,7 @@ public class GoToPositionTest{
 	public void test2_1Direction(){
 		System.out.println("test2_1Direction");
 		setupOneRobot(1, new FieldPoint(0,0), new FieldPoint(1000,1000), new FieldPoint(0,0));
-		go.calculate();
+		go.calculate(false);
 		assertTrue(message.split(",")[1].equals("45"));
 		System.out.println("Message: " + message);
 		System.out.println();
@@ -47,7 +47,7 @@ public class GoToPositionTest{
 	public void test2_2Direction(){
 		System.out.println("test2_2Direction");
 		setupOneRobot(1, new FieldPoint(0,0), new FieldPoint(-1000,1000), new FieldPoint(0,0));
-		go.calculate();
+		go.calculate(false);
 		assertTrue(message.split(",")[1].equals("135"));
 		System.out.println("Message: " + message);
 		System.out.println();
@@ -57,7 +57,7 @@ public class GoToPositionTest{
 	public void test2_3Direction(){
 		System.out.println("test2_3Direction");
 		setupOneRobot(1, new FieldPoint(0,0), new FieldPoint(-1000,-1000), new FieldPoint(0,0));
-		go.calculate();
+		go.calculate(false);
 		assertTrue(message.split(",")[1].equals("-135"));
 		System.out.println("Message: " + message);
 		System.out.println();
@@ -67,7 +67,7 @@ public class GoToPositionTest{
 	public void test2_4Direction(){
 		System.out.println("test2_4Direction");
 		setupOneRobot(1, new FieldPoint(0,0), new FieldPoint(1000,-1000), new FieldPoint(0,0));
-		go.calculate();
+		go.calculate(false);
 		assertTrue(message.split(",")[1].equals("-45"));
 		System.out.println("Message: " + message);
 		System.out.println();
@@ -77,7 +77,7 @@ public class GoToPositionTest{
 	public void test2_5Direction(){
 		System.out.println("test2_5Direction");
 		setupOneRobot(1, new FieldPoint(0,0), new FieldPoint(1000,0), new FieldPoint(0,0));
-		go.calculate();
+		go.calculate(false);
 		assertTrue(message.split(",")[1].equals("0"));
 		System.out.println("Message: " + message);
 		System.out.println();
@@ -87,7 +87,7 @@ public class GoToPositionTest{
 	public void test2_6Direction(){
 		System.out.println("test2_6Direction");
 		setupOneRobot(1, new FieldPoint(0,0), new FieldPoint(-1000,0), new FieldPoint(0,0));
-		go.calculate();
+		go.calculate(false);
 		assertTrue(message.split(",")[1].equals("180") || message.split(",")[1].equals("-180"));
 		System.out.println("Message: " + message);
 		System.out.println();
@@ -97,7 +97,7 @@ public class GoToPositionTest{
 	public void test2_7Direction(){
 		System.out.println("test2_7Direction");
 		setupOneRobot(1, new FieldPoint(0,0), new FieldPoint(0,1000), new FieldPoint(0,0));
-		go.calculate();
+		go.calculate(false);
 		assertTrue(message.split(",")[1].equals("90"));
 		System.out.println("Message: " + message);
 		System.out.println();
@@ -107,7 +107,7 @@ public class GoToPositionTest{
 	public void test2_8Direction(){
 		System.out.println("test2_8Direction");
 		setupOneRobot(1, new FieldPoint(0,0), new FieldPoint(0,-1000), new FieldPoint(0,0));
-		go.calculate();
+		go.calculate(false);
 		assertTrue(message.split(",")[1].equals("-90"));
 		System.out.println("Message: " + message);
 		System.out.println();
@@ -117,7 +117,7 @@ public class GoToPositionTest{
 	public void test2_9Direction(){
 		System.out.println("test2_9Direction");
 		setupOneRobot(1, new FieldPoint(-1500,-1500), new FieldPoint(-1000,-1000), new FieldPoint(0,0));
-		go.calculate();
+		go.calculate(false);
 		
 		System.out.println("Test 9 Message: " + message);
 		System.out.println();
@@ -129,7 +129,7 @@ public class GoToPositionTest{
 	public void test2_10Direction(){
 		System.out.println("test2_10Direction");
 		setupOneRobot(1, new FieldPoint(-1000,-1000), new FieldPoint(-1500,-1500), new FieldPoint(0,0));
-		go.calculate();
+		go.calculate(false);
 		System.out.println("Message: " + message);
 		System.out.println();
 		assertTrue(message.split(",")[1].equals("-135"));
@@ -139,7 +139,7 @@ public class GoToPositionTest{
 	public void test3_1Target(){
 		System.out.println("test3_1Direction");
 		setupOneRobot(1, new FieldPoint(0,0), new FieldPoint(0,0), new FieldPoint(500,500));
-		go.calculate();
+		go.calculate(false);
 		System.out.println("Message: " + message);
 		System.out.println();
 		assertTrue(message.split(",")[3].equals("1000"));
@@ -149,7 +149,7 @@ public class GoToPositionTest{
 	public void test3_2Target(){
 		System.out.println("test3_2Direction");
 		setupOneRobot(1, new FieldPoint(0,0), new FieldPoint(0,0), new FieldPoint(-500,-500));
-		go.calculate();
+		go.calculate(false);
 		System.out.println("Message: " + message);
 		System.out.println();
 		assertTrue(message.split(",")[3].equals("-3000"));
@@ -159,7 +159,7 @@ public class GoToPositionTest{
 	public void test3_3Target(){
 		System.out.println("test3_3Direction");
 		setupOneRobot(1, new FieldPoint(0,0), new FieldPoint(0,0), new FieldPoint(-500,500));
-		go.calculate();
+		go.calculate(false);
 		System.out.println("Message: " + message);
 		System.out.println();
 		assertTrue(message.split(",")[3].equals("3000"));
@@ -169,7 +169,7 @@ public class GoToPositionTest{
 	public void test3_4Target(){
 		System.out.println("test3_4Direction");
 		setupOneRobot(1, new FieldPoint(0,0), new FieldPoint(0,0), new FieldPoint(500,-500));
-		go.calculate();
+		go.calculate(false);
 		System.out.println("Message: " + message);
 		System.out.println();
 		assertTrue(message.split(",")[3].equals("-1000"));
@@ -180,7 +180,7 @@ public class GoToPositionTest{
 		System.out.println("test4_1TargetTurnedRobot");
 		setupOneRobot(1, new FieldPoint(0,0), new FieldPoint(0,0), new FieldPoint(0,500));
 		World.getInstance().getReferee().getAlly().getRobotByID(1).setOrientation(90);
-		go.calculate();
+		go.calculate(false);
 		System.out.println("Message: " + message);
 		System.out.println();
 		assertTrue(message.split(",")[3].equals("0"));
@@ -191,7 +191,7 @@ public class GoToPositionTest{
 		System.out.println("test4_1TargetTurnedRobot");
 		setupOneRobot(1, new FieldPoint(0,0), new FieldPoint(0,0), new FieldPoint(0,0));
 		World.getInstance().getReferee().getAlly().getRobotByID(1).setOrientation(90);
-		go.calculate();
+		go.calculate(false);
 		System.out.println("Message: " + message);
 		System.out.println();
 		assertTrue(message.split(",")[3].equals("-2000"));

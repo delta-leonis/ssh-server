@@ -50,14 +50,14 @@ public class TestPathPlannerPanel extends JPanel{
 		this.drawNeighbours = drawNeighbours;
 		this.drawPath = drawPath;
 		this.planner = planner;
-		this.path = planner.getRoute(World.getInstance().getAllRobots().get(0).getPosition(), destination, 0);
+		this.path = planner.getRoute(World.getInstance().getAllRobots().get(0).getPosition(), destination, 0, false);
 		vertices = planner.getAllVertices();
 		setPreferredSize(new Dimension((int)(WIDTH * RATIO), (int)(HEIGHT * RATIO)));
 	}
 	
 	public void refresh(FieldPoint destination){
 		this.destination = destination;
-		this.path = planner.getRoute(World.getInstance().getAllRobots().get(0).getPosition(), destination, 0);
+		this.path = planner.getRoute(World.getInstance().getAllRobots().get(0).getPosition(), destination, 0, false);
 		vertices = planner.getAllVertices();
 	}
 	
@@ -67,28 +67,29 @@ public class TestPathPlannerPanel extends JPanel{
 		Graphics2D g2 = (Graphics2D) g;
 			
 		drawField(g);
-	
-		for (Vertex vertex : vertices) {
-			g.setColor(Color.MAGENTA);
-	
-			int x = (int) (X_OFFSET + vertex.getPosition().getX()
-					* RATIO);
-			int y = (int) (Y_OFFSET - vertex.getPosition().getY()
-					* RATIO);
-			if(!vertex.isRemovable()){
-				g.drawString("nRmvbl", x, y);
-			}
-			g.drawOval(x - 5, y - 5, 10, 10);
-			if (drawNeighbours) {
-				g.setColor(new Color((int) (Math.random() * 255),
-						(int) (Math.random() * 255), (int) (Math
-								.random() * 255)));
-				for (Vertex neighbour : vertex.getNeighbours()) {
-					int x2 = (int) (X_OFFSET + neighbour.getPosition()
-							.getX() * RATIO);
-					int y2 = (int) (Y_OFFSET - neighbour.getPosition()
-							.getY() * RATIO);
-					g.drawLine(x, y, x2, y2);
+		if(vertices != null){
+			for (Vertex vertex : vertices) {
+				g.setColor(Color.MAGENTA);
+		
+				int x = (int) (X_OFFSET + vertex.getPosition().getX()
+						* RATIO);
+				int y = (int) (Y_OFFSET - vertex.getPosition().getY()
+						* RATIO);
+				if(!vertex.isRemovable()){
+					g.drawString("nRmvbl", x, y);
+				}
+				g.drawOval(x - 5, y - 5, 10, 10);
+				if (drawNeighbours) {
+					g.setColor(new Color((int) (Math.random() * 255),
+							(int) (Math.random() * 255), (int) (Math
+									.random() * 255)));
+					for (Vertex neighbour : vertex.getNeighbours()) {
+						int x2 = (int) (X_OFFSET + neighbour.getPosition()
+								.getX() * RATIO);
+						int y2 = (int) (Y_OFFSET - neighbour.getPosition()
+								.getY() * RATIO);
+						g.drawLine(x, y, x2, y2);
+					}
 				}
 			}
 		}
@@ -101,7 +102,7 @@ public class TestPathPlannerPanel extends JPanel{
 					(int) rect.getCenterY(),
 					90,
 					(int)rect.getWidth(),
-					DijkstraPathPlanner.VERTEX_DISTANCE_TO_ROBOT,
+					DijkstraPathPlanner.MAX_VERTEX_DISTANCE_TO_ROBOT,
 					"[" + (int) rect.getCenterX() + ","
 							+ (int) rect.getCenterY() + "]");
 		}
@@ -110,12 +111,12 @@ public class TestPathPlannerPanel extends JPanel{
 		Robot source = World.getInstance().getReferee().getAlly().getRobotByID(0);
 		drawRobot(g, (int) source.getPosition().getX(), (int) source
 				.getPosition().getY(), 90, DijkstraPathPlanner.DISTANCE_TO_ROBOT,
-				DijkstraPathPlanner.VERTEX_DISTANCE_TO_ROBOT, "id=" + source.getRobotId());
+				DijkstraPathPlanner.MAX_VERTEX_DISTANCE_TO_ROBOT, "id=" + source.getRobotId());
 		// Destination
 		g.setColor(Color.BLUE);
 		drawRobot(g, (int) destination.getX(),
 				(int) destination.getY(), 90, DijkstraPathPlanner.DISTANCE_TO_ROBOT,
-				DijkstraPathPlanner.VERTEX_DISTANCE_TO_ROBOT, "dest");
+				DijkstraPathPlanner.MAX_VERTEX_DISTANCE_TO_ROBOT, "dest");
 		
 	
 		// Draw path

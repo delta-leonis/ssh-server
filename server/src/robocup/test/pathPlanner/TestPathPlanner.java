@@ -141,7 +141,7 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 		TestPathPlanner planner = new TestPathPlanner();
 		planner.setupLockedInSource(destination, true);
 		System.out.println("\nTest Locked In Source...");
-		assertNull("Test Locked In Source", planner.getRoute(new FieldPoint(0,0), destination, 0));
+		assertNull("Test Locked In Source", planner.getRoute(new FieldPoint(0,0), destination, 0, false));
 		System.out.println("Succeeded");
 	}
 	
@@ -154,7 +154,7 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 		TestPathPlanner planner = new TestPathPlanner();
 		planner.setupLockedInDestination(destination, true);
 		System.out.println("\nTest Locked In Destination...");
-		assertNull("Test Locked In Source", planner.getRoute(new FieldPoint(0,0), destination, 0));
+		assertNull("Test Locked In Source", planner.getRoute(new FieldPoint(0,0), destination, 0, false));
 		System.out.println("Succeeded");
 	}
 
@@ -183,7 +183,7 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 		interceptingRobot.setPosition(interceptingBox);
 		interceptingRobot.setOnSight(true);
 
-		generateObjectList(0); // Generate from RobotID's perspective.
+		generateObjectList(0, false); // Generate from RobotID's perspective.
 
 		if (log) {
 			for (Rectangle2D r : getObjects()) {
@@ -266,8 +266,8 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 	}
 
 	public void generateAll() {
-		generateObjectList(0);
-		generateVertices();
+		generateObjectList(0, false);
+		generateVertices(false);
 		removeCollidingVertices();
 		generateNeighbours();
 	}

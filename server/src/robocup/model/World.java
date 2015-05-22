@@ -168,7 +168,7 @@ public class World extends Observable {
 	public ArrayList<Robot> getAllRobotsOnSight() {
 		ArrayList<Robot> onsight = new ArrayList<Robot>();
 		for (Robot robot : robotList) {
-			if (robot.isOnSight())
+			if (robot.isOnSight() || robot.getPosition() != null)
 				onsight.add(robot);
 		}
 		return onsight;
@@ -474,7 +474,7 @@ public class World extends Observable {
 		ArrayList<Enemy> foundEnemies = new ArrayList<Enemy>();
 
 		for (Robot enemy : enemyTeam)
-			if (fieldZone.contains(enemy.getPosition()))
+			if (enemy.getPosition() != null && fieldZone.contains(enemy.getPosition()))
 				foundEnemies.add((Enemy) enemy);
 
 		return foundEnemies;

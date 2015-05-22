@@ -25,7 +25,7 @@ public class Keeper extends LowLevelBehavior {
 		this.centerGoalPosition = centerGoalPosition;
 
 		this.role = RobotMode.KEEPER;
-		go = new GotoPosition(robot, centerGoalPosition, ballPosition, 2500);
+		go = new GotoPosition(robot, centerGoalPosition, ballPosition);
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class Keeper extends LowLevelBehavior {
 		else if (destination != null)
 			go.setDestination(destination);
 
-		go.calculate();
+		go.calculate(false);
 	}
 
 	/**

@@ -48,7 +48,7 @@ public class TestPositionBehavior extends Behavior {
 			}
 		}
 
-		go.calculate();
+		go.calculate(false);
 	}
 
 	private void goToBall(Robot r, RobotExecuter e) {

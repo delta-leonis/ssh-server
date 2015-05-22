@@ -24,7 +24,6 @@ import robocup.model.Ball;
 import robocup.model.FieldPoint;
 import robocup.model.Goal;
 import robocup.model.Robot;
-import robocup.model.Team;
 import robocup.model.World;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.TeamColor;
@@ -421,32 +420,36 @@ public class FieldPanel extends JPanel {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(4));
 		Color allyColor = world.getReferee().getAllyTeamColor().toColor();
-		Color enemyColor = world.getReferee().getEastTeam().getColor().toColor();
+		Color enemyColor = world.getReferee().getEnemy().getColor().toColor();
 		ArrayList<Robot> robots = world.getAllRobots();
 		for(Robot robot : robots){
 			if (robot.getPosition() != null) {
+				FieldPoint robotPosition = robot.getPosition();
+				double robotOrientation = robot.getOrientation();
+				
 				// draw flat front part of robot
-				FieldPoint left = new FieldPoint(robot.getPosition().getX()
-						+ Math.cos(Math.toRadians(robot.getOrientation() + 45.0)) * Robot.DIAMETER / 2.0, robot
+				FieldPoint left = new FieldPoint(robotPosition.getX()
+						+ Math.cos(Math.toRadians(robotOrientation + 45.0)) * Robot.DIAMETER / 2.0, robot
 						.getPosition().getY()
-						+ Math.sin(Math.toRadians(robot.getOrientation() + 45.0))
+						+ Math.sin(Math.toRadians(robotOrientation + 45.0))
 						* Robot.DIAMETER / 2.0);
-				FieldPoint right = new FieldPoint(robot.getPosition().getX()
-						+ Math.cos(Math.toRadians(robot.getOrientation() -45.0)) * Robot.DIAMETER / 2.0, robot
+				FieldPoint right = new FieldPoint(robotPosition.getX()
+						+ Math.cos(Math.toRadians(robotOrientation -45.0)) * Robot.DIAMETER / 2.0, robot
 						.getPosition().getY()
-						+ Math.sin(Math.toRadians(robot.getOrientation() -45.0))
+						+ Math.sin(Math.toRadians(robotOrientation -45.0))
 						* Robot.DIAMETER / 2.0);
 
-				//SOLID COLOR
 				g2.setColor((robot instanceof Ally) ? allyColor : enemyColor);
-				g2.fillArc(
-						(int) (robot.getPosition().toGUIPoint(ratio, mirror).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
-						(int) (robot.getPosition().toGUIPoint(ratio, mirror).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
-						(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio),
-						(int) robot.getOrientation() + (mirror ?  225: 45), 270);
-				g2.fillPolygon(new int[] {(int) right.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) left.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) robot.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX},
-						new int[] {(int) right.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) left.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) robot.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY}, 3);
-				
+				if(isWindows()){
+					//SOLID COLOR
+					g2.fillArc(
+							(int) (robotPosition.toGUIPoint(ratio, mirror).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
+							(int) (robotPosition.toGUIPoint(ratio, mirror).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
+							(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio),
+							(int) robot.getOrientation() + (mirror ?  215: 35), 295);
+					g2.fillPolygon(new int[] {(int) right.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) left.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) robot.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX},
+							new int[] {(int) right.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) left.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) robot.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY}, 3);
+				}
 				//BORDERS
 				g2.setColor(g2.getColor().darker());
 				g2.drawLine((int) (left.toGUIPoint(ratio, mirror).getX() + spaceBufferX),
@@ -454,23 +457,29 @@ public class FieldPanel extends JPanel {
 						(int) (right.toGUIPoint(ratio, mirror).getX() + spaceBufferX),
 						(int) (right.toGUIPoint(ratio, mirror).getY() + spaceBufferY));
 
-				g2.setFont(new Font(g2.getFont().getFontName(), Font.BOLD, g2.getFont().getSize()));
-				g2.drawString("" + robot.getRobotId(), (int) robot
-						.getPosition().toGUIPoint(ratio, mirror).getX() -(robot.getRobotId()/10 + 1)*2+ spaceBufferX,
-						(int) robot.getPosition().toGUIPoint(ratio, mirror).getY() +2+ spaceBufferY);
 				// draw round part of robot
 				g2.drawArc(
-						(int) (robot.getPosition().toGUIPoint(ratio, mirror).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
-						(int) (robot.getPosition().toGUIPoint(ratio, mirror).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
+						(int) (robotPosition.toGUIPoint(ratio, mirror).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
+						(int) (robotPosition.toGUIPoint(ratio, mirror).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
 						(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio),
-						(int) robot.getOrientation() + (mirror ?  224 : 46), 271);
-				
+						(int) robotOrientation + (mirror ?  225 : 45), 270);
+
+				g2.setColor(Color.BLACK);
+				g2.setFont(new Font(g2.getFont().getFontName(), Font.BOLD, (int) (Robot.DIAMETER*ratio)/2));
+				g2.drawString("" + robot.getRobotId(), (int) robot
+						.getPosition().toGUIPoint(ratio, mirror).getX() -(robot.getRobotId()/10 + 1)*(g2.getFont().getSize()/3)+ spaceBufferX,
+						(int) robotPosition.toGUIPoint(ratio, mirror).getY() +(g2.getFont().getSize()/3)+ spaceBufferY);
+
 				if(showCoords)
-					drawCoord(g2, robot.getPosition(), ratio, (int) (Robot.DIAMETER*ratio));
+					drawCoord(g2, robotPosition, ratio, (int) (Robot.DIAMETER*ratio));
 			}
 		}
 	}
 	
+	private boolean isWindows() {
+		return System.getProperty("os.name").toLowerCase().contains("windows");
+	}
+
 	/**
 	 * Toggles the boolean {@link FieldPanel#showPathPlanner} and repaints.
 	 */
@@ -505,7 +514,7 @@ public class FieldPanel extends JPanel {
 		ArrayList<RobotExecuter> robotExecuters = world.getRobotExecuters();
 		
 		for(RobotExecuter executer : robotExecuters){
-			if(executer.getLowLevelBehavior() != null)
+			if(executer.getLowLevelBehavior() != null && executer.getLowLevelBehavior().getGotoPosition() != null)
 				drawIndividualPath(g, ratio, executer.getLowLevelBehavior().getGotoPosition().getPathPlanner());
 		}
 		
