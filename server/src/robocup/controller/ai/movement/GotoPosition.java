@@ -176,16 +176,16 @@ public class GotoPosition {
 			double rotationToGoal = rotationToDest(destination);
 			double speed;
 			if(route.size() > 1)							//If we're not at our destination
-				speed = getSpeed(getDistance()+250, 500, MAX_VELOCITY);	//Don't slow down as much TODO: Base this on angle of turn
+				speed = getSpeed(getDistance()+150, 300, MAX_VELOCITY);	//Don't slow down as much TODO: Base this on angle of turn
 			else
-				speed = getSpeed(getDistance(), 500, MAX_VELOCITY);
+				speed = getSpeed(getDistance(), 300, MAX_VELOCITY);
 			
 			double rotationSpeed = getRotationSpeed(rotationToTarget, speed);
 
 			// Overrule speed
 			if (forcedSpeed > 0) {
 //				speed = forcedSpeed;
-				speed = getSpeed(getDistance(), 200, forcedSpeed);
+				speed = getSpeed(getDistance(), 150, forcedSpeed);
 			}
 			//TODO: remove test code
 //			System.out.println("ID: " + robot.getRobotId() + "\n\tDirection: " + rotationToGoal
