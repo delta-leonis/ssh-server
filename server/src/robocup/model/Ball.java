@@ -1,5 +1,7 @@
 package robocup.model;
 
+import java.awt.geom.Rectangle2D;
+
 /**
  * Describes a ball on the {@link Field}
  */
@@ -47,6 +49,12 @@ public class Ball extends FieldObject {
 	 */
 	public Robot getOwner() {
 		return owner;
+	}
+	
+	public Rectangle2D getDangerRectangle(int distance){
+		double x = getPosition().getX();
+		double y = getPosition().getY();
+		return new Rectangle2D.Double(x-distance, y-distance, distance*2, distance*2);
 	}
 
 	@Override

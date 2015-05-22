@@ -55,7 +55,7 @@ public class Keeper extends LowLevelBehavior {
 		else if (destination != null)
 			go.setDestination(destination);
 
-		go.calculate();
+		go.calculate(false);
 	}
 
 	/**

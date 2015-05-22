@@ -78,8 +78,8 @@ public abstract class LowLevelBehavior {
 			// TODO find out why direction on robot is inverted / twisted. Problem probably lies in the code within the physical Robot.  Possible problem: Mbed:Robotcontroller#Drive() 
 			double angle = -shootDirection + 270; // Angle needs to be the inverse of the shootDirection, to position the Robot behind the ball.
 
-			double dx = Math.sin(Math.toRadians(angle)) * (Robot.DIAMETER / 2);
-			double dy = Math.cos(Math.toRadians(angle)) * (Robot.DIAMETER / 2);
+			double dx = Math.sin(Math.toRadians(angle)) * (Robot.DIAMETER / 2 + 100);
+			double dy = Math.cos(Math.toRadians(angle)) * (Robot.DIAMETER / 2 + 100);
 
 			double destX = ballPosition.getX() + dx;
 			double destY = ballPosition.getY() + dy;

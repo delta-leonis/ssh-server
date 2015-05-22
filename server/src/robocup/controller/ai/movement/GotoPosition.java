@@ -22,8 +22,8 @@ import robocup.output.ComInterface;
 public class GotoPosition {
 
 	// TODO find a better solution
-	private static final double DISTANCE_ROTATIONSPEED_COEFFICIENT = 8;
-	private static final int MAX_ROTATION_SPEED = 1100;	//in mm/s
+	private static final double DISTANCE_ROTATIONSPEED_COEFFICIENT = 12;
+	private static final int MAX_ROTATION_SPEED = 1000;	//in mm/s
 	private static final int START_UP_SPEED = 100; // Speed added to rotation. Robot only starts rotating if it receives a value higher than 200 
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 
@@ -40,7 +40,7 @@ public class GotoPosition {
 	// calculate total circumference of robot
 	private static final double circumference = (Robot.DIAMETER * Math.PI);
 	
-	private static final int MAX_VELOCITY =2500;
+	private static final int MAX_VELOCITY =3000;
 
 	/**
 	 * Setup this object to function for the given {@link Robot} and {@link FieldPoint destination}
@@ -142,7 +142,7 @@ public class GotoPosition {
 	 * Calculates what message we need to send to the robot, based on the
 	 * parameters given in the constructor.
 	 */
-	public void calculate() {
+	public void calculate(boolean avoidBall) {
 		robot.setOnSight(true);
 		if (destination == null) {
 			if(target == null){
@@ -155,10 +155,7 @@ public class GotoPosition {
 		} else {
 			// TODO enable me to be able to dribble
 			// dribble = Math.abs(robot.getOrientation() - robot.getPosition().getAngle(World.getInstance().getBall().getPosition())) < 20 && robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition()) < Robot.DIAMETER / 2 + 200;
-			if(destination == null){
-				System.out.println("Test!  FOUT: Destination kan niet null zijn.");
-			}
-			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId());
+			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), avoidBall);
 			if(route == null){
 				LOGGER.severe("Robot #" + robot.getRobotId() + " can't reach destination.");
 				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
@@ -178,7 +175,7 @@ public class GotoPosition {
 			if(route.size() > 1)							//If we're not at our destination
 				speed = getSpeed(getDistance()+150, 300, MAX_VELOCITY);	//Don't slow down as much TODO: Base this on angle of turn
 			else
-				speed = getSpeed(getDistance(), 300, MAX_VELOCITY);
+				speed = getSpeed(getDistance(), 500, MAX_VELOCITY);
 			
 			double rotationSpeed = getRotationSpeed(rotationToTarget, speed);
 
@@ -219,7 +216,7 @@ public class GotoPosition {
 		// distance needed to rotate in mm
 		double rotationDistance = circumference * rotationPercent;
 		rotationDistance *= DISTANCE_ROTATIONSPEED_COEFFICIENT;
-		rotationDistance *= 1 - speed/4000;
+		rotationDistance *= 1 - speed/(MAX_VELOCITY + 500);
 		if(Math.abs(rotationDistance) > MAX_ROTATION_SPEED){
 			if(rotationDistance < 0){
 				rotationDistance = -MAX_ROTATION_SPEED;

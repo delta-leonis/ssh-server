@@ -20,6 +20,7 @@ public class DijkstraPathPlanner {
 	// Basically the "Danger zone" for the Robot. A normal Robot has a radius of 90mm, so if DISTANCE_TO_ROBOT == 130mm,
 	// then it means we don't want to get within (180mm - 90mm = ) 90mm of any other Robot.
 	public static final int DISTANCE_TO_ROBOT = 170;
+	public static final int DISTANCE_TO_BALL = 120;
 	// This value is used to determine the vertex points, which are VERTEX_DISTANCE_TO_ROBOT from the middle points of the robots.
 	public static final int MIN_VERTEX_DISTANCE_TO_ROBOT = 240;
 	public static final int MAX_VERTEX_DISTANCE_TO_ROBOT = 400;
@@ -201,13 +202,13 @@ public class DijkstraPathPlanner {
 	 * @return list with points forming the shortest route
 	 */
 	@SuppressWarnings("unchecked")
-	public LinkedList<FieldPoint> getRoute(FieldPoint beginNode, FieldPoint destination, int robotId) {
+	public LinkedList<FieldPoint> getRoute(FieldPoint beginNode, FieldPoint destination, int robotId, boolean avoidBall) {
 		LinkedList<FieldPoint> route = new LinkedList<FieldPoint>();
 		boolean found = false;
 		source = beginNode;
 		this.destination = destination;
 
-		generateObjectList(robotId);
+		generateObjectList(robotId, avoidBall);
 
 		// no object on route
 		if (!intersectsObject(new Vertex(beginNode), new Vertex(destination))) {
@@ -220,7 +221,7 @@ public class DijkstraPathPlanner {
 
 		// generate vertices around robots and remove vertices colliding with
 		// robots
-		generateVertices();
+		generateVertices(avoidBall);
 		removeCollidingVertices();
 		
 		// add source and dest to vertices list
@@ -534,7 +535,7 @@ public class DijkstraPathPlanner {
 	 * 					no rectangle will be created for this robot in this function. 
 	 * 					This rectangle might be created in {@link DijkstraPathPlanner#setupSource(FieldPoint) setupSouce()}.
 	 */
-	protected void generateObjectList(int robotId) {
+	protected void generateObjectList(int robotId, boolean avoidBall) {
 		objects.clear();
 		for (Robot r : world.getReferee().getAlly().getRobotsOnSight())
 			if (r.getPosition() != null)
@@ -544,13 +545,17 @@ public class DijkstraPathPlanner {
 		for (Robot r : world.getReferee().getEnemy().getRobotsOnSight())
 			if (r.getPosition() != null)
 				objects.add(r.getDangerRectangle(DISTANCE_TO_ROBOT));
+		if(avoidBall){
+			//Add ball
+			objects.add(world.getBall().getDangerRectangle(DISTANCE_TO_BALL));
+		}
 	}
 
 	/**
 	 * Generate vertices around every robot in the robot list
 	 * only add vertices when it is not the source destination
 	 */
-	protected void generateVertices() {
+	protected void generateVertices(boolean avoidBall) {
 		vertices.clear();
 		for (Robot robot : world.getAllRobotsOnSight()) {
 			if(robot.getPosition() != null){
@@ -571,6 +576,21 @@ public class DijkstraPathPlanner {
 					vertices.add(new Vertex(new FieldPoint(x, y + vertexDistance)));
 				}
 			}
+		}
+		if(avoidBall){
+			double x = world.getBall().getPosition().getX();
+			double y = world.getBall().getPosition().getY();
+			double vertexDistance = MIN_VERTEX_DISTANCE_TO_ROBOT + 
+					((MAX_VERTEX_DISTANCE_TO_ROBOT - MIN_VERTEX_DISTANCE_TO_ROBOT) * (Math.abs(world.getBall().getSpeed()) / 5000));
+			vertices.add(new Vertex(new FieldPoint(x + Math.cos(45) * vertexDistance, y + Math.sin(45) * vertexDistance)));
+			vertices.add(new Vertex(new FieldPoint(x + Math.cos(45) * vertexDistance, y + Math.sin(45) * vertexDistance)));
+			vertices.add(new Vertex(new FieldPoint(x + Math.cos(45) * vertexDistance, y + Math.sin(45) * vertexDistance)));
+			vertices.add(new Vertex(new FieldPoint(x + Math.cos(45) * vertexDistance, y + Math.sin(45) * vertexDistance)));
+			
+			vertices.add(new Vertex(new FieldPoint(x + vertexDistance, y)));
+			vertices.add(new Vertex(new FieldPoint(x, y - vertexDistance)));
+			vertices.add(new Vertex(new FieldPoint(x - vertexDistance, y)));
+			vertices.add(new Vertex(new FieldPoint(x, y + vertexDistance)));
 		}
 	}
 	

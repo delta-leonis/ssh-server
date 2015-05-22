@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.Mode;
 import robocup.controller.ai.lowLevelBehavior.Attacker;
+import robocup.controller.ai.lowLevelBehavior.LowLevelBehavior;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.FieldPoint;
@@ -46,9 +47,17 @@ public class TestMode extends Mode {
 		if(World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).getLowLevelBehavior() == null){
 			World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).setLowLevelBehavior(new Attacker(robot.getRobot()));
 		}
-		testFollowBallFacing(robot);
-//		testFollowBallMovementFacing(robot);
+//		testAttacker();
+//		testFollowBallFacing(robot);
+		testFollowBallMovementFacing(robot);
 //		testFollowBallMovement(robot);
+	}
+	
+	public void testAttacker(){
+		Attacker attacker = (Attacker)(World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).getLowLevelBehavior());
+		attacker.update(robot.getRobot().getPosition().getAngle(new FieldPoint(-3000, 0)), 0, World.getInstance().getBall().getPosition());
+		attacker.calculate();
+
 	}
 	
 	/**
@@ -56,12 +65,12 @@ public class TestMode extends Mode {
 	 */
 	public void testFollowBallFacing(RobotExecuter robot){
 		
-		robot.getLowLevelBehavior().setGotoPosition(new GotoPosition(robot.getRobot(), 
+		go = new GotoPosition(robot.getRobot(), 
 				/*robot.getPosition()*/ null,
-				 World.getInstance().getBall().getPosition()));
+				 World.getInstance().getBall().getPosition());
 		World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).getLowLevelBehavior().setGotoPosition(go);
 
-		go.calculate();
+		go.calculate(false);
 	}
 	
 	/**
@@ -73,7 +82,7 @@ public class TestMode extends Mode {
 				 new FieldPoint(0,0));
 		World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).getLowLevelBehavior().setGotoPosition(go);
 
-		go.calculate();
+		go.calculate(false);
 	}
 	
 	/**
@@ -84,7 +93,7 @@ public class TestMode extends Mode {
 				World.getInstance().getBall().getPosition(),
 				World.getInstance().getBall().getPosition());
 		World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).getLowLevelBehavior().setGotoPosition(go);
-		go.calculate();
+		go.calculate(false);
 	}
 	
 	/**
@@ -98,7 +107,7 @@ public class TestMode extends Mode {
 				new FieldPoint(0,0)));
 		World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).getLowLevelBehavior().setGotoPosition(go);
 
-		go.calculate();
+		go.calculate(false);
 	}
 	
 	/**
@@ -140,7 +149,7 @@ public class TestMode extends Mode {
 				newDestination.setY(newDestination.getY() + offset.getY());
 				
 				goes.set(i, new GotoPosition(robot.getRobot(), newDestination, subjectPosition));
-				goes.get(i).calculate();
+				goes.get(i).calculate(false);
 				
 				i++;
 			}

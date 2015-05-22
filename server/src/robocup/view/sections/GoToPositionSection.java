@@ -104,7 +104,7 @@ public class GoToPositionSection extends SectionBox implements ActionListener{
 				go = new GotoPosition(World.getInstance().getReferee().getAlly().getRobotByID(selectedRobotId), 
 						World.getInstance().getReferee().getAlly().getRobotByID(selectedRobotId).getPosition(),
 						 World.getInstance().getBall().getPosition());
-				go.calculate();
+				go.calculate(false);
 //				System.out.println("Ball pos: " +  World.getInstance().getBall().getPosition());
 				try {
 					Thread.sleep(10);
