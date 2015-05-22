@@ -64,19 +64,18 @@ public class EventSystem {
 		if (ball.getSpeed() < 100.0) {
 			previousBallOwner = currentBallOwner;
 			currentBallOwner = world.getClosestRobotToBall();
-			
-			if (previousBallOwner instanceof Ally){
-				if(currentBallOwner instanceof Enemy)	//Previous Ally, current Enemy
+
+			if (previousBallOwner instanceof Ally) {
+				if (currentBallOwner instanceof Enemy) //Previous Ally, current Enemy
 					return Event.BALL_ENEMY_CAPTURE;
-					
-				else if(previousBallOwner.getRobotId() != currentBallOwner.getRobotId()) //Ally retains possession of ball
+
+				else if (previousBallOwner.getRobotId() != currentBallOwner.getRobotId()) //Ally retains possession of ball
 					return Event.BALL_ALLY_CHANGEOWNER;
-			}
-			else{	// previousBallOwner instanceof Enemy
-				if(currentBallOwner instanceof Ally)	//Previous Enemy, current Ally
+			} else { // previousBallOwner instanceof Enemy
+				if (currentBallOwner instanceof Ally) //Previous Enemy, current Ally
 					return Event.BALL_ALLY_CAPTURE;
-				
-				else if(previousBallOwner.getRobotId() != currentBallOwner.getRobotId())	//Enemy retains possession of ball
+
+				else if (previousBallOwner.getRobotId() != currentBallOwner.getRobotId()) //Enemy retains possession of ball
 					return Event.BALL_ENEMY_CHANGEOWNER;
 			}
 		}

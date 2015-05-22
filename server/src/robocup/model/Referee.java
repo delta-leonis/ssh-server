@@ -14,7 +14,6 @@ public class Referee {
 	private long timeoutTimeLeft;
 	private int stagetimeLeft;
 	private Stage stage;
-	private Command previousCommand;
 	private Command command;
 	private int commandCounter;
 	private long lastCommandTimestamp;
@@ -34,7 +33,6 @@ public class Referee {
 	public Referee() {
 		commandCounter = 0;
 		lastCommandTimestamp = 0;
-		previousCommand = Command.HALT;
 		command = Command.HALT;
 		stage = Stage.POST_GAME;
 	}
@@ -69,9 +67,6 @@ public class Referee {
 	 * @param stageTimeLeft the time left for the current stage
 	 */
 	public void update(Command command, int commandCounter, long commandTimeStamp, Stage stage, int stageTimeLeft) {
-		if (previousCommand != this.command)
-			previousCommand = this.command;
-
 		this.command = command;
 		this.commandCounter = commandCounter;
 		this.lastCommandTimestamp = commandTimeStamp;
@@ -132,14 +127,6 @@ public class Referee {
 	 */
 	public Command getCommand() {
 		return command;
-	}
-	
-	/**
-	 * getter method that returns the previous command given by the referee
-	 * @return the previous command
-	 */
-	public Command getPreviousCommand() {
-		return previousCommand;
 	}
 
 	/**
