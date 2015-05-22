@@ -184,6 +184,7 @@ public class RecordSection extends SectionBox {
 		pauseButton.setEnabled(!recording && playing);
 		cursorSlider.setMaximum(logFile.getSize()-1);
 		cursorSlider.setValue(logFile.getCursor());
+		cursorSlider.setEnabled(!recording);
 	}
 
 }
