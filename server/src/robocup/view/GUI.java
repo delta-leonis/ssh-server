@@ -19,12 +19,15 @@ import javax.swing.UIManager.LookAndFeelInfo;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.Main;
+import robocup.model.Ally;
 import robocup.model.Robot;
 import robocup.model.World;
+import robocup.model.enums.RobotMode;
 import robocup.view.sections.ConsoleSection;
 import robocup.view.sections.ControlRobotSection;
 import robocup.view.sections.FieldControlSection;
 import robocup.view.sections.GameStatusSection;
+import robocup.view.sections.RecordSection;
 import robocup.view.sections.RotateRobotSection;
 import robocup.view.sections.SettingsSection;
 import robocup.view.sections.ValidRobotSection;
@@ -152,6 +155,7 @@ public class GUI extends JFrame {
 
 		sectionContainer.add(new SettingsSection(), "growx");
 		sectionContainer.add(new FieldControlSection(), "growx");
+		sectionContainer.add(new RecordSection(), "growx");
 		//rightContainer.add(new PathPlannerTestSection(), "growx");	// Comment "World.getInstance().getGUI().update("robotContainer");" in Main.initTeams() for this section to work.
 		//rightContainer.add(new ControlRobotPacketTestSection(), "growx");
 		//rightContainer.add(new PenguinSection(), "growx, growy");
@@ -171,8 +175,6 @@ public class GUI extends JFrame {
 		for (Robot robot : World.getInstance().getReferee().getAlly().getRobots()) {
 			RobotBox box = new RobotBox(robot);
 			box.addMouseListener(new PanelClickListener());
-			if (robot.getRobotId() == 0)
-				box.setBackground(Color.LIGHT_GRAY);
 			if (robot.isVisible())
 				robotContainer.add(box);
 			allRobotBoxes.add(box);
@@ -210,16 +212,8 @@ public class GUI extends JFrame {
 	}
 
 	public void selectRobotId(int robotId){
-		// loop all RobotBoxes, and change the background color
-		for (Component item : robotContainer.getComponents()) {
-			if (item instanceof RobotBox) {
-				if (((RobotBox) item).getRobot().getRobotId() == robotId)
-					((RobotBox) item).setBackground(Color.LIGHT_GRAY);
-				else
-					((RobotBox) item).setBackground(UIManager.getColor("Panel.background"));
-			}
-		}
-
+		if(robotId == selectedRobotId)
+			return;
 		selectedRobotId = robotId;
 	}
 	

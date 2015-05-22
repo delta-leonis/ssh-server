@@ -1,6 +1,7 @@
 package robocup.view;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
@@ -11,6 +12,8 @@ import javax.swing.border.EtchedBorder;
 import net.miginfocom.swing.MigLayout;
 import robocup.model.Ally;
 import robocup.model.Robot;
+import robocup.model.World;
+import robocup.model.enums.RobotMode;
 
 /**
  * A {@link JPanel} that displays the info for a single {@link Robot}<br>
@@ -69,6 +72,11 @@ public class RobotBox extends JPanel {
 		}
 	}
 
+	private Color getRoleColor(RobotMode robotMode) {
+		Color[] colors = {Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA, Color.ORANGE, Color.YELLOW};
+		return colors[Math.min(robotMode.ordinal(), colors.length-1)];
+	}
+	
 	/**
 	 * Updates all {@link Robot} information, usually called upon {@code SSL_DetectionFrame}
 	 */
@@ -76,5 +84,10 @@ public class RobotBox extends JPanel {
 		setRobotStatus(robot.isOnSight());
 		robotRole.setText(((Ally)robot).getRole() == null ? "Undefined" : ((Ally)robot).getRole().toString());
 		robotPosition.setText(robot.getPosition() != null ? (int)robot.getPosition().getX() + ", " + (int)robot.getPosition().getY() : "Undefined");
+
+		if(robot.getRobotId() == World.getInstance().getGUI().getSelectedRobotId())
+			setBackground(getRoleColor(((Ally)robot).getRole()).darker());
+		else
+			setBackground(getRoleColor(((Ally)robot).getRole()));
 	}
 }

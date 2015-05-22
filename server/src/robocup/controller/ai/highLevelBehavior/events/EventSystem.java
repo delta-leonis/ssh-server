@@ -4,8 +4,10 @@ import robocup.model.Ally;
 import robocup.model.Ball;
 import robocup.model.Enemy;
 import robocup.model.FieldPoint;
+import robocup.model.Referee;
 import robocup.model.Robot;
 import robocup.model.World;
+import robocup.model.enums.Command;
 import robocup.model.enums.Event;
 
 /**
@@ -16,10 +18,13 @@ import robocup.model.enums.Event;
 public class EventSystem {
 
 	private World world;
+	private Referee referee;
 	private Ball ball;
 
 	private Robot previousBallOwner = null;
 	private Robot currentBallOwner = null;
+	private Command previousCommand = null;
+	private Command currentCommand = null;
 	private FieldPoint previousBallPosition = null;
 	private FieldPoint currentBallPosition = null;
 	private int previousEnemyCountOnAttackingHalf = 0;
@@ -30,9 +35,11 @@ public class EventSystem {
 	 */
 	public EventSystem() {
 		world = World.getInstance();
+		referee = world.getReferee();
 		ball = world.getBall();
 
 		currentBallOwner = world.getClosestRobotToBall();
+		currentCommand = referee.getCommand();
 		currentBallPosition = ball.getPosition();
 
 		currentEnemyCountOnAttackingHalf = world.getAttackingEnemiesCount();
@@ -45,24 +52,31 @@ public class EventSystem {
 		previousBallPosition = currentBallPosition;
 		currentBallPosition = ball.getPosition();
 
+		previousCommand = currentCommand;
+		currentCommand = referee.getCommand();
+
 		previousEnemyCountOnAttackingHalf = currentEnemyCountOnAttackingHalf;
 		currentEnemyCountOnAttackingHalf = world.getAttackingEnemiesCount();
+
+		if (currentCommand != previousCommand)
+			return Event.REFEREE_NEWCOMMAND;
 
 		if (ball.getSpeed() < 100.0) {
 			previousBallOwner = currentBallOwner;
 			currentBallOwner = world.getClosestRobotToBall();
-
-			if (previousBallOwner instanceof Ally) {
-				if (currentBallOwner instanceof Enemy) //Previous Ally, current Enemy
+			
+			if (previousBallOwner instanceof Ally){
+				if(currentBallOwner instanceof Enemy)	//Previous Ally, current Enemy
 					return Event.BALL_ENEMY_CAPTURE;
-
-				else if (previousBallOwner.getRobotId() != currentBallOwner.getRobotId()) //Ally retains possession of ball
+					
+				else if(previousBallOwner.getRobotId() != currentBallOwner.getRobotId()) //Ally retains possession of ball
 					return Event.BALL_ALLY_CHANGEOWNER;
-			} else { // previousBallOwner instanceof Enemy
-				if (currentBallOwner instanceof Ally) //Previous Enemy, current Ally
+			}
+			else{	// previousBallOwner instanceof Enemy
+				if(currentBallOwner instanceof Ally)	//Previous Enemy, current Ally
 					return Event.BALL_ALLY_CAPTURE;
-
-				else if (previousBallOwner.getRobotId() != currentBallOwner.getRobotId()) //Enemy retains possession of ball
+				
+				else if(previousBallOwner.getRobotId() != currentBallOwner.getRobotId())	//Enemy retains possession of ball
 					return Event.BALL_ENEMY_CHANGEOWNER;
 			}
 		}
