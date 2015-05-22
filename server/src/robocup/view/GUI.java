@@ -19,12 +19,15 @@ import javax.swing.UIManager.LookAndFeelInfo;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.Main;
+import robocup.model.Ally;
 import robocup.model.Robot;
 import robocup.model.World;
+import robocup.model.enums.RobotMode;
 import robocup.view.sections.ConsoleSection;
 import robocup.view.sections.ControlRobotSection;
 import robocup.view.sections.FieldControlSection;
 import robocup.view.sections.GameStatusSection;
+import robocup.view.sections.RecordSection;
 import robocup.view.sections.RotateRobotSection;
 import robocup.view.sections.SettingsSection;
 import robocup.view.sections.ValidRobotSection;
@@ -152,6 +155,7 @@ public class GUI extends JFrame {
 
 		sectionContainer.add(new SettingsSection(), "growx");
 		sectionContainer.add(new FieldControlSection(), "growx");
+		sectionContainer.add(new RecordSection(), "growx");
 		//rightContainer.add(new PathPlannerTestSection(), "growx");	// Comment "World.getInstance().getGUI().update("robotContainer");" in Main.initTeams() for this section to work.
 		//rightContainer.add(new ControlRobotPacketTestSection(), "growx");
 		//rightContainer.add(new PenguinSection(), "growx, growy");
@@ -170,9 +174,10 @@ public class GUI extends JFrame {
 
 		for (Robot robot : World.getInstance().getReferee().getAlly().getRobots()) {
 			RobotBox box = new RobotBox(robot);
+			box.setBackground(getRoleColor(((Ally)robot).getRole()));
 			box.addMouseListener(new PanelClickListener());
-			if (robot.getRobotId() == 0)
-				box.setBackground(Color.LIGHT_GRAY);
+			if (robot.getRobotId() == selectedRobotId)
+				box.setBackground(box.getBackground().darker());
 			if (robot.isVisible())
 				robotContainer.add(box);
 			allRobotBoxes.add(box);
@@ -180,6 +185,11 @@ public class GUI extends JFrame {
 
 		robotContainer.add(new JPanel(), "growy, span 2");
 		leftContainer.add(robotContainer, "growx");
+	}
+
+	private Color getRoleColor(RobotMode robotMode) {
+		Color[] colors = {Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA, Color.ORANGE, Color.YELLOW};
+		return colors[Math.min(robotMode.ordinal(), colors.length-1)];
 	}
 
 	/**
@@ -214,9 +224,9 @@ public class GUI extends JFrame {
 		for (Component item : robotContainer.getComponents()) {
 			if (item instanceof RobotBox) {
 				if (((RobotBox) item).getRobot().getRobotId() == robotId)
-					((RobotBox) item).setBackground(Color.LIGHT_GRAY);
+					((RobotBox) item).setBackground(((RobotBox) item).getBackground().darker());
 				else
-					((RobotBox) item).setBackground(UIManager.getColor("Panel.background"));
+					((RobotBox) item).setBackground(getRoleColor(((Ally)((RobotBox) item).getRobot()).getRole()));
 			}
 		}
 
