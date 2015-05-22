@@ -439,16 +439,17 @@ public class FieldPanel extends JPanel {
 						+ Math.sin(Math.toRadians(robotOrientation -45.0))
 						* Robot.DIAMETER / 2.0);
 
-				//SOLID COLOR
 				g2.setColor((robot instanceof Ally) ? allyColor : enemyColor);
-				g2.fillArc(
-						(int) (robotPosition.toGUIPoint(ratio, mirror).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
-						(int) (robotPosition.toGUIPoint(ratio, mirror).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
-						(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio),
-						(int) robot.getOrientation() + (mirror ?  215: 35), 295);
-				g2.fillPolygon(new int[] {(int) right.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) left.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) robot.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX},
-						new int[] {(int) right.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) left.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) robot.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY}, 3);
-				
+				if(isWindows()){
+					//SOLID COLOR
+					g2.fillArc(
+							(int) (robotPosition.toGUIPoint(ratio, mirror).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
+							(int) (robotPosition.toGUIPoint(ratio, mirror).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
+							(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio),
+							(int) robot.getOrientation() + (mirror ?  215: 35), 295);
+					g2.fillPolygon(new int[] {(int) right.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) left.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) robot.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX},
+							new int[] {(int) right.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) left.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) robot.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY}, 3);
+				}
 				//BORDERS
 				g2.setColor(g2.getColor().darker());
 				g2.drawLine((int) (left.toGUIPoint(ratio, mirror).getX() + spaceBufferX),
@@ -456,23 +457,29 @@ public class FieldPanel extends JPanel {
 						(int) (right.toGUIPoint(ratio, mirror).getX() + spaceBufferX),
 						(int) (right.toGUIPoint(ratio, mirror).getY() + spaceBufferY));
 
-				g2.setFont(new Font(g2.getFont().getFontName(), Font.BOLD, g2.getFont().getSize()));
-				g2.drawString("" + robot.getRobotId(), (int) robot
-						.getPosition().toGUIPoint(ratio, mirror).getX() -(robot.getRobotId()/10 + 1)*2+ spaceBufferX,
-						(int) robotPosition.toGUIPoint(ratio, mirror).getY() +2+ spaceBufferY);
 				// draw round part of robot
 				g2.drawArc(
 						(int) (robotPosition.toGUIPoint(ratio, mirror).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
 						(int) (robotPosition.toGUIPoint(ratio, mirror).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
 						(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio),
 						(int) robotOrientation + (mirror ?  225 : 45), 270);
-				
+
+				g2.setColor(Color.BLACK);
+				g2.setFont(new Font(g2.getFont().getFontName(), Font.BOLD, (int) (Robot.DIAMETER*ratio)/2));
+				g2.drawString("" + robot.getRobotId(), (int) robot
+						.getPosition().toGUIPoint(ratio, mirror).getX() -(robot.getRobotId()/10 + 1)*(g2.getFont().getSize()/3)+ spaceBufferX,
+						(int) robotPosition.toGUIPoint(ratio, mirror).getY() +(g2.getFont().getSize()/3)+ spaceBufferY);
+
 				if(showCoords)
 					drawCoord(g2, robotPosition, ratio, (int) (Robot.DIAMETER*ratio));
 			}
 		}
 	}
 	
+	private boolean isWindows() {
+		return System.getProperty("os.name").toLowerCase().contains("windows");
+	}
+
 	/**
 	 * Toggles the boolean {@link FieldPanel#showPathPlanner} and repaints.
 	 */
