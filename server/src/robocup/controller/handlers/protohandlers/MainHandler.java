@@ -38,13 +38,14 @@ public class MainHandler implements Runnable {
 	public void run() {
 		while (true) {
 			Object message = protoParser.getHeadObject();
-
-			if (message instanceof SSL_DetectionFrame) {
-				detectionHandler.process((SSL_DetectionFrame) message);
-			} else if (message instanceof SSL_GeometryData) {
-				geometryHandler.process((SSL_GeometryData) message);
-			} else if (message instanceof SSL_Referee) {
-				refereeHandler.process((SSL_Referee) message);
+			if(message != null){
+				if (message instanceof SSL_DetectionFrame) {
+					detectionHandler.process((SSL_DetectionFrame) message);
+				} else if (message instanceof SSL_GeometryData) {
+					geometryHandler.process((SSL_GeometryData) message);
+				} else if (message instanceof SSL_Referee) {
+					refereeHandler.process((SSL_Referee) message);
+				}
 			}
 		}
 	}

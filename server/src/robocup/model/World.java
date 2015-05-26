@@ -44,6 +44,8 @@ public class World extends Observable {
 	
 	private ArrayList<RobotExecuter> robotExecuters;
 
+	private ProtoLog protoLog;
+
 	/**
 	 * Constructor for the {@link World} Can only be called as a singleton.
 	 */
@@ -860,5 +862,11 @@ public class World extends Observable {
 	
 	public ArrayList<RobotExecuter> getRobotExecuters(){
 		return robotExecuters;
+	}
+
+	public ProtoLog getProtoLog() {
+		if(protoLog == null)
+			protoLog = new ProtoLog();
+		return protoLog;
 	}
 }

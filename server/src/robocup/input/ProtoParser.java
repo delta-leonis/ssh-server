@@ -32,18 +32,15 @@ public class ProtoParser {
 	/**
 	 * Parse a byte array to a detection or a geometry object
 	 * 
-	 * @param data : {@link ByteArrayInputStream} of data received from {@link SSLVisionClient}
+	 * @param data : {@link ByteArrayInputStream} of data received from {@link SSLVisionClient} or {@link RecordSection}
 	 */
 	public void parseVision(ByteArrayInputStream data) {
-
 		try {
 			SSL_WrapperPacket wrapper = SSL_WrapperPacket.parseFrom(data);
-			if (wrapper.hasDetection()) {
+			if (wrapper.hasDetection())
 				addObject(wrapper.getDetection());
-			}
-			if (wrapper.hasGeometry()) {
+			else if (wrapper.hasGeometry()) 
 				addObject(wrapper.getGeometry());
-			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
