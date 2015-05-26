@@ -21,10 +21,10 @@ import robocup.output.ComInterface;
  */
 public class GotoPosition {
 
-	// TODO find a better solution
-	private static final double DISTANCE_ROTATIONSPEED_COEFFICIENT = 12;
-	private static final int MAX_ROTATION_SPEED = 1000;	//in mm/s
-	private static final int START_UP_SPEED = 100; // Speed added to rotation. Robot only starts rotating if it receives a value higher than 200 
+	private static final int MAX_VELOCITY = 2500;
+	private double DISTANCE_ROTATIONSPEED_COEFFICIENT = 12;
+	private int MAX_ROTATION_SPEED = 1000;	//in mm/s
+	private int START_UP_SPEED = 100; // Speed added to rotation. Robot only starts rotating if it receives a value higher than 200 
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 
 	private FieldPoint destination;
@@ -40,7 +40,6 @@ public class GotoPosition {
 	// calculate total circumference of robot
 	private static final double circumference = (Robot.DIAMETER * Math.PI);
 	
-	private static final int MAX_VELOCITY =3000;
 
 	/**
 	 * Setup this object to function for the given {@link Robot} and {@link FieldPoint destination}
@@ -173,16 +172,16 @@ public class GotoPosition {
 			double rotationToGoal = rotationToDest(destination);
 			double speed;
 			if(route.size() > 1)							//If we're not at our destination
-				speed = getSpeed(getDistance()+150, 300, MAX_VELOCITY);	//Don't slow down as much TODO: Base this on angle of turn
+				speed = getSpeed(getDistance()+50, 100, MAX_VELOCITY);	//Don't slow down as much TODO: Base this on angle of turn
 			else
-				speed = getSpeed(getDistance(), 500, MAX_VELOCITY);
+				speed = getSpeed(getDistance(), 150, MAX_VELOCITY);
 			
 			double rotationSpeed = getRotationSpeed(rotationToTarget, speed);
 
 			// Overrule speed
 			if (forcedSpeed > 0) {
 //				speed = forcedSpeed;
-				speed = getSpeed(getDistance(), 150, forcedSpeed);
+				speed = getSpeed(getDistance(), 50, forcedSpeed);
 			}
 			//TODO: remove test code
 //			System.out.println("ID: " + robot.getRobotId() + "\n\tDirection: " + rotationToGoal
@@ -209,6 +208,9 @@ public class GotoPosition {
 	 * @return the speed at which the {@link Robot} should turn.
 	 */
 	private double getRotationSpeed(double rotation, double speed) {
+		if(speed > MAX_VELOCITY / 2){
+			return 0;
+		}
 		// must be between 0 and 50 percent, if it's higher than 50% rotating to
 		// the other direction is faster
 		double rotationPercent = rotation / 360;
@@ -306,5 +308,13 @@ public class GotoPosition {
 	
 	public DijkstraPathPlanner getPathPlanner(){
 		return dplanner;
+	}
+	
+	public void setRotationSpeedCo(int co){
+		DISTANCE_ROTATIONSPEED_COEFFICIENT = co;
+	}
+	
+	public void setStartUpSpeed(int speed){
+		START_UP_SPEED = speed;
 	}
 }
