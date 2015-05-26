@@ -38,26 +38,47 @@ public class FreeShotRoundPlay extends Strategy {
 	public FreeShotRoundPlay() {
 		super();
 		roles.add(RobotMode.KEEPER);
+		roles.add(RobotMode.ATTACKER);
+		roles.add(RobotMode.RUNNER);
+		roles.add(RobotMode.RUNNER);
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.KEEPERDEFENDER);
-
-		roles.add(RobotMode.ATTACKER);
-		roles.add(RobotMode.ATTACKER);
-		roles.add(RobotMode.ATTACKER);
 	}
 
 	@Override
 	public void updateZones(FieldPoint ballPosition) {
 		super.updateZones(ballPosition);
 
-		if (World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
-			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.ATTACKER, FieldZone.WEST_CENTER));
-			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.ATTACKER, FieldZone.WEST_NORTH_SECONDPOST));
-			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.ATTACKER, FieldZone.WEST_SOUTH_SECONDPOST));
+		boolean isEastTeam = World.getInstance().getReferee().getEastTeam()
+				.equals(World.getInstance().getReferee().getAlly());
+
+		if (ballPosition.getY() > FieldZone.FieldPointPaletteZones.h.getY()) {
+			// ball in north zone
+			if (isEastTeam) {
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_MIDDLE));
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_SOUTH_SECONDPOST));
+			} else {
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_MIDDLE));
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_SOUTH_SECONDPOST));
+			}
+		} else if (ballPosition.getY() < -FieldZone.FieldPointPaletteZones.h.getY()) {
+			// ball in south zone
+			if (isEastTeam) {
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_MIDDLE));
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_NORTH_SECONDPOST));
+			} else {
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_MIDDLE));
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_SOUTH_SECONDPOST));
+			}
 		} else {
-			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.ATTACKER, FieldZone.EAST_CENTER));
-			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.ATTACKER, FieldZone.EAST_NORTH_SECONDPOST));
-			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.ATTACKER, FieldZone.EAST_SOUTH_SECONDPOST));
+			// ball in mid zone
+			if (isEastTeam) {
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_NORTH_SECONDPOST));
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_SOUTH_SECONDPOST));
+			} else {
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.WEST_NORTH_SECONDPOST));
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.RUNNER, FieldZone.EAST_SOUTH_SECONDPOST));
+			}
 		}
 	}
 }
