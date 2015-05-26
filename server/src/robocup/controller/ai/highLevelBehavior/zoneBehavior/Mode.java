@@ -50,14 +50,15 @@ public abstract class Mode {
 	 * @param executers
 	 */
 	public void execute() {
-//		try {
+		try {
 			for (RobotExecuter executer : executers)
 				updateExecuter(executer);
 
-//		} catch (Exception e) {
-////			System.out.println("Exception in Mode, please fix me :(");
-//			e.printStackTrace();
-//		}
+		} catch (Exception e) {
+			World.getInstance().stop();
+			System.out.println("Exception in Mode, please fix me :(");
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -92,7 +93,7 @@ public abstract class Mode {
 					closestRobot.setRole(role);
 					closestRobot.setPreferredZone(zone);
 				}
-			} else if(role == RobotMode.DISTURBER){
+			} else if(role == RobotMode.DISTURBER || role == RobotMode.ATTACKER){
 				getClosestAllyToBall().setRole(role);
 			} else {
 				ArrayList<Ally> allyRobots = getAllyRobotsWithoutRole();
