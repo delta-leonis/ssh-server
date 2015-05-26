@@ -63,10 +63,10 @@ public class BarricadeDefending extends Strategy {
 
 			if (ballPosition.getY() <= 0.0)
 				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.GOALPOSTCOVERER,
-						FieldZone.EAST_SOUTH_SECONDPOST));
+						FieldZone.WEST_SOUTH_SECONDPOST));
 			else
 				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.GOALPOSTCOVERER,
-						FieldZone.EAST_NORTH_SECONDPOST));
+						FieldZone.WEST_NORTH_SECONDPOST));
 		}
 	}
 }
