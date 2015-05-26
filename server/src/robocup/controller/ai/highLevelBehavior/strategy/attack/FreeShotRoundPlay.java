@@ -28,11 +28,11 @@ public class FreeShotRoundPlay extends Strategy {
 	 * Roles in the {@link FreeShotRoundPlay} strategy are assigned in the following order:<br>
 	 * <ol>
 	 * <li>{@link RobotMode#KEEPER}</li>
-	 * <li>{@link RobotMode#KEEPERDEFENDERS}</li>
-	 * <li>{@link RobotMode#KEEPERDEFENDERS}</li>
 	 * <li>{@link RobotMode#ATTACKER}</li>
-	 * <li>{@link RobotMode#ATTACKER}</li>
-	 * <li>{@link RobotMode#ATTACKER}</li>
+	 * <li>{@link RobotMode#RUNNER}</li>
+	 * <li>{@link RobotMode#RUNNER}</li>
+	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
+	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
 	 * </ol>
 	 */
 	public FreeShotRoundPlay() {
