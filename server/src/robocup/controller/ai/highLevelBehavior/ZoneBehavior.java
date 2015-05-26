@@ -23,7 +23,6 @@ import robocup.controller.ai.highLevelBehavior.zoneBehavior.StandardMode;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Referee;
 import robocup.model.World;
-import robocup.model.enums.Command;
 import robocup.model.enums.Event;
 import robocup.model.enums.TeamColor;
 
@@ -81,54 +80,42 @@ public class ZoneBehavior extends Behavior {
 	 * @return {@link AttackMode} when our team is closer to the ball. {@link DefenseMode} when the enemy team is closer to the ball.
 	 */
 	private void determineMode(ArrayList<RobotExecuter> executers) {
-		if (referee.getCommand() == Command.NORMAL_START || referee.getCommand() == Command.FORCE_START) {
-			Event event = events.getNewEvent();
+		Event event = events.getNewEvent();
 
-			if (event != null) {
-				LOGGER.info("Event: " + event.name());
-				switch (event) {
-				case BALL_ALLY_CAPTURE:
-					currentMode = chooseAttackStrategy(executers);
-					break;
-				case BALL_ENEMY_CAPTURE:
-					currentMode = chooseDefenseStrategy(executers);
-					break;
-				case BALL_ALLY_CHANGEOWNER:
-				case BALL_ENEMY_CHANGEOWNER:
-					currentMode.assignRoles();
-					break;
-				case BALL_MOVESPAST_MIDLINE:
-					if (world.allyHasBall())
-						currentMode = chooseAttackStrategy(executers);
-					else
-						currentMode = chooseDefenseStrategy(executers);
-					break;
-				case BALL_MOVESPAST_NORTHSOUTH:
-					currentMode.assignRoles();
-					break;
-				case ROBOT_ENEMY_ATTACKCOUNT_CHANGE:
-					if (world.getAttackingEnemiesCount() > 3)
-						// choose ultra defense strategy
-						currentMode = chooseDefenseStrategy(executers);
-					else
-						// choose normal defense strategy
-						currentMode = chooseDefenseStrategy(executers);
-					break;
-				default:
-					break;
-				}
-			}
-		} else {
-			currentMode = chooseStandardStrategy(executers);
-		}
-
-		// Check in case of missed event
-		if (referee.getCommand() == Command.NORMAL_START || referee.getCommand() == Command.FORCE_START) {
-			if (world.allyHasBall() && currentMode instanceof DefenseMode)
+		if (event != null) {
+			LOGGER.info("Event: " + event.name());
+			switch (event) {
+			case BALL_ALLY_CAPTURE:
 				currentMode = chooseAttackStrategy(executers);
-
-			if (!world.allyHasBall() && currentMode instanceof AttackMode)
+				break;
+			case BALL_ENEMY_CAPTURE:
 				currentMode = chooseDefenseStrategy(executers);
+				break;
+			case BALL_ALLY_CHANGEOWNER:
+			case BALL_ENEMY_CHANGEOWNER:
+				currentMode.assignRoles();
+				break;
+			case BALL_MOVESPAST_MIDLINE:
+				if (world.allyHasBall())
+					currentMode = chooseAttackStrategy(executers);
+				else
+					currentMode = chooseDefenseStrategy(executers);
+				break;
+			case BALL_MOVESPAST_NORTHSOUTH:
+				currentMode.assignRoles();
+				break;
+			case ROBOT_ENEMY_ATTACKCOUNT_CHANGE:
+				if (world.getAttackingEnemiesCount() > 3)
+					// choose ultra defense strategy
+					currentMode = chooseDefenseStrategy(executers);
+				else
+					// choose normal defense strategy
+					currentMode = chooseDefenseStrategy(executers);
+				break;
+			case REFEREE_NEWCOMMAND:
+				currentMode = chooseStandardStrategy(executers);
+				break;
+			}
 		}
 	}
 
