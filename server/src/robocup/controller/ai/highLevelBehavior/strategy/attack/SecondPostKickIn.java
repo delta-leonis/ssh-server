@@ -24,22 +24,21 @@ public class SecondPostKickIn extends Strategy {
 	 * Roles in the {@link SecondPostKickIn} strategy are assigned in the following order:<br>
 	 * <ol>
 	 * <li>{@link RobotMode#KEEPER}</li>
-	 * <li>{@link RobotMode#KEEPERDEFENDERS}</li>
-	 * <li>{@link RobotMode#KEEPERDEFENDERS}</li>
 	 * <li>{@link RobotMode#ATTACKER}</li>
 	 * <li>{@link RobotMode#ATTACKER}</li>
 	 * <li>{@link RobotMode#RUNNER}</li>
+	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
+	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
 	 * </ol>
 	 */
 	public SecondPostKickIn() {
 		super();
 		roles.add(RobotMode.KEEPER);
-		roles.add(RobotMode.KEEPERDEFENDER);
-		roles.add(RobotMode.KEEPERDEFENDER);
-
 		roles.add(RobotMode.ATTACKER);
 		roles.add(RobotMode.ATTACKER);
 		roles.add(RobotMode.RUNNER);
+		roles.add(RobotMode.KEEPERDEFENDER);
+		roles.add(RobotMode.KEEPERDEFENDER);
 	}
 
 	@Override

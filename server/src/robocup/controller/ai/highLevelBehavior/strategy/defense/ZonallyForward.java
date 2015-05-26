@@ -28,23 +28,21 @@ public class ZonallyForward extends Strategy {
 	 * Roles in the {@link ZonallyForward} strategy are assigned in the following order:<br>
 	 * <ol>
 	 * <li>{@link RobotMode#KEEPER}</li>
-	 * <li>{@link RobotMode#KEEPERDEFENDERS}</li>
-	 * <li>{@link RobotMode#KEEPERDEFENDERS}</li>
 	 * <li>{@link RobotMode#COUNTER}</li>
 	 * <li>{@link RobotMode#DISTURBER_COVERER}</li>
 	 * <li>{@link RobotMode#DISTURBER_COVERER}</li>
+	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
+	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
 	 * </ol>
 	 */
 	public ZonallyForward() {
 		super();
 		roles.add(RobotMode.KEEPER);
-		roles.add(RobotMode.KEEPERDEFENDER);
-		roles.add(RobotMode.KEEPERDEFENDER);
-
 		roles.add(RobotMode.COUNTER);
-
 		roles.add(RobotMode.DISTURBER_COVERER);
 		roles.add(RobotMode.DISTURBER_COVERER);
+		roles.add(RobotMode.KEEPERDEFENDER);
+		roles.add(RobotMode.KEEPERDEFENDER);
 	}
 
 	@Override

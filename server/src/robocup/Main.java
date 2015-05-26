@@ -5,6 +5,7 @@ package robocup;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Properties;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -33,7 +34,10 @@ public class Main {
 	private static String teamConfig = "config/teams.properties";
 	private static String protobufConfig = "config/config.properties";
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
+//		System.setProperty("java.library.path", System.getProperty("java.library.path") + File.pathSeparator + "../server/dist/");
+		setLibraryPath("../server/dist/");
+		System.out.println(System.getProperty("java.library.path"));
 		initLog();
 		LOGGER.info("Program started");
 		initView();
@@ -46,7 +50,14 @@ public class Main {
 		LOGGER.info("Main initialized");
         new robocup.controller.ai.Main();
 	}
-
+	public static void setLibraryPath(String path) throws Exception {
+	    System.setProperty("java.library.path", path);
+	 
+	    //set sys_paths to null
+	    final Field sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
+	    sysPathsField.setAccessible(true);
+	    sysPathsField.set(null, null);
+	}
 	/**
 	 * Create the root logger from this application.
 	 * Disable the console logger and set the warning level.

@@ -113,9 +113,9 @@ public class FieldPanel extends JPanel {
 				drawZone(g, fieldZone, ratio);
 		drawPlayfield(g, ratio);
 		drawFreeShot(g, ratio);
+		drawPathPlanner(g, ratio);
 		drawRobots(g, ratio);
 		drawBall(g, ratio);
-		drawPathPlanner(g, ratio);
 		drawCoords(g, ratio);
 	}
 
@@ -556,7 +556,7 @@ public class FieldPanel extends JPanel {
 	public void drawPath(Graphics g, LinkedList<FieldPoint> path, FieldPoint start, FieldPoint destination, double ratio) {
 		Graphics2D g2 = (Graphics2D)g;
 		
-		g.setColor(Color.ORANGE);
+		g.setColor(Color.YELLOW);
 		g2.setStroke(new BasicStroke(20));
 		Point2D.Double previous = start.toGUIPoint(ratio, mirror);
 		for (FieldPoint p : path) {
