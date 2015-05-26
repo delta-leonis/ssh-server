@@ -64,7 +64,9 @@ public class EventSystem {
 		if (ball.getSpeed() < 100.0) {
 			previousBallOwner = currentBallOwner;
 			currentBallOwner = world.getClosestRobotToBall();
-
+			if(previousBallOwner == null){
+				previousBallOwner = currentBallOwner;
+			}
 			if (previousBallOwner instanceof Ally) {
 				if (currentBallOwner instanceof Enemy) //Previous Ally, current Enemy
 					return Event.BALL_ENEMY_CAPTURE;
