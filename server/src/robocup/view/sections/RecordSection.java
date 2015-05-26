@@ -149,7 +149,7 @@ public class RecordSection extends SectionBox {
 				case "stopRec":
 					if(logFile.getSize() > 0)
 						if(chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
-							logFile.saveToFile(chooser.getSelectedFile() + ".protolog");
+							logFile.saveToFile(chooser.getSelectedFile().toString().replace(".protolog", "") + ".protolog");
 					logFile.setState(LogState.READY);
 					break;
 
