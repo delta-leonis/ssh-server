@@ -16,10 +16,10 @@ import robocup.model.World;
  */
 public class DijkstraPathPlanner {
 
-	// distance from the middle of the robot to the vertices around it
-	// Basically the "Danger zone" for the Robot. A normal Robot has a radius of 90mm, so if DISTANCE_TO_ROBOT == 130mm,
-	// then it means we don't want to get within (180mm - 90mm = ) 90mm of any other Robot.
-	public static final int DISTANCE_TO_ROBOT = 170;
+	// Distance from the middle of the robot to the vertices around it
+	// Basically the "Danger zone" for the Robot. A normal Robot has a radius of 90mm, so if DISTANCE_TO_ROBOT == 160mm,
+	// then it means we don't want to get within (160mm - 90mm = ) 70mm of any other Robot. (Based on their center points)
+	public static final int DISTANCE_TO_ROBOT = 160;
 	public static final int DISTANCE_TO_BALL = 120;
 	// This value is used to determine the vertex points, which are VERTEX_DISTANCE_TO_ROBOT from the middle points of the robots.
 	public static final int MIN_VERTEX_DISTANCE_TO_ROBOT = 240;

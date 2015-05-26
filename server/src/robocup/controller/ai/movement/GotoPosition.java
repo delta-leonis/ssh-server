@@ -21,10 +21,10 @@ import robocup.output.ComInterface;
  */
 public class GotoPosition {
 
-	private static final int MAX_VELOCITY = 2500;
-	private double DISTANCE_ROTATIONSPEED_COEFFICIENT = 12;
-	private int MAX_ROTATION_SPEED = 1000;	//in mm/s
-	private int START_UP_SPEED = 100; // Speed added to rotation. Robot only starts rotating if it receives a value higher than 200 
+	private static final int MAX_VELOCITY = 3000;
+	private double DISTANCE_ROTATIONSPEED_COEFFICIENT = 13;
+	private int MAX_ROTATION_SPEED = 1200;	//in mm/s
+	private int START_UP_SPEED = 150; // Speed added to rotation. Robot only starts rotating if it receives a value higher than 200 
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 
 	private FieldPoint destination;
