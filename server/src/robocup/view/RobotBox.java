@@ -73,7 +73,7 @@ public class RobotBox extends JPanel {
 	}
 
 	private Color getRoleColor(RobotMode robotMode) {
-		Color[] colors = {Color.BLUE.brighter().brighter(), Color.CYAN, Color.GREEN, Color.MAGENTA, Color.ORANGE, Color.YELLOW};
+		Color[] colors = {Color.BLUE.brighter().brighter(), Color.CYAN, Color.GREEN, Color.MAGENTA, Color.ORANGE, Color.YELLOW,  Color.RED, Color.YELLOW};
 		if(robotMode == null)
 			return Color.LIGHT_GRAY;
 		return colors[Math.min(robotMode.ordinal(), colors.length-1)];
