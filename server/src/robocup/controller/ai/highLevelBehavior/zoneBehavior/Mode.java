@@ -50,14 +50,14 @@ public abstract class Mode {
 	 * @param executers
 	 */
 	public void execute() {
-		try {
+//		try {
 			for (RobotExecuter executer : executers)
 				updateExecuter(executer);
 
-		} catch (Exception e) {
-			System.out.println("Exception in Mode, please fix me :(");
-			e.printStackTrace();
-		}
+//		} catch (Exception e) {
+////			System.out.println("Exception in Mode, please fix me :(");
+//			e.printStackTrace();
+//		}
 	}
 
 	/**
@@ -92,6 +92,8 @@ public abstract class Mode {
 					closestRobot.setRole(role);
 					closestRobot.setPreferredZone(zone);
 				}
+			} else if(role == RobotMode.DISTURBER){
+				getClosestAllyToBall().setRole(role);
 			} else {
 				ArrayList<Ally> allyRobots = getAllyRobotsWithoutRole();
 				if (allyRobots.size() != 0) {
@@ -346,7 +348,23 @@ public abstract class Mode {
 		for (Ally robot : getAllyRobotsWithoutRole()) {
 			if (robot.getPosition() != null && zone != null) {
 				double dist = robot.getPosition().getDeltaDistance(zone.getCenterPoint());
+				if (dist < minDistance) {
+					minDistance = dist;
+					minDistRobot = robot;
+				}
+			}
+		}
 
+		return minDistRobot;
+	}
+	
+	public Ally getClosestAllyToBall(){
+		double minDistance = Double.MAX_VALUE;
+		Ally minDistRobot = null;
+
+		for (Ally robot : getAllyRobotsWithoutRole()) {
+			if (robot.getPosition() != null) {
+				double dist = robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition());
 				if (dist < minDistance) {
 					minDistance = dist;
 					minDistRobot = robot;
