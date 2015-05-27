@@ -469,10 +469,11 @@ public class FieldPanel extends JPanel {
 				g2.drawString("" + robot.getRobotId(), (int) robot
 						.getPosition().toGUIPoint(ratio, mirror).getX() -(robot.getRobotId()/10 + 1)*(g2.getFont().getSize()/3)+ spaceBufferX,
 						(int) robotPosition.toGUIPoint(ratio, mirror).getY() +(g2.getFont().getSize()/3)+ spaceBufferY);
-
-				g2.setColor(RobotBox.getRoleColor(((Ally)robot).getRole()));
-				g2.fillRoundRect((int)(robot.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX + 10), 
-						(int)(robot.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY + 10), 10, 10, 2, 2);
+				if(robot instanceof Ally){
+					g2.setColor(RobotBox.getRoleColor(((Ally)robot).getRole()));
+					g2.fillRoundRect((int)(robot.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX + 10), 
+							(int)(robot.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY + 10), 10, 10, 2, 2);
+				}
 				if(showCoords)
 					drawCoord(g2, robotPosition, ratio, (int) (Robot.DIAMETER*ratio));
 			}
