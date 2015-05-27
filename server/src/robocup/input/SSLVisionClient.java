@@ -24,9 +24,10 @@ public class SSLVisionClient extends UDPClient {
 		ByteArrayInputStream data = null;
 
 		while (true) {
-			if(protolog.getState() == LogState.PAUSE)
+			if(protolog.getState() == LogState.PAUSE){
 				delay(1);
-			else if(protolog.getState() == LogState.PLAY){
+				continue;
+			} else if(protolog.getState() == LogState.PLAY){
 				data = new ByteArrayInputStream(protolog.getData(protolog.getCursor()));
 			}else
 				data = receive();
@@ -34,25 +35,40 @@ public class SSLVisionClient extends UDPClient {
 			if (data != null) {
 
 				if(protolog.getState() == LogState.RECORDING){
+					//It's copying data to a byte[]
+					//and making a new ByteArrayInputStream because data gets emptied when read 
 					byte[] byteArray = read(data);
 					protolog.add(byteArray);
 					data = new ByteArrayInputStream(byteArray);
 				}
 				
+				//pass data to a ProtoParser
 				protoParser.parseVision(data);
 			}
 		}
 	}
 	
+	/**
+	 * Wait for a given amount of time
+	 * @param time
+	 */
 	private void delay(long time){
 		try {	
 			Thread.sleep(time);
-		} catch (InterruptedException e) {	}
+		} catch (InterruptedException e) {	
+			e.printStackTrace();
+		}
 	}
 	
-	public byte[] read(ByteArrayInputStream bais) throws IOException {
-	     byte[] array = new byte[bais.available()];
-	     bais.read(array);
+	/**
+	 * Read a stream to a byte[]
+	 * @param stream	stream to read from
+	 * @return	byte[] containing bytes from stream
+	 * @throws IOException
+	 */
+	public byte[] read(ByteArrayInputStream stream) throws IOException {
+	     byte[] array = new byte[stream.available()];
+	     stream.read(array);
 	     return array;
 	}
 }

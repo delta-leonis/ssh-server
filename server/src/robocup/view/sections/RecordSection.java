@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -26,11 +28,17 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.input.ProtoParser;
+import robocup.input.SSLVisionClient;
 import robocup.model.ProtoLog;
 import robocup.model.World;
 import robocup.model.enums.LogState;
 import robocup.view.SectionBox;
 
+/**
+ * GUI elements for allowing playback and recording of logfiles, or temporary logs
+ * by providing control to the {@link ProtoLog} stored in {@link World} that will be accessed by {@link SSLVisionClient}  
+ *
+ */
 @SuppressWarnings("serial")
 public class RecordSection extends SectionBox {
 	private ProtoLog logFile = World.getInstance().getProtoLog();
@@ -49,6 +57,7 @@ public class RecordSection extends SectionBox {
 						stopIcon = new ImageIcon(getClass().getResource("../buttonImages/stop.png")),
 						recIcon = new ImageIcon(getClass().getResource("../buttonImages/record-red.png")),
 						openIcon = new ImageIcon(getClass().getResource("../buttonImages/open.png"));
+
 	public RecordSection() {
 		super("Record protobuf");
 		logFile.setState(LogState.READY);
@@ -131,6 +140,9 @@ public class RecordSection extends SectionBox {
 		}
 	}
 
+	/**
+	 * Buttonlistener for every button on this {@link Section}
+	 */
 	private class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			String buttonText = ((JButton) e.getSource()).getName();
@@ -144,6 +156,7 @@ public class RecordSection extends SectionBox {
 					if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
 						logFile.loadMessages(chooser.getSelectedFile());
 					logFile.setState(LogState.READY);
+					logFile.setCursor(0);
 					break;
 					
 				case "stopRec":
@@ -228,18 +241,32 @@ public class RecordSection extends SectionBox {
 		stopButton.setEnabled(state != LogState.RECORDING && (state == LogState.PLAY || state == LogState.PAUSE));
 		cursorSlider.setMaximum(logFile.getSize()-1);
 		cursorSlider.setValue(logFile.getCursor());
-		if(state != LogState.RECORDING){
-			cursorSlider.show(true);
+
+		cursorSlider.setVisible(state != LogState.RECORDING);
+		if(state != LogState.RECORDING && logFile.getSize() > 1){
 			Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
 			int part = (logFile.getSize()-1)/10;
-			for(int i=0; i <= 10; i++)
-				labelTable.put( part * i , new JLabel("" + part* i ));
+			long timePart = (logFile.getTimeStamp(logFile.getSize()-1) - logFile.getTimeStamp(0)) / 10;
+			labelTable.put( 0, new JLabel(getTime(logFile.getTimeStamp(0), "dd MMM, HH:mm:ss")));
+			for(int i=1; i <= 10; i++)
+				labelTable.put( part * i , new JLabel(getTime(logFile.getTimeStamp(0) + timePart * i, "HH:mm:ss")));
 			cursorSlider.setLabelTable( labelTable );
 			cursorSlider.setMajorTickSpacing((logFile.getSize()-1)/10);
 			cursorSlider.setMinorTickSpacing((logFile.getSize()-1)/100);
-		}else
-			cursorSlider.show(false);
-		cursorSlider.setEnabled(state != LogState.RECORDING);
+		}
+		cursorSlider.setEnabled(state == LogState.PAUSE);	
+	}
+	
+	/**
+	 * Convert a timestamp to a readable format
+	 * @param timestamp	timestamp in millis
+	 * @param format	format as string described in {@link Locale.Category.FORMAT}
+	 * @return	human-readable representation of timestamp
+	 */
+	private String getTime(long timestamp, String format){
+		SimpleDateFormat sdf = new SimpleDateFormat(format);    
+		Date resultdate = new Date(timestamp);
+		return sdf.format(resultdate);
 	}
 
 }

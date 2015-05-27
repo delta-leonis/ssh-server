@@ -11,11 +11,11 @@ import java.util.Map.Entry;
 
 import robocup.model.enums.LogState;
 
+/**
+ * Class that contains a {@link LinkedHashMap} containing a set of raw protobuf data as a byte[] accompanied by the corresponding timestamp (in millis) as key 
+ */
 public class ProtoLog {
-	//private ArrayList<byte[]> messages = new ArrayList<byte[]>();
-	/**
-	 * Long is the timestamp for the inputStream
-	 */
+	/** Long is the timestamp for the inputStream */
 	private LinkedHashMap<Long, byte[]> messages = new LinkedHashMap<Long, byte[]>();
 	private int cursor;
 	private LogState state;
@@ -25,11 +25,16 @@ public class ProtoLog {
 		cursor = 0;
 	}
 
-	public void loadMessages(File toRead) {
+	/**
+	 * Loads {@link LinkedHashMap LinkedHashMap<Long, byte[]>} from a {@link File} to the current log
+	 * @param file to read from
+	 */
+	public void loadMessages(File file) {
 		LinkedHashMap<Long, byte[]> linkedHashMapList = new LinkedHashMap<Long, byte[]>();
         try{
-            FileInputStream fileInputStream = new FileInputStream(toRead);
+            FileInputStream fileInputStream = new FileInputStream(file);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            
             linkedHashMapList = (LinkedHashMap<Long, byte[]>)objectInputStream.readObject();
             objectInputStream.close();
             fileInputStream.close();
@@ -41,15 +46,26 @@ public class ProtoLog {
         messages = linkedHashMapList;
 	}
 
+	/**
+	 * Removes all entries from the map, resets cursor and current state
+	 */
 	public void clear(){
 		messages = new LinkedHashMap<Long, byte[]>();
 		cursor = 0;
 		state = LogState.READY;
 	}
+	
+	/**
+	 * @return current state
+	 */
 	public LogState getState(){
 		return state;
 	}
 	
+	/**
+	 * Sets current state for playback status
+	 * @param _state	new state
+	 */
 	public void setState(LogState _state){
 		state = _state;
 	}
@@ -68,18 +84,37 @@ public class ProtoLog {
 		return messages.size();
 	}
 	
+	/**
+	 * @param index
+	 * @return	timestamp at given index
+	 */
+	public long getTimeStamp(int index){
+		return getKeyByIndex(index);
+	}
+	
+	/**
+	 * @return time before next frame should be loaded in milliseconds 
+	 */
 	public Long getTimeDelta(){
 		if(cursor < messages.size()-1)
-			return (getKeyByIndex(messages, cursor+1) - getKeyByIndex(messages, cursor));
+			return (getKeyByIndex(cursor+1) - getKeyByIndex( cursor));
 		return (long) 1;
 	}
 
-	private byte[] getValueByIndex(LinkedHashMap<Long, byte[]> hMap, int index){
-	   return (byte[]) hMap.values().toArray()[index];
+	/**
+	 * @param index	
+	 * @return	the Value at a certain index
+	 */
+	private byte[] getValueByIndex(int index){
+	   return (byte[]) messages.values().toArray()[index];
 	}
 	
-	private Long getKeyByIndex(LinkedHashMap<Long, byte[]> hMap, int index){
-	   return (Long) hMap.keySet().toArray()[index];
+	/**
+	 * @param index
+	 * @return	the Key at a certain index
+	 */
+	private Long getKeyByIndex(int index){
+	   return (Long) messages.keySet().toArray()[index];
 	}
 	
 	/**
@@ -91,9 +126,14 @@ public class ProtoLog {
 			cursor = _cursor;
 	}
 	
-	public boolean saveToFile(String fileName){
+	/**
+	 * Serializes and saves the {@link HashMap} to a file
+	 * @param filePath	path to save
+	 * @return	true when succesfull
+	 */
+	public boolean saveToFile(String filePath){
 		try{
-		    File fileOne = new File(fileName);
+		    File fileOne = new File(filePath);
 		    FileOutputStream fileOutputStream = new FileOutputStream(fileOne);
 		    ObjectOutputStream oos = new ObjectOutputStream(fileOutputStream);
 		
@@ -107,11 +147,19 @@ public class ProtoLog {
 		return true;
 	}
 
-	public byte[] getData(int _cursor) {
-		return getValueByIndex(messages, _cursor);
+	/**
+	 * @param index	the index for the frame
+	 * @return	get the data of a frame at given index
+	 */
+	public byte[] getData(int index) {
+		return getValueByIndex(index);
 	}
 
-	public void add(byte[] bs) {
-		messages.put(System.currentTimeMillis(), bs);
+	/**
+	 * Add a bytestring to the current loaded log
+	 * @param message	bytestring to add
+	 */
+	public void add(byte[] message) {
+		messages.put(System.currentTimeMillis(), message);
 	}
 }
