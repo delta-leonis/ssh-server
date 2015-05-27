@@ -9,6 +9,7 @@ import robocup.model.Robot;
 import robocup.model.World;
 import robocup.model.enums.Command;
 import robocup.model.enums.Event;
+import robocup.model.enums.GameState;
 
 /**
  * Class used to determine events which happen on the field
@@ -21,6 +22,8 @@ public class EventSystem {
 	private Referee referee;
 	private Ball ball;
 
+	private GameState previousGameState = null;
+	private GameState currentGameState = null;
 	private Robot previousBallOwner = null;
 	private Robot currentBallOwner = null;
 	private Command previousCommand = null;
@@ -38,6 +41,7 @@ public class EventSystem {
 		referee = world.getReferee();
 		ball = world.getBall();
 
+		currentGameState = world.getGameState();
 		currentBallOwner = world.getClosestRobotToBall();
 		currentCommand = referee.getCommand();
 		currentBallPosition = ball.getPosition();
@@ -52,6 +56,9 @@ public class EventSystem {
 		previousBallPosition = currentBallPosition;
 		currentBallPosition = ball.getPosition();
 
+		previousGameState = currentGameState;
+		currentGameState = world.getGameState();
+
 		previousCommand = currentCommand;
 		currentCommand = referee.getCommand();
 
@@ -61,10 +68,13 @@ public class EventSystem {
 		if (currentCommand != previousCommand)
 			return Event.REFEREE_NEWCOMMAND;
 
+		if (currentGameState != previousGameState)
+			return Event.GAMESTATE_CHANGED;
+
 		if (ball.getSpeed() < 100.0) {
 			previousBallOwner = currentBallOwner;
 			currentBallOwner = world.getClosestRobotToBall();
-			if(previousBallOwner == null){
+			if (previousBallOwner == null) {
 				previousBallOwner = currentBallOwner;
 			}
 			if (previousBallOwner instanceof Ally) {

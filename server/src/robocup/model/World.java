@@ -102,10 +102,18 @@ public class World extends Observable {
 		return instance;
 	}
 
+	/**
+	 * Get the current GameState {@link GameState}
+	 * @return the current GameState
+	 */
 	public GameState getGameState() {
 		return currentGameState;
 	}
 
+	/**
+	 * Update the current GameState {@link GameState}
+	 * The game state will be changed depending on referee commands and the ball position
+	 */
 	public void updateState() {
 		switch (currentGameState) {
 		case HALTED:

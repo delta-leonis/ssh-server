@@ -1,5 +1,9 @@
 package robocup.model.enums;
 
+/**
+ * The GameStates which are used to handle referee commands.
+ * @TODO add documentation in tactics document
+ */
 public enum GameState {
 	STOPPED,
 	HALTED,
