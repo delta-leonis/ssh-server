@@ -168,29 +168,31 @@ public class World extends Observable {
 
 			break;
 		case WAITING_FOR_NORMAL_START:
-			switch (referee.getPreviousCommand()) {
-			case PREPARE_KICKOFF_BLUE:
-			case PREPARE_PENALTY_BLUE:
-				if (referee.getAlly().getColor() == TeamColor.BLUE)
-					currentGameState = GameState.TAKING_KICKOFF;
-				else {
-					currentGameState = GameState.WAITING_FOR_KICKOFF;
-				}
+			if (referee.getCommand() == Command.NORMAL_START) {
+				switch (referee.getPreviousCommand()) {
+				case PREPARE_KICKOFF_BLUE:
+				case PREPARE_PENALTY_BLUE:
+					if (referee.getAlly().getColor() == TeamColor.BLUE)
+						currentGameState = GameState.TAKING_KICKOFF;
+					else {
+						currentGameState = GameState.WAITING_FOR_KICKOFF;
+					}
 
-				ballPositionForGameState = ball.getPosition();
-				break;
-			case PREPARE_KICKOFF_YELLOW:
-			case PREPARE_PENALTY_YELLOW:
-				if (referee.getAlly().getColor() == TeamColor.YELLOW)
-					currentGameState = GameState.TAKING_KICKOFF;
-				else {
-					currentGameState = GameState.WAITING_FOR_KICKOFF;
-				}
+					ballPositionForGameState = ball.getPosition();
+					break;
+				case PREPARE_KICKOFF_YELLOW:
+				case PREPARE_PENALTY_YELLOW:
+					if (referee.getAlly().getColor() == TeamColor.YELLOW)
+						currentGameState = GameState.TAKING_KICKOFF;
+					else {
+						currentGameState = GameState.WAITING_FOR_KICKOFF;
+					}
 
-				ballPositionForGameState = ball.getPosition();
-				break;
-			default:
-				break;
+					ballPositionForGameState = ball.getPosition();
+					break;
+				default:
+					break;
+				}
 			}
 
 			break;
