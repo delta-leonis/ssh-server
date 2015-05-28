@@ -26,8 +26,8 @@ public class GotoPosition {
 	private static final int MAX_VELOCITY = 3000;
 	
 	private double DISTANCE_ROTATIONSPEED_COEFFICIENT = 12;
-	private int MAX_ROTATION_SPEED = 1200;	//in mm/s
-	private int START_UP_SPEED = 150; // Speed added to rotation. Robot only starts rotating if it receives a value higher than 200 
+	private int MAX_ROTATION_SPEED = 1000;	//in mm/s
+	private int START_UP_SPEED = 100; // Speed added to rotation. Robot only starts rotating if it receives a value higher than 200 
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 
 	private FieldPoint destination;
@@ -148,10 +148,10 @@ public class GotoPosition {
 		// Handle nulls
 		if (destination == null) {
 			if(target == null){
-				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+				output.send(1, robot.getRobotId(), 0, 0, 0, chipKick, dribble);
 			}
 			else{
-				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(target),0), 0, false);
+				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(target),0), chipKick, dribble);
 			}
 		} 
 		else {
@@ -216,10 +216,10 @@ public class GotoPosition {
 		// Handle nulls
 		if (destination == null) {
 			if(target == null){
-				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+				output.send(1, robot.getRobotId(), 0, 0, 0, chipKick, dribble);
 			}
 			else{
-				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(target),0), 0, false);
+				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(target),0), chipKick, dribble);
 			}
 		} 
 		else {
@@ -227,7 +227,16 @@ public class GotoPosition {
 			double rotationToGoal = rotationToDest(destination);
 			
 			// Get the rotation speed, based on the speed we're turning
-			double rotationSpeed = getRotationSpeed(rotationToTarget, speed);
+			double rotationSpeed;
+			if(speed < -700){
+				rotationSpeed = getRotationSpeed(rotationToTarget, speed + 700);
+			}
+			else if(speed > 700){
+				rotationSpeed = getRotationSpeed(rotationToTarget, speed -700);
+			}
+			else{
+				rotationSpeed = getRotationSpeed(rotationToTarget, speed);
+			}
 			
 			// Send the command
 			output.send(1, robot.getRobotId(), (int)rotationToGoal, speed, (int)rotationSpeed, chipKick, dribble);
@@ -256,7 +265,7 @@ public class GotoPosition {
 		// distance needed to rotate in mm
 		double rotationDistance = circumference * rotationPercent;
 		rotationDistance *= DISTANCE_ROTATIONSPEED_COEFFICIENT;
-		rotationDistance *= 1 - speed/(MAX_VELOCITY + 500);
+		rotationDistance *= 1 - Math.abs(speed)/(MAX_VELOCITY + 500);
 		
 		if(Math.abs(rotationDistance) > MAX_ROTATION_SPEED){
 			if(rotationDistance < 0){

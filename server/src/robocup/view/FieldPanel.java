@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -567,9 +568,15 @@ public class FieldPanel extends JPanel {
 					}
 				}
 			}
-			g.setColor(new Color(222, 168, 176));
-			for(Shape shape : pathPlanner.getCopyOfObjects()){
-				((Graphics2D)g).draw(shape);
+			
+			if(pathPlanner.getCopyOfObjects() != null){
+				g.setColor(new Color(222, 168, 176));
+				for(Shape shape : pathPlanner.getCopyOfObjects()){
+					if(shape instanceof Polygon){
+						g.drawPolygon((Polygon)shape);
+					}
+//					((Graphics2D)g).draw(shape);
+				}
 			}
 			
 			if(path != null && !path.isEmpty())
