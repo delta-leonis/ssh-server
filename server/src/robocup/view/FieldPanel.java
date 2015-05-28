@@ -51,6 +51,8 @@ public class FieldPanel extends JPanel {
 	private boolean showCoords;
 	private boolean mirror;
 	
+	private int updateCounter;
+	
 	private boolean showPathPlanner;
 	private boolean drawNeighbours;
 	private boolean drawVertices;
