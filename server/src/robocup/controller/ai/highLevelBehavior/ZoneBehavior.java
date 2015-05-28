@@ -24,6 +24,7 @@ import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Referee;
 import robocup.model.World;
 import robocup.model.enums.Event;
+import robocup.model.enums.GameState;
 import robocup.model.enums.TeamColor;
 
 public class ZoneBehavior extends Behavior {
@@ -114,6 +115,15 @@ public class ZoneBehavior extends Behavior {
 				break;
 			case REFEREE_NEWCOMMAND:
 				currentMode = chooseStandardStrategy(executers);
+				break;
+			case GAMESTATE_CHANGED:
+				if (world.getGameState() == GameState.NORMAL_PLAY)
+					if (world.allyHasBall())
+						currentMode = chooseAttackStrategy(executers);
+					else
+						currentMode = chooseDefenseStrategy(executers);
+				break;
+			default:
 				break;
 			}
 		}

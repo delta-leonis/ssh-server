@@ -9,6 +9,7 @@ import java.util.TreeMap;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.controller.handlers.protohandlers.DetectionHandler;
+import robocup.gamepad.GamepadModel;
 import robocup.model.enums.Command;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.GameState;
@@ -45,8 +46,8 @@ public class World extends Observable {
 	
 	private ArrayList<RobotExecuter> robotExecuters;
 
+	private GamepadModel gamepadModel;
 	private ProtoLog protoLog;
-	
 	private GameState currentGameState;
 	private FieldPoint ballPositionForGameState;
 
@@ -88,6 +89,8 @@ public class World extends Observable {
 		robotList.addAll(enemyTeam);
 		
 		initExecutors();
+
+		gamepadModel = new GamepadModel();
 		currentGameState = GameState.STOPPED;
 		ballPositionForGameState = null;
 	}
@@ -330,12 +333,13 @@ public class World extends Observable {
 	public int getAttackingEnemiesCount() {
 		int count = 0;
 		FieldPoint keeperPosition = referee.getAlly().getRobotByID(referee.getAlly().getGoalie()).getPosition();
-
-		for (Robot r : referee.getEnemy().getRobotsOnSight()) {
-			if(r.getPosition()!=null)
-				if (r.getPosition().getX() > 0.0 && keeperPosition.getX() > 0.0 || r.getPosition().getX() < 0.0
-						&& keeperPosition.getX() < 0.0)
-					count++;
+		if(keeperPosition != null){
+			for (Robot r : referee.getEnemy().getRobotsOnSight()) {
+				if(r.getPosition()!=null)
+					if (r.getPosition().getX() > 0.0 && keeperPosition.getX() > 0.0 || r.getPosition().getX() < 0.0
+							&& keeperPosition.getX() < 0.0)
+						count++;
+			}
 		}
 
 		return count;
@@ -977,9 +981,17 @@ public class World extends Observable {
 		return robotExecuters;
 	}
 
+	public GamepadModel getGamepadModel() {
+		return gamepadModel;
+	}
+
 	public ProtoLog getProtoLog() {
 		if(protoLog == null)
 			protoLog = new ProtoLog();
 		return protoLog;
+	}
+
+	public void setGamepadModel(GamepadModel gamepadModel) {
+		this.gamepadModel = gamepadModel;
 	}
 }
