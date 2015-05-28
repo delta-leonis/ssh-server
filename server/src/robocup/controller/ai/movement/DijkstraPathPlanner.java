@@ -232,7 +232,6 @@ public class DijkstraPathPlanner {
 		// generate vertices around robots and remove vertices colliding with
 		// robots
 		generateVertices(avoidBall);
-		System.out.println(vertices.size());
 		removeCollidingVertices();
 		
 		// add source and dest to vertices list
@@ -557,7 +556,7 @@ public class DijkstraPathPlanner {
 			if (r.getPosition() != null)
 				objects.add(r.getDangerEllipse(DISTANCE_TO_ROBOT));
 		
-		if(world.getReferee().getAlly().getGoalie() != robotId){
+		if(world.getReferee().getAlly().getGoalie() != robotId){	//TODO
 			objects.add(FieldZone.EAST_NORTH_GOAL.getPolygon());
 			objects.add(FieldZone.EAST_SOUTH_GOAL.getPolygon());
 			objects.add(FieldZone.WEST_NORTH_GOAL.getPolygon());
@@ -702,15 +701,29 @@ public class DijkstraPathPlanner {
 	 * @return true when an object is found between the vertices
 	 */
 	protected boolean intersectsObject(Vertex source, Vertex destination) {
+		Line2D line = new Line2D.Double(source.getPosition().getX(), source.getPosition().getY(), destination.getPosition()
+				.getX(), destination.getPosition().getY());
 		for (Shape shape : objects){
 			if(destination.getPosition() != null){
 				if(shape instanceof Ellipse2D){
-					if(new Line2D.Double(source.getPosition().getX(), source.getPosition().getY(), destination.getPosition()
-							.getX(), destination.getPosition().getY()).ptSegDist(shape.getBounds().getCenterX(), shape.getBounds().getCenterY()) < shape.getBounds2D().getWidth()/2){
+					if(line.ptSegDist(shape.getBounds().getCenterX(), shape.getBounds().getCenterY()) < shape.getBounds2D().getWidth()/2){
+						return true;
+					}
+				}
+				else if(shape instanceof Polygon){
+					Polygon poly = (Polygon)shape;
+					if(lineIntersectsPolygon(line, poly)){
 						return true;
 					}
 				}
 			}
+		}
+		return false;
+	}
+	
+	protected boolean lineIntersectsPolygon(Line2D line, Polygon polygon){
+		for(int i = 0; i < polygon.npoints - 1; ++i){
+			new Line2D.Double(polygon.xpoints[i], polygon.ypoints[i], polygon.xpoints[i+1], polygon.ypoints[i+1]).intersectsLine(line);
 		}
 		return false;
 	}
