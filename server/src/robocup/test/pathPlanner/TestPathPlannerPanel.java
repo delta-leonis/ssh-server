@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -95,16 +96,16 @@ public class TestPathPlannerPanel extends JPanel{
 		}
 			
 		g.setColor(Color.BLACK);
-		for (Rectangle2D rect : planner.getObjects()) {
+		for (Shape shape : planner.getCopyOfObjects()) {
 			drawRobot(
 					g,
-					(int) rect.getCenterX(),
-					(int) rect.getCenterY(),
+					(int) shape.getBounds2D().getCenterX(),
+					(int) shape.getBounds2D().getCenterY(),
 					90,
-					(int)rect.getWidth(),
+					(int)shape.getBounds2D().getWidth()/2,
 					DijkstraPathPlanner.MAX_VERTEX_DISTANCE_TO_ROBOT,
-					"[" + (int) rect.getCenterX() + ","
-							+ (int) rect.getCenterY() + "]");
+					"[" + (int) shape.getBounds2D().getCenterX() + ","
+							+ (int) shape.getBounds2D().getCenterY() + "]");
 		}
 		// Source
 		g.setColor(Color.RED);
@@ -138,7 +139,7 @@ public class TestPathPlannerPanel extends JPanel{
 				- (int) (radius * RATIO), (int) (radius * 2 * RATIO),
 				(int) (radius * 2 * RATIO));
 		// DangerZone
-		g.drawRect(realX - (int) (dangerZone * RATIO), realY
+		g.drawOval(realX - (int) (dangerZone * RATIO), realY
 				- (int) (dangerZone * RATIO), (int) (dangerZone * 2 * RATIO),
 				(int) (dangerZone * 2 * RATIO));
 		// Vertice square.

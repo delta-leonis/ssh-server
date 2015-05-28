@@ -1,5 +1,10 @@
 package robocup.controller.ai.movement;
 
+import java.awt.Shape;
+import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
+import java.awt.geom.PathIterator;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -25,7 +30,8 @@ public class DijkstraPathPlanner {
 	public static final int MIN_VERTEX_DISTANCE_TO_ROBOT = 240;
 	public static final int MAX_VERTEX_DISTANCE_TO_ROBOT = 400;
 	private World world;
-	private ArrayList<Rectangle2D> objects;
+	private ArrayList<Shape> objects;
+	private ArrayList<Shape> copyOfObjects;
 	protected ArrayList<Vertex> vertices = new ArrayList<Vertex>();
 	private ArrayList<Vertex> allVertices = null;		//Vertices used for drawing.
 	protected ArrayList<Vertex> notRemovableVertices; 	//Contains the source and destination.
@@ -40,7 +46,7 @@ public class DijkstraPathPlanner {
 	 */
 	public DijkstraPathPlanner() {
 		world = World.getInstance();
-		objects = new ArrayList<Rectangle2D>(); 
+		objects = new ArrayList<Shape>(); 
 		notRemovableVertices = new ArrayList<Vertex>();
 	}
 
@@ -209,6 +215,7 @@ public class DijkstraPathPlanner {
 		this.destination = destination;
 
 		generateObjectList(robotId, avoidBall);
+		copyOfObjects = (ArrayList<Shape>)objects.clone();
 
 		// no object on route
 		if (!intersectsObject(new Vertex(beginNode), new Vertex(destination))) {
@@ -218,10 +225,10 @@ public class DijkstraPathPlanner {
 			currentRoute = route;
 			return route;
 		}
-
 		// generate vertices around robots and remove vertices colliding with
 		// robots
 		generateVertices(avoidBall);
+		System.out.println(vertices.size());
 		removeCollidingVertices();
 		
 		// add source and dest to vertices list
@@ -429,16 +436,16 @@ public class DijkstraPathPlanner {
 	 * @return true if the vertex is allowed to exist here, false otherwise.
 	 */
 	protected boolean isValidPosition(Vertex source, Vertex destination){
-		for(Rectangle2D rect : objects){
-			if(rect.intersects(source.toRect())) {
+		for(Shape shape : objects){
+			if(shape.intersects(source.toRect())) {
 				// check whether it's in between source and destination.
-				Rectangle2D smallerRect = new Rectangle2D.Double(rect.getX() + 40, rect.getY() + 40, 180, 180);
+				Rectangle2D smallerRect = new Rectangle2D.Double(shape.getBounds2D().getX() + 40, shape.getBounds2D().getY() + 40, 180, 180);
 				if(smallerRect.intersectsLine(source.getPosition().getX(), source.getPosition().getY(), destination.getPosition()
 						.getX(), destination.getPosition().getY())) {
 					return false;
 				}
 			}
-			if(rect.contains(destination.getPosition().toPoint2D())){
+			if(shape.contains(destination.getPosition().toPoint2D())){
 				return false;
 			}
 		}
@@ -540,11 +547,11 @@ public class DijkstraPathPlanner {
 		for (Robot r : world.getReferee().getAlly().getRobotsOnSight())
 			if (r.getPosition() != null)
 				if (r.getRobotId() != robotId)
-					objects.add(r.getDangerRectangle(DISTANCE_TO_ROBOT));
+					objects.add(r.getDangerEllipse(DISTANCE_TO_ROBOT));
 
 		for (Robot r : world.getReferee().getEnemy().getRobotsOnSight())
 			if (r.getPosition() != null)
-				objects.add(r.getDangerRectangle(DISTANCE_TO_ROBOT));
+				objects.add(r.getDangerEllipse(DISTANCE_TO_ROBOT));
 		if(avoidBall){
 			//Add ball
 			objects.add(world.getBall().getDangerRectangle(DISTANCE_TO_BALL));
@@ -557,18 +564,30 @@ public class DijkstraPathPlanner {
 	 */
 	protected void generateVertices(boolean avoidBall) {
 		vertices.clear();
+		double radians45 = Math.toRadians(45);
+		double radians22 = Math.toRadians(22.5);
+		double radians68 = Math.toRadians(67.5);
 		for (Robot robot : world.getAllRobotsOnSight()) {
 			if(robot.getPosition() != null){
 				double x = robot.getPosition().getX();
 				double y = robot.getPosition().getY();
 				double vertexDistance = MIN_VERTEX_DISTANCE_TO_ROBOT + 
 						((MAX_VERTEX_DISTANCE_TO_ROBOT - MIN_VERTEX_DISTANCE_TO_ROBOT) * (Math.abs(robot.getSpeed()) / 5000));
-	
 				if(!isObjectNotRemovable(x,y)){	//Avoid double vertices from pre-generated vertices in source and dest.
-					vertices.add(new Vertex(new FieldPoint(x + Math.cos(45) * vertexDistance, y + Math.sin(45) * vertexDistance)));
-					vertices.add(new Vertex(new FieldPoint(x - Math.cos(45) * vertexDistance, y - Math.sin(45) * vertexDistance)));
-					vertices.add(new Vertex(new FieldPoint(x + Math.cos(-45) * vertexDistance, y + Math.sin(-45) * vertexDistance)));
-					vertices.add(new Vertex(new FieldPoint(x - Math.cos(-45) * vertexDistance, y - Math.sin(-45) * vertexDistance)));
+					vertices.add(new Vertex(new FieldPoint(x + Math.cos(radians45) * vertexDistance, y + Math.sin(radians45) * vertexDistance)));
+					vertices.add(new Vertex(new FieldPoint(x - Math.cos(radians45) * vertexDistance, y - Math.sin(radians45) * vertexDistance)));
+					vertices.add(new Vertex(new FieldPoint(x + Math.cos(-radians45) * vertexDistance, y + Math.sin(-radians45) * vertexDistance)));
+					vertices.add(new Vertex(new FieldPoint(x - Math.cos(-radians45) * vertexDistance, y - Math.sin(-radians45) * vertexDistance)));
+					
+					vertices.add(new Vertex(new FieldPoint(x + Math.cos(radians22) * vertexDistance, y + Math.sin(radians22) * vertexDistance)));
+					vertices.add(new Vertex(new FieldPoint(x - Math.cos(radians22) * vertexDistance, y - Math.sin(radians22) * vertexDistance)));
+					vertices.add(new Vertex(new FieldPoint(x + Math.cos(-radians22) * vertexDistance, y + Math.sin(-radians22) * vertexDistance)));
+					vertices.add(new Vertex(new FieldPoint(x - Math.cos(-radians22) * vertexDistance, y - Math.sin(-radians22) * vertexDistance)));
+					
+					vertices.add(new Vertex(new FieldPoint(x + Math.cos(radians68) * vertexDistance, y + Math.sin(radians68) * vertexDistance)));
+					vertices.add(new Vertex(new FieldPoint(x - Math.cos(radians68) * vertexDistance, y - Math.sin(radians68) * vertexDistance)));
+					vertices.add(new Vertex(new FieldPoint(x + Math.cos(-radians68) * vertexDistance, y + Math.sin(-radians68) * vertexDistance)));
+					vertices.add(new Vertex(new FieldPoint(x - Math.cos(-radians68) * vertexDistance, y - Math.sin(-radians68) * vertexDistance)));
 					
 					vertices.add(new Vertex(new FieldPoint(x + vertexDistance, y)));
 					vertices.add(new Vertex(new FieldPoint(x, y - vertexDistance)));
@@ -582,10 +601,20 @@ public class DijkstraPathPlanner {
 			double y = world.getBall().getPosition().getY();
 			double vertexDistance = MIN_VERTEX_DISTANCE_TO_ROBOT + 
 					((MAX_VERTEX_DISTANCE_TO_ROBOT - MIN_VERTEX_DISTANCE_TO_ROBOT) * (Math.abs(world.getBall().getSpeed()) / 5000));
-			vertices.add(new Vertex(new FieldPoint(x + Math.cos(45) * vertexDistance, y + Math.sin(45) * vertexDistance)));
-			vertices.add(new Vertex(new FieldPoint(x + Math.cos(45) * vertexDistance, y + Math.sin(45) * vertexDistance)));
-			vertices.add(new Vertex(new FieldPoint(x + Math.cos(45) * vertexDistance, y + Math.sin(45) * vertexDistance)));
-			vertices.add(new Vertex(new FieldPoint(x + Math.cos(45) * vertexDistance, y + Math.sin(45) * vertexDistance)));
+			vertices.add(new Vertex(new FieldPoint(x + Math.cos(radians45) * vertexDistance, y + Math.sin(radians45) * vertexDistance)));
+			vertices.add(new Vertex(new FieldPoint(x + Math.cos(radians45) * vertexDistance, y + Math.sin(radians45) * vertexDistance)));
+			vertices.add(new Vertex(new FieldPoint(x + Math.cos(radians45) * vertexDistance, y + Math.sin(radians45) * vertexDistance)));
+			vertices.add(new Vertex(new FieldPoint(x + Math.cos(radians45) * vertexDistance, y + Math.sin(radians45) * vertexDistance)));
+			
+			vertices.add(new Vertex(new FieldPoint(x + Math.cos(radians22) * vertexDistance, y + Math.sin(radians22) * vertexDistance)));
+			vertices.add(new Vertex(new FieldPoint(x - Math.cos(radians22) * vertexDistance, y - Math.sin(radians22) * vertexDistance)));
+			vertices.add(new Vertex(new FieldPoint(x + Math.cos(-radians22) * vertexDistance, y + Math.sin(-radians22) * vertexDistance)));
+			vertices.add(new Vertex(new FieldPoint(x - Math.cos(-radians22) * vertexDistance, y - Math.sin(-radians22) * vertexDistance)));
+			
+			vertices.add(new Vertex(new FieldPoint(x + Math.cos(radians68) * vertexDistance, y + Math.sin(radians68) * vertexDistance)));
+			vertices.add(new Vertex(new FieldPoint(x - Math.cos(radians68) * vertexDistance, y - Math.sin(radians68) * vertexDistance)));
+			vertices.add(new Vertex(new FieldPoint(x + Math.cos(-radians68) * vertexDistance, y + Math.sin(-radians68) * vertexDistance)));
+			vertices.add(new Vertex(new FieldPoint(x - Math.cos(-radians68) * vertexDistance, y - Math.sin(-radians68) * vertexDistance)));
 			
 			vertices.add(new Vertex(new FieldPoint(x + vertexDistance, y)));
 			vertices.add(new Vertex(new FieldPoint(x, y - vertexDistance)));
@@ -614,9 +643,9 @@ public class DijkstraPathPlanner {
 	 */
 	protected void removeCollidingVertices() {
 		ArrayList<Vertex> filteredVertices = new ArrayList<Vertex>();
-		for (Rectangle2D rect : getObjects())
+		for (Shape shapes : objects)
 			for (Vertex v : vertices)
-				if (rect.contains(v.getPosition().getX(), v.getPosition().getY()) && v.isRemovable())
+				if (shapes.contains(v.getPosition().getX(), v.getPosition().getY()) && v.isRemovable())
 					filteredVertices.add(v);
 
 		vertices.removeAll(filteredVertices);
@@ -647,22 +676,14 @@ public class DijkstraPathPlanner {
 	 * @return true when an object is found between the vertices
 	 */
 	protected boolean intersectsObject(Vertex source, Vertex destination) {
-		for (Rectangle2D rect : objects){
+		for (Shape shape : objects){
 			if(destination.getPosition() != null){
-//				double angle = source.getPosition().getAngle(destination.getPosition());
-				if (rect.intersectsLine(source.getPosition().getX(), source.getPosition().getY(), destination.getPosition()
-						.getX(), destination.getPosition().getY())){
-					return true;
+				if(shape instanceof Ellipse2D){
+					if(new Line2D.Double(source.getPosition().getX(), source.getPosition().getY(), destination.getPosition()
+							.getX(), destination.getPosition().getY()).ptSegDist(shape.getBounds().getCenterX(), shape.getBounds().getCenterY()) < shape.getBounds2D().getWidth()/2){
+						return true;
+					}
 				}
-				
-//				if (rect.intersectsLine(source.getPosition().getX() + DISTANCE_TO_ROBOT * Math.cos(Math.toRadians(90 + angle)), source.getPosition().getY()  + DISTANCE_TO_ROBOT * Math.sin(Math.toRadians(90 + angle)), 
-//						destination.getPosition().getX()  + DISTANCE_TO_ROBOT * Math.cos(Math.toRadians(90 + angle)), destination.getPosition().getY() +  + DISTANCE_TO_ROBOT * Math.sin(Math.toRadians(90 + angle)))){
-//					return true;
-//				}
-//				if (rect.intersectsLine(source.getPosition().getX() + DISTANCE_TO_ROBOT * Math.cos(Math.toRadians(90 - angle)), source.getPosition().getY()  + DISTANCE_TO_ROBOT * Math.sin(Math.toRadians(90 - angle)), 
-//						destination.getPosition().getX()  + DISTANCE_TO_ROBOT * Math.cos(Math.toRadians(90 - angle)), destination.getPosition().getY() +  + DISTANCE_TO_ROBOT * Math.sin(Math.toRadians(90 - angle)))){
-//					return true;
-//				}
 			}
 		}
 		return false;
@@ -673,10 +694,13 @@ public class DijkstraPathPlanner {
 	 * @param r {@link Rectangle2D} we want to test for.
 	 * @return true if the {@link Rectangle2D} intersects with a rectangle on the field, false otherwise.
 	 */
-	protected boolean isInsideObject(Rectangle2D r) {
-		for(Rectangle2D rect : objects) {
-			if(rect.intersects(r))
+	protected boolean isInsideObject(Shape r) {
+		for(Shape shape : objects) {
+			Area areaA = new Area(shape);
+			areaA.intersect(new Area(r));
+			if(!areaA.isEmpty()){
 				return true;
+			}
 		}
 		return false;
 	}
@@ -690,11 +714,18 @@ public class DijkstraPathPlanner {
 	}
 
 	/**
-	 * Getter function that returns all current {@link Rectangle2D rectangles}
+	 * Getter function that returns all current {@link Shape shapes}
 	 * @return all objects in the arraylist objects
 	 */
-	public ArrayList<Rectangle2D> getObjects() {
+	public ArrayList<Shape> getObjects() {
 		return objects;
+	}
+	
+	/**
+	 * @returns a copy of the objects, before they get removed.
+	 */
+	public ArrayList<Shape> getCopyOfObjects(){
+		return copyOfObjects;
 	}
 	
 	public LinkedList<FieldPoint> getCurrentRoute(){

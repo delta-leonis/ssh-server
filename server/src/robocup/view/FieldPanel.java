@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
@@ -550,8 +551,12 @@ public class FieldPanel extends JPanel {
 						}
 					}
 				}
-			}		
-
+			}
+			g.setColor(new Color(222, 168, 176));
+			for(Shape shape : pathPlanner.getCopyOfObjects()){
+				((Graphics2D)g).draw(shape);
+			}
+			
 			if(path != null && !path.isEmpty())
 				drawPath(g, path, pathPlanner.getSource(), pathPlanner.getDestination(), ratio);
 		}
