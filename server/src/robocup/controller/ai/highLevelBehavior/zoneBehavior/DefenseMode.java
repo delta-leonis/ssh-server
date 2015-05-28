@@ -149,14 +149,15 @@ public class DefenseMode extends Mode {
 			default:
 				break;
 			}
+		
+
+			// Invert offset when on the left side of the field.
+			// This is done because the offset moves the other way on this side. 
+			if (robot.getPosition().getX() < 0)
+				offset = -offset;
+	
+			keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset);
 		}
-
-		// Invert offset when on the left side of the field.
-		// This is done because the offset moves the other way on this side. 
-		if (robot.getPosition().getX() < 0)
-			offset = -offset;
-
-		keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset);
 	}
 
 	@Override
@@ -164,7 +165,8 @@ public class DefenseMode extends Mode {
 		Keeper keeper = (Keeper) executer.getLowLevelBehavior();
 
 		int distanceToGoal = (int) world.getField().getEastGoal().getWidth() / 2;
-		boolean goToKick = world.getClosestRobotToBall().equals(executer.getRobot());
+//		boolean goToKick = world.getClosestRobotToBall().equals(executer.getRobot());
+		boolean goToKick = false;
 		FieldPoint ballPosition = ball.getPosition();
 		keeper.update(distanceToGoal, goToKick, ballPosition);
 	}

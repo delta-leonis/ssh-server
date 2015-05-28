@@ -28,23 +28,21 @@ public class ZonallyBackward extends Strategy {
 	 * Roles in the {@link ZonallyBackward} strategy are assigned in the following order:<br>
 	 * <ol>
 	 * <li>{@link RobotMode#KEEPER}</li>
+	 * <li>{@link RobotMode#DISTURBER_COVERER}</li>
+	 * <li>{@link RobotMode#DISTURBER_COVERER}</li>
 	 * <li>{@link RobotMode#KEEPERDEFENDERS}</li>
 	 * <li>{@link RobotMode#KEEPERDEFENDER_COVERER}</li>
 	 * <li>{@link RobotMode#KEEPERDEFENDER_COVERER}</li>
-	 * <li>{@link RobotMode#DISTURBER_COVERER}</li>
-	 * <li>{@link RobotMode#DISTURBER_COVERER}</li>
 	 * </ol>
 	 */
 	public ZonallyBackward() {
 		super();
 		roles.add(RobotMode.KEEPER);
+		roles.add(RobotMode.DISTURBER_COVERER);
+		roles.add(RobotMode.DISTURBER_COVERER);
 		roles.add(RobotMode.KEEPERDEFENDER);
-
 		roles.add(RobotMode.KEEPERDEFENDER_COVERER);
 		roles.add(RobotMode.KEEPERDEFENDER_COVERER);
-
-		roles.add(RobotMode.DISTURBER_COVERER);
-		roles.add(RobotMode.DISTURBER_COVERER);
 	}
 
 	@Override

@@ -55,6 +55,12 @@ public class FieldPanel extends JPanel {
 	private boolean drawNeighbours;
 	private boolean drawVertices;
 
+	private int frameCount;
+
+	private int FPS;
+
+	private long lastFPSpaint;
+
 	/**
 	 * Constructor of {@link FieldPanel}. The panel size is set and the mouseListener is added for 
 	 * the ball position.
@@ -113,22 +119,30 @@ public class FieldPanel extends JPanel {
 				drawZone(g, fieldZone, ratio);
 		drawPlayfield(g, ratio);
 		drawFreeShot(g, ratio);
+		drawPathPlanner(g, ratio);
 		drawRobots(g, ratio);
 		drawBall(g, ratio);
-		drawPathPlanner(g, ratio);
 		drawCoords(g, ratio);
+		drawFPS(g, ratio);
+	}
+	
+	private void drawFPS(Graphics g, double ratio){
+		g.setFont(new Font(g.getFont().getFontName(), Font.BOLD, (int) 22));
+		g.setColor(Color.YELLOW);
+		g.drawString("FPS: " + FPS, getWidth() - 100, 25);
 	}
 
 	/**
-	 * Function for updating the {@link FieldPanel}. Updates with a result of 2 times
-	 * per second at a frame rate of 60 fps
+	 * Function for updating the {@link FieldPanel}.
 	 */
 	public void update() {
-		updateCounter ++;
-		if(updateCounter < 10)
-			return;
+		frameCount++;
+		if(lastFPSpaint + 1000 < System.currentTimeMillis()){
+			lastFPSpaint = System.currentTimeMillis();
+			FPS = frameCount;
+			frameCount = 0;
+		}
 		repaint();
-		updateCounter = 0;
 	}
 
 	/**
@@ -290,8 +304,9 @@ public class FieldPanel extends JPanel {
 	 */
 	private void drawCoord(Graphics g, FieldPoint point, double ratio, int yoffset){
 		Point2D.Double guiPoint = point.toGUIPoint(ratio, mirror);
+		g.setFont(new Font(g.getFont().getFontName(), Font.PLAIN, (int) 12));
 		String coordinate = String.format("[%.0f, %.0f]", point.getX(), point.getY());
-		g.drawString(coordinate, (int)guiPoint.getX() - (coordinate.length()/2)*7  + spaceBufferX, (int)guiPoint.getY() + yoffset + (yoffset > 0 ? 5 : 0) + spaceBufferY);
+		g.drawString(coordinate, (int)guiPoint.getX() - (coordinate.length()/2)*(g.getFont().getSize()/2)  + spaceBufferX, (int)guiPoint.getY() + yoffset + (yoffset > 0 ? 5 : 0) + spaceBufferY);
 	}
 	
 	/**
@@ -469,7 +484,11 @@ public class FieldPanel extends JPanel {
 				g2.drawString("" + robot.getRobotId(), (int) robot
 						.getPosition().toGUIPoint(ratio, mirror).getX() -(robot.getRobotId()/10 + 1)*(g2.getFont().getSize()/3)+ spaceBufferX,
 						(int) robotPosition.toGUIPoint(ratio, mirror).getY() +(g2.getFont().getSize()/3)+ spaceBufferY);
-
+				if(robot instanceof Ally){
+					g2.setColor(RobotBox.getRoleColor(((Ally)robot).getRole()));
+					g2.fillRoundRect((int)(robot.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX + 10), 
+							(int)(robot.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY + 10), 10, 10, 2, 2);
+				}
 				if(showCoords)
 					drawCoord(g2, robotPosition, ratio, (int) (Robot.DIAMETER*ratio));
 			}
@@ -556,7 +575,7 @@ public class FieldPanel extends JPanel {
 	public void drawPath(Graphics g, LinkedList<FieldPoint> path, FieldPoint start, FieldPoint destination, double ratio) {
 		Graphics2D g2 = (Graphics2D)g;
 		
-		g.setColor(Color.ORANGE);
+		g.setColor(Color.YELLOW);
 		g2.setStroke(new BasicStroke(20));
 		Point2D.Double previous = start.toGUIPoint(ratio, mirror);
 		for (FieldPoint p : path) {

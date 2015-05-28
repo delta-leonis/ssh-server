@@ -28,22 +28,21 @@ public class BarricadeDefending extends Strategy {
 	 * Roles in the {@link BarricadeDefending} strategy are assigned in the following order:<br>
 	 * <ol>
 	 * <li>{@link RobotMode#KEEPER}</li>
-	 * <li>{@link RobotMode#KEEPERDEFENDERS}</li>
-	 * <li>{@link RobotMode#KEEPERDEFENDERS}</li>
 	 * <li>{@link RobotMode#COUNTER}</li>
 	 * <li>{@link RobotMode#GOALPOSTCOVERER}</li>
 	 * <li>{@link RobotMode#DISTURBER}</li>
+	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
+	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
 	 * </ol>
 	 */
 	public BarricadeDefending() {
 		super();
 		roles.add(RobotMode.KEEPER);
-		roles.add(RobotMode.KEEPERDEFENDER);
-		roles.add(RobotMode.KEEPERDEFENDER);
-
-//		roles.add(RobotMode.COUNTER);
-//		roles.add(RobotMode.GOALPOSTCOVERER);
+		roles.add(RobotMode.COUNTER);
+		roles.add(RobotMode.GOALPOSTCOVERER);
 		roles.add(RobotMode.DISTURBER);
+		roles.add(RobotMode.KEEPERDEFENDER);
+		roles.add(RobotMode.KEEPERDEFENDER);
 	}
 
 	@Override
@@ -64,10 +63,10 @@ public class BarricadeDefending extends Strategy {
 
 			if (ballPosition.getY() <= 0.0)
 				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.GOALPOSTCOVERER,
-						FieldZone.EAST_SOUTH_SECONDPOST));
+						FieldZone.WEST_SOUTH_SECONDPOST));
 			else
 				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.GOALPOSTCOVERER,
-						FieldZone.EAST_NORTH_SECONDPOST));
+						FieldZone.WEST_NORTH_SECONDPOST));
 		}
 	}
 }

@@ -2,6 +2,11 @@ package robocup.view.sections;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Hashtable;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -13,20 +18,36 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+
+
+
+
+
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import net.miginfocom.swing.MigLayout;
+import robocup.input.ProtoParser;
+import robocup.input.SSLVisionClient;
 import robocup.model.ProtoLog;
+import robocup.model.World;
+import robocup.model.enums.LogState;
 import robocup.view.SectionBox;
 
+/**
+ * GUI elements for allowing playback and recording of logfiles, or temporary logs
+ * by providing control to the {@link ProtoLog} stored in {@link World} that will be accessed by {@link SSLVisionClient}  
+ *
+ */
 @SuppressWarnings("serial")
 public class RecordSection extends SectionBox {
-	private boolean recording;
-	private boolean playing;
-	private ProtoLog logFile = new ProtoLog();
+	private ProtoLog logFile = World.getInstance().getProtoLog();
 	private JSlider cursorSlider;
 	private JFileChooser chooser = new JFileChooser();
+	FileNameExtensionFilter filter = new FileNameExtensionFilter("log files", "protobuf", "protolog");
 	private Timer playbackTimer;
 
-	private JButton homeButton, prevButton, recButton, stopButton, nextButton, endButton, playButton, pauseButton;
+	private JButton homeButton, prevButton, recButton, stopRecButton, nextButton, endButton, playPauseButton, stopButton, openFileButton;
 	private ImageIcon homeIcon = new ImageIcon(getClass().getResource("../buttonImages/home.png")),
 						endIcon = new ImageIcon(getClass().getResource("../buttonImages/end.png")),
 						prevIcon = new ImageIcon(getClass().getResource("../buttonImages/previous.png")),
@@ -34,26 +55,33 @@ public class RecordSection extends SectionBox {
 						playIcon = new ImageIcon(getClass().getResource("../buttonImages/play.png")),
 						pauseIcon = new ImageIcon(getClass().getResource("../buttonImages/pause.png")),
 						stopIcon = new ImageIcon(getClass().getResource("../buttonImages/stop.png")),
-						recIcon = new ImageIcon(getClass().getResource("../buttonImages/record-red.png"));
+						recIcon = new ImageIcon(getClass().getResource("../buttonImages/record-red.png")),
+						openIcon = new ImageIcon(getClass().getResource("../buttonImages/open.png"));
+
 	public RecordSection() {
 		super("Record protobuf");
-		recording = false;
-		playing = false;
-		logFile.genRandomData(430);
+		logFile.setState(LogState.READY);
+		chooser.setFileFilter(filter);
 		setLayout(new MigLayout("wrap 6", "[grow][grow][grow][grow][grow][grow]"));
 		ButtonListener listener = new ButtonListener();
 
 		add(new JLabel());
 		add(new JLabel());
-		stopButton = new JButton(stopIcon);
-		stopButton.addActionListener(listener);
-		stopButton.setName("stop");
-		add(stopButton);
+		
+		stopRecButton = new JButton(stopIcon);
+		stopRecButton.addActionListener(listener);
+		stopRecButton.setName("stopRec");
+		add(stopRecButton);
 		
 		recButton = new JButton(recIcon);
 		recButton.addActionListener(listener);
 		recButton.setName("record");
-		add(recButton, "wrap");
+		add(recButton);
+
+		openFileButton = new JButton(openIcon);
+		openFileButton.addActionListener(listener);
+		openFileButton.setName("openFile");
+		add(openFileButton, "wrap");
 		
 		homeButton = new JButton(homeIcon);
 		homeButton.addActionListener(listener);
@@ -65,15 +93,15 @@ public class RecordSection extends SectionBox {
 		prevButton.setName("previous");
 		add(prevButton);
 
-		playButton = new JButton(playIcon);
-		playButton.addActionListener(listener);
-		playButton.setName("play");
-		add(playButton);
+		playPauseButton = new JButton(playIcon);
+		playPauseButton.addActionListener(listener);
+		playPauseButton.setName("playPause");
+		add(playPauseButton);
 
-		pauseButton = new JButton(pauseIcon);
-		pauseButton.addActionListener(listener);
-		pauseButton.setName("pause");
-		add(pauseButton);
+		stopButton = new JButton(stopIcon);
+		stopButton.addActionListener(listener);
+		stopButton.setName("stop");
+		add(stopButton);
 
 		nextButton = new JButton(nextIcon);
 		nextButton.addActionListener(listener);
@@ -86,7 +114,7 @@ public class RecordSection extends SectionBox {
 		add(endButton);
 
 		cursorSlider = new JSlider(JSlider.HORIZONTAL,
-                0,logFile.getSize()-1, logFile.getCursor());
+                0, 0, 0);
 		cursorSlider.addChangeListener(new SliderListener());
 
 		//Turn on labels at major tick marks.
@@ -107,35 +135,56 @@ public class RecordSection extends SectionBox {
 		@Override
 		public void stateChanged(ChangeEvent e) {
 			logFile.setCursor(((JSlider)e.getSource()).getValue());
+			if(logFile.getState() == LogState.PAUSE)
+				ProtoParser.getInstance().parseVision(new ByteArrayInputStream(logFile.getData(logFile.getCursor())));
 		}
 	}
 
+	/**
+	 * Buttonlistener for every button on this {@link Section}
+	 */
 	private class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			String buttonText = ((JButton) e.getSource()).getName();
 			switch (buttonText) {
 				case "record":
-					logFile = new ProtoLog();
-					recording = true;
-					playing = false;
+					logFile.clear();
+					logFile.setState(LogState.RECORDING);
+					break;
+
+				case "openFile":
+					if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+						logFile.loadMessages(chooser.getSelectedFile());
+					logFile.setState(LogState.READY);
+					logFile.setCursor(0);
+					break;
+					
+				case "stopRec":
+					if(logFile.getSize() > 0)
+						if(chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
+							logFile.saveToFile(chooser.getSelectedFile().toString().replace(".protolog", "") + ".protolog");
+					logFile.setState(LogState.READY);
 					break;
 
 				case "stop":
-					playing = false;
-					recording = false;
-					if(logFile.getSize() > 0)
-						if(chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
-							logFile.saveToFile(chooser.getSelectedFile() + ".txt");
+					logFile.setState(LogState.READY);
+					logFile.setCursor(0);
 					break;
+					
+				case "playPause":
+					//when it should pause playback
+					if(logFile.getState() == LogState.PLAY){
+						logFile.setState(LogState.PAUSE);
+						return;
+					}
 
-				case "play":
-					recording = false;
-					playing = true;
-					playbackTimer.schedule(new PlaybackTimerTask(), 0);
-					break;
+					//when it should start playback
+					if(logFile.getCursor() < logFile.getSize()-1){
+						logFile.setState(LogState.PLAY);
+						playbackTimer.schedule(new PlaybackTimerTask(), 0);
+					}else
+						logFile.setState(LogState.READY);
 
-				case "pause":
-					playing = false;
 					break;
 
 				case "end":
@@ -163,28 +212,61 @@ public class RecordSection extends SectionBox {
 	 */
 	class PlaybackTimerTask extends TimerTask {
 		public void run() {
-			if(playing){
+			if(logFile.getState() == LogState.PLAY){
 				logFile.setCursor(logFile.getCursor() +1);
-				playbackTimer.schedule(new PlaybackTimerTask(), logFile.getTimeDelta());
-				if(logFile.getCursor() >= logFile.getSize()-1)
-					playing = false;
+				if(logFile.getCursor() >= logFile.getSize()-1){
+					logFile.setState(LogState.READY);
+					logFile.setCursor(0);
+				}
+				playbackTimer.schedule(new PlaybackTimerTask(), Math.abs(logFile.getTimeDelta()));
 			}
 		}
 	}
 
 	@Override
 	public void update() {
-		homeButton.setEnabled(!recording && !playing && (logFile.getCursor() > 0));
-		prevButton.setEnabled(!recording && !playing && (logFile.getCursor() > 0));
-		endButton.setEnabled (!recording && !playing && (logFile.getSize()-1 > logFile.getCursor()));
-		nextButton.setEnabled(!recording && !playing && (logFile.getSize()-1 > logFile.getCursor()));
-		recButton.setEnabled(!recording && !playing);
-		stopButton.setEnabled(recording && !playing);
-		playButton.setEnabled(!recording && !playing);
-		pauseButton.setEnabled(!recording && playing);
+		LogState state = logFile.getState();
+		
+		logFile.setCursor(Math.min(logFile.getCursor(), logFile.getSize()-1));
+		logFile.setCursor(Math.max(logFile.getCursor(), 0));
+		homeButton.setEnabled(state != LogState.RECORDING && state != LogState.PLAY && (logFile.getCursor() > 0));
+		prevButton.setEnabled(state != LogState.RECORDING && state != LogState.PLAY && (logFile.getCursor() > 0));
+		endButton.setEnabled (state != LogState.RECORDING && state != LogState.PLAY && (logFile.getSize()-1 > logFile.getCursor()));
+		nextButton.setEnabled(state != LogState.RECORDING && state != LogState.PLAY && (logFile.getSize()-1 > logFile.getCursor()));
+		recButton.setEnabled(state != LogState.RECORDING && state != LogState.PLAY && state != LogState.PAUSE);
+		openFileButton.setEnabled(state != LogState.RECORDING);
+		stopRecButton.setEnabled(state == LogState.RECORDING && state != LogState.PLAY);
+		playPauseButton.setEnabled(state != LogState.RECORDING);
+		playPauseButton.setIcon(state == LogState.PLAY ? pauseIcon : playIcon);
+		stopButton.setEnabled(state != LogState.RECORDING && (state == LogState.PLAY || state == LogState.PAUSE));
 		cursorSlider.setMaximum(logFile.getSize()-1);
 		cursorSlider.setValue(logFile.getCursor());
-		cursorSlider.setEnabled(!recording);
+
+		cursorSlider.setVisible(state != LogState.RECORDING);
+		if(state != LogState.RECORDING && logFile.getSize() > 1){
+			Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
+			int part = (logFile.getSize()-1)/10;
+			long timePart = (logFile.getTimeStamp(logFile.getSize()-1) - logFile.getTimeStamp(0)) / 10;
+			labelTable.put( 0, new JLabel(getTime(logFile.getTimeStamp(0), "dd MMM, HH:mm:ss")));
+			for(int i=1; i <= 10; i++)
+				labelTable.put( part * i , new JLabel(getTime(logFile.getTimeStamp(0) + timePart * i, "HH:mm:ss")));
+			cursorSlider.setLabelTable( labelTable );
+			cursorSlider.setMajorTickSpacing((logFile.getSize()-1)/10);
+			cursorSlider.setMinorTickSpacing((logFile.getSize()-1)/100);
+		}
+		cursorSlider.setEnabled(state == LogState.PAUSE);	
+	}
+	
+	/**
+	 * Convert a timestamp to a readable format
+	 * @param timestamp	timestamp in millis
+	 * @param format	format as string described in {@link Locale.Category.FORMAT}
+	 * @return	human-readable representation of timestamp
+	 */
+	private String getTime(long timestamp, String format){
+		SimpleDateFormat sdf = new SimpleDateFormat(format);    
+		Date resultdate = new Date(timestamp);
+		return sdf.format(resultdate);
 	}
 
 }

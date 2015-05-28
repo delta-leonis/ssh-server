@@ -1,25 +1,73 @@
 package robocup.model;
 
-import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 
+import robocup.model.enums.LogState;
+
+/**
+ * Class that contains a {@link LinkedHashMap} containing a set of raw protobuf data as a byte[] accompanied by the corresponding timestamp (in millis) as key 
+ */
 public class ProtoLog {
-	//private ArrayList<ByteArrayInputStream> messages = new ArrayList<ByteArrayInputStream>();
+	/** Long is the timestamp for the inputStream */
+	private LinkedHashMap<Long, byte[]> messages = new LinkedHashMap<Long, byte[]>();
+	private int cursor;
+	private LogState state;
+
+	public ProtoLog() {	
+		state = LogState.READY;
+		cursor = 0;
+	}
+
 	/**
-	 * Long is the timestamp for the inputStream
+	 * Loads {@link LinkedHashMap LinkedHashMap<Long, byte[]>} from a {@link File} to the current log
+	 * @param file to read from
 	 */
-	private LinkedHashMap<Long, ByteArrayInputStream> messages = new LinkedHashMap<Long, ByteArrayInputStream>();
-	private int cursor = 0;
+	public void loadMessages(File file) {
+		LinkedHashMap<Long, byte[]> linkedHashMapList = new LinkedHashMap<Long, byte[]>();
+        try{
+            FileInputStream fileInputStream = new FileInputStream(file);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            
+            linkedHashMapList = (LinkedHashMap<Long, byte[]>)objectInputStream.readObject();
+            objectInputStream.close();
+            fileInputStream.close();
+            for(Entry<Long, byte[]> m :linkedHashMapList.entrySet()){
+                linkedHashMapList.put(m.getKey(), m.getValue());
+            }
+
+        }catch(Exception e){ }
+        messages = linkedHashMapList;
+	}
+
+	/**
+	 * Removes all entries from the map, resets cursor and current state
+	 */
+	public void clear(){
+		messages = new LinkedHashMap<Long, byte[]>();
+		cursor = 0;
+		state = LogState.READY;
+	}
 	
+	/**
+	 * @return current state
+	 */
+	public LogState getState(){
+		return state;
+	}
 	
-	public void genRandomData(int size){
-		long millis = System.currentTimeMillis();
-		for(int i = 0; i < size; i++){
-			messages.put(millis + i*100, new ByteArrayInputStream(new byte[]  {0,0}));
-		}
+	/**
+	 * Sets current state for playback status
+	 * @param _state	new state
+	 */
+	public void setState(LogState _state){
+		state = _state;
 	}
 	
 	/**
@@ -36,18 +84,37 @@ public class ProtoLog {
 		return messages.size();
 	}
 	
-	public Long getTimeDelta(){
-		if(cursor < messages.size()-1)
-			return (getKeyByIndex(messages, cursor+1) - getKeyByIndex(messages, cursor));
-		return (long) 0;
-	}
-
-	public ByteArrayInputStream getValueByIndex(LinkedHashMap<Long, ByteArrayInputStream> hMap, int index){
-	   return (ByteArrayInputStream) hMap.values().toArray()[index];
+	/**
+	 * @param index
+	 * @return	timestamp at given index
+	 */
+	public long getTimeStamp(int index){
+		return getKeyByIndex(index);
 	}
 	
-	public Long getKeyByIndex(LinkedHashMap<Long, ByteArrayInputStream> hMap, int index){
-	   return (Long) hMap.keySet().toArray()[index];
+	/**
+	 * @return time before next frame should be loaded in milliseconds 
+	 */
+	public Long getTimeDelta(){
+		if(cursor < messages.size()-1)
+			return (getKeyByIndex(cursor+1) - getKeyByIndex( cursor));
+		return (long) 1;
+	}
+
+	/**
+	 * @param index	
+	 * @return	the Value at a certain index
+	 */
+	private byte[] getValueByIndex(int index){
+	   return (byte[]) messages.values().toArray()[index];
+	}
+	
+	/**
+	 * @param index
+	 * @return	the Key at a certain index
+	 */
+	private Long getKeyByIndex(int index){
+	   return (Long) messages.keySet().toArray()[index];
 	}
 	
 	/**
@@ -59,12 +126,40 @@ public class ProtoLog {
 			cursor = _cursor;
 	}
 	
-	public boolean saveToFile(String fileName){
-		try(FileWriter fw = new FileWriter(fileName)) {
-		    fw.write("ja dit werkt dus niet echt zegmaar");
-		    fw.close();
-		    return true;
-		} catch(Exception e){ }
-		return false;
+	/**
+	 * Serializes and saves the {@link HashMap} to a file
+	 * @param filePath	path to save
+	 * @return	true when succesfull
+	 */
+	public boolean saveToFile(String filePath){
+		try{
+		    File fileOne = new File(filePath);
+		    FileOutputStream fileOutputStream = new FileOutputStream(fileOne);
+		    ObjectOutputStream oos = new ObjectOutputStream(fileOutputStream);
+		
+		    oos.writeObject(messages);
+		    oos.flush();
+		    oos.close();
+		    fileOutputStream.close();
+		}catch(Exception e){
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * @param index	the index for the frame
+	 * @return	get the data of a frame at given index
+	 */
+	public byte[] getData(int index) {
+		return getValueByIndex(index);
+	}
+
+	/**
+	 * Add a bytestring to the current loaded log
+	 * @param message	bytestring to add
+	 */
+	public void add(byte[] message) {
+		messages.put(System.currentTimeMillis(), message);
 	}
 }

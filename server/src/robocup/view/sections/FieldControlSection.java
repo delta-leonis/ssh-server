@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
@@ -17,8 +18,8 @@ import robocup.view.SectionBox;
 
 /**
  * {@link FieldControlSection} is a {@link SectionBox} for controlling a graphical interface for the field.
- * It has {@link JButton}s for showing the {@link FieldPanel} in a {@link JFrame} and for toggling what to show
- * in the {@link FieldPanel}. Inter alia, there are {@link JButton}s to show a raster and to display a free shot.
+ * It has {@link JCheckBox}s for showing the {@link FieldPanel} in a {@link JFrame} and for toggling what to show
+ * in the {@link FieldPanel}. Inter alia, there are {@link JCheckBox}s to show a raster and to display a free shot.
  */
 @SuppressWarnings("serial")
 public class FieldControlSection extends SectionBox {
@@ -40,45 +41,45 @@ public class FieldControlSection extends SectionBox {
 		ActionListener buttonListener = new ButtonListener();
 		JButton showField = new JButton("Show field");
 		showField.addActionListener(buttonListener);
-		add(showField, "growx");
+		add(showField, "growx, span 2, wrap");
 
-		JButton showRaster = new JButton("Show raster");
+		JCheckBox showRaster = new JCheckBox("Show raster");
 		showRaster.addActionListener(buttonListener);
 		add(showRaster, "growx");
 
-		JButton showZones = new JButton("Show zones");
+		JCheckBox showZones = new JCheckBox("Show zones");
 		showZones.addActionListener(buttonListener);
 		add(showZones, "growx");
 
-		JButton showRobots = new JButton("Show robots");
+		JCheckBox showRobots = new JCheckBox("Show robots");
 		showRobots.addActionListener(buttonListener);
 		add(showRobots, "growx");
 
-		JButton showBall = new JButton("Show ball");
+		JCheckBox showBall = new JCheckBox("Show ball");
 		showBall.addActionListener(buttonListener);
 		add(showBall, "growx");
 		
-		JButton mirrorField = new JButton("Mirror North/South");
+		JCheckBox mirrorField = new JCheckBox("Mirror North/South");
 		mirrorField.addActionListener(buttonListener);
 		add(mirrorField, "growx");
 
-		JButton drawFreeShot = new JButton("Draw free shot");
+		JCheckBox drawFreeShot = new JCheckBox("Draw free shot");
 		drawFreeShot.addActionListener(buttonListener);
 		add(drawFreeShot, "growx");
 
-		JButton drawCoords = new JButton("Draw coordinates");
+		JCheckBox drawCoords = new JCheckBox("Draw coordinates");
 		drawCoords.addActionListener(buttonListener);
 		add(drawCoords, "growx");
 
-		JButton drawPaths = new JButton("Draw paths");
+		JCheckBox drawPaths = new JCheckBox("Draw paths");
 		drawPaths.addActionListener(buttonListener);
 		add(drawPaths, "growx");
 
-		JButton drawNeighbours = new JButton("Draw All paths");
+		JCheckBox drawNeighbours = new JCheckBox("Draw All paths");
 		drawNeighbours.addActionListener(buttonListener);
 		add(drawNeighbours, "growx");
 
-		JButton drawVertices = new JButton("Draw vertices");
+		JCheckBox drawVertices = new JCheckBox("Draw vertices");
 		drawVertices.addActionListener(buttonListener);
 		add(drawVertices, "growx");
 
@@ -110,7 +111,11 @@ public class FieldControlSection extends SectionBox {
 
 	private class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			String buttonText = ((JButton) e.getSource()).getText();
+			String buttonText;
+			if(e.getSource() instanceof JButton)
+				buttonText = ((JButton) e.getSource()).getText();
+			else
+				buttonText = ((JCheckBox) e.getSource()).getText();
 			switch (buttonText) {
 				case "Show field":
 					frame.setLocation(getSecondaryMonitor().getDefaultConfiguration().getBounds().x, getSecondaryMonitor().getDefaultConfiguration().getBounds().y);
@@ -165,9 +170,9 @@ public class FieldControlSection extends SectionBox {
 			
 		}
 	}
+
 	@Override
 	public void update() {
 		fieldPanel.update();
 	}
-
 }
