@@ -286,7 +286,7 @@ public class World extends Observable {
 	public ArrayList<Robot> getAllRobotsOnSight() {
 		ArrayList<Robot> onsight = new ArrayList<Robot>();
 		for (Robot robot : robotList) {
-			if (robot.isOnSight() || robot.getPosition() != null)
+			if (robot.isOnSight())
 				onsight.add(robot);
 		}
 		return onsight;
