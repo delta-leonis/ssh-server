@@ -34,11 +34,9 @@ public class Main {
 	private static String teamConfig = "config/teams.properties";
 	private static String protobufConfig = "config/config.properties";
 
-	public static void main(String[] args) throws Exception {
-//		System.setProperty("java.library.path", System.getProperty("java.library.path") + File.pathSeparator + "../server/dist/");
-		setLibraryPath("../server/dist/");
-		System.out.println(System.getProperty("java.library.path"));
+	public static void main(String[] args) {
 		initLog();
+		initLibraryPath();
 		LOGGER.info("Program started");
 		initView();
 		LOGGER.info("View initialized");
@@ -50,14 +48,24 @@ public class Main {
 		LOGGER.info("Main initialized");
         new robocup.controller.ai.Main();
 	}
-	public static void setLibraryPath(String path) throws Exception {
+
+	/**
+	 * Sets the library path correct for gamepad use.
+	 */
+	public static void initLibraryPath() {
+		String path = System.getProperty("java.library.path")  + ";../server/dist/";
 	    System.setProperty("java.library.path", path);
-	 
-	    //set sys_paths to null
-	    final Field sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
-	    sysPathsField.setAccessible(true);
-	    sysPathsField.set(null, null);
+	    Field sysPathsField;
+		try {
+			sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
+			sysPathsField.setAccessible(true);
+			sysPathsField.set(null, null);
+			LOGGER.info("Library path for gamepad correctly set");
+		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+			LOGGER.severe("Error in setting library path for gamepad: " + e);
+		}
 	}
+
 	/**
 	 * Create the root logger from this application.
 	 * Disable the console logger and set the warning level.

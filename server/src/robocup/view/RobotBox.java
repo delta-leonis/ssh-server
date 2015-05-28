@@ -86,7 +86,7 @@ public class RobotBox extends JPanel {
 		robotRole.setText(((Ally)robot).getRole() == null ? "Undefined" : ((Ally)robot).getRole().toString());
 		robotPosition.setText(robot.getPosition() != null ? (int)robot.getPosition().getX() + ", " + (int)robot.getPosition().getY() : "Undefined");
 
-		if(robot.getRobotId() == World.getInstance().getGUI().getSelectedRobotId())
+		if(robot.getRobotId() == World.getInstance().getGUI().getSelectedRobot().getRobotId())
 			setBackground(getRoleColor(((Ally)robot).getRole()).darker());
 		else
 			setBackground(getRoleColor(((Ally)robot).getRole()));

@@ -1,6 +1,5 @@
 package robocup.view;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -19,10 +18,8 @@ import javax.swing.UIManager.LookAndFeelInfo;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.Main;
-import robocup.model.Ally;
 import robocup.model.Robot;
 import robocup.model.World;
-import robocup.model.enums.RobotMode;
 import robocup.view.sections.ConsoleSection;
 import robocup.view.sections.ControlRobotSection;
 import robocup.view.sections.FieldControlSection;
@@ -49,7 +46,7 @@ public class GUI extends JFrame {
 				   leftContainer,
 				   sectionContainer;
 	private JScrollPane scrollPane;
-	private int selectedRobotId = 0;
+	private Robot selectedRobot = World.getInstance().getReferee().getAlly().getRobotByID(0);
 	private ArrayList<RobotBox> allRobotBoxes = new ArrayList<RobotBox>();
 	private Timer updateTimer;
 	private int updateFrequency = 30; //update frequency in Hertz
@@ -143,8 +140,8 @@ public class GUI extends JFrame {
 	 * Returns the id of the {@link Robot} who's {@link RobotBox} is selected 
 	 * @return robotId
 	 */
-	public int getSelectedRobotId() {
-		return selectedRobotId;
+	public Robot getSelectedRobot() {
+		return selectedRobot;
 	}
 
 	/**
@@ -193,7 +190,7 @@ public class GUI extends JFrame {
 
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
-			selectRobotId(((RobotBox) arg0.getSource()).getRobot().getRobotId());
+			selectRobot(((RobotBox) arg0.getSource()).getRobot());
 		}
 
 		@Override
@@ -213,10 +210,9 @@ public class GUI extends JFrame {
 		}
 	}
 
-	public void selectRobotId(int robotId){
-		if(robotId == selectedRobotId)
-			return;
-		selectedRobotId = robotId;
+	public void selectRobot(Robot robot){
+		selectedRobot = robot;
+		World.getInstance().getGamepadModel().setRobot(robot);
 	}
 	
 	/**
