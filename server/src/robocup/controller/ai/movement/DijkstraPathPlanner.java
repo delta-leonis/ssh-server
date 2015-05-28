@@ -6,6 +6,7 @@ import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.beans.DesignMode;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -218,6 +219,10 @@ public class DijkstraPathPlanner {
 
 		generateObjectList(robotId, avoidBall);
 		copyOfObjects = (ArrayList<Shape>)objects.clone();
+		
+		if(isInsidePolygon(new Vertex(destination).toRect())){
+			return null;
+		}
 
 		// no object on route
 		if (!intersectsObject(new Vertex(beginNode), new Vertex(destination))) {
@@ -332,10 +337,6 @@ public class DijkstraPathPlanner {
 		Vertex destination = new Vertex(endNode);
 		destination.setRemovable(false);
 		vertices.add(destination);
-
-		if(isInsidePolygon(destination.toRect())){
-			return null;
-		}
 		
 		if (isInsideObject(destination.toRect())) {
 			destination.setStuck(true);
