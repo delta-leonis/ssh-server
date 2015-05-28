@@ -330,12 +330,13 @@ public class World extends Observable {
 	public int getAttackingEnemiesCount() {
 		int count = 0;
 		FieldPoint keeperPosition = referee.getAlly().getRobotByID(referee.getAlly().getGoalie()).getPosition();
-
-		for (Robot r : referee.getEnemy().getRobotsOnSight()) {
-			if(r.getPosition()!=null)
-				if (r.getPosition().getX() > 0.0 && keeperPosition.getX() > 0.0 || r.getPosition().getX() < 0.0
-						&& keeperPosition.getX() < 0.0)
-					count++;
+		if(keeperPosition != null){
+			for (Robot r : referee.getEnemy().getRobotsOnSight()) {
+				if(r.getPosition()!=null)
+					if (r.getPosition().getX() > 0.0 && keeperPosition.getX() > 0.0 || r.getPosition().getX() < 0.0
+							&& keeperPosition.getX() < 0.0)
+						count++;
+			}
 		}
 
 		return count;

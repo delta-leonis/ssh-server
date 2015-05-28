@@ -73,7 +73,7 @@ public class GUI extends JFrame {
 
 		LOGGER.info("GUI is started and initialized");
 		updateTimer = new Timer();
-		updateTimer.schedule(new updateGUITask(), 1000/updateFrequency);
+		updateTimer.schedule(new updateGUITask(), 0);
 	}
 
 	/**
@@ -108,9 +108,9 @@ public class GUI extends JFrame {
 	 */
 	class updateGUITask extends TimerTask {
 		public void run() {
+			updateTimer.schedule(new updateGUITask(), 1000/updateFrequency);
 			update("robotContainer");
 			update("sectionContainer");
-			updateTimer.schedule(new updateGUITask(), 1000/updateFrequency);
 		}
 	}
 	

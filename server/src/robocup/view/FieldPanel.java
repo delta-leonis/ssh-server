@@ -125,7 +125,7 @@ public class FieldPanel extends JPanel {
 		drawCoords(g, ratio);
 		drawFPS(g, ratio);
 	}
-	
+
 	private void drawFPS(Graphics g, double ratio){
 		g.setFont(new Font(g.getFont().getFontName(), Font.BOLD, (int) 22));
 		g.setColor(Color.YELLOW);
