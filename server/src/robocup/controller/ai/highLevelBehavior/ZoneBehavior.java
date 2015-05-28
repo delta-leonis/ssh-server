@@ -177,7 +177,11 @@ public class ZoneBehavior extends Behavior {
 			}
 			break;
 		case FORCE_START:
-			// Cannot be reached as this command is already handled, so return null
+			if (world.allyHasBall()) {
+				currentMode = chooseAttackStrategy(executers);
+			} else {
+				currentMode = chooseDefenseStrategy(executers);
+			}
 			break;
 		case GOAL_BLUE:
 		case GOAL_YELLOW:
@@ -201,7 +205,11 @@ public class ZoneBehavior extends Behavior {
 			}
 			break;
 		case NORMAL_START:
-			// Cannot be reached as this command is already handled, so return null
+			if (world.allyHasBall()) {
+				currentMode = chooseAttackStrategy(executers);
+			} else {
+				currentMode = chooseDefenseStrategy(executers);
+			}
 			break;
 		case PREPARE_KICKOFF_BLUE:
 			if (referee.getAllyTeamColor() == TeamColor.BLUE) {
@@ -235,9 +243,6 @@ public class ZoneBehavior extends Behavior {
 		case TIMEOUT_BLUE:
 		case TIMEOUT_YELLOW:
 			returnMode = new StandardMode(new GameStop(), executers);
-			break;
-		default:
-			returnMode = null;
 			break;
 		}
 
