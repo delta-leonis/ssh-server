@@ -39,7 +39,7 @@ public class PenguinSection extends SectionBox {
 
 				LOGGER.setLevel(java.util.logging.Level.FINEST);
 				if (wowlevel <= 0.33)
-					LOGGER.fine("Selected robot: " + World.getInstance().getGUI().getSelectedRobotId());
+					LOGGER.fine("Selected robot: " + World.getInstance().getGUI().getSelectedRobot().getRobotId());
 				else if (wowlevel <= 0.66)
 					LOGGER.info("Log info");
 				else

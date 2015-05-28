@@ -9,6 +9,7 @@ import java.util.TreeMap;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.controller.handlers.protohandlers.DetectionHandler;
+import robocup.gamepad.GamepadModel;
 import robocup.model.enums.Command;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.TeamColor;
@@ -43,6 +44,8 @@ public class World extends Observable {
 	private boolean start = false;		// True for start, false for stop
 	
 	private ArrayList<RobotExecuter> robotExecuters;
+
+	private GamepadModel gamepadModel;
 
 	/**
 	 * Constructor for the {@link World} Can only be called as a singleton.
@@ -82,6 +85,8 @@ public class World extends Observable {
 		robotList.addAll(enemyTeam);
 		
 		initExecutors();
+
+		gamepadModel = new GamepadModel();
 	}
 
 	/**
@@ -860,5 +865,13 @@ public class World extends Observable {
 	
 	public ArrayList<RobotExecuter> getRobotExecuters(){
 		return robotExecuters;
+	}
+
+	public GamepadModel getGamepadModel() {
+		return gamepadModel;
+	}
+
+	public void setGamepadModel(GamepadModel gamepadModel) {
+		this.gamepadModel = gamepadModel;
 	}
 }
