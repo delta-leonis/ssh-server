@@ -6,6 +6,7 @@ import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.PathIterator;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -28,6 +29,7 @@ public class DijkstraPathPlanner {
 	// then it means we don't want to get within (160mm - 90mm = ) 70mm of any other Robot. (Based on their center points)
 	public static final int DISTANCE_TO_ROBOT = 160;
 	public static final int DISTANCE_TO_BALL = 120;
+	public static final int DISTANCE_TO_POLYGON = 120;
 	// This value is used to determine the vertex points, which are VERTEX_DISTANCE_TO_ROBOT from the middle points of the robots.
 	public static final int MIN_VERTEX_DISTANCE_TO_ROBOT = 240;
 	public static final int MAX_VERTEX_DISTANCE_TO_ROBOT = 400;
@@ -230,7 +232,6 @@ public class DijkstraPathPlanner {
 		// generate vertices around robots and remove vertices colliding with
 		// robots
 		generateVertices(avoidBall);
-		System.out.println(vertices.size());
 		removeCollidingVertices();
 		
 		// add source and dest to vertices list
@@ -555,7 +556,7 @@ public class DijkstraPathPlanner {
 			if (r.getPosition() != null)
 				objects.add(r.getDangerEllipse(DISTANCE_TO_ROBOT));
 		
-		if(world.getReferee().getAlly().getGoalie() != robotId){
+		if(world.getReferee().getAlly().getGoalie() != robotId){	//TODO
 			objects.add(FieldZone.EAST_NORTH_GOAL.getPolygon());
 			objects.add(FieldZone.EAST_SOUTH_GOAL.getPolygon());
 			objects.add(FieldZone.WEST_NORTH_GOAL.getPolygon());
@@ -634,6 +635,15 @@ public class DijkstraPathPlanner {
 		for(Shape shape : objects){
 			if(shape instanceof Polygon){
 				Polygon poly = (Polygon)shape;
+				FieldPoint center = new FieldPoint(poly.getBounds().getCenterX(), poly.getBounds().getCenterY());
+				// Middlepunt naar hoekpunt. Increase distance.
+				for(int i = 0; i < poly.xpoints.length - 1; ++i){
+					FieldPoint corner = new FieldPoint(poly.xpoints[i], poly.ypoints[i]);
+					double angle = center.getAngle(corner);
+					double distance = center.getDeltaDistance(corner);
+					vertices.add(new Vertex(new FieldPoint(center.getX() + Math.cos(angle) * (distance + DISTANCE_TO_POLYGON), 
+															center.getY() + Math.sin(angle) * (distance + DISTANCE_TO_POLYGON))));
+				}
 			}
 		}
 	}
@@ -691,15 +701,29 @@ public class DijkstraPathPlanner {
 	 * @return true when an object is found between the vertices
 	 */
 	protected boolean intersectsObject(Vertex source, Vertex destination) {
+		Line2D line = new Line2D.Double(source.getPosition().getX(), source.getPosition().getY(), destination.getPosition()
+				.getX(), destination.getPosition().getY());
 		for (Shape shape : objects){
 			if(destination.getPosition() != null){
 				if(shape instanceof Ellipse2D){
-					if(new Line2D.Double(source.getPosition().getX(), source.getPosition().getY(), destination.getPosition()
-							.getX(), destination.getPosition().getY()).ptSegDist(shape.getBounds().getCenterX(), shape.getBounds().getCenterY()) < shape.getBounds2D().getWidth()/2){
+					if(line.ptSegDist(shape.getBounds().getCenterX(), shape.getBounds().getCenterY()) < shape.getBounds2D().getWidth()/2){
+						return true;
+					}
+				}
+				else if(shape instanceof Polygon){
+					Polygon poly = (Polygon)shape;
+					if(lineIntersectsPolygon(line, poly)){
 						return true;
 					}
 				}
 			}
+		}
+		return false;
+	}
+	
+	protected boolean lineIntersectsPolygon(Line2D line, Polygon polygon){
+		for(int i = 0; i < polygon.npoints - 1; ++i){
+			new Line2D.Double(polygon.xpoints[i], polygon.ypoints[i], polygon.xpoints[i+1], polygon.ypoints[i+1]).intersectsLine(line);
 		}
 		return false;
 	}

@@ -148,10 +148,10 @@ public class GotoPosition {
 		// Handle nulls
 		if (destination == null) {
 			if(target == null){
-				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+				output.send(1, robot.getRobotId(), 0, 0, 0, chipKick, dribble);
 			}
 			else{
-				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(target),0), 0, false);
+				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(target),0), chipKick, dribble);
 			}
 		} 
 		else {
@@ -216,10 +216,10 @@ public class GotoPosition {
 		// Handle nulls
 		if (destination == null) {
 			if(target == null){
-				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+				output.send(1, robot.getRobotId(), 0, 0, 0, chipKick, dribble);
 			}
 			else{
-				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(target),0), 0, false);
+				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(target),0), chipKick, dribble);
 			}
 		} 
 		else {
