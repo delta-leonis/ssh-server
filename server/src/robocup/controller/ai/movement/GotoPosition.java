@@ -206,6 +206,37 @@ public class GotoPosition {
 			chipKick = 0;
 		}
 	}
+	
+	/**
+	 * Function which moves your {@link Robot} to the given position
+	 * without making use of the {@link DijkstraPathPlanner}
+	 * @param speed The speed the robot will move in mm/s
+	 */
+	public void calculateWithoutPathPlanner(int speed){
+		// Handle nulls
+		if (destination == null) {
+			if(target == null){
+				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+			}
+			else{
+				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(target),0), 0, false);
+			}
+		} 
+		else {
+			double rotationToTarget = rotationToDest(target);
+			double rotationToGoal = rotationToDest(destination);
+			
+			// Get the rotation speed, based on the speed we're turning
+			double rotationSpeed = getRotationSpeed(rotationToTarget, speed);
+			
+			// Send the command
+			output.send(1, robot.getRobotId(), (int)rotationToGoal, speed, (int)rotationSpeed, chipKick, dribble);
+			LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + "," + chipKick + "," + dribble);
+			
+			// Set kick back to 0 to prevent kicking twice in a row
+			chipKick = 0;
+		}
+	}
 
 	/**
 	 * Get rotationSpeed, calculates the speed at which to rotate based on degrees left to rotate

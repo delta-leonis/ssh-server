@@ -1,5 +1,6 @@
 package robocup.controller.ai.movement;
 
+import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
@@ -12,6 +13,7 @@ import java.util.LinkedList;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.World;
+import robocup.model.enums.FieldZone;
 
 /**
  * Pathplanner class based on Dijkstra's algorithm
@@ -552,6 +554,13 @@ public class DijkstraPathPlanner {
 		for (Robot r : world.getReferee().getEnemy().getRobotsOnSight())
 			if (r.getPosition() != null)
 				objects.add(r.getDangerEllipse(DISTANCE_TO_ROBOT));
+		
+		if(world.getReferee().getAlly().getGoalie() != robotId){
+			objects.add(FieldZone.EAST_NORTH_GOAL.getPolygon());
+			objects.add(FieldZone.EAST_SOUTH_GOAL.getPolygon());
+			objects.add(FieldZone.WEST_NORTH_GOAL.getPolygon());
+			objects.add(FieldZone.WEST_SOUTH_GOAL.getPolygon());
+		}
 		if(avoidBall){
 			//Add ball
 			objects.add(world.getBall().getDangerRectangle(DISTANCE_TO_BALL));
@@ -620,6 +629,12 @@ public class DijkstraPathPlanner {
 			vertices.add(new Vertex(new FieldPoint(x, y - vertexDistance)));
 			vertices.add(new Vertex(new FieldPoint(x - vertexDistance, y)));
 			vertices.add(new Vertex(new FieldPoint(x, y + vertexDistance)));
+		}
+		
+		for(Shape shape : objects){
+			if(shape instanceof Polygon){
+				Polygon poly = (Polygon)shape;
+			}
 		}
 	}
 	
