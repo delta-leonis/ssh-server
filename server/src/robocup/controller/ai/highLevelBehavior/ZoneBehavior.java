@@ -87,30 +87,30 @@ public class ZoneBehavior extends Behavior {
 			LOGGER.info("Event: " + event.name());
 			switch (event) {
 			case BALL_ALLY_CAPTURE:
-				currentMode = chooseAttackStrategy(executers);
+				if (world.getGameState() == GameState.NORMAL_PLAY)
+					currentMode = chooseAttackStrategy(executers);
 				break;
 			case BALL_ENEMY_CAPTURE:
-				currentMode = chooseDefenseStrategy(executers);
+				if (world.getGameState() == GameState.NORMAL_PLAY)
+					currentMode = chooseDefenseStrategy(executers);
 				break;
 			case BALL_ALLY_CHANGEOWNER:
 			case BALL_ENEMY_CHANGEOWNER:
 				currentMode.assignRoles();
 				break;
 			case BALL_MOVESPAST_MIDLINE:
-				if (world.allyHasBall())
-					currentMode = chooseAttackStrategy(executers);
-				else
+				if (world.allyHasBall()) {
+					if (world.getGameState() == GameState.NORMAL_PLAY)
+						currentMode = chooseAttackStrategy(executers);
+				} else if (world.getGameState() == GameState.NORMAL_PLAY)
 					currentMode = chooseDefenseStrategy(executers);
 				break;
 			case BALL_MOVESPAST_NORTHSOUTH:
 				currentMode.assignRoles();
 				break;
 			case ROBOT_ENEMY_ATTACKCOUNT_CHANGE:
-				if (world.getAttackingEnemiesCount() > 3)
+				if (world.getAttackingEnemiesCount() > 3 && world.getGameState() == GameState.NORMAL_PLAY)
 					// choose ultra defense strategy
-					currentMode = chooseDefenseStrategy(executers);
-				else
-					// choose normal defense strategy
 					currentMode = chooseDefenseStrategy(executers);
 				break;
 			case REFEREE_NEWCOMMAND:
@@ -118,10 +118,11 @@ public class ZoneBehavior extends Behavior {
 				break;
 			case GAMESTATE_CHANGED:
 				if (world.getGameState() == GameState.NORMAL_PLAY)
-					if (world.allyHasBall())
+					if (world.allyHasBall()) {
 						currentMode = chooseAttackStrategy(executers);
-					else
+					} else {
 						currentMode = chooseDefenseStrategy(executers);
+					}
 				break;
 			default:
 				break;
