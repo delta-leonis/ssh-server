@@ -6,6 +6,7 @@ import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.PathIterator;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -28,6 +29,7 @@ public class DijkstraPathPlanner {
 	// then it means we don't want to get within (160mm - 90mm = ) 70mm of any other Robot. (Based on their center points)
 	public static final int DISTANCE_TO_ROBOT = 160;
 	public static final int DISTANCE_TO_BALL = 120;
+	public static final int DISTANCE_TO_POLYGON = 120;
 	// This value is used to determine the vertex points, which are VERTEX_DISTANCE_TO_ROBOT from the middle points of the robots.
 	public static final int MIN_VERTEX_DISTANCE_TO_ROBOT = 240;
 	public static final int MAX_VERTEX_DISTANCE_TO_ROBOT = 400;
@@ -634,6 +636,15 @@ public class DijkstraPathPlanner {
 		for(Shape shape : objects){
 			if(shape instanceof Polygon){
 				Polygon poly = (Polygon)shape;
+				FieldPoint center = new FieldPoint(poly.getBounds().getCenterX(), poly.getBounds().getCenterY());
+				// Middlepunt naar hoekpunt. Increase distance.
+				for(int i = 0; i < poly.xpoints.length - 1; ++i){
+					FieldPoint corner = new FieldPoint(poly.xpoints[i], poly.ypoints[i]);
+					double angle = center.getAngle(corner);
+					double distance = center.getDeltaDistance(corner);
+					vertices.add(new Vertex(new FieldPoint(center.getX() + Math.cos(angle) * (distance + DISTANCE_TO_POLYGON), 
+															center.getY() + Math.sin(angle) * (distance + DISTANCE_TO_POLYGON))));
+				}
 			}
 		}
 	}

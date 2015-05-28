@@ -93,7 +93,7 @@ public abstract class Mode {
 					closestRobot.setRole(role);
 					closestRobot.setPreferredZone(zone);
 				}
-			} else if(role == RobotMode.DISTURBER || role == RobotMode.ATTACKER){
+			} else if((role == RobotMode.DISTURBER || role == RobotMode.ATTACKER) && getClosestAllyToBall() != null){
 				getClosestAllyToBall().setRole(role);
 			} else {
 				ArrayList<Ally> allyRobots = getAllyRobotsWithoutRole();
