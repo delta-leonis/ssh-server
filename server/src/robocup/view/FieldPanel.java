@@ -570,7 +570,6 @@ public class FieldPanel extends JPanel {
 			}
 			
 			if(pathPlanner.getCopyOfObjects() != null){
-				System.out.println("Geen shit.");
 				g.setColor(new Color(222, 168, 176));
 				for(Shape shape : pathPlanner.getCopyOfObjects()){
 					if(shape instanceof Polygon){
@@ -578,9 +577,6 @@ public class FieldPanel extends JPanel {
 					}
 //					((Graphics2D)g).draw(shape);
 				}
-			}
-			else{
-				System.out.println("Shit.");
 			}
 			
 			if(path != null && !path.isEmpty())
