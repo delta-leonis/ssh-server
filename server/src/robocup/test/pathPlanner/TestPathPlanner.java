@@ -4,8 +4,6 @@ package robocup.test.pathPlanner;
 import static org.junit.Assert.assertNull;
 
 import java.awt.Shape;
-import java.awt.geom.Rectangle2D;
-
 import javax.swing.JFrame;
 
 import org.junit.Assert;

@@ -43,8 +43,6 @@ public class FieldPanel extends JPanel {
 
 	private World world = World.getInstance();
 
-	private int updateCounter;
-
 	private boolean showFreeShot;
 	private boolean showRaster;
 	private boolean showRobots;
@@ -571,12 +569,21 @@ public class FieldPanel extends JPanel {
 			
 			if(pathPlanner.getCopyOfObjects() != null){
 				g.setColor(new Color(222, 168, 176));
+				((Graphics2D)g).setStroke(new BasicStroke(4));
+
 				for(Shape shape : pathPlanner.getCopyOfObjects()){
 					if(shape instanceof Polygon){
-						g.drawPolygon((Polygon)shape);
+						Polygon polygon = (Polygon)shape;
+						Polygon result = new Polygon();
+						for(int i = 0; i < polygon.npoints; ++i){
+							Point2D point = new FieldPoint(polygon.xpoints[i], polygon.ypoints[i]).toGUIPoint(ratio, mirror);
+							result.addPoint((int)point.getX() + spaceBufferX, (int)point.getY() + spaceBufferY);
+						}
+						g.drawPolygon(result);
 					}
-//					((Graphics2D)g).draw(shape);
 				}
+				((Graphics2D)g).setStroke(new BasicStroke(1));
+
 			}
 			
 			if(path != null && !path.isEmpty())
