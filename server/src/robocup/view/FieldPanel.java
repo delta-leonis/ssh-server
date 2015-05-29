@@ -135,11 +135,10 @@ size of the {@link JFrame} the {@link FieldPanel} should be in.
 	private void drawVectors(Graphics g, double ratio){
 		if(!showRobots || !showVectors)
 			return;
-		
-		for(Robot robot : World.getInstance().getReferee().getAlly().getRobots()){
-			Ally ally = (Ally)robot;
-			if(ally.getDirection() == null || ally.getPosition() == null || ally.getSpeed() == 0.0)
-				continue;
+
+		for(RobotExecuter executer : world.getRobotExecuters()){
+			if(executer.getLowLevelBehavior() != null && executer.getLowLevelBehavior().getGotoPosition() != null)
+				drawVector(g, ratio, executer.getLowLevelBehavior().getGotoPosition());
 		}
 
 	}
