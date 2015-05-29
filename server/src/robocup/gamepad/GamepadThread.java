@@ -103,14 +103,15 @@ public class GamepadThread extends Thread {
 
 	private int calculateKickChip() {
 		int chipKick = 0;
-		if(kickButton.getPollData() != 0.0f && System.currentTimeMillis() - kickButtonTime > 1000) {
+		if(kickButton.getPollData() != 0.0f && System.currentTimeMillis() - kickButtonTime > 250) {
 			chipKick = (int) (Math.round(Math.abs(forceTrigger.getPollData()*100)));
 			kickButtonTime = System.currentTimeMillis();
 		}
-		if(chipButton.getPollData() != 0.0f && System.currentTimeMillis() - chipButtonTime > 1000) {
+		if(chipButton.getPollData() != 0.0f && System.currentTimeMillis() - chipButtonTime > 250) {
 			chipKick = (int) (Math.round(Math.abs(forceTrigger.getPollData()*100))) * -1;
 			chipButtonTime = System.currentTimeMillis();
 		}
+		System.out.println(Math.abs(forceTrigger.getPollData()*100));
 		return chipKick;
 	}
 
