@@ -88,7 +88,8 @@ public class FieldPanel extends JPanel {
 	}
 
 	/**
-	 * Function to get the size of the {@link JFrame} the {@link FieldPanel} should be in.
+	 * Function to get the ../server/dist/
+size of the {@link JFrame} the {@link FieldPanel} should be in.
 	 * @return height of the {@link JFrame} the {@link FieldPanel} should be in.
 	 */
 	public int getFrameSizeY() {
