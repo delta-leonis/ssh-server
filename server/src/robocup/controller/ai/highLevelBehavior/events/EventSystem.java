@@ -87,7 +87,7 @@ public class EventSystem {
 				if (currentBallOwner instanceof Ally) //Previous Enemy, current Ally
 					return Event.BALL_ALLY_CAPTURE;
 
-				else if (previousBallOwner.getRobotId() != currentBallOwner.getRobotId()) //Enemy retains possession of ball
+				else if (previousBallOwner != null && currentBallOwner != null && previousBallOwner.getRobotId() != currentBallOwner.getRobotId()) //Enemy retains possession of ball
 					return Event.BALL_ENEMY_CHANGEOWNER;
 			}
 		}
