@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
@@ -21,15 +22,16 @@ public class GamepadSection extends SectionBox {
 	private boolean useGamepad = false;
 	private boolean useCamera = true;
 
-	JTextField gamepadConnectedField;
-	JButton gamepadUseButton;
-	JButton cameraUseButton;
+	private JTextField gamepadConnectedField;
+	private JButton gamepadUseButton;
+	private JCheckBox cameraUseCheckBox;
 
 	public GamepadSection() {
 		super("Gamepad Section");
 		this.setLayout(new MigLayout("wrap", "[grow]", "[grow]"));
 		gamepadModel = World.getInstance().getGamepadModel();
-		ButtonListener listener = new ButtonListener();
+		ButtonListener buttonListener = new ButtonListener();
+		CheckBoxListener checkBoxListener = new CheckBoxListener();
 
 		gamepadConnectedField = new JTextField();
 		gamepadConnectedField.setEnabled(false);
@@ -37,45 +39,37 @@ public class GamepadSection extends SectionBox {
 		add(gamepadConnectedField, "growx, wrap");
 
 		gamepadUseButton = new JButton("Start using gamepad");
-		gamepadUseButton.addActionListener(listener);
+		gamepadUseButton.addActionListener(buttonListener);
 		gamepadUseButton.setName("gamepadUse");
 		add(gamepadUseButton, "growx, split");
 		
-		cameraUseButton = new JButton("Stop using camera's");
-		cameraUseButton.addActionListener(listener);
-		cameraUseButton.setName("cameraUse");
-		add(cameraUseButton, "growx");
+		cameraUseCheckBox = new JCheckBox("Use camera's");
+		cameraUseCheckBox.addActionListener(checkBoxListener);
+		cameraUseCheckBox.setName("cameraUse");
+		add(cameraUseCheckBox, "growx");
+	}
+
+	private class CheckBoxListener implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			useCamera = !useCamera;
+			if (useCamera && useGamepad) {
+				gamepadModel.getGamepadThread().stop(true);
+				gamepadModel.setGamepadThread(new GamepadThread(gamepadModel, useCamera));
+				gamepadModel.getGamepadThread().start();
+			}
+		}
 	}
 
 	private class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			String buttonText = ((JButton) e.getSource()).getName();
-			switch (buttonText) {
-			case "gamepadUse":
-				useGamepad = !useGamepad;
-				if (useGamepad) {
-					gamepadUseButton.setText("Stop using gamepad");
-					gamepadModel.setGamepadThread(new GamepadThread(gamepadModel, useCamera));
-					gamepadModel.getGamepadThread().start();
-				} else {
-					gamepadUseButton.setText("Start using gamepad");
-					gamepadModel.getGamepadThread().stop(true);
-				}
-				break;
-			case "cameraUse":
-				useCamera = !useCamera;
-				if (useCamera) {
-					cameraUseButton.setText("Stop using camera");
-					gamepadModel.getGamepadThread().stop(true);
-					gamepadModel.setGamepadThread(new GamepadThread(gamepadModel, useCamera));
-					gamepadModel.getGamepadThread().start();
-				} else {
-					cameraUseButton.setText("Start using camera");
-					gamepadModel.getGamepadThread().stop(true);
-					gamepadModel.setGamepadThread(new GamepadThread(gamepadModel, useCamera));
-					gamepadModel.getGamepadThread().start();
-				}
-				break;
+			useGamepad = !useGamepad;
+			if (useGamepad) {
+				gamepadUseButton.setText("Stop using gamepad");
+				gamepadModel.setGamepadThread(new GamepadThread(gamepadModel, useCamera));
+				gamepadModel.getGamepadThread().start();
+			} else {
+				gamepadUseButton.setText("Start using gamepad");
+				gamepadModel.getGamepadThread().stop(true);
 			}
 		}
 	}

@@ -31,7 +31,7 @@ public class ZoneBehavior extends Behavior {
 
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private World world;
-	private Mode currentMode; // AttackMode or DefenseMode
+	public Mode currentMode; // AttackMode or DefenseMode
 	private EventSystem events;
 	private Referee referee;
 	private ArrayList<AttackMode> attackModes;
@@ -61,6 +61,7 @@ public class ZoneBehavior extends Behavior {
 //		defenseModes.add(new DefenseMode(new ForwardDefending(), executers));
 //		defenseModes.add(new DefenseMode(new ZonallyBackward(), executers));
 //		defenseModes.add(new DefenseMode(new ZonallyForward(), executers));
+		currentMode = new StandardMode(new KickOffDefense(), executers);
 	}
 
 	/**
@@ -206,9 +207,9 @@ public class ZoneBehavior extends Behavior {
 			break;
 		case NORMAL_START:
 			if (world.allyHasBall()) {
-				currentMode = chooseAttackStrategy(executers);
+				returnMode = chooseAttackStrategy(executers);
 			} else {
-				currentMode = chooseDefenseStrategy(executers);
+				returnMode = chooseDefenseStrategy(executers);
 			}
 			break;
 		case PREPARE_KICKOFF_BLUE:
