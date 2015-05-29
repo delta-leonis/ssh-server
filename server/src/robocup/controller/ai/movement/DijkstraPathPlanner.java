@@ -6,7 +6,6 @@ import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
-import java.beans.DesignMode;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -578,9 +577,6 @@ public class DijkstraPathPlanner {
 	 */
 	protected void generateVertices(boolean avoidBall) {
 		vertices.clear();
-		double radians45 = Math.toRadians(45);
-		double radians22 = Math.toRadians(22.5);
-		double radians68 = Math.toRadians(67.5);
 		for (Robot robot : world.getAllRobotsOnSight()) {
 			if(robot.getPosition() != null){
 				double x = robot.getPosition().getX();
