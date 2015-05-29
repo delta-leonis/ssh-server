@@ -5,9 +5,8 @@ import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
-import java.awt.geom.PathIterator;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.beans.DesignMode;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -220,6 +219,10 @@ public class DijkstraPathPlanner {
 
 		generateObjectList(robotId, avoidBall);
 		copyOfObjects = (ArrayList<Shape>)objects.clone();
+		
+		if(isInsidePolygon(new Vertex(destination).toRect())){
+			return null;
+		}
 
 		// no object on route
 		if (!intersectsObject(new Vertex(beginNode), new Vertex(destination))) {
@@ -334,9 +337,7 @@ public class DijkstraPathPlanner {
 		Vertex destination = new Vertex(endNode);
 		destination.setRemovable(false);
 		vertices.add(destination);
-
-		// TODO: Create new destination if we collide with something
-
+		
 		if (isInsideObject(destination.toRect())) {
 			destination.setStuck(true);
 			double x = endNode.getX();
@@ -556,7 +557,7 @@ public class DijkstraPathPlanner {
 			if (r.getPosition() != null)
 				objects.add(r.getDangerEllipse(DISTANCE_TO_ROBOT));
 		
-		if(world.getReferee().getAlly().getGoalie() != robotId){	//TODO
+		if(world.getReferee().getAlly().getGoalie() != robotId){
 			objects.add(FieldZone.EAST_NORTH_GOAL.getPolygon());
 			objects.add(FieldZone.EAST_SOUTH_GOAL.getPolygon());
 			objects.add(FieldZone.WEST_NORTH_GOAL.getPolygon());
@@ -701,10 +702,10 @@ public class DijkstraPathPlanner {
 	 * @return true when an object is found between the vertices
 	 */
 	protected boolean intersectsObject(Vertex source, Vertex destination) {
-		Line2D line = new Line2D.Double(source.getPosition().getX(), source.getPosition().getY(), destination.getPosition()
-				.getX(), destination.getPosition().getY());
-		for (Shape shape : objects){
-			if(destination.getPosition() != null){
+		if(source.getPosition() != null || destination.getPosition() != null){
+			Line2D line = new Line2D.Double(source.getPosition().getX(), source.getPosition().getY(), destination.getPosition()
+					.getX(), destination.getPosition().getY());
+			for (Shape shape : objects){
 				if(shape instanceof Ellipse2D){
 					if(line.ptSegDist(shape.getBounds().getCenterX(), shape.getBounds().getCenterY()) < shape.getBounds2D().getWidth()/2){
 						return true;
@@ -715,7 +716,7 @@ public class DijkstraPathPlanner {
 					if(lineIntersectsPolygon(line, poly)){
 						return true;
 					}
-				}
+				}	
 			}
 		}
 		return false;
@@ -723,7 +724,23 @@ public class DijkstraPathPlanner {
 	
 	protected boolean lineIntersectsPolygon(Line2D line, Polygon polygon){
 		for(int i = 0; i < polygon.npoints - 1; ++i){
-			new Line2D.Double(polygon.xpoints[i], polygon.ypoints[i], polygon.xpoints[i+1], polygon.ypoints[i+1]).intersectsLine(line);
+			Line2D line2 = new Line2D.Double(polygon.xpoints[i], polygon.ypoints[i], polygon.xpoints[i+1], polygon.ypoints[i+1]);
+			if(line2.intersectsLine(line)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	protected boolean isInsidePolygon(Shape r){
+		for(Shape shape : objects) {
+			if(shape instanceof Polygon){
+				Area areaA = new Area(shape);
+				areaA.intersect(new Area(r));
+				if(!areaA.isEmpty()){
+					return true;
+				}
+			}
 		}
 		return false;
 	}

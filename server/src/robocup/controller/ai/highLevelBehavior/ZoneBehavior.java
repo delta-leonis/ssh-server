@@ -31,7 +31,7 @@ public class ZoneBehavior extends Behavior {
 
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private World world;
-	private Mode currentMode; // AttackMode or DefenseMode
+	public Mode currentMode; // AttackMode or DefenseMode
 	private EventSystem events;
 	private Referee referee;
 	private ArrayList<AttackMode> attackModes;
@@ -61,6 +61,7 @@ public class ZoneBehavior extends Behavior {
 //		defenseModes.add(new DefenseMode(new ForwardDefending(), executers));
 //		defenseModes.add(new DefenseMode(new ZonallyBackward(), executers));
 //		defenseModes.add(new DefenseMode(new ZonallyForward(), executers));
+		currentMode = new StandardMode(new KickOffDefense(), executers);
 	}
 
 	/**
@@ -177,7 +178,11 @@ public class ZoneBehavior extends Behavior {
 			}
 			break;
 		case FORCE_START:
-			// Cannot be reached as this command is already handled, so return null
+			if (world.allyHasBall()) {
+				currentMode = chooseAttackStrategy(executers);
+			} else {
+				currentMode = chooseDefenseStrategy(executers);
+			}
 			break;
 		case GOAL_BLUE:
 		case GOAL_YELLOW:
@@ -201,7 +206,11 @@ public class ZoneBehavior extends Behavior {
 			}
 			break;
 		case NORMAL_START:
-			// Cannot be reached as this command is already handled, so return null
+			if (world.allyHasBall()) {
+				returnMode = chooseAttackStrategy(executers);
+			} else {
+				returnMode = chooseDefenseStrategy(executers);
+			}
 			break;
 		case PREPARE_KICKOFF_BLUE:
 			if (referee.getAllyTeamColor() == TeamColor.BLUE) {
@@ -235,9 +244,6 @@ public class ZoneBehavior extends Behavior {
 		case TIMEOUT_BLUE:
 		case TIMEOUT_YELLOW:
 			returnMode = new StandardMode(new GameStop(), executers);
-			break;
-		default:
-			returnMode = null;
 			break;
 		}
 

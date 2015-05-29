@@ -8,7 +8,6 @@ import robocup.Main;
 import robocup.model.FieldObject;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
-import robocup.model.World;
 import robocup.output.ComInterface;
 
 /**
@@ -22,7 +21,7 @@ import robocup.output.ComInterface;
  */
 public class GotoPosition {
 
-	private static final int DISTANCE_TO_SLOW_DOWN = 100;	// Distance at which we start slowing down in millimeters.
+	private static final int DISTANCE_TO_SLOW_DOWN = 200;	// Distance at which we start slowing down in millimeters.
 	private static final int MAX_VELOCITY = 3000;
 	
 	private double DISTANCE_ROTATIONSPEED_COEFFICIENT = 12;
@@ -39,6 +38,7 @@ public class GotoPosition {
 	private boolean dribble = false;
 	private DijkstraPathPlanner dplanner;
 	private LinkedList<FieldPoint> route;
+	private double currentSpeed;
 	
 	// calculate total circumference of robot
 	private static final double circumference = (Robot.DIAMETER * Math.PI);
@@ -156,9 +156,9 @@ public class GotoPosition {
 		} 
 		else {
 			// Dribble when the ball is close by
-			dribble = Math.abs(
-					robot.getOrientation() - robot.getPosition().getAngle(World.getInstance().getBall().getPosition())) < 20
-					&& robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition()) < Robot.DIAMETER / 2 + 200;
+//			dribble = Math.abs(
+//					robot.getOrientation() - robot.getPosition().getAngle(World.getInstance().getBall().getPosition())) < 20
+//					&& robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition()) < Robot.DIAMETER / 2 + 200;
 			// Calculate the route using the DijkstraPathPlanner
 			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), avoidBall);
 			// If robot is locked up, the route will be null
@@ -198,6 +198,8 @@ public class GotoPosition {
 				speed = getSpeed(getDistance(), DISTANCE_TO_SLOW_DOWN/3, forcedSpeed);
 			}
 			
+			currentSpeed = speed;
+			
 			// Send the command
 			output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, chipKick, dribble);
 			LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + "," + chipKick + "," + dribble);
@@ -205,6 +207,10 @@ public class GotoPosition {
 			// Set kick back to 0 to prevent kicking twice in a row
 			chipKick = 0;
 		}
+	}
+	
+	public double getCurrentSpeed(){
+		return currentSpeed;
 	}
 	
 	/**
@@ -238,6 +244,7 @@ public class GotoPosition {
 				rotationSpeed = getRotationSpeed(rotationToTarget, speed);
 			}
 			
+			currentSpeed = speed;
 			// Send the command
 			output.send(1, robot.getRobotId(), (int)rotationToGoal, speed, (int)rotationSpeed, chipKick, dribble);
 			LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + "," + chipKick + "," + dribble);

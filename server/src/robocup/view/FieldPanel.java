@@ -43,8 +43,6 @@ public class FieldPanel extends JPanel {
 
 	private World world = World.getInstance();
 
-	private int updateCounter;
-
 	private boolean showFreeShot;
 	private boolean showRaster;
 	private boolean showRobots;
@@ -52,6 +50,8 @@ public class FieldPanel extends JPanel {
 	private boolean showBall;
 	private boolean showCoords;
 	private boolean mirror;
+	
+	private int updateCounter;
 	
 	private boolean showPathPlanner;
 	private boolean drawNeighbours;
@@ -62,6 +62,8 @@ public class FieldPanel extends JPanel {
 	private int FPS;
 
 	private long lastFPSpaint;
+
+	private boolean showVectors;
 
 	/**
 	 * Constructor of {@link FieldPanel}. The panel size is set and the mouseListener is added for 
@@ -96,7 +98,8 @@ public class FieldPanel extends JPanel {
 	}
 
 	/**
-	 * Function to get the size of the {@link JFrame} the {@link FieldPanel} should be in.
+	 * Function to get the ../server/dist/
+size of the {@link JFrame} the {@link FieldPanel} should be in.
 	 * @return height of the {@link JFrame} the {@link FieldPanel} should be in.
 	 */
 	public int getFrameSizeY() {
@@ -126,6 +129,18 @@ public class FieldPanel extends JPanel {
 		drawBall(g, ratio);
 		drawCoords(g, ratio);
 		drawFPS(g, ratio);
+		drawVectors(g, ratio);
+	}
+	
+	private void drawVectors(Graphics g, double ratio){
+		if(!showRobots || !showVectors)
+			return;
+
+		for(RobotExecuter executer : world.getRobotExecuters()){
+			if(executer.getLowLevelBehavior() != null && executer.getLowLevelBehavior().getGotoPosition() != null)
+				drawVector(g, ratio, executer.getLowLevelBehavior().getGotoPosition());
+		}
+
 	}
 
 	private void drawFPS(Graphics g, double ratio){
@@ -532,16 +547,14 @@ public class FieldPanel extends JPanel {
 		if (!showPathPlanner)
 			return;
 		
-		ArrayList<RobotExecuter> robotExecuters = world.getRobotExecuters();
-		
-		for(RobotExecuter executer : robotExecuters){
+		for(RobotExecuter executer : world.getRobotExecuters()){
 			if(executer.getLowLevelBehavior() != null && executer.getLowLevelBehavior().getGotoPosition() != null)
-				drawIndividualPath(g, ratio, executer.getLowLevelBehavior().getGotoPosition().getPathPlanner());
+				drawIndividualPath(g, ratio, executer.getLowLevelBehavior().getGotoPosition().getPathPlanner(), executer.getRobot().getRobotId());
 		}
 		
 	}
 	
-	private void drawIndividualPath(Graphics g, double ratio, DijkstraPathPlanner pathPlanner){
+	private void drawIndividualPath(Graphics g, double ratio, DijkstraPathPlanner pathPlanner, int robotId){
 		if(pathPlanner != null){
 			LinkedList<FieldPoint> path = pathPlanner.getCurrentRoute();
 			if(drawVertices){
@@ -557,8 +570,8 @@ public class FieldPanel extends JPanel {
 							g.drawString("nRmvbl", x, y);
 						}
 						g.drawOval(x - 5, y - 5, 10, 10);
+						g.setColor(Color.WHITE);
 						if (drawNeighbours) {
-							g.setColor(new Color(50, 100, 200));
 							for (Vertex neighbour : vertex.getNeighbours()) {
 								int x2 = (int) neighbour.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX;
 								int y2 = (int) neighbour.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY;
@@ -570,21 +583,44 @@ public class FieldPanel extends JPanel {
 			}
 			
 			if(pathPlanner.getCopyOfObjects() != null){
-				System.out.println("Geen shit.");
 				g.setColor(new Color(222, 168, 176));
+				((Graphics2D)g).setStroke(new BasicStroke(4));
+
 				for(Shape shape : pathPlanner.getCopyOfObjects()){
 					if(shape instanceof Polygon){
-						g.drawPolygon((Polygon)shape);
+						Polygon polygon = (Polygon)shape;
+						Polygon result = new Polygon();
+						for(int i = 0; i < polygon.npoints; ++i){
+							Point2D point = new FieldPoint(polygon.xpoints[i], polygon.ypoints[i]).toGUIPoint(ratio, mirror);
+							result.addPoint((int)point.getX() + spaceBufferX, (int)point.getY() + spaceBufferY);
+						}
+						g.drawPolygon(result);
 					}
-//					((Graphics2D)g).draw(shape);
 				}
+				((Graphics2D)g).setStroke(new BasicStroke(1));
+
+			}
+			int x = (int)pathPlanner.getDestination().toGUIPoint(ratio, mirror).getX() + spaceBufferX;
+			int y = (int)pathPlanner.getDestination().toGUIPoint(ratio,mirror).getY() + spaceBufferY;
+			if(path != null && !path.isEmpty()){
+				drawPath(g, path, pathPlanner.getSource(), pathPlanner.getDestination(), ratio);
+				g.setColor(Color.GREEN);
+				((Graphics2D)g).setStroke(new BasicStroke(5));
+				g.drawOval(x - 10, y - 10, 20, 20);
+				((Graphics2D)g).setStroke(new BasicStroke(1));
+				g.drawString(""+robotId, x+20, y);
+
 			}
 			else{
-				System.out.println("Shit.");
+				if(pathPlanner.getDestination() != null){
+					g.setColor(Color.RED);
+					((Graphics2D)g).setStroke(new BasicStroke(5));
+					g.drawOval(x - 10, y - 10, 20, 20);
+					((Graphics2D)g).setStroke(new BasicStroke(1));
+					g.drawString(""+robotId, x+20, y);
+				}
 			}
-			
-			if(path != null && !path.isEmpty())
-				drawPath(g, path, pathPlanner.getSource(), pathPlanner.getDestination(), ratio);
+
 		}
 	}
 	
