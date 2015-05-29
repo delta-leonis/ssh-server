@@ -46,7 +46,7 @@ public class Main {
 		LOGGER.info("Handlers initialized");
 		initHandlers();
 		LOGGER.info("Main initialized");
-        new robocup.controller.ai.Main();
+        new robocup.controller.ai.AiExecuter().start();
 	}
 
 	/**

@@ -359,17 +359,19 @@ public class World extends Observable {
 		double minDistance = -1.0;
 		Robot minDistanceRobot = null;
 
-		for (Robot robot : robots) {
-			if (minDistance == -1.0) {
-				minDistanceRobot = robot;
-				minDistance = robot.getPosition().getDeltaDistance(ball.getPosition());
-			} else {
-				if(robot.getPosition() != null){
-					double distance = robot.getPosition().getDeltaDistance(ball.getPosition());
-	
-					if (distance < minDistance) {
-						minDistanceRobot = robot;
-						minDistance = distance;
+		if (ball.getPosition() != null) {
+			for (Robot robot : robots) {
+				if (minDistance == -1.0) {
+					minDistanceRobot = robot;
+					minDistance = robot.getPosition().getDeltaDistance(ball.getPosition());
+				} else {
+					if (robot.getPosition() != null) {
+						double distance = robot.getPosition().getDeltaDistance(ball.getPosition());
+
+						if (distance < minDistance) {
+							minDistanceRobot = robot;
+							minDistance = distance;
+						}
 					}
 				}
 			}
