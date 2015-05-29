@@ -38,6 +38,7 @@ public class GotoPosition {
 	private boolean dribble = false;
 	private DijkstraPathPlanner dplanner;
 	private LinkedList<FieldPoint> route;
+	private double currentSpeed;
 	
 	// calculate total circumference of robot
 	private static final double circumference = (Robot.DIAMETER * Math.PI);
@@ -197,6 +198,8 @@ public class GotoPosition {
 				speed = getSpeed(getDistance(), DISTANCE_TO_SLOW_DOWN/3, forcedSpeed);
 			}
 			
+			currentSpeed = speed;
+			
 			// Send the command
 			output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, chipKick, dribble);
 			LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + "," + chipKick + "," + dribble);
@@ -204,6 +207,10 @@ public class GotoPosition {
 			// Set kick back to 0 to prevent kicking twice in a row
 			chipKick = 0;
 		}
+	}
+	
+	public double getCurrentSpeed(){
+		return currentSpeed;
 	}
 	
 	/**
@@ -237,6 +244,7 @@ public class GotoPosition {
 				rotationSpeed = getRotationSpeed(rotationToTarget, speed);
 			}
 			
+			currentSpeed = speed;
 			// Send the command
 			output.send(1, robot.getRobotId(), (int)rotationToGoal, speed, (int)rotationSpeed, chipKick, dribble);
 			LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + "," + chipKick + "," + dribble);
