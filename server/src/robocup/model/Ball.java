@@ -27,6 +27,7 @@ public class Ball extends FieldObject {
 	public void update(double newTime, FieldPoint p, double posZ, int lastCamUpdateNo) {
 		super.update(p, newTime, lastCamUpdateNo);
 		this.posZ = posZ;
+		World.getInstance().updateState();
 	}
 
 	/**

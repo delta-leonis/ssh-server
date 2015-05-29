@@ -1,5 +1,7 @@
 package robocup.model.enums;
 
+import java.awt.Polygon;
+
 import robocup.model.FieldPoint;
 import robocup.model.World;
 
@@ -367,6 +369,19 @@ public enum FieldZone {
 			}
 		}
 		return closestVertex;
+	}
+	
+	/**
+	 * @returns a {@link Polygon} object of this FieldZone.
+	 */
+	public Polygon getPolygon(){
+		int xpoints[] = new int[vertices.length];
+		int ypoints[] = new int[vertices.length];
+ 		for(int i = 0; i < vertices.length; ++i){
+			xpoints[i] = (int)vertices[i].getX();
+			ypoints[i] = (int)vertices[i].getY();
+		}
+		return new Polygon(xpoints, ypoints, vertices.length);
 	}
 
 	/**

@@ -1,7 +1,6 @@
 package robocup.view;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
@@ -72,8 +71,8 @@ public class RobotBox extends JPanel {
 		}
 	}
 
-	private Color getRoleColor(RobotMode robotMode) {
-		Color[] colors = {Color.BLUE.brighter().brighter(), Color.CYAN, Color.GREEN, Color.MAGENTA, Color.ORANGE, Color.YELLOW};
+	public static Color getRoleColor(RobotMode robotMode) {
+		Color[] colors = {Color.BLUE.brighter().brighter(), Color.CYAN, Color.GREEN, Color.MAGENTA, Color.ORANGE, Color.YELLOW,  Color.RED, new Color(255, 150, 50), new Color(50, 150, 255), new Color(255, 50, 150), Color.PINK};
 		if(robotMode == null)
 			return Color.LIGHT_GRAY;
 		return colors[Math.min(robotMode.ordinal(), colors.length-1)];
@@ -87,7 +86,7 @@ public class RobotBox extends JPanel {
 		robotRole.setText(((Ally)robot).getRole() == null ? "Undefined" : ((Ally)robot).getRole().toString());
 		robotPosition.setText(robot.getPosition() != null ? (int)robot.getPosition().getX() + ", " + (int)robot.getPosition().getY() : "Undefined");
 
-		if(robot.getRobotId() == World.getInstance().getGUI().getSelectedRobotId())
+		if(robot.getRobotId() == World.getInstance().getGUI().getSelectedRobot().getRobotId())
 			setBackground(getRoleColor(((Ally)robot).getRole()).darker());
 		else
 			setBackground(getRoleColor(((Ally)robot).getRole()));

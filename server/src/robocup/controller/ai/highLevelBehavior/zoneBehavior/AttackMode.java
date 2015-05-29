@@ -197,7 +197,8 @@ public class AttackMode extends Mode {
 		Keeper keeper = (Keeper) executer.getLowLevelBehavior();
 
 		int distanceToGoal = (int) world.getField().getEastGoal().getWidth() / 2;
-		boolean goToKick = world.getClosestRobotToBall().equals(executer.getRobot());
+//		boolean goToKick = world.getClosestRobotToBall().equals(executer.getRobot());
+		boolean goToKick = false;
 		FieldPoint ballPosition = ball.getPosition();
 		keeper.update(distanceToGoal, goToKick, ballPosition);
 	}

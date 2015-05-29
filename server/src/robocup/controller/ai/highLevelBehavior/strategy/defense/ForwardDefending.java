@@ -51,5 +51,142 @@ public class ForwardDefending extends Strategy {
 		} else {
 			zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COUNTER, FieldZone.EAST_CENTER));
 		}
+		// TODO: Test
+		updateCoverer1();
+		updateCoverer2();
+	}
+	
+	/**
+	 * Creates zones for a {@link Coverer} which will cover
+	 * 	1 SECOND_POST
+	 * 	2 CORNER
+	 *  3 FRONT
+	 */
+	private void updateCoverer1(){
+		// If we're the east team.
+		if (World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
+			// Check for enemies on second post first
+			if(World.getInstance().getEnemyRobotsInZone(FieldZone.EAST_NORTH_SECONDPOST).size() > 0){
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.EAST_NORTH_SECONDPOST));
+			}
+			else if(World.getInstance().getEnemyRobotsInZone(FieldZone.EAST_SOUTH_SECONDPOST).size() > 0){
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.EAST_SOUTH_SECONDPOST));
+			}
+			// Check for enemies on corner next
+			else if(World.getInstance().getEnemyRobotsInZone(FieldZone.EAST_NORTH_CORNER).size() > 0){
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.EAST_NORTH_CORNER));
+			}
+			else if(World.getInstance().getEnemyRobotsInZone(FieldZone.EAST_SOUTH_CORNER).size() > 0){
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.EAST_SOUTH_CORNER));
+			}
+			// Check for enemies on front after
+			else if(World.getInstance().getEnemyRobotsInZone(FieldZone.EAST_NORTH_FRONT).size() > 0){
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.EAST_NORTH_FRONT));
+			}
+			else if(World.getInstance().getEnemyRobotsInZone(FieldZone.EAST_SOUTH_FRONT).size() > 0){
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.EAST_SOUTH_FRONT));
+			}
+			// If we're clear
+			else{
+				// Stand in the second post opposite to the ball.
+				if(World.getInstance().getBall().getPosition().getY() <= 0){
+					zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.EAST_NORTH_SECONDPOST));
+				}
+				else{
+					zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.EAST_SOUTH_SECONDPOST));
+				}
+			}
+		}else{
+			// Check for enemies on second post first
+			if(World.getInstance().getEnemyRobotsInZone(FieldZone.WEST_NORTH_SECONDPOST).size() > 0){
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.WEST_NORTH_SECONDPOST));
+			}
+			else if(World.getInstance().getEnemyRobotsInZone(FieldZone.WEST_SOUTH_SECONDPOST).size() > 0){
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.WEST_SOUTH_SECONDPOST));
+			}
+			// Check for enemies on corner next
+			else if(World.getInstance().getEnemyRobotsInZone(FieldZone.WEST_NORTH_CORNER).size() > 0){
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.WEST_NORTH_CORNER));
+			}
+			else if(World.getInstance().getEnemyRobotsInZone(FieldZone.WEST_SOUTH_CORNER).size() > 0){
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.WEST_SOUTH_CORNER));
+			}
+			// Check for enemies on front after
+			else if(World.getInstance().getEnemyRobotsInZone(FieldZone.WEST_NORTH_FRONT).size() > 0){
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.WEST_NORTH_FRONT));
+			}
+			else if(World.getInstance().getEnemyRobotsInZone(FieldZone.WEST_SOUTH_FRONT).size() > 0){
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.WEST_SOUTH_FRONT));
+			}
+			// If we're clear
+			else{
+				// Stand in the second post opposite to the ball.
+				if(World.getInstance().getBall().getPosition().getY() <= 0){
+					zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.WEST_NORTH_SECONDPOST));
+				}
+				else{
+					zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.WEST_SOUTH_SECONDPOST));
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Creates zones for a {@link Coverer} which will cover
+	 * 	1 CENTER
+	 * 	2 MIDDLE
+	 *  3 FRONT
+	 */
+	private void updateCoverer2(){
+		// If we're the east team.
+		if (World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())) {
+			// Check for enemies on center first
+			if(World.getInstance().getEnemyRobotsInZone(FieldZone.EAST_CENTER).size() > 0){
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.EAST_CENTER));
+			}
+			
+			// Check for enemies on middle next
+			else if(World.getInstance().getEnemyRobotsInZone(FieldZone.EAST_MIDDLE).size() > 0){
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.EAST_MIDDLE));
+			}
+			// Check for enemies on front after
+			else if(World.getInstance().getEnemyRobotsInZone(FieldZone.EAST_NORTH_FRONT).size() > 0){
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.EAST_NORTH_FRONT));
+			}
+			else if(World.getInstance().getEnemyRobotsInZone(FieldZone.EAST_SOUTH_FRONT).size() > 0){
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.EAST_SOUTH_FRONT));
+			}
+			// If we're clear
+			else{
+				// Going to center is priority
+				if(World.getInstance().getEnemyRobotsInZone(FieldZone.EAST_CENTER).size() > 0){
+					zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.EAST_NORTH_SECONDPOST));
+				}
+			}
+		}else{
+			// Check for enemies on center first
+			if(World.getInstance().getEnemyRobotsInZone(FieldZone.WEST_CENTER).size() > 0){
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.WEST_CENTER));
+			}
+					
+			// Check for enemies on middle next
+			else if(World.getInstance().getEnemyRobotsInZone(FieldZone.WEST_MIDDLE).size() > 0){
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.WEST_MIDDLE));
+			}
+			// Check for enemies on front after
+			else if(World.getInstance().getEnemyRobotsInZone(FieldZone.WEST_NORTH_FRONT).size() > 0){
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.WEST_NORTH_FRONT));
+			}
+			else if(World.getInstance().getEnemyRobotsInZone(FieldZone.WEST_SOUTH_FRONT).size() > 0){
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.WEST_SOUTH_FRONT));
+			}
+			// If we're clear
+			else{
+				// Going to center is priority
+				if(World.getInstance().getEnemyRobotsInZone(FieldZone.WEST_CENTER).size() > 0){
+					zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.WEST_CENTER));
+				}
+			}
+		}
 	}
 }

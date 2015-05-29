@@ -3,8 +3,7 @@ package robocup.test.pathPlanner;
 
 import static org.junit.Assert.assertNull;
 
-import java.awt.geom.Rectangle2D;
-
+import java.awt.Shape;
 import javax.swing.JFrame;
 
 import org.junit.Assert;
@@ -186,7 +185,7 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 		generateObjectList(0, false); // Generate from RobotID's perspective.
 
 		if (log) {
-			for (Rectangle2D r : getObjects()) {
+			for (Shape r : getObjects()) {
 				System.out.println(r);
 			}
 		}

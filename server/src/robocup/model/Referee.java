@@ -15,6 +15,7 @@ public class Referee {
 	private int stagetimeLeft;
 	private Stage stage;
 	private Command command;
+	private Command previousCommand;
 	private int commandCounter;
 	private long lastCommandTimestamp;
 	private boolean start;
@@ -33,6 +34,7 @@ public class Referee {
 	public Referee() {
 		commandCounter = 0;
 		lastCommandTimestamp = 0;
+		previousCommand = Command.HALT;
 		command = Command.HALT;
 		stage = Stage.POST_GAME;
 	}
@@ -48,7 +50,7 @@ public class Referee {
 	}
 
 	/**
- 	 * Method that accepts a list with robots, and adds them to the robotlist of the enemy team
+	 * Method that accepts a list with robots, and adds them to the robotlist of the enemy team
 	 * @param teamRobots the robots from the world mode class
 	 */
 	public void initEnemyTeam(ArrayList<Robot> teamRobots) {
@@ -67,11 +69,15 @@ public class Referee {
 	 * @param stageTimeLeft the time left for the current stage
 	 */
 	public void update(Command command, int commandCounter, long commandTimeStamp, Stage stage, int stageTimeLeft) {
+		if (previousCommand != this.command)
+			previousCommand = this.command;
+
 		this.command = command;
 		this.commandCounter = commandCounter;
 		this.lastCommandTimestamp = commandTimeStamp;
 		this.stagetimeLeft = stageTimeLeft;
 		this.stage = stage;
+		World.getInstance().updateState();
 	}
 
 	/**
@@ -127,6 +133,14 @@ public class Referee {
 	 */
 	public Command getCommand() {
 		return command;
+	}
+
+	/**
+	 * getter method that returns the previous command given by the referee
+	 * @return the previous command
+	 */
+	public Command getPreviousCommand() {
+		return previousCommand;
 	}
 
 	/**
@@ -229,7 +243,7 @@ public class Referee {
 	public Team getEnemy() {
 		return enemyTeam;
 	}
-	
+
 	/**
 	 * @param color The {@link TeamColor} that will be compared
 	 * @return if the {@link Team} that plays east has the given {@link TeamColor}
@@ -264,12 +278,11 @@ public class Referee {
 	 * Set {@link Team} that plays east
 	 * @param Team to be set east
 	 */
-	public void setEastTeam(Team team){
-		if(team.equals(allyTeam)){
+	public void setEastTeam(Team team) {
+		if (team.equals(allyTeam)) {
 			eastTeam = allyTeam;
 			westTeam = enemyTeam;
-		}
-		else {
+		} else {
 			eastTeam = enemyTeam;
 			westTeam = allyTeam;
 		}
@@ -279,12 +292,11 @@ public class Referee {
 	 * Set {@link Team} that plays west
 	 * @param Team to be set west
 	 */
-	public void setWestTeam(Team team){
-		if(team.equals(allyTeam)){
+	public void setWestTeam(Team team) {
+		if (team.equals(allyTeam)) {
 			westTeam = allyTeam;
 			eastTeam = enemyTeam;
-		}
-		else {
+		} else {
 			westTeam = enemyTeam;
 			eastTeam = allyTeam;
 		}

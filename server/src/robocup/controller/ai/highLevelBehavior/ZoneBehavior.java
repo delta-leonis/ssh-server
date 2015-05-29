@@ -24,6 +24,7 @@ import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.model.Referee;
 import robocup.model.World;
 import robocup.model.enums.Event;
+import robocup.model.enums.GameState;
 import robocup.model.enums.TeamColor;
 
 public class ZoneBehavior extends Behavior {
@@ -86,34 +87,44 @@ public class ZoneBehavior extends Behavior {
 			LOGGER.info("Event: " + event.name());
 			switch (event) {
 			case BALL_ALLY_CAPTURE:
-				currentMode = chooseAttackStrategy(executers);
+				if (world.getGameState() == GameState.NORMAL_PLAY)
+					currentMode = chooseAttackStrategy(executers);
 				break;
 			case BALL_ENEMY_CAPTURE:
-				currentMode = chooseDefenseStrategy(executers);
+				if (world.getGameState() == GameState.NORMAL_PLAY)
+					currentMode = chooseDefenseStrategy(executers);
 				break;
 			case BALL_ALLY_CHANGEOWNER:
 			case BALL_ENEMY_CHANGEOWNER:
 				currentMode.assignRoles();
 				break;
 			case BALL_MOVESPAST_MIDLINE:
-				if (world.allyHasBall())
-					currentMode = chooseAttackStrategy(executers);
-				else
+				if (world.allyHasBall()) {
+					if (world.getGameState() == GameState.NORMAL_PLAY)
+						currentMode = chooseAttackStrategy(executers);
+				} else if (world.getGameState() == GameState.NORMAL_PLAY)
 					currentMode = chooseDefenseStrategy(executers);
 				break;
 			case BALL_MOVESPAST_NORTHSOUTH:
 				currentMode.assignRoles();
 				break;
 			case ROBOT_ENEMY_ATTACKCOUNT_CHANGE:
-				if (world.getAttackingEnemiesCount() > 3)
+				if (world.getAttackingEnemiesCount() > 3 && world.getGameState() == GameState.NORMAL_PLAY)
 					// choose ultra defense strategy
-					currentMode = chooseDefenseStrategy(executers);
-				else
-					// choose normal defense strategy
 					currentMode = chooseDefenseStrategy(executers);
 				break;
 			case REFEREE_NEWCOMMAND:
 				currentMode = chooseStandardStrategy(executers);
+				break;
+			case GAMESTATE_CHANGED:
+				if (world.getGameState() == GameState.NORMAL_PLAY)
+					if (world.allyHasBall()) {
+						currentMode = chooseAttackStrategy(executers);
+					} else {
+						currentMode = chooseDefenseStrategy(executers);
+					}
+				break;
+			default:
 				break;
 			}
 		}
@@ -166,7 +177,11 @@ public class ZoneBehavior extends Behavior {
 			}
 			break;
 		case FORCE_START:
-			// Cannot be reached as this command is already handled, so return null
+			if (world.allyHasBall()) {
+				currentMode = chooseAttackStrategy(executers);
+			} else {
+				currentMode = chooseDefenseStrategy(executers);
+			}
 			break;
 		case GOAL_BLUE:
 		case GOAL_YELLOW:
@@ -190,7 +205,11 @@ public class ZoneBehavior extends Behavior {
 			}
 			break;
 		case NORMAL_START:
-			// Cannot be reached as this command is already handled, so return null
+			if (world.allyHasBall()) {
+				currentMode = chooseAttackStrategy(executers);
+			} else {
+				currentMode = chooseDefenseStrategy(executers);
+			}
 			break;
 		case PREPARE_KICKOFF_BLUE:
 			if (referee.getAllyTeamColor() == TeamColor.BLUE) {
@@ -224,9 +243,6 @@ public class ZoneBehavior extends Behavior {
 		case TIMEOUT_BLUE:
 		case TIMEOUT_YELLOW:
 			returnMode = new StandardMode(new GameStop(), executers);
-			break;
-		default:
-			returnMode = null;
 			break;
 		}
 

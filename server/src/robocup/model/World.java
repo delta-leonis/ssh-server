@@ -9,8 +9,10 @@ import java.util.TreeMap;
 import robocup.controller.ai.lowLevelBehavior.Keeper;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.controller.handlers.protohandlers.DetectionHandler;
+import robocup.gamepad.GamepadModel;
 import robocup.model.enums.Command;
 import robocup.model.enums.FieldZone;
+import robocup.model.enums.GameState;
 import robocup.model.enums.TeamColor;
 import robocup.output.ComInterface;
 import robocup.view.GUI;
@@ -44,7 +46,10 @@ public class World extends Observable {
 	
 	private ArrayList<RobotExecuter> robotExecuters;
 
+	private GamepadModel gamepadModel;
 	private ProtoLog protoLog;
+	private GameState currentGameState;
+	private FieldPoint ballPositionForGameState;
 
 	/**
 	 * Constructor for the {@link World} Can only be called as a singleton.
@@ -84,6 +89,10 @@ public class World extends Observable {
 		robotList.addAll(enemyTeam);
 		
 		initExecutors();
+
+		gamepadModel = new GamepadModel();
+		currentGameState = GameState.STOPPED;
+		ballPositionForGameState = null;
 	}
 
 	/**
@@ -94,6 +103,113 @@ public class World extends Observable {
 			instance = new World();
 		}
 		return instance;
+	}
+
+	/**
+	 * Get the current GameState {@link GameState}
+	 * @return the current GameState
+	 */
+	public GameState getGameState() {
+		return currentGameState;
+	}
+
+	/**
+	 * Update the current GameState {@link GameState}
+	 * The game state will be changed depending on referee commands and the ball position
+	 */
+	public void updateState() {
+		switch (currentGameState) {
+		case HALTED:
+			if (referee.getCommand() == Command.STOP)
+				currentGameState = GameState.STOPPED;
+
+			break;
+		case NORMAL_PLAY:
+			if (referee.getCommand() == Command.STOP)
+				currentGameState = GameState.STOPPED;
+			else if (referee.getCommand() == Command.HALT)
+				currentGameState = GameState.HALTED;
+
+			break;
+		case STOPPED:
+			switch (referee.getCommand()) {
+			case DIRECT_FREE_BLUE:
+			case INDIRECT_FREE_BLUE:
+				if (referee.getAlly().getColor() == TeamColor.BLUE)
+					currentGameState = GameState.NORMAL_PLAY;
+				else {
+					currentGameState = GameState.WAITING_FOR_KICKOFF;
+					ballPositionForGameState = ball.getPosition();
+				}
+
+				break;
+			case DIRECT_FREE_YELLOW:
+			case INDIRECT_FREE_YELLOW:
+				if (referee.getAlly().getColor() == TeamColor.YELLOW)
+					currentGameState = GameState.NORMAL_PLAY;
+				else {
+					currentGameState = GameState.WAITING_FOR_KICKOFF;
+					ballPositionForGameState = ball.getPosition();
+				}
+
+				break;
+			case FORCE_START:
+				currentGameState = GameState.NORMAL_PLAY;
+				break;
+			case HALT:
+				currentGameState = GameState.HALTED;
+				break;
+			case PREPARE_KICKOFF_BLUE:
+			case PREPARE_PENALTY_BLUE:
+			case PREPARE_KICKOFF_YELLOW:
+			case PREPARE_PENALTY_YELLOW:
+				currentGameState = GameState.WAITING_FOR_NORMAL_START;
+				break;
+			default:
+				break;
+			}
+
+			break;
+		case TAKING_KICKOFF:
+		case WAITING_FOR_KICKOFF:
+			if (ball.getPosition().getDeltaDistance(ballPositionForGameState) > 100) {
+				ballPositionForGameState = null;
+				currentGameState = GameState.NORMAL_PLAY;
+			}
+
+			break;
+		case WAITING_FOR_NORMAL_START:
+			if (referee.getCommand() == Command.NORMAL_START) {
+				switch (referee.getPreviousCommand()) {
+				case PREPARE_KICKOFF_BLUE:
+				case PREPARE_PENALTY_BLUE:
+					if (referee.getAlly().getColor() == TeamColor.BLUE)
+						currentGameState = GameState.TAKING_KICKOFF;
+					else {
+						currentGameState = GameState.WAITING_FOR_KICKOFF;
+					}
+
+					ballPositionForGameState = ball.getPosition();
+					break;
+				case PREPARE_KICKOFF_YELLOW:
+				case PREPARE_PENALTY_YELLOW:
+					if (referee.getAlly().getColor() == TeamColor.YELLOW)
+						currentGameState = GameState.TAKING_KICKOFF;
+					else {
+						currentGameState = GameState.WAITING_FOR_KICKOFF;
+					}
+
+					ballPositionForGameState = ball.getPosition();
+					break;
+				default:
+					break;
+				}
+			}
+
+			break;
+		default:
+			break;
+		}
 	}
 
 	/**
@@ -217,12 +333,13 @@ public class World extends Observable {
 	public int getAttackingEnemiesCount() {
 		int count = 0;
 		FieldPoint keeperPosition = referee.getAlly().getRobotByID(referee.getAlly().getGoalie()).getPosition();
-
-		for (Robot r : referee.getEnemy().getRobotsOnSight()) {
-			if(r.getPosition()!=null)
-				if (r.getPosition().getX() > 0.0 && keeperPosition.getX() > 0.0 || r.getPosition().getX() < 0.0
-						&& keeperPosition.getX() < 0.0)
-					count++;
+		if(keeperPosition != null){
+			for (Robot r : referee.getEnemy().getRobotsOnSight()) {
+				if(r.getPosition()!=null)
+					if (r.getPosition().getX() > 0.0 && keeperPosition.getX() > 0.0 || r.getPosition().getX() < 0.0
+							&& keeperPosition.getX() < 0.0)
+						count++;
+			}
 		}
 
 		return count;
@@ -864,9 +981,17 @@ public class World extends Observable {
 		return robotExecuters;
 	}
 
+	public GamepadModel getGamepadModel() {
+		return gamepadModel;
+	}
+
 	public ProtoLog getProtoLog() {
 		if(protoLog == null)
 			protoLog = new ProtoLog();
 		return protoLog;
+	}
+
+	public void setGamepadModel(GamepadModel gamepadModel) {
+		this.gamepadModel = gamepadModel;
 	}
 }

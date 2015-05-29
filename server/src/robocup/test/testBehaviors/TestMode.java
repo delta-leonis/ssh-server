@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import robocup.controller.ai.highLevelBehavior.strategy.Strategy;
 import robocup.controller.ai.highLevelBehavior.zoneBehavior.Mode;
 import robocup.controller.ai.lowLevelBehavior.Attacker;
-import robocup.controller.ai.lowLevelBehavior.LowLevelBehavior;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.FieldPoint;
@@ -17,19 +16,13 @@ public class TestMode extends Mode {
 	private RobotExecuter robot;
 	private ArrayList<RobotExecuter> robots;
 	private GotoPosition go;
-	private ArrayList<GotoPosition> goes;
 	private static final int[] robotIDs = new int[]{0,3,6};
-	
-    /** Co-ordinates of the goal on the left side of the field */
-    private static final FieldPoint MID_GOAL_NEGATIVE = new FieldPoint(-3000, 0);
-    /** Co-ordinates of the goal on the right side of the field */
-    private static final FieldPoint MID_GOAL_POSITIVE = new FieldPoint(3000, 0);
 	
 	public TestMode(Strategy strategy) {
 		super(strategy, World.getInstance().getRobotExecuters());
 		
-//		initializeOneRobot();
-		initializeTwoRobots();
+		initializeOneRobot();
+//		initializeTwoRobots();
 //		initializeThreeRobots();
 	}
 	
@@ -53,15 +46,15 @@ public class TestMode extends Mode {
 	
 	@Override
 	public void execute(){
-//		if(World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).getLowLevelBehavior() == null){
-//			World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).setLowLevelBehavior(new Attacker(robot.getRobot()));
-//		}
+		if(World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).getLowLevelBehavior() == null){
+			World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).setLowLevelBehavior(new Attacker(robot.getRobot()));
+		}
 //		testAttacker();
 //		testFollowBallFacing(robot);
-//		testFollowBallMovementFacing(robot);
+		testFollowBallMovementFacing(robot);
 //		testThreeKeeperDefenders(robots, MID_GOAL_NEGATIVE);
 //		testFollowBallMovement(robot);
-		testTwoRobotFollowBall();
+//		testTwoRobotFollowBall();
 	}
 	
 	public void testTwoRobotFollowBall(){
@@ -126,7 +119,7 @@ public class TestMode extends Mode {
 	 */
 	public void testFollowBallMovementFacing(RobotExecuter robot){		
 		go = new GotoPosition(robot.getRobot(), 
-				World.getInstance().getBall().getPosition(),
+				new FieldPoint(World.getInstance().getBall().getPosition().getX() - 100, World.getInstance().getBall().getPosition().getY()),
 				World.getInstance().getBall().getPosition());
 		World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).getLowLevelBehavior().setGotoPosition(go);
 		go.calculate(false);
