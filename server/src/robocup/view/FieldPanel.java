@@ -61,6 +61,8 @@ public class FieldPanel extends JPanel {
 
 	private long lastFPSpaint;
 
+	private boolean showVectors;
+
 	/**
 	 * Constructor of {@link FieldPanel}. The panel size is set and the mouseListener is added for 
 	 * the ball position.
@@ -124,6 +126,19 @@ public class FieldPanel extends JPanel {
 		drawBall(g, ratio);
 		drawCoords(g, ratio);
 		drawFPS(g, ratio);
+		drawVectors(g, ratio);
+	}
+	
+	private void drawVectors(Graphics g, double ratio){
+		if(!showRobots || !showVectors)
+			return;
+		
+		for(Robot robot : World.getInstance().getReferee().getAlly().getRobots()){
+			Ally ally = (Ally)robot;
+			if(ally.getDirection() == null || ally.getPosition() == null || ally.getSpeed() == 0.0)
+				continue;
+		}
+
 	}
 
 	private void drawFPS(Graphics g, double ratio){
@@ -530,9 +545,7 @@ public class FieldPanel extends JPanel {
 		if (!showPathPlanner)
 			return;
 		
-		ArrayList<RobotExecuter> robotExecuters = world.getRobotExecuters();
-		
-		for(RobotExecuter executer : robotExecuters){
+		for(RobotExecuter executer : world.getRobotExecuters()){
 			if(executer.getLowLevelBehavior() != null && executer.getLowLevelBehavior().getGotoPosition() != null)
 				drawIndividualPath(g, ratio, executer.getLowLevelBehavior().getGotoPosition().getPathPlanner());
 		}
