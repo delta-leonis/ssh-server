@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Polygon;
+import java.awt.Shape;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
@@ -41,8 +43,6 @@ public class FieldPanel extends JPanel {
 
 	private World world = World.getInstance();
 
-	private int updateCounter;
-
 	private boolean showFreeShot;
 	private boolean showRaster;
 	private boolean showRobots;
@@ -50,6 +50,8 @@ public class FieldPanel extends JPanel {
 	private boolean showBall;
 	private boolean showCoords;
 	private boolean mirror;
+	
+	private int updateCounter;
 	
 	private boolean showPathPlanner;
 	private boolean drawNeighbours;
@@ -96,7 +98,8 @@ public class FieldPanel extends JPanel {
 	}
 
 	/**
-	 * Function to get the size of the {@link JFrame} the {@link FieldPanel} should be in.
+	 * Function to get the ../server/dist/
+size of the {@link JFrame} the {@link FieldPanel} should be in.
 	 * @return height of the {@link JFrame} the {@link FieldPanel} should be in.
 	 */
 	public int getFrameSizeY() {
@@ -578,8 +581,27 @@ public class FieldPanel extends JPanel {
 						}
 					}
 				}
-			}		
+			}
+			
+			if(pathPlanner.getCopyOfObjects() != null){
+				g.setColor(new Color(222, 168, 176));
+				((Graphics2D)g).setStroke(new BasicStroke(4));
 
+				for(Shape shape : pathPlanner.getCopyOfObjects()){
+					if(shape instanceof Polygon){
+						Polygon polygon = (Polygon)shape;
+						Polygon result = new Polygon();
+						for(int i = 0; i < polygon.npoints; ++i){
+							Point2D point = new FieldPoint(polygon.xpoints[i], polygon.ypoints[i]).toGUIPoint(ratio, mirror);
+							result.addPoint((int)point.getX() + spaceBufferX, (int)point.getY() + spaceBufferY);
+						}
+						g.drawPolygon(result);
+					}
+				}
+				((Graphics2D)g).setStroke(new BasicStroke(1));
+
+			}
+			
 			if(path != null && !path.isEmpty())
 				drawPath(g, path, pathPlanner.getSource(), pathPlanner.getDestination(), ratio);
 		}

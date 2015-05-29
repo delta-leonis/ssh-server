@@ -175,23 +175,24 @@ public class DetectionHandler {
 			}
 
 			FieldPoint filterPoint = new FieldPoint(robotMessage.getX(), robotMessage.getY());
-
-			// deltadistance between predicted and measured point
-			double deltaDistance = filter.getPredictPoint().getDeltaDistance(filterPoint);
-			double xSpeed = (robotMessage.getX() - filter.getLastX());
-			double ySpeed = (robotMessage.getY() - filter.getLastY());
-
-			// Point data after Kalman filtering
-			FieldPoint filteredPoint = filter.filterPoint(filterPoint, xSpeed, ySpeed);
-			filter.predictPoint(); // predict new point for next iteration
-
-			// if predicted and measured points are close update position data
-			if (deltaDistance < 20) {
-				if (robotMessage.hasOrientation()) {
-					double degrees = Math.toDegrees(robotMessage.getOrientation());
-					robot.update(new FieldPoint(filteredPoint.getX(), filteredPoint.getY()), updateTime, degrees, camNo);
-				} else {
-					robot.update(new FieldPoint(filteredPoint.getX(), filteredPoint.getY()), updateTime, camNo);
+			if(filter != null) {
+				// deltadistance between predicted and measured point
+				double deltaDistance = filter.getPredictPoint().getDeltaDistance(filterPoint);
+				double xSpeed = (robotMessage.getX() - filter.getLastX());
+				double ySpeed = (robotMessage.getY() - filter.getLastY());
+	
+				// Point data after Kalman filtering
+				FieldPoint filteredPoint = filter.filterPoint(filterPoint, xSpeed, ySpeed);
+				filter.predictPoint(); // predict new point for next iteration
+	
+				// if predicted and measured points are close update position data
+				if (deltaDistance < 20) {
+					if (robotMessage.hasOrientation()) {
+						double degrees = Math.toDegrees(robotMessage.getOrientation());
+						robot.update(new FieldPoint(filteredPoint.getX(), filteredPoint.getY()), updateTime, degrees, camNo);
+					} else {
+						robot.update(new FieldPoint(filteredPoint.getX(), filteredPoint.getY()), updateTime, camNo);
+					}
 				}
 			}
 		}

@@ -8,7 +8,6 @@ import robocup.Main;
 import robocup.model.FieldObject;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
-import robocup.model.World;
 import robocup.output.ComInterface;
 
 /**
@@ -22,12 +21,12 @@ import robocup.output.ComInterface;
  */
 public class GotoPosition {
 
-	private static final int DISTANCE_TO_SLOW_DOWN = 100;	// Distance at which we start slowing down in millimeters.
+	private static final int DISTANCE_TO_SLOW_DOWN = 200;	// Distance at which we start slowing down in millimeters.
 	private static final int MAX_VELOCITY = 3000;
 	
 	private double DISTANCE_ROTATIONSPEED_COEFFICIENT = 12;
-	private int MAX_ROTATION_SPEED = 1200;	//in mm/s
-	private int START_UP_SPEED = 150; // Speed added to rotation. Robot only starts rotating if it receives a value higher than 200 
+	private int MAX_ROTATION_SPEED = 1000;	//in mm/s
+	private int START_UP_SPEED = 100; // Speed added to rotation. Robot only starts rotating if it receives a value higher than 200 
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 
 	private FieldPoint destination;
@@ -148,17 +147,17 @@ public class GotoPosition {
 		// Handle nulls
 		if (destination == null) {
 			if(target == null){
-				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+				output.send(1, robot.getRobotId(), 0, 0, 0, chipKick, dribble);
 			}
 			else{
-				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(target),0), 0, false);
+				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(target),0), chipKick, dribble);
 			}
 		} 
 		else {
 			// Dribble when the ball is close by
-			dribble = Math.abs(
-					robot.getOrientation() - robot.getPosition().getAngle(World.getInstance().getBall().getPosition())) < 20
-					&& robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition()) < Robot.DIAMETER / 2 + 200;
+//			dribble = Math.abs(
+//					robot.getOrientation() - robot.getPosition().getAngle(World.getInstance().getBall().getPosition())) < 20
+//					&& robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition()) < Robot.DIAMETER / 2 + 200;
 			// Calculate the route using the DijkstraPathPlanner
 			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), avoidBall);
 			// If robot is locked up, the route will be null
@@ -206,6 +205,46 @@ public class GotoPosition {
 			chipKick = 0;
 		}
 	}
+	
+	/**
+	 * Function which moves your {@link Robot} to the given position
+	 * without making use of the {@link DijkstraPathPlanner}
+	 * @param speed The speed the robot will move in mm/s
+	 */
+	public void calculateWithoutPathPlanner(int speed){
+		// Handle nulls
+		if (destination == null) {
+			if(target == null){
+				output.send(1, robot.getRobotId(), 0, 0, 0, chipKick, dribble);
+			}
+			else{
+				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(target),0), chipKick, dribble);
+			}
+		} 
+		else {
+			double rotationToTarget = rotationToDest(target);
+			double rotationToGoal = rotationToDest(destination);
+			
+			// Get the rotation speed, based on the speed we're turning
+			double rotationSpeed;
+			if(speed < -700){
+				rotationSpeed = getRotationSpeed(rotationToTarget, speed + 700);
+			}
+			else if(speed > 700){
+				rotationSpeed = getRotationSpeed(rotationToTarget, speed -700);
+			}
+			else{
+				rotationSpeed = getRotationSpeed(rotationToTarget, speed);
+			}
+			
+			// Send the command
+			output.send(1, robot.getRobotId(), (int)rotationToGoal, speed, (int)rotationSpeed, chipKick, dribble);
+			LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + "," + chipKick + "," + dribble);
+			
+			// Set kick back to 0 to prevent kicking twice in a row
+			chipKick = 0;
+		}
+	}
 
 	/**
 	 * Get rotationSpeed, calculates the speed at which to rotate based on degrees left to rotate
@@ -225,7 +264,7 @@ public class GotoPosition {
 		// distance needed to rotate in mm
 		double rotationDistance = circumference * rotationPercent;
 		rotationDistance *= DISTANCE_ROTATIONSPEED_COEFFICIENT;
-		rotationDistance *= 1 - speed/(MAX_VELOCITY + 500);
+		rotationDistance *= 1 - Math.abs(speed)/(MAX_VELOCITY + 500);
 		
 		if(Math.abs(rotationDistance) > MAX_ROTATION_SPEED){
 			if(rotationDistance < 0){

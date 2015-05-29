@@ -20,6 +20,8 @@ import net.miginfocom.swing.MigLayout;
 import robocup.Main;
 import robocup.model.Robot;
 import robocup.model.World;
+import robocup.test.pathPlanner.TestPathPlanner;
+import robocup.test.pathPlanner.TestPathPlannerVisualTestPanel;
 import robocup.view.sections.ConsoleSection;
 import robocup.view.sections.ControlRobotSection;
 import robocup.view.sections.FieldControlSection;
@@ -155,7 +157,7 @@ public class GUI extends JFrame {
 		sectionContainer.add(new GamepadSection(), "growx");
 		sectionContainer.add(new FieldControlSection(), "growx");
 		sectionContainer.add(new RecordSection(), "growx");
-		//rightContainer.add(new PathPlannerTestSection(), "growx");	// Comment "World.getInstance().getGUI().update("robotContainer");" in Main.initTeams() for this section to work.
+//		sectionContainer.add(new TestPathPlannerVisualTestPanel(new TestPathPlanner()), "growx");	// Comment "World.getInstance().getGUI().update("robotContainer");" in Main.initTeams() for this section to work.
 		//rightContainer.add(new ControlRobotPacketTestSection(), "growx");
 		//rightContainer.add(new PenguinSection(), "growx, growy");
 		sectionContainer.add(new ControlRobotSection(), "growx");

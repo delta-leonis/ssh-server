@@ -1,5 +1,6 @@
 package robocup.model;
 
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -135,11 +136,11 @@ public abstract class Robot extends FieldObject {
 	 * @param DISTANCE_TO_ROBOT The maximum distance we need to keep from this {@link Robot}
 	 * @return A {@link Rectangle2D} which signifies 
 	 */
-	public Rectangle2D getDangerRectangle(int DISTANCE_TO_ROBOT){
+	public Ellipse2D getDangerEllipse(int DISTANCE_TO_ROBOT){
 		double x = getPosition().getX();
 		double y = getPosition().getY();
 		double actualDistance = DISTANCE_TO_ROBOT;
-		return new Rectangle2D.Double(x - actualDistance, y - actualDistance, actualDistance*2, actualDistance*2);
+		return new Ellipse2D.Double(x - actualDistance, y - actualDistance, actualDistance*2, actualDistance*2);
 	}
 
 

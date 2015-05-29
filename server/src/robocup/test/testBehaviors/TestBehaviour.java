@@ -9,7 +9,7 @@ import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 
 public class TestBehaviour extends Behavior {
 	private Mode currentMode; // AttackMode or DefenseMode
-    public static final int ROBOT_ID = 3;    //Robot we want to test
+    public static final int ROBOT_ID = 1;    //Robot we want to test
 
 	/**
 	 * Create a ZoneBehavior.
