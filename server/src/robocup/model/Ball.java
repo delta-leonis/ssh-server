@@ -24,9 +24,10 @@ public class Ball extends FieldObject {
 	 * @param p			new {@link FieldPoint} position
 	 * @param posZ		new Z position for object, also known the be the current height of the ball.
 	 */
-	public void update(double newTime, FieldPoint p, double posZ, int lastCamUpdateNo) {
+	public void update(double newTime, FieldPoint p, double posZ, int lastCamUpdateNo, double directionSpeed) {
 		super.update(p, newTime, lastCamUpdateNo);
 		this.posZ = posZ;
+		this.speed = directionSpeed;
 		World.getInstance().updateState();
 	}
 

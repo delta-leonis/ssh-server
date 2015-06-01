@@ -10,7 +10,7 @@ public abstract class FieldObject {
 	// LastUpdateTime = time off the day in sec
 	protected double lastUpdateTime;
 	private double direction;
-	private double speed;
+	protected double speed;
 
 	public FieldObject() {
 		lastUpdateTime = 0;

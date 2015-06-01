@@ -103,11 +103,11 @@ public class GamepadThread extends Thread {
 
 	private int calculateKickChip() {
 		int chipKick = 0;
-		if(kickButton.getPollData() != 0.0f && System.currentTimeMillis() - kickButtonTime > 1000) {
+		if(kickButton.getPollData() > 0.1f && System.currentTimeMillis() - kickButtonTime > 250) {
 			chipKick = (int) (Math.round(Math.abs(forceTrigger.getPollData()*100)));
 			kickButtonTime = System.currentTimeMillis();
 		}
-		if(chipButton.getPollData() != 0.0f && System.currentTimeMillis() - chipButtonTime > 1000) {
+		if(chipButton.getPollData() > 0.1f && System.currentTimeMillis() - chipButtonTime > 250) {
 			chipKick = (int) (Math.round(Math.abs(forceTrigger.getPollData()*100))) * -1;
 			chipButtonTime = System.currentTimeMillis();
 		}
@@ -132,10 +132,13 @@ public class GamepadThread extends Thread {
 		if(Math.abs(dx) < 10 && Math.abs(dy) < 10) {
 			return null;
 		} else {
-			double x = robot.getPosition().getX() + dx*2;
-			double y = robot.getPosition().getY() + dy*2;
-			return new FieldPoint(x, y);
+			if (robot.getPosition() != null) {
+				double x = robot.getPosition().getX() + dx * 2;
+				double y = robot.getPosition().getY() + dy * 2;
+				return new FieldPoint(x, y);
+			}
 		}
+		return null;
 	}
 
 	private FieldPoint calculateTarget(Robot robot) {
@@ -144,10 +147,13 @@ public class GamepadThread extends Thread {
 		if(Math.abs(dx) < 10 && Math.abs(dy) < 10) {
 			return null;
 		} else {
-			double x = robot.getPosition().getX() + dx*2;
-			double y = robot.getPosition().getY() + dy*2;
-			return new FieldPoint(x, y);
+			if (robot.getPosition() != null) {
+				double x = robot.getPosition().getX() + dx * 2;
+				double y = robot.getPosition().getY() + dy * 2;
+				return new FieldPoint(x, y);
+			}
 		}
+		return null;
 	}
 
 	/**
@@ -170,9 +176,7 @@ public class GamepadThread extends Thread {
 			int speed = calculateSpeed();
 
 			GotoPosition goPos = new GotoPosition(robot, destination, target);
-			goPos.setKick(calculateKickChip());
-			goPos.setDribble(calculateDribble());
-			goPos.calculateWithoutPathPlanner(speed);
+			goPos.calculateWithoutPathPlanner(speed, calculateKickChip(), calculateDribble());
 
 			try {
 				Thread.sleep(1);

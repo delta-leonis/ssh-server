@@ -110,12 +110,12 @@ public class TestPathPlannerPanel extends JPanel{
 		g.setColor(Color.RED);
 		Robot source = World.getInstance().getReferee().getAlly().getRobotByID(0);
 		drawRobot(g, (int) source.getPosition().getX(), (int) source
-				.getPosition().getY(), 90, DijkstraPathPlanner.DISTANCE_TO_ROBOT,
+				.getPosition().getY(), 90, DijkstraPathPlanner.MIN_DISTANCE_TO_ROBOT,
 				DijkstraPathPlanner.MAX_VERTEX_DISTANCE_TO_ROBOT, "id=" + source.getRobotId());
 		// Destination
 		g.setColor(Color.BLUE);
 		drawRobot(g, (int) destination.getX(),
-				(int) destination.getY(), 90, DijkstraPathPlanner.DISTANCE_TO_ROBOT,
+				(int) destination.getY(), 90, DijkstraPathPlanner.MIN_DISTANCE_TO_ROBOT,
 				DijkstraPathPlanner.MAX_VERTEX_DISTANCE_TO_ROBOT, "dest");
 		
 	

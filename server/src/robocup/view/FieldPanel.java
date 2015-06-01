@@ -642,24 +642,28 @@ size of the {@link JFrame} the {@link FieldPanel} should be in.
 				((Graphics2D)g).setStroke(new BasicStroke(1));
 
 			}
-			int x = (int)pathPlanner.getDestination().toGUIPoint(ratio, mirror).getX() + spaceBufferX;
-			int y = (int)pathPlanner.getDestination().toGUIPoint(ratio,mirror).getY() + spaceBufferY;
-			if(path != null && !path.isEmpty()){
-				drawPath(g, path, pathPlanner.getSource(), pathPlanner.getDestination(), ratio);
-				g.setColor(Color.GREEN);
-				((Graphics2D)g).setStroke(new BasicStroke(5));
-				g.drawOval(x - 10, y - 10, 20, 20);
-				((Graphics2D)g).setStroke(new BasicStroke(1));
-				g.drawString(""+robotId, x+20, y);
-
-			}
-			else{
-				if(pathPlanner.getDestination() != null){
-					g.setColor(Color.RED);
-					((Graphics2D)g).setStroke(new BasicStroke(5));
-					g.drawOval(x - 10, y - 10, 20, 20);
-					((Graphics2D)g).setStroke(new BasicStroke(1));
-					g.drawString(""+robotId, x+20, y);
+			if(pathPlanner.getDestination() != null){
+				int x = (int)pathPlanner.getDestination().toGUIPoint(ratio, mirror).getX() + spaceBufferX;
+				int y = (int)pathPlanner.getDestination().toGUIPoint(ratio,mirror).getY() + spaceBufferY;
+				if(path != null){
+					if(!path.isEmpty()){
+						drawPath(g, path, pathPlanner.getSource(), pathPlanner.getDestination(), ratio);
+						g.setColor(Color.GREEN);
+						((Graphics2D)g).setStroke(new BasicStroke(5));
+						g.drawOval(x - 10, y - 10, 20, 20);
+						((Graphics2D)g).setStroke(new BasicStroke(1));
+						g.drawString(""+robotId, x+20, y);
+		
+					}
+					else{
+						if(pathPlanner.getDestination() != null){
+							g.setColor(Color.RED);
+							((Graphics2D)g).setStroke(new BasicStroke(5));
+							g.drawOval(x - 10, y - 10, 20, 20);
+							((Graphics2D)g).setStroke(new BasicStroke(1));
+							g.drawString(""+robotId, x+20, y);
+						}
+					}
 				}
 			}
 

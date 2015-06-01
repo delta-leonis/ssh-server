@@ -218,7 +218,7 @@ public class GotoPosition {
 	 * without making use of the {@link DijkstraPathPlanner}
 	 * @param speed The speed the robot will move in mm/s
 	 */
-	public void calculateWithoutPathPlanner(int speed){
+	public void calculateWithoutPathPlanner(int speed, int chipKick, boolean dribble){
 		// Handle nulls
 		if (destination == null) {
 			if(target == null){
