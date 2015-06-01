@@ -22,7 +22,7 @@ import robocup.output.ComInterface;
 public class GotoPosition {
 
 	private static final int DISTANCE_TO_SLOW_DOWN = 200;	// Distance at which we start slowing down in millimeters.
-	private static final int MAX_VELOCITY = 3000;
+	public static final int MAX_VELOCITY = 3000;
 	
 	private double DISTANCE_ROTATIONSPEED_COEFFICIENT = 12;
 	private int MAX_ROTATION_SPEED = 1000;	//in mm/s

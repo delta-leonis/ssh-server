@@ -82,6 +82,10 @@ public class FieldControlSection extends SectionBox {
 		JCheckBox drawVertices = new JCheckBox("Draw vertices");
 		drawVertices.addActionListener(buttonListener);
 		add(drawVertices, "growx");
+		
+		JCheckBox drawVectors = new JCheckBox("Draw vectors");
+		drawVectors.addActionListener(buttonListener);
+		add(drawVectors, "growx");
 
 	}
 	
@@ -141,6 +145,10 @@ public class FieldControlSection extends SectionBox {
 
 				case "Show ball":
 					fieldPanel.toggleShowBall();
+				break;
+
+				case "Draw vectors":
+					fieldPanel.toggleShowVectors();
 				break;
 
 				case "Mirror North/South":

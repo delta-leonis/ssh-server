@@ -9,6 +9,7 @@ import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import javax.swing.SwingUtilities;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.controller.ai.movement.DijkstraPathPlanner;
 import robocup.controller.ai.movement.DijkstraPathPlanner.Vertex;
+import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.Ally;
 import robocup.model.Ball;
 import robocup.model.FieldPoint;
@@ -51,8 +53,6 @@ public class FieldPanel extends JPanel {
 	private boolean showCoords;
 	private boolean mirror;
 	
-	private int updateCounter;
-	
 	private boolean showPathPlanner;
 	private boolean drawNeighbours;
 	private boolean drawVertices;
@@ -74,7 +74,7 @@ public class FieldPanel extends JPanel {
 		showFreeShot = false;
 		showRaster = false;
 		mirror = false;
-		updateCounter = 0;
+		showVectors = false;
 
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent me) {
@@ -132,15 +132,57 @@ size of the {@link JFrame} the {@link FieldPanel} should be in.
 		drawVectors(g, ratio);
 	}
 	
+	/**
+	 * Draws vectors voor {@link Ball} and {@link Ally Allies}
+	 * @param g	graphics object
+	 * @param ratio	ratio for drawing
+	 */
 	private void drawVectors(Graphics g, double ratio){
+		g.setColor(Color.ORANGE);
+		Ball ball = world.getBall();
+		FieldPoint startPoint = ball.getPosition();
+		int length = (int) (1000*ratio);
+		double dX = Math.cos(Math.toRadians(ball.getDirection()))*length;
+		double dY = Math.sin(Math.toRadians(ball.getDirection()))*length;
+		FieldPoint endPoint = new FieldPoint(startPoint.getX() + dX, startPoint.getY() + dY);
+		g.drawLine((int) startPoint.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) startPoint.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) endPoint.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) endPoint.toGUIPoint(ratio, mirror).getY() + spaceBufferY );
+		
 		if(!showRobots || !showVectors)
 			return;
 
-		for(RobotExecuter executer : world.getRobotExecuters()){
+		for(RobotExecuter executer : world.getRobotExecuters())
 			if(executer.getLowLevelBehavior() != null && executer.getLowLevelBehavior().getGotoPosition() != null)
-				drawVector(g, ratio, executer.getLowLevelBehavior().getGotoPosition());
-		}
+				drawRobotVector(g, ratio, executer);
+	}
 
+	/**
+	 * Draws vectors voor  {@link Ally Ally}
+	 * @param g	graphics object
+	 * @param ratio	ratio for drawing
+	 * @param executer executer containing destination to draw to
+	 */
+	private void drawRobotVector(Graphics g, double ratio, RobotExecuter executer) {
+		Graphics2D g2 = (Graphics2D) g;
+		g.setColor(RobotBox.getRoleColor(((Ally)executer.getRobot()).getRole()));
+		double gotoSpeed = executer.getLowLevelBehavior().getGotoPosition().getCurrentSpeed();
+		if(gotoSpeed < 500)
+			return;
+
+		double percentage = ((double)GotoPosition.MAX_VELOCITY)/gotoSpeed;
+		FieldPoint destination = executer.getLowLevelBehavior().getGotoPosition().getDestination();
+		FieldPoint startPoint = executer.getRobot().getPosition();
+		double dX = destination.getX() - startPoint.getX();
+		double dY = destination.getY() - startPoint.getY();
+
+		FieldPoint endPoint = new FieldPoint(startPoint.getX() + dX*percentage, startPoint.getY() + dY*percentage);
+		FieldPoint stringPoint = new FieldPoint(startPoint.getX() + dX/2*percentage, startPoint.getY() + dY/2*percentage);
+		g.drawLine((int) startPoint.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int)startPoint.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int)endPoint.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int)endPoint.toGUIPoint(ratio, mirror).getY() + spaceBufferY);
+		
+		g2.setColor(Color.BLACK);
+		g.setFont(new Font(g.getFont().getFontName(), Font.BOLD, (int) 10));
+		String speed = "" + gotoSpeed;
+		g2.drawString(speed, (int)stringPoint.toGUIPoint(ratio, mirror).getX() - speed.length()*5/2 + spaceBufferX, (int)stringPoint.toGUIPoint(ratio, mirror).getY() + spaceBufferY);
+		
 	}
 
 	private void drawFPS(Graphics g, double ratio){
@@ -648,5 +690,9 @@ size of the {@link JFrame} the {@link FieldPanel} should be in.
 		g2.draw(new Line2D.Float(x, y, x2, y2));
 		g2.setStroke(new BasicStroke(1));
 
+	}
+
+	public void toggleShowVectors() {
+		showVectors = !showVectors;
 	}
 }
