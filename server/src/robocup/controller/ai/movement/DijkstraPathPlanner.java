@@ -158,7 +158,7 @@ public class DijkstraPathPlanner {
 		}
 		
 		/**
-		 * deprecated method that checks wether the given rectangle shares the same center as the vertex
+		 * deprecated method that checks whether the given rectangle shares the same center as the vertex
 		 * @param rect
 		 * @return
 		 */
@@ -290,33 +290,15 @@ public class DijkstraPathPlanner {
 			source.setStuck(true);
 			double x = beginNode.getX();
 			double y = beginNode.getY();
-			// North east
-			Vertex neighbour = new Vertex(new FieldPoint(x + Math.cos(45) * MAX_VERTEX_DISTANCE_TO_ROBOT, y + Math.sin(45) * MAX_VERTEX_DISTANCE_TO_ROBOT));
-			if(isValidPosition(source, neighbour)) {
-				lockedIn = false;
-				vertices.add(neighbour);
-				source.addNeighbour(neighbour);
-			}
-			// South east
-			neighbour = new Vertex(new FieldPoint(x + MAX_VERTEX_DISTANCE_TO_ROBOT, y - MAX_VERTEX_DISTANCE_TO_ROBOT));
-			if(isValidPosition(source, neighbour)){
-				lockedIn = false;
-				vertices.add(neighbour);
-				source.addNeighbour(neighbour);
-			}
-			// North west
-			neighbour = new Vertex(new FieldPoint(x - MAX_VERTEX_DISTANCE_TO_ROBOT, y + MAX_VERTEX_DISTANCE_TO_ROBOT));
-			if(isValidPosition(source, neighbour)){
-				lockedIn = false;
-				vertices.add(neighbour);
-				source.addNeighbour(neighbour);
-			}
-			// South west
-			neighbour = new Vertex(new FieldPoint(x - MAX_VERTEX_DISTANCE_TO_ROBOT, y - MAX_VERTEX_DISTANCE_TO_ROBOT));
-			if(isValidPosition(source, neighbour)){
-				lockedIn = false;
-				vertices.add(neighbour);
-				source.addNeighbour(neighbour);
+			for(int i = 0; i < 8; ++i){
+				Vertex neighbour = new Vertex(new FieldPoint(x
+						+ Math.cos(Math.toRadians(45*i)) * MAX_VERTEX_DISTANCE_TO_ROBOT, y
+						+ Math.sin(Math.toRadians(45*i)) * MAX_VERTEX_DISTANCE_TO_ROBOT));
+				if (isValidPosition(source, neighbour)) {
+					lockedIn = false;
+					vertices.add(neighbour);
+					neighbour.addNeighbour(source);
+				}
 			}
 			
 			// Stand still if we're locked in.
@@ -344,75 +326,15 @@ public class DijkstraPathPlanner {
 			destination.setStuck(true);
 			double x = endNode.getX();
 			double y = endNode.getY();
-
-			// North east
-			Vertex neighbour = new Vertex(new FieldPoint(x
-					+ MAX_VERTEX_DISTANCE_TO_ROBOT, y
-					+ MAX_VERTEX_DISTANCE_TO_ROBOT));
-			if (isValidPosition(destination, neighbour)) {
-				lockedIn = false;
-				vertices.add(neighbour);
-				neighbour.addNeighbour(destination);
-			}
-			// South east
-			neighbour = new Vertex(new FieldPoint(x
-					+ MAX_VERTEX_DISTANCE_TO_ROBOT, y
-					- MAX_VERTEX_DISTANCE_TO_ROBOT));
-			if (isValidPosition(destination, neighbour)) {
-				lockedIn = false;
-				vertices.add(neighbour);
-				neighbour.addNeighbour(destination);
-			}
-			// North west
-			neighbour = new Vertex(new FieldPoint(x
-					- MAX_VERTEX_DISTANCE_TO_ROBOT, y
-					+ MAX_VERTEX_DISTANCE_TO_ROBOT));
-			if (isValidPosition(destination, neighbour)) {
-				lockedIn = false;
-				vertices.add(neighbour);
-				neighbour.addNeighbour(destination);
-			}
-			// South west
-			neighbour = new Vertex(new FieldPoint(x
-					- MAX_VERTEX_DISTANCE_TO_ROBOT, y
-					- MAX_VERTEX_DISTANCE_TO_ROBOT));
-			if (isValidPosition(destination, neighbour)) {
-				lockedIn = false;
-				vertices.add(neighbour);
-				neighbour.addNeighbour(destination);
-			}
-
-			// East
-			neighbour = new Vertex(new FieldPoint(x
-					+ MAX_VERTEX_DISTANCE_TO_ROBOT, y));
-			if (isValidPosition(destination, neighbour)) {
-				lockedIn = false;
-				vertices.add(neighbour);
-				neighbour.addNeighbour(destination);
-			}
-			// South
-			neighbour = new Vertex(new FieldPoint(x, y
-					- MAX_VERTEX_DISTANCE_TO_ROBOT));
-			if (isValidPosition(destination, neighbour)) {
-				lockedIn = false;
-				vertices.add(neighbour);
-				neighbour.addNeighbour(destination);
-			}
-			// West
-			neighbour = new Vertex(new FieldPoint(x
-					- MAX_VERTEX_DISTANCE_TO_ROBOT, y));
-			if (isValidPosition(destination, neighbour)) {
-				lockedIn = false;
-				vertices.add(neighbour);
-				neighbour.addNeighbour(destination);
-			}
-			// North
-			neighbour = new Vertex(new FieldPoint(x, y
-					+ MAX_VERTEX_DISTANCE_TO_ROBOT));
-			if (isValidPosition(destination, neighbour)) {
-				lockedIn = false;
-				vertices.add(neighbour);
-				neighbour.addNeighbour(destination);
+			for(int i = 0; i < 8; ++i){
+				Vertex neighbour = new Vertex(new FieldPoint(x
+						+ Math.cos(Math.toRadians(45*i)) * MAX_VERTEX_DISTANCE_TO_ROBOT, y
+						+ Math.sin(Math.toRadians(45*i)) * MAX_VERTEX_DISTANCE_TO_ROBOT));
+				if (isValidPosition(destination, neighbour)) {
+					lockedIn = false;
+					vertices.add(neighbour);
+					neighbour.addNeighbour(destination);
+				}
 			}
 
 			if (lockedIn)
@@ -682,8 +604,10 @@ public class DijkstraPathPlanner {
 				}
 				else if(shape instanceof Polygon){
 					Polygon poly = (Polygon)shape;
-					if(lineIntersectsPolygon(line, poly)){
-						return true;
+					if(!poly.contains(source.getPosition().toPoint2D())){
+						if(lineIntersectsPolygon(line, poly)){
+							return true;
+						}
 					}
 				}	
 			}
