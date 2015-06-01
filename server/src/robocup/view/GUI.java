@@ -20,8 +20,6 @@ import net.miginfocom.swing.MigLayout;
 import robocup.Main;
 import robocup.model.Robot;
 import robocup.model.World;
-import robocup.test.pathPlanner.TestPathPlanner;
-import robocup.test.pathPlanner.TestPathPlannerVisualTestPanel;
 import robocup.view.sections.ConsoleSection;
 import robocup.view.sections.ControlRobotSection;
 import robocup.view.sections.FieldControlSection;

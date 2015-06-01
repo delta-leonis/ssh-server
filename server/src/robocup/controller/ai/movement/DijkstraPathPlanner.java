@@ -6,7 +6,6 @@ import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
-import java.beans.DesignMode;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -26,7 +25,8 @@ public class DijkstraPathPlanner {
 	// Distance from the middle of the robot to the vertices around it
 	// Basically the "Danger zone" for the Robot. A normal Robot has a radius of 90mm, so if DISTANCE_TO_ROBOT == 160mm,
 	// then it means we don't want to get within (160mm - 90mm = ) 70mm of any other Robot. (Based on their center points)
-	public static final int DISTANCE_TO_ROBOT = 160;
+	public static final int MIN_DISTANCE_TO_ROBOT = 160;
+	public static final int MAX_DISTANCE_TO_ROBOT = 300;
 	public static final int DISTANCE_TO_BALL = 120;
 	public static final int DISTANCE_TO_POLYGON = 120;
 	// This value is used to determine the vertex points, which are VERTEX_DISTANCE_TO_ROBOT from the middle points of the robots.
@@ -81,7 +81,7 @@ public class DijkstraPathPlanner {
 		 * @return
 		 */
 		public Rectangle2D toRect(){
-			return new Rectangle2D.Double(position.getX() - DISTANCE_TO_ROBOT, position.getY() - DISTANCE_TO_ROBOT, DISTANCE_TO_ROBOT * 2, DISTANCE_TO_ROBOT * 2);
+			return new Rectangle2D.Double(position.getX() - MIN_DISTANCE_TO_ROBOT, position.getY() - MIN_DISTANCE_TO_ROBOT, MIN_DISTANCE_TO_ROBOT * 2, MIN_DISTANCE_TO_ROBOT * 2);
 		}
 
 		/**
@@ -219,8 +219,8 @@ public class DijkstraPathPlanner {
 
 		generateObjectList(robotId, avoidBall);
 		copyOfObjects = (ArrayList<Shape>)objects.clone();
-		
 		if(isInsidePolygon(new Vertex(destination).toRect())){
+			System.out.println("Inside polygon" + robotId);
 			return null;
 		}
 
@@ -240,11 +240,13 @@ public class DijkstraPathPlanner {
 		// add source and dest to vertices list
 		Vertex source = setupSource(beginNode);
 		if(source == null){
+			System.out.println("Stuck in source" + robotId);
 			allVertices = (ArrayList<Vertex>)vertices.clone();
 			return null;					//Locked in
 		}
 		Vertex dest = setupDestination(destination);
 		if(dest == null){
+			System.out.println("Stuck in destination" + robotId);
 			allVertices = (ArrayList<Vertex>)vertices.clone();
 			return null;					//Locked in
 		}
@@ -551,11 +553,11 @@ public class DijkstraPathPlanner {
 		for (Robot r : world.getReferee().getAlly().getRobotsOnSight())
 			if (r.getPosition() != null)
 				if (r.getRobotId() != robotId)
-					objects.add(r.getDangerEllipse(DISTANCE_TO_ROBOT));
+					objects.add(r.getDangerEllipse(MIN_DISTANCE_TO_ROBOT, MAX_DISTANCE_TO_ROBOT));
 
 		for (Robot r : world.getReferee().getEnemy().getRobotsOnSight())
 			if (r.getPosition() != null)
-				objects.add(r.getDangerEllipse(DISTANCE_TO_ROBOT));
+				objects.add(r.getDangerEllipse(MIN_DISTANCE_TO_ROBOT, MAX_DISTANCE_TO_ROBOT));
 		
 		if(world.getReferee().getAlly().getGoalie() != robotId){
 			objects.add(FieldZone.EAST_NORTH_GOAL.getPolygon());
@@ -575,9 +577,6 @@ public class DijkstraPathPlanner {
 	 */
 	protected void generateVertices(boolean avoidBall) {
 		vertices.clear();
-		double radians45 = Math.toRadians(45);
-		double radians22 = Math.toRadians(22.5);
-		double radians68 = Math.toRadians(67.5);
 		for (Robot robot : world.getAllRobotsOnSight()) {
 			if(robot.getPosition() != null){
 				double x = robot.getPosition().getX();
@@ -585,25 +584,10 @@ public class DijkstraPathPlanner {
 				double vertexDistance = MIN_VERTEX_DISTANCE_TO_ROBOT + 
 						((MAX_VERTEX_DISTANCE_TO_ROBOT - MIN_VERTEX_DISTANCE_TO_ROBOT) * (Math.abs(robot.getSpeed()) / 5000));
 				if(!isObjectNotRemovable(x,y)){	//Avoid double vertices from pre-generated vertices in source and dest.
-					vertices.add(new Vertex(new FieldPoint(x + Math.cos(radians45) * vertexDistance, y + Math.sin(radians45) * vertexDistance)));
-					vertices.add(new Vertex(new FieldPoint(x - Math.cos(radians45) * vertexDistance, y - Math.sin(radians45) * vertexDistance)));
-					vertices.add(new Vertex(new FieldPoint(x + Math.cos(-radians45) * vertexDistance, y + Math.sin(-radians45) * vertexDistance)));
-					vertices.add(new Vertex(new FieldPoint(x - Math.cos(-radians45) * vertexDistance, y - Math.sin(-radians45) * vertexDistance)));
-					
-					vertices.add(new Vertex(new FieldPoint(x + Math.cos(radians22) * vertexDistance, y + Math.sin(radians22) * vertexDistance)));
-					vertices.add(new Vertex(new FieldPoint(x - Math.cos(radians22) * vertexDistance, y - Math.sin(radians22) * vertexDistance)));
-					vertices.add(new Vertex(new FieldPoint(x + Math.cos(-radians22) * vertexDistance, y + Math.sin(-radians22) * vertexDistance)));
-					vertices.add(new Vertex(new FieldPoint(x - Math.cos(-radians22) * vertexDistance, y - Math.sin(-radians22) * vertexDistance)));
-					
-					vertices.add(new Vertex(new FieldPoint(x + Math.cos(radians68) * vertexDistance, y + Math.sin(radians68) * vertexDistance)));
-					vertices.add(new Vertex(new FieldPoint(x - Math.cos(radians68) * vertexDistance, y - Math.sin(radians68) * vertexDistance)));
-					vertices.add(new Vertex(new FieldPoint(x + Math.cos(-radians68) * vertexDistance, y + Math.sin(-radians68) * vertexDistance)));
-					vertices.add(new Vertex(new FieldPoint(x - Math.cos(-radians68) * vertexDistance, y - Math.sin(-radians68) * vertexDistance)));
-					
-					vertices.add(new Vertex(new FieldPoint(x + vertexDistance, y)));
-					vertices.add(new Vertex(new FieldPoint(x, y - vertexDistance)));
-					vertices.add(new Vertex(new FieldPoint(x - vertexDistance, y)));
-					vertices.add(new Vertex(new FieldPoint(x, y + vertexDistance)));
+					for(int i = 0; i < 16; ++i){
+						vertices.add(new Vertex(new FieldPoint(x + Math.cos(Math.toRadians(22.5 * i)) * vertexDistance,
+								y + Math.sin(Math.toRadians(22.5 * i)) * vertexDistance)));
+					}
 				}
 			}
 		}
@@ -612,25 +596,10 @@ public class DijkstraPathPlanner {
 			double y = world.getBall().getPosition().getY();
 			double vertexDistance = MIN_VERTEX_DISTANCE_TO_ROBOT + 
 					((MAX_VERTEX_DISTANCE_TO_ROBOT - MIN_VERTEX_DISTANCE_TO_ROBOT) * (Math.abs(world.getBall().getSpeed()) / 5000));
-			vertices.add(new Vertex(new FieldPoint(x + Math.cos(radians45) * vertexDistance, y + Math.sin(radians45) * vertexDistance)));
-			vertices.add(new Vertex(new FieldPoint(x + Math.cos(radians45) * vertexDistance, y + Math.sin(radians45) * vertexDistance)));
-			vertices.add(new Vertex(new FieldPoint(x + Math.cos(radians45) * vertexDistance, y + Math.sin(radians45) * vertexDistance)));
-			vertices.add(new Vertex(new FieldPoint(x + Math.cos(radians45) * vertexDistance, y + Math.sin(radians45) * vertexDistance)));
-			
-			vertices.add(new Vertex(new FieldPoint(x + Math.cos(radians22) * vertexDistance, y + Math.sin(radians22) * vertexDistance)));
-			vertices.add(new Vertex(new FieldPoint(x - Math.cos(radians22) * vertexDistance, y - Math.sin(radians22) * vertexDistance)));
-			vertices.add(new Vertex(new FieldPoint(x + Math.cos(-radians22) * vertexDistance, y + Math.sin(-radians22) * vertexDistance)));
-			vertices.add(new Vertex(new FieldPoint(x - Math.cos(-radians22) * vertexDistance, y - Math.sin(-radians22) * vertexDistance)));
-			
-			vertices.add(new Vertex(new FieldPoint(x + Math.cos(radians68) * vertexDistance, y + Math.sin(radians68) * vertexDistance)));
-			vertices.add(new Vertex(new FieldPoint(x - Math.cos(radians68) * vertexDistance, y - Math.sin(radians68) * vertexDistance)));
-			vertices.add(new Vertex(new FieldPoint(x + Math.cos(-radians68) * vertexDistance, y + Math.sin(-radians68) * vertexDistance)));
-			vertices.add(new Vertex(new FieldPoint(x - Math.cos(-radians68) * vertexDistance, y - Math.sin(-radians68) * vertexDistance)));
-			
-			vertices.add(new Vertex(new FieldPoint(x + vertexDistance, y)));
-			vertices.add(new Vertex(new FieldPoint(x, y - vertexDistance)));
-			vertices.add(new Vertex(new FieldPoint(x - vertexDistance, y)));
-			vertices.add(new Vertex(new FieldPoint(x, y + vertexDistance)));
+			for(int i = 0; i < 16; ++i){
+				vertices.add(new Vertex(new FieldPoint(x + Math.cos(Math.toRadians(22.5 * i)) * vertexDistance,
+						y + Math.sin(Math.toRadians(22.5 * i)) * vertexDistance)));
+			}
 		}
 		
 		for(Shape shape : objects){
