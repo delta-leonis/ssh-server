@@ -97,12 +97,14 @@ public class GameStatusSection extends SectionBox implements ActionListener{
 		refereeCommandField.setText(World.getInstance().getReferee().getCommand().toString());
 		refereeStatusField.setText(World.getInstance().getReferee().getStage().toString());
 		gameStatusField.setText(World.getInstance().getGameState().toString());
-		ZoneBehavior behavior = (ZoneBehavior) AiExecuter.behavior;
-		strategyField.setText(behavior == null || behavior.currentMode == null
-				|| behavior.currentMode.getStrategy() == null ? "No strategy" : behavior.currentMode.getStrategy()
-				.getClass().getSimpleName());
-		keeperIdField.setText(World.getInstance().getReferee().getAlly().getGoalie() + "");
-		goalsField.setText(World.getInstance().getReferee().getAlly().getScore() + "");
+		if(AiExecuter.behavior instanceof ZoneBehavior){
+			ZoneBehavior behavior = (ZoneBehavior) AiExecuter.behavior;
+			strategyField.setText(behavior == null || behavior.currentMode == null
+					|| behavior.currentMode.getStrategy() == null ? "No strategy" : behavior.currentMode.getStrategy()
+					.getClass().getSimpleName());
+			keeperIdField.setText(World.getInstance().getReferee().getAlly().getGoalie() + "");
+			goalsField.setText(World.getInstance().getReferee().getAlly().getScore() + "");
+		}
 	}
 
 	@Override
