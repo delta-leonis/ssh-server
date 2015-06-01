@@ -137,8 +137,8 @@ size of the {@link JFrame} the {@link FieldPanel} should be in.
 			return;
 
 		for(RobotExecuter executer : world.getRobotExecuters()){
-			if(executer.getLowLevelBehavior() != null && executer.getLowLevelBehavior().getGotoPosition() != null)
-				drawVector(g, ratio, executer.getLowLevelBehavior().getGotoPosition());
+//			if(executer.getLowLevelBehavior() != null && executer.getLowLevelBehavior().getGotoPosition() != null)
+//				drawVector(g, ratio, executer.getLowLevelBehavior().getGotoPosition());
 		}
 
 	}
