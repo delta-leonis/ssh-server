@@ -3,6 +3,7 @@ package robocup.controller.handlers.protohandlers;
 import java.util.ArrayList;
 import java.util.List;
 
+import robocup.filter.BallUKF;
 import robocup.filter.Kalman;
 import robocup.input.protobuf.MessagesRobocupSslDetection.SSL_DetectionBall;
 import robocup.input.protobuf.MessagesRobocupSslDetection.SSL_DetectionFrame;
@@ -19,21 +20,18 @@ import robocup.model.enums.TeamColor;
 public class DetectionHandler {
 
 	private World world;
-	// TODO: read in validRobotId's from somewhere else / no more hardcoded id's
-//	int validRobotIDs[] = { 6 };
-//	int validEnemyRobotIDs[] = {  };
 
 	Kalman allyFilter[] = new Kalman[12];
 	Kalman enemyFilter[] = new Kalman[12];
-	Kalman ballFilter;
+	BallUKF ballFilter;
 
 	/**
 	 * Constructs DetectionHandler. Also initiates {@link Kalman} filter for the {@link Ball}
 	 */
 	public DetectionHandler() {
 		world = World.getInstance();
-		Ball b = world.getBall();
-		ballFilter = new Kalman(new FieldPoint(b.getPosition().getX(), b.getPosition().getY()), 0, 0);
+
+		ballFilter = new BallUKF(new FieldPoint(0, 0));
 	}
 
 	/**
@@ -61,21 +59,18 @@ public class DetectionHandler {
 
 	/**
 	 * Updates position of the {@link Ball} in the {@link World}
-	 * 
 	 * @param balls The balls currently on the field
 	 * @param time The time of detection.
 	 * @param camNo The ID of the camera that detected the ball
 	 */
 	public void updateBall(SSL_DetectionBall ball, double time, int camNo) {
-		FieldPoint filterPoint = new FieldPoint(ball.getX(), ball.getY());
-		double xSpeed = (ball.getX() - ballFilter.getLastX());
-		double ySpeed = (ball.getY() - ballFilter.getLastY());
-		FieldPoint filteredPoint = ballFilter.filterPoint(filterPoint, xSpeed, ySpeed);
+		ballFilter.run(new FieldPoint(ball.getX(), ball.getY()));
 
 		if (ball.hasZ()) {
-			world.getBall().update(time, filteredPoint, ball.getZ(), camNo);
+			world.getBall().update(time, new FieldPoint(ballFilter.getX(), ballFilter.getY()), ball.getZ(), camNo,
+					Math.sqrt(Math.pow(ballFilter.getXVelocity(), 2) + Math.pow(ballFilter.getYVelocity(), 2)));
 		} else {
-			world.getBall().update(filteredPoint, time, camNo);
+			world.getBall().update(new FieldPoint(ballFilter.getX(), ballFilter.getY()), time, camNo);
 		}
 	}
 

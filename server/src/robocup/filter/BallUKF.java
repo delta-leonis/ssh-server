@@ -23,10 +23,11 @@
  */
 package robocup.filter;
 
-import robocup.model.StateModel;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
+
 import robocup.model.FieldPoint;
+import robocup.model.StateModel;
 
 /**
  * Implementation of AbstractUKF for a ball given only x, y data
@@ -58,7 +59,7 @@ public class BallUKF extends AbstractUKF {
                 true,              //   row-major
                                    // Now follows the matrix. Note that the
                                    // frequency is arbitrarily chosen as 40 times per second.
-                                   // The acutual frequency will depend on the underlying system specs
+                                   // The actual frequency will depend on the underlying system specs
                                    // and performance.
                 1, 0, 1/40, 0,     // x_pos       = x_pos + v_x*frequency
                 0, 1, 0, 1/40,     // y_pos       = y_pos + v_y*frequency
