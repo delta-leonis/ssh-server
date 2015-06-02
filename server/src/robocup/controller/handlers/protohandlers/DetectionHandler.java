@@ -105,9 +105,17 @@ public class DetectionHandler {
 	 */
 	public void processRobots(List<SSL_DetectionRobot> blueList, List<SSL_DetectionRobot> yellowList, double time,
 			int camNo) {
-
+		ArrayList<Integer> validBlueIds,validYellowIds;
+		if(World.getInstance().getReferee().getAllyTeamColor().equals(TeamColor.BLUE)){
+			validBlueIds = World.getInstance().getValidAllyIDs();
+			validYellowIds = World.getInstance().getValidEnemyIDs();
+		} else {
+			validYellowIds = World.getInstance().getValidAllyIDs();
+			validBlueIds = World.getInstance().getValidEnemyIDs();
+		}
+		
 		for (SSL_DetectionRobot robot : blueList) {
-			for (int id : World.getInstance().getValidRobotIDs()) {
+			for (int id : validBlueIds) {
 				if (robot.getRobotId() == id) {
 					updateRobot(TeamColor.BLUE, robot, time, camNo);
 				}
@@ -115,7 +123,7 @@ public class DetectionHandler {
 		}
 
 		for (SSL_DetectionRobot robot : yellowList) {
-			for (int id : World.getInstance().getValidRobotIDs()) {
+			for (int id : validYellowIds) {
 				if (robot.getRobotId() == id) {
 					updateRobot(TeamColor.YELLOW, robot, time, camNo);
 				}
@@ -168,7 +176,7 @@ public class DetectionHandler {
 		//add robot to filter if not so already
 		if (allyFilter[robotMessage.getRobotId()] == null) { // Create robot object
 			if (world.getReferee().getAllyTeamColor().equals(color)) {
-				for (int id : World.getInstance().getValidRobotIDs()) {
+				for (int id : World.getInstance().getValidAllyIDs()) {
 					// filter out all robots that should not be available
 					if (robotMessage.getRobotId() == id) {
 						// if the robot is validated add it to the ally's list
