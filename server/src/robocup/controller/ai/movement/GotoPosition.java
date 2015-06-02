@@ -8,6 +8,7 @@ import robocup.Main;
 import robocup.model.FieldObject;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
+import robocup.model.World;
 import robocup.output.ComInterface;
 
 /**
@@ -156,9 +157,9 @@ public class GotoPosition {
 		} 
 		else {
 			// Dribble when the ball is close by
-//			dribble = Math.abs(
-//					robot.getOrientation() - robot.getPosition().getAngle(World.getInstance().getBall().getPosition())) < 20
-//					&& robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition()) < Robot.DIAMETER / 2 + 200;
+			dribble = Math.abs(
+					robot.getOrientation() - robot.getPosition().getAngle(World.getInstance().getBall().getPosition())) < 20
+					&& robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition()) < Robot.DIAMETER / 2 + 200;
 			// Calculate the route using the DijkstraPathPlanner
 			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), avoidBall);
 			// If robot is locked up, the route will be null
@@ -199,10 +200,18 @@ public class GotoPosition {
 			}
 			
 			currentSpeed = speed;
+			if(dribble){
+				// Send the command
+				output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, chipKick, dribble);
+				LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + "," + chipKick + "," + dribble);
+			}
+			// Don't kick or chip if we aren't nearby.
+			else{
+				// Send the command
+				output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, 0, dribble);
+				LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + ",0 ," + dribble);
+			}
 			
-			// Send the command
-			output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, chipKick, dribble);
-			LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + "," + chipKick + "," + dribble);
 			
 			// Set kick back to 0 to prevent kicking twice in a row
 			chipKick = 0;
