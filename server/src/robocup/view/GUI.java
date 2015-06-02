@@ -262,4 +262,12 @@ public class GUI extends JFrame {
 			break;
 		}
 	}
+
+	public void selectNextRobot() {
+		int currentId = getSelectedRobot().getRobotId();
+		int newId = (currentId + 1 >= Main.POSSIBLE_IDS) ? 0 : currentId+1;
+		LOGGER.info("Selecting robot #" + newId + " as next robot");
+
+		selectRobot(World.getInstance().getReferee().getAlly().getRobotByID(newId));
+	}
 }

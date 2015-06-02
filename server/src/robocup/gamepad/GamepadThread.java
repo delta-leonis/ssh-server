@@ -30,9 +30,11 @@ public class GamepadThread extends Thread {
 	private Component orientationX;
 	private Component orientationY;
 	private Component forceTrigger;
+	private Component selectButton;
 
 	private boolean useCamera;
 	private boolean stop;
+	private long selectButtonTime;
 
 	public GamepadThread(GamepadModel gamepadModel, boolean useCamera) {
 		this.gamepadModel = gamepadModel;
@@ -46,7 +48,7 @@ public class GamepadThread extends Thread {
 	public void findController() {
 		Controller[] controllersList = ControllerEnvironment.getDefaultEnvironment().getControllers();
 		for (int i = 0; i < controllersList.length; i++)
-			if (controllersList[i].getName().toLowerCase().contains("xbox 360")) {
+			if (controllersList[i].getName().toLowerCase().contains("360")) {
 				gamepadModel.setGamepad(controllersList[i]);
 				gamepad = controllersList[i];
 			}
@@ -55,20 +57,22 @@ public class GamepadThread extends Thread {
 	private void initComponents() {
 		if (gamepad == null) {
 			LOGGER.warning("No controller to find components");
-			System.out.println("kut");
 			return;
 		}
 		Component[] components = gamepad.getComponents();
 		for (int j = 0; j < components.length; j++) {
 			switch (components[j].getIdentifier().getName()) {
-			case "3":
-				dribbleButton = components[j];
+			case "0":
+			case "A":
+				kickButton = components[j];
 				break;
+			case "B":
 			case "1":
 				chipButton = components[j];
 				break;
-			case "0":
-				kickButton = components[j];
+			case "3":
+			case "Y":
+				dribbleButton = components[j];
 				break;
 			case "x":
 				directionX = components[j];
@@ -83,9 +87,14 @@ public class GamepadThread extends Thread {
 				orientationY = components[j];
 				break;
 			case "z":
+			case "rz":
 				forceTrigger = components[j];
 				break;
+			case "Select":
+				selectButton = components[j];
+				break;
 			default:
+				System.out.println("unassigned button: " + components[j].getIdentifier().getName());
 				break;
 			}
 		}
@@ -112,6 +121,13 @@ public class GamepadThread extends Thread {
 			chipButtonTime = System.currentTimeMillis();
 		}
 		return chipKick;
+	}
+	
+	private void selectNextRobot(){
+		if(selectButton.getPollData() > 0.1f && System.currentTimeMillis() - selectButtonTime > 250){
+			World.getInstance().getGUI().selectNextRobot();
+			selectButtonTime = System.currentTimeMillis();
+		}
 	}
 
 	/**
@@ -158,7 +174,8 @@ public class GamepadThread extends Thread {
 
 	/**
 	 * Initializes the controller and its components by calling {@link GamepadThread#findController()}
-	 * and {@link GamepadThread#initComponents()}. Then stays in a loop that reads the gamepad and
+	 * and {@link GamepadThread#initCom
+INFO: Failed to open device (/dev/input/event5): Failed to open device /dev/input/event5 (13)ponents()}. Then stays in a loop that reads the gamepad and
 	 * controls a robot by using {@link GotoPosition#calculateWithoutPathPlanner(int)} until
 	 * {@link GamepadThread#stop} is true.
 	 */
@@ -174,12 +191,12 @@ public class GamepadThread extends Thread {
 			FieldPoint destination = calculateDestination(robot);
 			FieldPoint target = calculateTarget(robot);
 			int speed = calculateSpeed();
-
+			selectNextRobot();
 			GotoPosition goPos = new GotoPosition(robot, destination, target);
 			goPos.calculateWithoutPathPlanner(speed, calculateKickChip(), calculateDribble());
 
 			try {
-				Thread.sleep(1);
+				Thread.sleep(1000/60);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
