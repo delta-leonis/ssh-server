@@ -1,10 +1,13 @@
 package robocup.controller.handlers.protohandlers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import robocup.filter.BallUKF;
 import robocup.filter.Kalman;
+import robocup.filter.RobotUKF;
 import robocup.input.protobuf.MessagesRobocupSslDetection.SSL_DetectionBall;
 import robocup.input.protobuf.MessagesRobocupSslDetection.SSL_DetectionFrame;
 import robocup.input.protobuf.MessagesRobocupSslDetection.SSL_DetectionRobot;
@@ -14,6 +17,7 @@ import robocup.model.Robot;
 import robocup.model.Team;
 import robocup.model.World;
 import robocup.model.enums.TeamColor;
+
 /**
  * Handler for {@link SSL_DetectionFrame} messages, will process all {@link Robot Robots} and {@link Ball Balls}
  */
@@ -21,17 +25,39 @@ public class DetectionHandler {
 
 	private World world;
 
-	Kalman allyFilter[] = new Kalman[12];
-	Kalman enemyFilter[] = new Kalman[12];
-	BallUKF ballFilter;
+	private Map<Integer, RobotUKF> allyFilter = new HashMap<Integer, RobotUKF>();
+	private Map<Integer, RobotUKF> enemyFilter = new HashMap<Integer, RobotUKF>();
+	private BallUKF ballFilter;
 
 	/**
 	 * Constructs DetectionHandler. Also initiates {@link Kalman} filter for the {@link Ball}
 	 */
 	public DetectionHandler() {
 		world = World.getInstance();
-
 		ballFilter = new BallUKF(new FieldPoint(0, 0));
+	}
+
+	private boolean isValidCameraId(FieldPoint measuredPosition, int camNo) {
+		switch (camNo) {
+		case 0:
+			if (measuredPosition.getX() >= 0 || measuredPosition.getY() <= 0)
+				return false;
+			break;
+		case 1:
+			if (measuredPosition.getX() <= 0 || measuredPosition.getY() >= 0)
+				return false;
+			break;
+		case 2:
+			if (measuredPosition.getX() <= 0 || measuredPosition.getY() <= 0)
+				return false;
+			break;
+		case 3:
+			if (measuredPosition.getX() >= 0 || measuredPosition.getY() >= 0)
+				return false;
+			break;
+		}
+
+		return true;
 	}
 
 	/**
@@ -46,7 +72,6 @@ public class DetectionHandler {
 
 	/**
 	 * Process all balls given by the SSL Vision Program.
-	 * 
 	 * @param balls The balls currently on the field
 	 * @param time The time of detection.
 	 * @param camNo The ID of the camera that detected the ball
@@ -65,87 +90,45 @@ public class DetectionHandler {
 	 */
 	public void updateBall(SSL_DetectionBall ball, double time, int camNo) {
 		FieldPoint measuredPosition = new FieldPoint(ball.getX(), ball.getY());
-		
-		switch (camNo) {
-		case 0:
-			if (measuredPosition.getX() >= 0 || measuredPosition.getY() <= 0)
-				return;
-			break;
-		case 1:
-			if (measuredPosition.getX() <= 0 || measuredPosition.getY() >= 0)
-				return;
-			break;
-		case 2:
-			if (measuredPosition.getX() <= 0 || measuredPosition.getY() <= 0)
-				return;
-			break;
-		case 3:
-			if (measuredPosition.getX() >= 0 || measuredPosition.getY() >= 0)
-				return;
-			break;
-		}
+
+		if (!isValidCameraId(measuredPosition, camNo))
+			return;
 
 		ballFilter.run(measuredPosition);
 		double speed = Math.sqrt(Math.pow(ballFilter.getXVelocity(), 2) + Math.pow(ballFilter.getYVelocity(), 2));
 		double direction = Math.toDegrees(Math.atan2(ballFilter.getYVelocity(), ballFilter.getXVelocity()));
 
-		if (ball.hasZ()) {
-			world.getBall().update(time, new FieldPoint(ballFilter.getX(), ballFilter.getY()), ball.getZ(), camNo,
-					speed, direction);
-		} else {
-			world.getBall().update(new FieldPoint(ballFilter.getX(), ballFilter.getY()), time, camNo);
-		}
+		world.getBall().update(time, new FieldPoint(ballFilter.getX(), ballFilter.getY()), ball.getZ(), speed,
+				direction);
 	}
 
 	/**
-	 * Update every {@link Robot} in {@link World} 
-	 * 
+	 * Update every {@link Robot} in {@link World}
 	 * @param blueList		list with every {@link SSL_DetectionRobot} in blue team
 	 * @param yellowList	list with every {@link SSL_DetectionRobot} in yellow team
 	 */
 	public void processRobots(List<SSL_DetectionRobot> blueList, List<SSL_DetectionRobot> yellowList, double time,
 			int camNo) {
 
-		for (SSL_DetectionRobot robot : blueList) {
-			for (int id : World.getInstance().getValidRobotIDs()) {
-				if (robot.getRobotId() == id) {
-					updateRobot(TeamColor.BLUE, robot, time, camNo);
-				}
-			}
-		}
+		for (SSL_DetectionRobot robot : blueList)
+			updateRobot(TeamColor.BLUE, robot, time, camNo);
 
-		for (SSL_DetectionRobot robot : yellowList) {
-			for (int id : World.getInstance().getValidRobotIDs()) {
-				if (robot.getRobotId() == id) {
-					updateRobot(TeamColor.YELLOW, robot, time, camNo);
-				}
-			}
-		}
-		
-		if(World.getInstance().getReferee().getAllyTeamColor()== TeamColor.YELLOW){
-			updateOnSight(yellowList);
-		}
-		else{
-			updateOnSight(blueList);
-		}
+		for (SSL_DetectionRobot robot : yellowList)
+			updateRobot(TeamColor.YELLOW, robot, time, camNo);
+
+		updateOnSight(world.getReferee().getAllyTeamColor() == TeamColor.YELLOW ? yellowList : blueList);
 	}
-	
+
 	/**
 	 * Updates the ally {@link Team}'s {@link Robot robots} to be set "onSight"  or not onSight.
 	 * Setting this variable to true in a {@link Robot} will allow the GUI to display it as "Online"
 	 * @param robotList A list with the Detected Robots from the ally team.
 	 */
-	public void updateOnSight(List<SSL_DetectionRobot> robotList){
-		ArrayList<Robot> team = World.getInstance().getReferee().getAlly().getRobots();
-		for(Robot ally : team){
-			ally.setOnSight(false);
-			for(SSL_DetectionRobot allyMsg: robotList){
-				if(ally.getRobotId() == allyMsg.getRobotId()){
-//					System.out.println("On sight ID: " + allyMsg.getRobotId());
-					ally.setOnSight(true);
-					break;
-				}
-			}
+	public void updateOnSight(List<SSL_DetectionRobot> robotList) {
+		ArrayList<Robot> team = world.getReferee().getAlly().getRobots();
+
+		for (Robot ally : team) {
+			ally.setOnSight(world.getLastTimeStamp() - ally.getLastUpdateTime() > 2);
 		}
 	}
 
@@ -158,63 +141,40 @@ public class DetectionHandler {
 	 */
 	public void updateRobot(TeamColor color, SSL_DetectionRobot robotMessage, double updateTime, int camNo) {
 		Team t = world.getTeamByColor(color);
-		// No team or robotID set. Reject data.
-		if (t == null || robotMessage.hasRobotId() == false) {
-			return;
-		}
-
 		Robot robot = t.getRobotByID(robotMessage.getRobotId());
+		boolean isAlly = world.getReferee().getAllyTeamColor().equals(color);
 
-		//add robot to filter if not so already
-		if (allyFilter[robotMessage.getRobotId()] == null) { // Create robot object
-			if (world.getReferee().getAllyTeamColor().equals(color)) {
-				for (int id : World.getInstance().getValidRobotIDs()) {
-					// filter out all robots that should not be available
-					if (robotMessage.getRobotId() == id) {
-						// if the robot is validated add it to the ally's list
-						FieldPoint p = new FieldPoint(robotMessage.getX(), robotMessage.getY());
-						allyFilter[id] = new Kalman(p, 0, 0);
-						break;
-					}
-				}
+		if (isAlly && !world.getValidAllyRobotIDs().contains(robotMessage.getRobotId()) || !isAlly
+				&& !world.getValidEnemyRobotIDs().contains(robotMessage.getRobotId()))
+			return;
+
+		// create filter if this is the first detection for this robot
+		if (allyFilter.get(robotMessage.getRobotId()) == null) { // Create robot object
+			if (isAlly) {
+				allyFilter.put(robotMessage.getRobotId(),
+						new RobotUKF(new FieldPoint(robotMessage.getX(), robotMessage.getY())));
 			} else {
-				enemyFilter[robotMessage.getRobotId()] = new Kalman(
-						new FieldPoint(robotMessage.getX(), robotMessage.getY()), 0, 0);
+				enemyFilter.put(robotMessage.getRobotId(), new RobotUKF(new FieldPoint(robotMessage.getX(),
+						robotMessage.getY())));
 			}
 		}
 
-		robot = t.getRobotByID(robotMessage.getRobotId());
+		FieldPoint measuredPosition = new FieldPoint(robotMessage.getX(), robotMessage.getY());
+
+		if (!isValidCameraId(measuredPosition, camNo))
+			return;
+
 		if (robot != null) {
-			Kalman filter;
-			if (world.getReferee().getAllyTeamColor().equals(color)) {
-				filter = allyFilter[robot.getRobotId()];
-			} else {
-				filter = enemyFilter[robot.getRobotId()];
-			}
+			RobotUKF filter = isAlly ? allyFilter.get(robotMessage.getRobotId()) : enemyFilter.get(robotMessage
+					.getRobotId());
 
-			FieldPoint filterPoint = new FieldPoint(robotMessage.getX(), robotMessage.getY());
-			if(filter != null) {
-				// deltadistance between predicted and measured point
-				double deltaDistance = filter.getPredictPoint().getDeltaDistance(filterPoint);
-				double xSpeed = (robotMessage.getX() - filter.getLastX());
-				double ySpeed = (robotMessage.getY() - filter.getLastY());
-	
-				// Point data after Kalman filtering
-				FieldPoint filteredPoint = filter.filterPoint(filterPoint, xSpeed, ySpeed);
-				filter.predictPoint(); // predict new point for next iteration
-	
-				// if predicted and measured points are close update position data
-				if (deltaDistance < 20) {
-					if (robotMessage.hasOrientation()) {
-						double degrees = Math.toDegrees(robotMessage.getOrientation());
-						robot.update(new FieldPoint(filteredPoint.getX(), filteredPoint.getY()), updateTime, degrees, camNo);
-					} else {
-						robot.update(new FieldPoint(filteredPoint.getX(), filteredPoint.getY()), updateTime, camNo);
-					}
-				}
-			}
+			filter.run(measuredPosition, robotMessage.getOrientation());
+
+			FieldPoint newPosition = new FieldPoint(filter.getX(), filter.getY());
+			double speed = Math.sqrt(Math.pow(ballFilter.getXVelocity(), 2) + Math.pow(ballFilter.getYVelocity(), 2));
+			double direction = Math.toDegrees(Math.atan2(ballFilter.getYVelocity(), ballFilter.getXVelocity()));
+
+			robot.update(newPosition, updateTime, filter.getOrientation(), speed, direction);
 		}
-		else
-			System.err.printf("DetectionHandler: Could not find robot with ID %d\n", robotMessage.getRobotId());
 	}
 }

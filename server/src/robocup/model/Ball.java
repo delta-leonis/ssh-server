@@ -25,8 +25,9 @@ public class Ball extends FieldObject {
 	 * @param posZ		new Z position for object, also known the be the current height of the ball.
 	 * @param direction 
 	 */
-	public void update(double newTime, FieldPoint p, double posZ, int lastCamUpdateNo, double directionSpeed, double direction) {
-		super.update(p, newTime, lastCamUpdateNo);
+	public void update(double newTime, FieldPoint p, double posZ, double directionSpeed, double direction) {
+		position = p;
+		lastUpdateTime = newTime;
 		this.posZ = posZ;
 		this.speed = directionSpeed;
 		this.direction = direction;

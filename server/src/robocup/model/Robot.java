@@ -3,6 +3,8 @@ package robocup.model;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 
+import robocup.controller.ai.movement.DijkstraPathPlanner;
+
 /**
  * Represents a Robot on the {@link Field}.
  * This class is abstract, so make sure your Robot is either from the {@link Ally} or {@link Enemy} class.
@@ -64,17 +66,15 @@ public abstract class Robot extends FieldObject {
 	/**
 	 * {@inheritDoc}
 	 * @param orientation in degrees (0 = EAST, 90 = NORTH, 180 = WEST, -90 = SOUTH)
+	 * @param direction 
+	 * @param speed 
 	 */
-	public void update(FieldPoint newPosition, double updateTime, double orientation, int lastCamUpdateNo) {
-		super.update(newPosition, updateTime, lastCamUpdateNo);
-		this.orientation = orientation; // setOrientation(orientation)
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void update(FieldPoint p, double updateTime, int lastCamUpdateNo) {
-		super.update(p, updateTime, lastCamUpdateNo);
+	public void update(FieldPoint newPosition, double updateTime, double orientation, double speed, double direction) {
+		position = newPosition;
+		lastUpdateTime = updateTime;
+		this.orientation = orientation;
+		this.speed = speed;
+		this.direction = direction;
 	}
 
 	/**

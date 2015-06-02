@@ -6,7 +6,7 @@ package robocup.model;
  */
 public abstract class FieldObject {
 
-	private FieldPoint position;
+	protected FieldPoint position;
 	// LastUpdateTime = time off the day in sec
 	protected double lastUpdateTime;
 	protected double direction;
@@ -18,72 +18,10 @@ public abstract class FieldObject {
 	}
 
 	/**
-	 * Updates FieldObject
-	 * @param updateTime Update timestamp given by the SSL Vision program
-	 * @param newPosition New {@link FieldPoint}
-	 * @post Updated position, direction and speed.
-	 */
-	public void update(FieldPoint newPosition, double updateTime, int camUpdateNo) {
-		switch (camUpdateNo) {
-		case 0:
-			if (newPosition.getX() >= 0 || newPosition.getY() <= 0)
-				return;
-			break;
-		case 1:
-			if (newPosition.getX() <= 0 || newPosition.getY() >= 0)
-				return;
-			break;
-		case 2:
-			if (newPosition.getX() <= 0 || newPosition.getY() <= 0)
-				return;
-			break;
-		case 3:
-			if (newPosition.getX() >= 0 || newPosition.getY() >= 0)
-				return;
-			break;
-		}
-
-		if (position != null) {
-			setDirection(newPosition);
-			setSpeed(updateTime, newPosition);
-		}
-
-		position = newPosition;
-		lastUpdateTime = updateTime;
-	}
-
-	/**
-	 * @param direction Sets the direction on this object based on its last position.
-	 */
-	public void setDirection(FieldPoint newPosition) {
-		if (position != null) {
-			double deltaDistance = position.getDeltaDistance(newPosition);
-
-			if (deltaDistance > 1.5) {
-				direction = position.getAngle(newPosition);
-				// System.out.println(direction);
-			}
-		}
-	}
-
-	/**
 	 * @return the direction this object is facing in degrees
 	 */
 	public double getDirection() {
 		return direction;
-	}
-
-	/**
-	 * Calculates speed of this FieldObject based on its {@link FieldPoint previous position}, {@link FieldPoint current position} and the current time.
-	 * @param updateTime The current time in seconds
-	 * @param newPosition The {@link FieldPoint current position} of this object.
-	 */
-	private void setSpeed(double updateTime, FieldPoint newPosition) {
-		double deltaDistance = position.getDeltaDistance(newPosition);
-		double deltaTime = updateTime - lastUpdateTime;
-		if (deltaDistance > 1.5) {
-			speed = Math.abs((deltaDistance / deltaTime));
-		}
 	}
 
 	/**
