@@ -513,7 +513,7 @@ size of the {@link JFrame} the {@link FieldPanel} should be in.
 						* Robot.DIAMETER / 2.0);
 
 				g2.setColor((robot instanceof Ally) ? allyColor : enemyColor);
-				if((world.getLastTimestamp() - robot.getLastUpdateTime()) > 5)
+				if(!robot.isOnSight())
 					g2.setColor(toGrayScale(g2.getColor()));
 				if(isWindows()){
 					//SOLID COLOR
