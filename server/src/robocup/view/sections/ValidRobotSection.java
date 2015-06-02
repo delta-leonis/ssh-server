@@ -38,7 +38,6 @@ public class ValidRobotSection extends SectionBox {
 			checkbox.setName("ally");
 			checkbox.addActionListener(new checkHandler());
 			//checkbox.setSelected(World.getInstance().getValidAllyIDs().contains(i));
-			checkbox.setSelected(true);
 			checkboxes.add(checkbox);
 			add(checkbox, (numberOfRobots - 1 == i) ? "wrap" : "");
 		}
@@ -52,7 +51,6 @@ public class ValidRobotSection extends SectionBox {
 			checkbox.setName("enemy");
 			checkbox.addActionListener(new checkHandler());
 			//checkbox.setSelected(World.getInstance().getValidEnemyIDs().contains(i));
-			checkbox.setSelected(true);
 			checkboxes.add(checkbox);
 			add(checkbox, (numberOfRobots - 1 == i) ? "wrap" : "");
 		}
