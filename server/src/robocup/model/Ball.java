@@ -23,11 +23,13 @@ public class Ball extends FieldObject {
 	 * @param newTime	Update timestamp
 	 * @param p			new {@link FieldPoint} position
 	 * @param posZ		new Z position for object, also known the be the current height of the ball.
+	 * @param direction 
 	 */
-	public void update(double newTime, FieldPoint p, double posZ, int lastCamUpdateNo, double directionSpeed) {
+	public void update(double newTime, FieldPoint p, double posZ, int lastCamUpdateNo, double directionSpeed, double direction) {
 		super.update(p, newTime, lastCamUpdateNo);
 		this.posZ = posZ;
 		this.speed = directionSpeed;
+		this.direction = direction;
 		World.getInstance().updateState();
 	}
 

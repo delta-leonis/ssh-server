@@ -64,11 +64,34 @@ public class DetectionHandler {
 	 * @param camNo The ID of the camera that detected the ball
 	 */
 	public void updateBall(SSL_DetectionBall ball, double time, int camNo) {
-		ballFilter.run(new FieldPoint(ball.getX(), ball.getY()));
+		FieldPoint measuredPosition = new FieldPoint(ball.getX(), ball.getY());
+		
+		switch (camNo) {
+		case 0:
+			if (measuredPosition.getX() >= 0 || measuredPosition.getY() <= 0)
+				return;
+			break;
+		case 1:
+			if (measuredPosition.getX() <= 0 || measuredPosition.getY() >= 0)
+				return;
+			break;
+		case 2:
+			if (measuredPosition.getX() <= 0 || measuredPosition.getY() <= 0)
+				return;
+			break;
+		case 3:
+			if (measuredPosition.getX() >= 0 || measuredPosition.getY() >= 0)
+				return;
+			break;
+		}
+
+		ballFilter.run(measuredPosition);
+		double speed = Math.sqrt(Math.pow(ballFilter.getXVelocity(), 2) + Math.pow(ballFilter.getYVelocity(), 2));
+		double direction = Math.toDegrees(Math.atan2(ballFilter.getYVelocity(), ballFilter.getXVelocity()));
 
 		if (ball.hasZ()) {
 			world.getBall().update(time, new FieldPoint(ballFilter.getX(), ballFilter.getY()), ball.getZ(), camNo,
-					Math.sqrt(Math.pow(ballFilter.getXVelocity(), 2) + Math.pow(ballFilter.getYVelocity(), 2)));
+					speed, direction);
 		} else {
 			world.getBall().update(new FieldPoint(ballFilter.getX(), ballFilter.getY()), time, camNo);
 		}
