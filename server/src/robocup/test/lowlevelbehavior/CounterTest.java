@@ -25,7 +25,7 @@ public class CounterTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		counterRobot = new Ally(0, 180);
-		counterRobot.update(new FieldPoint(0, 0), 0, 0, 0);
+		counterRobot.update(new FieldPoint(0, 0), 0, 0, 0, 0);
 		ballPosition = new FieldPoint(0, 0);
 		freePosition = null;
 	}

@@ -2,7 +2,6 @@ package robocup.controller.ai.lowLevelBehavior;
 
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.Ball;
-import robocup.model.Enemy;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.World;

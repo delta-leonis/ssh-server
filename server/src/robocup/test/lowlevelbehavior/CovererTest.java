@@ -30,7 +30,7 @@ public class CovererTest {
 
 	@Before
 	public void setUp() {
-		covererRobot.update(new FieldPoint(0, 0), 0, 0, 0);
+		covererRobot.update(new FieldPoint(0, 0), 0, 0, 0, 0);
 		covererBehavior = new Coverer(covererRobot);
 	}
 

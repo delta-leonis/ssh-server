@@ -128,7 +128,7 @@ public class DetectionHandler {
 		ArrayList<Robot> team = world.getReferee().getAlly().getRobots();
 
 		for (Robot ally : team) {
-			ally.setOnSight(world.getLastTimeStamp() - ally.getLastUpdateTime() > 2);
+			ally.setOnSight(world.getLastTimestamp() - ally.getLastUpdateTime() > 2);
 		}
 	}
 
@@ -144,8 +144,8 @@ public class DetectionHandler {
 		Robot robot = t.getRobotByID(robotMessage.getRobotId());
 		boolean isAlly = world.getReferee().getAllyTeamColor().equals(color);
 
-		if (isAlly && !world.getValidAllyRobotIDs().contains(robotMessage.getRobotId()) || !isAlly
-				&& !world.getValidEnemyRobotIDs().contains(robotMessage.getRobotId()))
+		if (isAlly && !world.getValidAllyIDs().contains(robotMessage.getRobotId()) || !isAlly
+				&& !world.getValidEnemyIDs().contains(robotMessage.getRobotId()))
 			return;
 
 		// create filter if this is the first detection for this robot
