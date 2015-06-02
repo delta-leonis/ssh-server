@@ -513,6 +513,8 @@ size of the {@link JFrame} the {@link FieldPanel} should be in.
 						* Robot.DIAMETER / 2.0);
 
 				g2.setColor((robot instanceof Ally) ? allyColor : enemyColor);
+				if((world.getLastTimestamp() - robot.getLastUpdateTime()) > 5)
+					g2.setColor(toGrayScale(g2.getColor()));
 				if(isWindows()){
 					//SOLID COLOR
 					g2.fillArc(
@@ -553,6 +555,11 @@ size of the {@link JFrame} the {@link FieldPanel} should be in.
 		}
 	}
 	
+	private Color toGrayScale(Color color) {
+        int grayColor = (int)(color.getRed() * 0.299 + color.getGreen() * 0.587 + color.getBlue() * 0.114);
+        return new Color(grayColor, grayColor, grayColor);
+	}
+
 	private boolean isWindows() {
 		return System.getProperty("os.name").toLowerCase().contains("windows");
 	}

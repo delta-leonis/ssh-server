@@ -37,6 +37,7 @@ public class World extends Observable {
 
 	private static final int TOTAL_TEAM_SIZE = 11;
 	private final int STOP_BALL_DISTANCE = 500; // in mm
+	private long lastUpdateTime; //last update from vision in seconds
 
 	public GUI gui;
 
@@ -113,6 +114,13 @@ public class World extends Observable {
 		return currentGameState;
 	}
 
+	/**
+	 * most recent timestamp from datapacket (in seconds) 
+	 */
+	public long getLastTimestamp(){
+		return lastUpdateTime;
+	}
+	
 	/**
 	 * Update the current GameState {@link GameState}
 	 * The game state will be changed depending on referee commands and the ball position
