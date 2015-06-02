@@ -149,15 +149,12 @@ public class DetectionHandler {
 			return;
 
 		// create filter if this is the first detection for this robot
-		if (allyFilter.get(robotMessage.getRobotId()) == null) { // Create robot object
-			if (isAlly) {
-				allyFilter.put(robotMessage.getRobotId(),
-						new RobotUKF(new FieldPoint(robotMessage.getX(), robotMessage.getY())));
-			} else {
-				enemyFilter.put(robotMessage.getRobotId(), new RobotUKF(new FieldPoint(robotMessage.getX(),
-						robotMessage.getY())));
-			}
-		}
+		if (isAlly && allyFilter.get(robotMessage.getRobotId()) == null)
+			allyFilter.put(robotMessage.getRobotId(),
+					new RobotUKF(new FieldPoint(robotMessage.getX(), robotMessage.getY())));
+		else if (!isAlly && enemyFilter.get(robotMessage.getRobotId()) == null)
+			enemyFilter.put(robotMessage.getRobotId(),
+					new RobotUKF(new FieldPoint(robotMessage.getX(), robotMessage.getY())));
 
 		FieldPoint measuredPosition = new FieldPoint(robotMessage.getX(), robotMessage.getY());
 
@@ -174,7 +171,7 @@ public class DetectionHandler {
 			double speed = Math.sqrt(Math.pow(ballFilter.getXVelocity(), 2) + Math.pow(ballFilter.getYVelocity(), 2));
 			double direction = Math.toDegrees(Math.atan2(ballFilter.getYVelocity(), ballFilter.getXVelocity()));
 
-			robot.update(newPosition, updateTime, filter.getOrientation(), speed, direction);
+			robot.update(newPosition, updateTime, Math.toDegrees(filter.getOrientation()), speed, direction);
 		}
 	}
 }
