@@ -23,10 +23,11 @@
  */
 package robocup.filter;
 
-import robocup.model.StateModel;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
+
 import robocup.model.FieldPoint;
+import robocup.model.StateModel;
 
 /**
  * Implementation of AbstractUKF for a robot given only x, y, and orientation data
@@ -98,8 +99,8 @@ public class RobotUKF extends AbstractUKF {
                     true, 
                     measurement.getX(),                        // measured x-position
                     measurement.getY(),                        // measured y-position
-                    (this.getX() - measurement.getX()) / 40,   // estimated x-velocity
-                    (this.getY() - measurement.getY()) / 40,   // estimated y-velocity
+                    (measurement.getX() - this.getX()) / 40,   // estimated x-velocity
+                    (measurement.getY() - this.getY()) / 40,   // estimated y-velocity
                     orientation
                 ), 
                 this.state.getCovariance()

@@ -97,8 +97,8 @@ public class BallUKF extends AbstractUKF {
                     true, 
                     measurement.getX(),                        // measured x-position
                     measurement.getY(),                        // measured y-position
-                    (this.getX() - measurement.getX()) / 40,   // estimated x-velocity
-                    (this.getY() - measurement.getY()) / 40   // estimated y-velocity
+                    (measurement.getX() - this.getX()) / 40,   // estimated x-velocity
+                    (measurement.getY() - this.getY()) / 40   // estimated y-velocity
                 ), 
                 this.state.getCovariance()
             )
