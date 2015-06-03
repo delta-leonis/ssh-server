@@ -191,7 +191,7 @@ INFO: Failed to open device (/dev/input/event5): Failed to open device /dev/inpu
 			FieldPoint destination = calculateDestination(robot);
 			FieldPoint target = calculateTarget(robot);
 			int speed = calculateSpeed();
-			selectNextRobot();
+//			selectNextRobot();
 			GotoPosition goPos = new GotoPosition(robot, destination, target);
 			goPos.calculateWithoutPathPlanner(speed, calculateKickChip(), calculateDribble());
 
