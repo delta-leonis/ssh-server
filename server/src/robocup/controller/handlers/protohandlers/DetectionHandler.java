@@ -168,8 +168,8 @@ public class DetectionHandler {
 			filter.run(measuredPosition, robotMessage.getOrientation());
 
 			FieldPoint newPosition = new FieldPoint(filter.getX(), filter.getY());
-			double speed = Math.sqrt(Math.pow(ballFilter.getXVelocity(), 2) + Math.pow(ballFilter.getYVelocity(), 2));
-			double direction = Math.toDegrees(Math.atan2(ballFilter.getYVelocity(), ballFilter.getXVelocity()));
+			double speed = Math.sqrt(Math.pow(filter.getXVelocity(), 2) + Math.pow(filter.getYVelocity(), 2));
+			double direction = Math.toDegrees(Math.atan2(filter.getYVelocity(), filter.getXVelocity()));
 
 			robot.update(newPosition, updateTime, Math.toDegrees(filter.getOrientation()), speed, direction);
 		}
