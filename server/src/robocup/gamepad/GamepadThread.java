@@ -95,7 +95,6 @@ public class GamepadThread extends Thread {
 				selectButton = components[j];
 				break;
 			default:
-				System.out.println("unassigned button: " + components[j].getIdentifier().getName());
 				break;
 			}
 		}
@@ -114,11 +113,11 @@ public class GamepadThread extends Thread {
 	private int calculateKickChip() {
 		int chipKick = 0;
 		if(kickButton.getPollData() > 0.1f && System.currentTimeMillis() - kickButtonTime > 250) {
-			chipKick = (int) (Math.round(Math.abs(forceTrigger.getPollData()*100)));
+			chipKick = (int) (Math.round(Math.abs(forceTrigger.getPollData()*100))) * -1;
 			kickButtonTime = System.currentTimeMillis();
 		}
 		if(chipButton.getPollData() > 0.1f && System.currentTimeMillis() - chipButtonTime > 250) {
-			chipKick = (int) (Math.round(Math.abs(forceTrigger.getPollData()*100))) * -1;
+			chipKick = (int) (Math.round(Math.abs(forceTrigger.getPollData()*100)));
 			chipButtonTime = System.currentTimeMillis();
 		}
 		return chipKick;
