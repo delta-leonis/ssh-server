@@ -61,6 +61,7 @@ public class GamepadThread extends Thread {
 		}
 		Component[] components = gamepad.getComponents();
 		for (int j = 0; j < components.length; j++) {
+			System.out.println("component: "+components[j].getIdentifier().getName());
 			switch (components[j].getIdentifier().getName()) {
 			case "0":
 			case "A":
@@ -87,14 +88,12 @@ public class GamepadThread extends Thread {
 				orientationY = components[j];
 				break;
 			case "z":
-			case "rz":
 				forceTrigger = components[j];
 				break;
 			case "Select":
 				selectButton = components[j];
 				break;
 			default:
-				System.out.println("unassigned button: " + components[j].getIdentifier().getName());
 				break;
 			}
 		}
@@ -113,11 +112,11 @@ public class GamepadThread extends Thread {
 	private int calculateKickChip() {
 		int chipKick = 0;
 		if(kickButton.getPollData() > 0.1f && System.currentTimeMillis() - kickButtonTime > 250) {
-			chipKick = (int) (Math.round(Math.abs(forceTrigger.getPollData()*100)));
+			chipKick = (int) (Math.abs(forceTrigger.getPollData()*100));
 			kickButtonTime = System.currentTimeMillis();
 		}
 		if(chipButton.getPollData() > 0.1f && System.currentTimeMillis() - chipButtonTime > 250) {
-			chipKick = (int) (Math.round(Math.abs(forceTrigger.getPollData()*100))) * -1;
+			chipKick = (int) (Math.abs(forceTrigger.getPollData()*100)) * -1;
 			chipButtonTime = System.currentTimeMillis();
 		}
 		return chipKick;
