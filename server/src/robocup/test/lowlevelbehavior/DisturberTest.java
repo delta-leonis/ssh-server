@@ -28,14 +28,14 @@ public class DisturberTest {
 	@Before
 	public void setUp() {
 		disturberRobot = new Ally(0, 180);
-		disturberRobot.update(new FieldPoint(0, 0), 0, 0, 0);
+		disturberRobot.update(new FieldPoint(0, 0), 0, 0, 0, 0);
 		objectPosition = new FieldPoint(0, 0);
 	}
 
 	@Before
 	public void setUpNull() {
 		disturberRobot = new Ally(0, 180);
-		disturberRobot.update(new FieldPoint(0, 0), 0, 0, 0);
+		disturberRobot.update(new FieldPoint(0, 0), 0, 0, 0, 0);
 		objectPosition = new FieldPoint(0, 0);
 		disturberBehavior = new Disturber(disturberRobot, new FieldPoint(3000, 0));
 	}

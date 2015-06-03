@@ -37,10 +37,12 @@ public class World extends Observable {
 
 	private static final int TOTAL_TEAM_SIZE = 11;
 	private final int STOP_BALL_DISTANCE = 500; // in mm
+	private long lastUpdateTime; //last update from vision in seconds
 
 	public GUI gui;
 
-	private ArrayList<Integer> validRobotIDs = new ArrayList<Integer>();
+	private ArrayList<Integer> validAllyIDs = new ArrayList<Integer>();
+	private ArrayList<Integer> validEnemyIDs = new ArrayList<Integer>();
 	
 	private boolean start = false;		// True for start, false for stop
 	
@@ -55,16 +57,6 @@ public class World extends Observable {
 	 * Constructor for the {@link World} Can only be called as a singleton.
 	 */
 	private World() {
-		
-		validRobotIDs.add(0);
-		validRobotIDs.add(1);
-		validRobotIDs.add(2);
-		validRobotIDs.add(3);
-		validRobotIDs.add(4);
-		validRobotIDs.add(5);
-		validRobotIDs.add(6);
-		validRobotIDs.add(7);
-		
 		ball = new Ball();
 		// set a ball position to prevent null pointers
 		ball.setPosition(new FieldPoint(-500, -500));
@@ -113,6 +105,13 @@ public class World extends Observable {
 		return currentGameState;
 	}
 
+	/**
+	 * most recent timestamp from datapacket (in seconds) 
+	 */
+	public long getLastTimestamp(){
+		return lastUpdateTime;
+	}
+	
 	/**
 	 * Update the current GameState {@link GameState}
 	 * The game state will be changed depending on referee commands and the ball position
@@ -921,10 +920,16 @@ public class World extends Observable {
 	}
 
 	/**
-	 * @return list with robots that are valid for processing by {@link DetectionHandler}
+	 * @return list with {@link Enemy Enemies} that are valid for processing by {@link DetectionHandler}
 	 */
-	public ArrayList<Integer> getValidRobotIDs() {
-		return validRobotIDs;
+	public ArrayList<Integer> getValidEnemyIDs() {
+		return validEnemyIDs;
+	}
+	/**
+	 * @return list with {@link Ally Allies} that are valid for processing by {@link DetectionHandler}
+	 */
+	public ArrayList<Integer> getValidAllyIDs() {
+		return validAllyIDs;
 	}
 	
 	

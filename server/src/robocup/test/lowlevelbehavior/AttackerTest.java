@@ -24,7 +24,7 @@ public class AttackerTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		attackRobot = new Ally(0, 180);
-		attackRobot.update(new FieldPoint(0, 0), 0, 0, 0);
+		attackRobot.update(new FieldPoint(0, 0), 0, 0, 0, 0);
 	}
 
 	@Before
@@ -38,7 +38,7 @@ public class AttackerTest {
 		setUp();
 		
 		// Test if attacker robot finds a shooting position in the correct direction when shooting towards EAST
-		attackRobot.update(new FieldPoint(0, 0), 0, 0, 0);
+		attackRobot.update(new FieldPoint(0, 0), 0, 0, 0, 0);
 		attackBehavior.update(0.0, 0, ballPosition);
 		attackBehavior.calculate();
 		assertEquals(attackBehavior.getGotoPosition().getDestination(), new FieldPoint(ballPosition.getX()

@@ -28,7 +28,7 @@ public class RunnerTest {
 	@Before
 	public void setUp() {
 		runnerRobot = new Ally(0, 180);
-		runnerRobot.update(new FieldPoint(0, 0), 0, 0, 0);
+		runnerRobot.update(new FieldPoint(0, 0), 0, 0, 0, 0);
 		ballPosition = new FieldPoint(-100, 100);
 		runnerBehavior = new Runner(runnerRobot);
 	}
