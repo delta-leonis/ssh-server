@@ -2,6 +2,7 @@ package robocup.controller.ai.lowLevelBehavior;
 
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.Ball;
+import robocup.model.Enemy;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.World;
@@ -27,7 +28,7 @@ public class Keeper extends LowLevelBehavior {
 		this.centerGoalPosition = centerGoalPosition;
 
 		this.role = RobotMode.KEEPER;
-		go = new GotoPosition(robot, centerGoalPosition, ballPosition);
+		go = new GotoPosition(robot, centerGoalPosition, ballPosition,3000);
 	}
 
 	/**
@@ -58,75 +59,77 @@ public class Keeper extends LowLevelBehavior {
 	 * Calculates the goToKick
 	 */
 	private FieldPoint calculateGoToKick(){
-		// Look for "Dangerous robots"
-		// 		Get closest enemy robot to ball
-		Robot robot = World.getInstance().getClosestRobotToBall();
-		// This part might just ruin the entire game for us.
-//		boolean dangerous = false;
-//		if(robot instanceof Enemy){
-//			//		If enemy in danger zone
-//			if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())
-//					&& robot.getPosition().getX() > 0){
-//				dangerous = true;
-//			}
-//			else if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getWestTeam())
-//					&& robot.getPosition().getX() < 0){
-//				dangerous = true;
-//			}
-//			//		Then we're dealing with a dangerous robot.
-//		}
-//		if(dangerous){
-//			// calculate stuff for dangerous robot
-//		}
-//		else{
-		// If no robot has the ball -> Go to where the ball will be.
-		Ball ball = World.getInstance().getBall();
-		FieldPoint ballPos = ball.getPosition();
-		if(robot.getPosition().getDeltaDistance(ballPos) > 250){
+		if(this instanceof Keeper){
+			// Look for "Dangerous robots"
+			// 		Get closest enemy robot to ball
+			double ballDirection;
+			Robot robot = World.getInstance().getClosestRobotToBall();
+			// This part might just ruin the entire game for us.
+			boolean dangerous = false;
+			if(robot instanceof Enemy){
+				//		If enemy in danger zone
+				if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())
+						&& robot.getPosition().getX() > 0){
+					dangerous = true;
+				}
+				else if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getWestTeam())
+						&& robot.getPosition().getX() < 0){
+					dangerous = true;
+				}
+				//		Then we're dealing with a dangerous robot.
+			}
+			// If no robot has the ball -> Go to where the ball will be.
+			Ball ball = World.getInstance().getBall();
+			FieldPoint ballPos = ball.getPosition();
+			if(robot.getPosition().getDeltaDistance(ballPos) > 250 && ball.getSpeed() > 0.1){
+				ballDirection = ball.getDirection();
+			}
+			else if(dangerous){
+				ballDirection = robot.getPosition().getAngle(ball.getPosition());
+			}
+			else{
+				return getNewKeeperDestination(centerGoalPosition, ballPosition, distanceToObject);		
+			}
+			
 			double y;	// Where the ball will go to.
 			double x;
 			if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())){
-				if(Math.cos(Math.toRadians(ball.getDirection())) < 0){		// Ball moves towards the west
+				if(Math.cos(Math.toRadians(ballDirection)) < 0){		// Ball moves towards the west
 					goToKick = false;
 					return getNewKeeperDestination(centerGoalPosition, ballPosition, distanceToObject);
 				}
 				x = World.getInstance().getField().getLength()/2;
 			}
 			else{
-				if(Math.cos(Math.toRadians(ball.getDirection())) > 0){		// Ball moves towards the east
+				if(Math.cos(Math.toRadians(ballDirection)) > 0){		// Ball moves towards the east
 					goToKick = false;
 					return getNewKeeperDestination(centerGoalPosition, ballPosition, distanceToObject);
 				}
 				x = -World.getInstance().getField().getLength()/2;
 			}
-			y = Math.tan(Math.toRadians(ball.getDirection())) * (ballPos.getX() + x) + ballPos.getY();
+			y = Math.tan(Math.toRadians(ballDirection)) * (ballPos.getX() + x) + ballPos.getY();	// <-- Where the ball will hit
 			double goalWidth = World.getInstance().getField().getEastGoal().getWidth();
 			if(y < goalWidth/2 && y > -goalWidth/2){
 				// if the ball is going towards the goal
-				double keeperX = x - Math.cos(Math.toRadians(360 - ball.getDirection())) * 500;
-				double keeperY = y + Math.sin(Math.toRadians(360 - ball.getDirection())) * 500;
+				double keeperX = x - Math.cos(Math.toRadians(- ballDirection)) * 500;
+				double keeperY = y + Math.sin(Math.toRadians(- ballDirection)) * 500;
 				FieldPoint goalDest =  new FieldPoint(keeperX,keeperY);
-				if(goalDest.getDeltaDistance(ballPos) < 1000){
-					// go to ball and kick
-					goToKick = true;
-					return new FieldPoint(	x - Math.cos(Math.toRadians(360 - ball.getDirection())) * 800,
-											y + Math.sin(Math.toRadians(360 - ball.getDirection())) * 800);
-				}
-				else{
+				//TODO: Test the commented code.
+	//				if(goalDest.getDeltaDistance(ballPos) < 1000){
+	//					// go to ball and kick
+	////					goToKick = true;
+	//					return new FieldPoint(	x - Math.cos(Math.toRadians(- ball.getDirection())) * 800,
+	//											y + Math.sin(Math.toRadians(- ball.getDirection())) * 800);
+	//				}
+	//				else{
 					goToKick = false;
 					return goalDest;
-				}
+	//				}
 			}
 			goToKick = false;
-			return getNewKeeperDestination(centerGoalPosition, ballPosition, distanceToObject);
 		}
-//		}
-		
-		else{
-			return getNewKeeperDestination(centerGoalPosition, ballPosition, distanceToObject);
-		}
-		
 		// Else: Ally has ball. Do the regular stuff.
+		return getNewKeeperDestination(centerGoalPosition, ballPosition, distanceToObject);		
 		
 		
 	}
@@ -173,6 +176,12 @@ public class Keeper extends LowLevelBehavior {
 
 			double destX = objectPosition.getX() + dx;
 			double destY = objectPosition.getY() + dy;
+			if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam()) && destX > World.getInstance().getField().getLength()/2){
+				destX = World.getInstance().getField().getLength()/2;
+			}
+			else if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getWestTeam()) && destX < -World.getInstance().getField().getLength()/2){
+				destX = -World.getInstance().getField().getLength()/2;
+			}
 			newDestination = new FieldPoint(destX, destY);
 		}
 

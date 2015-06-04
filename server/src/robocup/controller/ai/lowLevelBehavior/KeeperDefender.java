@@ -14,7 +14,18 @@ public class KeeperDefender extends Keeper {
 		offset = 0;
 
 		this.role = RobotMode.KEEPERDEFENDER;
-		go = new GotoPosition(robot, centerGoalPosition, ballPosition, 2000);
+		go = new GotoPosition(robot, centerGoalPosition, ballPosition/*, 3000*/);
+	}
+	
+	@Override
+	public void calculate() {
+		// Calculate goToKick
+		
+		FieldPoint newDestination = getNewKeeperDestination(centerGoalPosition, ballPosition, distanceToObject);
+		// Change direction based on goToKick.
+		// Move forward and kick if ball gets too close
+		// Else, go to proper direction
+		changeDestination(newDestination, ballPosition);
 	}
 
 	/**
@@ -27,6 +38,7 @@ public class KeeperDefender extends Keeper {
 	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, int offset) {
 		super.update(distanceToGoal, goToKick, ballPosition);
 		this.offset = offset;
+		robot.setIgnore(true);
 	}
 
 	@Override

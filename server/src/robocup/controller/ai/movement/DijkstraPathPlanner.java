@@ -25,13 +25,13 @@ public class DijkstraPathPlanner {
 	// Distance from the middle of the robot to the vertices around it
 	// Basically the "Danger zone" for the Robot. A normal Robot has a radius of 90mm, so if DISTANCE_TO_ROBOT == 160mm,
 	// then it means we don't want to get within (160mm - 90mm = ) 70mm of any other Robot. (Based on their center points)
-	public static final int MIN_DISTANCE_TO_ROBOT = 160;
-	public static final int MAX_DISTANCE_TO_ROBOT = 300;
+	public static final int MIN_DISTANCE_TO_ROBOT = 170;
+	public static final int MAX_DISTANCE_TO_ROBOT = 250;
 	public static final int DISTANCE_TO_BALL = 120;
 	public static final int DISTANCE_TO_POLYGON = 120;
 	// This value is used to determine the vertex points, which are VERTEX_DISTANCE_TO_ROBOT from the middle points of the robots.
-	public static final int MIN_VERTEX_DISTANCE_TO_ROBOT = 240;
-	public static final int MAX_VERTEX_DISTANCE_TO_ROBOT = 400;
+	public static final int MIN_VERTEX_DISTANCE_TO_ROBOT = 200;
+	public static final int MAX_VERTEX_DISTANCE_TO_ROBOT = 300;
 	private World world;
 	private ArrayList<Shape> objects;
 	private ArrayList<Shape> copyOfObjects;
@@ -80,8 +80,8 @@ public class DijkstraPathPlanner {
 		 * A method that converts a poin to a rectangle by using the current position as base
 		 * @return
 		 */
-		public Rectangle2D toRect(){
-			return new Rectangle2D.Double(position.getX() - MIN_DISTANCE_TO_ROBOT, position.getY() - MIN_DISTANCE_TO_ROBOT, MIN_DISTANCE_TO_ROBOT * 2, MIN_DISTANCE_TO_ROBOT * 2);
+		public Ellipse2D toEllipse(){
+			return new Ellipse2D.Double(position.getX() - MIN_DISTANCE_TO_ROBOT, position.getY() - MIN_DISTANCE_TO_ROBOT, MIN_DISTANCE_TO_ROBOT * 2, MIN_DISTANCE_TO_ROBOT * 2);
 		}
 
 		/**
@@ -219,7 +219,7 @@ public class DijkstraPathPlanner {
 
 		generateObjectList(robotId, avoidBall);
 		copyOfObjects = (ArrayList<Shape>)objects.clone();
-		if(isInsidePolygon(new Vertex(destination).toRect())){
+		if(isInsidePolygon(new Vertex(destination).toEllipse())){
 			System.out.println("Inside polygon" + robotId);
 			return null;
 		}
@@ -240,13 +240,11 @@ public class DijkstraPathPlanner {
 		// add source and dest to vertices list
 		Vertex source = setupSource(beginNode);
 		if(source == null){
-			System.out.println("Stuck in source" + robotId);
 			allVertices = (ArrayList<Vertex>)vertices.clone();
 			return null;					//Locked in
 		}
 		Vertex dest = setupDestination(destination);
-		if(dest == null){
-			System.out.println("Stuck in destination" + robotId);
+		if(dest == null){	//TODO  fix
 			allVertices = (ArrayList<Vertex>)vertices.clone();
 			return null;					//Locked in
 		}
@@ -286,7 +284,7 @@ public class DijkstraPathPlanner {
 		source.setRemovable(false);
 		vertices.add(source);
 		
-		if(isInsideObject(source.toRect())) {
+		if(isInsideObject(source.toEllipse())) {
 			source.setStuck(true);
 			double x = beginNode.getX();
 			double y = beginNode.getY();
@@ -322,7 +320,7 @@ public class DijkstraPathPlanner {
 		destination.setRemovable(false);
 		vertices.add(destination);
 		
-		if (isInsideObject(destination.toRect())) {
+		if (isInsideObject(destination.toEllipse())) {
 			destination.setStuck(true);
 			double x = endNode.getX();
 			double y = endNode.getY();
@@ -340,11 +338,11 @@ public class DijkstraPathPlanner {
 			if (lockedIn)
 				return null;
 
-			removeAllVectorsInRect(new Rectangle2D.Double(x
-					- MAX_VERTEX_DISTANCE_TO_ROBOT + 1, y
-					- MAX_VERTEX_DISTANCE_TO_ROBOT + 1,
-					MAX_VERTEX_DISTANCE_TO_ROBOT * 2 - 2,
-					MAX_VERTEX_DISTANCE_TO_ROBOT * 2 - 2));
+//			removeAllVectorsInRect(new Rectangle2D.Double(x
+//					- MAX_VERTEX_DISTANCE_TO_ROBOT + 1, y
+//					- MAX_VERTEX_DISTANCE_TO_ROBOT + 1,
+//					MAX_VERTEX_DISTANCE_TO_ROBOT * 2 - 2,
+//					MAX_VERTEX_DISTANCE_TO_ROBOT * 2 - 2));
 		}
 		return destination;
 	}
@@ -365,7 +363,9 @@ public class DijkstraPathPlanner {
 	 */
 	protected boolean isValidPosition(Vertex source, Vertex destination){
 		for(Shape shape : objects){
-			if(shape.intersects(source.toRect())) {
+			Area areaA = new Area(shape);
+			areaA.intersect(new Area(source.toEllipse()));
+			if(!areaA.isEmpty()) {
 				// check whether it's in between source and destination.
 				Rectangle2D smallerRect = new Rectangle2D.Double(shape.getBounds2D().getX() + 40, shape.getBounds2D().getY() + 40, 180, 180);
 				if(smallerRect.intersectsLine(source.getPosition().getX(), source.getPosition().getY(), destination.getPosition()
@@ -471,10 +471,11 @@ public class DijkstraPathPlanner {
 	 * 					This rectangle might be created in {@link DijkstraPathPlanner#setupSource(FieldPoint) setupSouce()}.
 	 */
 	protected void generateObjectList(int robotId, boolean avoidBall) {
+		Robot thisRobot = World.getInstance().getAllRobots().get(robotId);
 		objects.clear();
 		for (Robot r : world.getReferee().getAlly().getRobotsOnSight())
 			if (r.getPosition() != null)
-				if (r.getRobotId() != robotId)
+				if (r.getRobotId() != robotId && !(r.getIgnore() && thisRobot.getIgnore()))
 					objects.add(r.getDangerEllipse(MIN_DISTANCE_TO_ROBOT, MAX_DISTANCE_TO_ROBOT));
 
 		for (Robot r : world.getReferee().getEnemy().getRobotsOnSight())
@@ -487,6 +488,10 @@ public class DijkstraPathPlanner {
 			objects.add(FieldZone.WEST_NORTH_GOAL.getPolygon());
 			objects.add(FieldZone.WEST_SOUTH_GOAL.getPolygon());
 		}
+		// Avoid goals.
+		objects.add(World.getInstance().getField().getEastGoal().toRect());
+		objects.add(World.getInstance().getField().getWestGoal().toRect());
+
 		if(avoidBall){
 			//Add ball
 			objects.add(world.getBall().getDangerRectangle(DISTANCE_TO_BALL));

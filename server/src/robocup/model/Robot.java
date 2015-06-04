@@ -24,6 +24,7 @@ public abstract class Robot extends FieldObject {
 	 */
 	private boolean onSight;
 	private boolean visible = true;		//true = visible in the GUI
+	private boolean ignore;
 
 	/**
 	 * Creates a new robot object
@@ -129,6 +130,18 @@ public abstract class Robot extends FieldObject {
 	 */
 	public void setHeight(double height) {
 		this.height = height;
+	}
+	
+	/**
+	 * If this robot is ignored, then it won't take part in the pathplanning.
+	 * @param ignore
+	 */
+	public void setIgnore(boolean ignore){
+		this.ignore = ignore;
+	}
+	
+	public boolean getIgnore(){
+		return ignore;
 	}
 	
 	/**

@@ -1,5 +1,7 @@
 package robocup.model;
 
+import java.awt.geom.Rectangle2D;
+
 /**
  * Describes a goal on the {@link Field}
  */
@@ -119,6 +121,14 @@ public class Goal {
 	 */
 	public void setBackSouth(FieldPoint backSouth) {
 		this.backSouth = backSouth;
+	}
+	
+	public Rectangle2D toRect(){
+		double x = backSouth.getX();
+		double y = backSouth.getY();
+		double horizontalLength = frontSouth.getX() - x;
+		double verticalLength = backNorth.getY() - y;
+		return new Rectangle2D.Double(x,y,horizontalLength,verticalLength);
 	}
 
 	@Override

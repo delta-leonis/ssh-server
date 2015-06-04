@@ -22,10 +22,10 @@ import robocup.output.ComInterface;
  */
 public class GotoPosition {
 
-	private static final int DISTANCE_TO_SLOW_DOWN = 200;	// Distance at which we start slowing down in millimeters.
+	private static final int DISTANCE_TO_SLOW_DOWN = 450;	// Distance at which we start slowing down in millimeters.
 	public static final int MAX_VELOCITY = 3000;
 	
-	private double DISTANCE_ROTATIONSPEED_COEFFICIENT = 12;
+	private double DISTANCE_ROTATIONSPEED_COEFFICIENT = 5;
 	private int MAX_ROTATION_SPEED = 1000;	//in mm/s
 	private int START_UP_SPEED = 100; // Speed added to rotation. Robot only starts rotating if it receives a value higher than 200 
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
@@ -152,7 +152,7 @@ public class GotoPosition {
 				output.send(1, robot.getRobotId(), 0, 0, 0, chipKick, dribble);
 			}
 			else{
-				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(target),0), chipKick, dribble);
+				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(robot.getPosition(), target),0), chipKick, dribble);
 			}
 		} 
 		else {
@@ -177,8 +177,8 @@ public class GotoPosition {
 				return;
 			}
 
-			double rotationToTarget = rotationToDest(target);
-			double rotationToGoal = rotationToDest(destination);
+			double rotationToTarget = rotationToDest(destination,target);
+			double rotationToGoal = rotationToDest(robot.getPosition(), destination);
 			double speed;
 			// Base speed on route.
 			if(route.size() > 1){
@@ -196,7 +196,7 @@ public class GotoPosition {
 
 			// Overrule speed
 			if (forcedSpeed > 0) {
-				speed = getSpeed(getDistance(), DISTANCE_TO_SLOW_DOWN/3, forcedSpeed);
+				speed = getSpeed(getDistance(), DISTANCE_TO_SLOW_DOWN/2, forcedSpeed);
 			}
 			
 			currentSpeed = speed;
@@ -234,12 +234,12 @@ public class GotoPosition {
 				output.send(1, robot.getRobotId(), 0, 0, 0, chipKick, dribble);
 			}
 			else{
-				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(target),0), chipKick, dribble);
+				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(robot.getPosition(), target),0), chipKick, dribble);
 			}
 		} 
 		else {
-			double rotationToTarget = rotationToDest(target);
-			double rotationToGoal = rotationToDest(destination);
+			double rotationToTarget = rotationToDest(robot.getPosition(), target);
+			double rotationToGoal = rotationToDest(robot.getPosition(), destination);
 			
 			// Get the rotation speed, based on the speed we're turning
 			double rotationSpeed;
@@ -326,10 +326,10 @@ public class GotoPosition {
 	 * @param newPoint The {@link FieldPoint} we wish to face.
 	 * @return The rotation we need to make to face the given {@link FieldPoint}
 	 */
-	private double rotationToDest(FieldPoint newPoint) {
+	private double rotationToDest(FieldPoint destination, FieldPoint newPoint) {
 		if(newPoint != null){
 			// angle vector between old and new
-			double newangle = robot.getPosition().getAngle(newPoint);
+			double newangle = destination.getAngle(newPoint);
 			double rot = robot.getOrientation() - newangle;
 	
 			if (rot > 180) {
