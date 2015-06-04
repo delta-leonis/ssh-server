@@ -171,14 +171,22 @@ public class World extends Observable {
 			break;
 		case TAKING_KICKOFF:
 		case WAITING_FOR_KICKOFF:
-			if (ball.getPosition().getDeltaDistance(ballPositionForGameState) > 100) {
+			if (referee.getCommand() == Command.STOP)
+				currentGameState = GameState.STOPPED;
+			else if (referee.getCommand() == Command.HALT)
+				currentGameState = GameState.HALTED;
+			else if (ball.getPosition().getDeltaDistance(ballPositionForGameState) > 100) {
 				ballPositionForGameState = null;
 				currentGameState = GameState.NORMAL_PLAY;
 			}
 
 			break;
 		case WAITING_FOR_NORMAL_START:
-			if (referee.getCommand() == Command.NORMAL_START) {
+			if (referee.getCommand() == Command.STOP)
+				currentGameState = GameState.STOPPED;
+			else if (referee.getCommand() == Command.HALT)
+				currentGameState = GameState.HALTED;
+			else if (referee.getCommand() == Command.NORMAL_START) {
 				switch (referee.getPreviousCommand()) {
 				case PREPARE_KICKOFF_BLUE:
 				case PREPARE_PENALTY_BLUE:
