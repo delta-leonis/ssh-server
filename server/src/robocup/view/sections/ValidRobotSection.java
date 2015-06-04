@@ -51,7 +51,6 @@ public class ValidRobotSection extends SectionBox {
 			JCheckBox checkbox = new JCheckBox("#" + i);
 			checkbox.setName("enemy");
 			checkbox.addActionListener(new checkHandler());
-			//checkbox.setSelected(World.getInstance().getValidEnemyIDs().contains(i));
 			checkboxes.add(checkbox);
 			add(checkbox, (numberOfRobots - 1 == i) ? "wrap" : "");
 		}
@@ -68,10 +67,10 @@ public class ValidRobotSection extends SectionBox {
 			int id = Integer.valueOf(checkbox.getText().substring(1));
 			
 			if(checkbox.isSelected())
-				list.add(id);
+				list.add((Integer)id);
 			else {
 				team.getRobotByID(id).setPosition(null);
-				list.remove(id);
+				list.remove((Integer)id);
 			}
 				
 		}

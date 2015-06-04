@@ -113,6 +113,13 @@ public class World extends Observable {
 	}
 	
 	/**
+	 * set the last received timestamp (in seconds)
+	 */
+	public void setLastTimestamp(long timestamp){
+		lastUpdateTime = timestamp;
+	}
+	
+	/**
 	 * Update the current GameState {@link GameState}
 	 * The game state will be changed depending on referee commands and the ball position
 	 */
