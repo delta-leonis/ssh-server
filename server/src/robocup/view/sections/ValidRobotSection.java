@@ -114,9 +114,9 @@ public class ValidRobotSection extends SectionBox {
 			if(checkbox.isSelected())
 				list.add((Integer)id);
 			else {
+				list.remove((Integer)id);
 				team.getRobotByID(id).setPosition(null);
 				team.getRobotByID(id).setOnSight(false);
-				list.remove((Integer)id);
 			}
 				
 		}
