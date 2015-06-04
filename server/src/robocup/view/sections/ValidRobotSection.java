@@ -70,6 +70,7 @@ public class ValidRobotSection extends SectionBox {
 				list.add((Integer)id);
 			else {
 				team.getRobotByID(id).setPosition(null);
+				team.getRobotByID(id).setOnSight(false);
 				list.remove((Integer)id);
 			}
 				
