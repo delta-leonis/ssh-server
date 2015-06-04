@@ -70,7 +70,7 @@ public abstract class Robot extends FieldObject {
 	 * @param direction 
 	 * @param speed 
 	 */
-	public void update(FieldPoint newPosition, double updateTime, double orientation, double speed, double direction) {
+	public void update(FieldPoint newPosition, long updateTime, double orientation, double speed, double direction) {
 		position = newPosition;
 		lastUpdateTime = updateTime;
 		this.orientation = orientation;

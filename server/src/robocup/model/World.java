@@ -113,6 +113,13 @@ public class World extends Observable {
 	}
 	
 	/**
+	 * set the last received timestamp (in seconds)
+	 */
+	public void setLastTimestamp(long timestamp){
+		lastUpdateTime = timestamp;
+	}
+	
+	/**
 	 * Update the current GameState {@link GameState}
 	 * The game state will be changed depending on referee commands and the ball position
 	 */
@@ -135,21 +142,21 @@ public class World extends Observable {
 			case DIRECT_FREE_BLUE:
 			case INDIRECT_FREE_BLUE:
 				if (referee.getAlly().getColor() == TeamColor.BLUE)
-					currentGameState = GameState.NORMAL_PLAY;
-				else {
+					currentGameState = GameState.TAKING_KICKOFF;
+				else
 					currentGameState = GameState.WAITING_FOR_KICKOFF;
-					ballPositionForGameState = ball.getPosition();
-				}
+
+				ballPositionForGameState = ball.getPosition();
 
 				break;
 			case DIRECT_FREE_YELLOW:
 			case INDIRECT_FREE_YELLOW:
 				if (referee.getAlly().getColor() == TeamColor.YELLOW)
-					currentGameState = GameState.NORMAL_PLAY;
-				else {
+					currentGameState = GameState.TAKING_KICKOFF;
+				else
 					currentGameState = GameState.WAITING_FOR_KICKOFF;
-					ballPositionForGameState = ball.getPosition();
-				}
+
+				ballPositionForGameState = ball.getPosition();
 
 				break;
 			case FORCE_START:
@@ -171,14 +178,22 @@ public class World extends Observable {
 			break;
 		case TAKING_KICKOFF:
 		case WAITING_FOR_KICKOFF:
-			if (ball.getPosition().getDeltaDistance(ballPositionForGameState) > 100) {
+			if (referee.getCommand() == Command.STOP)
+				currentGameState = GameState.STOPPED;
+			else if (referee.getCommand() == Command.HALT)
+				currentGameState = GameState.HALTED;
+			else if (ball.getPosition().getDeltaDistance(ballPositionForGameState) > 100) {
 				ballPositionForGameState = null;
 				currentGameState = GameState.NORMAL_PLAY;
 			}
 
 			break;
 		case WAITING_FOR_NORMAL_START:
-			if (referee.getCommand() == Command.NORMAL_START) {
+			if (referee.getCommand() == Command.STOP)
+				currentGameState = GameState.STOPPED;
+			else if (referee.getCommand() == Command.HALT)
+				currentGameState = GameState.HALTED;
+			else if (referee.getCommand() == Command.NORMAL_START) {
 				switch (referee.getPreviousCommand()) {
 				case PREPARE_KICKOFF_BLUE:
 				case PREPARE_PENALTY_BLUE:

@@ -8,7 +8,7 @@ public abstract class FieldObject {
 
 	protected FieldPoint position;
 	// LastUpdateTime = time off the day in sec
-	protected double lastUpdateTime;
+	protected long lastUpdateTime;
 	protected double direction;
 	protected double speed;
 
@@ -34,7 +34,7 @@ public abstract class FieldObject {
 	/**
 	 * @return The last time this object got updated in seconds.
 	 */
-	public double getLastUpdateTime() {
+	public long getLastUpdateTime() {
 		return lastUpdateTime;
 	}
 
