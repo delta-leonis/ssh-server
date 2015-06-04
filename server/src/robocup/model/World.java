@@ -135,21 +135,21 @@ public class World extends Observable {
 			case DIRECT_FREE_BLUE:
 			case INDIRECT_FREE_BLUE:
 				if (referee.getAlly().getColor() == TeamColor.BLUE)
-					currentGameState = GameState.NORMAL_PLAY;
-				else {
+					currentGameState = GameState.TAKING_KICKOFF;
+				else
 					currentGameState = GameState.WAITING_FOR_KICKOFF;
-					ballPositionForGameState = ball.getPosition();
-				}
+
+				ballPositionForGameState = ball.getPosition();
 
 				break;
 			case DIRECT_FREE_YELLOW:
 			case INDIRECT_FREE_YELLOW:
 				if (referee.getAlly().getColor() == TeamColor.YELLOW)
-					currentGameState = GameState.NORMAL_PLAY;
-				else {
+					currentGameState = GameState.TAKING_KICKOFF;
+				else
 					currentGameState = GameState.WAITING_FOR_KICKOFF;
-					ballPositionForGameState = ball.getPosition();
-				}
+
+				ballPositionForGameState = ball.getPosition();
 
 				break;
 			case FORCE_START:
