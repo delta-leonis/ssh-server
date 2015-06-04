@@ -61,8 +61,8 @@ public class BallUKF extends AbstractUKF {
                                    // frequency is arbitrarily chosen as 40 times per second.
                                    // The actual frequency will depend on the underlying system specs
                                    // and performance.
-                1, 0, 1/40, 0,     // x_pos       = x_pos + v_x*frequency
-                0, 1, 0, 1/40,     // y_pos       = y_pos + v_y*frequency
+                1, 0, 1/30, 0,     // x_pos       = x_pos + v_x*frequency
+                0, 1, 0, 1/30,     // y_pos       = y_pos + v_y*frequency
                 0, 0, 1, 0,        // v_x         = v_x
                 0, 0, 0, 1         // v_y         = v_y
             ),
@@ -97,8 +97,8 @@ public class BallUKF extends AbstractUKF {
                     true, 
                     measurement.getX(),                        // measured x-position
                     measurement.getY(),                        // measured y-position
-                    (measurement.getX() - this.getX()) / 40,   // estimated x-velocity
-                    (measurement.getY() - this.getY()) / 40   // estimated y-velocity
+                    (measurement.getX() - this.getX()) / 30,   // estimated x-velocity
+                    (measurement.getY() - this.getY()) / 30   // estimated y-velocity
                 ), 
                 this.state.getCovariance()
             )
