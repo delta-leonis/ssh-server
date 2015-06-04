@@ -496,7 +496,7 @@ size of the {@link JFrame} the {@link FieldPanel} should be in.
 		Color enemyColor = world.getReferee().getEnemy().getColor().toColor();
 		ArrayList<Robot> robots = world.getAllRobots();
 		for(Robot robot : robots){
-			if(((robot instanceof Ally) ? World.getInstance().getValidAllyIDs() : World.getInstance().getValidEnemyIDs()).contains(new Integer(robot.getRobotId()) != null)
+			if(((robot instanceof Ally) ? World.getInstance().getValidAllyIDs() : World.getInstance().getValidEnemyIDs()).contains(new Integer(robot.getRobotId()) != null))
 				continue;
 
 			if (robot.getPosition() == null)
