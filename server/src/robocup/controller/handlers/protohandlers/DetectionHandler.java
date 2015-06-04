@@ -64,6 +64,8 @@ public class DetectionHandler {
 	 * Process a {@link SSL_DetectionFrame}, which is a message from the Robocup SSL Vision program.
 	 */
 	public void process(SSL_DetectionFrame message) {
+		world.setLastTimestamp((long) message.getTCapture());
+
 		processRobots(message.getRobotsBlueList(), message.getRobotsYellowList(), message.getTCapture(),
 				message.getCameraId());
 		processBalls(message.getBallsList(), message.getTCapture(), message.getCameraId());
@@ -98,7 +100,7 @@ public class DetectionHandler {
 		double speed = Math.sqrt(Math.pow(ballFilter.getXVelocity(), 2) + Math.pow(ballFilter.getYVelocity(), 2));
 		double direction = Math.toDegrees(Math.atan2(ballFilter.getYVelocity(), ballFilter.getXVelocity()));
 
-		world.getBall().update(time, new FieldPoint(ballFilter.getX(), ballFilter.getY()), ball.getZ(), speed,
+		world.getBall().update((long) time, new FieldPoint(ballFilter.getX(), ballFilter.getY()), ball.getZ(), speed,
 				direction);
 	}
 
@@ -115,7 +117,6 @@ public class DetectionHandler {
 
 		for (SSL_DetectionRobot robot : yellowList)
 			updateRobot(TeamColor.YELLOW, robot, time, camNo);
-
 		updateOnSight(world.getReferee().getAllyTeamColor() == TeamColor.YELLOW ? yellowList : blueList);
 	}
 
@@ -128,7 +129,7 @@ public class DetectionHandler {
 		ArrayList<Robot> team = world.getReferee().getAlly().getRobots();
 
 		for (Robot ally : team) {
-			ally.setOnSight(world.getLastTimestamp() - ally.getLastUpdateTime() > 2);
+			ally.setOnSight(world.getLastTimestamp() - ally.getLastUpdateTime() < 2);
 		}
 	}
 
@@ -171,7 +172,7 @@ public class DetectionHandler {
 			double speed = Math.sqrt(Math.pow(filter.getXVelocity(), 2) + Math.pow(filter.getYVelocity(), 2));
 			double direction = Math.toDegrees(Math.atan2(filter.getYVelocity(), filter.getXVelocity()));
 
-			robot.update(newPosition, updateTime, Math.toDegrees(filter.getOrientation()), speed, direction);
+			robot.update(newPosition, (long) updateTime, Math.toDegrees(filter.getOrientation()), speed, direction);
 		}
 	}
 }
