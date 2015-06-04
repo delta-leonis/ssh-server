@@ -496,62 +496,67 @@ size of the {@link JFrame} the {@link FieldPanel} should be in.
 		Color enemyColor = world.getReferee().getEnemy().getColor().toColor();
 		ArrayList<Robot> robots = world.getAllRobots();
 		for(Robot robot : robots){
-			if (robot.getPosition() != null) {
-				FieldPoint robotPosition = robot.getPosition();
-				double robotOrientation = robot.getOrientation();
-				
-				// draw flat front part of robot
-				FieldPoint left = new FieldPoint(robotPosition.getX()
-						+ Math.cos(Math.toRadians(robotOrientation + 45.0)) * Robot.DIAMETER / 2.0, robot
-						.getPosition().getY()
-						+ Math.sin(Math.toRadians(robotOrientation + 45.0))
-						* Robot.DIAMETER / 2.0);
-				FieldPoint right = new FieldPoint(robotPosition.getX()
-						+ Math.cos(Math.toRadians(robotOrientation -45.0)) * Robot.DIAMETER / 2.0, robot
-						.getPosition().getY()
-						+ Math.sin(Math.toRadians(robotOrientation -45.0))
-						* Robot.DIAMETER / 2.0);
+			if(((robot instanceof Ally) ? World.getInstance().getValidAllyIDs() : World.getInstance().getValidEnemyIDs()).contains(new Integer(robot.getRobotId()) != null)
+				continue;
 
-				g2.setColor((robot instanceof Ally) ? allyColor : enemyColor);
-				if(!robot.isOnSight())
-					g2.setColor(toGrayScale(g2.getColor()));
-				if(isWindows()){
-					//SOLID COLOR
-					g2.fillArc(
-							(int) (robotPosition.toGUIPoint(ratio, mirror).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
-							(int) (robotPosition.toGUIPoint(ratio, mirror).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
-							(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio),
-							(int) robot.getOrientation() + (mirror ?  215: 35), 295);
-					g2.fillPolygon(new int[] {(int) right.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) left.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) robot.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX},
-							new int[] {(int) right.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) left.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) robot.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY}, 3);
-				}
-				//BORDERS
-				g2.setColor(g2.getColor().darker());
-				g2.drawLine((int) (left.toGUIPoint(ratio, mirror).getX() + spaceBufferX),
-						(int) (left.toGUIPoint(ratio, mirror).getY() + spaceBufferY),
-						(int) (right.toGUIPoint(ratio, mirror).getX() + spaceBufferX),
-						(int) (right.toGUIPoint(ratio, mirror).getY() + spaceBufferY));
+			if (robot.getPosition() == null)
+				continue;
+		
+			FieldPoint robotPosition = robot.getPosition();
+			double robotOrientation = robot.getOrientation();
+			
+			// draw flat front part of robot
+			FieldPoint left = new FieldPoint(robotPosition.getX()
+					+ Math.cos(Math.toRadians(robotOrientation + 45.0)) * Robot.DIAMETER / 2.0, robot
+					.getPosition().getY()
+					+ Math.sin(Math.toRadians(robotOrientation + 45.0))
+					* Robot.DIAMETER / 2.0);
+			FieldPoint right = new FieldPoint(robotPosition.getX()
+					+ Math.cos(Math.toRadians(robotOrientation -45.0)) * Robot.DIAMETER / 2.0, robot
+					.getPosition().getY()
+					+ Math.sin(Math.toRadians(robotOrientation -45.0))
+					* Robot.DIAMETER / 2.0);
 
-				// draw round part of robot
-				g2.drawArc(
+			g2.setColor((robot instanceof Ally) ? allyColor : enemyColor);
+			if(!robot.isOnSight())
+				g2.setColor(toGrayScale(g2.getColor()));
+			if(isWindows()){
+				//SOLID COLOR
+				g2.fillArc(
 						(int) (robotPosition.toGUIPoint(ratio, mirror).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
 						(int) (robotPosition.toGUIPoint(ratio, mirror).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
 						(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio),
-						(int) robotOrientation + (mirror ?  225 : 45), 270);
-
-				g2.setColor(Color.BLACK);
-				g2.setFont(new Font(g2.getFont().getFontName(), Font.BOLD, (int) (Robot.DIAMETER*ratio)/2));
-				g2.drawString("" + robot.getRobotId(), (int) robot
-						.getPosition().toGUIPoint(ratio, mirror).getX() -(robot.getRobotId()/10 + 1)*(g2.getFont().getSize()/3)+ spaceBufferX,
-						(int) robotPosition.toGUIPoint(ratio, mirror).getY() +(g2.getFont().getSize()/3)+ spaceBufferY);
-				if(robot instanceof Ally){
-					g2.setColor(RobotBox.getRoleColor(((Ally)robot).getRole()));
-					g2.fillRoundRect((int)(robot.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX + 10), 
-							(int)(robot.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY + 10), 10, 10, 2, 2);
-				}
-				if(showCoords)
-					drawCoord(g2, robotPosition, ratio, (int) (Robot.DIAMETER*ratio));
+						(int) robot.getOrientation() + (mirror ?  215: 35), 295);
+				g2.fillPolygon(new int[] {(int) right.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) left.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) robot.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX},
+						new int[] {(int) right.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) left.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) robot.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY}, 3);
 			}
+			//BORDERS
+			g2.setColor(g2.getColor().darker());
+			g2.drawLine((int) (left.toGUIPoint(ratio, mirror).getX() + spaceBufferX),
+					(int) (left.toGUIPoint(ratio, mirror).getY() + spaceBufferY),
+					(int) (right.toGUIPoint(ratio, mirror).getX() + spaceBufferX),
+					(int) (right.toGUIPoint(ratio, mirror).getY() + spaceBufferY));
+
+			// draw round part of robot
+			g2.drawArc(
+					(int) (robotPosition.toGUIPoint(ratio, mirror).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
+					(int) (robotPosition.toGUIPoint(ratio, mirror).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
+					(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio),
+					(int) robotOrientation + (mirror ?  225 : 45), 270);
+
+			g2.setColor(Color.BLACK);
+			g2.setFont(new Font(g2.getFont().getFontName(), Font.BOLD, (int) (Robot.DIAMETER*ratio)/2));
+			g2.drawString("" + robot.getRobotId(), (int) robot
+					.getPosition().toGUIPoint(ratio, mirror).getX() -(robot.getRobotId()/10 + 1)*(g2.getFont().getSize()/3)+ spaceBufferX,
+					(int) robotPosition.toGUIPoint(ratio, mirror).getY() +(g2.getFont().getSize()/3)+ spaceBufferY);
+			if(robot instanceof Ally){
+				g2.setColor(RobotBox.getRoleColor(((Ally)robot).getRole()));
+				g2.fillRoundRect((int)(robot.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX + 10), 
+						(int)(robot.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY + 10), 10, 10, 2, 2);
+			}
+
+			if(showCoords)
+				drawCoord(g2, robotPosition, ratio, (int) (Robot.DIAMETER*ratio));
 		}
 	}
 	

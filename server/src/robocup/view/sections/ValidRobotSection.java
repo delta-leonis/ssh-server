@@ -11,6 +11,7 @@ import net.miginfocom.swing.MigLayout;
 import robocup.controller.handlers.protohandlers.DetectionHandler;
 import robocup.model.Ally;
 import robocup.model.Robot;
+import robocup.model.Team;
 import robocup.model.World;
 import robocup.view.SectionBox;
 
@@ -62,16 +63,16 @@ public class ValidRobotSection extends SectionBox {
 	private class checkHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			JCheckBox checkbox = ((JCheckBox) e.getSource());
-			if(checkbox.getName().equals("ally"))
-				if(checkbox.isSelected())
-					World.getInstance().getValidAllyIDs().add(Integer.valueOf(checkbox.getText().substring(1)));
-				else
-					World.getInstance().getValidAllyIDs().remove(Integer.valueOf(checkbox.getText().substring(1)));
-			else
-				if(checkbox.isSelected())
-					World.getInstance().getValidEnemyIDs().add(Integer.valueOf(checkbox.getText().substring(1)));
-				else
-					World.getInstance().getValidEnemyIDs().remove(Integer.valueOf(checkbox.getText().substring(1)));
+			ArrayList<Integer> list = (checkbox.getName().equals("ally") ? World.getInstance().getValidAllyIDs() : World.getInstance().getValidEnemyIDs());
+			Team team = (checkbox.getName().equals("ally") ? World.getInstance().getReferee().getAlly() : World.getInstance().getReferee().getEnemy());
+			int id = Integer.valueOf(checkbox.getText().substring(1));
+			
+			if(checkbox.isSelected())
+				list.add(id);
+			else {
+				team.getRobotByID(id).setPosition(null);
+				list.remove(id);
+			}
 				
 		}
 	}
