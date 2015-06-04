@@ -2,14 +2,14 @@ package robocup.gamepad;
 
 import java.util.logging.Logger;
 
+import net.java.games.input.Component;
+import net.java.games.input.Controller;
+import net.java.games.input.ControllerEnvironment;
 import robocup.Main;
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.World;
-import net.java.games.input.Component;
-import net.java.games.input.Controller;
-import net.java.games.input.ControllerEnvironment;
 
 public class GamepadThread extends Thread {
 
@@ -61,7 +61,6 @@ public class GamepadThread extends Thread {
 		}
 		Component[] components = gamepad.getComponents();
 		for (int j = 0; j < components.length; j++) {
-			System.out.println("component: "+components[j].getIdentifier().getName());
 			switch (components[j].getIdentifier().getName()) {
 			case "0":
 			case "A":
@@ -113,7 +112,7 @@ public class GamepadThread extends Thread {
 	private int calculateKickChip() {
 		int chipKick = 0;
 		if(kickButton.getPollData() > 0.1f && System.currentTimeMillis() - kickButtonTime > 250) {
-			chipKick = (int) (Math.round(Math.abs(forceTrigger.getPollData()*100))) * -1;
+			chipKick = (int) (Math.abs(forceTrigger.getPollData()*100));
 			kickButtonTime = System.currentTimeMillis();
 		}
 		if(chipButton.getPollData() > 0.1f && System.currentTimeMillis() - chipButtonTime > 250) {
