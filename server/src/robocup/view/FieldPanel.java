@@ -137,21 +137,24 @@ size of the {@link JFrame} the {@link FieldPanel} should be in.
 	 * @param ratio	ratio for drawing
 	 */
 	private void drawVectors(Graphics g, double ratio){
-		g.setColor(Color.ORANGE);
-		Ball ball = world.getBall();
-		FieldPoint startPoint = ball.getPosition();
-		int length = (int) (1000*ratio);
-		double dX = Math.cos(Math.toRadians(ball.getDirection()))*length;
-		double dY = Math.sin(Math.toRadians(ball.getDirection()))*length;
-		FieldPoint endPoint = new FieldPoint(startPoint.getX() + dX, startPoint.getY() + dY);
-		g.drawLine((int) startPoint.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) startPoint.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) endPoint.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) endPoint.toGUIPoint(ratio, mirror).getY() + spaceBufferY );
-		
-		if(!showRobots || !showVectors)
+		if(!showVectors)
 			return;
 
-		for(RobotExecuter executer : world.getRobotExecuters())
-			if(executer.getLowLevelBehavior() != null && executer.getLowLevelBehavior().getGotoPosition() != null)
-				drawRobotVector(g, ratio, executer);
+		if(showRobots)
+			for(RobotExecuter executer : world.getRobotExecuters())
+				if(executer.getLowLevelBehavior() != null && executer.getLowLevelBehavior().getGotoPosition() != null)
+					drawRobotVector(g, ratio, executer);
+
+		if(showBall){
+			g.setColor(Color.ORANGE);
+			Ball ball = world.getBall();
+			FieldPoint startPoint = ball.getPosition();
+			int length = (int) (1000*ratio);
+			double dX = Math.cos(Math.toRadians(ball.getDirection()))*length;
+			double dY = Math.sin(Math.toRadians(ball.getDirection()))*length;
+			FieldPoint endPoint = new FieldPoint(startPoint.getX() + dX, startPoint.getY() + dY);
+			g.drawLine((int) startPoint.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) startPoint.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) endPoint.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) endPoint.toGUIPoint(ratio, mirror).getY() + spaceBufferY );
+		}
 	}
 
 	/**
