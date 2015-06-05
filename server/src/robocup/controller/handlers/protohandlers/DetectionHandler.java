@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import robocup.filter.BallUKF;
-import robocup.filter.Kalman;
 import robocup.filter.RobotUKF;
 import robocup.input.protobuf.MessagesRobocupSslDetection.SSL_DetectionBall;
 import robocup.input.protobuf.MessagesRobocupSslDetection.SSL_DetectionFrame;
