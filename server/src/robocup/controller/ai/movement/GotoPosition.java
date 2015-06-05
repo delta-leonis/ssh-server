@@ -146,75 +146,81 @@ public class GotoPosition {
 	 * parameters given in the constructor.
 	 */
 	public void calculate(boolean avoidBall) {
-		// Handle nulls
-		if (destination == null) {
-			if(target == null){
-				output.send(1, robot.getRobotId(), 0, 0, 0, chipKick, dribble);
-			}
-			else{
-				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(robot.getPosition(), target),0), chipKick, dribble);
-			}
-		} 
-		else {
-			// Dribble when the ball is close by
-			dribble = Math.abs(
-					robot.getOrientation() - robot.getPosition().getAngle(World.getInstance().getBall().getPosition())) < 20
-					&& robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition()) < Robot.DIAMETER / 2 + 200;
-			// Calculate the route using the DijkstraPathPlanner
-			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), avoidBall);
-			// If robot is locked up, the route will be null
-			if(route == null){
-				LOGGER.info("Robot #" + robot.getRobotId() + " can't reach destination.");
-				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
-				return;
-			}
+		// check if the robot is onSight
+		if (robot.isOnSight()) {	
+			// Handle nulls
+			if (destination == null) {
+				if(target == null){
+					output.send(1, robot.getRobotId(), 0, 0, 0, chipKick, dribble);
+				}
+				else{
+					output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(robot.getPosition(), target),0), chipKick, dribble);
+				}
+			} 
+			else {
+				// Dribble when the ball is close by
+				dribble = Math.abs(
+						robot.getOrientation() - robot.getPosition().getAngle(World.getInstance().getBall().getPosition())) < 20
+						&& robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition()) < Robot.DIAMETER / 2 + 200;
+				// Calculate the route using the DijkstraPathPlanner
+				route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), avoidBall);
+				// If robot is locked up, the route will be null
+				if(route == null){
+					LOGGER.info("Robot #" + robot.getRobotId() + " can't reach destination.");
+					output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+					return;
+				}
 			
-			// Get the first point in the route
-			if (route.size() > 0 && route.get(0) != null) {
-				destination = route.get(0);
-			} else {
-				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
-				return;
-			}
+				// Get the first point in the route
+				if (route.size() > 0 && route.get(0) != null) {
+					destination = route.get(0);
+				} else {
+					output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+					return;
+				}
 
-			double rotationToTarget = rotationToDest(destination,target);
-			double rotationToGoal = rotationToDest(robot.getPosition(), destination);
-			double speed;
-			// Base speed on route.
-			if(route.size() > 1){
-				double angle0 = robot.getPosition().getAngle(route.get(0));
-				double angle1 = route.get(0).getAngle(route.get(1));
-				double routeAngle = Math.abs(angle0 - angle1);
-				// Slow down based on the angle of the turn
-				speed = getSpeed(getDistance() + DISTANCE_TO_SLOW_DOWN * (1 - routeAngle/360), DISTANCE_TO_SLOW_DOWN, MAX_VELOCITY);
-			}
-			else{
-				speed = getSpeed(getDistance(), DISTANCE_TO_SLOW_DOWN, MAX_VELOCITY);
-			}
-			// Get the rotation speed, based on the speed we're turning
-			double rotationSpeed = getRotationSpeed(rotationToTarget, speed);
+				double rotationToTarget = rotationToDest(destination,target);
+				double rotationToGoal = rotationToDest(robot.getPosition(), destination);
+				double speed;
+				// Base speed on route.
+				if(route.size() > 1){
+					double angle0 = robot.getPosition().getAngle(route.get(0));
+					double angle1 = route.get(0).getAngle(route.get(1));
+					double routeAngle = Math.abs(angle0 - angle1);
+					// Slow down based on the angle of the turn
+					speed = getSpeed(getDistance() + DISTANCE_TO_SLOW_DOWN * (1 - routeAngle/360), DISTANCE_TO_SLOW_DOWN, MAX_VELOCITY);
+				}
+				else{
+					speed = getSpeed(getDistance(), DISTANCE_TO_SLOW_DOWN, MAX_VELOCITY);
+				}
+				// Get the rotation speed, based on the speed we're turning
+				double rotationSpeed = getRotationSpeed(rotationToTarget, speed);
 
-			// Overrule speed
-			if (forcedSpeed > 0) {
-				speed = getSpeed(getDistance(), DISTANCE_TO_SLOW_DOWN/2, forcedSpeed);
-			}
+				// Overrule speed
+				if (forcedSpeed > 0) {
+					speed = getSpeed(getDistance(), DISTANCE_TO_SLOW_DOWN/2, forcedSpeed);
+				}
 			
-			currentSpeed = speed;
-			if(dribble){
-				// Send the command
-				output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, chipKick, dribble);
-				LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + "," + chipKick + "," + dribble);
-			}
-			// Don't kick or chip if we aren't nearby.
-			else{
-				// Send the command
-				output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, 0, dribble);
-				LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + ",0 ," + dribble);
-			}
+				currentSpeed = speed;
+				if(dribble){
+					// Send the command
+					output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, chipKick, dribble);
+					LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + "," + chipKick + "," + dribble);
+				}
+				// Don't kick or chip if we aren't nearby.
+				else{
+					// Send the command
+					output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, 0, dribble);
+					LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + ",0 ," + dribble);
+				}
 			
-			
-			// Set kick back to 0 to prevent kicking twice in a row
-			chipKick = 0;
+				// Set kick back to 0 to prevent kicking twice in a row
+				chipKick = 0;
+			}
+		}
+		// Check if the robot has a previous location if the robot is not onSight
+		else if (robot.getPosition() != null && !robot.isOnSight()) {
+			output.send(2, robot.getRobotId());
 		}
 	}
 	
