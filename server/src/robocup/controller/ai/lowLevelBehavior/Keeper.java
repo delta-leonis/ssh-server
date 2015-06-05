@@ -107,7 +107,7 @@ public class Keeper extends LowLevelBehavior {
 				}
 				x = -World.getInstance().getField().getLength()/2;
 			}
-			y = Math.tan(Math.toRadians(ballDirection)) * (ballPos.getX() + x) + ballPos.getY();	// <-- Where the ball will hit
+			y = Math.tan(Math.toRadians(ballDirection)) * (x - ballPos.getX()) + ballPos.getY();	// <-- Where the ball will hit
 			double goalWidth = World.getInstance().getField().getEastGoal().getWidth();
 			if(y < goalWidth/2 && y > -goalWidth/2){
 				// if the ball is going towards the goal

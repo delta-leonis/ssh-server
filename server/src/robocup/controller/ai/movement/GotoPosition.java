@@ -9,6 +9,7 @@ import robocup.model.FieldObject;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.World;
+import robocup.model.enums.GameState;
 import robocup.output.ComInterface;
 
 /**
@@ -146,7 +147,24 @@ public class GotoPosition {
 	 * parameters given in the constructor.
 	 */
 	public void calculate(boolean avoidBall) {
-		// Handle nulls
+		if(World.getInstance().getGameState() == GameState.HALTED){
+			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+			return;
+		}
+		if(World.getInstance().getGameState() == GameState.STOPPED){
+			FieldPoint ball = World.getInstance().getBall().getPosition();
+			double deltaDistance = ball.getDeltaDistance(robot.getPosition());
+			System.out.println("Delta distance: " + deltaDistance);
+			if(deltaDistance < 700){
+				double robotAngleBall = robot.getPosition().getAngle(ball);
+				destination = new FieldPoint(robot.getPosition().getX() - Math.cos(Math.toRadians(robotAngleBall)) * (750 - deltaDistance),
+														robot.getPosition().getY() - Math.sin(Math.toRadians(robotAngleBall)) * (750 - deltaDistance));
+			}
+			else{
+				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+				return;
+			}
+		}
 		if (destination == null) {
 			if(target == null){
 				output.send(1, robot.getRobotId(), 0, 0, 0, chipKick, dribble);
