@@ -29,7 +29,7 @@ public class FieldControlSection extends SectionBox {
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 
 	public FieldControlSection() {
-		super("Field Conrol Section");
+		super("Field Control Section");
 
 		GraphicsDevice fieldMonitor = getSecondaryMonitor();
 
