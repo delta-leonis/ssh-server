@@ -13,8 +13,8 @@ public class DirectFreeKickDefense extends Strategy {
 	public DirectFreeKickDefense() {
 		super();
 		roles.add(RobotMode.KEEPER);
-		roles.add(RobotMode.COVERER);
 		roles.add(RobotMode.DISTURBER);
+		roles.add(RobotMode.COVERER);
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.KEEPERDEFENDER);

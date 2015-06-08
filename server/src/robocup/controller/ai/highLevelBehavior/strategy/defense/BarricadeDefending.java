@@ -29,8 +29,8 @@ public class BarricadeDefending extends Strategy {
 	 * <ol>
 	 * <li>{@link RobotMode#KEEPER}</li>
 	 * <li>{@link RobotMode#COUNTER}</li>
-	 * <li>{@link RobotMode#GOALPOSTCOVERER}</li>
 	 * <li>{@link RobotMode#DISTURBER}</li>
+	 * <li>{@link RobotMode#GOALPOSTCOVERER}</li>
 	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
 	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
 	 * </ol>
@@ -39,8 +39,8 @@ public class BarricadeDefending extends Strategy {
 		super();
 		roles.add(RobotMode.KEEPER);
 		roles.add(RobotMode.COUNTER);
-		roles.add(RobotMode.GOALPOSTCOVERER);
 		roles.add(RobotMode.DISTURBER);
+		roles.add(RobotMode.GOALPOSTCOVERER);
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.KEEPERDEFENDER);
 	}

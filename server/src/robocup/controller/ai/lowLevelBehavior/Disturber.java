@@ -26,7 +26,7 @@ public class Disturber extends Keeper {
 
 	@Override
 	public void calculate() {
-		FieldPoint newDestination = getNewKeeperDestination(ballPosition, centerGoalPosition, distanceToObject, offset);
+		FieldPoint newDestination = getNewKeeperDestination(ballPosition, pointToDefend, distanceToObject, offset);
 		changeDestination(newDestination, ballPosition);
 	}
 }
