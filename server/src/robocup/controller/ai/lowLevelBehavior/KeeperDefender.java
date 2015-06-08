@@ -21,7 +21,7 @@ public class KeeperDefender extends Keeper {
 	public void calculate() {
 		// Calculate goToKick
 		
-		FieldPoint newDestination = getNewKeeperDestination(centerGoalPosition, ballPosition, distanceToObject);
+		FieldPoint newDestination = getNewKeeperDestination(pointToDefend, ballPosition, distanceToObject);
 		// Change direction based on goToKick.
 		// Move forward and kick if ball gets too close
 		// Else, go to proper direction
