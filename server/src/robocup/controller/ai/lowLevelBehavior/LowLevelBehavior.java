@@ -85,8 +85,6 @@ public abstract class LowLevelBehavior {
 			double destX = ballPosition.getX() + dx;
 			double destY = ballPosition.getY() + dy;
 
-			System.out.println(distance);
-			System.out.println( Math.round(destX) + ", "+  Math.round(destY));
 			return new FieldPoint(Math.round(destX), Math.round(destY));
 		}
 
