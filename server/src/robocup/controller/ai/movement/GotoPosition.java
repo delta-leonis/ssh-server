@@ -27,7 +27,7 @@ public class GotoPosition {
 	/** 450 */
 	private int DISTANCE_TO_SLOW_DOWN = 450;
 	/** 3000 */
-	private int MAX_VELOCITY = 3000;
+	public static int MAX_VELOCITY = 3000;
 	/** 100 */
 	private int START_UP_MOVEMENT_SPEED = 100;
 	// Rotation Speed Variables
