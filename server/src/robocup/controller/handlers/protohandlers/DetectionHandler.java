@@ -116,7 +116,9 @@ public class DetectionHandler {
 
 		for (SSL_DetectionRobot robot : yellowList)
 			updateRobot(TeamColor.YELLOW, robot, time, camNo);
-		updateOnSight(world.getReferee().getAllyTeamColor() == TeamColor.YELLOW ? yellowList : blueList);
+
+		updateOnSight(yellowList, TeamColor.YELLOW);
+		updateOnSight(blueList, TeamColor.BLUE);
 	}
 
 	/**
@@ -124,12 +126,11 @@ public class DetectionHandler {
 	 * Setting this variable to true in a {@link Robot} will allow the GUI to display it as "Online"
 	 * @param robotList A list with the Detected Robots from the ally team.
 	 */
-	public void updateOnSight(List<SSL_DetectionRobot> robotList) {
-		ArrayList<Robot> team = world.getReferee().getAlly().getRobots();
+	public void updateOnSight(List<SSL_DetectionRobot> robotList, TeamColor teamcolor) {
+		ArrayList<Robot> team = (teamcolor.equals(world.getReferee().getAlly().getColor()) ? world.getReferee().getAlly().getRobots() : world.getReferee().getEnemy().getRobots());
 
-		for (Robot ally : team) {
-			ally.setOnSight(world.getLastTimestamp() - ally.getLastUpdateTime() < 2);
-		}
+		for (Robot robot : team)
+			robot.setOnSight(world.getLastTimestamp() - robot.getLastUpdateTime() < 2);
 	}
 
 	/**
