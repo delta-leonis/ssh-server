@@ -94,7 +94,7 @@ public abstract class Mode {
 					closestRobot.setPreferredZone(zone);
 				}
 			} else if((role == RobotMode.DISTURBER || role == RobotMode.ATTACKER) && getClosestAllyToBall() != null){
-				getClosestAllyToBall().setRole(role);
+				getClosestAllyToBallWithoutRole().setRole(role);
 			} else {
 				ArrayList<Ally> allyRobots = getAllyRobotsWithoutRole();
 				if (allyRobots.size() != 0) {
@@ -358,14 +358,33 @@ public abstract class Mode {
 
 		return minDistRobot;
 	}
-	
-	public Ally getClosestAllyToBall(){
+
+	public Ally getClosestAllyToBall() {
 		double minDistance = Double.MAX_VALUE;
 		Ally minDistRobot = null;
 
 		for (Ally robot : getAllyRobotsWithoutRole()) {
 			if (robot.getPosition() != null) {
-				double dist = robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition());
+				double dist = robot.getPosition().getDeltaDistance(world.getBall().getPosition());
+
+				if (dist < minDistance) {
+					minDistance = dist;
+					minDistRobot = robot;
+				}
+			}
+		}
+
+		return minDistRobot;
+	}
+
+	public Ally getClosestAllyToBallWithoutRole() {
+		double minDistance = Double.MAX_VALUE;
+		Ally minDistRobot = null;
+
+		for (Ally robot : getAllyRobotsWithoutRole()) {
+			if (robot.getPosition() != null && robot.getRole() != null) {
+				double dist = robot.getPosition().getDeltaDistance(world.getBall().getPosition());
+
 				if (dist < minDistance) {
 					minDistance = dist;
 					minDistRobot = robot;
