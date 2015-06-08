@@ -382,7 +382,7 @@ public abstract class Mode {
 		Ally minDistRobot = null;
 
 		for (Ally robot : getAllyRobotsWithoutRole()) {
-			if (robot.getPosition() != null && robot.getRole() != null) {
+			if (robot.getPosition() != null) {
 				double dist = robot.getPosition().getDeltaDistance(world.getBall().getPosition());
 
 				if (dist < minDistance) {
