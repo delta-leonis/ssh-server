@@ -45,7 +45,7 @@ public class Attacker extends LowLevelBehavior {
 			FieldPoint newDestination = ballPosition;
 
 			// find a shooting position
-			newDestination = getShootingPosition(shootDirection, ballPosition);
+			newDestination = getShootingPosition(shootDirection, ballPosition, 100);
 
 			if (chipKick != 0) {
 				// kick or chip when the orientation is good and the attacker is close to the ball
