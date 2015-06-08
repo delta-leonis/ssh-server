@@ -229,24 +229,24 @@ public class GotoPosition {
 	 * @return true, if we're allowed to move, false otherwise.
 	 */
 	public boolean prepareForTakeOff(){
-		if(World.getInstance().getGameState() == GameState.HALTED){
-			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
-			return false;
-		}
-		if(World.getInstance().getGameState() == GameState.STOPPED){
-			FieldPoint ball = World.getInstance().getBall().getPosition();
-			double deltaDistance = ball.getDeltaDistance(robot.getPosition());
-			if(deltaDistance < 700){
-				double robotAngleBall = robot.getPosition().getAngle(ball);
-				destination = new FieldPoint(robot.getPosition().getX() - Math.cos(Math.toRadians(robotAngleBall)) * (750 - deltaDistance),
-														robot.getPosition().getY() - Math.sin(Math.toRadians(robotAngleBall)) * (750 - deltaDistance));
-				return false;
-			}
-			else{
-				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
-				return false;
-			}
-		}
+//		if(World.getInstance().getGameState() == GameState.HALTED){
+//			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+//			return false;
+//		}
+//		if(World.getInstance().getGameState() == GameState.STOPPED){
+//			FieldPoint ball = World.getInstance().getBall().getPosition();
+//			double deltaDistance = ball.getDeltaDistance(robot.getPosition());
+//			if(deltaDistance < 700){
+//				double robotAngleBall = robot.getPosition().getAngle(ball);
+//				destination = new FieldPoint(robot.getPosition().getX() - Math.cos(Math.toRadians(robotAngleBall)) * (750 - deltaDistance),
+//														robot.getPosition().getY() - Math.sin(Math.toRadians(robotAngleBall)) * (750 - deltaDistance));
+//				return false;
+//			}
+//			else{
+//				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+//				return false;
+//			}
+//		}
 		if (destination == null) {
 			if(target == null){
 				output.send(1, robot.getRobotId(), 0, 0, 0, chipKick, dribble);
@@ -306,7 +306,9 @@ public class GotoPosition {
 	}
 	
 	/**
-	 * Function that
+	 * Function that goes to the given position, whilst turning around the target.
+	 * Calling this function continuously will make the robot end up at the given
+	 * offset from the target at an angle between the target and the destination.
 	 */
 	public void calculateTurnAroundTarget(int offset){
 		if(prepareForTakeOff()){
@@ -328,7 +330,7 @@ public class GotoPosition {
 														target.getY() + offset * Math.sin(Math.toRadians(degreesToMove)));
 			destination = newDestination;
 			forcedSpeed = CIRCLE_SPEED;
-			calculate(true);
+			calculate(false);
 //			System.out.println("Dest: " + newDestination + " AngleTargetAndRobot: " + angleTargetAndRobot + "  totalAngle: " + totalAngle + " DegreesToMove: " + degreesToMove + " test: " + (totalAngle - angleTargetAndRobot));
 //			double rotationToTarget = rotationToDest(newDestination,target);
 //			double rotationToGoal = rotationToDest(robot.getPosition(), destination);
@@ -400,9 +402,9 @@ public class GotoPosition {
 	 */
 	private double getSpeed(double d, int distanceToSlowDown, int speed) {
 		if(d > distanceToSlowDown){
-			return speed;
+			return speed + (speed > 0 ? START_UP_MOVEMENT_SPEED : -START_UP_MOVEMENT_SPEED);
 		}
-		return (d / distanceToSlowDown) * speed + START_UP_MOVEMENT_SPEED;
+		return (d / distanceToSlowDown) * speed + (speed > 0 ? START_UP_MOVEMENT_SPEED : -START_UP_MOVEMENT_SPEED);
 	}
 	
 	/**
