@@ -30,6 +30,8 @@ public class GotoPosition {
 	public static int MAX_VELOCITY = 3000;
 	/** 100 */
 	private int START_UP_MOVEMENT_SPEED = 100;
+	/** 450 */
+	private int DISTANCE_TO_SLOW_DOWN_FORCED = 100;
 	// Rotation Speed Variables
 	/** 5 */
 	private double DISTANCE_ROTATIONSPEED_COEFFICIENT = 5;
@@ -38,7 +40,7 @@ public class GotoPosition {
 	/** 100 */
 	private int START_UP_ROTATION_SPEED = 100;
 	// Circle Around Ball Move Variables
-	private int CIRCLE_SPEED = 1500;
+	private int CIRCLE_SPEED = 2000;
 	
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 
@@ -199,7 +201,7 @@ public class GotoPosition {
 
 			// Overrule speed
 			if (forcedSpeed > 0) {
-				speed = getSpeed(getDistance(), DISTANCE_TO_SLOW_DOWN/2, forcedSpeed);
+				speed = getSpeed(getDistance(), DISTANCE_TO_SLOW_DOWN_FORCED, forcedSpeed);
 			}
 			
 			currentSpeed = speed;
@@ -214,6 +216,8 @@ public class GotoPosition {
 				output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, 0, dribble);
 				LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + ",0 ," + dribble);
 			}
+//			System.out.println("\t " + robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)currentSpeed + "," + (int)rotationSpeed );
+
 			
 			// Set kick back to 0 to prevent kicking twice in a row
 			chipKick = 0;
@@ -225,24 +229,24 @@ public class GotoPosition {
 	 * @return true, if we're allowed to move, false otherwise.
 	 */
 	public boolean prepareForTakeOff(){
-//		if(World.getInstance().getGameState() == GameState.HALTED){
-//			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
-//			return false;
-//		}
-//		if(World.getInstance().getGameState() == GameState.STOPPED){
-//			FieldPoint ball = World.getInstance().getBall().getPosition();
-//			double deltaDistance = ball.getDeltaDistance(robot.getPosition());
-//			if(deltaDistance < 700){
-//				double robotAngleBall = robot.getPosition().getAngle(ball);
-//				destination = new FieldPoint(robot.getPosition().getX() - Math.cos(Math.toRadians(robotAngleBall)) * (750 - deltaDistance),
-//														robot.getPosition().getY() - Math.sin(Math.toRadians(robotAngleBall)) * (750 - deltaDistance));
-//				return false;
-//			}
-//			else{
-//				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
-//				return false;
-//			}
-//		}
+		if(World.getInstance().getGameState() == GameState.HALTED){
+			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+			return false;
+		}
+		if(World.getInstance().getGameState() == GameState.STOPPED){
+			FieldPoint ball = World.getInstance().getBall().getPosition();
+			double deltaDistance = ball.getDeltaDistance(robot.getPosition());
+			if(deltaDistance < 700){
+				double robotAngleBall = robot.getPosition().getAngle(ball);
+				destination = new FieldPoint(robot.getPosition().getX() - Math.cos(Math.toRadians(robotAngleBall)) * (750 - deltaDistance),
+														robot.getPosition().getY() - Math.sin(Math.toRadians(robotAngleBall)) * (750 - deltaDistance));
+				return false;
+			}
+			else{
+				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+				return false;
+			}
+		}
 		if (destination == null) {
 			if(target == null){
 				output.send(1, robot.getRobotId(), 0, 0, 0, chipKick, dribble);
@@ -312,21 +316,20 @@ public class GotoPosition {
 			double totalAngle = target.getAngle(destination);
 			// Increase angle
 			double degreesToMove;
-			if(Math.abs(totalAngle - angleTargetAndRobot) > 1.5){
-				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) > 180 ? -1.5 : 1.5);
+			if(Math.abs(totalAngle - angleTargetAndRobot) > 15){
+				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -15 : 15);
 			}
 			else{
 				double turnAmount = Math.abs(totalAngle - angleTargetAndRobot);
-				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) > 180 ? -turnAmount : turnAmount);
+				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -turnAmount : turnAmount);
 			}
-			System.out.println("Angle to rotate: " + angleTargetAndRobot);
 			// Use new angle to get position on circle around target
-			FieldPoint newDestination = new FieldPoint(	target.getX() - offset * Math.cos(degreesToMove),
-														target.getY() - offset * Math.sin(degreesToMove));
+			FieldPoint newDestination = new FieldPoint(	target.getX() + offset * Math.cos(Math.toRadians(degreesToMove)),
+														target.getY() + offset * Math.sin(Math.toRadians(degreesToMove)));
 			destination = newDestination;
-			System.out.println("Destination: " + destination);
-			calculate(false);
-//			System.out.println("Dest: " + newDestination + " AngleTargetAndRobot: " + angleTargetAndRobot + "  totalAngle: " + totalAngle + " DegreesToMove: " + degreesToMove);
+			forcedSpeed = CIRCLE_SPEED;
+			calculate(true);
+//			System.out.println("Dest: " + newDestination + " AngleTargetAndRobot: " + angleTargetAndRobot + "  totalAngle: " + totalAngle + " DegreesToMove: " + degreesToMove + " test: " + (totalAngle - angleTargetAndRobot));
 //			double rotationToTarget = rotationToDest(newDestination,target);
 //			double rotationToGoal = rotationToDest(robot.getPosition(), destination);
 //			
@@ -399,7 +402,7 @@ public class GotoPosition {
 		if(d > distanceToSlowDown){
 			return speed;
 		}
-		return (d / distanceToSlowDown) * speed;
+		return (d / distanceToSlowDown) * speed + START_UP_MOVEMENT_SPEED;
 	}
 	
 	/**
