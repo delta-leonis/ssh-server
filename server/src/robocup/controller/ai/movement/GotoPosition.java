@@ -29,16 +29,16 @@ public class GotoPosition {
 	/** 3000 */
 	public static int MAX_VELOCITY = 3000;
 	/** 100 */
-	private int START_UP_MOVEMENT_SPEED = 100;
+	private int START_UP_MOVEMENT_SPEED = 200;
 	/** 450 */
-	private int DISTANCE_TO_SLOW_DOWN_FORCED = 100;
+	private int DISTANCE_TO_SLOW_DOWN_FORCED = 150;
 	// Rotation Speed Variables
 	/** 5 */
 	private double DISTANCE_ROTATIONSPEED_COEFFICIENT = 5;
 	/** 1000 */
 	private int MAX_ROTATION_SPEED = 1000;
 	/** 100 */
-	private int START_UP_ROTATION_SPEED = 100;
+	private int START_UP_ROTATION_SPEED = 200;
 	// Circle Around Ball Move Variables
 	private int CIRCLE_SPEED = 2000;
 	
@@ -159,7 +159,7 @@ public class GotoPosition {
 	 * Calculates what message we need to send to the robot, based on the
 	 * parameters given in the constructor.
 	 */
-	public void calculate(boolean avoidBall) {
+	public void calculate(boolean avoidBall, boolean alwaysFaceTarget) {
 		if(prepareForTakeOff()) {
 			// Dribble when the ball is close by
 			dribble = Math.abs(
@@ -181,8 +181,8 @@ public class GotoPosition {
 				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
 				return;
 			}
-
-			double rotationToTarget = rotationToDest(destination,target);
+			
+			double rotationToTarget = alwaysFaceTarget ? rotationToDest(robot.getPosition(), target) : rotationToDest(destination,target);
 			double rotationToGoal = rotationToDest(robot.getPosition(), destination);
 			double speed;
 			// Base speed on route.
@@ -229,24 +229,24 @@ public class GotoPosition {
 	 * @return true, if we're allowed to move, false otherwise.
 	 */
 	public boolean prepareForTakeOff(){
-		if(World.getInstance().getGameState() == GameState.HALTED){
-			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
-			return false;
-		}
-		if(World.getInstance().getGameState() == GameState.STOPPED){
-			FieldPoint ball = World.getInstance().getBall().getPosition();
-			double deltaDistance = ball.getDeltaDistance(robot.getPosition());
-			if(deltaDistance < 700){
-				double robotAngleBall = robot.getPosition().getAngle(ball);
-				destination = new FieldPoint(robot.getPosition().getX() - Math.cos(Math.toRadians(robotAngleBall)) * (750 - deltaDistance),
-														robot.getPosition().getY() - Math.sin(Math.toRadians(robotAngleBall)) * (750 - deltaDistance));
-				return false;
-			}
-			else{
-				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
-				return false;
-			}
-		}
+//		if(World.getInstance().getGameState() == GameState.HALTED){
+//			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+//			return false;
+//		}
+//		if(World.getInstance().getGameState() == GameState.STOPPED){
+//			FieldPoint ball = World.getInstance().getBall().getPosition();
+//			double deltaDistance = ball.getDeltaDistance(robot.getPosition());
+//			if(deltaDistance < 700){
+//				double robotAngleBall = robot.getPosition().getAngle(ball);
+//				destination = new FieldPoint(robot.getPosition().getX() - Math.cos(Math.toRadians(robotAngleBall)) * (750 - deltaDistance),
+//														robot.getPosition().getY() - Math.sin(Math.toRadians(robotAngleBall)) * (750 - deltaDistance));
+//				return false;
+//			}
+//			else{
+//				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+//				return false;
+//			}
+//		}
 		if (destination == null) {
 			if(target == null){
 				output.send(1, robot.getRobotId(), 0, 0, 0, chipKick, dribble);
@@ -306,7 +306,9 @@ public class GotoPosition {
 	}
 	
 	/**
-	 * Function that
+	 * Function that goes to the given position, whilst turning around the target.
+	 * Calling this function continuously will make the robot end up at the given
+	 * offset from the target at an angle between the target and the destination.
 	 */
 	public void calculateTurnAroundTarget(int offset){
 		if(prepareForTakeOff()){
@@ -328,7 +330,7 @@ public class GotoPosition {
 														target.getY() + offset * Math.sin(Math.toRadians(degreesToMove)));
 			destination = newDestination;
 			forcedSpeed = CIRCLE_SPEED;
-			calculate(true);
+			calculate(false, true);
 //			System.out.println("Dest: " + newDestination + " AngleTargetAndRobot: " + angleTargetAndRobot + "  totalAngle: " + totalAngle + " DegreesToMove: " + degreesToMove + " test: " + (totalAngle - angleTargetAndRobot));
 //			double rotationToTarget = rotationToDest(newDestination,target);
 //			double rotationToGoal = rotationToDest(robot.getPosition(), destination);
@@ -359,14 +361,20 @@ public class GotoPosition {
 //		}
 		// must be between 0 and 50 percent, if it's higher than 50% rotating to
 		// the other direction is faster
-		double rotationPercent = rotation / 360;	// TODO: Make 180.
+		double rotationPercent = rotation / 180;	// TODO: Make 180.
 
 		// distance needed to rotate in mm
 //		double rotationDistance = circumference * rotationPercent;
 //		rotationDistance *= DISTANCE_ROTATIONSPEED_COEFFICIENT;
 		double rotationDistance = rotationPercent * MAX_ROTATION_SPEED;
+		if(rotationDistance < 0){
+			rotationDistance -= START_UP_ROTATION_SPEED;
+		}
+		else{
+			rotationDistance += START_UP_ROTATION_SPEED;
+		}
 		rotationDistance *= 1 - Math.abs(speed)/(MAX_VELOCITY + 500);
-		
+		return rotationDistance;
 //		if(Math.abs(rotationDistance) > MAX_ROTATION_SPEED){
 //			if(rotationDistance < 0){
 //				rotationDistance = -MAX_ROTATION_SPEED;
@@ -375,12 +383,7 @@ public class GotoPosition {
 //				rotationDistance = MAX_ROTATION_SPEED;
 //			}
 //		}
-		if(rotationDistance < 0){
-			return rotationDistance - START_UP_ROTATION_SPEED;
-		}
-		else{
-			return rotationDistance + START_UP_ROTATION_SPEED;
-		}
+		
 	}
 
 	/**
@@ -400,9 +403,9 @@ public class GotoPosition {
 	 */
 	private double getSpeed(double d, int distanceToSlowDown, int speed) {
 		if(d > distanceToSlowDown){
-			return speed;
+			return speed + (speed > 0 ? START_UP_MOVEMENT_SPEED : -START_UP_MOVEMENT_SPEED);
 		}
-		return (d / distanceToSlowDown) * speed + START_UP_MOVEMENT_SPEED;
+		return (d / distanceToSlowDown) * speed + (speed > 0 ? START_UP_MOVEMENT_SPEED : -START_UP_MOVEMENT_SPEED);
 	}
 	
 	/**
