@@ -152,7 +152,7 @@ public abstract class Robot extends FieldObject {
 	public Ellipse2D getDangerEllipse(int minDistance, int maxDistance){
 		double x = getPosition().getX();
 		double y = getPosition().getY();
-		double actualDistance = minDistance + ((getSpeed() *(maxDistance - minDistance)) / 4000);
+		double actualDistance = minDistance + ((getSpeed() *(maxDistance - minDistance)) / 5);
 		return new Ellipse2D.Double(x - actualDistance, y - actualDistance, actualDistance*2, actualDistance*2);
 	}
 
