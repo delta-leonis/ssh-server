@@ -67,6 +67,6 @@ public class Attacker extends LowLevelBehavior {
 		go = new GotoPosition(robot, newDestination, ballPosition);
 //		go.setDestination(newDestination);
 //		go.setTarget(ballPosition);
-		go.calculate(true);
+		go.calculate(true, true);
 	}
 }
