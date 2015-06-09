@@ -15,7 +15,7 @@ public class Keeper extends LowLevelBehavior {
 	protected FieldPoint centerGoalPosition;
 	
 	protected double fieldWidth = 3000;
-	protected double fieldHeight = 2000;
+	protected double fieldLength = 2000;
 
 	/**
 	 * Create a keeper
@@ -42,14 +42,14 @@ public class Keeper extends LowLevelBehavior {
 	 * @param pointToDefend The point this keeper is going to defend.
 	 * @see {@link #update(int, boolean, FieldPoint)}
 	 */
-	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, FieldPoint pointToDefend, double fieldWidth, double fieldHeight) {
+	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, FieldPoint pointToDefend, double fieldWidth, double fieldLength) {
 		this.distanceToObject = distanceToGoal;
 		this.goToKick = goToKick;
 		this.ballPosition = ballPosition;
 		this.pointToDefend = pointToDefend;
 
 		this.fieldWidth = fieldWidth;
-		this.fieldHeight = fieldHeight;
+		this.fieldLength = fieldLength;
 	}
 	
 	/**
@@ -58,14 +58,14 @@ public class Keeper extends LowLevelBehavior {
 	 * @param goToKick True if the {@link Keeper} has to go forth and get the ball, false otherwise.
 	 * @param ballPosition The {@link FieldPoint position} of the ball. (duh)
 	 */
-	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, double fieldWidth, double fieldHeight) {
+	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, double fieldWidth, double fieldLength) {
 		this.distanceToObject = distanceToGoal;
 		this.goToKick = goToKick;
 		this.ballPosition = ballPosition;
 		pointToDefend = centerGoalPosition;
 
 		this.fieldWidth = fieldWidth;
-		this.fieldHeight = fieldHeight;
+		this.fieldLength = fieldLength;
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class Keeper extends LowLevelBehavior {
 			double ballX = Math.max(-fieldWidth/2, Math.min(fieldWidth/2, ballPosition.getX()));
 
 			// make sure the x coordinate of the ball is within the x axis of the field
-			double ballY = Math.max(-fieldHeight/2, Math.min(fieldHeight/2, ballPosition.getY()));
+			double ballY = Math.max(-fieldLength/2, Math.min(fieldLength/2, ballPosition.getY()));
 			// place the new x coordinate in a new fieldpoint
 			return new FieldPoint(ballX,	ballY);
 		} else {

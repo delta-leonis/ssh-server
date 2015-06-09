@@ -34,8 +34,8 @@ public class KeeperDefender extends Keeper {
 	 * @param ballPosition
 	 * @param offset the offset for this keeper defender in degrees
 	 */
-	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, int offset, double fieldWidth, double fieldHeight) {
-		super.update(distanceToGoal, goToKick, ballPosition, fieldWidth, fieldHeight);
+	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, int offset, double fieldWidth, double fieldLength) {
+		super.update(distanceToGoal, goToKick, ballPosition, fieldWidth, fieldLength);
 		this.offset = offset;
 		robot.setIgnore(true);
 	}

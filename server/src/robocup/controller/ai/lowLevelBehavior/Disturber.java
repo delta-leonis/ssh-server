@@ -20,8 +20,8 @@ public class Disturber extends Keeper {
 	 * @param objectPosition
 	 * @param offset
 	 */
-	public void update(int distanceToObject, boolean goToKick, FieldPoint objectPosition, int offset, double fieldWidth, double fieldHeight) {
-		super.update(distanceToObject, goToKick, objectPosition, fieldWidth, fieldHeight);
+	public void update(int distanceToObject, boolean goToKick, FieldPoint objectPosition, int offset, double fieldWidth, double fieldLength) {
+		super.update(distanceToObject, goToKick, objectPosition, fieldWidth, fieldLength);
 		
 		this.offset = offset;
 	}
