@@ -3,6 +3,7 @@ package robocup.controller.ai.lowLevelBehavior;
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
+import robocup.model.World;
 import robocup.model.enums.RobotMode;
 
 public class KeeperDefender extends Keeper {
@@ -20,8 +21,15 @@ public class KeeperDefender extends Keeper {
 	@Override
 	public void calculate() {
 		// Calculate goToKick
-		
-		FieldPoint newDestination = getNewKeeperDestination(pointToDefend, ballPosition, distanceToObject);
+		// take half of the field width
+		double halfFieldWidth = World.getInstance().getField().getWidth()/2;
+		// make sure the x coordinate of the ball is within the x axis of the field
+		double ballX = Math.max(-halfFieldWidth, Math.min(halfFieldWidth, ballPosition.getX()));
+		// place the new x coordinate in a new fieldpoint
+		FieldPoint inFieldBallPosition = new FieldPoint(ballX,	ballPosition.getY());
+
+		// calculate position
+		FieldPoint newDestination = getNewKeeperDestination(centerGoalPosition, inFieldBallPosition , distanceToObject);
 		// Change direction based on goToKick.
 		// Move forward and kick if ball gets too close
 		// Else, go to proper direction
