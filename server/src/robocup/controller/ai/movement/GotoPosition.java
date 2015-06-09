@@ -173,7 +173,7 @@ public class GotoPosition {
 				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
 				return;
 			}
-			
+
 			// Get the first point in the route
 			if (route.size() > 0 && route.get(0) != null) {
 				destination = route.get(0);
@@ -203,7 +203,7 @@ public class GotoPosition {
 			if (forcedSpeed > 0) {
 				speed = getSpeed(getDistance(), DISTANCE_TO_SLOW_DOWN_FORCED, forcedSpeed);
 			}
-			
+
 			currentSpeed = speed;
 			if(dribble){
 				// Send the command
@@ -218,7 +218,6 @@ public class GotoPosition {
 			}
 //			System.out.println("\t " + robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)currentSpeed + "," + (int)rotationSpeed );
 
-			
 			// Set kick back to 0 to prevent kicking twice in a row
 			chipKick = 0;
 		}
