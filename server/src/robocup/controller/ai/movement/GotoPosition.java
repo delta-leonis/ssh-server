@@ -31,7 +31,7 @@ public class GotoPosition {
 	/** 100 */
 	private int START_UP_MOVEMENT_SPEED = 200;
 	/** 450 */
-	private int DISTANCE_TO_SLOW_DOWN_FORCED = 150;
+	private int DISTANCE_TO_SLOW_DOWN_FORCED = 80;
 	// Rotation Speed Variables
 	/** 5 */
 	private double DISTANCE_ROTATIONSPEED_COEFFICIENT = 5;
@@ -311,26 +311,46 @@ public class GotoPosition {
 	 * offset from the target at an angle between the target and the destination.
 	 */
 	public void calculateTurnAroundTarget(int offset){
-		if(prepareForTakeOff()){
+		if(prepareForTakeOff()){			
 			// Angle between ball and robot
 			double angleTargetAndRobot = target.getAngle(robot.getPosition());
 			// Get total angle we need to rotate
 			double totalAngle = target.getAngle(destination);
 			// Increase angle
 			double degreesToMove;
-			if(Math.abs(totalAngle - angleTargetAndRobot) > 15){
-				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -15 : 15);
+			if(robot.getPosition().getDeltaDistance(target) > (offset*1.1)){
+				if(Math.abs(totalAngle - angleTargetAndRobot) > 90){
+					double turnAmount = Math.abs(totalAngle - angleTargetAndRobot) - 90;
+					degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -turnAmount : turnAmount);
+				}
+				else if(Math.abs(totalAngle - angleTargetAndRobot) > 15){
+					degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -15 : 15);
+				}
+				else{
+					double turnAmount = Math.abs(totalAngle - angleTargetAndRobot);
+					degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -turnAmount : turnAmount);
+				}
+				// Use new angle to get position on circle around target
+				FieldPoint newDestination = new FieldPoint(	target.getX() + offset * Math.cos(Math.toRadians(degreesToMove)),
+															target.getY() + offset * Math.sin(Math.toRadians(degreesToMove)));
+				destination = newDestination;
+				calculate(false, true);
 			}
 			else{
-				double turnAmount = Math.abs(totalAngle - angleTargetAndRobot);
-				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -turnAmount : turnAmount);
+				if(Math.abs(totalAngle - angleTargetAndRobot) > 15){
+					degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -15 : 15);
+				}
+				else{
+					double turnAmount = Math.abs(totalAngle - angleTargetAndRobot);
+					degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -turnAmount : turnAmount);
+				}
+				// Use new angle to get position on circle around target
+				FieldPoint newDestination = new FieldPoint(	target.getX() + offset * Math.cos(Math.toRadians(degreesToMove)),
+															target.getY() + offset * Math.sin(Math.toRadians(degreesToMove)));
+				destination = newDestination;
+				forcedSpeed = CIRCLE_SPEED;
+				calculate(false, true);
 			}
-			// Use new angle to get position on circle around target
-			FieldPoint newDestination = new FieldPoint(	target.getX() + offset * Math.cos(Math.toRadians(degreesToMove)),
-														target.getY() + offset * Math.sin(Math.toRadians(degreesToMove)));
-			destination = newDestination;
-			forcedSpeed = CIRCLE_SPEED;
-			calculate(false, true);
 //			System.out.println("Dest: " + newDestination + " AngleTargetAndRobot: " + angleTargetAndRobot + "  totalAngle: " + totalAngle + " DegreesToMove: " + degreesToMove + " test: " + (totalAngle - angleTargetAndRobot));
 //			double rotationToTarget = rotationToDest(newDestination,target);
 //			double rotationToGoal = rotationToDest(robot.getPosition(), destination);
