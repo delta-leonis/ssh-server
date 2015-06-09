@@ -160,7 +160,7 @@ public class DefenseMode extends Mode {
 			if (robot.getPosition().getX() < 0)
 				offset = -offset;
 
-			keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset);
+			keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset, world.getField().getWidth(), world.getField().getLength());
 		}
 	}
 
@@ -185,10 +185,10 @@ public class DefenseMode extends Mode {
 		FieldPoint ballPosition = ball.getPosition();
 		FieldPoint pointToDefend = getPointToDefendForKeeper();
 		if(pointToDefend != null){
-			keeper.update(distanceToGoal, goToKick, ballPosition, pointToDefend);
+			keeper.update(distanceToGoal, goToKick, ballPosition, pointToDefend , world.getField().getWidth(), world.getField().getLength());
 		}
 		else{
-			keeper.update(distanceToGoal, goToKick, ballPosition);
+			keeper.update(distanceToGoal, goToKick, ballPosition, world.getField().getWidth(), world.getField().getLength());
 		}
 	}
 	
@@ -260,7 +260,7 @@ public class DefenseMode extends Mode {
 		FieldPoint ballPosition = ball.getPosition();
 
 		goalPostCoverer.update(distanceToPole, goToKick, enemyRobot == null ? ((Ally) executer.getRobot())
-				.getPreferredZone().getCenterPoint() : enemyRobot.getPosition(), ballPosition);
+				.getPreferredZone().getCenterPoint() : enemyRobot.getPosition(), ballPosition, world.getField().getWidth(), world.getField().getLength());
 	}
 
 	@Override
@@ -271,7 +271,7 @@ public class DefenseMode extends Mode {
 		FieldPoint objectPosition = ball.getPosition();
 		boolean goToKick = world.getClosestRobotToBall().getPosition().getDeltaDistance(objectPosition) > Robot.DIAMETER;
 
-		disturber.update(distanceToObject, goToKick, objectPosition);
+		disturber.update(distanceToObject, goToKick, objectPosition, world.getField().getWidth(), world.getField().getLength());
 	}
 
 	@Override

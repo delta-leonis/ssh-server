@@ -32,9 +32,10 @@ public class GoalPostCoverer extends Keeper {
 	 * @param enemyRobotPosition the position of the enemy robot this goalpostcoverer is covering
 	 * @param ballPosition the position of the ball
 	 */
-	public void update(int distanceToPole, boolean goToKick, FieldPoint enemyRobotPosition, FieldPoint ballPosition) {
-		super.update(distanceToPole, goToKick, enemyRobotPosition);
+	public void update(int distanceToPole, boolean goToKick, FieldPoint enemyRobotPosition, FieldPoint ballPosition, double fieldWidth, double fieldHeight) {
+		super.update(distanceToPole, goToKick, enemyRobotPosition, fieldWidth, fieldHeight);
 		this.ballPosition = ballPosition;
+		
 	}
 
 	@Override
