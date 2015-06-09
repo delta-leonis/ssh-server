@@ -206,10 +206,14 @@ public class ZoneBehavior extends Behavior {
 			}
 			break;
 		case NORMAL_START:
-			if (world.allyHasBall()) {
-				returnMode = chooseAttackStrategy(executers);
+			if (world.getGameState() == GameState.NORMAL_PLAY) {
+				if (world.allyHasBall()) {
+					returnMode = chooseAttackStrategy(executers);
+				} else {
+					returnMode = chooseDefenseStrategy(executers);
+				}
 			} else {
-				returnMode = chooseDefenseStrategy(executers);
+				return currentMode;
 			}
 			break;
 		case PREPARE_KICKOFF_BLUE:
