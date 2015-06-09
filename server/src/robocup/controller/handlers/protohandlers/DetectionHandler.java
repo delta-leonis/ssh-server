@@ -128,7 +128,7 @@ public class DetectionHandler {
 		ArrayList<Robot> team = world.getReferee().getAlly().getRobots();
 
 		for (Robot ally : team) {
-			ally.setOnSight(world.getLastTimestamp() - ally.getLastUpdateTime() < 2);
+			ally.setOnSight(world.getLastTimestamp() - ally.getLastUpdateTime() < 1);
 		}
 	}
 

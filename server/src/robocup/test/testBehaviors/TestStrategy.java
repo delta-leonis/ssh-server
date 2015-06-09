@@ -5,6 +5,11 @@ import robocup.controller.ai.highLevelBehavior.strategy.defense.BarricadeDefendi
 import robocup.model.FieldPoint;
 import robocup.model.enums.RobotMode;
 
+/**
+ * This class is a dummy class and has no functional value
+ * @author Jasper
+ *
+ */
 public class TestStrategy extends Strategy {
 
 	/**
@@ -20,8 +25,8 @@ public class TestStrategy extends Strategy {
 	 */
 	public TestStrategy() {
 		super();
-		roles.add(RobotMode.DISTURBER);
-		roles.add(RobotMode.DISTURBER);
+		roles.add(RobotMode.KEEPERDEFENDER);
+		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.DISTURBER);
 		roles.add(RobotMode.DISTURBER);
 		roles.add(RobotMode.DISTURBER);

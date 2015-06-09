@@ -2,6 +2,7 @@ package robocup.controller.ai.lowLevelBehavior;
 
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
+import robocup.model.World;
 
 public class Disturber extends Keeper {
 
@@ -26,7 +27,21 @@ public class Disturber extends Keeper {
 
 	@Override
 	public void calculate() {
-		FieldPoint newDestination = getNewKeeperDestination(ballPosition, centerGoalPosition, distanceToObject, offset);
+		// Calculate goToKick
+		// take half of the field width
+		double halfFieldWidth = World.getInstance().getField().getWidth()/2;
+		// make sure the x coordinate of the ball is within the x axis of the field
+		double ballX = Math.max(-halfFieldWidth, Math.min(halfFieldWidth, ballPosition.getX()));
+
+		// take half of the field width
+		double halfFieldHeight = World.getInstance().getField().getLength()/2;
+		// make sure the x coordinate of the ball is within the x axis of the field
+		double ballY = Math.max(-halfFieldHeight, Math.min(halfFieldHeight, ballPosition.getY()));
+		// place the new x coordinate in a new fieldpoint
+		FieldPoint inFieldBallPosition = new FieldPoint(ballX,	ballY);
+
+		// calculate position
+		FieldPoint newDestination = getNewKeeperDestination(inFieldBallPosition, centerGoalPosition, distanceToObject, offset);
 		changeDestination(newDestination, ballPosition);
 	}
 }
