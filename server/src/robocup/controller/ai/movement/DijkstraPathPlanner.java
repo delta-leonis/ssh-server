@@ -220,7 +220,6 @@ public class DijkstraPathPlanner {
 		generateObjectList(robotId, avoidBall);
 		copyOfObjects = (ArrayList<Shape>)objects.clone();
 		if(isInsidePolygon(new Vertex(destination).toEllipse())){
-			System.out.println("Inside polygon" + robotId);
 			return null;
 		}
 
