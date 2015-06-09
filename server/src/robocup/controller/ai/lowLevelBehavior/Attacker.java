@@ -10,6 +10,7 @@ public class Attacker extends LowLevelBehavior {
 	private FieldPoint ballPosition;
 	private int chipKick;
 	private double shootDirection;
+	private boolean avoidBall;
 
 	/**
 	 * Create an attacker.
@@ -22,6 +23,7 @@ public class Attacker extends LowLevelBehavior {
 		shootDirection = 0.0;
 		chipKick = 0;
 		ballPosition = null;
+		avoidBall = true;
 
 		this.role = RobotMode.ATTACKER;
 		go = new GotoPosition(robot, robot.getPosition(), ballPosition);
@@ -45,12 +47,17 @@ public class Attacker extends LowLevelBehavior {
 			FieldPoint newDestination = ballPosition;
 
 			// find a shooting position
-			newDestination = getShootingPosition(shootDirection, ballPosition, 100);
+			newDestination = getShootingPosition(shootDirection, ballPosition, 0);
+
+			avoidBall = !(Math.abs(robot.getOrientation() - robot.getPosition().getAngle(ballPosition)) < 5.0
+					&& robot.getPosition().getDeltaDistance(ballPosition) < 100);
+			
 
 			if (chipKick != 0) {
 				// kick or chip when the orientation is good and the attacker is close to the ball
 				if (Math.abs(robot.getOrientation() - robot.getPosition().getAngle(ballPosition)) < 2.0
-						&& robot.getPosition().getDeltaDistance(ballPosition) < 100) {
+						&& robot.getPosition().getDeltaDistance(ballPosition) < 20) {
+					avoidBall = false;
 					go.setKick(chipKick);
 				}
 			}
@@ -67,6 +74,6 @@ public class Attacker extends LowLevelBehavior {
 		go = new GotoPosition(robot, newDestination, ballPosition);
 //		go.setDestination(newDestination);
 //		go.setTarget(ballPosition);
-		go.calculate(true, true);
+		go.calculate(avoidBall, true);
 	}
 }
