@@ -48,19 +48,18 @@ public class Attacker extends LowLevelBehavior {
 
 			// find a shooting position
 			newDestination = getShootingPosition(shootDirection, ballPosition, 0);
-
-			avoidBall = !(Math.abs(robot.getOrientation() - robot.getPosition().getAngle(ballPosition)) < 5.0
-					&& robot.getPosition().getDeltaDistance(ballPosition) < 100);
-			
-
-			if (chipKick != 0) {
-				// kick or chip when the orientation is good and the attacker is close to the ball
-				if (Math.abs(robot.getOrientation() - robot.getPosition().getAngle(ballPosition)) < 2.0
-						&& robot.getPosition().getDeltaDistance(ballPosition) < 20) {
-					avoidBall = false;
-					go.setKick(chipKick);
-				}
-			}
+//
+//			avoidBall = (Math.abs(robot.getOrientation() - robot.getPosition().getAngle(ballPosition)) > 5.0
+//					|| robot.getPosition().getDeltaDistance(ballPosition) > 300); //HAD JE COMM + Robot.DIAMETER/2ENTAAR 
+//			
+//
+//			if (chipKick != 0) {
+//				// kick or chip when the orientation is good and the attacker is close to the ball
+//				if (Math.abs(robot.getOrientation() - robot.getPosition().getAngle(ballPosition)) < 2.0
+//						&& robot.getPosition().getDeltaDistance(ballPosition) < 20 + Robot.DIAMETER/2) {
+//					go.setKick(chipKick);
+//				}
+//			}
 
 			changeDestination(newDestination);
 		}
@@ -71,9 +70,13 @@ public class Attacker extends LowLevelBehavior {
 	 * @param newDestination the new destination
 	 */
 	private void changeDestination(FieldPoint newDestination) {
-		go = new GotoPosition(robot, newDestination, ballPosition);
-//		go.setDestination(newDestination);
-//		go.setTarget(ballPosition);
-		go.calculate(avoidBall, true);
+		go.setDestination(newDestination);
+		go.setTarget(ballPosition);
+		if(avoidBall){
+			go.calculateTurnAroundTarget(300);
+		}
+		else{
+			go.calculate(avoidBall, true);
+		}
 	}
 }
