@@ -7,9 +7,8 @@ import robocup.model.enums.RobotMode;
 
 public class GoalPostCoverer extends Keeper {
 
-	private FieldPoint enemyRobotPosition;
 	private FieldPoint paalPosition;
-	private FieldPoint ballPosition;
+	private FieldPoint enemyRobotPosition;
 
 	/**
 	 * Create a GoalPostCoverer LowLevelBehaviour
@@ -18,9 +17,8 @@ public class GoalPostCoverer extends Keeper {
 	 */
 	public GoalPostCoverer(Robot robot, FieldPoint paalPosition) {
 		super(robot, paalPosition);
-		enemyRobotPosition = null;
 		this.paalPosition = paalPosition;
-
+		enemyRobotPosition = null;
 		this.role = RobotMode.GOALPOSTCOVERER;
 		go = new GotoPosition(robot, null, null);
 	}
@@ -33,8 +31,8 @@ public class GoalPostCoverer extends Keeper {
 	 * @param ballPosition the position of the ball
 	 */
 	public void update(int distanceToPole, boolean goToKick, FieldPoint enemyRobotPosition, FieldPoint ballPosition, double fieldWidth, double fieldHeight) {
-		super.update(distanceToPole, goToKick, enemyRobotPosition, fieldWidth, fieldHeight);
-		this.ballPosition = ballPosition;
+		super.update(distanceToPole, goToKick, ballPosition, fieldWidth, fieldHeight);
+		this.enemyRobotPosition = enemyRobotPosition;
 		
 	}
 

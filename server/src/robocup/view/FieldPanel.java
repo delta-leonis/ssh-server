@@ -24,6 +24,7 @@ import robocup.controller.ai.movement.DijkstraPathPlanner.Vertex;
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.Ally;
 import robocup.model.Ball;
+import robocup.model.FieldObject;
 import robocup.model.FieldPoint;
 import robocup.model.Goal;
 import robocup.model.Robot;
@@ -51,18 +52,15 @@ public class FieldPanel extends JPanel {
 	private boolean showBall;
 	private boolean showCoords;
 	private boolean mirror;
-	
 	private boolean showPathPlanner;
 	private boolean drawNeighbours;
 	private boolean drawVertices;
-
-	private int frameCount;
-
-	private int FPS;
-
-	private long lastFPSpaint;
-
 	private boolean showVectors;
+
+	private FieldObject mouseObject;
+	private int frameCount;
+	private int FPS;
+	private long lastFPSpaint;
 
 	/**
 	 * Constructor of {@link FieldPanel}. The panel size is set and the mouseListener is added for 
@@ -74,6 +72,7 @@ public class FieldPanel extends JPanel {
 		showRaster = false;
 		mirror = false;
 		showVectors = false;
+		mouseObject = world.getBall();
 
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent me) {
@@ -81,7 +80,7 @@ public class FieldPanel extends JPanel {
 						/ (double) world.getField().getLength();
 				double x = - world.getField().getLength() / 2 + (me.getX() - spaceBufferX) / ratio;
 				double y = -1 * (- (world.getField().getWidth()) / 2 + (me.getY() - spaceBufferY) / ratio);
-				world.getBall().setPosition(new FieldPoint(x, y));
+				mouseObject.setPosition(new FieldPoint(x, y));
 				repaint();
 			}
 		});
@@ -97,13 +96,21 @@ public class FieldPanel extends JPanel {
 	}
 
 	/**
-	 * Function to get the ../server/dist/
-size of the {@link JFrame} the {@link FieldPanel} should be in.
+	 * Function to get the ../server/dist/size of the {@link JFrame} the {@link FieldPanel} should be in.
 	 * @return height of the {@link JFrame} the {@link FieldPanel} should be in.
 	 */
 	public int getFrameSizeY() {
 		return (int) (World.getInstance().getField().getWidth()*RATIO + spaceBufferY*2);
 	}
+
+	/**
+	 * Sets the {@link FieldObject} for the mouse listener to replace.
+	 * @param mouseObject {@link FieldObject} that has to be placed on the position of the mouse click.
+	 */
+	public void setMouseObject(FieldObject mouseObject) {
+		this.mouseObject = mouseObject;
+	}
+
 	/**
 	 * Paints the whole screen/field green. Draws the pitch by calling {@link FieldPanel#drawPlayfield(Graphics, double)}.
 	 * Draws all {@link FieldZone}s by calling {@link FieldPanel#drawZone(Graphics, FieldZone, double)} for each {@link FieldZone}.
