@@ -46,13 +46,14 @@ public class GamepadSection extends SectionBox {
 		cameraUseCheckBox = new JCheckBox("Use camera's");
 		cameraUseCheckBox.addActionListener(checkBoxListener);
 		cameraUseCheckBox.setName("cameraUse");
+		cameraUseCheckBox.setSelected(useCamera);
 		add(cameraUseCheckBox, "growx");
 	}
 
 	private class CheckBoxListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
-			useCamera = !useCamera;
-			if (useCamera && useGamepad) {
+			useCamera = ((JCheckBox)arg0.getSource()).isSelected();
+			if (useGamepad) {
 				gamepadModel.getGamepadThread().stop(true);
 				gamepadModel.setGamepadThread(new GamepadThread(gamepadModel, useCamera));
 				gamepadModel.getGamepadThread().start();

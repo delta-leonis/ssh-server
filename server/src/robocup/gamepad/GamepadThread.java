@@ -10,6 +10,7 @@ import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.World;
+import robocup.output.ComInterface;
 
 public class GamepadThread extends Thread {
 
@@ -62,12 +63,12 @@ public class GamepadThread extends Thread {
 		Component[] components = gamepad.getComponents();
 		for (int j = 0; j < components.length; j++) {
 			switch (components[j].getIdentifier().getName()) {
-			case "0":
+			case "1":
 			case "A":
 				kickButton = components[j];
 				break;
 			case "B":
-			case "1":
+			case "0":
 				chipButton = components[j];
 				break;
 			case "3":
@@ -187,13 +188,21 @@ INFO: Failed to open device (/dev/input/event5): Failed to open device /dev/inpu
 			gamepad.poll();
 
 			Robot robot = gamepadModel.getRobot();
-			FieldPoint destination = calculateDestination(robot);
-			FieldPoint target = calculateTarget(robot);
-			int speed = calculateSpeed();
-			selectNextRobot();
-			GotoPosition goPos = new GotoPosition(robot, destination, target);
-			goPos.calculateWithoutPathPlanner(speed, calculateKickChip(), calculateDribble());
-
+			if (useCamera) {
+				FieldPoint destination = calculateDestination(robot);
+				FieldPoint target = calculateTarget(robot);
+				int speed = calculateSpeed();
+				selectNextRobot();
+				GotoPosition goPos = new GotoPosition(robot, destination, target);
+				goPos.calculateWithoutPathPlanner(speed, calculateKickChip(), calculateDribble());
+			} else {
+				int directionSpeed = calculateSpeed();
+				int direction = (int) Math.toDegrees(Math.atan2(directionX.getPollData(), -directionY.getPollData()));
+				int rotationSpeed = (int) orientationX.getPollData() * 1000;
+				int shootKicker = calculateKickChip();
+				boolean dribble = calculateDribble();
+				ComInterface.getInstance().send(1, robot.getRobotId(), direction, directionSpeed, rotationSpeed, shootKicker, dribble);
+			}
 			try {
 				Thread.sleep(1000/60);
 			} catch (InterruptedException e) {
