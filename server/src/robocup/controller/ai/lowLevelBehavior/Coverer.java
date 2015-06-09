@@ -29,7 +29,7 @@ public class Coverer extends LowLevelBehavior {
 		subjectId = 0;
 
 		this.role = RobotMode.COVERER;
-		go = new GotoPosition(robot, robot.getPosition(), objectPosition, 400);
+		go = new GotoPosition(robot, robot.getPosition(), objectPosition);
 	}
 
 	/**

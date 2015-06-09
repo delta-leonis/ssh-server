@@ -46,11 +46,16 @@ public class KeeperDefender extends Keeper {
 	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, int offset) {
 		super.update(distanceToGoal, goToKick, ballPosition);
 		this.offset = offset;
-		robot.setIgnore(true);
 	}
 
 	@Override
 	protected FieldPoint getNewKeeperDestination(FieldPoint objectPosition, FieldPoint subjectPosition, int distance) {
+		if(robot.getPosition().getDeltaDistance(objectPosition) < 500){
+			robot.setIgnore(true);
+		}
+		else{
+			robot.setIgnore(false);
+		}
 		return super.getNewKeeperDestination(objectPosition, subjectPosition, distance, offset);
 	}
 }
