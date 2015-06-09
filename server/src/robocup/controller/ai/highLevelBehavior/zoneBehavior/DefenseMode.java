@@ -14,9 +14,11 @@ import robocup.controller.ai.lowLevelBehavior.PenaltyKeeper;
 import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.controller.ai.lowLevelBehavior.Runner;
 import robocup.model.Ally;
+import robocup.model.Ball;
 import robocup.model.Enemy;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
+import robocup.model.World;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
 
@@ -152,13 +154,12 @@ public class DefenseMode extends Mode {
 			default:
 				break;
 			}
-		
 
 			// Invert offset when on the left side of the field.
 			// This is done because the offset moves the other way on this side. 
 			if (robot.getPosition().getX() < 0)
 				offset = -offset;
-	
+
 			keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset);
 		}
 	}
@@ -168,10 +169,72 @@ public class DefenseMode extends Mode {
 		Keeper keeper = (Keeper) executer.getLowLevelBehavior();
 
 		int distanceToGoal = (int) world.getField().getEastGoal().getWidth() / 2;
-//		boolean goToKick = world.getClosestRobotToBall().equals(executer.getRobot());
+
 		boolean goToKick = false;
+
+		if (ball.getSpeed() < 1.0) {
+			if (world.getReferee().getEastTeam().equals(world.getReferee().getAlly())) {
+				goToKick = FieldZone.EAST_NORTH_GOAL.contains(ball.getPosition())
+						|| FieldZone.EAST_SOUTH_GOAL.contains(ball.getPosition());
+			} else {
+				goToKick = FieldZone.WEST_NORTH_GOAL.contains(ball.getPosition())
+						|| FieldZone.WEST_SOUTH_GOAL.contains(ball.getPosition());
+			}
+		}
+
 		FieldPoint ballPosition = ball.getPosition();
-		keeper.update(distanceToGoal, goToKick, ballPosition);
+		FieldPoint pointToDefend = getPointToDefendForKeeper();
+		if(pointToDefend != null){
+			keeper.update(distanceToGoal, goToKick, ballPosition, pointToDefend);
+		}
+		else{
+			keeper.update(distanceToGoal, goToKick, ballPosition);
+		}
+	}
+	
+	private FieldPoint getPointToDefendForKeeper(){
+		// The direction we predict the ball to go.
+		double ballDirection;
+		FieldPoint ballPos = ball.getPosition();
+		double y;	// Where the ball will go to.
+		double x;
+		boolean eastTeam = World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam());
+		// Look for "Dangerous robots"
+		// Get closest enemy robot to ball
+		Robot robot = World.getInstance().getClosestRobotToBall();
+		// If ball is floating
+		if(robot.getPosition().getDeltaDistance(ball.getPosition()) > 250 && ball.getSpeed() > 0.5){
+			ballDirection = ball.getDirection();
+		}
+		// If enemy has ball
+		else if(robot instanceof Enemy && ((eastTeam && robot.getPosition().getX() > 0) || (!eastTeam && robot.getPosition().getX() < 0))){
+			//	If enemy in danger zone
+			// Where the ball is likely to go if the robot were to shoot.
+			// Maybe for the future: Take the direction of the robot into account, as well.
+			ballDirection = robot.getPosition().getAngle(ball.getPosition());
+		}
+		else{
+			return null;
+		}
+		
+		if(eastTeam && Math.cos(Math.toRadians(ballDirection)) > 0){	// Ball moves towards the east.
+			x = World.getInstance().getField().getLength()/2;
+		}
+		else if(!eastTeam && Math.cos(Math.toRadians(ballDirection)) < 0){
+			x = -World.getInstance().getField().getLength()/2;
+		}
+		else{
+			// Ball is moving away from us, and thus, no special measures need to be taken.
+			return null;
+		}
+
+		y = Math.tan(Math.toRadians(ballDirection)) * (x - ballPos.getX()) + ballPos.getY();	// <-- Where the ball will hit
+		double goalWidth = World.getInstance().getField().getEastGoal().getWidth();
+		if(y < goalWidth/2 && y > -goalWidth/2){
+			// if the ball is going towards the goal
+			return new FieldPoint(x,y);
+		}
+		return null;
 	}
 
 	@Override

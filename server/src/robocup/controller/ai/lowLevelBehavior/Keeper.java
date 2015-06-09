@@ -1,8 +1,6 @@
 package robocup.controller.ai.lowLevelBehavior;
 
 import robocup.controller.ai.movement.GotoPosition;
-import robocup.model.Ball;
-import robocup.model.Enemy;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.World;
@@ -13,6 +11,7 @@ public class Keeper extends LowLevelBehavior {
 	protected int distanceToObject;
 	protected boolean goToKick;
 	protected FieldPoint ballPosition;
+	protected FieldPoint pointToDefend;
 	protected FieldPoint centerGoalPosition;
 
 	/**
@@ -25,6 +24,7 @@ public class Keeper extends LowLevelBehavior {
 		distanceToObject = 0;
 		goToKick = false;
 		ballPosition = null;
+		this.pointToDefend = centerGoalPosition;
 		this.centerGoalPosition = centerGoalPosition;
 
 		this.role = RobotMode.KEEPER;
@@ -33,105 +33,41 @@ public class Keeper extends LowLevelBehavior {
 
 	/**
 	 * Update the values for the keeper
-	 * @param distanceToGoal
-	 * @param goToKick
-	 * @param ballPosition
+	 * @param distanceToGoal The distance this {@link Keeper} needs to stay away from the pointToDefend.
+	 * @param goToKick True if the {@link Keeper} has to go forth and get the ball, false otherwise.
+	 * @param ballPosition The {@link FieldPoint position} of the ball. (duh)
+	 * @param pointToDefend The point this keeper is going to defend.
+	 * @see {@link #update(int, boolean, FieldPoint)}
+	 */
+	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, FieldPoint pointToDefend) {
+		this.distanceToObject = distanceToGoal;
+		this.goToKick = goToKick;
+		this.ballPosition = ballPosition;
+		this.pointToDefend = pointToDefend;
+	}
+	
+	/**
+	 * Update the values for the keeper
+	 * @param distanceToGoal The distance this {@link Keeper} needs to stay away from the middle of the goal.
+	 * @param goToKick True if the {@link Keeper} has to go forth and get the ball, false otherwise.
+	 * @param ballPosition The {@link FieldPoint position} of the ball. (duh)
 	 */
 	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition) {
 		this.distanceToObject = distanceToGoal;
 		this.goToKick = goToKick;
 		this.ballPosition = ballPosition;
+		pointToDefend = centerGoalPosition;
 	}
 
 	@Override
 	public void calculate() {
 		// Calculate goToKick
 		
-//		FieldPoint newDestination = getNewKeeperDestination(centerGoalPosition, ballPosition, distanceToObject);
-		FieldPoint newDestination = calculateGoToKick();
+		FieldPoint newDestination = getNewKeeperDestination(pointToDefend, ballPosition, distanceToObject);
 		// Change direction based on goToKick.
 		// Move forward and kick if ball gets too close
 		// Else, go to proper direction
 		changeDestination(newDestination, ballPosition);
-	}
-	
-	/**
-	 * Calculates the goToKick
-	 */
-	private FieldPoint calculateGoToKick(){
-		if(this instanceof Keeper){
-			// Look for "Dangerous robots"
-			// 		Get closest enemy robot to ball
-			double ballDirection;
-			Robot robot = World.getInstance().getClosestRobotToBall();
-			// This part might just ruin the entire game for us.
-			boolean dangerous = false;
-			if(robot instanceof Enemy){
-				//		If enemy in danger zone
-				if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())
-						&& robot.getPosition().getX() > 0){
-					dangerous = true;
-				}
-				else if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getWestTeam())
-						&& robot.getPosition().getX() < 0){
-					dangerous = true;
-				}
-				//		Then we're dealing with a dangerous robot.
-			}
-			// If no robot has the ball -> Go to where the ball will be.
-			Ball ball = World.getInstance().getBall();
-			FieldPoint ballPos = ball.getPosition();
-			if(robot.getPosition().getDeltaDistance(ballPos) > 250 && ball.getSpeed() > 0.1){
-				ballDirection = ball.getDirection();
-			}
-			else if(dangerous){
-				ballDirection = robot.getPosition().getAngle(ball.getPosition());
-			}
-			else{
-				return getNewKeeperDestination(centerGoalPosition, ballPosition, distanceToObject);		
-			}
-			
-			double y;	// Where the ball will go to.
-			double x;
-			if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())){
-				if(Math.cos(Math.toRadians(ballDirection)) < 0){		// Ball moves towards the west
-					goToKick = false;
-					return getNewKeeperDestination(centerGoalPosition, ballPosition, distanceToObject);
-				}
-				x = World.getInstance().getField().getLength()/2;
-			}
-			else{
-				if(Math.cos(Math.toRadians(ballDirection)) > 0){		// Ball moves towards the east
-					goToKick = false;
-					return getNewKeeperDestination(centerGoalPosition, ballPosition, distanceToObject);
-				}
-				x = -World.getInstance().getField().getLength()/2;
-			}
-			y = Math.tan(Math.toRadians(ballDirection)) * (ballPos.getX() + x) + ballPos.getY();	// <-- Where the ball will hit
-			double goalWidth = World.getInstance().getField().getEastGoal().getWidth();
-			if(y < goalWidth/2 && y > -goalWidth/2){
-				// if the ball is going towards the goal
-				double keeperX = x - Math.cos(Math.toRadians(- ballDirection)) * 500;
-				double keeperY = y + Math.sin(Math.toRadians(- ballDirection)) * 500;
-				FieldPoint goalDest =  new FieldPoint(keeperX,keeperY);
-				//TODO: Test the commented code.
-	//				if(goalDest.getDeltaDistance(ballPos) < 1000){
-	//					// go to ball and kick
-	////					goToKick = true;
-	//					return new FieldPoint(	x - Math.cos(Math.toRadians(- ball.getDirection())) * 800,
-	//											y + Math.sin(Math.toRadians(- ball.getDirection())) * 800);
-	//				}
-	//				else{
-					goToKick = false;
-					return goalDest;
-	//				}
-			}
-			goToKick = false;
-		}
-		// Else: Ally has ball. Do the regular stuff.
-		return getNewKeeperDestination(centerGoalPosition, ballPosition, distanceToObject);		
-		
-		
 	}
 
 	protected void changeDestination(FieldPoint destination, FieldPoint target) {
@@ -142,7 +78,7 @@ public class Keeper extends LowLevelBehavior {
 		else if (destination != null)
 			go.setDestination(destination);
 
-		go.calculate(false);
+		go.calculate(false, false);
 	}
 
 	/**

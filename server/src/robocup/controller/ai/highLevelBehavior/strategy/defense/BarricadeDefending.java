@@ -28,9 +28,9 @@ public class BarricadeDefending extends Strategy {
 	 * Roles in the {@link BarricadeDefending} strategy are assigned in the following order:<br>
 	 * <ol>
 	 * <li>{@link RobotMode#KEEPER}</li>
+	 * <li>{@link RobotMode#DISTURBER}</li>
 	 * <li>{@link RobotMode#COUNTER}</li>
 	 * <li>{@link RobotMode#GOALPOSTCOVERER}</li>
-	 * <li>{@link RobotMode#DISTURBER}</li>
 	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
 	 * <li>{@link RobotMode#KEEPERDEFENDER}</li>
 	 * </ol>
@@ -38,9 +38,9 @@ public class BarricadeDefending extends Strategy {
 	public BarricadeDefending() {
 		super();
 		roles.add(RobotMode.KEEPER);
+		roles.add(RobotMode.DISTURBER);
 		roles.add(RobotMode.COUNTER);
 		roles.add(RobotMode.GOALPOSTCOVERER);
-		roles.add(RobotMode.DISTURBER);
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.KEEPERDEFENDER);
 	}

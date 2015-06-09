@@ -58,7 +58,7 @@ public abstract class LowLevelBehavior {
 	 * @param range The range between the {@link FieldObject object} and the {@link FieldPoint target}. TODO: Range is in millimeters?
 	 * @return true if the {@link FieldPoint target} is within the given range of the {@link FieldObject object}, false otherwise.
 	 */
-	protected boolean isWithinRange(FieldObject object, FieldPoint target, int range) {
+	public static boolean isWithinRange(FieldObject object, FieldPoint target, int range) {
 		double dy = target.getY() - object.getPosition().getY();
 		double dx = target.getX() - object.getPosition().getX();
 
@@ -70,16 +70,17 @@ public abstract class LowLevelBehavior {
 	 * Basically makes sure your {@link Robot} is half-diameter away from the ball.
 	 * @param shootDirection The direction you want your {@link Robot} to shoot the {@link Ball}. 
 	 * 						 This direction is in degrees, with a value between -180 and 180. 0 being east and 90 being north.
-	 * @param ballPosition 	 The position of the Ball. See {@link FieldPoint} for further documentation. 
+	 * @param ballPosition 	 The position of the {@link Ball}. See {@link FieldPoint} for further documentation.
+	 * @param distance		 The distance to the {@link Ball}
 	 * @return The position we want our {@link Robot} to be at when before we chip or kick.
 	 */
-	public FieldPoint getShootingPosition(double shootDirection, FieldPoint ballPosition) {
+	public FieldPoint getShootingPosition(double shootDirection, FieldPoint ballPosition, int distance) {
 		if (ballPosition != null) {
 			// TODO find out why direction on robot is inverted / twisted. Problem probably lies in the code within the physical Robot.  Possible problem: Mbed:Robotcontroller#Drive() 
 			double angle = -shootDirection + 270; // Angle needs to be the inverse of the shootDirection, to position the Robot behind the ball.
 
-			double dx = Math.sin(Math.toRadians(angle)) * (Robot.DIAMETER / 2 + 100);
-			double dy = Math.cos(Math.toRadians(angle)) * (Robot.DIAMETER / 2 + 100);
+			double dx = Math.sin(Math.toRadians(angle)) * (Robot.DIAMETER / 2 + distance);
+			double dy = Math.cos(Math.toRadians(angle)) * (Robot.DIAMETER / 2 + distance);
 
 			double destX = ballPosition.getX() + dx;
 			double destY = ballPosition.getY() + dy;

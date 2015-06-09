@@ -250,12 +250,12 @@ public class StandardMode extends Mode {
 			default:
 				break;
 			}
-		
+
 			// Invert offset when on the left side of the field.
 			// This is done because the offset moves the other way on this side. 
 			if (robot.getPosition().getX() < 0)
 				offset = -offset;
-	
+
 			keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset);
 		}
 	}
@@ -265,7 +265,19 @@ public class StandardMode extends Mode {
 		Keeper keeper = (Keeper) executer.getLowLevelBehavior();
 
 		int distanceToGoal = (int) world.getField().getEastGoal().getWidth() / 2;
-		boolean goToKick = world.getClosestRobotToBall().equals(executer.getRobot());
+
+		boolean goToKick = false;
+
+		if (ball.getSpeed() < 1.0) {
+			if (world.getReferee().getEastTeam().equals(world.getReferee().getAlly())) {
+				goToKick = FieldZone.EAST_NORTH_GOAL.contains(ball.getPosition())
+						|| FieldZone.EAST_SOUTH_GOAL.contains(ball.getPosition());
+			} else {
+				goToKick = FieldZone.WEST_NORTH_GOAL.contains(ball.getPosition())
+						|| FieldZone.WEST_SOUTH_GOAL.contains(ball.getPosition());
+			}
+		}
+
 		FieldPoint ballPosition = ball.getPosition();
 		keeper.update(distanceToGoal, goToKick, ballPosition);
 	}

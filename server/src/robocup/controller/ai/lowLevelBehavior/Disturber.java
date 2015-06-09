@@ -27,7 +27,6 @@ public class Disturber extends Keeper {
 
 	@Override
 	public void calculate() {
-		// Calculate goToKick
 		// take half of the field width
 		double halfFieldWidth = World.getInstance().getField().getWidth()/2;
 		// make sure the x coordinate of the ball is within the x axis of the field
