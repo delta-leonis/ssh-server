@@ -34,8 +34,13 @@ public class AttackMode extends Mode {
 		FieldPoint freeShot = world.hasFreeShot();
 
 		if (freeShot != null) {
-			if (Math.abs(freeShot.getAngle(ballPosition)-ballPosition.getAngle(executer.getRobot().getPosition())) < 7000 / executer.getRobot().getPosition().getDeltaDistance(ballPosition) && executer.getRobot().getPosition().getDeltaDistance(ballPosition) < 300) {
-				chipKick = -50;
+			if (	// Check whether the angle between robot and ball is lines up with the angle between the freeshot and the ball
+					Math.abs(Math.abs(freeShot.getAngle(ballPosition))-Math.abs(ballPosition.getAngle(executer.getRobot().getPosition()))) < 5000 / executer.getRobot().getPosition().getDeltaDistance(ballPosition)
+					// Check whether we're nearby enough
+					&& executer.getRobot().getPosition().getDeltaDistance(ballPosition) < 350
+					// Check whether the robot is facing the way it's supposed to face
+					&& Math.abs(Math.abs(executer.getRobot().getOrientation()) - Math.abs(ballPosition.getAngle(freeShot))) < 5000 / executer.getRobot().getPosition().getDeltaDistance(ballPosition)) {
+				chipKick = -100;
 			}
 			double shootDirection = ballPosition.getAngle(freeShot);
 			attacker.update(shootDirection, chipKick, ballPosition);

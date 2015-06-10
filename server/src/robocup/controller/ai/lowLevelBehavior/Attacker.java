@@ -27,6 +27,11 @@ public class Attacker extends LowLevelBehavior {
 
 		this.role = RobotMode.ATTACKER;
 		go = new GotoPosition(robot, robot.getPosition(), ballPosition);
+		go.setStartupSpeedVelocity(200);
+		go.setMaxVelocity(3000);
+		go.setDistanceToSlowDown(500);
+		go.setMaxRotationSpeed(1000);
+		go.setStartupSpeedRotation(100);
 	}
 
 	/**
@@ -78,6 +83,7 @@ public class Attacker extends LowLevelBehavior {
 		}
 		else{
 			go.setDestination(ballPosition);
+			go.setForcedSpeed(0);
 			go.calculate(false, true);
 		}
 	}

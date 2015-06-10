@@ -40,7 +40,7 @@ public class GotoPosition {
 	/** 100 */
 	private int START_UP_ROTATION_SPEED = 200;
 	// Circle Around Ball Move Variables
-	private int CIRCLE_SPEED = 2000;
+	private int CIRCLE_SPEED = 1800;
 	
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 
@@ -548,5 +548,9 @@ public class GotoPosition {
 	 */
 	public void setStartupSpeedRotation(int startup){
 		START_UP_ROTATION_SPEED = startup;
+	}
+	
+	public void setForcedSpeed(int speed){
+		forcedSpeed = speed;
 	}
 }
