@@ -14,8 +14,10 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
 import java.util.logging.Logger;
 
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -37,6 +39,7 @@ import robocup.Main;
 import robocup.model.Ally;
 import robocup.model.Ball;
 import robocup.model.FieldObject;
+import robocup.model.Obstruction;
 import robocup.model.Robot;
 import robocup.model.Team;
 import robocup.model.World;
@@ -44,6 +47,7 @@ import robocup.model.enums.TeamColor;
 import robocup.view.FieldPanel;
 import robocup.view.RobotBox;
 import robocup.view.SectionBox;
+import robocup.view.sections.ValidRobotSection.SelectTimer;
 
 /**
  * {@link FieldControlSection} is a {@link SectionBox} for controlling a graphical interface for the field.
@@ -146,10 +150,14 @@ public class FieldControlSection extends SectionBox {
 		JCheckBox drawVertices = new JCheckBox("Draw vertices");
 		drawVertices.addActionListener(buttonListener);
 		settingsTab.add(drawVertices, "growx");
-		
+
 		JCheckBox drawVectors = new JCheckBox("Draw vectors");
 		drawVectors.addActionListener(buttonListener);
 		settingsTab.add(drawVectors, "growx");
+		
+		JCheckBox drawObstructions = new JCheckBox("Draw obstructions");
+		drawObstructions.addActionListener(buttonListener);
+		settingsTab.add(drawObstructions, "growx");
 		
 		tabs.put("Settings", settingsTab);
 	}
@@ -194,6 +202,13 @@ public class FieldControlSection extends SectionBox {
 	private void createItemTabs(){
 		items.setLayout(new MigLayout("wrap 11", "[][][][][][]"));
 		TeamColor teamcolor = TeamColor.YELLOW;
+		JPanel settingsPanel = new JPanel();
+		settingsPanel.add(new JLabel("Rotation"));
+		orientationSlider = new JSlider(JSlider.HORIZONTAL,
+                0, 360, 0);
+		orientationSlider.addChangeListener(new SliderListener());
+		settingsPanel.add(orientationSlider);
+		items.add(settingsPanel, "wrap, span 4");
 		for(int teamnr = 0; teamnr < 2; teamnr++){
 			Team team = (World.getInstance().getReferee().getAllyTeamColor().equals(teamcolor)) ? World.getInstance().getReferee().getAlly() : World.getInstance().getReferee().getEnemy();
 
@@ -207,13 +222,22 @@ public class FieldControlSection extends SectionBox {
 		ItemPanel panel = new ItemPanel(World.getInstance().getBall());
 		panel.addMouseListener(new PanelClickListener());
 		items.add(panel);
-		JPanel settingsPanel = new JPanel();
-		settingsPanel.add(new JLabel("Rotation"));
-		orientationSlider = new JSlider(JSlider.HORIZONTAL,
-                0, 360, 0);
-		orientationSlider.addChangeListener(new SliderListener());
-		settingsPanel.add(orientationSlider);
-		items.add(settingsPanel, "wrap, span 4");
+
+		for(Obstruction obstruction : World.getInstance().getObstructions()){
+			ItemPanel obstructionPanel = new ItemPanel(obstruction);
+			obstructionPanel.addMouseListener(new PanelClickListener());
+			items.add(obstructionPanel);
+		}
+		JPanel addObstructionPanel = new JPanel();
+		addObstructionPanel.add(new JButton(new AbstractAction("+") {
+			public void actionPerformed(ActionEvent e) {
+				World.getInstance().getObstructions().add(new Obstruction(100, 200));
+				items.removeAll();
+				createItemTabs();
+				repaint();
+			}
+		}), "");
+		items.add(addObstructionPanel);
 		
 		tabs.put("items", items);
 	}
@@ -224,6 +248,10 @@ public class FieldControlSection extends SectionBox {
 			if(getSelectedObject() instanceof Robot){
 				int newOrientation = ((JSlider)e.getSource()).getValue();
 				((Robot)getSelectedObject()).setOrientation(newOrientation);
+			}
+			if(getSelectedObject() instanceof Obstruction){
+				int newOrientation = ((JSlider)e.getSource()).getValue();
+				((Obstruction)getSelectedObject()).setOrientation(newOrientation);
 			}
 		}
 	}
@@ -300,6 +328,10 @@ public class FieldControlSection extends SectionBox {
 				case "Draw vertices":
 					fieldPanel.toggleDrawVertices();
 				break;
+
+				case "Draw obstructions":
+					fieldPanel.toggleObstructions();
+				break;
 			}
 			
 		}
@@ -310,6 +342,8 @@ public class FieldControlSection extends SectionBox {
 		fieldPanel.update();
 		if(getSelectedObject() instanceof Robot && orientationSlider != null)
 			orientationSlider.setValue((int) ((Robot)getSelectedObject()).getOrientation());
+		if(getSelectedObject() instanceof Obstruction && orientationSlider != null)
+			orientationSlider.setValue((int) ((Obstruction)getSelectedObject()).getOrientation());
 		items.repaint();
 	}
 }
