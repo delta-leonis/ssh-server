@@ -44,7 +44,7 @@ public class Referee {
 	 * @param teamRobots the robots from the world mode class
 	 */
 	public void initAllyTeam(ArrayList<Robot> teamRobots) {
-		allyTeam = new Team("", TeamColor.BLUE, PLAYING_TEAM_SIZE);
+		allyTeam = new Team("", TeamColor.YELLOW, PLAYING_TEAM_SIZE);
 		allyTeam.setRobots(teamRobots);
 		eastTeam = allyTeam;
 	}
@@ -54,7 +54,7 @@ public class Referee {
 	 * @param teamRobots the robots from the world mode class
 	 */
 	public void initEnemyTeam(ArrayList<Robot> teamRobots) {
-		enemyTeam = new Team("", TeamColor.YELLOW, PLAYING_TEAM_SIZE);
+		enemyTeam = new Team("", TeamColor.BLUE, PLAYING_TEAM_SIZE);
 		enemyTeam.setRobots(teamRobots);
 		westTeam = enemyTeam;
 	}
