@@ -244,7 +244,7 @@ public class GotoPosition {
 		if(World.getInstance().getGameState() == GameState.STOPPED){
 			FieldPoint ball = World.getInstance().getBall().getPosition();
 			double deltaDistance = ball.getDeltaDistance(robot.getPosition());
-			MAX_VELOCITY = 1000;
+			MAX_VELOCITY = 1500;
 			if(deltaDistance < 700){
 				double robotAngleBall = robot.getPosition().getAngle(ball);
 				destination = new FieldPoint(robot.getPosition().getX() - Math.cos(Math.toRadians(robotAngleBall)) * (750 - deltaDistance),
