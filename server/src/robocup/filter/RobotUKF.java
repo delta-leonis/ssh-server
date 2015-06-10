@@ -37,7 +37,8 @@ import robocup.model.StateModel;
  */
 public class RobotUKF extends AbstractUKF {
     private final StateModel state;
-    private final StateModel measurement;
+    @SuppressWarnings("unused")
+	private final StateModel measurement;
     
     /**
      * Initializes a AbstractUKF for a robot in a RobocupSSL match.

@@ -2,7 +2,6 @@ package robocup.controller.ai.lowLevelBehavior;
 
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
-import robocup.model.World;
 
 public class Disturber extends Keeper {
 

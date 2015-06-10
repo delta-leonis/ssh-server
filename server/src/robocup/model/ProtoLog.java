@@ -28,6 +28,7 @@ public class ProtoLog {
 	 * Loads {@link LinkedHashMap LinkedHashMap<Long, byte[]>} from a {@link File} to the current log
 	 * @param file to read from
 	 */
+	@SuppressWarnings("unchecked")
 	public void loadMessages(File file) {
 		LinkedHashMap<Long, byte[]> linkedHashMapList = new LinkedHashMap<Long, byte[]>();
         try{

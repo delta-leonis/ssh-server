@@ -10,19 +10,13 @@ import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
 import javax.swing.UIManager;
 import javax.swing.border.EtchedBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.model.Ally;
@@ -100,6 +94,7 @@ import robocup.model.World;
 				g.fillOval(getWidth()/2 - 10, getHeight()/2 - 10, 20, 20);
 			}
 
+			@SuppressWarnings("unused")
 			private Color toGrayScale(Color color) {
 		        int grayColor = (int)(color.getRed() * 0.299 + color.getGreen() * 0.587 + color.getBlue() * 0.114);
 		        return new Color(grayColor, grayColor, grayColor);

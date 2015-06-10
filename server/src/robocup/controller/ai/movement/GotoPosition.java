@@ -34,7 +34,8 @@ public class GotoPosition {
 	private int DISTANCE_TO_SLOW_DOWN_FORCED = 80;
 	// Rotation Speed Variables
 	/** 5 */
-	private double DISTANCE_ROTATIONSPEED_COEFFICIENT = 5;
+	@SuppressWarnings("unused")
+	private final double DISTANCE_ROTATIONSPEED_COEFFICIENT = 5;
 	/** 1000 */
 	private int MAX_ROTATION_SPEED = 1000;
 	/** 100 */

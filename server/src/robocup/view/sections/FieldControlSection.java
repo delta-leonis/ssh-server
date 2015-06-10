@@ -1,9 +1,6 @@
 package robocup.view.sections;
 
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
@@ -11,33 +8,24 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
 import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.Main;
-import robocup.model.Ally;
-import robocup.model.Ball;
 import robocup.model.FieldObject;
 import robocup.model.Obstruction;
 import robocup.model.Robot;
@@ -45,14 +33,14 @@ import robocup.model.Team;
 import robocup.model.World;
 import robocup.model.enums.TeamColor;
 import robocup.view.FieldPanel;
-import robocup.view.RobotBox;
 import robocup.view.SectionBox;
-import robocup.view.sections.ValidRobotSection.SelectTimer;
 
 /**
- * {@link FieldControlSection} is a {@link SectionBox} for controlling a graphical interface for the field.
- * It has {@link JCheckBox}s for showing the {@link FieldPanel} in a {@link JFrame} and for toggling what to show
- * in the {@link FieldPanel}. Inter alia, there are {@link JCheckBox}s to show a raster and to display a free shot.
+ * {@link FieldControlSection} is a {@link SectionBox} for controlling a
+ * graphical interface for the field. It has {@link JCheckBox}s for showing the
+ * {@link FieldPanel} in a {@link JFrame} and for toggling what to show in the
+ * {@link FieldPanel}. Inter alia, there are {@link JCheckBox}s to show a raster
+ * and to display a free shot.
  */
 @SuppressWarnings("serial")
 public class FieldControlSection extends SectionBox {
@@ -77,34 +65,39 @@ public class FieldControlSection extends SectionBox {
 		createSettingsTab();
 		createTabs();
 	}
-	
+
 	/**
 	 * @return Monitor as GraphicsDevice for the fieldframe to be placed
 	 */
 	private GraphicsDevice getSecondaryMonitor() {
-		GraphicsDevice[] monitors = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+		GraphicsDevice[] monitors = GraphicsEnvironment
+				.getLocalGraphicsEnvironment().getScreenDevices();
 		GraphicsDevice secondaryMonitor = null;
-		try{
-		String mainMonitor = ((JFrame) SwingUtilities.getWindowAncestor(this)).getGraphicsConfiguration().getDevice().getIDstring();
-		for(GraphicsDevice monitor : monitors){
-			if(mainMonitor.equals(monitor.getIDstring()))
-				continue;
-			secondaryMonitor = monitor;
-			break;
-		}
-		LOGGER.info("Set '" + mainMonitor + "' as primary display.");
-		LOGGER.info("Set '" + secondaryMonitor.getIDstring() + "' as secondary display.");
-		}catch(Exception e){
-			//error found? return first monitor
+		try {
+			String mainMonitor = ((JFrame) SwingUtilities
+					.getWindowAncestor(this)).getGraphicsConfiguration()
+					.getDevice().getIDstring();
+			for (GraphicsDevice monitor : monitors) {
+				if (mainMonitor.equals(monitor.getIDstring()))
+					continue;
+				secondaryMonitor = monitor;
+				break;
+			}
+			LOGGER.info("Set '" + mainMonitor + "' as primary display.");
+			LOGGER.info("Set '" + secondaryMonitor.getIDstring()
+					+ "' as secondary display.");
+		} catch (Exception e) {
+			// error found? return first monitor
 			secondaryMonitor = monitors[0];
 			LOGGER.info("Only one monitor found");
 		}
 		return secondaryMonitor;
 	}
-	
-	private void createSettingsTab(){
+
+	private void createSettingsTab() {
 		JPanel settingsTab = new JPanel();
-		settingsTab.setLayout(new MigLayout("wrap 4", "[grow]", "[grow][grow][grow]"));
+		settingsTab.setLayout(new MigLayout("wrap 4", "[grow]",
+				"[grow][grow][grow]"));
 
 		ActionListener buttonListener = new ButtonListener();
 		JButton showField = new JButton("Show field");
@@ -126,7 +119,7 @@ public class FieldControlSection extends SectionBox {
 		JCheckBox showBall = new JCheckBox("Show ball");
 		showBall.addActionListener(buttonListener);
 		settingsTab.add(showBall, "growx");
-		
+
 		JCheckBox mirrorField = new JCheckBox("Mirror North/South");
 		mirrorField.addActionListener(buttonListener);
 		settingsTab.add(mirrorField, "growx");
@@ -154,11 +147,11 @@ public class FieldControlSection extends SectionBox {
 		JCheckBox drawVectors = new JCheckBox("Draw vectors");
 		drawVectors.addActionListener(buttonListener);
 		settingsTab.add(drawVectors, "growx");
-		
+
 		JCheckBox drawObstructions = new JCheckBox("Draw obstructions");
 		drawObstructions.addActionListener(buttonListener);
 		settingsTab.add(drawObstructions, "growx");
-		
+
 		tabs.put("Settings", settingsTab);
 	}
 
@@ -166,10 +159,11 @@ public class FieldControlSection extends SectionBox {
 
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
-			fieldPanel.setMouseObject(((ItemPanel)arg0.getSource()).getItem());
-			for(Component component : tabs.get("items").getComponents())
-					if(component instanceof ItemPanel)
-						((ItemPanel)component).setSelected(((ItemPanel) arg0.getSource()).equals((ItemPanel)component));
+			fieldPanel.setMouseObject(((ItemPanel) arg0.getSource()).getItem());
+			for (Component component : tabs.get("items").getComponents())
+				if (component instanceof ItemPanel)
+					((ItemPanel) component).setSelected(((ItemPanel) arg0
+							.getSource()).equals((ItemPanel) component));
 		}
 
 		@Override
@@ -189,30 +183,31 @@ public class FieldControlSection extends SectionBox {
 		}
 	}
 
-	public FieldObject getSelectedObject(){
-		for(Component component : items.getComponents()){
-			if(component instanceof ItemPanel){
-				if(((ItemPanel)component).isSelected())
-					return ((ItemPanel)component).getItem();
+	public FieldObject getSelectedObject() {
+		for (Component component : items.getComponents()) {
+			if (component instanceof ItemPanel) {
+				if (((ItemPanel) component).isSelected())
+					return ((ItemPanel) component).getItem();
 			}
 		}
 		return null;
 	}
-	
-	private void createItemTabs(){
+
+	private void createItemTabs() {
 		items.setLayout(new MigLayout("wrap 11", "[][][][][][]"));
 		TeamColor teamcolor = TeamColor.YELLOW;
 		JPanel settingsPanel = new JPanel();
 		settingsPanel.add(new JLabel("Rotation"));
-		orientationSlider = new JSlider(JSlider.HORIZONTAL,
-                0, 360, 0);
+		orientationSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
 		orientationSlider.addChangeListener(new SliderListener());
 		settingsPanel.add(orientationSlider);
 		items.add(settingsPanel, "wrap, span 4");
-		for(int teamnr = 0; teamnr < 2; teamnr++){
-			Team team = (World.getInstance().getReferee().getAllyTeamColor().equals(teamcolor)) ? World.getInstance().getReferee().getAlly() : World.getInstance().getReferee().getEnemy();
+		for (int teamnr = 0; teamnr < 2; teamnr++) {
+			Team team = (World.getInstance().getReferee().getAllyTeamColor()
+					.equals(teamcolor)) ? World.getInstance().getReferee()
+					.getAlly() : World.getInstance().getReferee().getEnemy();
 
-			for(int id = 0; id < Main.POSSIBLE_IDS; id++){
+			for (int id = 0; id < Main.POSSIBLE_IDS; id++) {
 				ItemPanel robotPanel = new ItemPanel(team.getRobotByID(id));
 				robotPanel.addMouseListener(new PanelClickListener());
 				items.add(robotPanel);
@@ -223,7 +218,7 @@ public class FieldControlSection extends SectionBox {
 		panel.addMouseListener(new PanelClickListener());
 		items.add(panel);
 
-		for(Obstruction obstruction : World.getInstance().getObstructions()){
+		for (Obstruction obstruction : World.getInstance().getObstructions()) {
 			ItemPanel obstructionPanel = new ItemPanel(obstruction);
 			obstructionPanel.addMouseListener(new PanelClickListener());
 			items.add(obstructionPanel);
@@ -231,34 +226,36 @@ public class FieldControlSection extends SectionBox {
 		JPanel addObstructionPanel = new JPanel();
 		addObstructionPanel.add(new JButton(new AbstractAction("+") {
 			public void actionPerformed(ActionEvent e) {
-				World.getInstance().getObstructions().add(new Obstruction(100, 200));
+				World.getInstance().getObstructions()
+						.add(new Obstruction(100, 200));
 				items.removeAll();
 				createItemTabs();
 				repaint();
 			}
 		}), "");
 		items.add(addObstructionPanel);
-		
+
 		tabs.put("items", items);
 	}
-	
+
 	private class SliderListener implements ChangeListener {
 		@Override
 		public void stateChanged(ChangeEvent e) {
-			if(getSelectedObject() instanceof Robot){
-				int newOrientation = ((JSlider)e.getSource()).getValue();
-				((Robot)getSelectedObject()).setOrientation(newOrientation);
+			if (getSelectedObject() instanceof Robot) {
+				int newOrientation = ((JSlider) e.getSource()).getValue();
+				((Robot) getSelectedObject()).setOrientation(newOrientation);
 			}
-			if(getSelectedObject() instanceof Obstruction){
-				int newOrientation = ((JSlider)e.getSource()).getValue();
-				((Obstruction)getSelectedObject()).setOrientation(newOrientation);
+			if (getSelectedObject() instanceof Obstruction) {
+				int newOrientation = ((JSlider) e.getSource()).getValue();
+				((Obstruction) getSelectedObject())
+						.setOrientation(newOrientation);
 			}
 		}
 	}
-	
-	private void createTabs(){
+
+	private void createTabs() {
 		JTabbedPane tabbedPane = new JTabbedPane();
-		
+
 		for (Map.Entry<String, JPanel> entry : tabs.entrySet())
 			tabbedPane.add(entry.getKey(), entry.getValue());
 		add(tabbedPane, "growx");
@@ -266,84 +263,94 @@ public class FieldControlSection extends SectionBox {
 
 	private class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			String buttonText = ((e.getSource() instanceof JButton) ? ((JButton) e.getSource()) : ((JCheckBox) e.getSource())).getText();
+			String buttonText = ((e.getSource() instanceof JButton) ? ((JButton) e
+					.getSource()) : ((JCheckBox) e.getSource())).getText();
 
 			switch (buttonText) {
-				case "Show field":
-					frame.setLocation(getSecondaryMonitor().getDefaultConfiguration().getBounds().x, getSecondaryMonitor().getDefaultConfiguration().getBounds().y);
-					frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-					frame.setTitle("Field");
-					frame.setSize(fieldPanel.getFrameSizeX(), fieldPanel.getFrameSizeY());
-					frame.setContentPane(fieldPanel);
-					frame.setVisible(true);
-					((JButton)e.getSource()).setText("Hide field");
-					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			case "Show field":
+				frame.setLocation(getSecondaryMonitor()
+						.getDefaultConfiguration().getBounds().x,
+						getSecondaryMonitor().getDefaultConfiguration()
+								.getBounds().y);
+				frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+				frame.setTitle("Field");
+				frame.setSize(fieldPanel.getFrameSizeX(),
+						fieldPanel.getFrameSizeY());
+				frame.setContentPane(fieldPanel);
+				frame.setVisible(true);
+				((JButton) e.getSource()).setText("Hide field");
+				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				break;
 
-				case "Hide field":
-					frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-					((JButton)e.getSource()).setText("Show field");
-					break;
-
-				case "Show raster":
-					fieldPanel.toggleShowRaster();
+			case "Hide field":
+				frame.dispatchEvent(new WindowEvent(frame,
+						WindowEvent.WINDOW_CLOSING));
+				((JButton) e.getSource()).setText("Show field");
 				break;
 
-				case "Show zones":
-					fieldPanel.toggleShowZones();
+			case "Show raster":
+				fieldPanel.toggleShowRaster();
 				break;
 
-				case "Show robots":
-					fieldPanel.toggleShowRobots();
+			case "Show zones":
+				fieldPanel.toggleShowZones();
 				break;
 
-				case "Show ball":
-					fieldPanel.toggleShowBall();
+			case "Show robots":
+				fieldPanel.toggleShowRobots();
 				break;
 
-				case "Draw vectors":
-					fieldPanel.toggleShowVectors();
+			case "Show ball":
+				fieldPanel.toggleShowBall();
 				break;
 
-				case "Mirror North/South":
-					fieldPanel.toggleMirror();
-				break;
-				
-				case "Draw free shot":
-					fieldPanel.toggleShowFreeShot();
+			case "Draw vectors":
+				fieldPanel.toggleShowVectors();
 				break;
 
-				case "Draw coordinates":
-					fieldPanel.toggleCoords();
+			case "Mirror North/South":
+				fieldPanel.toggleMirror();
 				break;
 
-				case "Draw paths":
-					fieldPanel.toggleShowPathPlanner();
+			case "Draw free shot":
+				fieldPanel.toggleShowFreeShot();
 				break;
 
-				case "Draw All paths":
-					fieldPanel.toggleDrawNeighbours();
+			case "Draw coordinates":
+				fieldPanel.toggleCoords();
 				break;
 
-				case "Draw vertices":
-					fieldPanel.toggleDrawVertices();
+			case "Draw paths":
+				fieldPanel.toggleShowPathPlanner();
 				break;
 
-				case "Draw obstructions":
-					fieldPanel.toggleObstructions();
+			case "Draw All paths":
+				fieldPanel.toggleDrawNeighbours();
+				break;
+
+			case "Draw vertices":
+				fieldPanel.toggleDrawVertices();
+				break;
+
+			case "Draw obstructions":
+				fieldPanel.toggleObstructions();
 				break;
 			}
-			
+
 		}
 	}
 
 	@Override
 	public void update() {
 		fieldPanel.update();
-		if(getSelectedObject() instanceof Robot && orientationSlider != null)
-			orientationSlider.setValue((int) ((Robot)getSelectedObject()).getOrientation());
-		if(getSelectedObject() instanceof Obstruction && orientationSlider != null)
-			orientationSlider.setValue((int) ((Obstruction)getSelectedObject()).getOrientation());
+		if (getSelectedObject() instanceof Robot && orientationSlider != null)
+			orientationSlider.setValue((int) ((Robot) getSelectedObject())
+					.getOrientation());
+		if (getSelectedObject() instanceof Obstruction
+				&& orientationSlider != null)
+			orientationSlider
+					.setValue((int) ((Obstruction) getSelectedObject())
+							.getOrientation());
 		items.repaint();
 	}
 }

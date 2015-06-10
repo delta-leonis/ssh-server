@@ -24,6 +24,7 @@
 package robocup.filter;
 
 import robocup.model.StateModel;
+
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 
@@ -36,7 +37,8 @@ import org.ejml.ops.CommonOps;
 public class DistortedDoublesUKF extends AbstractUKF {
     
     private final StateModel state;
-    private final StateModel measurement;
+    @SuppressWarnings("unused")
+	private final StateModel measurement;
     
     /**
      * Constructor method
