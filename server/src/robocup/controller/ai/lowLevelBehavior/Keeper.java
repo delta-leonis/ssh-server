@@ -13,6 +13,9 @@ public class Keeper extends LowLevelBehavior {
 	protected FieldPoint ballPosition;
 	protected FieldPoint pointToDefend;
 	protected FieldPoint centerGoalPosition;
+	
+	protected double fieldWidth = 3000;
+	protected double fieldLength = 2000;
 
 	/**
 	 * Create a keeper
@@ -41,11 +44,14 @@ public class Keeper extends LowLevelBehavior {
 	 * @param pointToDefend The point this keeper is going to defend.
 	 * @see {@link #update(int, boolean, FieldPoint)}
 	 */
-	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, FieldPoint pointToDefend) {
+	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, FieldPoint pointToDefend, double fieldWidth, double fieldLength) {
 		this.distanceToObject = distanceToGoal;
 		this.goToKick = goToKick;
 		this.ballPosition = ballPosition;
 		this.pointToDefend = pointToDefend;
+
+		this.fieldWidth = fieldWidth;
+		this.fieldLength = fieldLength;
 	}
 	
 	/**
@@ -54,17 +60,18 @@ public class Keeper extends LowLevelBehavior {
 	 * @param goToKick True if the {@link Keeper} has to go forth and get the ball, false otherwise.
 	 * @param ballPosition The {@link FieldPoint position} of the ball. (duh)
 	 */
-	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition) {
+	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, double fieldWidth, double fieldLength) {
 		this.distanceToObject = distanceToGoal;
 		this.goToKick = goToKick;
 		this.ballPosition = ballPosition;
 		pointToDefend = centerGoalPosition;
+
+		this.fieldWidth = fieldWidth;
+		this.fieldLength = fieldLength;
 	}
 
 	@Override
 	public void calculate() {
-		// Calculate goToKick
-		
 		FieldPoint newDestination = getNewKeeperDestination(pointToDefend, ballPosition, distanceToObject);
 		// Change direction based on goToKick.
 		// Move forward and kick if ball gets too close
@@ -93,6 +100,20 @@ public class Keeper extends LowLevelBehavior {
 	 */
 	protected FieldPoint getNewKeeperDestination(FieldPoint objectPosition, FieldPoint subjectPosition, int distance) {
 		return getNewKeeperDestination(objectPosition, subjectPosition, distance, 0);
+	}
+	
+	protected FieldPoint cropFieldPosition(FieldPoint position){
+		if (ballPosition != null) {
+			// make sure the x coordinate of the ball is within the x axis of the field
+			double ballX = Math.max(-fieldWidth/2, Math.min(fieldWidth/2, ballPosition.getX()));
+
+			// make sure the x coordinate of the ball is within the x axis of the field
+			double ballY = Math.max(-fieldLength/2, Math.min(fieldLength/2, ballPosition.getY()));
+			// place the new x coordinate in a new fieldpoint
+			return new FieldPoint(ballX,	ballY);
+		} else {
+			return null;
+		}
 	}
 	
 	/**
