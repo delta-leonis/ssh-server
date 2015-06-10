@@ -229,21 +229,21 @@ public class StandardMode extends Mode {
 			case 2:
 				if (robot.getPosition().getY() == Math.max(keeperDefenders.get(0).getPosition().getY(), keeperDefenders
 						.get(1).getPosition().getY()))
-					offset = -5;
+					offset = -15;
 				else
-					offset = 5;
+					offset = 15;
 				break;
 			case 3:
 				if (robot.getPosition().getY() == Math.max(
 						keeperDefenders.get(0).getPosition().getY(),
 						Math.max(keeperDefenders.get(1).getPosition().getY(), keeperDefenders.get(2).getPosition()
 								.getY())))
-					offset = -5;
+					offset = -15;
 				else if (robot.getPosition().getY() == Math.min(
 						keeperDefenders.get(0).getPosition().getY(),
 						Math.min(keeperDefenders.get(1).getPosition().getY(), keeperDefenders.get(2).getPosition()
 								.getY())))
-					offset = 5;
+					offset = 15;
 				else
 					offset = 0;
 				break;
@@ -312,11 +312,34 @@ public class StandardMode extends Mode {
 	protected void updateDisturber(RobotExecuter executer) {
 		Disturber disturber = (Disturber) executer.getLowLevelBehavior();
 
-		int distanceToObject = 300;
-		FieldPoint objectPosition = ball.getPosition();
-		boolean goToKick = world.getClosestRobotToBall().getPosition().getDeltaDistance(objectPosition) > Robot.DIAMETER;
+		Ally robot = (Ally) executer.getRobot();
+		ArrayList<Ally> disturbers = new ArrayList<Ally>();
 
-		disturber.update(distanceToObject, goToKick, objectPosition);
+		for (RobotExecuter itExecuter : executers)
+			if (itExecuter.getLowLevelBehavior() instanceof Disturber)
+				if (itExecuter.getRobot().getPosition() != null)
+					disturbers.add((Ally) itExecuter.getRobot());
+
+		int offset = 0;
+
+		if (disturbers.size() == 2) {
+			if (robot.getPosition().getY() == Math.max(disturbers.get(0).getPosition().getY(), disturbers.get(1)
+					.getPosition().getY()))
+				offset = -10;
+			else
+				offset = 10;
+		}
+
+		int distanceToObject = 700; // keep longer distance from ball in standardmode, as we are probably in GameState.STOPPED
+		FieldPoint objectPosition = ball.getPosition();
+		boolean goToKick = false;//world.getClosestRobotToBall().getPosition().getDeltaDistance(objectPosition) > Robot.DIAMETER;
+
+		// Invert offset when on the left side of the field.
+		// This is done because the offset moves the other way on this side. 
+		if (robot.getPosition().getX() < 0)
+			offset = -offset;
+
+		disturber.update(distanceToObject, goToKick, objectPosition, offset);
 	}
 
 	@Override
