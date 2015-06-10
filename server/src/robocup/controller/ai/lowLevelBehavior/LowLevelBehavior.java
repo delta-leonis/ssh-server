@@ -23,6 +23,7 @@ public abstract class LowLevelBehavior {
 	public LowLevelBehavior(Robot robot) {
 		this.robot = robot;
 		go = new GotoPosition(robot,new FieldPoint(0,0));
+		robot.setIgnore(false);
 	}
 
 	public abstract void calculate();

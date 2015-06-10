@@ -37,7 +37,6 @@ public class KeeperDefender extends Keeper {
 	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, int offset, double fieldWidth, double fieldLength) {
 		super.update(distanceToGoal, goToKick, ballPosition, fieldWidth, fieldLength);
 		this.offset = offset;
-		robot.setIgnore(true);
 	}
 
 	@Override
