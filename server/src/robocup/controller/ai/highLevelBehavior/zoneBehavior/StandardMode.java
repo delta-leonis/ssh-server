@@ -256,7 +256,7 @@ public class StandardMode extends Mode {
 			if (robot.getPosition().getX() < 0)
 				offset = -offset;
 
-			keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset);
+			keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset, world.getField().getWidth(), world.getField().getLength());
 		}
 	}
 
@@ -279,7 +279,7 @@ public class StandardMode extends Mode {
 		}
 
 		FieldPoint ballPosition = ball.getPosition();
-		keeper.update(distanceToGoal, goToKick, ballPosition);
+		keeper.update(distanceToGoal, goToKick, ballPosition, world.getField().getWidth(), world.getField().getLength());
 	}
 
 	@Override
@@ -305,7 +305,7 @@ public class StandardMode extends Mode {
 		FieldPoint ballPosition = ball.getPosition();
 
 		goalPostCoverer.update(distanceToPole, goToKick, enemyRobot == null ? ((Ally) executer.getRobot())
-				.getPreferredZone().getCenterPoint() : enemyRobot.getPosition(), ballPosition);
+				.getPreferredZone().getCenterPoint() : enemyRobot.getPosition(), ballPosition, world.getField().getWidth(), world.getField().getLength());
 	}
 
 	@Override
@@ -335,11 +335,12 @@ public class StandardMode extends Mode {
 		boolean goToKick = false;//world.getClosestRobotToBall().getPosition().getDeltaDistance(objectPosition) > Robot.DIAMETER;
 
 		// Invert offset when on the left side of the field.
+		disturber.update(distanceToObject, goToKick, objectPosition, world.getField().getWidth(), world.getField().getLength());
 		// This is done because the offset moves the other way on this side. 
 		if (robot.getPosition().getX() < 0)
 			offset = -offset;
 
-		disturber.update(distanceToObject, goToKick, objectPosition, offset);
+		disturber.update(distanceToObject, goToKick, objectPosition, offset, world.getField().getWidth(), world.getField().getLength());
 	}
 
 	@Override

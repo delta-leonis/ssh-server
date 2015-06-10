@@ -13,6 +13,9 @@ public class Keeper extends LowLevelBehavior {
 	protected FieldPoint ballPosition;
 	protected FieldPoint pointToDefend;
 	protected FieldPoint centerGoalPosition;
+	
+	protected double fieldWidth = 3000;
+	protected double fieldLength = 2000;
 
 	/**
 	 * Create a keeper
@@ -28,7 +31,9 @@ public class Keeper extends LowLevelBehavior {
 		this.centerGoalPosition = centerGoalPosition;
 
 		this.role = RobotMode.KEEPER;
-		go = new GotoPosition(robot, centerGoalPosition, ballPosition,3000);
+		go = new GotoPosition(robot, centerGoalPosition, ballPosition);
+		go.setStartupSpeedVelocity(200);
+		go.setDistanceToSlowDown(150);
 	}
 
 	/**
@@ -39,11 +44,14 @@ public class Keeper extends LowLevelBehavior {
 	 * @param pointToDefend The point this keeper is going to defend.
 	 * @see {@link #update(int, boolean, FieldPoint)}
 	 */
-	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, FieldPoint pointToDefend) {
+	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, FieldPoint pointToDefend, double fieldWidth, double fieldLength) {
 		this.distanceToObject = distanceToGoal;
 		this.goToKick = goToKick;
 		this.ballPosition = ballPosition;
 		this.pointToDefend = pointToDefend;
+
+		this.fieldWidth = fieldWidth;
+		this.fieldLength = fieldLength;
 	}
 	
 	/**
@@ -52,17 +60,18 @@ public class Keeper extends LowLevelBehavior {
 	 * @param goToKick True if the {@link Keeper} has to go forth and get the ball, false otherwise.
 	 * @param ballPosition The {@link FieldPoint position} of the ball. (duh)
 	 */
-	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition) {
+	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, double fieldWidth, double fieldLength) {
 		this.distanceToObject = distanceToGoal;
 		this.goToKick = goToKick;
 		this.ballPosition = ballPosition;
 		pointToDefend = centerGoalPosition;
+
+		this.fieldWidth = fieldWidth;
+		this.fieldLength = fieldLength;
 	}
 
 	@Override
 	public void calculate() {
-		// Calculate goToKick
-		
 		FieldPoint newDestination = getNewKeeperDestination(pointToDefend, ballPosition, distanceToObject);
 		// Change direction based on goToKick.
 		// Move forward and kick if ball gets too close
@@ -93,6 +102,20 @@ public class Keeper extends LowLevelBehavior {
 		return getNewKeeperDestination(objectPosition, subjectPosition, distance, 0);
 	}
 	
+	protected FieldPoint cropFieldPosition(FieldPoint position){
+		if (ballPosition != null) {
+			// make sure the x coordinate of the ball is within the x axis of the field
+			double ballX = Math.max(-fieldWidth/2, Math.min(fieldWidth/2, ballPosition.getX()));
+
+			// make sure the x coordinate of the ball is within the x axis of the field
+			double ballY = Math.max(-fieldLength/2, Math.min(fieldLength/2, ballPosition.getY()));
+			// place the new x coordinate in a new fieldpoint
+			return new FieldPoint(ballX,	ballY);
+		} else {
+			return null;
+		}
+	}
+	
 	/**
 	 * Calculate a new Keeper destination.
 	 * The destination will be a point between the object and the subject position with a specified distance to the object position.
@@ -112,11 +135,11 @@ public class Keeper extends LowLevelBehavior {
 
 			double destX = objectPosition.getX() + dx;
 			double destY = objectPosition.getY() + dy;
-			if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam()) && destX > World.getInstance().getField().getLength()/2){
-				destX = World.getInstance().getField().getLength()/2;
+			if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam()) && destX > World.getInstance().getField().getLength()/2 - Robot.DIAMETER/2){
+				destX = World.getInstance().getField().getLength()/2 - Robot.DIAMETER/2;
 			}
-			else if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getWestTeam()) && destX < -World.getInstance().getField().getLength()/2){
-				destX = -World.getInstance().getField().getLength()/2;
+			else if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getWestTeam()) && destX < -World.getInstance().getField().getLength()/2 + Robot.DIAMETER/2){
+				destX = -World.getInstance().getField().getLength()/2 + Robot.DIAMETER/2;
 			}
 			newDestination = new FieldPoint(destX, destY);
 		}
