@@ -14,8 +14,8 @@ public class Keeper extends LowLevelBehavior {
 	protected FieldPoint pointToDefend;
 	protected FieldPoint centerGoalPosition;
 	
-	protected double fieldWidth = 3000;
-	protected double fieldLength = 2000;
+	protected double fieldWidth = 6000;
+	protected double fieldLength = 9000;
 
 	/**
 	 * Create a keeper
@@ -105,12 +105,12 @@ public class Keeper extends LowLevelBehavior {
 	protected FieldPoint cropFieldPosition(FieldPoint position){
 		if (ballPosition != null) {
 			// make sure the x coordinate of the ball is within the x axis of the field
-			double ballX = Math.max(-fieldWidth/2, Math.min(fieldWidth/2, ballPosition.getX()));
+			double ballX = Math.max(-fieldLength/2, Math.min(fieldLength/2, ballPosition.getX()));
 
 			// make sure the x coordinate of the ball is within the x axis of the field
-			double ballY = Math.max(-fieldLength/2, Math.min(fieldLength/2, ballPosition.getY()));
+			double ballY = Math.max(-fieldWidth/2, Math.min(fieldWidth/2, ballPosition.getY()));
 			// place the new x coordinate in a new fieldpoint
-			return new FieldPoint(ballX,	ballY);
+			return new FieldPoint(ballX, ballY);
 		} else {
 			return null;
 		}
