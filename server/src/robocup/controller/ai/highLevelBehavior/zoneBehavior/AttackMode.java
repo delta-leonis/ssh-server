@@ -29,11 +29,14 @@ public class AttackMode extends Mode {
 	@Override
 	public void updateAttacker(RobotExecuter executer) {
 		Attacker attacker = (Attacker) executer.getLowLevelBehavior();
-		int chipKick = 40;
+		int chipKick = 0;
 		FieldPoint ballPosition = ball.getPosition();
 		FieldPoint freeShot = world.hasFreeShot();
 
 		if (freeShot != null) {
+			if (Math.abs(freeShot.getAngle(ballPosition)-ballPosition.getAngle(executer.getRobot().getPosition())) < 7000 / executer.getRobot().getPosition().getDeltaDistance(ballPosition) && executer.getRobot().getPosition().getDeltaDistance(ballPosition) < 300) {
+				chipKick = -50;
+			}
 			double shootDirection = ballPosition.getAngle(freeShot);
 			attacker.update(shootDirection, chipKick, ballPosition);
 		} else {

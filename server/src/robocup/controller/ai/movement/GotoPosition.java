@@ -205,7 +205,7 @@ public class GotoPosition {
 			}
 
 			currentSpeed = speed;
-			if(dribble){
+			if(dribble && robot.getPosition().getDeltaDistance(destination) < Robot.DIAMETER/2){
 				// Send the command
 				output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, chipKick, dribble);
 				LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + "," + chipKick + "," + dribble);
