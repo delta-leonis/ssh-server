@@ -213,7 +213,7 @@ public class ZoneBehavior extends Behavior {
 					returnMode = chooseDefenseStrategy(executers);
 				}
 			} else {
-				return currentMode;
+				returnMode = currentMode;
 			}
 			break;
 		case PREPARE_KICKOFF_BLUE:

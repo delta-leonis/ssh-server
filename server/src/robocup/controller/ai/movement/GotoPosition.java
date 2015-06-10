@@ -158,8 +158,12 @@ public class GotoPosition {
 	/**
 	 * Calculates what message we need to send to the robot, based on the
 	 * parameters given in the constructor.
+	 * @param avoidBall True if you wish the robot to avoid the ball, false otherwise.
+	 * @param alwaysFaceTarget True if you want the robot to constantly face the target, 
+	 * 							false if you want the robot to face the direction it should face at its destination
 	 */
 	public void calculate(boolean avoidBall, boolean alwaysFaceTarget) {
+		if (robot.isOnSight()) {
 		if(prepareForTakeOff()) {
 			// Dribble when the ball is close by
 			dribble = Math.abs(
@@ -221,6 +225,11 @@ public class GotoPosition {
 			// Set kick back to 0 to prevent kicking twice in a row
 			chipKick = 0;
 		}
+		}
+		// check if robot has a previous location if the robot is not onsight
+		else if (robot.getPosition() != null && !robot.isOnSight()) {
+			output.send(2, robot.getRobotId());
+		}
 	}
 	
 	/**
@@ -228,24 +237,21 @@ public class GotoPosition {
 	 * @return true, if we're allowed to move, false otherwise.
 	 */
 	public boolean prepareForTakeOff(){
-//		if(World.getInstance().getGameState() == GameState.HALTED){
-//			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
-//			return false;
-//		}
-//		if(World.getInstance().getGameState() == GameState.STOPPED){
-//			FieldPoint ball = World.getInstance().getBall().getPosition();
-//			double deltaDistance = ball.getDeltaDistance(robot.getPosition());
-//			if(deltaDistance < 700){
-//				double robotAngleBall = robot.getPosition().getAngle(ball);
-//				destination = new FieldPoint(robot.getPosition().getX() - Math.cos(Math.toRadians(robotAngleBall)) * (750 - deltaDistance),
-//														robot.getPosition().getY() - Math.sin(Math.toRadians(robotAngleBall)) * (750 - deltaDistance));
-//				return false;
-//			}
-//			else{
-//				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
-//				return false;
-//			}
-//		}
+		if(World.getInstance().getGameState() == GameState.HALTED){
+			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+			return false;
+		}
+		if(World.getInstance().getGameState() == GameState.STOPPED){
+			FieldPoint ball = World.getInstance().getBall().getPosition();
+			double deltaDistance = ball.getDeltaDistance(robot.getPosition());
+			MAX_VELOCITY = 1500;
+			if(deltaDistance < 700){
+				double robotAngleBall = robot.getPosition().getAngle(ball);
+				destination = new FieldPoint(robot.getPosition().getX() - Math.cos(Math.toRadians(robotAngleBall)) * (750 - deltaDistance),
+														robot.getPosition().getY() - Math.sin(Math.toRadians(robotAngleBall)) * (750 - deltaDistance));
+				return true;
+			}
+		}
 		if (destination == null) {
 			if(target == null){
 				output.send(1, robot.getRobotId(), 0, 0, 0, chipKick, dribble);
@@ -308,6 +314,7 @@ public class GotoPosition {
 	 * Function that goes to the given position, whilst turning around the target.
 	 * Calling this function continuously will make the robot end up at the given
 	 * offset from the target at an angle between the target and the destination.
+	 * @param offset The distance to stay away from the target.
 	 */
 	public void calculateTurnAroundTarget(int offset){
 		if(prepareForTakeOff()){			

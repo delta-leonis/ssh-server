@@ -26,6 +26,11 @@ public class Counter extends LowLevelBehavior {
 
 		this.role = RobotMode.COUNTER;
 		go = new GotoPosition(robot, null, ballPosition);
+		go.setStartupSpeedVelocity(200);
+		go.setMaxVelocity(2500);
+		go.setDistanceToSlowDown(300);
+		go.setMaxRotationSpeed(1200);
+		go.setStartupSpeedRotation(200);
 	}
 
 	/**
