@@ -163,6 +163,7 @@ public class GotoPosition {
 	 * 							false if you want the robot to face the direction it should face at its destination
 	 */
 	public void calculate(boolean avoidBall, boolean alwaysFaceTarget) {
+		if (robot.isOnSight()) {
 		if(prepareForTakeOff()) {
 			// Dribble when the ball is close by
 			dribble = Math.abs(
@@ -223,6 +224,11 @@ public class GotoPosition {
 
 			// Set kick back to 0 to prevent kicking twice in a row
 			chipKick = 0;
+		}
+		}
+		// check if robot has a previous location if the robot is not onsight
+		else if (robot.getPosition() != null && !robot.isOnSight()) {
+			output.send(2, robot.getRobotId());
 		}
 	}
 	
