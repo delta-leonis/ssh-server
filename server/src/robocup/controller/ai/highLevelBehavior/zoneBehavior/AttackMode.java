@@ -271,7 +271,7 @@ public class AttackMode extends Mode {
 		if (robot.getPosition().getX() < 0)
 			offset = -offset;
 
-		disturber.update(distanceToObject, goToKick, objectPosition, offset, world.getField.getWidth(), world.getField().getLength());
+		disturber.update(distanceToObject, goToKick, objectPosition, offset, world.getField().getWidth(), world.getField().getLength());
 	}
 
 	@Override
