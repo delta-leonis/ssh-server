@@ -28,7 +28,9 @@ public class Keeper extends LowLevelBehavior {
 		this.centerGoalPosition = centerGoalPosition;
 
 		this.role = RobotMode.KEEPER;
-		go = new GotoPosition(robot, centerGoalPosition, ballPosition,3000);
+		go = new GotoPosition(robot, centerGoalPosition, ballPosition);
+		go.setStartupSpeedVelocity(200);
+		go.setDistanceToSlowDown(150);
 	}
 
 	/**
@@ -112,11 +114,11 @@ public class Keeper extends LowLevelBehavior {
 
 			double destX = objectPosition.getX() + dx;
 			double destY = objectPosition.getY() + dy;
-			if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam()) && destX > World.getInstance().getField().getLength()/2){
-				destX = World.getInstance().getField().getLength()/2;
+			if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam()) && destX > World.getInstance().getField().getLength()/2 - Robot.DIAMETER/2){
+				destX = World.getInstance().getField().getLength()/2 - Robot.DIAMETER/2;
 			}
-			else if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getWestTeam()) && destX < -World.getInstance().getField().getLength()/2){
-				destX = -World.getInstance().getField().getLength()/2;
+			else if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getWestTeam()) && destX < -World.getInstance().getField().getLength()/2 + Robot.DIAMETER/2){
+				destX = -World.getInstance().getField().getLength()/2 + Robot.DIAMETER/2;
 			}
 			newDestination = new FieldPoint(destX, destY);
 		}

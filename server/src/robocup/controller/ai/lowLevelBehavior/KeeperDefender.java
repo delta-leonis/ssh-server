@@ -16,6 +16,7 @@ public class KeeperDefender extends Keeper {
 
 		this.role = RobotMode.KEEPERDEFENDER;
 		go = new GotoPosition(robot, centerGoalPosition, ballPosition/*, 3000*/);
+		go.setStartupSpeedVelocity(500);
 	}
 	
 	@Override
@@ -30,6 +31,12 @@ public class KeeperDefender extends Keeper {
 
 		// calculate position
 		FieldPoint newDestination = getNewKeeperDestination(centerGoalPosition, inFieldBallPosition , distanceToObject);
+		if(robot.getPosition().getDeltaDistance(newDestination) < 1000){
+			robot.setIgnore(true);
+		}
+		else{
+			robot.setIgnore(false);
+		}
 		// Change direction based on goToKick.
 		// Move forward and kick if ball gets too close
 		// Else, go to proper direction
@@ -50,12 +57,6 @@ public class KeeperDefender extends Keeper {
 
 	@Override
 	protected FieldPoint getNewKeeperDestination(FieldPoint objectPosition, FieldPoint subjectPosition, int distance) {
-		if(robot.getPosition().getDeltaDistance(objectPosition) < 500){
-			robot.setIgnore(true);
-		}
-		else{
-			robot.setIgnore(false);
-		}
 		return super.getNewKeeperDestination(objectPosition, subjectPosition, distance, offset);
 	}
 }
