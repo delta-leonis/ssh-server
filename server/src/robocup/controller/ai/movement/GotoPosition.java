@@ -35,7 +35,7 @@ public class GotoPosition {
 	// Rotation Speed Variables
 	/** 5 */
 	@SuppressWarnings("unused")
-	private final double DISTANCE_ROTATIONSPEED_COEFFICIENT = 5;
+	private double DISTANCE_ROTATIONSPEED_COEFFICIENT = 5;
 	/** 1000 */
 	private int MAX_ROTATION_SPEED = 1000;
 	/** 100 */
