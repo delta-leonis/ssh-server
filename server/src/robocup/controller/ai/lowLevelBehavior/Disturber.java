@@ -11,6 +11,11 @@ public class Disturber extends Keeper {
 	public Disturber(Robot robot, FieldPoint centerGoalPosition) {
 		super(robot, centerGoalPosition);
 		offset = 0;
+		go.setStartupSpeedVelocity(200);
+		go.setMaxVelocity(2500);
+		go.setDistanceToSlowDown(300);
+		go.setMaxRotationSpeed(1200);
+		go.setStartupSpeedRotation(200);
 	}
 
 	/**
