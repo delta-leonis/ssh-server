@@ -13,16 +13,16 @@ import org.junit.Test;
 import robocup.controller.ai.lowLevelBehavior.Disturber;
 import robocup.model.Ally;
 import robocup.model.FieldPoint;
+import robocup.model.World;
 
 public class DisturberTest {
 
 	private Ally disturberRobot;
 	private FieldPoint objectPosition;
 	private Disturber disturberBehavior;
-
+	private World world;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-
 	}
 
 	@Before
@@ -30,6 +30,8 @@ public class DisturberTest {
 		disturberRobot = new Ally(0, 180);
 		disturberRobot.update(new FieldPoint(0, 0), 0, 0, 0, 0);
 		objectPosition = new FieldPoint(0, 0);
+		world = World.getInstance();
+		
 	}
 
 	@Before
@@ -44,28 +46,28 @@ public class DisturberTest {
 	public void setUpEastSingleSize() {
 		setUp();
 		disturberBehavior = new Disturber(disturberRobot, new FieldPoint(3000, 0));
-		disturberBehavior.update(200, false, objectPosition);
+		disturberBehavior.update(200, false, objectPosition, world.getField().getWidth(), world.getField().getLength());
 	}
 
 	@Before
 	public void setUpWestSingleSize() {
 		setUp();
 		disturberBehavior = new Disturber(disturberRobot, new FieldPoint(-3000, 0));
-		disturberBehavior.update(200, false, objectPosition);
+		disturberBehavior.update(200, false, objectPosition, world.getField().getWidth(), world.getField().getLength());
 	}
 
 	@Before
 	public void setUpEastDoubleSize() {
 		setUp();
 		disturberBehavior = new Disturber(disturberRobot, new FieldPoint(4500, 0));
-		disturberBehavior.update(200, false, objectPosition);
+		disturberBehavior.update(200, false, objectPosition, world.getField().getWidth(), world.getField().getLength());
 	}
 
 	@Before
 	public void setUpWestDoubleSize() {
 		setUp();
 		disturberBehavior = new Disturber(disturberRobot, new FieldPoint(-4500, 0));
-		disturberBehavior.update(200, false, objectPosition);
+		disturberBehavior.update(200, false, objectPosition, world.getField().getWidth(), world.getField().getLength());
 	}
 
 	@Test
@@ -77,14 +79,14 @@ public class DisturberTest {
 				.getDestination())));
 
 		objectPosition = new FieldPoint(3000, 1000);
-		disturberBehavior.update(200, false, objectPosition);
+		disturberBehavior.update(200, false, objectPosition, world.getField().getWidth(), world.getField().getLength());
 		disturberBehavior.calculate();
 		assertTrue(new FieldPoint(3000, 800).equalsRounded(disturberBehavior.getGotoPosition().getDestination()));
 		assertTrue(200.0 == Math.round(objectPosition.getDeltaDistance(disturberBehavior.getGotoPosition()
 				.getDestination())));
 
 		objectPosition = new FieldPoint(3000, -1000);
-		disturberBehavior.update(200, false, objectPosition);
+		disturberBehavior.update(200, false, objectPosition, world.getField().getWidth(), world.getField().getLength());
 		disturberBehavior.calculate();
 		assertTrue(new FieldPoint(3000, -800).equalsRounded(disturberBehavior.getGotoPosition().getDestination()));
 		assertTrue(200.0 == Math.round(objectPosition.getDeltaDistance(disturberBehavior.getGotoPosition()
@@ -97,14 +99,14 @@ public class DisturberTest {
 				.getDestination())));
 
 		objectPosition = new FieldPoint(-3000, 1000);
-		disturberBehavior.update(200, false, objectPosition);
+		disturberBehavior.update(200, false, objectPosition, world.getField().getWidth(), world.getField().getLength());
 		disturberBehavior.calculate();
 		assertTrue(new FieldPoint(-3000, 800).equalsRounded(disturberBehavior.getGotoPosition().getDestination()));
 		assertTrue(200.0 == Math.round(objectPosition.getDeltaDistance(disturberBehavior.getGotoPosition()
 				.getDestination())));
 
 		objectPosition = new FieldPoint(-3000, -1000);
-		disturberBehavior.update(200, false, objectPosition);
+		disturberBehavior.update(200, false, objectPosition, world.getField().getWidth(), world.getField().getLength());
 		disturberBehavior.calculate();
 		assertTrue(new FieldPoint(-3000, -800).equalsRounded(disturberBehavior.getGotoPosition().getDestination()));
 		assertTrue(200.0 == Math.round(objectPosition.getDeltaDistance(disturberBehavior.getGotoPosition()
@@ -120,14 +122,14 @@ public class DisturberTest {
 				.getDestination())));
 
 		objectPosition = new FieldPoint(4500, 1000);
-		disturberBehavior.update(200, false, objectPosition);
+		disturberBehavior.update(200, false, objectPosition, world.getField().getWidth(), world.getField().getLength());
 		disturberBehavior.calculate();
 		assertTrue(new FieldPoint(4500, 800).equalsRounded(disturberBehavior.getGotoPosition().getDestination()));
 		assertTrue(200.0 == Math.round(objectPosition.getDeltaDistance(disturberBehavior.getGotoPosition()
 				.getDestination())));
 
 		objectPosition = new FieldPoint(4500, -1000);
-		disturberBehavior.update(200, false, objectPosition);
+		disturberBehavior.update(200, false, objectPosition, world.getField().getWidth(), world.getField().getLength());
 		disturberBehavior.calculate();
 		assertTrue(new FieldPoint(4500, -800).equalsRounded(disturberBehavior.getGotoPosition().getDestination()));
 		assertTrue(200.0 == Math.round(objectPosition.getDeltaDistance(disturberBehavior.getGotoPosition()
@@ -140,14 +142,14 @@ public class DisturberTest {
 				.getDestination())));
 
 		objectPosition = new FieldPoint(-4500, 1000);
-		disturberBehavior.update(200, false, objectPosition);
+		disturberBehavior.update(200, false, objectPosition, world.getField().getWidth(), world.getField().getLength());
 		disturberBehavior.calculate();
 		assertTrue(new FieldPoint(-4500, 800).equalsRounded(disturberBehavior.getGotoPosition().getDestination()));
 		assertTrue(200.0 == Math.round(objectPosition.getDeltaDistance(disturberBehavior.getGotoPosition()
 				.getDestination())));
 
 		objectPosition = new FieldPoint(-4500, -1000);
-		disturberBehavior.update(200, false, objectPosition);
+		disturberBehavior.update(200, false, objectPosition, world.getField().getWidth(), world.getField().getLength());
 		disturberBehavior.calculate();
 		assertTrue(new FieldPoint(-4500, -800).equalsRounded(disturberBehavior.getGotoPosition().getDestination()));
 		assertTrue(200.0 == Math.round(objectPosition.getDeltaDistance(disturberBehavior.getGotoPosition()
@@ -156,7 +158,7 @@ public class DisturberTest {
 
 	public final void testNull() {
 		setUpNull();
-		disturberBehavior.update(0, false, objectPosition);
+		disturberBehavior.update(0, false, objectPosition, world.getField().getWidth(), world.getField().getLength());
 
 		try {
 			disturberBehavior.calculate();
@@ -173,7 +175,7 @@ public class DisturberTest {
 		}
 
 		disturberRobot.setPosition(new FieldPoint(0, 0));
-		disturberBehavior.update(0, false, null);
+		disturberBehavior.update(0, false, null, world.getField().getWidth(), world.getField().getLength());
 
 		try {
 			disturberBehavior.calculate();

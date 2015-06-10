@@ -3,33 +3,30 @@ package robocup.controller.ai.lowLevelBehavior;
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
-import robocup.model.World;
 import robocup.model.enums.RobotMode;
 
 public class KeeperDefender extends Keeper {
 
 	private int offset;
-
+	
 	public KeeperDefender(Robot robot, FieldPoint centerGoalPosition) {
 		super(robot, centerGoalPosition);
 		offset = 0;
-
 		this.role = RobotMode.KEEPERDEFENDER;
 		go = new GotoPosition(robot, centerGoalPosition, ballPosition/*, 3000*/);
+		go.setStartupSpeedVelocity(500);
 	}
 	
 	@Override
 	public void calculate() {
-		// Calculate goToKick
-		// take half of the field width
-		double halfFieldWidth = World.getInstance().getField().getWidth()/2;
-		// make sure the x coordinate of the ball is within the x axis of the field
-		double ballX = Math.max(-halfFieldWidth, Math.min(halfFieldWidth, ballPosition.getX()));
-		// place the new x coordinate in a new fieldpoint
-		FieldPoint inFieldBallPosition = new FieldPoint(ballX,	ballPosition.getY());
-
 		// calculate position
-		FieldPoint newDestination = getNewKeeperDestination(centerGoalPosition, inFieldBallPosition , distanceToObject);
+		FieldPoint newDestination = getNewKeeperDestination(centerGoalPosition, ballPosition , distanceToObject);
+		if(robot.getPosition().getDeltaDistance(newDestination) < 1000){
+			robot.setIgnore(true);
+		}
+		else{
+			robot.setIgnore(false);
+		}
 		// Change direction based on goToKick.
 		// Move forward and kick if ball gets too close
 		// Else, go to proper direction
@@ -43,14 +40,13 @@ public class KeeperDefender extends Keeper {
 	 * @param ballPosition
 	 * @param offset the offset for this keeper defender in degrees
 	 */
-	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, int offset) {
-		super.update(distanceToGoal, goToKick, ballPosition);
+	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, int offset, double fieldWidth, double fieldLength) {
+		super.update(distanceToGoal, goToKick, ballPosition, fieldWidth, fieldLength);
 		this.offset = offset;
-		robot.setIgnore(true);
 	}
 
 	@Override
 	protected FieldPoint getNewKeeperDestination(FieldPoint objectPosition, FieldPoint subjectPosition, int distance) {
-		return super.getNewKeeperDestination(objectPosition, subjectPosition, distance, offset);
+		return super.getNewKeeperDestination(objectPosition, cropFieldPosition(subjectPosition), distance, offset);
 	}
 }
