@@ -25,13 +25,13 @@ public class DijkstraPathPlanner {
 	// Distance from the middle of the robot to the vertices around it
 	// Basically the "Danger zone" for the Robot. A normal Robot has a radius of 90mm, so if DISTANCE_TO_ROBOT == 160mm,
 	// then it means we don't want to get within (160mm - 90mm = ) 70mm of any other Robot. (Based on their center points)
-	public static final int MIN_DISTANCE_TO_ROBOT = 170;
-	public static final int MAX_DISTANCE_TO_ROBOT = 250;
+	public static final int MIN_DISTANCE_TO_ROBOT = 195;
+	public static final int MAX_DISTANCE_TO_ROBOT = 270;
 	public static final int DISTANCE_TO_BALL = 120;
 	public static final int DISTANCE_TO_POLYGON = 120;
 	// This value is used to determine the vertex points, which are VERTEX_DISTANCE_TO_ROBOT from the middle points of the robots.
 	public static final int MIN_VERTEX_DISTANCE_TO_ROBOT = 200;
-	public static final int MAX_VERTEX_DISTANCE_TO_ROBOT = 300;
+	public static final int MAX_VERTEX_DISTANCE_TO_ROBOT = 450;
 	private World world;
 	private ArrayList<Shape> objects;
 	private ArrayList<Shape> copyOfObjects;

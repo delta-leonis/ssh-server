@@ -29,11 +29,19 @@ public class AttackMode extends Mode {
 	@Override
 	public void updateAttacker(RobotExecuter executer) {
 		Attacker attacker = (Attacker) executer.getLowLevelBehavior();
-		int chipKick = 40;
+		int chipKick = 0;
 		FieldPoint ballPosition = ball.getPosition();
 		FieldPoint freeShot = world.hasFreeShot();
 
 		if (freeShot != null) {
+			if (	// Check whether the angle between robot and ball is lines up with the angle between the freeshot and the ball
+					Math.abs(Math.abs(freeShot.getAngle(ballPosition))-Math.abs(ballPosition.getAngle(executer.getRobot().getPosition()))) < 5000 / executer.getRobot().getPosition().getDeltaDistance(ballPosition)
+					// Check whether we're nearby enough
+					&& executer.getRobot().getPosition().getDeltaDistance(ballPosition) < 350
+					// Check whether the robot is facing the way it's supposed to face
+					&& Math.abs(Math.abs(executer.getRobot().getOrientation()) - Math.abs(ballPosition.getAngle(freeShot))) < 5000 / executer.getRobot().getPosition().getDeltaDistance(ballPosition)) {
+				chipKick = -100;
+			}
 			double shootDirection = ballPosition.getAngle(freeShot);
 			attacker.update(shootDirection, chipKick, ballPosition);
 		} else {
@@ -189,7 +197,8 @@ public class AttackMode extends Mode {
 		if (robot.getPosition().getX() < 0)
 			offset = -offset;
 
-		keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset, world.getField().getWidth(), world.getField().getLength());
+		keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset, world.getField().getWidth(), world
+				.getField().getLength());
 	}
 
 	@Override
@@ -226,7 +235,7 @@ public class AttackMode extends Mode {
 	protected void updateGoalPostCoverer(RobotExecuter executer) {
 		GoalPostCoverer goalPostCoverer = (GoalPostCoverer) executer.getLowLevelBehavior();
 
-		int distanceToPole = world.getField().getDefenceRadius() + world.getField().getDefenceStretch() / 2 + 50;
+		int distanceToPole = world.getField().getDefenceRadius() + world.getField().getDefenceStretch() / 2 + 200;
 		boolean goToKick = false;
 
 		double XPoint = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? world.getField()
@@ -236,8 +245,12 @@ public class AttackMode extends Mode {
 		Robot enemyRobot = world.getClosestEnemyRobotToPoint(new FieldPoint(XPoint, YPoint));
 		FieldPoint ballPosition = ball.getPosition();
 
-		goalPostCoverer.update(distanceToPole, goToKick, enemyRobot == null ? ((Ally) executer.getRobot())
-				.getPreferredZone().getCenterPoint() : enemyRobot.getPosition(), ballPosition, world.getField().getWidth(), world.getField().getLength());
+		goalPostCoverer.update(
+				new FieldPoint(XPoint, YPoint),
+				distanceToPole,
+				goToKick,
+				enemyRobot == null ? ((Ally) executer.getRobot()).getPreferredZone().getCenterPoint() : enemyRobot
+						.getPosition(), ballPosition, world.getField().getWidth(), world.getField().getLength());
 	}
 
 	@Override
@@ -271,7 +284,8 @@ public class AttackMode extends Mode {
 		if (robot.getPosition().getX() < 0)
 			offset = -offset;
 
-		disturber.update(distanceToObject, goToKick, objectPosition, offset, world.getField().getWidth(), world.getField().getLength());
+		disturber.update(distanceToObject, goToKick, objectPosition, offset, world.getField().getWidth(), world
+				.getField().getLength());
 	}
 
 	@Override

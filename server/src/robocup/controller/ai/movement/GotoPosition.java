@@ -41,7 +41,7 @@ public class GotoPosition {
 	/** 100 */
 	private int START_UP_ROTATION_SPEED = 200;
 	// Circle Around Ball Move Variables
-	private int CIRCLE_SPEED = 2000;
+	private int CIRCLE_SPEED = 1800;
 	
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 
@@ -210,7 +210,7 @@ public class GotoPosition {
 			}
 
 			currentSpeed = speed;
-			if(dribble){
+			if(dribble && robot.getPosition().getDeltaDistance(destination) < Robot.DIAMETER/2){
 				// Send the command
 				output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, chipKick, dribble);
 				LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + "," + chipKick + "," + dribble);
@@ -245,7 +245,7 @@ public class GotoPosition {
 		if(World.getInstance().getGameState() == GameState.STOPPED){
 			FieldPoint ball = World.getInstance().getBall().getPosition();
 			double deltaDistance = ball.getDeltaDistance(robot.getPosition());
-			MAX_VELOCITY = 1000;
+			MAX_VELOCITY = 1500;
 			if(deltaDistance < 700){
 				double robotAngleBall = robot.getPosition().getAngle(ball);
 				destination = new FieldPoint(robot.getPosition().getX() - Math.cos(Math.toRadians(robotAngleBall)) * (750 - deltaDistance),
@@ -549,5 +549,9 @@ public class GotoPosition {
 	 */
 	public void setStartupSpeedRotation(int startup){
 		START_UP_ROTATION_SPEED = startup;
+	}
+	
+	public void setForcedSpeed(int speed){
+		forcedSpeed = speed;
 	}
 }

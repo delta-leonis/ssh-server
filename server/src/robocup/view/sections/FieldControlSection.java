@@ -107,6 +107,8 @@ public class FieldControlSection extends SectionBox {
 		JCheckBox showRaster = new JCheckBox("Show raster");
 		showRaster.addActionListener(buttonListener);
 		settingsTab.add(showRaster, "growx");
+		showRaster.setSelected(true);
+		fieldPanel.toggleShowRaster();
 
 		JCheckBox showZones = new JCheckBox("Show zones");
 		showZones.addActionListener(buttonListener);
@@ -115,10 +117,14 @@ public class FieldControlSection extends SectionBox {
 		JCheckBox showRobots = new JCheckBox("Show robots");
 		showRobots.addActionListener(buttonListener);
 		settingsTab.add(showRobots, "growx");
+		showRobots.setSelected(true);
+		fieldPanel.toggleShowRobots();
 
 		JCheckBox showBall = new JCheckBox("Show ball");
 		showBall.addActionListener(buttonListener);
 		settingsTab.add(showBall, "growx");
+		showBall.setSelected(true);
+		fieldPanel.toggleShowBall();
 
 		JCheckBox mirrorField = new JCheckBox("Mirror North/South");
 		mirrorField.addActionListener(buttonListener);

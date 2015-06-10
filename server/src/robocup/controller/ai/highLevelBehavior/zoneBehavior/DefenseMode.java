@@ -159,7 +159,8 @@ public class DefenseMode extends Mode {
 			if (robot.getPosition().getX() < 0)
 				offset = -offset;
 
-			keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset, world.getField().getWidth(), world.getField().getLength());
+			keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset, world.getField().getWidth(), world
+					.getField().getLength());
 		}
 	}
 
@@ -183,55 +184,55 @@ public class DefenseMode extends Mode {
 
 		FieldPoint ballPosition = ball.getPosition();
 		FieldPoint pointToDefend = getPointToDefendForKeeper();
-		if(pointToDefend != null){
-			keeper.update(distanceToGoal, goToKick, ballPosition, pointToDefend , world.getField().getWidth(), world.getField().getLength());
-		}
-		else{
-			keeper.update(distanceToGoal, goToKick, ballPosition, world.getField().getWidth(), world.getField().getLength());
+		if (pointToDefend != null) {
+			keeper.update(distanceToGoal, goToKick, ballPosition, pointToDefend, world.getField().getWidth(), world
+					.getField().getLength());
+		} else {
+			keeper.update(distanceToGoal, goToKick, ballPosition, world.getField().getWidth(), world.getField()
+					.getLength());
 		}
 	}
-	
-	private FieldPoint getPointToDefendForKeeper(){
+
+	private FieldPoint getPointToDefendForKeeper() {
 		// The direction we predict the ball to go.
 		double ballDirection;
 		FieldPoint ballPos = ball.getPosition();
-		double y;	// Where the ball will go to.
+		double y; // Where the ball will go to.
 		double x;
-		boolean eastTeam = World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam());
+		boolean eastTeam = World.getInstance().getReferee().getAlly()
+				.equals(World.getInstance().getReferee().getEastTeam());
 		// Look for "Dangerous robots"
 		// Get closest enemy robot to ball
 		Robot robot = World.getInstance().getClosestRobotToBall();
 		// If ball is floating
-		if(robot.getPosition().getDeltaDistance(ball.getPosition()) > 250 && ball.getSpeed() > 0.5){
+		if (robot.getPosition().getDeltaDistance(ball.getPosition()) > 250 && ball.getSpeed() > 0.5) {
 			ballDirection = ball.getDirection();
 		}
 		// If enemy has ball
-		else if(robot instanceof Enemy && ((eastTeam && robot.getPosition().getX() > 0) || (!eastTeam && robot.getPosition().getX() < 0))){
+		else if (robot instanceof Enemy
+				&& ((eastTeam && robot.getPosition().getX() > 0) || (!eastTeam && robot.getPosition().getX() < 0))) {
 			//	If enemy in danger zone
 			// Where the ball is likely to go if the robot were to shoot.
 			// Maybe for the future: Take the direction of the robot into account, as well.
 			ballDirection = robot.getPosition().getAngle(ball.getPosition());
-		}
-		else{
+		} else {
 			return null;
 		}
-		
-		if(eastTeam && Math.cos(Math.toRadians(ballDirection)) > 0){	// Ball moves towards the east.
-			x = World.getInstance().getField().getLength()/2;
-		}
-		else if(!eastTeam && Math.cos(Math.toRadians(ballDirection)) < 0){
-			x = -World.getInstance().getField().getLength()/2;
-		}
-		else{
+
+		if (eastTeam && Math.cos(Math.toRadians(ballDirection)) > 0) { // Ball moves towards the east.
+			x = World.getInstance().getField().getLength() / 2;
+		} else if (!eastTeam && Math.cos(Math.toRadians(ballDirection)) < 0) {
+			x = -World.getInstance().getField().getLength() / 2;
+		} else {
 			// Ball is moving away from us, and thus, no special measures need to be taken.
 			return null;
 		}
 
-		y = Math.tan(Math.toRadians(ballDirection)) * (x - ballPos.getX()) + ballPos.getY();	// <-- Where the ball will hit
+		y = Math.tan(Math.toRadians(ballDirection)) * (x - ballPos.getX()) + ballPos.getY(); // <-- Where the ball will hit
 		double goalWidth = World.getInstance().getField().getEastGoal().getWidth();
-		if(y < goalWidth/2 && y > -goalWidth/2){
+		if (y < goalWidth / 2 && y > -goalWidth / 2) {
 			// if the ball is going towards the goal
-			return new FieldPoint(x,y);
+			return new FieldPoint(x, y);
 		}
 		return null;
 	}
@@ -248,7 +249,7 @@ public class DefenseMode extends Mode {
 	protected void updateGoalPostCoverer(RobotExecuter executer) {
 		GoalPostCoverer goalPostCoverer = (GoalPostCoverer) executer.getLowLevelBehavior();
 
-		int distanceToPole = world.getField().getDefenceRadius() + world.getField().getDefenceStretch() / 2 + 50;
+		int distanceToPole = world.getField().getDefenceRadius() + world.getField().getDefenceStretch() / 2 + 200;
 		boolean goToKick = false;
 
 		double XPoint = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? world.getField()
@@ -258,8 +259,12 @@ public class DefenseMode extends Mode {
 		Robot enemyRobot = world.getClosestEnemyRobotToPoint(new FieldPoint(XPoint, YPoint));
 		FieldPoint ballPosition = ball.getPosition();
 
-		goalPostCoverer.update(distanceToPole, goToKick, enemyRobot == null ? ((Ally) executer.getRobot())
-				.getPreferredZone().getCenterPoint() : enemyRobot.getPosition(), ballPosition, world.getField().getWidth(), world.getField().getLength());
+		goalPostCoverer.update(
+				new FieldPoint(XPoint, YPoint),
+				distanceToPole,
+				goToKick,
+				enemyRobot == null ? ((Ally) executer.getRobot()).getPreferredZone().getCenterPoint() : enemyRobot
+						.getPosition(), ballPosition, world.getField().getWidth(), world.getField().getLength());
 	}
 
 	@Override
@@ -293,7 +298,8 @@ public class DefenseMode extends Mode {
 		if (robot.getPosition().getX() < 0)
 			offset = -offset;
 
-		disturber.update(distanceToObject, goToKick, objectPosition, offset, world.getField().getWidth(), world.getField().getLength());
+		disturber.update(distanceToObject, goToKick, objectPosition, offset, world.getField().getWidth(), world
+				.getField().getLength());
 	}
 
 	@Override

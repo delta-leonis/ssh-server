@@ -25,6 +25,11 @@ public class Attacker extends LowLevelBehavior {
 
 		this.role = RobotMode.ATTACKER;
 		go = new GotoPosition(robot, robot.getPosition(), ballPosition);
+		go.setStartupSpeedVelocity(200);
+		go.setMaxVelocity(3000);
+		go.setDistanceToSlowDown(500);
+		go.setMaxRotationSpeed(1000);
+		go.setStartupSpeedRotation(100);
 	}
 
 	/**
@@ -52,11 +57,12 @@ public class Attacker extends LowLevelBehavior {
 //			
 //
 			if (chipKick != 0) {
-				// kick or chip when the orientation is good and the attacker is close to the ball
-				if (Math.abs(robot.getOrientation() - robot.getPosition().getAngle(ballPosition)) < 2.0
-						&& robot.getPosition().getDeltaDistance(ballPosition) < 20 + Robot.DIAMETER/2) {
+//				// kick or chip when the orientation is good and the attacker is close to the ball
+//				if (Math.abs(robot.getOrientation() - robot.getPosition().getAngle(ballPosition)) < 2.0
+//						&& robot.getPosition().getDeltaDistance(ballPosition) < 20 + Robot.DIAMETER/2) {
 					go.setKick(chipKick);
-				}
+					
+//				}
 			}
 
 			changeDestination(newDestination);
@@ -68,12 +74,14 @@ public class Attacker extends LowLevelBehavior {
 	 * @param newDestination the new destination
 	 */
 	private void changeDestination(FieldPoint newDestination) {
-		go.setDestination(newDestination);
 		go.setTarget(ballPosition);
 		if(chipKick == 0){
+			go.setDestination(newDestination);
 			go.calculateTurnAroundTarget(300);
 		}
 		else{
+			go.setDestination(ballPosition);
+			go.setForcedSpeed(0);
 			go.calculate(false, true);
 		}
 	}

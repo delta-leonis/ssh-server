@@ -256,7 +256,8 @@ public class StandardMode extends Mode {
 			if (robot.getPosition().getX() < 0)
 				offset = -offset;
 
-			keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset, world.getField().getWidth(), world.getField().getLength());
+			keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset, world.getField().getWidth(), world
+					.getField().getLength());
 		}
 	}
 
@@ -294,7 +295,7 @@ public class StandardMode extends Mode {
 	protected void updateGoalPostCoverer(RobotExecuter executer) {
 		GoalPostCoverer goalPostCoverer = (GoalPostCoverer) executer.getLowLevelBehavior();
 
-		int distanceToPole = world.getField().getDefenceRadius() + world.getField().getDefenceStretch() / 2 + 50;
+		int distanceToPole = world.getField().getDefenceRadius() + world.getField().getDefenceStretch() / 2 + 200;
 		boolean goToKick = false;
 
 		double XPoint = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? world.getField()
@@ -304,8 +305,12 @@ public class StandardMode extends Mode {
 		Robot enemyRobot = world.getClosestEnemyRobotToPoint(new FieldPoint(XPoint, YPoint));
 		FieldPoint ballPosition = ball.getPosition();
 
-		goalPostCoverer.update(distanceToPole, goToKick, enemyRobot == null ? ((Ally) executer.getRobot())
-				.getPreferredZone().getCenterPoint() : enemyRobot.getPosition(), ballPosition, world.getField().getWidth(), world.getField().getLength());
+		goalPostCoverer.update(
+				new FieldPoint(XPoint, YPoint),
+				distanceToPole,
+				goToKick,
+				enemyRobot == null ? ((Ally) executer.getRobot()).getPreferredZone().getCenterPoint() : enemyRobot
+						.getPosition(), ballPosition, world.getField().getWidth(), world.getField().getLength());
 	}
 
 	@Override
@@ -335,12 +340,14 @@ public class StandardMode extends Mode {
 		boolean goToKick = false;//world.getClosestRobotToBall().getPosition().getDeltaDistance(objectPosition) > Robot.DIAMETER;
 
 		// Invert offset when on the left side of the field.
-		disturber.update(distanceToObject, goToKick, objectPosition, world.getField().getWidth(), world.getField().getLength());
+		disturber.update(distanceToObject, goToKick, objectPosition, world.getField().getWidth(), world.getField()
+				.getLength());
 		// This is done because the offset moves the other way on this side. 
 		if (robot.getPosition().getX() < 0)
 			offset = -offset;
 
-		disturber.update(distanceToObject, goToKick, objectPosition, offset, world.getField().getWidth(), world.getField().getLength());
+		disturber.update(distanceToObject, goToKick, objectPosition, offset, world.getField().getWidth(), world
+				.getField().getLength());
 	}
 
 	@Override
