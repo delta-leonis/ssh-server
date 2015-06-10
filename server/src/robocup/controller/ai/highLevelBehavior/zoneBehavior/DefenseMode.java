@@ -111,7 +111,7 @@ public class DefenseMode extends Mode {
 	public void updateKeeperDefender(RobotExecuter executer) {
 		KeeperDefender keeperDefender = (KeeperDefender) executer.getLowLevelBehavior();
 
-		int distanceToGoal = world.getField().getDefenceRadius() + world.getField().getDefenceStretch() / 2 + 200;
+		int distanceToGoal = world.getField().getDefenceRadius() + world.getField().getDefenceStretch() / 2 + 500;
 		boolean goToKick = false;
 		FieldPoint ballPosition = ball.getPosition();
 
