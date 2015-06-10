@@ -8,7 +8,7 @@ import robocup.model.enums.RobotMode;
 public class KeeperDefender extends Keeper {
 
 	private int offset;
-	
+
 	public KeeperDefender(Robot robot, FieldPoint centerGoalPosition) {
 		super(robot, centerGoalPosition);
 		offset = 0;
@@ -16,15 +16,14 @@ public class KeeperDefender extends Keeper {
 		go = new GotoPosition(robot, centerGoalPosition, ballPosition/*, 3000*/);
 		go.setStartupSpeedVelocity(500);
 	}
-	
+
 	@Override
 	public void calculate() {
 		// calculate position
-		FieldPoint newDestination = getNewKeeperDestination(centerGoalPosition, ballPosition , distanceToObject);
-		if(robot.getPosition().getDeltaDistance(newDestination) < 1000){
+		FieldPoint newDestination = getNewKeeperDestination(centerGoalPosition, ballPosition, distanceToObject);
+		if (robot.getPosition() != null && robot.getPosition().getDeltaDistance(newDestination) < 1000) {
 			robot.setIgnore(true);
-		}
-		else{
+		} else {
 			robot.setIgnore(false);
 		}
 		// Change direction based on goToKick.
@@ -40,7 +39,8 @@ public class KeeperDefender extends Keeper {
 	 * @param ballPosition
 	 * @param offset the offset for this keeper defender in degrees
 	 */
-	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, int offset, double fieldWidth, double fieldLength) {
+	public void update(int distanceToGoal, boolean goToKick, FieldPoint ballPosition, int offset, double fieldWidth,
+			double fieldLength) {
 		super.update(distanceToGoal, goToKick, ballPosition, fieldWidth, fieldLength);
 		this.offset = offset;
 	}
