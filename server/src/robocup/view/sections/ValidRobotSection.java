@@ -122,11 +122,10 @@ public class ValidRobotSection extends SectionBox {
 		}
 	}
 
-	/**
-	 * currently unused
-	 */
 	@Override
 	public void update() {
+		for(JCheckBox checkbox : checkboxes)
+			checkbox.setSelected(World.getInstance().isValidRobotId((checkbox.getName().equals("ally") ? World.getInstance().getReferee().getAlly() : World.getInstance().getReferee().getEnemy()).getRobotByID(Integer.valueOf(checkbox.getText().substring(1)))));
 	}
 
 }

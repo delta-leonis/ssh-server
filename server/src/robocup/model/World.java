@@ -54,6 +54,8 @@ public class World extends Observable {
 	private GameState currentGameState;
 	private FieldPoint ballPositionForGameState;
 
+	private ArrayList<Obstruction> obstructions;
+
 	/**
 	 * Constructor for the {@link World} Can only be called as a singleton.
 	 */
@@ -67,6 +69,7 @@ public class World extends Observable {
 		// initialize all robots
 		allyTeam = new ArrayList<Robot>();
 		enemyTeam = new ArrayList<Robot>();
+		obstructions = new ArrayList<Obstruction>();
 
 		for (int i = 0; i < TOTAL_TEAM_SIZE; i++) {
 			allyTeam.add(new Ally(i, 150));
@@ -1022,5 +1025,17 @@ public class World extends Observable {
 
 	public void setGamepadModel(GamepadModel gamepadModel) {
 		this.gamepadModel = gamepadModel;
+	}
+
+	public ArrayList<Obstruction> getObstructions() {
+		return obstructions;
+	}
+
+	public boolean isValidRobotId(Robot robot) {
+		ArrayList<Integer> validIDs = ((robot instanceof Ally) ? World.getInstance().getValidAllyIDs() : World.getInstance().getValidEnemyIDs());
+		for(int id : validIDs)
+			if(id == robot.getRobotId())
+				return true;
+		return false;
 	}
 }

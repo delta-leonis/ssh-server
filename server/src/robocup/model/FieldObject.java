@@ -11,10 +11,12 @@ public abstract class FieldObject {
 	protected long lastUpdateTime;
 	protected double direction;
 	protected double speed;
+	private boolean overrideOnsight;
 
 	public FieldObject() {
 		lastUpdateTime = 0;
 		position = null;
+		overrideOnsight = false;
 	}
 
 	/**
@@ -31,6 +33,14 @@ public abstract class FieldObject {
 		return speed;
 	}
 
+	public boolean overrideOnsight(){
+		return overrideOnsight;
+	}
+
+	public void setOverrideOnsight(boolean override){
+		overrideOnsight = override;
+	}
+	
 	/**
 	 * @return The last time this object got updated in seconds.
 	 */

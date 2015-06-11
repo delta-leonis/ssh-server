@@ -9,8 +9,10 @@ import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -24,9 +26,11 @@ import robocup.controller.ai.movement.DijkstraPathPlanner.Vertex;
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.Ally;
 import robocup.model.Ball;
+import robocup.model.Enemy;
 import robocup.model.FieldObject;
 import robocup.model.FieldPoint;
 import robocup.model.Goal;
+import robocup.model.Obstruction;
 import robocup.model.Robot;
 import robocup.model.World;
 import robocup.model.enums.FieldZone;
@@ -62,6 +66,8 @@ public class FieldPanel extends JPanel {
 	private int FPS;
 	private long lastFPSpaint;
 
+	private boolean showObstructions;
+
 	/**
 	 * Constructor of {@link FieldPanel}. The panel size is set and the mouseListener is added for 
 	 * the ball position.
@@ -81,6 +87,9 @@ public class FieldPanel extends JPanel {
 				double x = - world.getField().getLength() / 2 + (me.getX() - spaceBufferX) / ratio;
 				double y = -1 * (- (world.getField().getWidth()) / 2 + (me.getY() - spaceBufferY) / ratio);
 				mouseObject.setPosition(new FieldPoint(x, y));
+				mouseObject.setOverrideOnsight(true);
+				if(mouseObject instanceof Ally || mouseObject instanceof Enemy)
+					(mouseObject instanceof Ally ? world.getValidAllyIDs() : world.getValidEnemyIDs()).add(((Robot)mouseObject).getRobotId());
 				repaint();
 			}
 		});
@@ -136,6 +145,42 @@ public class FieldPanel extends JPanel {
 		drawCoords(g, ratio);
 		drawFPS(g, ratio);
 		drawVectors(g, ratio);
+		drawObstructions(g, ratio);
+	}
+	
+	private Shape getRectAngle(int x, int y, int width, int height, int angle){
+		double theta = Math.toRadians(angle);
+		
+		// create rect centred on the point we want to rotate it about
+		Rectangle2D rect = new Rectangle2D.Double(-width/2., -height/2., width, height);
+	
+		AffineTransform transform = new AffineTransform();
+		transform.translate(x, y);
+		transform.rotate(theta);
+
+		return transform.createTransformedShape(rect);
+	}
+
+	/**
+	 * Draws the obstructions that are placed on the field
+	 * @param g		graphics object
+	 * @param ratio	ratio for drawing
+	 */
+	private void drawObstructions(Graphics g, double ratio){
+		if(!showObstructions)
+			return;
+
+		Graphics2D g2 = (Graphics2D)g;
+		g2.setStroke(new BasicStroke(4));
+		for(Obstruction obstruction : World.getInstance().getObstructions()){
+			if(obstruction.getPosition() != null){
+				g.setColor(Color.GRAY);
+				Shape rect = getRectAngle((int)obstruction.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int)obstruction.getPosition().toGUIPoint(ratio, mirror).getY()+ spaceBufferY, (int)(obstruction.getWidth()*ratio), (int)(obstruction.getLength()*ratio), (int)obstruction.getOrientation());
+				g2.fill(rect);
+				g.setColor(g.getColor().darker());
+				g2.draw(rect);
+			}
+		}
 	}
 	
 	/**
@@ -327,12 +372,19 @@ public class FieldPanel extends JPanel {
 		g2.drawLine((int) backNorth.getX() + spaceBufferX,(int)  backNorth.getY() + spaceBufferY, (int) backSouth.getX() + spaceBufferX, (int) backSouth.getY() + spaceBufferY);
 		g2.drawLine((int) backSouth.getX() + spaceBufferX,(int)  backSouth.getY() + spaceBufferY, (int) frontSouth.getX() + spaceBufferX, (int) frontSouth.getY() + spaceBufferY);
 	}
-	
+
 	/**
 	 * Toggle to show coordinates of both {@link Robot robots} and the field.
 	 */
 	public void toggleCoords(){
 		showCoords = !showCoords;
+		repaint();
+	}
+	/**
+	 * Toggle to show {@link Obstruction obstructions} placed on the field.
+	 */
+	public void toggleObstructions(){
+		showObstructions = !showObstructions;
 		repaint();
 	}
 	
@@ -506,7 +558,7 @@ public class FieldPanel extends JPanel {
 		Color enemyColor = world.getReferee().getEnemy().getColor().toColor();
 		ArrayList<Robot> robots = world.getAllRobots();
 		for(Robot robot : robots){
-			if(((robot instanceof Ally) ? World.getInstance().getValidAllyIDs() : World.getInstance().getValidEnemyIDs()).contains(new Integer(robot.getRobotId()) != null))
+			if(!world.isValidRobotId(robot))
 				continue;
 
 			if (robot.getPosition() == null)

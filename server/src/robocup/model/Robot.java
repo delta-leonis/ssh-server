@@ -92,7 +92,7 @@ public abstract class Robot extends FieldObject {
 	 * @return true if robot is visible on the {@link Field}
 	 */
 	public boolean isOnSight() {
-		return onSight;
+		return onSight || overrideOnsight();
 	}
 
 	/**
