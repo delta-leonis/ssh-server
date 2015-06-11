@@ -25,11 +25,11 @@ public class Attacker extends LowLevelBehavior {
 
 		this.role = RobotMode.ATTACKER;
 		go = new GotoPosition(robot, robot.getPosition(), ballPosition);
-		go.setStartupSpeedVelocity(200);
+		go.setStartupSpeedVelocity(220);
 		go.setMaxVelocity(3000);
 		go.setDistanceToSlowDown(500);
-		go.setMaxRotationSpeed(1000);
-		go.setStartupSpeedRotation(100);
+		go.setMaxRotationSpeed(1200);
+		go.setStartupSpeedRotation(200);
 	}
 
 	/**
@@ -77,11 +77,13 @@ public class Attacker extends LowLevelBehavior {
 		go.setTarget(ballPosition);
 		if(chipKick == 0){
 			go.setDestination(newDestination);
+			go.setMaxRotationSpeed(1200);
 			go.calculateTurnAroundTarget(300);
 		}
 		else{
 			go.setDestination(ballPosition);
-			go.setForcedSpeed(0);
+			go.setForcedSpeed(3000);
+			go.setMaxRotationSpeed(2500);
 			go.calculate(false, true);
 		}
 	}

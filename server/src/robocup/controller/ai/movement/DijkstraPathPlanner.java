@@ -482,10 +482,16 @@ public class DijkstraPathPlanner {
 				objects.add(r.getDangerEllipse(MIN_DISTANCE_TO_ROBOT, MAX_DISTANCE_TO_ROBOT));
 		
 		if(world.getReferee().getAlly().getGoalie() != robotId){
-			objects.add(FieldZone.EAST_NORTH_GOAL.getPolygon());
-			objects.add(FieldZone.EAST_SOUTH_GOAL.getPolygon());
-			objects.add(FieldZone.WEST_NORTH_GOAL.getPolygon());
-			objects.add(FieldZone.WEST_SOUTH_GOAL.getPolygon());
+			// We're east team.
+			if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())){
+				objects.add(FieldZone.EAST_NORTH_GOAL.getPolygon());
+				objects.add(FieldZone.EAST_SOUTH_GOAL.getPolygon());
+			}
+			// We're west team
+			else{
+				objects.add(FieldZone.WEST_NORTH_GOAL.getPolygon());
+				objects.add(FieldZone.WEST_SOUTH_GOAL.getPolygon());
+			}
 		}
 		// Avoid goals.
 		objects.add(World.getInstance().getField().getEastGoal().toRect());
