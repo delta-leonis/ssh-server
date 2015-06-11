@@ -31,7 +31,7 @@ public class GotoPosition {
 	/** 100 */
 	private int START_UP_MOVEMENT_SPEED = 200;
 	/** 450 */
-	private int DISTANCE_TO_SLOW_DOWN_FORCED = 80;
+	private int DISTANCE_TO_SLOW_DOWN_FORCED = 90;
 	// Rotation Speed Variables
 	/** 5 */
 	private double DISTANCE_ROTATIONSPEED_COEFFICIENT = 5;
@@ -40,7 +40,7 @@ public class GotoPosition {
 	/** 100 */
 	private int START_UP_ROTATION_SPEED = 200;
 	// Circle Around Ball Move Variables
-	private int CIRCLE_SPEED = 1800;
+	private int CIRCLE_SPEED = 2500;
 	
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 
@@ -167,7 +167,7 @@ public class GotoPosition {
 		if(prepareForTakeOff()) {
 			// Dribble when the ball is close by
 			dribble = Math.abs(
-					robot.getOrientation() - robot.getPosition().getAngle(World.getInstance().getBall().getPosition())) < 20
+					Math.abs(robot.getOrientation()) - Math.abs(robot.getPosition().getAngle(World.getInstance().getBall().getPosition()))) < 20
 					&& robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition()) < Robot.DIAMETER / 2 + 200;
 			// Calculate the route using the DijkstraPathPlanner
 			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), avoidBall);
@@ -209,7 +209,7 @@ public class GotoPosition {
 			}
 
 			currentSpeed = speed;
-			if(dribble && robot.getPosition().getDeltaDistance(destination) < Robot.DIAMETER/2){
+			if(dribble && robot.getPosition().getDeltaDistance(destination) < Robot.DIAMETER/2 -5){
 				// Send the command
 				output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, chipKick, dribble);
 				LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + "," + chipKick + "," + dribble);
@@ -262,6 +262,8 @@ public class GotoPosition {
 				return false;
 			}
 		}
+		MAX_VELOCITY = 3000;
+
 		return true;
 	}
 	
@@ -340,6 +342,7 @@ public class GotoPosition {
 				FieldPoint newDestination = new FieldPoint(	target.getX() + offset * Math.cos(Math.toRadians(degreesToMove)),
 															target.getY() + offset * Math.sin(Math.toRadians(degreesToMove)));
 				destination = newDestination;
+				forcedSpeed = 0;
 				calculate(false, true);
 			}
 			else{
@@ -399,7 +402,7 @@ public class GotoPosition {
 		else{
 			rotationDistance += START_UP_ROTATION_SPEED;
 		}
-		rotationDistance *= 1 - Math.abs(speed)/(MAX_VELOCITY + 500);
+		rotationDistance *= 1 - Math.abs(speed)/(MAX_VELOCITY * 1.5);
 		return rotationDistance;
 //		if(Math.abs(rotationDistance) > MAX_ROTATION_SPEED){
 //			if(rotationDistance < 0){

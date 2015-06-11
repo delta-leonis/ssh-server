@@ -1,5 +1,6 @@
 package robocup.model;
 
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map.Entry;
@@ -667,12 +668,18 @@ public class World extends Observable {
 		boolean result = false;
 		if (argPoint != null){
 			for (int edges = 0; edges < areaPoly.length - 1; edges++) {
-				if (pointToLineDistance(new FieldPoint(areaPoly[edges].getX() + (field.getLength() / 2), areaPoly[edges].getY()
-					+ (field.getWidth() / 2)), new FieldPoint(areaPoly[edges + 1].getX() + (field.getLength() / 2),
-					areaPoly[edges + 1].getY() + (field.getWidth() / 2)), new FieldPoint(argPoint.getX() + (field.getLength() / 2),
-					argPoint.getY() + (field.getWidth() / 2))) < radius) {
+				Line2D lineA = new Line2D.Double(areaPoly[edges].getX() + (field.getLength() / 2), areaPoly[edges].getY()
+					+ (field.getWidth() / 2), areaPoly[edges + 1].getX() + (field.getLength() / 2),
+					areaPoly[edges + 1].getY() + (field.getWidth() / 2));
+				if(lineA.ptSegDist(argPoint.getX() + (field.getLength() / 2),argPoint.getY() + (field.getWidth() / 2)) < radius){
 					result = true;
 				}
+//				if (pointToLineDistance(new FieldPoint(areaPoly[edges].getX() + (field.getLength() / 2), areaPoly[edges].getY()
+//					+ (field.getWidth() / 2)), new FieldPoint(areaPoly[edges + 1].getX() + (field.getLength() / 2),
+//					areaPoly[edges + 1].getY() + (field.getWidth() / 2)), new FieldPoint(argPoint.getX() + (field.getLength() / 2),
+//					argPoint.getY() + (field.getWidth() / 2))) < radius) {
+//					result = true;
+//				}
 			}
 			result = result || pointInPolygon(argPoint, areaPoly);
 		}
