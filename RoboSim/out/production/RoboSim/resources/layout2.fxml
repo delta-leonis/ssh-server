@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.*?>
+<?import java.lang.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.saxion.robosim.controller.UIController">
+    <top>
+        <FlowPane fx:id="menubar" prefHeight="60.0" prefWidth="-Infinity" BorderPane.alignment="CENTER">
+            <children>
+                <Button mnemonicParsing="false" text="Open" />
+                <Button mnemonicParsing="false" text="Overview" />
+                <Button mnemonicParsing="false" text="Settings" />
+                <Button mnemonicParsing="false" text="Exit" />
+            </children>
+        </FlowPane>
+    </top>
+    <center>
+        <Canvas fx:id="canvas" height="600" width="1200" BorderPane.alignment="CENTER" />
+    </center>
+   <right>
+      <VBox maxWidth="300.0" prefHeight="200.0" prefWidth="300.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="150.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@plaatje.jpg" />
+               </image>
+            </ImageView>
+            <Slider />
+            <Button mnemonicParsing="false" text="Button" />
+            <Button mnemonicParsing="false" text="Button" />
+         </children>
+      </VBox>
+   </right>
+
+
+</BorderPane>

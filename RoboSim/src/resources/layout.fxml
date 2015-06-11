@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#exitOnEscape" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.saxion.robosim.controller.UIController">
+    <top>
+        <FlowPane fx:id="menubar" prefHeight="60.0" prefWidth="-Infinity" BorderPane.alignment="CENTER">
+            <children>
+                <Button fx:id="btnOpenLayout" mnemonicParsing="false" onAction="#showFileChooser" text="Open" />
+                <Button mnemonicParsing="false" onAction="#showSettings" text="Settings" />
+                <Button mnemonicParsing="false" onAction="#exitApplication" text="Exit" />
+            </children>
+        </FlowPane>
+    </top>
+    <right>
+        <VBox maxWidth="300.0" prefHeight="200.0" prefWidth="300.0" styleClass="right" BorderPane.alignment="CENTER">
+            <children>
+                <ImageView fitHeight="200.0" fitWidth="300.0" pickOnBounds="true">
+                    <image>
+                        <Image url="@plaatje.jpg" />
+                    </image>
+                </ImageView>
+                <Label fx:id="FPS" text="FPS" />
+                <Label fx:id="RDR" text="RDR" />
+                <Label fx:id="CMD" text="CMD" />
+                <Label fx:id="RobotId" text="ID:" />
+                <Label fx:id="RobotX" text="X:" />
+                <Label fx:id="RobotY" text="Y:" />
+                <Label fx:id="RobotOrientation" text="Orentation:" />
+                <Label fx:id="RobotConfidence" text="Confidence:" />
+                <Label fx:id="RobotUpdateCount" text="Update count:" />
+
+                <ListView fx:id="frameList" onKeyPressed="#keyUpDown" prefHeight="200.0" prefWidth="200.0" />
+            </children>
+        </VBox>
+
+    </right>
+    <center>
+        <BorderPane BorderPane.alignment="TOP_LEFT">
+            <center>
+                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                    <children>
+                        <Canvas fx:id="canvas" height="600" width="900" />
+                    </children>
+                </AnchorPane>
+            </center>
+            <bottom>
+                <BorderPane fx:id="buttonWrapper" prefHeight="105.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                    <left>
+                        <ImageView fx:id="backward_button" fitHeight="67.0" fitWidth="200.0" onMouseClicked="#backwardClick" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                            <image>
+                                <Image url="@backward.png" />
+                            </image>
+                        </ImageView>
+                    </left>
+                    <right>
+                        <ImageView fx:id="forward_button" fitHeight="67.0" fitWidth="200.0" onMouseClicked="#forwardClick" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+
+                            <image>
+                                <Image url="@forward.png" />
+                            </image>
+                        </ImageView>
+                    </right>
+                    <center>
+                        <FlowPane alignment="CENTER" columnHalignment="CENTER" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                            <children>
+                                <ImageView fitHeight="67.0" fitWidth="67.0" onMouseClicked="#stopClick" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@stop.png" />
+                                    </image>
+                                </ImageView>
+                                <ImageView fx:id="start_button" fitHeight="67.0" fitWidth="67.0" onMouseClicked="#startClick" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@play.png" />
+                                    </image>
+                                </ImageView>
+                            </children>
+                        </FlowPane>
+                    </center>
+                    <bottom>
+
+                        <Pane fx:id="sliderPane">
+                            <BorderPane.margin>
+                                <Insets bottom="20.0" left="20.0" right="20.0" />
+                            </BorderPane.margin>
+                            <children>
+
+                                <Slider fx:id="slider" />
+
+                            </children>
+                        </Pane>
+
+
+                    </bottom>
+                </BorderPane>
+            </bottom>
+        </BorderPane>
+    </center>
+
+
+</BorderPane>
