@@ -97,7 +97,8 @@ public class ZoneBehavior extends Behavior {
 				break;
 			case BALL_ALLY_CHANGEOWNER:
 			case BALL_ENEMY_CHANGEOWNER:
-				currentMode.assignRoles();
+				if (currentMode != null)
+					currentMode.assignRoles();
 				break;
 			case BALL_MOVESPAST_MIDLINE:
 				if (world.allyHasBall()) {
@@ -107,7 +108,8 @@ public class ZoneBehavior extends Behavior {
 					currentMode = chooseDefenseStrategy(executers);
 				break;
 			case BALL_MOVESPAST_NORTHSOUTH:
-				currentMode.assignRoles();
+				if (currentMode != null)
+					currentMode.assignRoles();
 				break;
 			case ROBOT_ENEMY_ATTACKCOUNT_CHANGE:
 				if (world.getAttackingEnemiesCount() > 3 && world.getGameState() == GameState.NORMAL_PLAY)
@@ -185,8 +187,18 @@ public class ZoneBehavior extends Behavior {
 			}
 			break;
 		case GOAL_BLUE:
+			if (referee.getAllyTeamColor() == TeamColor.YELLOW) {
+				returnMode = new StandardMode(new KickOffAttack(), executers);
+			} else {
+				returnMode = new StandardMode(new KickOffDefense(), executers);
+			}
+			break;
 		case GOAL_YELLOW:
-			returnMode = new StandardMode(new GameStop(), executers);
+			if (referee.getAllyTeamColor() == TeamColor.BLUE) {
+				returnMode = new StandardMode(new KickOffAttack(), executers);
+			} else {
+				returnMode = new StandardMode(new KickOffDefense(), executers);
+			}
 			break;
 		case HALT:
 			returnMode = new StandardMode(new GameStop(), executers);
@@ -246,8 +258,17 @@ public class ZoneBehavior extends Behavior {
 			break;
 		case STOP:
 		case TIMEOUT_BLUE:
+			if (referee.getAllyTeamColor() == TeamColor.BLUE) {
+				returnMode = new StandardMode(new KickOffAttack(), executers);
+			} else {
+				returnMode = new StandardMode(new KickOffDefense(), executers);
+			}
 		case TIMEOUT_YELLOW:
-			returnMode = new StandardMode(new GameStop(), executers);
+			if (referee.getAllyTeamColor() == TeamColor.YELLOW) {
+				returnMode = new StandardMode(new KickOffAttack(), executers);
+			} else {
+				returnMode = new StandardMode(new KickOffDefense(), executers);
+			}
 			break;
 		}
 
