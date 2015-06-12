@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import robocup.model.FieldPoint;
+import robocup.model.Obstruction;
 import robocup.model.Robot;
 import robocup.model.World;
 import robocup.model.enums.FieldZone;
@@ -496,6 +497,11 @@ public class DijkstraPathPlanner {
 		// Avoid goals.
 		objects.add(World.getInstance().getField().getEastGoal().toRect());
 		objects.add(World.getInstance().getField().getWestGoal().toRect());
+		
+		ArrayList<Obstruction> obstructions = world.getObstructions();
+		for(Obstruction obstruction : obstructions){
+			objects.add(obstruction.toPolygon());
+		}
 
 		if(avoidBall){
 			//Add ball
@@ -543,9 +549,17 @@ public class DijkstraPathPlanner {
 					FieldPoint corner = new FieldPoint(poly.xpoints[i], poly.ypoints[i]);
 					double angle = center.getAngle(corner);
 					double distance = center.getDeltaDistance(corner);
-					vertices.add(new Vertex(new FieldPoint(center.getX() + Math.cos(angle) * (distance + DISTANCE_TO_POLYGON), 
-															center.getY() + Math.sin(angle) * (distance + DISTANCE_TO_POLYGON))));
+					vertices.add(new Vertex(new FieldPoint(center.getX() + Math.cos(Math.toRadians(angle)) * (distance + DISTANCE_TO_POLYGON), 
+															center.getY() + Math.sin(Math.toRadians(angle)) * (distance + DISTANCE_TO_POLYGON))));
 				}
+			}
+			else if(shape instanceof Rectangle2D){
+				Rectangle2D rect = (Rectangle2D)shape;
+				vertices.add(new Vertex(new FieldPoint(rect.getCenterX() + (rect.getWidth()/2 + DISTANCE_TO_POLYGON), rect.getCenterY() + (rect.getHeight()/2 + DISTANCE_TO_POLYGON))));
+				vertices.add(new Vertex(new FieldPoint(rect.getCenterX() - (rect.getWidth()/2 + DISTANCE_TO_POLYGON), rect.getCenterY() + (rect.getHeight()/2 + DISTANCE_TO_POLYGON))));
+				vertices.add(new Vertex(new FieldPoint(rect.getCenterX() + (rect.getWidth()/2 + DISTANCE_TO_POLYGON), rect.getCenterY() - (rect.getHeight()/2 + DISTANCE_TO_POLYGON))));
+				vertices.add(new Vertex(new FieldPoint(rect.getCenterX() - (rect.getWidth()/2 + DISTANCE_TO_POLYGON), rect.getCenterY() - (rect.getHeight()/2 + DISTANCE_TO_POLYGON))));
+
 			}
 		}
 	}
@@ -619,7 +633,13 @@ public class DijkstraPathPlanner {
 							return true;
 						}
 					}
-				}	
+				}
+				else if(shape instanceof Rectangle2D){
+					Rectangle2D rect = (Rectangle2D)shape;
+					if(rect.intersectsLine(new Line2D.Double(source.getPosition().getX(), source.getPosition().getY(), destination.getPosition().getX(), destination.getPosition().getY()))){
+						return true;
+					}
+				}
 			}
 		}
 		return false;

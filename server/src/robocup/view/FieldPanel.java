@@ -703,6 +703,7 @@ public class FieldPanel extends JPanel {
 
 				for(Shape shape : pathPlanner.getCopyOfObjects()){
 					if(shape instanceof Polygon){
+						g.setColor(new Color(222, 168, 176));
 						Polygon polygon = (Polygon)shape;
 						Polygon result = new Polygon();
 						for(int i = 0; i < polygon.npoints; ++i){
@@ -710,6 +711,12 @@ public class FieldPanel extends JPanel {
 							result.addPoint((int)point.getX() + spaceBufferX, (int)point.getY() + spaceBufferY);
 						}
 						g.drawPolygon(result);
+					}
+					else if(shape instanceof Rectangle2D){
+						g.setColor(Color.red);
+						Rectangle2D rect = (Rectangle2D)shape;
+						Point2D start = new FieldPoint(rect.getX(), rect.getY()).toGUIPoint(ratio,mirror);
+						g.drawRect((int)start.getX() + spaceBufferX, (int)start.getY() + spaceBufferY, (int)(rect.getWidth() * ratio), (int)(rect.getHeight() * ratio));	
 					}
 				}
 				((Graphics2D)g).setStroke(new BasicStroke(1));
