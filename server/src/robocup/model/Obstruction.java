@@ -51,9 +51,7 @@ public class Obstruction extends FieldObject {
             	break;
             }
             p.addPoint((int) xy[0], (int) xy[1]);
-            System.out.println("[" + xy[0] + "," + xy[1] + "]");
         }
-        System.out.println();
 		return p;
 	}
 }
