@@ -772,23 +772,21 @@ public class World extends Observable {
 	 * @return Point ideal aim position in goal
 	 */
 	public FieldPoint hasFreeShot(FieldZone[] zones, int maxObstacles) {
-		Ball ball = World.getInstance().getBall();
 		// only proceed when we are the ballowner
 		if (ball.getOwner() instanceof Enemy)
 			return null;
 
 		// check if the ball is in a zone from which we can actually make the
 		// angle
-		if (!Arrays.asList(zones).contains(World.getInstance().locateFieldObject(ball)))
+		if (!Arrays.asList(zones).contains(locateFieldObject(ball)))
 			return null;
 
 		// get the enemy goal (checking which side is ours, and get the opposite
-		Goal enemyGoal = (World.getInstance().getReferee().isWestTeamColor(World.getInstance().getReferee()
-				.getAllyTeamColor())) ? World.getInstance().getField().getEastGoal() : World.getInstance().getField()
+		Goal enemyGoal = (referee.isWestTeamColor(referee.getAllyTeamColor())) ? field.getEastGoal() : field
 				.getWestGoal();
 
-		ArrayList<Robot> obstacles = World.getInstance().getAllRobotsInArea(
-				new FieldPoint[] { enemyGoal.getFrontSouth(), enemyGoal.getFrontNorth(), ball.getPosition() });
+		ArrayList<Robot> obstacles = getAllRobotsInArea(new FieldPoint[] { enemyGoal.getFrontSouth(),
+				enemyGoal.getFrontNorth(), ball.getPosition() });
 
 		// No obstacles?! shoot directly in the center of the goal;
 		if (obstacles.size() == 0)
@@ -1032,9 +1030,9 @@ public class World extends Observable {
 	}
 
 	public boolean isValidRobotId(Robot robot) {
-		ArrayList<Integer> validIDs = ((robot instanceof Ally) ? World.getInstance().getValidAllyIDs() : World.getInstance().getValidEnemyIDs());
-		for(int id : validIDs)
-			if(id == robot.getRobotId())
+		ArrayList<Integer> validIDs = ((robot instanceof Ally) ? getValidAllyIDs() : getValidEnemyIDs());
+		for (int id : validIDs)
+			if (id == robot.getRobotId())
 				return true;
 		return false;
 	}

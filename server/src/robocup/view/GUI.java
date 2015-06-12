@@ -40,13 +40,14 @@ import robocup.view.sections.VisibleRobotSection;
 @SuppressWarnings("serial")
 public class GUI extends JFrame {
 
+	private World world = World.getInstance();
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private JPanel robotContainer,
 				   rightContainer,
 				   leftContainer,
 				   sectionContainer;
 	private JScrollPane scrollPane;
-	private Robot selectedRobot = World.getInstance().getReferee().getAlly().getRobotByID(0);
+	private Robot selectedRobot = world.getReferee().getAlly().getRobotByID(0);
 	private ArrayList<RobotBox> allRobotBoxes = new ArrayList<RobotBox>();
 	private Timer updateTimer;
 	private int updateFrequency = 30; //update frequency in Hertz
@@ -155,7 +156,7 @@ public class GUI extends JFrame {
 		sectionContainer.add(new GamepadSection(), "growx");
 		sectionContainer.add(new FieldControlSection(), "growx");
 		sectionContainer.add(new RecordSection(), "growx");
-//		sectionContainer.add(new TestPathPlannerVisualTestPanel(new TestPathPlanner()), "growx");	// Comment "World.getInstance().getGUI().update("robotContainer");" in Main.initTeams() for this section to work.
+//		sectionContainer.add(new TestPathPlannerVisualTestPanel(new TestPathPlanner()), "growx");	// Comment "world.getGUI().update("robotContainer");" in Main.initTeams() for this section to work.
 		//rightContainer.add(new ControlRobotPacketTestSection(), "growx");
 		//rightContainer.add(new PenguinSection(), "growx, growy");
 		sectionContainer.add(new ControlRobotSection(), "growx");
@@ -171,7 +172,7 @@ public class GUI extends JFrame {
 		robotContainer.setLayout(new MigLayout("wrap 2", "[250]related[250]"));
 		robotContainer.setBorder(BorderFactory.createTitledBorder("Robots"));
 
-		for (Robot robot : World.getInstance().getReferee().getAlly().getRobots()) {
+		for (Robot robot : world.getReferee().getAlly().getRobots()) {
 			RobotBox box = new RobotBox(robot);
 			box.addMouseListener(new PanelClickListener());
 			if (robot.isVisible())
@@ -212,7 +213,7 @@ public class GUI extends JFrame {
 
 	public void selectRobot(Robot robot){
 		selectedRobot = robot;
-		World.getInstance().getGamepadModel().setRobot(robot);
+		world.getGamepadModel().setRobot(robot);
 	}
 	
 	/**
@@ -268,6 +269,6 @@ public class GUI extends JFrame {
 		int newId = (currentId + 1 >= Main.POSSIBLE_IDS) ? 0 : currentId+1;
 		LOGGER.info("Selecting robot #" + newId + " as next robot");
 
-		selectRobot(World.getInstance().getReferee().getAlly().getRobotByID(newId));
+		selectRobot(world.getReferee().getAlly().getRobotByID(newId));
 	}
 }

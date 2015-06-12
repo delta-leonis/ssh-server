@@ -23,12 +23,14 @@ public class GameStatusSection extends SectionBox implements ActionListener{
 	private JTextField fieldHalfField, timePlayedField, refereeStatusField, refereeCommandField, gameStatusField, strategyField, goalsField, keeperIdField;
 	private JButton startButton;
 	private JButton stopButton;
+	private World world;
 
 	/**
 	 * Creates section
 	 */
 	public GameStatusSection() {
 		super("Game Status");
+		world = World.getInstance();
 		setLayout(new MigLayout("wrap 2", "[]related[grow]"));
 
 		keeperIdField = new JTextField();
@@ -81,39 +83,39 @@ public class GameStatusSection extends SectionBox implements ActionListener{
 	 */
 	@Override
 	public void update() {
-		if (World.getInstance().getReferee().getStagetimeLeft() == 0) {
+		if (world.getReferee().getStagetimeLeft() == 0) {
 			timePlayedField.setText("0:00");
 		} else {
-			int timePlayed = 600000000 - World.getInstance().getReferee().getStagetimeLeft();
+			int timePlayed = 600000000 - world.getReferee().getStagetimeLeft();
 			timePlayedField.setText("" + java.util.concurrent.TimeUnit.MICROSECONDS.toMinutes(timePlayed) % 60 + ":"
 					+ java.util.concurrent.TimeUnit.MICROSECONDS.toSeconds(timePlayed) % 60);
 		}
 
-		if (World.getInstance().getReferee().isEastTeamColor(World.getInstance().getReferee().getAlly().getColor()))
+		if (world.getReferee().isEastTeamColor(world.getReferee().getAlly().getColor()))
 			fieldHalfField.setText("east");
 		else
 			fieldHalfField.setText("west");
 
-		refereeCommandField.setText(World.getInstance().getReferee().getCommand().toString());
-		refereeStatusField.setText(World.getInstance().getReferee().getStage().toString());
-		gameStatusField.setText(World.getInstance().getGameState().toString());
+		refereeCommandField.setText(world.getReferee().getCommand().toString());
+		refereeStatusField.setText(world.getReferee().getStage().toString());
+		gameStatusField.setText(world.getGameState().toString());
 		if(AiExecuter.behavior instanceof ZoneBehavior){
 			ZoneBehavior behavior = (ZoneBehavior) AiExecuter.behavior;
 			strategyField.setText(behavior == null || behavior.currentMode == null
 					|| behavior.currentMode.getStrategy() == null ? "No strategy" : behavior.currentMode.getStrategy()
 					.getClass().getSimpleName());
-			keeperIdField.setText(World.getInstance().getReferee().getAlly().getGoalie() + "");
-			goalsField.setText(World.getInstance().getReferee().getAlly().getScore() + "");
+			keeperIdField.setText(world.getReferee().getAlly().getGoalie() + "");
+			goalsField.setText(world.getReferee().getAlly().getScore() + "");
 		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == startButton){
-			World.getInstance().start();
+			world.start();
 		}
 		if(e.getSource() == stopButton){
-			World.getInstance().stop();
+			world.stop();
 			for(int i = 0; i < 11; ++i){
 				ComInterface.getInstance().send(1, i,0, 0, 0, 0, false);
 				try {

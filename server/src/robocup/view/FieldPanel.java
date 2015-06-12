@@ -73,7 +73,7 @@ public class FieldPanel extends JPanel {
 	 * the ball position.
 	 */
 	public FieldPanel() {
-		setSize((int) (World.getInstance().getField().getLength()*RATIO), (int) (World.getInstance().getField().getWidth()*RATIO));
+		setSize((int) (world.getField().getLength()*RATIO), (int) (world.getField().getWidth()*RATIO));
 		showFreeShot = false;
 		showRaster = false;
 		mirror = false;
@@ -101,7 +101,7 @@ public class FieldPanel extends JPanel {
 	 * @return width of the {@link JFrame} the {@link FieldPanel} should be in.
 	 */
 	public int getFrameSizeX() {
-		return (int) (World.getInstance().getField().getLength()*RATIO + spaceBufferX*2);
+		return (int) (world.getField().getLength()*RATIO + spaceBufferX*2);
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class FieldPanel extends JPanel {
 	 * @return height of the {@link JFrame} the {@link FieldPanel} should be in.
 	 */
 	public int getFrameSizeY() {
-		return (int) (World.getInstance().getField().getWidth()*RATIO + spaceBufferY*2);
+		return (int) (world.getField().getWidth()*RATIO + spaceBufferY*2);
 	}
 
 	/**
@@ -172,7 +172,7 @@ public class FieldPanel extends JPanel {
 
 		Graphics2D g2 = (Graphics2D)g;
 		g2.setStroke(new BasicStroke(4));
-		for(Obstruction obstruction : World.getInstance().getObstructions()){
+		for(Obstruction obstruction : world.getObstructions()){
 			if(obstruction.getPosition() != null){
 				g.setColor(Color.GRAY);
 				Shape rect = getRectAngle((int)obstruction.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int)obstruction.getPosition().toGUIPoint(ratio, mirror).getY()+ spaceBufferY, (int)(obstruction.getWidth()*ratio), (int)(obstruction.getLength()*ratio), (int)obstruction.getOrientation());
@@ -352,7 +352,7 @@ public class FieldPanel extends JPanel {
 
 		// goals
 		//g2.setStroke(new BasicStroke(10));
-		if (World.getInstance().getReferee().getEastTeam().isColor(TeamColor.YELLOW))
+		if (world.getReferee().getEastTeam().isColor(TeamColor.YELLOW))
 			g.setColor(Color.YELLOW);
 		else
 			g.setColor(Color.BLUE);

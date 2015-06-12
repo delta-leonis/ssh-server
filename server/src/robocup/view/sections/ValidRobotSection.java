@@ -27,6 +27,7 @@ public class ValidRobotSection extends SectionBox {
 
 	private ArrayList<JCheckBox> checkboxes = new ArrayList<JCheckBox>();
 	private Timer autoselectTimer;
+	private World world;
 
 	/**
 	 * Creates a {@link JCheckBox} for every {@link Ally} and 
@@ -34,9 +35,10 @@ public class ValidRobotSection extends SectionBox {
 	 */
 	public ValidRobotSection() {
 		super("Valid robots");
+		world = World.getInstance();
 		setLayout(new MigLayout("wrap 6", "[][][][][][]"));
 
-		int numberOfRobots = World.getInstance().getReferee().getAlly().getRobots().size();
+		int numberOfRobots = world.getReferee().getAlly().getRobots().size();
 
 		add(new JLabel("Ally IDs"), "span 4, growx");
 		
@@ -49,7 +51,7 @@ public class ValidRobotSection extends SectionBox {
 			public void actionPerformed(ActionEvent e) {
 				for(JCheckBox box : checkboxes){
 					int id = Integer.valueOf(box.getText().substring(1));
-					(box.getName().equals("ally") ? World.getInstance().getValidAllyIDs() : World.getInstance().getValidEnemyIDs()).add(id);
+					(box.getName().equals("ally") ? world.getValidAllyIDs() : world.getValidEnemyIDs()).add(id);
 					box.setEnabled(false);
 				}
 
@@ -63,13 +65,13 @@ public class ValidRobotSection extends SectionBox {
 			JCheckBox checkbox = new JCheckBox("#" + i);
 			checkbox.setName("ally");
 			checkbox.addActionListener(new checkHandler());
-			//checkbox.setSelected(World.getInstance().getValidAllyIDs().contains(i));
+			//checkbox.setSelected(world.getValidAllyIDs().contains(i));
 			checkboxes.add(checkbox);
 			add(checkbox, (numberOfRobots - 1 == i) ? "wrap" : "");
 		}
 		add(new JLabel("Enemy IDs"), "span 6, growx, wrap");
 		
-		numberOfRobots = World.getInstance().getReferee().getEnemy().getRobots().size();
+		numberOfRobots = world.getReferee().getEnemy().getRobots().size();
 
 		for (int i = 0; i < numberOfRobots; i++) {
 			JCheckBox checkbox = new JCheckBox("#" + i);
@@ -86,12 +88,12 @@ public class ValidRobotSection extends SectionBox {
 				//id uitzoeken
 				int id = Integer.valueOf(box.getText().substring(1));
 				//team uitzoeken
-				Team team = (box.getName().equals("ally") ? World.getInstance().getReferee().getAlly() : World.getInstance().getReferee().getEnemy());
+				Team team = (box.getName().equals("ally") ? world.getReferee().getAlly() : world.getReferee().getEnemy());
 				//onsight setten op checkbox
 				box.setSelected(team.getRobotByID(id).isOnSight());
 				if(!box.isSelected()){
 					//eventueel uit de valid reeks weghalen
-					(box.getName().equals("ally") ? World.getInstance().getValidAllyIDs() : World.getInstance().getValidEnemyIDs()).remove((Integer)id);
+					(box.getName().equals("ally") ? world.getValidAllyIDs() : world.getValidEnemyIDs()).remove((Integer)id);
 					team.getRobotByID(id).setPosition(null);
 				}
 
@@ -107,8 +109,8 @@ public class ValidRobotSection extends SectionBox {
 	private class checkHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			JCheckBox checkbox = ((JCheckBox) e.getSource());
-			ArrayList<Integer> list = (checkbox.getName().equals("ally") ? World.getInstance().getValidAllyIDs() : World.getInstance().getValidEnemyIDs());
-			Team team = (checkbox.getName().equals("ally") ? World.getInstance().getReferee().getAlly() : World.getInstance().getReferee().getEnemy());
+			ArrayList<Integer> list = (checkbox.getName().equals("ally") ? world.getValidAllyIDs() : world.getValidEnemyIDs());
+			Team team = (checkbox.getName().equals("ally") ? world.getReferee().getAlly() : world.getReferee().getEnemy());
 			int id = Integer.valueOf(checkbox.getText().substring(1));
 			
 			if(checkbox.isSelected())
@@ -125,7 +127,7 @@ public class ValidRobotSection extends SectionBox {
 	@Override
 	public void update() {
 		for(JCheckBox checkbox : checkboxes)
-			checkbox.setSelected(World.getInstance().isValidRobotId((checkbox.getName().equals("ally") ? World.getInstance().getReferee().getAlly() : World.getInstance().getReferee().getEnemy()).getRobotByID(Integer.valueOf(checkbox.getText().substring(1)))));
+			checkbox.setSelected(world.isValidRobotId((checkbox.getName().equals("ally") ? world.getReferee().getAlly() : world.getReferee().getEnemy()).getRobotByID(Integer.valueOf(checkbox.getText().substring(1)))));
 	}
 
 }

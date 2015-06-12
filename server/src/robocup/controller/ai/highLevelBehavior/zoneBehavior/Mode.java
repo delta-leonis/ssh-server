@@ -55,7 +55,7 @@ public abstract class Mode {
 				updateExecuter(executer);
 
 		} catch (Exception e) {
-			World.getInstance().stop();
+			world.stop();
 			System.out.println("Exception in Mode, please fix me :(");
 			e.printStackTrace();
 		}

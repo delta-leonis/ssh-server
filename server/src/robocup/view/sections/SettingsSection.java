@@ -30,12 +30,14 @@ public class SettingsSection extends SectionBox {
 	// Base station frequencies
 	private static final int[] frequencies = { 2436, 2450, 2490, 2500, 2525 };
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
+	private World world;
 
 	/**
 	 * Creates the components for the GUI
 	 */
 	public SettingsSection() {
 		super("Settings");
+		world = World.getInstance();
 		setLayout(new MigLayout("wrap 2", "[][grow]"));
 
 		fieldHalfBox = new JComboBox<String>();
@@ -90,8 +92,8 @@ public class SettingsSection extends SectionBox {
 		add(new JLabel("GUI Updates per second"), "span 2, growx");
 		add(framesPerSecond, "span 2, growx");
 
-		if (World.getInstance().getReferee()
-					.isEastTeamColor(World.getInstance().getReferee().getAlly().getColor()))
+		if (world.getReferee()
+					.isEastTeamColor(world.getReferee().getAlly().getColor()))
 			fieldHalfBox.setSelectedItem("east");
 		else
 			fieldHalfBox.setSelectedItem("west");
@@ -105,7 +107,7 @@ public class SettingsSection extends SectionBox {
 		@Override
 		public void stateChanged(ChangeEvent e) {
 			int newFrequency = Math.max(((JSlider)e.getSource()).getValue(), 1); //minimum of 1 update a second
-			World.getInstance().getGUI().setUpdateFrequency(newFrequency);
+			world.getGUI().setUpdateFrequency(newFrequency);
 		}
 	}
 	
@@ -138,11 +140,11 @@ public class SettingsSection extends SectionBox {
 			
 			case "Set fieldhalf":
 				if (fieldHalfBox.getSelectedItem().equals("west"))
-					World.getInstance().getReferee()
-							.setWestTeam(World.getInstance().getReferee().getAlly());
+					world.getReferee()
+							.setWestTeam(world.getReferee().getAlly());
 				else
-					World.getInstance().getReferee()
-							.setWestTeam(World.getInstance().getReferee().getEnemy());
+					world.getReferee()
+							.setWestTeam(world.getReferee().getEnemy());
 				break;
 			}
 		}

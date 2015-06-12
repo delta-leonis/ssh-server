@@ -55,6 +55,7 @@ public class GotoPosition {
 	private DijkstraPathPlanner dplanner;
 	private LinkedList<FieldPoint> route;
 	private double currentSpeed;
+	private World world;
 	
 	// calculate total circumference of robot
 //	private static final double circumference = (Robot.DIAMETER * Math.PI);
@@ -71,6 +72,7 @@ public class GotoPosition {
 		this.destination = destination;
 		this.target = destination;
 		dplanner = new DijkstraPathPlanner();
+		world = World.getInstance();
 	}
 
 	/**
@@ -85,6 +87,7 @@ public class GotoPosition {
 		this.destination = target.getPosition();
 		this.target = this.destination;
 		dplanner = new DijkstraPathPlanner();
+		world = World.getInstance();
 	}
 
 	/**
@@ -168,8 +171,8 @@ public class GotoPosition {
 		if(prepareForTakeOff()) {
 			// Dribble when the ball is close by
 			dribble = Math.abs(
-					Math.abs(robot.getOrientation()) - Math.abs(robot.getPosition().getAngle(World.getInstance().getBall().getPosition()))) < 20
-					&& robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition()) < Robot.DIAMETER / 2 + 200;
+					Math.abs(robot.getOrientation()) - Math.abs(robot.getPosition().getAngle(world.getBall().getPosition()))) < 20
+					&& robot.getPosition().getDeltaDistance(world.getBall().getPosition()) < Robot.DIAMETER / 2 + 200;
 			// Calculate the route using the DijkstraPathPlanner
 			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), avoidBall);
 			// If robot is locked up, the route will be null
@@ -238,12 +241,12 @@ public class GotoPosition {
 	 * @return true, if we're allowed to move, false otherwise.
 	 */
 	public boolean prepareForTakeOff(){
-		if(World.getInstance().getGameState() == GameState.HALTED){
+		if(world.getGameState() == GameState.HALTED){
 			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
 			return false;
 		}
-		if(World.getInstance().getGameState() == GameState.STOPPED){
-			FieldPoint ball = World.getInstance().getBall().getPosition();
+		if(world.getGameState() == GameState.STOPPED){
+			FieldPoint ball = world.getBall().getPosition();
 			double deltaDistance = ball.getDeltaDistance(robot.getPosition());
 			MAX_VELOCITY = 1500;
 			if(deltaDistance < 700){

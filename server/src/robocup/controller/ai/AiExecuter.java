@@ -17,7 +17,7 @@ public class AiExecuter extends Thread {
 
 	public void run() {
 		while (true) {
-			if (behavior != null && World.getInstance().getStart()) {
+			if (behavior != null && world.getStart()) {
 				behavior.execute(world.getRobotExecuters());
 			}
 			
