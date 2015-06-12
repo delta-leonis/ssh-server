@@ -34,8 +34,8 @@ public class Referee {
 	public Referee() {
 		commandCounter = 0;
 		lastCommandTimestamp = 0;
-		previousCommand = Command.HALT;
-		command = Command.HALT;
+		previousCommand = Command.STOP;
+		command = Command.STOP;
 		stage = Stage.POST_GAME;
 	}
 
