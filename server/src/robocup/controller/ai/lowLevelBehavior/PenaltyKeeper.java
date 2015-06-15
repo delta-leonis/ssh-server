@@ -2,6 +2,7 @@ package robocup.controller.ai.lowLevelBehavior;
 
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.FieldPoint;
+import robocup.model.Goal;
 import robocup.model.Robot;
 import robocup.model.enums.RobotMode;
 
@@ -9,18 +10,18 @@ public class PenaltyKeeper extends LowLevelBehavior {
 
 	private FieldPoint ballPosition;
 	private Robot enemy;
-	private double maxX;
+	private Goal goal;
 
 	/**
 	 * Create a penalty keeper.
 	 * The penalty keeper will drive towards a point on the goal line in an attempt to block a penalty.
 	 * @param robot the penalty keeper {@link Robot} in the model.
-	 * @param fieldLength the length of the field, needed to calculate a point on the goal line
+	 * @param goal goal to defend
 	 */
-	public PenaltyKeeper(Robot robot, double fieldLength) {
+	public PenaltyKeeper(Robot robot, Goal goal) {
 		super(robot);
-		maxX = fieldLength / 2;
 		ballPosition = null;
+		this.goal = goal;
 		enemy = null;
 		this.role = RobotMode.PENALTYKEEPER;
 		go = new GotoPosition(robot, robot.getPosition(), ballPosition, 1500);
@@ -52,15 +53,16 @@ public class PenaltyKeeper extends LowLevelBehavior {
 	 */
 	private FieldPoint getNewKeeperDestination() {
 		FieldPoint newDestination = null;
-		FieldPoint enemyPosition = enemy.getPosition();
 
-		if (enemyPosition != null) {
-			double angle = enemyPosition.getAngle(ballPosition);
-			double dx = (enemyPosition.getX() > 0.0 ? maxX : -maxX) - enemyPosition.getX();
-			double dy = Math.tan(angle) * dx;
-			
-			newDestination = new FieldPoint(enemyPosition.getX() + dx, enemyPosition.getY() + dy);
-		}
+		if(enemy == null || enemy.getPosition() == null)
+			return newDestination;
+
+		FieldPoint enemyPosition = enemy.getPosition();
+		double angle = Math.toRadians(enemyPosition.getAngle(ballPosition));
+		double offset = (goal.getFrontNorth().getX() > 0 ? Robot.DIAMETER/2 : -Robot.DIAMETER/2);
+		double newY =  (goal.getFrontNorth().getX() - enemyPosition.getX() - offset) * Math.tan(angle);
+
+		newDestination = new FieldPoint(goal.getFrontNorth().getX() - offset, Math.min(goal.getFrontNorth().getY() - Robot.DIAMETER/2 ,Math.max(goal.getFrontSouth().getY() + Robot.DIAMETER/2, newY)));
 
 		return newDestination;
 	}

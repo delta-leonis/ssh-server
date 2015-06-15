@@ -355,4 +355,12 @@ public class Field {
 	private String printGoals() {
 		return eastGoal.toString() +  westGoal.toString();
 	}
+
+	public Goal getAllyGoal() {
+		return (World.getInstance().getReferee().getEastTeam().equals(World.getInstance().getReferee().getAlly()) ? eastGoal : westGoal);
+	}
+
+	public Goal getEnemyGoal() {
+		return (World.getInstance().getReferee().getEastTeam().equals(World.getInstance().getReferee().getEnemy()) ? eastGoal : westGoal);
+	}
 }
