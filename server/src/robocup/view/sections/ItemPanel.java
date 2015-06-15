@@ -40,7 +40,8 @@ import robocup.model.World;
 			setLayout(new MigLayout("wrap 1", "[]"));
 			objectgraphic = new ObjectGraphic();
 			removeOverride = new JButton("x");
-			removeOverride.setEnabled(false);
+			if(!(item instanceof Obstruction))
+				removeOverride.setEnabled(false);
 			removeOverride.addActionListener(new ButtonListener());
 			add(removeOverride, "growx");
 			
@@ -72,6 +73,9 @@ import robocup.model.World;
 			return selected;
 		}
 		
+		/**
+		 * @return item corresponding to this panel
+		 */
 		public FieldObject getItem() {
 			return item;
 		}
@@ -81,28 +85,57 @@ import robocup.model.World;
 			super.paint(g);
 			if(objectgraphic != null)
 				objectgraphic.repaint();
-			if(removeOverride != null)
+			if(removeOverride != null && !(item instanceof Obstruction))
 				removeOverride.setEnabled(item.overrideOnsight());
 		}
 
+		/**
+		 * Class that will draw a graphic corresponding to the representing item
+		 * Currently capable of 3 drawings
+		 *  - a ball
+		 *  - a robot (blue and yellow)
+		 *  - a obstruction
+		 *
+		 */
 		private class ObjectGraphic extends JPanel{
+			/**
+			 * Create new graphic (standard size: 51x51)
+			 */
 			public ObjectGraphic(){
 				setPreferredSize(new Dimension(51, 51));
 			}
+			
+			/**
+			 * method to draw a ball (20x20) 
+			 * @param g graphic object to draw on
+			 */
 			private void drawBall(Graphics g){
 				g.setColor(Color.orange);
 				g.fillOval(getWidth()/2 - 10, getHeight()/2 - 10, 20, 20);
 			}
 
+			/**
+			 * @param color
+			 * @return given color in grayscale
+			 */
 			@SuppressWarnings("unused")
 			private Color toGrayScale(Color color) {
 		        int grayColor = (int)(color.getRed() * 0.299 + color.getGreen() * 0.587 + color.getBlue() * 0.114);
 		        return new Color(grayColor, grayColor, grayColor);
 			}
 
+			/**
+			 * Lazy bugfix for unix.
+			 * @return true when used operating system is windows
+			 */
 			private boolean isWindows() {
 				return System.getProperty("os.name").toLowerCase().contains("windows");
 			}
+			
+			/**
+			 * Draws a robot, color of drawing is determined by the teamcolor
+			 * @param g graphic object to draw to
+			 */
 			private void drawRobot(Graphics g){
 				Graphics2D g2 = (Graphics2D) g;
 				g2.setStroke(new BasicStroke(4));
@@ -146,11 +179,21 @@ import robocup.model.World;
 				g2.drawString("" + robot.getRobotId(), (int) getWidth()/2 -(robot.getRobotId()/10 + 1)*(g2.getFont().getSize()/3),
 						(int) getHeight()/2 +(g2.getFont().getSize()/3));
 			}
-			private Shape getRectAngle(int x, int y, int width, int height, int angle){
+
+			/**
+			 * 
+			 * @param x		center X for rectangle
+			 * @param y		center Y for rectangle
+			 * @param width	width of rectangle
+			 * @param length length of rectangle
+			 * @param angle	angle of the rectangle
+			 * @return		shape to be drawn or filled by {@link Graphics}
+			 */
+			private Shape getRectAngle(int x, int y, int width, int length, int angle){
 				double theta = Math.toRadians(angle);
 				
 				// create rect centred on the point we want to rotate it about
-				Rectangle2D rect = new Rectangle2D.Double(-width/2., -height/2., width, height);
+				Rectangle2D rect = new Rectangle2D.Double(-width/2., -length/2., width, length);
 			
 				AffineTransform transform = new AffineTransform();
 				transform.translate(x, y);
@@ -159,6 +202,10 @@ import robocup.model.World;
 				return transform.createTransformedShape(rect);
 			}
 
+			/**
+			 * draws an obstruction graphic
+			 * @param g Graphics object to draw to
+			 */
 			private void drawObstruction(Graphics g){
 				Obstruction obstruction = (Obstruction)item;
 				g.setColor(Color.GRAY);
@@ -174,17 +221,35 @@ import robocup.model.World;
 				g.setColor(g.getColor().darker());
 				g2.draw(rect);
 			}
-			
+
+			/**
+			 * draw an questionmark in the middle of the panel
+			 * @param g	graphics to draw to
+			 */
+			private void drawQuestionmark(Graphics g) {
+				g.setFont(g.getFont().deriveFont(22f));
+				g.drawString("?", getWidth()/2-5, getHeight()/2-3);
+			}
+
+			/**
+			 * {@inheritDoc}
+			 * 
+			 * determinse object, and shape to be drawn
+			 */
 			@Override
 			public void paint(Graphics g){
 				super.paint(g);
+
 				if(item instanceof Ball)
 					drawBall(g);
-				if(item instanceof Robot)
+				else if(item instanceof Robot)
 					drawRobot(g);
-				if(item instanceof Obstruction)
+				else if(item instanceof Obstruction)
 					drawObstruction(g);
+				else
+					drawQuestionmark(g);
 			}
+			
 		}
 		
 
