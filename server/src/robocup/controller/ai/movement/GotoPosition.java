@@ -102,6 +102,7 @@ public class GotoPosition {
 		this.destination = destination;
 		this.target = target;
 		dplanner = new DijkstraPathPlanner();
+		world = World.getInstance();
 	}
 
 	/**
@@ -118,6 +119,7 @@ public class GotoPosition {
 		this.target = target;
 		this.forcedSpeed = forcedSpeed;
 		dplanner = new DijkstraPathPlanner();
+		world = World.getInstance();
 	}
 
 	/**
