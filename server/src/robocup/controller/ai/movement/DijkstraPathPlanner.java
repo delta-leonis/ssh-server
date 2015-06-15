@@ -252,7 +252,6 @@ public class DijkstraPathPlanner {
 			allVertices = (ArrayList<Vertex>)vertices.clone();
 			return null;					//Locked in
 		}
-		System.out.println("Dest: " + dest);
 		
 		// calculate neighbours for every vertex
 		generateNeighbours();
@@ -662,7 +661,6 @@ public class DijkstraPathPlanner {
 	
 	protected boolean isInsidePolygon(Shape r){
 		for(Shape shape : objects) {
-			System.out.println("Shape: " + shape.getBounds().getCenterX() + "  " + shape.getBounds().getCenterY());
 			Area areaA = new Area(shape);
 			areaA.intersect(new Area(r));
 			if(!areaA.isEmpty()){
