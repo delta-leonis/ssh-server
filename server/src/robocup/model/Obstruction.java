@@ -36,6 +36,9 @@ public class Obstruction extends FieldObject {
 	}
 	
 	public Polygon toPolygon(){
+		if(position == null)
+			return null;
+		
 		Rectangle2D rect = getRectangle();
 		AffineTransform at = AffineTransform.getRotateInstance(
                 Math.toRadians(90 - orientation), rect.getCenterX(), rect.getCenterY());
