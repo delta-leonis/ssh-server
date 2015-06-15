@@ -41,7 +41,9 @@ public class GotoPosition {
 	/** 100 */
 	private int START_UP_ROTATION_SPEED = 200;
 	// Circle Around Ball Move Variables
-	private int CIRCLE_SPEED = 2500;
+	private int CIRCLE_SPEED = 2300;
+	
+	private long lastKickTime;
 	
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 
@@ -70,6 +72,7 @@ public class GotoPosition {
 		output = ComInterface.getInstance();
 		this.destination = destination;
 		this.target = destination;
+		lastKickTime = System.currentTimeMillis();
 		dplanner = new DijkstraPathPlanner();
 	}
 
@@ -84,6 +87,7 @@ public class GotoPosition {
 		output = ComInterface.getInstance();
 		this.destination = target.getPosition();
 		this.target = this.destination;
+		lastKickTime = System.currentTimeMillis();
 		dplanner = new DijkstraPathPlanner();
 	}
 
@@ -98,6 +102,8 @@ public class GotoPosition {
 		output = ComInterface.getInstance();
 		this.destination = destination;
 		this.target = target;
+		lastKickTime = System.currentTimeMillis();
+		System.out.println("LAST KICK TIME: " + lastKickTime);
 		dplanner = new DijkstraPathPlanner();
 	}
 
@@ -114,6 +120,7 @@ public class GotoPosition {
 		this.destination = destination;
 		this.target = target;
 		this.forcedSpeed = forcedSpeed;
+		lastKickTime = System.currentTimeMillis();
 		dplanner = new DijkstraPathPlanner();
 	}
 
@@ -210,10 +217,12 @@ public class GotoPosition {
 			}
 
 			currentSpeed = speed;
-			if(dribble && robot.getPosition().getDeltaDistance(destination) < Robot.DIAMETER/2 -5){
+			if(dribble && robot.getPosition().getDeltaDistance(destination) < Robot.DIAMETER/2 && System.currentTimeMillis() > lastKickTime + 5000){
 				// Send the command
+				chipKick = 0;
 				output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, chipKick, dribble);
 				LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + "," + chipKick + "," + dribble);
+				lastKickTime = System.currentTimeMillis();
 			}
 			// Don't kick or chip if we aren't nearby.
 			else{
@@ -238,28 +247,28 @@ public class GotoPosition {
 	 * @return true, if we're allowed to move, false otherwise.
 	 */
 	public boolean prepareForTakeOff(){
-		if(World.getInstance().getGameState() == GameState.HALTED){
-			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
-			return false;
-		}
-		if(World.getInstance().getGameState() == GameState.STOPPED){
-			FieldPoint ball = World.getInstance().getBall().getPosition();
-			double deltaDistance = ball.getDeltaDistance(robot.getPosition());
-			MAX_VELOCITY = 1500;
-			if(deltaDistance < 700){
-				double robotAngleBall = robot.getPosition().getAngle(ball);
-				destination = new FieldPoint(robot.getPosition().getX() - Math.cos(Math.toRadians(robotAngleBall)) * (750 - deltaDistance),
-														robot.getPosition().getY() - Math.sin(Math.toRadians(robotAngleBall)) * (750 - deltaDistance));
-				return true;
-			}
-		}
+//		if(World.getInstance().getGameState() == GameState.HALTED){
+//			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+//			return false;
+//		}
+//		if(World.getInstance().getGameState() == GameState.STOPPED){
+//			FieldPoint ball = World.getInstance().getBall().getPosition();
+//			double deltaDistance = ball.getDeltaDistance(robot.getPosition());
+//			MAX_VELOCITY = 1500;
+//			if(deltaDistance < 700){
+//				double robotAngleBall = robot.getPosition().getAngle(ball);
+//				destination = new FieldPoint(robot.getPosition().getX() - Math.cos(Math.toRadians(robotAngleBall)) * (750 - deltaDistance),
+//														robot.getPosition().getY() - Math.sin(Math.toRadians(robotAngleBall)) * (750 - deltaDistance));
+//				return true;
+//			}
+//		}
 		if (destination == null) {
 			if(target == null){
-				output.send(1, robot.getRobotId(), 0, 0, 0, chipKick, dribble);
+				output.send(1, robot.getRobotId(), 0, 0, 0, 0, dribble);
 				return false;
 			}
 			else{
-				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(robot.getPosition(), target),0), chipKick, dribble);
+				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(robot.getPosition(), target),0), 0, dribble);
 				return false;
 			}
 		}
@@ -361,20 +370,24 @@ public class GotoPosition {
 				forcedSpeed = CIRCLE_SPEED;
 				calculate(false, true);
 			}
-//			System.out.println("Dest: " + newDestination + " AngleTargetAndRobot: " + angleTargetAndRobot + "  totalAngle: " + totalAngle + " DegreesToMove: " + degreesToMove + " test: " + (totalAngle - angleTargetAndRobot));
-//			double rotationToTarget = rotationToDest(newDestination,target);
-//			double rotationToGoal = rotationToDest(robot.getPosition(), destination);
-//			
-//			currentSpeed = CIRCLE_SPEED;
-//			double rotationSpeed = getRotationSpeed(rotationToTarget, CIRCLE_SPEED);
-//			System.out.println("\t " + robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)currentSpeed + "," + (int)rotationSpeed );
-//			// Send the command
-//			output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)currentSpeed, (int)rotationSpeed, 0, dribble);
-//			LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)currentSpeed + "," + (int)rotationSpeed + ",0 ," + dribble);
-//			
-//			
-//			// Set kick back to 0 to prevent kicking twice in a row
-//			chipKick = 0;
+		}
+	}
+	
+	public void goForwardUntilKick(int speed){
+		if(prepareForTakeOff()){
+			// Dribble when the ball is close by
+			dribble = Math.abs(
+					Math.abs(robot.getOrientation()) - Math.abs(robot.getPosition().getAngle(World.getInstance().getBall().getPosition()))) < 20
+					&& robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition()) < Robot.DIAMETER / 2 + 200;
+			System.out.println("Last kick time: " + lastKickTime + "  Current: " + System.currentTimeMillis());
+			if(dribble && target.getDeltaDistance(robot.getPosition()) < Robot.DIAMETER/2 && System.currentTimeMillis() > lastKickTime + 500 && chipKick != 0){
+				System.out.println("CHIP: " + chipKick);
+				ComInterface.getInstance().send(1, robot.getRobotId(), 0, 0, 0, chipKick, true);
+				lastKickTime = System.currentTimeMillis();
+			}
+			else{
+				ComInterface.getInstance().send(1, robot.getRobotId(), 0, speed, 0, 0, true);
+			}
 		}
 	}
 
