@@ -51,9 +51,11 @@ public class FieldControlSection extends SectionBox {
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private JSlider orientationSlider;
 	private JPanel items = new JPanel();
+	private World world;
 
 	public FieldControlSection() {
 		super("Field Control Section");
+		world = World.getInstance();
 
 		GraphicsDevice fieldMonitor = getSecondaryMonitor();
 
@@ -209,9 +211,9 @@ public class FieldControlSection extends SectionBox {
 		settingsPanel.add(orientationSlider);
 		items.add(settingsPanel, "wrap, span 4");
 		for (int teamnr = 0; teamnr < 2; teamnr++) {
-			Team team = (World.getInstance().getReferee().getAllyTeamColor()
-					.equals(teamcolor)) ? World.getInstance().getReferee()
-					.getAlly() : World.getInstance().getReferee().getEnemy();
+			Team team = (world.getReferee().getAllyTeamColor()
+					.equals(teamcolor)) ? world.getReferee()
+					.getAlly() : world.getReferee().getEnemy();
 
 			for (int id = 0; id < Main.POSSIBLE_IDS; id++) {
 				ItemPanel robotPanel = new ItemPanel(team.getRobotByID(id));
@@ -220,11 +222,11 @@ public class FieldControlSection extends SectionBox {
 			}
 			teamcolor = TeamColor.BLUE;
 		}
-		ItemPanel panel = new ItemPanel(World.getInstance().getBall());
+		ItemPanel panel = new ItemPanel(world.getBall());
 		panel.addMouseListener(new PanelClickListener());
 		items.add(panel);
 
-		for (Obstruction obstruction : World.getInstance().getObstructions()) {
+		for (Obstruction obstruction : world.getObstructions()) {
 			ItemPanel obstructionPanel = new ItemPanel(obstruction);
 			obstructionPanel.addMouseListener(new PanelClickListener());
 			items.add(obstructionPanel);
@@ -232,7 +234,7 @@ public class FieldControlSection extends SectionBox {
 		JPanel addObstructionPanel = new JPanel();
 		addObstructionPanel.add(new JButton(new AbstractAction("+") {
 			public void actionPerformed(ActionEvent e) {
-				World.getInstance().getObstructions()
+				world.getObstructions()
 						.add(new Obstruction(100, 200));
 				items.removeAll();
 				createItemTabs();

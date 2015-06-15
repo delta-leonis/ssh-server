@@ -8,10 +8,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Properties;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 import javax.swing.JFrame;
 
@@ -34,8 +32,10 @@ public class Main {
 	private static Level debugLevel = Level.WARNING;
 	private static String teamConfig = "config/teams.properties";
 	private static String protobufConfig = "config/config.properties";
+	private static World world;
 
 	public static void main(String[] args) {
+		world = World.getInstance();
 		initLog();
 		initLibraryPath();
 		LOGGER.info("Program started");
@@ -72,35 +72,24 @@ public class Main {
 	 * Disable the console logger and set the warning level.
 	 */
 	public static void initLog() {
-		try {
-			LOGGER.setUseParentHandlers(false);
-			FileHandler fileTxt = new FileHandler("Logging.txt");
-			SimpleFormatter formatterTxt = new SimpleFormatter();
-			fileTxt.setFormatter(formatterTxt);
-			LOGGER.addHandler(fileTxt);
-			LOGGER.setLevel(debugLevel);
-		} catch (SecurityException | IOException e) {
-			e.printStackTrace();
-			System.err.println("LOGGER could not start");
-			LOGGER.setUseParentHandlers(true);
-		}
+		LOGGER.setUseParentHandlers(false);
+		LOGGER.setLevel(debugLevel);
 	}
 
 	/**
 	 * Set a fancy lookAndFeel and start the view GUI
 	 */
 	public static void initView() {
-		World.getInstance().setGUI(new robocup.view.GUI());
+		world.setGUI(new robocup.view.GUI());
 
-		World.getInstance().getGUI().setExtendedState(World.getInstance().getGUI().getExtendedState() | JFrame.MAXIMIZED_BOTH);
-		World.getInstance().getGUI().setVisible(true);
+		world.getGUI().setExtendedState(world.getGUI().getExtendedState() | JFrame.MAXIMIZED_BOTH);
+		world.getGUI().setVisible(true);
 	}
 
 	/**
 	 * Creates teams from default values in configuration file.
 	 */
 	public static void initTeams() {
-		World w = World.getInstance();
 		final Properties configFile = new Properties();
 
 		try {
@@ -112,10 +101,10 @@ public class Main {
 			String ourTeamName    = configFile.getProperty("ownTeam");
 			String enemyTeamName  = configFile.getProperty("otherTeam");
 			
-			w.getReferee().getAlly().setName(ourTeamName);
-			w.getReferee().getEnemy().setName(enemyTeamName);
+			world.getReferee().getAlly().setName(ourTeamName);
+			world.getReferee().getEnemy().setName(enemyTeamName);
 			
-			w.getReferee().setAllyTeamColor(TeamColor.valueOf(ourTeamColor));
+			world.getReferee().setAllyTeamColor(TeamColor.valueOf(ourTeamColor));
 			
 		} catch (IllegalArgumentException e) {
 			LOGGER.severe("Please check the config file for type errors");

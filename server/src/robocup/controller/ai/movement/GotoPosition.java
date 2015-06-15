@@ -57,6 +57,7 @@ public class GotoPosition {
 	private DijkstraPathPlanner dplanner;
 	private LinkedList<FieldPoint> route;
 	private double currentSpeed;
+	private World world;
 	
 	// calculate total circumference of robot
 //	private static final double circumference = (Robot.DIAMETER * Math.PI);
@@ -74,6 +75,7 @@ public class GotoPosition {
 		this.target = destination;
 		lastKickTime = System.currentTimeMillis();
 		dplanner = new DijkstraPathPlanner();
+		world = World.getInstance();
 	}
 
 	/**
@@ -89,6 +91,7 @@ public class GotoPosition {
 		this.target = this.destination;
 		lastKickTime = System.currentTimeMillis();
 		dplanner = new DijkstraPathPlanner();
+		world = World.getInstance();
 	}
 
 	/**
@@ -105,6 +108,7 @@ public class GotoPosition {
 		lastKickTime = System.currentTimeMillis();
 		System.out.println("LAST KICK TIME: " + lastKickTime);
 		dplanner = new DijkstraPathPlanner();
+		world = World.getInstance();
 	}
 
 	/**
@@ -122,6 +126,7 @@ public class GotoPosition {
 		this.forcedSpeed = forcedSpeed;
 		lastKickTime = System.currentTimeMillis();
 		dplanner = new DijkstraPathPlanner();
+		world = World.getInstance();
 	}
 
 	/**
@@ -175,8 +180,8 @@ public class GotoPosition {
 		if(prepareForTakeOff()) {
 			// Dribble when the ball is close by
 			dribble = Math.abs(
-					Math.abs(robot.getOrientation()) - Math.abs(robot.getPosition().getAngle(World.getInstance().getBall().getPosition()))) < 20
-					&& robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition()) < Robot.DIAMETER / 2 + 200;
+					Math.abs(robot.getOrientation()) - Math.abs(robot.getPosition().getAngle(world.getBall().getPosition()))) < 20
+					&& robot.getPosition().getDeltaDistance(world.getBall().getPosition()) < Robot.DIAMETER / 2 + 200;
 			// Calculate the route using the DijkstraPathPlanner
 			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), avoidBall);
 			// If robot is locked up, the route will be null
@@ -247,21 +252,21 @@ public class GotoPosition {
 	 * @return true, if we're allowed to move, false otherwise.
 	 */
 	public boolean prepareForTakeOff(){
-//		if(World.getInstance().getGameState() == GameState.HALTED){
-//			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
-//			return false;
-//		}
-//		if(World.getInstance().getGameState() == GameState.STOPPED){
-//			FieldPoint ball = World.getInstance().getBall().getPosition();
-//			double deltaDistance = ball.getDeltaDistance(robot.getPosition());
-//			MAX_VELOCITY = 1500;
-//			if(deltaDistance < 700){
-//				double robotAngleBall = robot.getPosition().getAngle(ball);
-//				destination = new FieldPoint(robot.getPosition().getX() - Math.cos(Math.toRadians(robotAngleBall)) * (750 - deltaDistance),
-//														robot.getPosition().getY() - Math.sin(Math.toRadians(robotAngleBall)) * (750 - deltaDistance));
-//				return true;
-//			}
-//		}
+		if(World.getInstance().getGameState() == GameState.HALTED){
+			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+			return false;
+		}
+		if(World.getInstance().getGameState() == GameState.STOPPED){
+			FieldPoint ball = World.getInstance().getBall().getPosition();
+			double deltaDistance = ball.getDeltaDistance(robot.getPosition());
+			MAX_VELOCITY = 1500;
+			if(deltaDistance < 700){
+				double robotAngleBall = robot.getPosition().getAngle(ball);
+				destination = new FieldPoint(robot.getPosition().getX() - Math.cos(Math.toRadians(robotAngleBall)) * (750 - deltaDistance),
+														robot.getPosition().getY() - Math.sin(Math.toRadians(robotAngleBall)) * (750 - deltaDistance));
+				return true;
+			}
+		}
 		if (destination == null) {
 			if(target == null){
 				output.send(1, robot.getRobotId(), 0, 0, 0, 0, dribble);

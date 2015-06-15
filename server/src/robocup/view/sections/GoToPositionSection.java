@@ -40,9 +40,11 @@ public class GoToPositionSection extends SectionBox implements ActionListener{
 	private JButton startButton;
 	
 	private GotoPosition go;
+	private World world;
 
 	public GoToPositionSection(){
 		super("Go To Position");
+		world = World.getInstance();
 		setLayout(new MigLayout("wrap 2", "[grow][grow]"));
 
 		startButton = new JButton("Start Test");
@@ -88,24 +90,24 @@ public class GoToPositionSection extends SectionBox implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent a) {
 		if(a.getSource() == startButton){
-//			Team allyTeam = World.getInstance().getReferee().getAlly();
+//			Team allyTeam = world.getReferee().getAlly();
 //			Robot robot = allyTeam.getRobotByID(selectedRobotId);
 //			robot.setPosition(new FieldPoint(Integer.parseInt(xRobotField.getText()), Integer.parseInt(yRobotField.getText())));
 //			robot.setOnSight(true);
 			
-//			go = new GotoPosition(World.getInstance().getReferee().getAlly().getRobotByID(selectedRobotId),
+//			go = new GotoPosition(world.getReferee().getAlly().getRobotByID(selectedRobotId),
 //									new FieldPoint(Integer.parseInt(xDestinationField.getText()), Integer.parseInt(yDestinationField.getText())),
 //									new FieldPoint(Integer.parseInt(xTargetField.getText()), Integer.parseInt(yTargetField.getText())));
 //			
 
 //			System.out.println("Id: " + selectedRobotId + " Destination [" + xDestinationField + "," + yDestinationField +"]");
-//			System.out.println("RobotPosition: " + World.getInstance().getReferee().getAlly().getRobotByID(selectedRobotId).getPosition());
+//			System.out.println("RobotPosition: " + world.getReferee().getAlly().getRobotByID(selectedRobotId).getPosition());
 			for(int i = 0; i < 5000; ++i){
-				go = new GotoPosition(World.getInstance().getReferee().getAlly().getRobotByID(selectedRobotId), 
-						World.getInstance().getReferee().getAlly().getRobotByID(selectedRobotId).getPosition(),
-						 World.getInstance().getBall().getPosition());
+				go = new GotoPosition(world.getReferee().getAlly().getRobotByID(selectedRobotId), 
+						world.getReferee().getAlly().getRobotByID(selectedRobotId).getPosition(),
+						world.getBall().getPosition());
 				go.calculate(false,true);
-//				System.out.println("Ball pos: " +  World.getInstance().getBall().getPosition());
+//				System.out.println("Ball pos: " +  world.getBall().getPosition());
 				try {
 					Thread.sleep(10);
 				} catch (InterruptedException e) {

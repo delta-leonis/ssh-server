@@ -23,6 +23,7 @@ import robocup.view.SectionBox;
 public class VisibleRobotSection extends SectionBox {
 
 	private ArrayList<JCheckBox> checkboxes = new ArrayList<JCheckBox>();
+	private World world;
 
 	/**
 	 * Creates a {@link JCheckBox} for every {@link Ally} and 
@@ -30,14 +31,15 @@ public class VisibleRobotSection extends SectionBox {
 	 */
 	public VisibleRobotSection() {
 		super("Visible robots");
+		world = World.getInstance();
 		setLayout(new MigLayout("wrap 6", "[][][][][][]"));
 
-		int numberOfRobots = World.getInstance().getReferee().getAlly().getRobots().size();
+		int numberOfRobots = world.getReferee().getAlly().getRobots().size();
 
 		for (int i = 0; i < numberOfRobots; i++) {
 			JCheckBox checkbox = new JCheckBox("#" + i);
 			checkbox.addActionListener(new checkHandler());
-			checkbox.setSelected(World.getInstance().getReferee().getAlly().getRobotByID(i).isVisible());
+			checkbox.setSelected(world.getReferee().getAlly().getRobotByID(i).isVisible());
 			checkboxes.add(checkbox);
 			add(checkbox, (numberOfRobots - 1 == i) ? "wrap" : "");
 		}
@@ -49,12 +51,12 @@ public class VisibleRobotSection extends SectionBox {
 			 */
 			public void actionPerformed(ActionEvent e) {
 				int i = 0;
-				for (Robot robot : World.getInstance().getReferee().getAlly().getRobots()) {
+				for (Robot robot : world.getReferee().getAlly().getRobots()) {
 					robot.setVisible(robot.isOnSight());
 					checkboxes.get(i).setSelected(robot.isVisible());
 					i++;
 				}
-				World.getInstance().getGUI().update("robotBoxes");
+				world.getGUI().update("robotBoxes");
 			}
 		}), "span");
 	}
@@ -65,9 +67,9 @@ public class VisibleRobotSection extends SectionBox {
 	private class checkHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			JCheckBox checkbox = ((JCheckBox) e.getSource());
-			World.getInstance().getReferee().getAlly().getRobotByID(Integer.valueOf(checkbox.getText().substring(1)))
+			world.getReferee().getAlly().getRobotByID(Integer.valueOf(checkbox.getText().substring(1)))
 					.setVisible(checkbox.isSelected());
-			World.getInstance().getGUI().update("robotBoxes");
+			world.getGUI().update("robotBoxes");
 		}
 	}
 

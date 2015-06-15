@@ -473,7 +473,7 @@ public class DijkstraPathPlanner {
 	 * 					This rectangle might be created in {@link DijkstraPathPlanner#setupSource(FieldPoint) setupSouce()}.
 	 */
 	protected void generateObjectList(int robotId, boolean avoidBall) {
-		Robot thisRobot = World.getInstance().getAllRobots().get(robotId);
+		Robot thisRobot = world.getAllRobots().get(robotId);
 		objects.clear();
 		for (Robot r : world.getReferee().getAlly().getRobotsOnSight())
 			if (r.getPosition() != null)
@@ -486,7 +486,7 @@ public class DijkstraPathPlanner {
 		
 		if(world.getReferee().getAlly().getGoalie() != robotId){
 			// We're east team.
-			if(World.getInstance().getReferee().getAlly().equals(World.getInstance().getReferee().getEastTeam())){
+			if(world.getReferee().getAlly().equals(world.getReferee().getEastTeam())){
 				objects.add(FieldZone.EAST_NORTH_GOAL.getPolygon());
 				objects.add(FieldZone.EAST_SOUTH_GOAL.getPolygon());
 			}
@@ -497,8 +497,8 @@ public class DijkstraPathPlanner {
 			}
 		}
 		// Avoid goals.
-		objects.add(World.getInstance().getField().getEastGoal().toRect());
-		objects.add(World.getInstance().getField().getWestGoal().toRect());
+		objects.add(world.getField().getEastGoal().toRect());
+		objects.add(world.getField().getWestGoal().toRect());
 		
 		ArrayList<Obstruction> obstructions = world.getObstructions();
 		for(Obstruction obstruction : obstructions){
