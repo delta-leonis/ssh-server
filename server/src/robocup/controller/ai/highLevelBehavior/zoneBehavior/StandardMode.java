@@ -17,7 +17,9 @@ import robocup.model.Ally;
 import robocup.model.Enemy;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
+import robocup.model.enums.Command;
 import robocup.model.enums.FieldZone;
+import robocup.model.enums.GameState;
 import robocup.model.enums.RobotMode;
 
 public class StandardMode extends Mode {
@@ -33,18 +35,31 @@ public class StandardMode extends Mode {
 		int chipKick = 0;
 		FieldPoint ballPosition = ball.getPosition();
 
-		ArrayList<Ally> runners = new ArrayList<Ally>();
-
-		for (RobotExecuter itExecuter : executers) {
-			Ally robot = (Ally) itExecuter.getRobot();
-
-			if (robot.getRole() == RobotMode.RUNNER)
-				runners.add(robot);
-		}
-
-		if (runners.size() > 0 && runners.get(0).getPosition() != null) {
-			double shootDirection = ballPosition.getAngle(runners.get(0).getPosition());
+		if (world.getReferee().getCommand() == Command.PREPARE_PENALTY_YELLOW
+				|| world.getReferee().getCommand() == Command.PREPARE_PENALTY_BLUE) {
+			double shootDirection = ballPosition.getAngle(world.hasFreeShot());
 			attacker.update(shootDirection, chipKick, ballPosition);
+		} else if (world.getGameState() == GameState.TAKING_KICKOFF
+				&& (world.getReferee().getPreviousCommand() == Command.PREPARE_PENALTY_YELLOW || world.getReferee()
+						.getPreviousCommand() == Command.PREPARE_PENALTY_BLUE)) {
+			double shootDirection = ballPosition.getAngle(world.hasFreeShot());
+			chipKick = -100;
+			attacker.update(shootDirection, chipKick, ballPosition);
+		} else {
+			ArrayList<Ally> runners = new ArrayList<Ally>();
+
+			for (RobotExecuter itExecuter : executers) {
+				Ally robot = (Ally) itExecuter.getRobot();
+
+				if (robot.getRole() == RobotMode.RUNNER)
+					runners.add(robot);
+			}
+
+			if (runners.size() > 0 && runners.get(0).getPosition() != null) {
+				double shootDirection = ballPosition.getAngle(runners.get(0).getPosition());
+				chipKick = world.getGameState() == GameState.TAKING_KICKOFF ? -50 : 0;
+				attacker.update(shootDirection, chipKick, ballPosition);
+			}
 		}
 	}
 
