@@ -234,7 +234,7 @@ import robocup.model.World;
 			/**
 			 * {@inheritDoc}
 			 * 
-			 * determinse object, and shape to be drawn
+			 * determine object, and shape to be drawn
 			 */
 			@Override
 			public void paint(Graphics g){

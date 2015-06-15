@@ -172,7 +172,7 @@ public abstract class Mode {
 	 */
 	private void handlePenaltyKeeper(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof PenaltyKeeper))
-			executer.setLowLevelBehavior(new PenaltyKeeper(executer.getRobot(), world.getField().getLength()));
+			executer.setLowLevelBehavior(new PenaltyKeeper(executer.getRobot(), world.getField().getAllyGoal()));
 		updatePenaltyKeeper(executer);
 	}
 
