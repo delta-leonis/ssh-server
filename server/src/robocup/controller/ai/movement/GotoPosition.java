@@ -41,7 +41,7 @@ public class GotoPosition {
 	/** 100 */
 	private int START_UP_ROTATION_SPEED = 200;
 	// Circle Around Ball Move Variables
-	private int CIRCLE_SPEED = 2300;
+	private int CIRCLE_SPEED = 2500;
 	
 	private long lastKickTime;
 	
@@ -224,8 +224,9 @@ public class GotoPosition {
 			}
 
 			currentSpeed = speed;
-			if(dribble && robot.getPosition().getDeltaDistance(destination) < Robot.DIAMETER/2 + 15 && System.currentTimeMillis() > lastKickTime + 1000){
+			if(dribble && robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition()) < Robot.DIAMETER/2 + 20 && System.currentTimeMillis() > lastKickTime + 500 && chipKick != 0){
 				// Send the command
+				System.out.println("SHOOT!");
 				output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, chipKick, dribble);
 				LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + "," + chipKick + "," + dribble);
 				lastKickTime = System.currentTimeMillis();
@@ -347,7 +348,7 @@ public class GotoPosition {
 				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -turnAmount : turnAmount);
 			}
 			else if(Math.abs(totalAngle - angleTargetAndRobot) > 15){
-				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -15 : 15);
+				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -20 : 20);
 			}
 			else{
 				double turnAmount = Math.abs(totalAngle - angleTargetAndRobot);
@@ -362,7 +363,7 @@ public class GotoPosition {
 		}
 		else{
 			if(Math.abs(totalAngle - angleTargetAndRobot) > 15){
-				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -15 : 15);
+				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -20 : 20);
 			}
 			else{
 				double turnAmount = Math.abs(totalAngle - angleTargetAndRobot);

@@ -3,6 +3,7 @@ package robocup.controller.ai.lowLevelBehavior;
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
+import robocup.model.World;
 import robocup.model.enums.RobotMode;
 
 public class Attacker extends LowLevelBehavior {
@@ -25,11 +26,14 @@ public class Attacker extends LowLevelBehavior {
 
 		this.role = RobotMode.ATTACKER;
 		go = new GotoPosition(robot, robot.getPosition(), ballPosition);
-		go.setStartupSpeedVelocity(250);
+		go.setStartupSpeedVelocity(260);
 		go.setMaxVelocity(3000);
 		go.setDistanceToSlowDown(500);
-		go.setMaxRotationSpeed(1300);
-		go.setStartupSpeedRotation(220);
+		go.setMaxRotationSpeed(1400);
+		go.setStartupSpeedRotation(240);
+		go.setAvoidEastGoal(true);
+		go.setAvoidWestGoal(true);
+		
 	}
 
 	/**
@@ -74,12 +78,19 @@ public class Attacker extends LowLevelBehavior {
 		if(chipKick == 0){
 			go.setDestination(newDestination);
 //			go.setMaxRotationSpeed(1200);
+			go.setMaxRotationSpeed(1400);
+			go.setForcedSpeed(0);
 			go.calculateTurnAroundTarget(250);
 		}
 		else{
-			go.setDestination(ballPosition);
-			go.goForwardUntilKick(3000);
-//			go.calculate(false, true);
+			double overshootBallX = ballPosition.getX() + Math.cos(Math.toRadians(robot.getPosition().getAngle(ballPosition))) * 80;
+			double overshootBallY = ballPosition.getY() + Math.sin(Math.toRadians(robot.getPosition().getAngle(ballPosition))) * 80;
+			
+			go.setDestination(new FieldPoint(overshootBallX, overshootBallY));
+			go.setForcedSpeed(3000);
+//			go.goForwardUntilKick(3000);
+			go.setMaxRotationSpeed(0);
+			go.calculate(false, true);
 		}
 	}
 }
