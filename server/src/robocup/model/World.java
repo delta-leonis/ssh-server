@@ -751,7 +751,8 @@ public class World extends Observable {
 	 * @return Point ideal aim position in goal
 	 */
 	public FieldPoint hasFreeShot(int maxObstacles) {
-		FieldZone[] zones = { FieldZone.EAST_NORTH_FRONT, FieldZone.EAST_CENTER, FieldZone.EAST_SOUTH_FRONT,
+		FieldZone[] zones = { FieldZone.EAST_NORTH_GOAL, FieldZone.EAST_SOUTH_GOAL, FieldZone.WEST_NORTH_GOAL, FieldZone.WEST_SOUTH_GOAL, 
+				FieldZone.EAST_NORTH_FRONT, FieldZone.EAST_CENTER, FieldZone.EAST_SOUTH_FRONT,
 				FieldZone.EAST_MIDDLE, FieldZone.EAST_NORTH_SECONDPOST, FieldZone.EAST_SOUTH_SECONDPOST,
 				FieldZone.WEST_NORTH_FRONT, FieldZone.WEST_CENTER, FieldZone.WEST_SOUTH_FRONT, FieldZone.WEST_MIDDLE,
 				FieldZone.WEST_SOUTH_SECONDPOST, FieldZone.WEST_NORTH_SECONDPOST };

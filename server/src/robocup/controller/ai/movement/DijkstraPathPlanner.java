@@ -6,6 +6,7 @@ import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.beans.DesignMode;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -212,16 +213,19 @@ public class DijkstraPathPlanner {
 	 * @return list with points forming the shortest route
 	 */
 	@SuppressWarnings("unchecked")
-	public LinkedList<FieldPoint> getRoute(FieldPoint beginNode, FieldPoint destination, int robotId, boolean avoidBall) {
+	public LinkedList<FieldPoint> getRoute(FieldPoint beginNode, FieldPoint desti, int robotId, boolean avoidBall, boolean avoidEastGoal, boolean avoidWestGoal) {
 		LinkedList<FieldPoint> route = new LinkedList<FieldPoint>();
 		boolean found = false;
 		source = beginNode;
-		this.destination = destination;
+		destination = desti;
 
-		generateObjectList(robotId, avoidBall);
+		generateObjectList(robotId, avoidBall, avoidEastGoal, avoidWestGoal);
 		copyOfObjects = (ArrayList<Shape>)objects.clone();
-		if(isInsidePolygon(new Vertex(destination).toEllipse())){
-			return null;
+		while(isInsidePolygon(new Vertex(destination).toEllipse())){
+			if(getClosestVertexToPoint(destination) == null){
+				return null;
+			}
+			destination = getClosestVertexToPoint(destination).getPosition();
 		}
 
 		// no object on route
@@ -248,6 +252,7 @@ public class DijkstraPathPlanner {
 			allVertices = (ArrayList<Vertex>)vertices.clone();
 			return null;					//Locked in
 		}
+		System.out.println("Dest: " + dest);
 		
 		// calculate neighbours for every vertex
 		generateNeighbours();
@@ -336,7 +341,7 @@ public class DijkstraPathPlanner {
 			}
 
 			if (lockedIn)
-				return null;
+				return getClosestVertexToPoint(endNode);
 
 			removeAllVectorsInRect(new Rectangle2D.Double(x
 					- MAX_VERTEX_DISTANCE_TO_ROBOT + 1, y
@@ -470,7 +475,7 @@ public class DijkstraPathPlanner {
 	 * 					no rectangle will be created for this robot in this function. 
 	 * 					This rectangle might be created in {@link DijkstraPathPlanner#setupSource(FieldPoint) setupSouce()}.
 	 */
-	protected void generateObjectList(int robotId, boolean avoidBall) {
+	protected void generateObjectList(int robotId, boolean avoidBall, boolean avoidEastGoal, boolean avoidWestGoal) {
 		Robot thisRobot = world.getAllRobots().get(robotId);
 		objects.clear();
 		for (Robot r : world.getReferee().getAlly().getRobotsOnSight())
@@ -482,25 +487,25 @@ public class DijkstraPathPlanner {
 			if (r.getPosition() != null)
 				objects.add(r.getDangerEllipse(MIN_DISTANCE_TO_ROBOT, MAX_DISTANCE_TO_ROBOT));
 		
-		if(world.getReferee().getAlly().getGoalie() != robotId){
-			// We're east team.
-			if(world.getReferee().getAlly().equals(world.getReferee().getEastTeam())){
-				objects.add(FieldZone.EAST_NORTH_GOAL.getPolygon());
-				objects.add(FieldZone.EAST_SOUTH_GOAL.getPolygon());
-			}
-			// We're west team
-			else{
-				objects.add(FieldZone.WEST_NORTH_GOAL.getPolygon());
-				objects.add(FieldZone.WEST_SOUTH_GOAL.getPolygon());
-			}
+		// We're east team.
+		if(avoidEastGoal){
+			objects.add(FieldZone.EAST_NORTH_GOAL.getPolygon());
+			objects.add(FieldZone.EAST_SOUTH_GOAL.getPolygon());
 		}
+		// We're west team
+		if(avoidWestGoal){
+			objects.add(FieldZone.WEST_NORTH_GOAL.getPolygon());
+			objects.add(FieldZone.WEST_SOUTH_GOAL.getPolygon());
+		}
+		
 		// Avoid goals.
 		objects.add(world.getField().getEastGoal().toRect());
 		objects.add(world.getField().getWestGoal().toRect());
 		
 		ArrayList<Obstruction> obstructions = world.getObstructions();
 		for(Obstruction obstruction : obstructions){
-			objects.add(obstruction.toPolygon());
+			if(obstruction.toPolygon() != null)
+				objects.add(obstruction.toPolygon());
 		}
 
 		if(avoidBall){
@@ -657,15 +662,31 @@ public class DijkstraPathPlanner {
 	
 	protected boolean isInsidePolygon(Shape r){
 		for(Shape shape : objects) {
-			if(shape instanceof Polygon){
-				Area areaA = new Area(shape);
-				areaA.intersect(new Area(r));
-				if(!areaA.isEmpty()){
-					return true;
-				}
+			System.out.println("Shape: " + shape.getBounds().getCenterX() + "  " + shape.getBounds().getCenterY());
+			Area areaA = new Area(shape);
+			areaA.intersect(new Area(r));
+			if(!areaA.isEmpty()){
+				return true;
 			}
 		}
 		return false;
+	}
+	
+	private Vertex getClosestVertexToPoint(FieldPoint point){
+		double minDistance = Double.MAX_VALUE;
+		Vertex minVertex = null;
+		for(Vertex v : vertices){
+			if(!(v.getPosition().getX() == point.getX() && v.getPosition().getY() == point.getY())){
+				if(minVertex == null){
+					minVertex = v;
+				}
+				else if(point.getDeltaDistance(v.getPosition()) < minDistance){
+					minDistance = point.getDeltaDistance(v.getPosition());
+					minVertex = v;
+				}
+			}
+		}
+		return minVertex;
 	}
 	
 	/**

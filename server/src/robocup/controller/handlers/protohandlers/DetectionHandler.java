@@ -130,7 +130,7 @@ public class DetectionHandler {
 		ArrayList<Robot> team = (teamcolor.equals(world.getReferee().getAlly().getColor()) ? world.getReferee().getAlly().getRobots() : world.getReferee().getEnemy().getRobots());
 
 		for (Robot robot : team)
-			robot.setOnSight(world.getLastTimestamp() - robot.getLastUpdateTime() < 2);
+			robot.setOnSight(world.getLastTimestamp() - robot.getLastUpdateTime() <= 2);
 	}
 
 	/**
