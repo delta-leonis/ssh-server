@@ -6,6 +6,7 @@ import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.beans.DesignMode;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -212,16 +213,16 @@ public class DijkstraPathPlanner {
 	 * @return list with points forming the shortest route
 	 */
 	@SuppressWarnings("unchecked")
-	public LinkedList<FieldPoint> getRoute(FieldPoint beginNode, FieldPoint destination, int robotId, boolean avoidBall) {
+	public LinkedList<FieldPoint> getRoute(FieldPoint beginNode, FieldPoint desti, int robotId, boolean avoidBall) {
 		LinkedList<FieldPoint> route = new LinkedList<FieldPoint>();
 		boolean found = false;
 		source = beginNode;
-		this.destination = destination;
+		destination = desti;
 
 		generateObjectList(robotId, avoidBall);
 		copyOfObjects = (ArrayList<Shape>)objects.clone();
-		if(isInsidePolygon(new Vertex(destination).toEllipse())){
-			return null;
+		while(isInsidePolygon(new Vertex(destination).toEllipse())){
+			destination = getClosestVertexToPoint(destination).getPosition();
 		}
 
 		// no object on route
@@ -248,6 +249,7 @@ public class DijkstraPathPlanner {
 			allVertices = (ArrayList<Vertex>)vertices.clone();
 			return null;					//Locked in
 		}
+		System.out.println("Dest: " + dest);
 		
 		// calculate neighbours for every vertex
 		generateNeighbours();
@@ -336,7 +338,7 @@ public class DijkstraPathPlanner {
 			}
 
 			if (lockedIn)
-				return null;
+				return getClosestVertexToPoint(endNode);
 
 			removeAllVectorsInRect(new Rectangle2D.Double(x
 					- MAX_VERTEX_DISTANCE_TO_ROBOT + 1, y
@@ -666,6 +668,23 @@ public class DijkstraPathPlanner {
 			}
 		}
 		return false;
+	}
+	
+	private Vertex getClosestVertexToPoint(FieldPoint point){
+		double minDistance = Double.MAX_VALUE;
+		Vertex minVertex = null;
+		for(Vertex v : vertices){
+			if(!(v.getPosition().getX() == point.getX() && v.getPosition().getY() == point.getY())){
+				if(minVertex == null){
+					minVertex = v;
+				}
+				else if(point.getDeltaDistance(v.getPosition()) < minDistance){
+					minDistance = point.getDeltaDistance(v.getPosition());
+					minVertex = v;
+				}
+			}
+		}
+		return minVertex;
 	}
 	
 	/**
