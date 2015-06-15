@@ -226,7 +226,6 @@ public class GotoPosition {
 			currentSpeed = speed;
 			if(dribble && robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition()) < Robot.DIAMETER/2 + 20 && System.currentTimeMillis() > lastKickTime + 500 && chipKick != 0){
 				// Send the command
-				System.out.println("SHOOT!");
 				output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, chipKick, dribble);
 				LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + "," + chipKick + "," + dribble);
 				lastKickTime = System.currentTimeMillis();
@@ -343,15 +342,15 @@ public class GotoPosition {
 		// Increase angle
 		double degreesToMove;
 		if(robot.getPosition().getDeltaDistance(target) > (offset*1.1)){
-			if(Math.abs(totalAngle - angleTargetAndRobot) > 90){
-				double turnAmount = Math.abs(totalAngle - angleTargetAndRobot) - 90;
+			if(Math.abs(Math.abs(totalAngle) - Math.abs(angleTargetAndRobot)) > 90){
+				double turnAmount = Math.abs(Math.abs(totalAngle) - Math.abs(angleTargetAndRobot)) - 90;
 				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -turnAmount : turnAmount);
 			}
-			else if(Math.abs(totalAngle - angleTargetAndRobot) > 15){
-				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -20 : 20);
+			else if(Math.abs(Math.abs(totalAngle) - Math.abs(angleTargetAndRobot)) > 15){
+				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -15 : 15);
 			}
 			else{
-				double turnAmount = Math.abs(totalAngle - angleTargetAndRobot);
+				double turnAmount = Math.abs(Math.abs(totalAngle) - Math.abs(angleTargetAndRobot));
 				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -turnAmount : turnAmount);
 			}
 			// Use new angle to get position on circle around target
@@ -362,11 +361,11 @@ public class GotoPosition {
 			calculate(false, true);
 		}
 		else{
-			if(Math.abs(totalAngle - angleTargetAndRobot) > 15){
-				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -20 : 20);
+			if(Math.abs(Math.abs(totalAngle) - Math.abs(angleTargetAndRobot)) > 15){
+				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -15 : 15);
 			}
 			else{
-				double turnAmount = Math.abs(totalAngle - angleTargetAndRobot);
+				double turnAmount = Math.abs(Math.abs(totalAngle) - Math.abs(angleTargetAndRobot));
 				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -turnAmount : turnAmount);
 			}
 			// Use new angle to get position on circle around target
