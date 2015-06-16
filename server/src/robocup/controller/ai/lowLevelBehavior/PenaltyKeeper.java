@@ -62,9 +62,9 @@ public class PenaltyKeeper extends LowLevelBehavior {
 		//double angle = Math.toRadians(enemyPosition.getAngle(ballPosition));
 		double angle = Math.toRadians(Math.abs(enemy.getOrientation()));
 		double offset = (goal.getFrontNorth().getX() > 0 ? Robot.DIAMETER : -Robot.DIAMETER); //should be divided by 2, isn't being devided currelty because of lack of precision 
-		double newY =  (goal.getFrontNorth().getX() - enemyPosition.getX() - offset) * Math.tan(angle);
+		double newY =  enemyPosition.getY() + (goal.getFrontNorth().getX() - enemyPosition.getX() - offset) * Math.tan(angle);
 
-		newDestination = new FieldPoint(goal.getFrontNorth().getX() - offset, Math.min(goal.getFrontNorth().getY() - Robot.DIAMETER/2 ,Math.max(goal.getFrontSouth().getY() + Robot.DIAMETER/2, newY)));
+		newDestination = new FieldPoint(goal.getFrontNorth().getX() - offset/2, Math.min(goal.getFrontNorth().getY() - Robot.DIAMETER/2 ,Math.max(goal.getFrontSouth().getY() + Robot.DIAMETER/2, newY)));
 
 		return newDestination;
 	}
