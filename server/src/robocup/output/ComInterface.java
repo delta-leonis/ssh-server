@@ -65,7 +65,7 @@ public class ComInterface {
 	 */
 	public void send(int messageType, int robotID, int direction, int directionSpeed, 
 			int rotationSpeed, int shootKicker, boolean dribble) {
-		byte[] dataPacket = createByteArray(messageType, robotID, direction, directionSpeed, rotationSpeed, (int)(shootKicker*0.8), dribble);
+		byte[] dataPacket = createByteArray(messageType, robotID, direction, directionSpeed, rotationSpeed, (int)(shootKicker*0.7), dribble);
 		DatagramPacket sendPacket = new DatagramPacket(dataPacket, dataPacket.length, ipAddress, port);
 
 		try {
