@@ -401,12 +401,9 @@ public class GotoPosition {
 	 * @return the speed at which the {@link Robot} should turn.
 	 */
 	private double getRotationSpeed(double rotation, double speed) {
-//		if(speed > MAX_VELOCITY / 2){
-//			return 0;
-//		}
 		// must be between 0 and 50 percent, if it's higher than 50% rotating to
 		// the other direction is faster
-		double rotationPercent = rotation / 180;	// TODO: Make 180.
+		double rotationPercent = (rotation) / 180;
 
 		// distance needed to rotate in mm
 //		double rotationDistance = circumference * rotationPercent;
@@ -418,7 +415,7 @@ public class GotoPosition {
 		else{
 			rotationDistance += START_UP_ROTATION_SPEED;
 		}
-		rotationDistance *= 1 - Math.abs(speed)/(MAX_VELOCITY * 1.5);
+//		rotationDistance *= 1 - Math.abs(speed)/(MAX_VELOCITY);
 		return rotationDistance;
 //		if(Math.abs(rotationDistance) > MAX_ROTATION_SPEED){
 //			if(rotationDistance < 0){
