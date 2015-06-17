@@ -348,18 +348,20 @@ public class Field {
 				+ "\r\n defenceRadius=" + defenceRadius + "\r\n defenceStretch=" + defenceStretch
 				+ "\r\n freeKickFromDefenceDistance=" + freeKickFromDefenceDistance
 				+ "\r\n penaltySpotFromFieldLineDistance=" + penaltySpotFromFieldLineDistance
-				+ "\r\n penaltyLineFromSpotDistance=" + penaltyLineFromSpotDistance + "\r\n" + printGoals() + "]"
+				+ "\r\n penaltyLineFromSpotDistance=" + penaltyLineFromSpotDistance + "\r\n" + eastGoal.toString() +  westGoal.toString() + "]"
 				+ "\r\n";
 	}
 
-	private String printGoals() {
-		return eastGoal.toString() +  westGoal.toString();
-	}
-
+	/**
+	 * @return goal on Ally {@link Team} side
+	 */
 	public Goal getAllyGoal() {
 		return (World.getInstance().getReferee().getEastTeam().equals(World.getInstance().getReferee().getAlly()) ? eastGoal : westGoal);
 	}
 
+	/**
+	 * @return goal on Enemy {@link Team} side
+	 */
 	public Goal getEnemyGoal() {
 		return (World.getInstance().getReferee().getEastTeam().equals(World.getInstance().getReferee().getEnemy()) ? eastGoal : westGoal);
 	}
