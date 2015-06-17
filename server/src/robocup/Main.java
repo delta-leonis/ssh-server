@@ -35,9 +35,9 @@ public class Main {
 	private static World world;
 
 	public static void main(String[] args) {
-		world = World.getInstance();
 		initLog();
 		initLibraryPath();
+		world = World.getInstance();
 		LOGGER.info("Program started");
 		initView();
 		LOGGER.info("View initialized");
@@ -104,7 +104,7 @@ public class Main {
 			world.getReferee().getAlly().setName(ourTeamName);
 			world.getReferee().getEnemy().setName(enemyTeamName);
 			
-			world.getReferee().setAllyTeamColor(TeamColor.valueOf(ourTeamColor));
+			world.getReferee().setTeamColors(TeamColor.valueOf(ourTeamColor));
 			
 		} catch (IllegalArgumentException e) {
 			LOGGER.severe("Please check the config file for type errors");
