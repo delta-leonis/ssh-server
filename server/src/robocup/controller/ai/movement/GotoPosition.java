@@ -10,7 +10,6 @@ import robocup.model.FieldObject;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.World;
-import robocup.model.enums.GameState;
 import robocup.output.ComInterface;
 
 /**
@@ -336,22 +335,22 @@ public class GotoPosition {
 	 */
 	public void calculateTurnAroundTarget(int offset){
 		// Angle between ball and robot
-		double angleTargetAndRobot = target.getAngle(robot.getPosition());
+		double angleTargetAndRobot = target.getAngle(robot.getPosition()) < 0 ? target.getAngle(robot.getPosition()) + 360 : target.getAngle(robot.getPosition());
 		// Get total angle we need to rotate
-		double totalAngle = target.getAngle(destination);
+		double totalAngle = target.getAngle(destination) < 0 ? target.getAngle(destination) + 360 : target.getAngle(destination);
 		// Increase angle
 		double degreesToMove;
-		if(robot.getPosition().getDeltaDistance(target) > (offset*1.1)){
-			if(Math.abs(Math.abs(totalAngle) - Math.abs(angleTargetAndRobot)) > 90){
-				double turnAmount = Math.abs(Math.abs(totalAngle) - Math.abs(angleTargetAndRobot)) - 90;
+		// If we're not in range of to circle around the target
+		if(robot.getPosition().getDeltaDistance(target) > (offset*1.3)){
+			if(Math.abs(totalAngle - angleTargetAndRobot) > 90){
+				double turnAmount = Math.abs(totalAngle - angleTargetAndRobot) - 90;
 				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -turnAmount : turnAmount);
 			}
-			else if(Math.abs(Math.abs(totalAngle) - Math.abs(angleTargetAndRobot)) > 15){
+			else if(Math.abs(totalAngle - angleTargetAndRobot) > 15){
 				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -15 : 15);
 			}
 			else{
-				double turnAmount = Math.abs(Math.abs(totalAngle) - Math.abs(angleTargetAndRobot));
-				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -turnAmount : turnAmount);
+				degreesToMove = angleTargetAndRobot + totalAngle - angleTargetAndRobot;
 			}
 			// Use new angle to get position on circle around target
 			FieldPoint newDestination = new FieldPoint(	target.getX() + offset * Math.cos(Math.toRadians(degreesToMove)),
@@ -361,11 +360,11 @@ public class GotoPosition {
 			calculate(false, true);
 		}
 		else{
-			if(Math.abs(Math.abs(totalAngle) - Math.abs(angleTargetAndRobot)) > 15){
+			if(Math.abs(totalAngle - angleTargetAndRobot) > 15){
 				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -15 : 15);
 			}
 			else{
-				double turnAmount = Math.abs(Math.abs(totalAngle) - Math.abs(angleTargetAndRobot));
+				double turnAmount = Math.abs(totalAngle - angleTargetAndRobot);
 				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -turnAmount : turnAmount);
 			}
 			// Use new angle to get position on circle around target
