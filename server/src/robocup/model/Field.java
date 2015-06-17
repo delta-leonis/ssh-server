@@ -303,6 +303,7 @@ public class Field {
 	public Goal getEastGoal(){
 		return eastGoal;
 	}
+
 	public Goal getWestGoal(){
 		return westGoal;
 	}
