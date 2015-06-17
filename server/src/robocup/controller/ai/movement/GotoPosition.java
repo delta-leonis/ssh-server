@@ -415,7 +415,7 @@ public class GotoPosition {
 		else{
 			rotationDistance += START_UP_ROTATION_SPEED;
 		}
-//		rotationDistance *= 1 - Math.abs(speed)/(MAX_VELOCITY);
+		rotationDistance *= 1 - Math.abs(speed)/(MAX_VELOCITY * 2);
 		return rotationDistance;
 //		if(Math.abs(rotationDistance) > MAX_ROTATION_SPEED){
 //			if(rotationDistance < 0){
