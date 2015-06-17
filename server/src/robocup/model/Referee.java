@@ -206,12 +206,12 @@ public class Referee {
 	}
 
 	/**
-	 * Sets the Color for our own Team.
-	 * @param color
+	 * Sets the Color for our both {@link Team teams}
+	 * @param allyColor color for Ally team, enemy team gets opposite color
 	 * 
 	 */
-	public void setAllyTeamColor(TeamColor color) {
-		if (color == TeamColor.BLUE) {
+	public void setTeamColors(TeamColor allyColor) {
+		if (allyColor == TeamColor.BLUE) {
 			allyTeam.setColor(TeamColor.BLUE);
 			enemyTeam.setColor(TeamColor.YELLOW);
 		} else {
