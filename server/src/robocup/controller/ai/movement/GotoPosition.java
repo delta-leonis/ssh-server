@@ -30,7 +30,7 @@ public class GotoPosition {
 	/** 100 */
 	private int START_UP_MOVEMENT_SPEED = 200;
 	/** 450 */
-	private int DISTANCE_TO_SLOW_DOWN_FORCED = 30;
+	private int DISTANCE_TO_SLOW_DOWN_FORCED = 50;
 	// Rotation Speed Variables
 	/** 5 */
 	@SuppressWarnings("unused")
@@ -306,16 +306,7 @@ public class GotoPosition {
 			double rotationToGoal = rotationToDest(robot.getPosition(), destination);
 			
 			// Get the rotation speed, based on the speed we're turning
-			double rotationSpeed;
-			if(speed < -700){
-				rotationSpeed = getRotationSpeed(rotationToTarget, speed + 700);
-			}
-			else if(speed > 700){
-				rotationSpeed = getRotationSpeed(rotationToTarget, speed -700);
-			}
-			else{
-				rotationSpeed = getRotationSpeed(rotationToTarget, speed);
-			}
+			double rotationSpeed = getRotationSpeed(rotationToTarget, speed);
 			
 			currentSpeed = speed;
 			// Send the command
