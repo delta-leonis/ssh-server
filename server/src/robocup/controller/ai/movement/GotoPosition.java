@@ -40,7 +40,7 @@ public class GotoPosition {
 	/** 100 */
 	private int START_UP_ROTATION_SPEED = 200;
 	// Circle Around Ball Move Variables
-	private int CIRCLE_SPEED = 3000;
+	private int CIRCLE_SPEED = 2500;
 	
 	private long lastKickTime;
 	
@@ -341,16 +341,16 @@ public class GotoPosition {
 		// Increase angle
 		double degreesToMove;
 		// If we're not in range of to circle around the target
-		if(robot.getPosition().getDeltaDistance(target) > (offset*1.3)){
-			if(Math.abs(totalAngle - angleTargetAndRobot) > 90){
-				double turnAmount = Math.abs(totalAngle - angleTargetAndRobot) - 90;
-				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -turnAmount : turnAmount);
+		if(robot.getPosition().getDeltaDistance(target) > (offset*1.2)){
+			if(Math.abs(toRelativeAngle(totalAngle - angleTargetAndRobot)) > 90){
+				double turnAmount = Math.abs(toRelativeAngle(totalAngle - angleTargetAndRobot)) - 90;
+				degreesToMove = angleTargetAndRobot + (toRelativeAngle((totalAngle - angleTargetAndRobot)) < 0 ? -turnAmount : turnAmount);
 			}
 			else if(Math.abs(totalAngle - angleTargetAndRobot) > 15){
-				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -15 : 15);
+				degreesToMove = angleTargetAndRobot + (toRelativeAngle((totalAngle - angleTargetAndRobot)) < 0 ? -15 : 15);
 			}
 			else{
-				degreesToMove = angleTargetAndRobot + totalAngle - angleTargetAndRobot;
+				degreesToMove = angleTargetAndRobot + toRelativeAngle(totalAngle - angleTargetAndRobot);
 			}
 			// Use new angle to get position on circle around target
 			FieldPoint newDestination = new FieldPoint(	target.getX() + offset * Math.cos(Math.toRadians(degreesToMove)),
@@ -361,12 +361,13 @@ public class GotoPosition {
 		}
 		else{
 			if(Math.abs(totalAngle - angleTargetAndRobot) > 15){
-				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -15 : 15);
+				degreesToMove = angleTargetAndRobot + (toRelativeAngle((totalAngle - angleTargetAndRobot)) < 0 ? -15 : 15);
 			}
 			else{
 				double turnAmount = Math.abs(totalAngle - angleTargetAndRobot);
-				degreesToMove = angleTargetAndRobot + ((totalAngle - angleTargetAndRobot) < 0 ? -turnAmount : turnAmount);
+				degreesToMove = angleTargetAndRobot + (toRelativeAngle((totalAngle - angleTargetAndRobot)) < 0 ? -turnAmount : turnAmount);
 			}
+			
 			// Use new angle to get position on circle around target
 			FieldPoint newDestination = new FieldPoint(	target.getX() + offset * Math.cos(Math.toRadians(degreesToMove)),
 														target.getY() + offset * Math.sin(Math.toRadians(degreesToMove)));
@@ -375,6 +376,21 @@ public class GotoPosition {
 			forcedSpeed = CIRCLE_SPEED;
 			calculate(false, false);
 		}
+	}
+	
+	/**
+	 * Takes an angle between 0-360 degrees and makes it so that it's between -180 and 180 degrees
+	 * @param angle
+	 * @return
+	 */
+	public double toRelativeAngle(double angle){
+		if(angle > 180){
+			return angle - 360;
+		}
+		if(angle < -180){
+			return angle + 360;
+		}
+		return angle;
 	}
 	
 	public void goForwardUntilKick(int speed){
