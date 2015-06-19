@@ -182,14 +182,10 @@ public class DefenseMode extends Mode {
 		}
 
 		FieldPoint ballPosition = ball.getPosition();
-		FieldPoint pointToDefend = getPointToDefendForKeeper();
-		if (pointToDefend != null) {
-			keeper.update(distanceToGoal, goToKick, ballPosition, pointToDefend, world.getField().getWidth(), world
-					.getField().getLength());
-		} else {
-			keeper.update(distanceToGoal, goToKick, ballPosition, world.getField().getWidth(), world.getField()
+		
+		keeper.update(distanceToGoal, goToKick, ballPosition, world.getField().getWidth(), world.getField()
 					.getLength());
-		}
+		
 	}
 
 	private FieldPoint getPointToDefendForKeeper() {
@@ -241,7 +237,7 @@ public class DefenseMode extends Mode {
 		PenaltyKeeper penalKeeper = (PenaltyKeeper) executer.getLowLevelBehavior();
 		FieldPoint ballPosition = ball.getPosition();
 		Robot enemy = world.getClosestRobotToBall();
-		penalKeeper.update(ballPosition, enemy);
+		penalKeeper.update(ballPosition, enemy, ballPosition);
 	}
 
 	@Override

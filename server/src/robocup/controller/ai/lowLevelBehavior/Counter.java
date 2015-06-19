@@ -3,6 +3,7 @@ package robocup.controller.ai.lowLevelBehavior;
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
+import robocup.model.World;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
 
@@ -31,6 +32,15 @@ public class Counter extends LowLevelBehavior {
 		go.setDistanceToSlowDown(300);
 		go.setMaxRotationSpeed(1200);
 		go.setStartupSpeedRotation(200);
+		
+		boolean isEastTeam = World.getInstance().getReferee().getEastTeam()
+				.equals(World.getInstance().getReferee().getAlly());
+		if(isEastTeam){
+			go.setAvoidEastGoal(true);
+		}
+		else{
+			go.setAvoidWestGoal(true);
+		}
 	}
 
 	/**

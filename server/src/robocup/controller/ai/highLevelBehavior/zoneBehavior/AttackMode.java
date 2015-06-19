@@ -236,7 +236,7 @@ public class AttackMode extends Mode {
 		PenaltyKeeper penalKeeper = (PenaltyKeeper) executer.getLowLevelBehavior();
 		FieldPoint ballPosition = ball.getPosition();
 		Robot enemy = world.getClosestRobotToBall();
-		penalKeeper.update(ballPosition, enemy);
+		penalKeeper.update(ballPosition, enemy, ballPosition);
 	}
 
 	@Override

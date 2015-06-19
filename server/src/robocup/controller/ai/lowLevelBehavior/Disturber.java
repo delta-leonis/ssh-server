@@ -2,6 +2,7 @@ package robocup.controller.ai.lowLevelBehavior;
 
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
+import robocup.model.World;
 
 public class Disturber extends Keeper {
 
@@ -15,6 +16,14 @@ public class Disturber extends Keeper {
 		go.setDistanceToSlowDown(300);
 		go.setMaxRotationSpeed(1200);
 		go.setStartupSpeedRotation(200);
+		boolean isEastTeam = World.getInstance().getReferee().getEastTeam()
+				.equals(World.getInstance().getReferee().getAlly());
+		if(isEastTeam){
+			go.setAvoidEastGoal(true);
+		}
+		else{
+			go.setAvoidWestGoal(true);
+		}
 	}
 
 	/**
