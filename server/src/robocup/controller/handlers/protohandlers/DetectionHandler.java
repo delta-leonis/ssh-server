@@ -25,6 +25,8 @@ public class DetectionHandler {
 	//Max distance between ball and closest robot to be assigned to ballowner
 	private static final int MAX_DISTANCE = 160;
 
+	private static final double MAX_SPEED_WHILE_RETAINING_OWNERSHIP = 100;
+
 	private World world;
 
 	private Map<Integer, RobotUKF> allyFilter = new HashMap<Integer, RobotUKF>();
@@ -103,7 +105,11 @@ public class DetectionHandler {
 		double speed = Math.sqrt(Math.pow(ballFilter.getXVelocity(), 2) + Math.pow(ballFilter.getYVelocity(), 2));
 		double direction = Math.toDegrees(Math.atan2(ballFilter.getYVelocity(), ballFilter.getXVelocity()));
 		Robot closestRobot = world.getClosestRobotToBall();
-		Robot owner = (closestRobot.getPosition().getDeltaDistance(ballPosition) < MAX_DISTANCE + Robot.DIAMETER ? closestRobot : null);
+		Robot owner = null;
+		if(closestRobot != null
+			&& closestRobot.getPosition().getDeltaDistance(ballPosition) < MAX_DISTANCE + Robot.DIAMETER
+			&& speed < MAX_SPEED_WHILE_RETAINING_OWNERSHIP)
+			owner = closestRobot;
 		world.getBall().update((long) time, ballPosition, ball.getZ(), speed,
 				direction, owner);
 	}
