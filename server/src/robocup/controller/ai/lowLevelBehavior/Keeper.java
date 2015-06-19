@@ -81,9 +81,10 @@ public class Keeper extends LowLevelBehavior {
 	protected void changeDestination(FieldPoint destination, FieldPoint target) {
 		go.setTarget(target);
 
-		if (goToKick)
+		if (goToKick) {
 			go.setDestination(ballPosition);
-		else if (destination != null)
+			go.setKick(142);
+		} else if (destination != null)
 			go.setDestination(destination);
 
 		go.calculate(false, false);

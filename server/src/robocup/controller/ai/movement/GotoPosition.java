@@ -295,7 +295,7 @@ public class GotoPosition {
 			}
 		}
 		if (destination == null) {
-			if(target == null){
+			if (target == null) {
 				if(SIMULATED){
 					output.sendForSimulation(robot.getRobotId(), 0, 0, 0, 0, 0, false);
 				}
@@ -303,8 +303,8 @@ public class GotoPosition {
 					output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
 				}
 				return false;
-			}
-			else{
+			} else {
+				output.send(1, robot.getRobotId(), 0, 0,
 				if(SIMULATED){
 					double rotation = rotationToDest(robot.getPosition(), target);;
 					output.sendForSimulation(robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotation,0), (int)rotation, 0, dribble);

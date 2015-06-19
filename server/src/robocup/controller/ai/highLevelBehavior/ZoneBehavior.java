@@ -126,8 +126,7 @@ public class ZoneBehavior extends Behavior {
 					} else {
 						currentMode = chooseDefenseStrategy(executers);
 					}
-				} else
-					currentMode = chooseStandardStrategy(executers);
+				}
 				break;
 			default:
 				break;
@@ -196,6 +195,7 @@ public class ZoneBehavior extends Behavior {
 			}
 			break;
 		case HALT:
+		case STOP:
 			returnMode = new StandardMode(new GameStop(), executers);
 			break;
 		case INDIRECT_FREE_BLUE:
@@ -252,7 +252,6 @@ public class ZoneBehavior extends Behavior {
 				returnMode = new StandardMode(new PenaltyDefense(), executers);
 			}
 			break;
-		case STOP:
 		case TIMEOUT_BLUE:
 			if (referee.getAllyTeamColor() == TeamColor.BLUE) {
 				returnMode = new StandardMode(new KickOffAttack(), executers);
