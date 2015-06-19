@@ -1,5 +1,8 @@
 package nl.saxion.robosim.communications;
 
+import nl.saxion.robosim.controller.SSL_Field;
+import nl.saxion.robosim.model.Model;
+import nl.saxion.robosim.model.Settings;
 import nl.saxion.robosim.model.protobuf.SslDetection;
 import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionFrame;
 import nl.saxion.robosim.model.protobuf.SslReferee;
@@ -10,6 +13,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Sends udp messages to the given ip and port.
@@ -23,9 +27,9 @@ public class MultiCastServer {
     MulticastSocket aiSocket, refSocket;
     InetAddress aiGroup, refGroup;
     // The address from ssl 224.5.23.2
-    private final static String aiIp = "224.5.23.2", refIp = "224.5.23.1";
+    private static String aiIp = "224.5.23.2", refIp = "224.5.23.1";
     // The port from ssl 10002
-    private final static int aiPort = 10002, refPort = 10003;
+    private static int aiPort = 10002, refPort = 10003;
 
 
     /**
@@ -34,7 +38,13 @@ public class MultiCastServer {
      * @throws IOException
      */
     public MultiCastServer() throws IOException {
-        aiSocket = new MulticastSocket(aiPort);
+        Settings s = Settings.getInstance();
+        aiIp = s.getOip();
+        aiPort = Integer.parseInt(s.getOport());
+
+        refIp = s.getRefIp();
+        refPort = Integer.parseInt(s.getRefPort());
+        aiSocket = new MulticastSocket();
         aiGroup = InetAddress.getByName(aiIp);
         aiSocket.joinGroup(aiGroup);
         refGroup = InetAddress.getByName(refIp);
@@ -46,8 +56,6 @@ public class MultiCastServer {
      * continuously gets data from the model, and sends it.
      */
     public void send(SslWrapper.SSL_WrapperPacket p, SslReferee.SSL_Referee referee) {
-        System.out.println("Sending...\n" + p + "\n" + referee);
-
         SSL_DetectionFrame frame = p.getDetection();
         SSL_DetectionFrame.Builder[] frameBuilders = new SSL_DetectionFrame.Builder[4];
         for (int i = 0; i < frameBuilders.length; i++) {
@@ -67,23 +75,28 @@ public class MultiCastServer {
         }
 
         for (SslDetection.SSL_DetectionRobot blueRobot : frame.getRobotsBlueList()) {
+
             float robotX = blueRobot.getX();
             float robotY = blueRobot.getY();
+
             int cameraId = getQuadrant(robotX, robotY);
-            frameBuilders[cameraId] = frameBuilders[cameraId].addRobotsBlue(blueRobot);
+            if(validRobot(blueRobot))
+                System.out.println("adding bluebot");
+                frameBuilders[cameraId] = frameBuilders[cameraId].addRobotsBlue(blueRobot);
         }
 
         for (SslDetection.SSL_DetectionRobot yellowRobot : frame.getRobotsYellowList()) {
             float robotX = yellowRobot.getX();
             float robotY = yellowRobot.getY();
             int cameraId = getQuadrant(robotX, robotY);
-            frameBuilders[cameraId] = frameBuilders[cameraId].addRobotsYellow(yellowRobot);
+            if(validRobot(yellowRobot))
+                frameBuilders[cameraId] = frameBuilders[cameraId].addRobotsYellow(yellowRobot);
         }
 
         try {
-            for (int i = 0; i < frameBuilders.length; i++) {
+            for (SSL_DetectionFrame.Builder frameBuilder : frameBuilders) {
                 byte[] bytePackage = SSL_WrapperPacket.newBuilder()
-                        .setDetection(frameBuilders[i].build())
+                        .setDetection(frameBuilder.build())
                         .setGeometry(p.getGeometry())
                         .build()
                         .toByteArray();
@@ -91,8 +104,10 @@ public class MultiCastServer {
                 DatagramPacket packet = new DatagramPacket(bytePackage, bytePackage.length, aiGroup, aiPort);
                 aiSocket.send(packet);
             }
-            byte[] array = referee.toByteArray();
-            refSocket.send(new DatagramPacket(array, array.length, refGroup, refPort));
+            if (referee != null ) {
+                byte[] array = referee.toByteArray();
+                refSocket.send(new DatagramPacket(array, array.length, refGroup, refPort));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -112,6 +127,19 @@ public class MultiCastServer {
                 return 1;
             }
         }
+    }
+
+    private boolean validRobot(SslDetection.SSL_DetectionRobot robot) {
+        SSL_Field f = Model.getInstance().getSSLField();
+        double x = f.getBench_real_y();
+        double y = f.getBench_real_x();
+        double width = f.getBench_width();
+        double heigth = f.getBench_height();
+
+//        System.out.println(x + " - " + y + " - " + width + " - " + heigth);
+//        System.out.println("robot: " + robot.getX() + " - " + robot.getY());
+
+        return robot.getX() != y;
     }
 }
 

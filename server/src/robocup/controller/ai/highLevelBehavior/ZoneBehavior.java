@@ -120,12 +120,13 @@ public class ZoneBehavior extends Behavior {
 				currentMode = chooseStandardStrategy(executers);
 				break;
 			case GAMESTATE_CHANGED:
-				if (world.getGameState() == GameState.NORMAL_PLAY)
+				if (world.getGameState() == GameState.NORMAL_PLAY) {
 					if (world.allyHasBall()) {
 						currentMode = chooseAttackStrategy(executers);
 					} else {
 						currentMode = chooseDefenseStrategy(executers);
 					}
+				}
 				break;
 			default:
 				break;
@@ -179,13 +180,6 @@ public class ZoneBehavior extends Behavior {
 				returnMode = new StandardMode(new DirectFreeKickDefense(), executers);
 			}
 			break;
-		case FORCE_START:
-			if (world.allyHasBall()) {
-				currentMode = chooseAttackStrategy(executers);
-			} else {
-				currentMode = chooseDefenseStrategy(executers);
-			}
-			break;
 		case GOAL_BLUE:
 			if (referee.getAllyTeamColor() == TeamColor.YELLOW) {
 				returnMode = new StandardMode(new KickOffAttack(), executers);
@@ -201,6 +195,7 @@ public class ZoneBehavior extends Behavior {
 			}
 			break;
 		case HALT:
+		case STOP:
 			returnMode = new StandardMode(new GameStop(), executers);
 			break;
 		case INDIRECT_FREE_BLUE:
@@ -217,6 +212,7 @@ public class ZoneBehavior extends Behavior {
 				returnMode = new StandardMode(new IndirectFreeKickDefense(), executers);
 			}
 			break;
+		case FORCE_START:
 		case NORMAL_START:
 			if (world.getGameState() == GameState.NORMAL_PLAY) {
 				if (world.allyHasBall()) {
@@ -256,7 +252,6 @@ public class ZoneBehavior extends Behavior {
 				returnMode = new StandardMode(new PenaltyDefense(), executers);
 			}
 			break;
-		case STOP:
 		case TIMEOUT_BLUE:
 			if (referee.getAllyTeamColor() == TeamColor.BLUE) {
 				returnMode = new StandardMode(new KickOffAttack(), executers);

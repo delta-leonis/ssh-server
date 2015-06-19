@@ -27,10 +27,10 @@ public class DijkstraPathPlanner {
 	// Distance from the middle of the robot to the vertices around it
 	// Basically the "Danger zone" for the Robot. A normal Robot has a radius of 90mm, so if DISTANCE_TO_ROBOT == 160mm,
 	// then it means we don't want to get within (160mm - 90mm = ) 70mm of any other Robot. (Based on their center points)
-	public static final int MIN_DISTANCE_TO_ROBOT = 195;
+	public static final int MIN_DISTANCE_TO_ROBOT = 180;
 	public static final int MAX_DISTANCE_TO_ROBOT = 270;
 	public static final int DISTANCE_TO_BALL = 120;
-	public static final int DISTANCE_TO_POLYGON = 120;
+	public static final int DISTANCE_TO_POLYGON = 90;
 	// This value is used to determine the vertex points, which are VERTEX_DISTANCE_TO_ROBOT from the middle points of the robots.
 	public static final int MIN_VERTEX_DISTANCE_TO_ROBOT = 200;
 	public static final int MAX_VERTEX_DISTANCE_TO_ROBOT = 450;
@@ -83,7 +83,7 @@ public class DijkstraPathPlanner {
 		 * @return
 		 */
 		public Ellipse2D toEllipse(){
-			return new Ellipse2D.Double(position.getX() - MIN_DISTANCE_TO_ROBOT, position.getY() - MIN_DISTANCE_TO_ROBOT, MIN_DISTANCE_TO_ROBOT * 2, MIN_DISTANCE_TO_ROBOT * 2);
+			return new Ellipse2D.Double(position.getX() - MIN_DISTANCE_TO_ROBOT/2, position.getY() - MIN_DISTANCE_TO_ROBOT/2, MIN_DISTANCE_TO_ROBOT, MIN_DISTANCE_TO_ROBOT);
 		}
 
 		/**
@@ -307,7 +307,7 @@ public class DijkstraPathPlanner {
 			if(lockedIn)
 				return null;
 			
-			removeAllVectorsInRect(new Rectangle2D.Double(x - MAX_VERTEX_DISTANCE_TO_ROBOT + 1, y - MAX_VERTEX_DISTANCE_TO_ROBOT + 1, MAX_VERTEX_DISTANCE_TO_ROBOT * 2 - 2, MAX_VERTEX_DISTANCE_TO_ROBOT * 2 - 2));
+			removeAllVectorsInRect(new Rectangle2D.Double(x - MIN_VERTEX_DISTANCE_TO_ROBOT + 1, y - MIN_VERTEX_DISTANCE_TO_ROBOT + 1, MIN_VERTEX_DISTANCE_TO_ROBOT * 2 - 2, MIN_VERTEX_DISTANCE_TO_ROBOT * 2 - 2));
 		}
 		
 		return source;

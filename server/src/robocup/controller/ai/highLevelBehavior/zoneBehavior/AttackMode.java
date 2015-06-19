@@ -34,22 +34,22 @@ public class AttackMode extends Mode {
 		FieldPoint freeShot = world.hasFreeShot();
 
 		if (freeShot != null) {
-			if (	// Check whether the angle between robot and ball is lines up with the angle between the freeshot and the ball
-					Math.abs(Math.abs(freeShot.getAngle(ballPosition))-Math.abs(ballPosition.getAngle(executer.getRobot().getPosition()))) < 2200 / executer.getRobot().getPosition().getDeltaDistance(ballPosition)
-					// Check whether we're nearby enough
-					&& executer.getRobot().getPosition().getDeltaDistance(ballPosition) < 550
-					// Check whether the robot is facing the way it's supposed to face
-					&& Math.abs(Math.abs(executer.getRobot().getOrientation()) - Math.abs(ballPosition.getAngle(freeShot))) < 2200 / executer.getRobot().getPosition().getDeltaDistance(ballPosition)) {
-				chipKick = -60;
-			}
 //			if (	// Check whether the angle between robot and ball is lines up with the angle between the freeshot and the ball
-//					Math.abs(Math.abs(freeShot.getAngle(ballPosition))-Math.abs(ballPosition.getAngle(executer.getRobot().getPosition()))) < 10 
+//					Math.abs(Math.abs(freeShot.getAngle(ballPosition))-Math.abs(ballPosition.getAngle(executer.getRobot().getPosition()))) < 2000 / executer.getRobot().getPosition().getDeltaDistance(ballPosition)
 //					// Check whether we're nearby enough
 //					&& executer.getRobot().getPosition().getDeltaDistance(ballPosition) < 550
 //					// Check whether the robot is facing the way it's supposed to face
-//					&& Math.abs(Math.abs(executer.getRobot().getOrientation()) - Math.abs(ballPosition.getAngle(freeShot))) < 10) {
-//				chipKick = -100;
+//					&& Math.abs(Math.abs(executer.getRobot().getOrientation()) - Math.abs(ballPosition.getAngle(freeShot))) < 2000 / executer.getRobot().getPosition().getDeltaDistance(ballPosition)) {
+//				chipKick = -60;
 //			}
+			if (	// Check whether the angle between robot and ball is lines up with the angle between the freeshot and the ball
+					Math.abs(Math.abs(freeShot.getAngle(ballPosition))-Math.abs(ballPosition.getAngle(executer.getRobot().getPosition()))) < 10 
+					// Check whether we're nearby enough
+					&& executer.getRobot().getPosition().getDeltaDistance(ballPosition) < 550
+					// Check whether the robot is facing the way it's supposed to face
+					&& Math.abs(Math.abs(executer.getRobot().getOrientation()) - Math.abs(ballPosition.getAngle(freeShot))) < 10) {
+				chipKick = -100;
+			}
 			double shootDirection = ballPosition.getAngle(freeShot);
 			attacker.update(shootDirection, chipKick, ballPosition);
 		} else {
@@ -214,8 +214,11 @@ public class AttackMode extends Mode {
 		Keeper keeper = (Keeper) executer.getLowLevelBehavior();
 
 		int distanceToGoal = (int) world.getField().getEastGoal().getWidth() / 2;
+		FieldPoint ballPosition = ball.getPosition();
 
-		boolean goToKick = false;
+		boolean goToKick = world.getReferee().getWestTeam() == world.getReferee().getAlly() ? FieldZone.WEST_NORTH_GOAL
+				.contains(ballPosition) || FieldZone.WEST_SOUTH_GOAL.contains(ballPosition) : FieldZone.EAST_NORTH_GOAL
+				.contains(ballPosition) || FieldZone.EAST_SOUTH_GOAL.contains(ballPosition);
 
 		if (ball.getSpeed() < 1.0) {
 			if (world.getReferee().getEastTeam().equals(world.getReferee().getAlly())) {
@@ -227,7 +230,6 @@ public class AttackMode extends Mode {
 			}
 		}
 
-		FieldPoint ballPosition = ball.getPosition();
 		keeper.update(distanceToGoal, goToKick, ballPosition, world.getField().getWidth(), world.getField().getLength());
 	}
 
@@ -236,7 +238,7 @@ public class AttackMode extends Mode {
 		PenaltyKeeper penalKeeper = (PenaltyKeeper) executer.getLowLevelBehavior();
 		FieldPoint ballPosition = ball.getPosition();
 		Robot enemy = world.getClosestRobotToBall();
-		penalKeeper.update(ballPosition, enemy);
+		penalKeeper.update(ballPosition, enemy, ballPosition);
 	}
 
 	@Override

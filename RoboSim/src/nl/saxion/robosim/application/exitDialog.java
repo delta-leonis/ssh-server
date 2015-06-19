@@ -30,7 +30,7 @@ public class exitDialog extends Stage implements Initializable {
         fxmlLoader.setController(this);
 
         try {
-            setScene(new Scene((Parent) fxmlLoader.load()));
+            setScene(new Scene(fxmlLoader.load()));
         } catch (IOException e) {
             e.printStackTrace();
         }

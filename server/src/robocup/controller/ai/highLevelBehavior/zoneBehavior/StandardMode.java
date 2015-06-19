@@ -37,12 +37,14 @@ public class StandardMode extends Mode {
 
 		if (world.getReferee().getCommand() == Command.PREPARE_PENALTY_YELLOW
 				|| world.getReferee().getCommand() == Command.PREPARE_PENALTY_BLUE) {
-			double shootDirection = ballPosition.getAngle(world.hasFreeShot());
+			FieldPoint freeShot = world.hasFreeShot();
+			double shootDirection = freeShot != null ? ballPosition.getAngle(world.hasFreeShot()) : world.getReferee()
+					.isEastTeamColor(world.getReferee().getAllyTeamColor()) ? 180.0 : 0.0;
 			attacker.update(shootDirection, chipKick, ballPosition);
 		} else if (world.getGameState() == GameState.TAKING_KICKOFF
 				&& (world.getReferee().getPreviousCommand() == Command.PREPARE_PENALTY_YELLOW || world.getReferee()
 						.getPreviousCommand() == Command.PREPARE_PENALTY_BLUE)) {
-			double shootDirection = ballPosition.getAngle(world.hasFreeShot());
+			double shootDirection = world.hasFreeShot() == null ? 0 : ballPosition.getAngle(world.hasFreeShot());
 			chipKick = -100;
 			attacker.update(shootDirection, chipKick, ballPosition);
 		} else {
@@ -282,19 +284,12 @@ public class StandardMode extends Mode {
 
 		int distanceToGoal = (int) world.getField().getEastGoal().getWidth() / 2;
 
-		boolean goToKick = false;
-
-		if (ball.getSpeed() < 1.0) {
-			if (world.getReferee().getEastTeam().equals(world.getReferee().getAlly())) {
-				goToKick = FieldZone.EAST_NORTH_GOAL.contains(ball.getPosition())
-						|| FieldZone.EAST_SOUTH_GOAL.contains(ball.getPosition());
-			} else {
-				goToKick = FieldZone.WEST_NORTH_GOAL.contains(ball.getPosition())
-						|| FieldZone.WEST_SOUTH_GOAL.contains(ball.getPosition());
-			}
-		}
-
 		FieldPoint ballPosition = ball.getPosition();
+
+		boolean goToKick = world.getReferee().getWestTeam() == world.getReferee().getAlly() ? FieldZone.WEST_NORTH_GOAL
+				.contains(ballPosition) || FieldZone.WEST_SOUTH_GOAL.contains(ballPosition) : FieldZone.EAST_NORTH_GOAL
+				.contains(ballPosition) || FieldZone.EAST_SOUTH_GOAL.contains(ballPosition);
+
 		keeper.update(distanceToGoal, goToKick, ballPosition, world.getField().getWidth(), world.getField().getLength());
 	}
 
@@ -303,7 +298,7 @@ public class StandardMode extends Mode {
 		PenaltyKeeper penalKeeper = (PenaltyKeeper) executer.getLowLevelBehavior();
 		FieldPoint ballPosition = ball.getPosition();
 		Robot enemy = world.getClosestRobotToBall();
-		penalKeeper.update(ballPosition, enemy);
+		penalKeeper.update(ballPosition, enemy, ballPosition);
 	}
 
 	@Override

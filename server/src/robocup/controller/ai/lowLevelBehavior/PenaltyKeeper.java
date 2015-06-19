@@ -25,7 +25,9 @@ public class PenaltyKeeper extends LowLevelBehavior {
 		enemy = null;
 		this.role = RobotMode.PENALTYKEEPER;
 		go = new GotoPosition(robot, robot.getPosition(), ballPosition);
-		go.setMaxRotationSpeed(600);
+//		go.setMaxRotationSpeed(600);
+		go.setDistanceToSlowDown(700);
+		go.setStartupSpeedVelocity(750);
 	}
 
 	@Override
@@ -42,9 +44,10 @@ public class PenaltyKeeper extends LowLevelBehavior {
 	 * @param ballPosition
 	 * @param enemy
 	 */
-	public void update(FieldPoint ballPosition, Robot enemy) {
+	public void update(FieldPoint ballPosition, Robot enemy, FieldPoint ball) {
 		this.ballPosition = ballPosition;
 		this.enemy = enemy;
+		ballPosition = ball;
 	}
 
 	/**
@@ -57,15 +60,16 @@ public class PenaltyKeeper extends LowLevelBehavior {
 
 		if(enemy == null || enemy.getPosition() == null)
 			return newDestination;
-
+ 
 		FieldPoint enemyPosition = enemy.getPosition();
-		//double angle = Math.toRadians(enemyPosition.getAngle(ballPosition));
-		double angle = Math.toRadians(Math.abs(enemy.getOrientation()));
+		double angle = enemyPosition.getAngle(ballPosition);
+//		double angle = Math.toRadians(Math.abs(enemy.getOrientation()));
 		double offset = (goal.getFrontNorth().getX() > 0 ? Robot.DIAMETER : -Robot.DIAMETER); //should be divided by 2, isn't being devided currelty because of lack of precision 
-		double newY =  enemyPosition.getY() + (goal.getFrontNorth().getX() - enemyPosition.getX() - offset) * Math.tan(angle);
+		double newY = Math.tan(Math.toRadians(angle)) * (goal.getFrontNorth().getX() - ballPosition.getX()) + ballPosition.getY();
+//		double newY =  enemyPosition.getY() + (goal.getFrontNorth().getX() - enemyPosition.getX() - offset) * Math.tan(angle);
 
 		newDestination = new FieldPoint(goal.getFrontNorth().getX() - offset/2, Math.min(goal.getFrontNorth().getY() - Robot.DIAMETER/2 ,Math.max(goal.getFrontSouth().getY() + Robot.DIAMETER/2, newY)));
-
+	
 		return newDestination;
 	}
 }

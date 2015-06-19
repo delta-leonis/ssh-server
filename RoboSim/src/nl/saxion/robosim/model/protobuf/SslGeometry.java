@@ -1045,11 +1045,7 @@ public final class SslGeometry {
           
           return false;
         }
-        if (!hasPenaltyLineFromSpotDist()) {
-          
-          return false;
-        }
-        return true;
+        return hasPenaltyLineFromSpotDist();
       }
 
       public Builder mergeFrom(
@@ -2598,11 +2594,7 @@ public final class SslGeometry {
           
           return false;
         }
-        if (!hasTz()) {
-          
-          return false;
-        }
-        return true;
+        return hasTz();
       }
 
       public Builder mergeFrom(

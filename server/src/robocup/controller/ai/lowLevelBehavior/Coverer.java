@@ -4,6 +4,7 @@ import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.Ball;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
+import robocup.model.World;
 import robocup.model.enums.RobotMode;
 
 /**
@@ -30,6 +31,14 @@ public class Coverer extends LowLevelBehavior {
 
 		this.role = RobotMode.COVERER;
 		go = new GotoPosition(robot, robot.getPosition(), objectPosition);
+		boolean isEastTeam = World.getInstance().getReferee().getEastTeam()
+				.equals(World.getInstance().getReferee().getAlly());
+		if(isEastTeam){
+			go.setAvoidEastGoal(true);
+		}
+		else{
+			go.setAvoidWestGoal(true);
+		}
 	}
 
 	/**

@@ -1,4 +1,3 @@
 Manifest-Version: 1.0
-Class-Path: C:\Program Files\Java\jre1.8.0_40\lib\jfxswt.jar
 Main-Class: nl.saxion.robosim.application.Main
 
