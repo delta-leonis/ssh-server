@@ -637,7 +637,7 @@ public final class SslReferee {
       private final int index;
       private final int value;
 
-      private Stage(int index, int value) {
+      Stage(int index, int value) {
         this.index = index;
         this.value = value;
       }
@@ -981,7 +981,7 @@ public final class SslReferee {
       private final int index;
       private final int value;
 
-      private Command(int index, int value) {
+      Command(int index, int value) {
         this.index = index;
         this.value = value;
       }
@@ -1951,11 +1951,7 @@ public final class SslReferee {
             
             return false;
           }
-          if (!hasGoalie()) {
-            
-            return false;
-          }
-          return true;
+          return hasGoalie();
         }
 
         public Builder mergeFrom(
@@ -3107,11 +3103,7 @@ public final class SslReferee {
           
           return false;
         }
-        if (!getBlue().isInitialized()) {
-          
-          return false;
-        }
-        return true;
+        return getBlue().isInitialized();
       }
 
       public Builder mergeFrom(

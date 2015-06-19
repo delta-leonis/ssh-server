@@ -3,11 +3,13 @@ package nl.saxion.robosim.communications;
 import nl.saxion.robosim.model.AiData;
 import nl.saxion.robosim.model.AiRobot;
 import nl.saxion.robosim.model.Model;
+import nl.saxion.robosim.model.Settings;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.SocketException;
 import java.util.ArrayList;
 
 /**
@@ -17,16 +19,21 @@ import java.util.ArrayList;
  *
  * @author Damon Daalhuisen
  * @author Joost van Dijk
+ * @author Kris Minkjan
  */
 public class AIListener extends Thread {
     Model model;
-    private byte[] lastMessage;
     private MulticastSocket socket;
-    private InetAddress group;
-    private DatagramPacket packet;
-    private ArrayList<byte[]> messages;
     long time = System.currentTimeMillis();
+    private volatile boolean running = true;
 
+    /**
+     * Closes the socket and tries to terminate the Thread
+     */
+    public void terminate() {
+        running = false;
+        socket.close();
+    }
 
     /**
      * Initialize connections
@@ -34,71 +41,48 @@ public class AIListener extends Thread {
      */
     public AIListener() throws IOException {
         model = Model.getInstance();
+        Settings s = Settings.getInstance();
         // The port from ssl 10002
-        socket = new MulticastSocket(1337);
+        socket = new MulticastSocket(Integer.parseInt(s.getIport()));
         // The address from ssl 224.5.23.2
-        group = InetAddress.getByName("224.5.23.20");
+        InetAddress group = InetAddress.getByName(s.getIip());
         socket.joinGroup(group);
-        System.out.println("start listening");
+        System.out.println("Start Listening");
     }
 
     /**
      * Receive the package
-     * FIXME The loop is never stopped
      */
     @Override
     public void run() {
-        while (true) {
-            if (System.currentTimeMillis() - time > 10000) {
-                System.out.println(Model.getInstance().getAiData().size());
-                time = System.currentTimeMillis();
-            }
+        while (running) {
             int length = 1024;
             byte[] buffer = new byte[length];
             byte[] data;
-            packet = new DatagramPacket(buffer, length);
+            DatagramPacket packet = new DatagramPacket(buffer, length);
 
             try {
                 socket.receive(packet);
                 data = new byte[packet.getLength()];
                 System.arraycopy(packet.getData(), packet.getOffset(), data, 0, packet.getLength());
-                //System.out.println("UDPserver " + data.length + " bytes received");
-
-                lastMessage = data;
                 AiData info = new AiData(data);
                 System.out.println(info);
 
-               // AiRobot r = model.getAiRobots().get(info.getRobotID());
-                for(AiRobot r : model.getAiRobots()) {
-                    if(r.getId() == info.getRobotID()) {
-                        r.setDribble(info.getDribble());
-                        r.setOrientation(info.getDirection());
-                        r.setRotationSpeed(info.getRotationSpeed());
-                        r.setVelocity(info.getDirectionSpeed());
-                        r.setShootkicker(info.getShootKicker());
-                    }
-                }
-
-
-
-
+                // Update the AiRobots
+                model.getAiRobots().stream().filter(r -> r.getId() == info.getRobotID()).forEach(r -> {
+                    r.setDribble(info.getDribble());
+                    r.setOrientation(info.getDirection());
+                    r.setRotationSpeed(info.getRotationSpeed());
+                    r.setVelocity(info.getDirectionSpeed());
+                    r.setShootkicker(info.getShootKicker());
+                });
+            } catch (SocketException ignored) {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
-
         }
+        System.out.println("Listener Terminated");
     }
-
-    public ArrayList<byte[]> getMessages() {
-        return messages;
-    }
-
-    public byte[] getLastMessage() {
-        return lastMessage;
-    }
-
 }
 
 

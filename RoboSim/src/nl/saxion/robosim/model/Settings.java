@@ -7,17 +7,20 @@ import java.util.Properties;
  * Created by Damon on 4-6-2015.
  */
 public class Settings {
-    boolean teamBlue = true;
-    boolean teamYellow = true;
-    String fileName;
+    private boolean teamBlue = true;
+    private boolean teamYellow = true;
+    private String fileName;
     //incoming ip / incoming port / outgoing ip, outgoing port
-    String iip, iport, oip, oport;
+    private String iip, iport, oip, oport;
+    private String refIp, refPort;
+    private final String CONFIG = "config.properties";
+
     //singleton variable
     private static Settings settings;
 
 
     public static Settings getInstance() {
-        if(settings == null) {
+        if (settings == null) {
             settings = new Settings();
         }
         return settings;
@@ -26,7 +29,7 @@ public class Settings {
     /**
      * reads the values from the config.properties file
      */
-    private Settings(){
+    private Settings() {
         /* default values
         this.iip = "224.5.23.2";
         this.iport = "10002";
@@ -36,9 +39,18 @@ public class Settings {
         Properties prop = new Properties();
         InputStream input = null;
 
+        File f = new File(CONFIG);
+        if (!f.exists()) {
+            try {
+                reset(f);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
         try {
 
-            input = new FileInputStream("config.properties");
+            input = new FileInputStream(f);
 
             // load a properties file
             prop.load(input);
@@ -46,8 +58,16 @@ public class Settings {
             // get the property value and set the variables
             this.iip = prop.getProperty("inputIp");
             this.iport = prop.getProperty("inputPort");
-            this.oip   = prop.getProperty("outputIp");
+            this.oip = prop.getProperty("outputIp");
             this.oport = prop.getProperty("outputPort");
+            this.refIp = prop.getProperty("refereeIp");
+            this.refPort = prop.getProperty("refereePort");
+            if (iip == null || iport == null ||
+                    oip == null || oport == null ||
+                    refIp == null || refPort == null) {
+                reset(f);
+            }
+
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -64,32 +84,40 @@ public class Settings {
 
     /**
      * Set simulation settings
-     * @param blue simulate team blue?
+     *
+     * @param blue   simulate team blue?
      * @param yellow simulate team yellow?
-     * @param file what log to read.
+     * @param file   what log to read.
      */
     public void setSimulationSettings(boolean blue, boolean yellow, String file) {
-        this.teamBlue     = blue;
-        this.teamYellow   = yellow;
-        this.fileName     = file;
+        this.teamBlue = blue;
+        this.teamYellow = yellow;
+        this.fileName = file;
     }
 
     /**
      * Set communication settings, input receives from ai, output sends to ai.
-     * @param iip Input ip address
+     *
+     * @param iip   Input ip address
      * @param iport input port
-     * @param oip output ip address
+     * @param oip   output ip address
      * @param oport output port
      */
     public void setCommunicationSettings(String iip, String iport, String oip, String oport) {
         FileInputStream in = null;
+        this.iip = iip;
+        this.iport = iport;
+        this.oip = oip;
+        this.oport = oport;
         try {
-            in = new FileInputStream("config.properties");
+            in = new FileInputStream(CONFIG);
             Properties props = new Properties();
             props.load(in);
             in.close();
             //set properties to new values
-            FileOutputStream out = new FileOutputStream("config.properties");
+            FileOutputStream out = new FileOutputStream(CONFIG);
+            props.setProperty("refereeIp", refIp);
+            props.setProperty("refereeIp", refPort);
             props.setProperty("inputIp", iip);
             props.setProperty("outputIp", oip);
             props.setProperty("inputPort", iport);
@@ -101,6 +129,41 @@ public class Settings {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setRefSettings(String ip, String port) {
+        FileInputStream in = null;
+        this.refIp = ip;
+        this.refPort = port;
+        try {
+            in = new FileInputStream(CONFIG);
+            FileOutputStream out = new FileOutputStream(CONFIG);
+
+            Properties props = new Properties();
+            props.load(in);
+            in.close();
+            props.setProperty("refereeIp", ip);
+            props.setProperty("refereePort", port);
+            props.setProperty("inputIp", iip);
+            props.setProperty("outputIp", oip);
+            props.setProperty("inputPort", iport);
+            props.setProperty("outputPort", oport);
+            props.store(out, null);
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public String getRefPort() {
+        return refPort;
+    }
+
+    public String getRefIp() {
+        return refIp;
     }
 
     public String getIip() {
@@ -132,4 +195,21 @@ public class Settings {
 
         return teamBlue;
     }
+
+    public static void destroy() {
+        settings = null;
+    }
+
+    public void reset(File f) throws FileNotFoundException {
+        PrintWriter w = new PrintWriter(f);
+        w.write("outputIp=224.5.23.2\n" +
+                "inputIp=224.5.23.20\n" +
+                "inputPort=1337\n" +
+                "refereePort=10003\n" +
+                "outputPort=10002\n" +
+                "refereeIp=224.5.23.1");
+        w.close();
+
+    }
+
 }

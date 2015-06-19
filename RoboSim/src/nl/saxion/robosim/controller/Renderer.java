@@ -7,13 +7,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
+import javafx.scene.shape.ArcType;
 import javafx.scene.text.Font;
+import nl.saxion.robosim.model.AiRobot;
 import nl.saxion.robosim.model.Model;
 import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionBall;
 import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionFrame;
 import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionRobot;
 import nl.saxion.robosim.model.protobuf.SslReferee.SSL_Referee;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,11 +30,11 @@ import java.util.concurrent.TimeUnit;
  */
 @SuppressWarnings("SuspiciousNameCombination")
 public class Renderer {
-    private final GraphicsContext graphicsContext;
+    private GraphicsContext graphicsContext;
     private final Model model;
     private final Image image_yellow, image_blue, image_bench;
     private final Font font;
-    private final SSL_Field field;
+    private SSL_Field field;
 
     /**
      * Creates a Renderer, used for rendering the canvas. This constructor retrieves the {@link GraphicsContext} from the
@@ -42,12 +45,12 @@ public class Renderer {
     public Renderer(Canvas canvas) {
         assert canvas != null : "Canvas is null";
         model = Model.getInstance();
-        field = model.getSSLField();
+//        field = model.getSSLField();
 
          /* Set drawing properties */
         graphicsContext = canvas.getGraphicsContext2D();
         graphicsContext.setFill(Color.DARKGREEN);
-        graphicsContext.setLineWidth(field.line_width);
+//        graphicsContext.setLineWidth(field.line_width);
         graphicsContext.setStroke(Color.WHITE);
 
         /* Load assets */
@@ -86,6 +89,7 @@ public class Renderer {
         /* Draw in-canvas ui */
         drawScore(model.getLastReferee());
         drawBench();
+//        drawTargets(model.getAiRobots());
     }
 
     /**
@@ -103,7 +107,7 @@ public class Renderer {
 
         /* Check if this Robot is selected */
         if (model.getSelectedTeam() == teamId && model.getSelectedRobotId() == robot.getRobotId()) {
-            graphicsContext.setFill(Color.WHITE);;
+            graphicsContext.setFill(Color.WHITE);
             graphicsContext.fillOval(-field.selection_radius / 2, -field.selection_radius / 2, field.selection_radius,
                     field.selection_radius);
         }
@@ -119,6 +123,11 @@ public class Renderer {
      * {@link SSL_Field}.
      */
     public void drawField() {
+        if(field == null) {
+            field = model.getSSLField();
+            System.out.println("field == null: " + (field == null));
+            graphicsContext.setLineWidth(field.line_width);
+        }
         graphicsContext.clearRect(0, 0, field.canvasX, field.canvasY);
 
         /* Draw playing field */
@@ -140,19 +149,17 @@ public class Renderer {
         graphicsContext.strokeRect(field.boundary_width, field.boundary_width, field.field_length, field.field_width);
 
         /* Draw the middle lines */
-        graphicsContext.strokeLine(field.line_x, field.boundary_width, field.line_x, field.boundary_width + field.field_width / 2 - field.circle_radius / 2);
-        graphicsContext.strokeLine(field.line_x, field.boundary_width + field.field_width / 2 + field.circle_radius / 2, field.line_x, field.canvasY - field.boundary_width);
-
+        graphicsContext.strokeLine(field.line_x, field.boundary_width, field.line_x, field.canvasY - field.boundary_width);
         graphicsContext.strokeOval(field.circle_x, field.circle_y, field.circle_radius, field.circle_radius);
 
         /* Draw the defence radius */
-        graphicsContext.strokeRoundRect(field.boundary_width + field.field_length - field.defence_radius, field.defence_width, field.defence_radius * 2, 2 * field.scaled_meter, 200, 200);
-        graphicsContext.strokeRoundRect(field.boundary_width - field.defence_radius, field.defence_width, field.defence_radius * 2, 2 * field.scaled_meter, 200, 200);
+        graphicsContext.strokeArc(field.boundary_width - field.defence_arc_radius, field.defence_offset_top, field.defence_arc_radius * 2, field.defence_arc_radius * 2, 0, 90, ArcType.OPEN);
+        graphicsContext.strokeArc(field.boundary_width - field.defence_arc_radius, field.defence_offset_bottom, field.defence_arc_radius * 2, field.defence_arc_radius * 2, 0, -90, ArcType.OPEN);
+        graphicsContext.strokeLine(field.boundary_width + field.defence_arc_radius, field.defence_stretch_offset + field.defence_stretch, field.boundary_width + field.defence_arc_radius, field.defence_stretch_offset);
 
-        /* Hide the overflow */
-        graphicsContext.setFill(Color.DARKGREEN);
-        graphicsContext.fillRect(field.boundary_width + field.field_length + field.line_width / 2, field.defence_width - 2, field.scaled_meter, 2 * field.scaled_meter + 4);
-        graphicsContext.fillRect(0, field.defence_width - 2, field.boundary_width - field.line_width / 2, 2 * field.scaled_meter + 4);
+        graphicsContext.strokeArc(field.right_defence_x, field.defence_offset_top, field.defence_arc_radius * 2, field.defence_arc_radius * 2, 90, 90, ArcType.OPEN);
+        graphicsContext.strokeArc(field.right_defence_x, field.defence_offset_bottom, field.defence_arc_radius * 2, field.defence_arc_radius * 2, 180, 90, ArcType.OPEN);
+        graphicsContext.strokeLine(field.right_defence_x, field.defence_stretch_offset + field.defence_stretch, field.right_defence_x, field.defence_stretch_offset);
 
         /* Draw the goals */
         graphicsContext.strokeRect(field.boundary_width - field.goal_depth, field.field_width / 2 + field.boundary_width - field.goal_width / 2, field.goal_depth, field.goal_width);
@@ -168,28 +175,24 @@ public class Renderer {
         if(referee == null) {
             return;
         }
-        Stop[] stops = new Stop[]{new Stop(0, Color.web("3f3ff6")), new Stop(1, Color.web("060686"))};
-        LinearGradient lg1 = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops);
 
-        graphicsContext.setFill(lg1);
-        graphicsContext.fillRect(20, 20, 280, 50);
-        graphicsContext.setFill(Color.web("000000", 0.7));
-        graphicsContext.fillRect(300, 23, 100, 47);
-        graphicsContext.setFill(Color.DARKGRAY);
-        graphicsContext.fillRect(20, 65, 380, 5);
+        graphicsContext.setFill(Color.web("101010"));
+        graphicsContext.fillRect(20, 5, 280, 35);
+        graphicsContext.setFill(Color.web("5cb808"));
+        graphicsContext.fillRect(300, 5, 100, 35);
+
         graphicsContext.setFill(Color.WHITE);
-        graphicsContext.fillRect(298, 30, 4, 30);
         graphicsContext.setFont(font);
 
-        graphicsContext.fillText(referee.getBlue().getName(), 35, 53);
-        graphicsContext.fillText(referee.getBlue().getScore() + ":" + referee.getYellow().getScore(), 140, 53);
-        graphicsContext.fillText(referee.getYellow().getName(), 175, 53);
+        graphicsContext.fillText(referee.getBlue().getName(), 35, 25);
+        graphicsContext.fillText(referee.getBlue().getScore() + ":" + referee.getYellow().getScore(), 140, 25);
+        graphicsContext.fillText(referee.getYellow().getName(), 175, 25);
 
         /* Draw the time that is left */
         long microsecondsLeft = referee.getStageTimeLeft();
         long minutes = TimeUnit.MINUTES.convert(microsecondsLeft, TimeUnit.MICROSECONDS);
         long seconds = TimeUnit.SECONDS.convert(microsecondsLeft, TimeUnit.MICROSECONDS) % 60;
-        graphicsContext.fillText(String.format("%02d:%02d", minutes, seconds), 330, 53);
+        graphicsContext.fillText(String.format("%02d:%02d", minutes, seconds), 330, 25);
     }
 
     private void drawChairs() {
@@ -201,4 +204,16 @@ public class Renderer {
         graphicsContext.drawImage(image_bench,field.bench_x,field.bench_y,field.bench_width,field.bench_height);
     }
 
+//    private void drawTargets(List<AiRobot> robots) {
+//        graphicsContext.setStroke(Color.RED);
+//        graphicsContext.setFill(Color.RED);
+//        for (AiRobot robot : robots) {
+//            for (AiRobot.Target t : robot.targetList()) {
+//                graphicsContext.strokeOval((t.getX() + field.center_x) * field.scale-10,(t.getY()+ field.center_y)*field.scale-10, 20, 20);
+//                graphicsContext.fillText(Integer.toString(robot.getId()), (t.getX() + field.center_x) * field.scale + 15,(t.getY()+ field.center_y)*field.scale);
+//            }
+//        }
+//        graphicsContext.setFill(Color.WHITE);
+//        graphicsContext.setStroke(Color.WHITE);
+//    }
 }

@@ -37,12 +37,14 @@ public class StandardMode extends Mode {
 
 		if (world.getReferee().getCommand() == Command.PREPARE_PENALTY_YELLOW
 				|| world.getReferee().getCommand() == Command.PREPARE_PENALTY_BLUE) {
-			double shootDirection = ballPosition.getAngle(world.hasFreeShot());
+			FieldPoint freeShot = world.hasFreeShot();
+			double shootDirection = freeShot != null ? ballPosition.getAngle(world.hasFreeShot()) : world.getReferee()
+					.isEastTeamColor(world.getReferee().getAllyTeamColor()) ? 180.0 : 0.0;
 			attacker.update(shootDirection, chipKick, ballPosition);
 		} else if (world.getGameState() == GameState.TAKING_KICKOFF
 				&& (world.getReferee().getPreviousCommand() == Command.PREPARE_PENALTY_YELLOW || world.getReferee()
 						.getPreviousCommand() == Command.PREPARE_PENALTY_BLUE)) {
-			double shootDirection = ballPosition.getAngle(world.hasFreeShot());
+			double shootDirection = world.hasFreeShot() == null ? 0 : ballPosition.getAngle(world.hasFreeShot());
 			chipKick = -100;
 			attacker.update(shootDirection, chipKick, ballPosition);
 		} else {

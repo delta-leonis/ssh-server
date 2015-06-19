@@ -1,19 +1,20 @@
 package nl.saxion.robosim.model;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+import javafx.application.Platform;
+import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionFrame;
+import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionRobot;
+import nl.saxion.robosim.model.protobuf.SslWrapper.SSL_WrapperPacket;
+import nl.saxion.robosim.model.protobuf.SslReferee.SSL_Referee;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionFrame;
-import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionRobot;
-import nl.saxion.robosim.model.protobuf.SslReferee.SSL_Referee;
-import nl.saxion.robosim.model.protobuf.SslWrapper.SSL_WrapperPacket;
-
-import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
  * Reads Small Soccer League logs en parses the so they are usable for the {@link Model} by creating
@@ -33,8 +34,10 @@ public class LogReader {
             MESSAGE_SSL_REFBOX_2013 = 3;
 
 
-    FileInputStream fileStream;
-    String fileName;
+    private FileInputStream fileStream;
+
+    private LinkedList<SSL_DetectionFrame> frames;
+    private LinkedList<SSL_Referee> referees;
 
     private SSL_DetectionFrame curFrame;
     private SSL_Referee curReferee;
@@ -47,7 +50,7 @@ public class LogReader {
      * Sets the filename to "RoboSim\\2013-06-29-133738_odens_mrl.log"
      */
     public LogReader() {
-        this("2013-06-29-133738_odens_mrl.log");
+        this("RoboSim\\2013-06-29-133738_odens_mrl.log");
     }
 
     /**
@@ -56,14 +59,23 @@ public class LogReader {
      */
     public LogReader(String fileName) {
         assert fileName != null : "File name can't be null";
-        Model.getInstance().clear();
+        Model model = Model.getInstance();
+        model.clear();
+        System.out.println("FILEDIALOG");
+
         blueTimes = new HashMap<>();
         yellowTimes = new HashMap<>();
 
-        this.fileName = fileName;
+        frames = new LinkedList<>();
+        referees = new LinkedList<>();
+
         try {
-//            checkField();
+            System.out.println("FILEDIALOG");
+            fileStream = new FileInputStream(fileName);
             readFrames();
+            model.setFrames(frames);
+            model.setReferees(referees);
+            Platform.runLater(model::update);
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
             e.printStackTrace();
@@ -83,7 +95,6 @@ public class LogReader {
         long oldTime = 0, newTime, totalTime = 0, bytesRead = 0;
 
         //fileStream to read the bytes from
-        fileStream = new FileInputStream(fileName);
 
         //The first 12 bytes of the file must be a String with value "SSL_LOG_FILE"
         byte[] byteArray = new byte[12];
@@ -151,10 +162,11 @@ public class LogReader {
             //If it's the right time, add frame to model
             if (totalTime >= FRAMETIME) {
                 removeGhostRobots();
-                Model.getInstance().addFrame(curFrame);
+                frames.add(curFrame);
                 curFrame = SSL_DetectionFrame.parseFrom(curFrame.toByteArray());
-                Model.getInstance().addReferee(curReferee);
+                referees.add(curReferee);
                 totalTime -= FRAMETIME;
+//                System.out.println("total time " + totalTime );
             }
         }
         fileStream.close();

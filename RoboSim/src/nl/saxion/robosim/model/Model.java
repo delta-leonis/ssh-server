@@ -6,6 +6,7 @@ import javafx.scene.canvas.Canvas;
 import nl.saxion.robosim.communications.MultiCastServer;
 import nl.saxion.robosim.controller.Renderer;
 import nl.saxion.robosim.controller.SSL_Field;
+import nl.saxion.robosim.controller.UIController;
 import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionFrame;
 import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionRobot;
 import nl.saxion.robosim.model.protobuf.SslGeometry.SSL_GeometryData;
@@ -13,12 +14,7 @@ import nl.saxion.robosim.model.protobuf.SslReferee.SSL_Referee;
 import nl.saxion.robosim.model.protobuf.SslWrapper;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-
-import static org.junit.Assert.assertNotNull;
+import java.util.*;
 
 /**
  * The model for this project. Functions as a a central hub between the different modules. All the data about the
@@ -33,47 +29,44 @@ import static org.junit.Assert.assertNotNull;
  * @author Daan Veldhof
  * @author Kris Minkjan
  * @author Ken Sleebos
+ * @author Joost van Dijk
  */
 public class Model {
-
     //Singleton variables
     private static Model model;
 
     //Field variables
     private SSL_Field SSLField;
     private SSL_GeometryData geometryData;
+    private Canvas canvas;
 
     //Frame variables
     private LinkedList<SSL_DetectionFrame> frames = new LinkedList<>();
     private ListIterator<SSL_DetectionFrame> frameIterator;
-    private int totalFrames;
     private SSL_DetectionFrame lastFrame;
 
     //Referee variables
     private LinkedList<SSL_Referee> referees = new LinkedList<>();
     private ListIterator<SSL_Referee> refereeIterator;
     private SSL_Referee lastReferee;
-    MultiCastServer m;
+    private MultiCastServer multicastServer;
 
     //Robot variables
     private int selectedRobot, selectedTeam;
+    private Renderer renderer;
+    private final List<AiRobot> aiRobots = new ArrayList<>();
+    private boolean hasTeamYellow, hasTeamBlue;
 
-    public List<AiRobot> getAiRobots() {
-        return aiRobots;
-    }
+    // Instance for ui controller
+    private UIController controller;
 
-    private List<AiRobot> aiRobots = new ArrayList<>();
-
-    //Accelerate variables
+    // Variables for the acceleration
     private double acceleration = 1;
-
-    //Settings
-    private LinkedList<AiData> aiData = new LinkedList<>();
-
+    private double reversedAcceleration = 1;
 
     private Model() {
         try {
-            m = new MultiCastServer();
+            multicastServer = new MultiCastServer();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -101,12 +94,17 @@ public class Model {
         return frameNumbers;
     }
 
-    public void addFrame(SSL_DetectionFrame frame) {
-        assertNotNull(frame);
-        frames.add(frame);
+    public void setFrames(LinkedList<SSL_DetectionFrame> frames) {
+        assert frames != null : "frames null";
 
-        /* Refresh the iterator */
-        frameIterator = frames.listIterator();
+        this.frames = frames;
+        this.frameIterator = frames.listIterator();
+    }
+
+    public void setUIController(UIController controller) {
+        assert controller != null : "controller null";
+
+        this.controller = controller;
     }
 
     /**
@@ -125,11 +123,23 @@ public class Model {
                     refereeIterator.next();
                 }
             }
-            lastReferee = refereeIterator.hasNext() ? refereeIterator.next() : lastReferee;
-            lastFrame = frameIterator.hasNext() ? frameIterator.next() : lastFrame;
+            // When there isn't a next frame, change acceleration and set to pause
+            if (frameIterator.hasNext()) {
+                lastFrame = frameIterator.next();
+            } else { // Set image to normal
+                model.setAcceleration(1);
+                controller.acceleration();
+                controller.startClick();
+            }
+            // When there isn't a next referee frame change, acceleration and set to pause
+            if (refereeIterator.hasNext()) {
+                lastReferee = refereeIterator.next();
+            } else { // Set image to normal
+                model.setAcceleration(1);
+                controller.acceleration();
+            }
         } else {
-            for (int i = -1; i > acceleration; i--) {
-                /* Slow down */
+            for (int i = 1; i < reversedAcceleration; i++) {
                 if (frameIterator.hasPrevious()) {
                     frameIterator.previous();
                 }
@@ -137,15 +147,33 @@ public class Model {
                     refereeIterator.previous();
                 }
             }
-            lastReferee = refereeIterator.hasPrevious() ? refereeIterator.previous() : lastReferee;
-            lastFrame = frameIterator.hasPrevious() ? frameIterator.previous() : lastFrame;
+            // When there isn't a previous frame change acceleration and set to pause
+            if (frameIterator.hasPrevious()) {
+                lastFrame = frameIterator.previous();
+            } else { // Set image to normal
+                model.setAcceleration(1);
+                controller.acceleration();
+                controller.startClick();
+            }
+            // When there isn't a previous frame change acceleration and set to pause
+            if (refereeIterator.hasPrevious()) {
+                lastReferee = refereeIterator.previous();
+            } else { // Set image to normal
+                model.setAcceleration(1);
+                controller.acceleration();
+            }
         }
 
         aiRobots.forEach(AiRobot::update);
-//        aiRobots.forEach(System.out::println);
-        addAiToSSLFrame();
-        m.send(nextPacket(), lastReferee);
+        if (!hasTeamYellow || !hasTeamBlue) addAiToSSLFrame();
+        multicastServer.send(nextPacket(), lastReferee);
+        if (getSelectedRobot() != null) {
+            SSL_DetectionRobot robot = getSelectedRobot();
+            controller.updateRobotUI(robot.getRobotId(), robot.getX(), robot.getY(), robot.getOrientation());
+        }
 
+        double position = (double) frameIterator.nextIndex() / (double) frames.size() * 100;
+        controller.updateUI(lastReferee != null ? lastReferee.getCommand().toString() : "", position, frameIterator.nextIndex());
     }
 
     public SSL_DetectionFrame getLastFrame() {
@@ -157,78 +185,104 @@ public class Model {
         refereeIterator = referees.listIterator(frameNumber);
     }
 
-    public int getFrameNumber() {
-        return frameIterator.nextIndex();
-    }
-
     public LinkedList<SSL_DetectionFrame> getFrames() {
         return frames;
     }
 
 
     //-------------Referee methods-------------
-    public void addReferee(SSL_Referee referee) {
-        referees.add(referee);
-        refereeIterator = referees.listIterator();
+
+    public void setReferees(LinkedList<SSL_Referee> referees) {
+        assert referees != null : "referees null";
+
+        this.referees = referees;
+        this.refereeIterator = referees.listIterator();
+        long frameNumber = 0;
+        String lastCommand = "";
+        Map<Long, String> refereeCommands = new TreeMap<>();
+        TreeSet<String> commandSet = new TreeSet<>();
+
+        for (SSL_Referee ref : referees) {
+            if (ref != null) {
+                String command = ref.getCommand().toString();
+                if (!command.equals(lastCommand)) {
+                    commandSet.add(command);
+                    refereeCommands.put(frameNumber, command);
+                    lastCommand = command;
+                }
+            }
+            frameNumber++;
+        }
+        controller.setCommands(commandSet, refereeCommands);
     }
 
     public SSL_Referee getLastReferee() {
         return lastReferee;
     }
 
-
     //-------------Field methods-------------
     public SSL_Field getSSLField() {
         return SSLField;
     }
 
-    public void setSSLField(Canvas canvas) {
-        assert canvas != null : "Canvas in null";
+    public void setSSLField() {
+        assert canvas != null : "Canvas null";
+
         this.SSLField = new SSL_Field(canvas, geometryData);
-        for (int i = 0; i < 6; i++) {
-            aiRobots.add(new AiRobot(i,(float) (SSLField.getBench_real_x()),(float) (SSLField.getBench_real_y() + SSLField.getRobot_real_size()* i)));
+        if (aiRobots.isEmpty()) {
+            for (int i = 0; i < 6; i++) { // TODO 10
+                aiRobots.add(new AiRobot(i, (float) (SSLField.getBench_real_x()), (float) (SSLField.getBench_real_y() + SSLField.getRobot_real_size() * i)));
+            }
         }
     }
 
     public void setGeometry(SSL_GeometryData geometry) {
         assert geometry != null : "Setting null SSLField";
+
+        if (this.SSLField != null) {
+            System.out.println("Updating SSLField");
+            this.SSLField.update(geometry);
+        } else {
+            this.SSLField = new SSL_Field(canvas, geometry);
+        }
         this.geometryData = geometry;
     }
 
+    /**
+     * Set the canvas
+     */
+    public void setCanvas(Canvas canvas) {
+        assert canvas != null : "Canvas null";
 
-    //-------------Communication methods-------------
-    public void addAiData(AiData a) {
-        aiData.add(a);
+        this.canvas = canvas;
     }
-
-    public LinkedList<AiData> getAiData() {
-        return aiData;
-    }
-
 
     //-------------Timing methods-------------
+
+    /**
+     * Get acceleration for the speed
+     */
     public double getAcceleration() {
         return acceleration;
     }
 
+    /**
+     * Set acceleration for the speed
+     */
     public void setAcceleration(double acceleration) {
+        assert acceleration > 0 : "acceleration kleinder dan 0";
+
         this.acceleration = acceleration;
     }
 
     /**
-     * Get the percentual position of the simulation.
-     * Result is between 0(Start) and 100(End)
-     *
-     * @return Double with the position value
+     * Set reversed acceleration
      */
-    public double getSimulationPosition() {
-        if (totalFrames == 0) {
-            totalFrames = frames.size();
-        }
-        double position = (double) frameIterator.nextIndex() / (double) totalFrames;
-        return position * 100;
-    }
+    public void setReversedAcceleration(double backwards) {
+        assert backwards > 0 : "backwards kleiner dan 0";
 
+        this.reversedAcceleration = backwards;
+    }
 
     //-------------Robot methods-------------
 
@@ -247,10 +301,16 @@ public class Model {
         return xDifference < size && xDifference > -size && yDifference > -size && yDifference < size;
     }
 
+    /**
+     * Get selected robot's id
+     */
     public int getSelectedRobotId() {
         return selectedRobot;
     }
 
+    /**
+     * Get selected team id
+     */
     public int getSelectedTeam() {
         return selectedTeam;
     }
@@ -260,7 +320,7 @@ public class Model {
      *
      * @return A {@link SSL_DetectionRobot}. Returns null if no robot is selected.
      */
-    public SSL_DetectionRobot getSelectedRobot() {
+    private SSL_DetectionRobot getSelectedRobot() {
         for (SSL_DetectionRobot robot : selectedTeam == 0 ? lastFrame.getRobotsBlueList() : lastFrame.getRobotsYellowList()) {
             if (robot.getRobotId() == selectedRobot) {
                 return robot;
@@ -274,52 +334,88 @@ public class Model {
      * is marked as the selected Robot. Uses the {@link #clickIsInRobot(double, double, SSL_DetectionRobot)} to determine if the
      * click is <b>in</b> a {@link SSL_DetectionRobot Robot}.
      *
-     * @param x The {@link javafx.scene.input.MouseEvent MouseEvent's} x
-     * @param y The {@link javafx.scene.input.MouseEvent MouseEvent's} y
+     * @param x      The {@link javafx.scene.input.MouseEvent MouseEvent's} x
+     * @param y      The {@link javafx.scene.input.MouseEvent MouseEvent's} y
+     * @param render True if the {@link Renderer} needs to be re-rendered
      */
-    public void selectRobotByPosition(double x, double y) {
-        double scale = SSLField.getScale();
-        x = x / scale - SSLField.getCenter_x();
-        y = y / scale - SSLField.getCenter_y();
+    public void selectRobotByPosition(double x, double y, boolean render) {
+        if (SSLField != null) {
+            double scale = SSLField.getScale();
+            x = x / scale - SSLField.getCenter_x();
+            y = y / scale - SSLField.getCenter_y();
+        } else {
+            return;
+        }
 
         if (lastFrame != null) {
             for (SSL_DetectionRobot robot : lastFrame.getRobotsBlueList()) {
                 if (clickIsInRobot(x, y, robot)) {
-                    System.out.println(robot);
+                    controller.updateRobotUI(robot.getRobotId(), robot.getX(), robot.getY(), robot.getOrientation());
                     selectedRobot = robot.getRobotId();
                     selectedTeam = 0;
+                    if (render) renderer.render();
                     return;
                 }
             }
             for (SSL_DetectionRobot robot : lastFrame.getRobotsYellowList()) {
                 if (clickIsInRobot(x, y, robot)) {
-                    System.out.println(robot);
+                    controller.updateRobotUI(robot.getRobotId(), robot.getX(), robot.getY(), robot.getOrientation());
                     selectedRobot = robot.getRobotId();
                     selectedTeam = 1;
+                    if (render) renderer.render();
                     return;
                 }
             }
         }
         /* Default: no Robot selected */
         selectedRobot = -1;
+        controller.unselect();
+        if (render) renderer.render();
     }
 
     /**
      * Sets the position of the given Robot.
      *
-     * @param x     x-position
-     * @param y     y-position
+     * @param x      x-position
+     * @param y      y-position
+     * @param render True if the {@link Renderer} needs to be re-rendered
      */
-    public void setRobotPosition(double x, double y) {
-        if (selectedTeam == 1) { // FIXME this should take te ai team. This is not always this team
+    public void setRobotPosition(double x, double y, boolean render) {
+        if (!aiRobots.isEmpty() && (selectedTeam != 0) == Settings.getInstance().hasTeamBlue() && selectedRobot >= 0) {
             AiRobot robot = aiRobots.get(selectedRobot);
             double scale = SSLField.getScale();
             robot.setX((float) (x / scale - SSLField.getCenter_x()));
             robot.setY((float) (y / scale - SSLField.getCenter_y()));
-            addAiToSSLFrame();
+            if (!hasTeamYellow || !hasTeamBlue) addAiToSSLFrame();
+            if (render) renderer.render();
         }
     }
 
+    public void setInBench(double x, double y, boolean render) {
+        if (!aiRobots.isEmpty() && positionInBench(x, y) && (selectedTeam != 0) == Settings.getInstance().hasTeamBlue() && selectedRobot >= 0) {
+            AiRobot robot = aiRobots.get(selectedRobot);
+            robot.setX((float) SSLField.getBench_real_x());
+            robot.setY((float) SSLField.getBenchPosition(robot.getId()));
+            if (!hasTeamYellow || !hasTeamBlue) addAiToSSLFrame();
+            if (render) renderer.render();
+            model.setTargetBench();
+        }
+    }
+
+    public void rotateSelectedRobot(double deltaY, boolean render) {
+        if (!aiRobots.isEmpty() && (selectedTeam != 0) == Settings.getInstance().hasTeamBlue() && selectedRobot >= 0) {
+            AiRobot robot = aiRobots.get(selectedRobot);
+            robot.addDegrees(deltaY / 10);
+            if (!hasTeamYellow || !hasTeamBlue) addAiToSSLFrame();
+            if (render) renderer.render();
+        }
+    }
+
+    private boolean positionInBench(double x, double y) {
+        double xDifference = x - SSLField.getBench_x();
+        double yDifference = y - SSLField.getBench_y();
+        return xDifference > -50 && xDifference < SSLField.getBench_width() && yDifference > -50 && yDifference < SSLField.getBench_height();
+    }
 
     //-------------Other methods-------------
 
@@ -327,34 +423,69 @@ public class Model {
      * Resets the entire game data
      */
     public void clear() {
+        System.out.println("MODEL - clear()");
         SSLField = null;
         frames.clear();
         referees.clear();
-//        aiRobots.clear();
-        totalFrames = 0;
         lastFrame = null;
         lastReferee = null;
         selectedRobot = -1;
-        selectedRobot = -1;
+        selectedTeam = -1;
+        acceleration = 1;
+    }
+
+    public void update() {
+        System.out.println("MODEL - update()");
+        Settings s = Settings.getInstance();
+        hasTeamYellow = s.hasTeamYellow();
+        hasTeamBlue  = s.hasTeamBlue();
+        setSSLField();
+        aiRobots.forEach(robot -> {
+                    robot.setX((float) (SSLField.getBench_real_x()));
+                    robot.setY((float) (SSLField.getBench_real_y() + SSLField.getRobot_real_size() * robot.getId()));
+                }
+        );
+        nextFrame();
+        renderer.render();
+        controller.updateUI("", 0, 0);
     }
 
     //-----------------AI Methods------------------------
 
     /**
+     * Set target bench
+     */
+    private void setTargetBench() {
+        for (AiRobot robot : aiRobots) {
+            robot.addTarget(SSLField.getBench_real_x(), SSLField.getBenchPosition(robot.getId()));
+        }
+    }
+
+    /**
+     * Get the ai robots
+     */
+    public List<AiRobot> getAiRobots() {
+        return aiRobots;
+    }
+
+    /**
      * Parse an {@link AiRobot} to an {@link SSL_DetectionRobot SSL_DetectionRobot} so it is useable for the
      * {@link Renderer Renderer} and the AI.
-     * @param aiRobot   The {@link AiRobot} to be parsed.
-     * @return  An {@link SSL_DetectionRobot SSL_DetectionRobot} from the AiRobot
+     *
+     * @param aiRobot The {@link AiRobot} to be parsed.
+     * @return An {@link SSL_DetectionRobot SSL_DetectionRobot} from the AiRobot
      */
     private SSL_DetectionRobot parseAiRobot(AiRobot aiRobot) {
+        assert aiRobot != null : "aiRobot null";
+
         return SSL_DetectionRobot.newBuilder()
-                .setOrientation(aiRobot.getOrientation())
+                .setOrientation((float) aiRobot.getOrientation())
                 .setConfidence(0.9f)
                 .setRobotId(aiRobot.getId())
-                .setPixelX(aiRobot.getCurrentX())
-                .setPixelY(aiRobot.getCurrentY())
-                .setX(aiRobot.getCurrentX())
-                .setY(aiRobot.getCurrentY())
+                .setPixelX((float) aiRobot.getCurrentX())
+                .setPixelY((float) aiRobot.getCurrentY())
+                .setX((float) aiRobot.getCurrentX())
+                .setY((float) aiRobot.getCurrentY())
                 .setHeight(145.0f)
                 .build();
     }
@@ -365,23 +496,48 @@ public class Model {
      */
     private void addAiToSSLFrame() {
         SSL_DetectionFrame.Builder builder = lastFrame.toBuilder();
-        builder.clearRobotsYellow();
-        for (AiRobot robot : aiRobots) {
-            builder.addRobotsYellow(parseAiRobot(robot));
+        if (Settings.getInstance().hasTeamBlue()) {
+            builder.clearRobotsYellow();
+            for (AiRobot robot : aiRobots) {
+                builder.addRobotsYellow(parseAiRobot(robot));
+            }
+        } else {
+            builder.clearRobotsBlue();
+            for (AiRobot robot : aiRobots) {
+                builder.addRobotsBlue(parseAiRobot(robot));
+            }
         }
+
         lastFrame = builder.build();
     }
 
-    public SslWrapper.SSL_WrapperPacket nextPacket() {
-//        System.out.println("Blue:");
-//        lastFrame.getRobotsBlueList().forEach(System.out::println);
-//        System.out.println("Yellow:");
-//        lastFrame.getRobotsYellowList().forEach(System.out::println);
-
+    /**
+     * Go to next packet
+     */
+    private SslWrapper.SSL_WrapperPacket nextPacket() {
         return SslWrapper.SSL_WrapperPacket.newBuilder()
                 .setGeometry(geometryData)
                 .setDetection(lastFrame)
                 .build();
     }
 
+    /**
+     * Set renderer
+     */
+    public void setRenderer(Renderer renderer) {
+        assert renderer != null : "renderer null";
+
+        this.renderer = renderer;
+    }
+
+    public long size() {
+        return frames.size();
+    }
+
+    /**
+     * Destroys the singleton instance of this class.
+     */
+    public static void destroy() {
+        model = null;
+    }
 }
