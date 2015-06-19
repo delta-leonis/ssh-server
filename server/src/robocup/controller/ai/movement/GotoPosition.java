@@ -304,7 +304,6 @@ public class GotoPosition {
 				}
 				return false;
 			} else {
-				output.send(1, robot.getRobotId(), 0, 0,
 				if(SIMULATED){
 					double rotation = rotationToDest(robot.getPosition(), target);;
 					output.sendForSimulation(robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotation,0), (int)rotation, 0, dribble);
