@@ -1,29 +1,33 @@
 package nl.saxion.robosim.application;
 
 
+import java.io.File;
+
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
-import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import nl.saxion.robosim.controller.UIController;
+import nl.saxion.robosim.controller.Renderer;
 import nl.saxion.robosim.model.LogReader;
 import nl.saxion.robosim.model.Model;
 import nl.saxion.robosim.model.Settings;
+
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.ProgressDialog;
 
-import java.io.File;
 
 
 /**
  * Created by Damon on 3-6-2015.
  */
 public class FileDialog {
+    private final Renderer renderer;
     Settings settings;
     Button fileButton, acceptButton, cancelButton;
     CheckBox yellowBox, blueBox;
@@ -33,7 +37,8 @@ public class FileDialog {
     Stage stage;
     GridPane grid;
 
-    public FileDialog() {
+    public FileDialog(Renderer renderer) {
+        this.renderer = renderer;
         model = Model.getInstance();
     }
 
@@ -45,6 +50,9 @@ public class FileDialog {
     public void startDialog(Stage stage) {
         this.stage = stage;
         dlg = new Dialog(stage, "Settings");
+        //dlg = Dialogs.create().styleClass(Dialog.STYLE_CLASS_UNDECORATED).masthead("select log file and teams");
+
+
 
         grid = new GridPane();
 
@@ -65,19 +73,30 @@ public class FileDialog {
         yellowBox  = new CheckBox();
         blueBox    = new CheckBox();
 
+
+        acceptButton.setStyle("-fx-background-color: #5cb808; -fx-background-radius: 0; -fx-text-fill: #ffffff; -fx-padding: 15px 25px;");
+        cancelButton.setStyle("-fx-background-color: #101010; -fx-background-radius: 0; -fx-text-fill: #ffffff; -fx-padding: 15px 25px;");
+        fileButton.setStyle("-fx-background-color: #5cb808; -fx-background-radius: 0; -fx-text-fill: #ffffff; -fx-padding: 15px 25px;");
+
         //add widgets to grid.
         grid.add(fileButton, 0, 0);
         grid.add(yellowBox, 1, 2);
         grid.add(new Label("Team Yellow?"), 0, 2);
         grid.add(blueBox, 1, 3);
         grid.add(new Label("Team blue?"), 0, 3);
-        grid.add(acceptButton, 4,4);
-        grid.add(cancelButton, 0, 4);
+        grid.add(acceptButton, 0,4);
+        grid.add(cancelButton, 4, 4);
+
         dlg.setMasthead("Select log file and team(s)");
+
+        dlg.getMasthead().setStyle("-fx-background-color: #101010;   -fx-text-fill: #ffffff;");
+        dlg.getMasthead().lookup(".label").setStyle("  -fx-text-fill: #ffffff;");
         grid.setPadding(new Insets(10, 10, 10, 10));
         grid.setMinHeight(200);
         grid.setMinWidth(200);
         grid.add(fileloc, 1 , 0);
+
+
 
         //onclick events
         acceptButton.setOnAction(event -> accept());
@@ -89,7 +108,10 @@ public class FileDialog {
 
 
         dlg.setResizable(false);
+       // dlg.setContent(grid);
+
         dlg.setContent(grid);
+//        dlg = DialogStyle.style(dlg, grid);
         dlg.show();
     }
 
@@ -104,7 +126,10 @@ public class FileDialog {
 
 
         File f = chooser.showOpenDialog((Stage)dlg.getContent().getScene().getWindow());
-        fileloc.setText(f.getPath());
+        if(f != null) {
+            fileloc.setText(f.getPath());
+        }
+        checkInput();
     }
 
     /**
@@ -136,6 +161,7 @@ public class FileDialog {
      * @param file The filename to the log which needs to be read.
      */
     private void loadingDialog(String file) {
+
         Service<Void> service = new Service<Void>() {
 
             @Override
@@ -151,12 +177,11 @@ public class FileDialog {
         };
 
 
-        ProgressDialog dlg = new ProgressDialog(service);;
-
-
+        ProgressDialog dlg = new ProgressDialog(service);
         dlg.initOwner(stage);
         dlg.setTitle("");
         dlg.setHeaderText("Please wait, reading log");
+
         service.start();
     }
 }

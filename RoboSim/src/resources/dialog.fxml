@@ -12,7 +12,7 @@
     <top>
         <BorderPane prefHeight="30.0" prefWidth="200.0" styleClass="dialogbar" BorderPane.alignment="CENTER">
             <left>
-                <Label text="Weet u het zeker?" BorderPane.alignment="CENTER">
+                <Label text="Are you sure?" BorderPane.alignment="CENTER">
                     <BorderPane.margin>
                         <Insets left="25.0"/>
                     </BorderPane.margin>
@@ -29,7 +29,7 @@
         </BorderPane>
     </top>
     <center>
-        <Label text="Weet u zeker dat u wilt afsluiten?" BorderPane.alignment="CENTER"/>
+        <Label text="Are you sure you want to exit?" BorderPane.alignment="CENTER"/>
     </center>
     <bottom>
         <BorderPane prefHeight="50.0" prefWidth="200.0" BorderPane.alignment="CENTER">

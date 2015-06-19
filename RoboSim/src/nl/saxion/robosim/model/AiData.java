@@ -34,11 +34,7 @@ public class AiData {
         rotationSpeed = dataBuffer.getShort();
         shootKicker = dataBuffer.get();
         int dribble = dataBuffer.get();
-        if (dribble == 0) {
-            this.dribble = false;
-        } else {
-            this.dribble = true;
-        }
+        this.dribble = dribble != 0;
     }
 
     public int getMessageType() {

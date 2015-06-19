@@ -17,19 +17,22 @@ import static nl.saxion.robosim.model.protobuf.SslGeometry.SSL_GeometryFieldSize
  */
 public class SSL_Field{
 
+    private double[] benchpositions = new double[6];
+
     /* Pre-computed values */
-    protected final double canvasX, canvasY;
-    protected final double scale, line_width, boundary_width, field_length, field_width,
+    protected double canvasX, canvasY;
+    protected double scale, line_width, boundary_width, field_length, field_width,
             scaled_meter, defence_width, circle_x, circle_y, line_x,
             circle_radius, center_x, center_y, goal_width, goal_depth,
-            defence_radius, robot_size, selection_radius;
+            defence_radius, robot_size, selection_radius, defence_arc_radius, defence_offset_top, defence_offset_bottom,
+            defence_stretch, defence_stretch_offset, right_defence_x;
 
-    protected final double bench_x, bench_y, bench_width, bench_height, bench_real_x, bench_real_y, robot_real_size;
+    protected double bench_x, bench_y, bench_width, bench_height, bench_real_x, bench_real_y, robot_real_size;
 
     /**
      * Constructor for SSL_Field
      * Creates a SSL_Field object with the given SSL_GeometryFieldSize object
-     * Update the precalcuated sizes so the interface is scaled correctly. .
+     * Update the precalcuated sizes so the interface is scaled correctly.
      *
      * @param canvas
      * @param geometryData
@@ -39,7 +42,12 @@ public class SSL_Field{
         canvasY = canvas.getHeight();
         canvasX = canvas.getWidth();
 
+        update(geometryData);
         /* Compute field values */
+
+    }
+
+    public void update(SSL_GeometryData geometryData) {
         SSL_GeometryFieldSize field = geometryData.getField();
         scale = canvasY / (field.getFieldWidth() + field.getBoundaryWidth() * 2);
         line_width = field.getLineWidth() * scale;
@@ -69,6 +77,21 @@ public class SSL_Field{
 
         bench_real_x = (bench_x) / scale - center_x;
         bench_real_y = (bench_y + robot_size) / scale - center_y;
+
+        for (int i = 0; i < benchpositions.length; i++) {
+            benchpositions[i] = bench_real_y + i * robot_real_size;
+        }
+
+        System.out.println("stretch: " + field.getDefenseStretch() + "\nradius: " +
+                field.getDefenseRadius());
+
+        defence_arc_radius = field.getDefenseRadius() * scale;
+        defence_stretch = field.getDefenseStretch() * scale;
+
+        defence_stretch_offset = center_y * scale - defence_stretch / 2;
+        defence_offset_top = center_y * scale - (defence_arc_radius + defence_stretch / 2);
+        defence_offset_bottom = center_y * scale - defence_arc_radius + defence_stretch / 2;
+        right_defence_x = boundary_width + field_length - defence_arc_radius;
     }
 
     public double getRobot_real_size() {
@@ -93,5 +116,25 @@ public class SSL_Field{
 
     public double getCenter_y() {
         return center_y;
+    }
+
+    public double getBenchPosition(int id) {
+        return benchpositions[id];
+    }
+
+    public double getBench_x() {
+        return bench_x;
+    }
+
+    public double getBench_y() {
+        return bench_y;
+    }
+
+    public double getBench_width() {
+        return bench_width;
+    }
+
+    public double getBench_height() {
+        return bench_height;
     }
 }

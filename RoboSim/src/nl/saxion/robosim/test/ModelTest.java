@@ -20,8 +20,10 @@ public class ModelTest {
 
     @Test
     public void testModelAfter() {
-        new LogReader("2013-06-29-133738_odens_mrl.log");
+        Model.destroy();
         Model model = Model.getInstance();
+
+        new LogReader("2013-06-29-133738_odens_mrl.log");
         assertNotNull(model.getSSLField()); // kijkt of er een veld uit de log is gelezen
         assertNotNull(model.getLastFrame()); // kijkt of het volgende frame aanwezig is
         assertNotNull(model.getLastReferee()); // kijkt of de volgende referee gevuld is

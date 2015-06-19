@@ -651,11 +651,7 @@ public final class SslDetection {
           
           return false;
         }
-        if (!hasPixelY()) {
-          
-          return false;
-        }
-        return true;
+        return hasPixelY();
       }
 
       public Builder mergeFrom(
@@ -1602,11 +1598,7 @@ public final class SslDetection {
           
           return false;
         }
-        if (!hasPixelY()) {
-          
-          return false;
-        }
-        return true;
+        return hasPixelY();
       }
 
       public Builder mergeFrom(

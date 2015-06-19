@@ -8,14 +8,13 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import nl.saxion.robosim.model.LogReader;
 
 import java.io.IOException;
 
 public class Main extends Application {
 
     public static void main(String[] args) throws IOException {
-        new LogReader();
+//        TODO new LogReader();
 //        new AIListener().start();
 //        new MultiCastServerThread(16).start();
         //new LogReader();
@@ -36,6 +35,7 @@ public class Main extends Application {
         primaryStage.setFullScreen(true);
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
         primaryStage.show();
+
     }
 
 
