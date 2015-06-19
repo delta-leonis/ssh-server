@@ -307,7 +307,7 @@ public class DijkstraPathPlanner {
 			if(lockedIn)
 				return null;
 			
-			removeAllVectorsInRect(new Rectangle2D.Double(x - MAX_VERTEX_DISTANCE_TO_ROBOT + 1, y - MAX_VERTEX_DISTANCE_TO_ROBOT + 1, MAX_VERTEX_DISTANCE_TO_ROBOT * 2 - 2, MAX_VERTEX_DISTANCE_TO_ROBOT * 2 - 2));
+			removeAllVectorsInRect(new Rectangle2D.Double(x - MIN_VERTEX_DISTANCE_TO_ROBOT + 1, y - MIN_VERTEX_DISTANCE_TO_ROBOT + 1, MIN_VERTEX_DISTANCE_TO_ROBOT * 2 - 2, MIN_VERTEX_DISTANCE_TO_ROBOT * 2 - 2));
 		}
 		
 		return source;
