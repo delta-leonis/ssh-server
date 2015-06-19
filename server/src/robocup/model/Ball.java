@@ -24,13 +24,15 @@ public class Ball extends FieldObject {
 	 * @param p			new {@link FieldPoint} position
 	 * @param posZ		new Z position for object, also known the be the current height of the ball.
 	 * @param direction 
+	 * @param newOwner 
 	 */
-	public void update(long newTime, FieldPoint p, double posZ, double directionSpeed, double direction) {
+	public void update(long newTime, FieldPoint p, double posZ, double directionSpeed, double direction, Robot owner) {
 		position = p;
 		lastUpdateTime = newTime;
 		this.posZ = posZ;
 		this.speed = directionSpeed;
 		this.direction = direction;
+		this.owner = owner;
 		World.getInstance().updateState();
 	}
 
