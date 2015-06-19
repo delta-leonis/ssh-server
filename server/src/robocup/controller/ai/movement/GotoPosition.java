@@ -30,7 +30,7 @@ public class GotoPosition {
 	/** 100 */
 	private int START_UP_MOVEMENT_SPEED = 200;
 	/** 450 */
-	private int DISTANCE_TO_SLOW_DOWN_FORCED = 50;
+	private int DISTANCE_TO_SLOW_DOWN_FORCED = 60;
 	// Rotation Speed Variables
 	/** 5 */
 	@SuppressWarnings("unused")
@@ -40,7 +40,7 @@ public class GotoPosition {
 	/** 100 */
 	private int START_UP_ROTATION_SPEED = 200;
 	// Circle Around Ball Move Variables
-	private int CIRCLE_SPEED = 2500;
+	private int CIRCLE_SPEED = 2200;
 	
 	private long lastKickTime;
 	
@@ -363,7 +363,7 @@ public class GotoPosition {
 			FieldPoint newDestination = new FieldPoint(	target.getX() + offset * Math.cos(Math.toRadians(degreesToMove)),
 														target.getY() + offset * Math.sin(Math.toRadians(degreesToMove)));
 			destination = newDestination;
-			START_UP_MOVEMENT_SPEED = 550;
+			START_UP_MOVEMENT_SPEED = 650;
 			forcedSpeed = CIRCLE_SPEED;
 			calculate(false, false);
 		}
