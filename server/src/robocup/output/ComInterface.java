@@ -76,6 +76,50 @@ public class ComInterface {
 	}
 	
 	/**
+	 * Messagetype: 3 
+	 * Note 1: Relative to a robot means that when a {@link Robot}
+	 * is facing at 90 degrees, a target of 60 degrees, means that it has to
+	 * turn 60 degrees to the right. Meaning the {@link Robot} will have to face
+	 * at (90 - 60 = ) 30 degrees at the end of its turn.
+	 * 
+	 * Note 2: If everything besides the robotID is set to 0, the {@link Robot} has to stop.
+	 * 
+	 * @param robotID The ID of the {@link Robot}
+	 * @param direction The direction the {@link Robot} will go, relative to the  {@link Robot} in degrees (-180 : 180)
+	 * @param speed The speed the {@link Robot} has to move in mm/s. Rumor has it, our {@link Robot robots} can move up to about 4500mm/s
+	 * @param target The angle the {@link Robot} needs to face, relative to the {@link Robot} in degrees (-180 : 180)
+	 * @param rotationSpeed The speed at which the {@link Robot} has to turn in mm/s (Usually between -1500 and 1500 mm/s)
+	 * @param kicker -1 to -100 for chipping, 1 to 100 for kicking.
+	 * @param dribble true to start the dribbler, false otherwise
+	 */
+	public void sendForSimulation(int robotID, int direction, int directionSpeed, int target, int rotationSpeed, int shootKicker, boolean dribble){
+		ByteBuffer dataBuffer = ByteBuffer.allocate(15);
+		dataBuffer.order(ByteOrder.LITTLE_ENDIAN);
+		dataBuffer.put((byte) 3);
+		dataBuffer.put((byte) robotID);
+		dataBuffer.putShort((short) direction);
+		dataBuffer.putShort((short) directionSpeed);
+		dataBuffer.putShort((short) target);
+		dataBuffer.putShort((short) rotationSpeed);
+		dataBuffer.put((byte) shootKicker);
+		if (dribble) {
+			dataBuffer.put((byte) 1);
+		} else {
+			dataBuffer.put((byte) 0);
+		}
+		addChecksum(dataBuffer);
+		byte[] dataPacket = dataBuffer.array();
+		
+		DatagramPacket sendPacket = new DatagramPacket(dataPacket, dataPacket.length, ipAddress, port);
+
+		try {
+			serverSocket.send(sendPacket);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
 	 * @param messageType, MessageType 0 => robot instruction
 	 * @param robotID The ID of the robot we want to send to.
 	 * @param direction The direction we want our robot to move towards.
