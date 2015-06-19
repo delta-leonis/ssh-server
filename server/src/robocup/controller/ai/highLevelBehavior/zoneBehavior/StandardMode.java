@@ -284,19 +284,12 @@ public class StandardMode extends Mode {
 
 		int distanceToGoal = (int) world.getField().getEastGoal().getWidth() / 2;
 
-		boolean goToKick = false;
-
-		if (ball.getSpeed() < 1.0) {
-			if (world.getReferee().getEastTeam().equals(world.getReferee().getAlly())) {
-				goToKick = FieldZone.EAST_NORTH_GOAL.contains(ball.getPosition())
-						|| FieldZone.EAST_SOUTH_GOAL.contains(ball.getPosition());
-			} else {
-				goToKick = FieldZone.WEST_NORTH_GOAL.contains(ball.getPosition())
-						|| FieldZone.WEST_SOUTH_GOAL.contains(ball.getPosition());
-			}
-		}
-
 		FieldPoint ballPosition = ball.getPosition();
+
+		boolean goToKick = world.getReferee().getWestTeam() == world.getReferee().getAlly() ? FieldZone.WEST_NORTH_GOAL
+				.contains(ballPosition) || FieldZone.WEST_SOUTH_GOAL.contains(ballPosition) : FieldZone.EAST_NORTH_GOAL
+				.contains(ballPosition) || FieldZone.EAST_SOUTH_GOAL.contains(ballPosition);
+
 		keeper.update(distanceToGoal, goToKick, ballPosition, world.getField().getWidth(), world.getField().getLength());
 	}
 

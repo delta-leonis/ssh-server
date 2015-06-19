@@ -10,6 +10,7 @@ import robocup.model.FieldObject;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.World;
+import robocup.model.enums.GameState;
 import robocup.output.ComInterface;
 
 /**
@@ -252,28 +253,31 @@ public class GotoPosition {
 	 * @return true, if we're allowed to move, false otherwise.
 	 */
 	public boolean prepareForTakeOff(){
-//		if(World.getInstance().getGameState() == GameState.HALTED){
-//			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
-//			return false;
-//		}
-//		if(World.getInstance().getGameState() == GameState.STOPPED){
-//			FieldPoint ball = World.getInstance().getBall().getPosition();
-//			double deltaDistance = ball.getDeltaDistance(robot.getPosition());
-//			MAX_VELOCITY = 1500;
-//			if(deltaDistance < 700){
-//				double robotAngleBall = robot.getPosition().getAngle(ball);
-//				destination = new FieldPoint(robot.getPosition().getX() - Math.cos(Math.toRadians(robotAngleBall)) * (750 - deltaDistance),
-//														robot.getPosition().getY() - Math.sin(Math.toRadians(robotAngleBall)) * (750 - deltaDistance));
-//				return true;
-//			}
-//		}
+		if (world.getGameState() == GameState.HALTED) {
+			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+			return false;
+		}
+
+		if (world.getGameState() == GameState.STOPPED) {
+			FieldPoint ball = world.getBall().getPosition();
+			double deltaDistance = ball.getDeltaDistance(robot.getPosition());
+			MAX_VELOCITY = 1500;
+			if (deltaDistance < 700) {
+				double robotAngleBall = robot.getPosition().getAngle(ball);
+				destination = new FieldPoint(robot.getPosition().getX() - Math.cos(Math.toRadians(robotAngleBall))
+						* (750 - deltaDistance), robot.getPosition().getY() - Math.sin(Math.toRadians(robotAngleBall))
+						* (750 - deltaDistance));
+				return true;
+			}
+		}
+
 		if (destination == null) {
-			if(target == null){
+			if (target == null) {
 				output.send(1, robot.getRobotId(), 0, 0, 0, 0, dribble);
 				return false;
-			}
-			else{
-				output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(robot.getPosition(), target),0), 0, dribble);
+			} else {
+				output.send(1, robot.getRobotId(), 0, 0,
+						(int) getRotationSpeed(rotationToDest(robot.getPosition(), target), 0), 0, dribble);
 				return false;
 			}
 		}
