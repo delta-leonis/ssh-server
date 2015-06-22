@@ -25,9 +25,10 @@ public class PenaltyKeeper extends LowLevelBehavior {
 		enemy = null;
 		this.role = RobotMode.PENALTYKEEPER;
 		go = new GotoPosition(robot, robot.getPosition(), ballPosition);
-//		go.setMaxRotationSpeed(600);
+		go.setMaxRotationSpeed(600);
 		go.setDistanceToSlowDown(700);
 		go.setStartupSpeedVelocity(750);
+		go.setMaxVelocity(2000);
 	}
 
 	@Override
@@ -64,7 +65,7 @@ public class PenaltyKeeper extends LowLevelBehavior {
 		FieldPoint enemyPosition = enemy.getPosition();
 		double angle = enemyPosition.getAngle(ballPosition);
 //		double angle = Math.toRadians(Math.abs(enemy.getOrientation()));
-		double offset = (goal.getFrontNorth().getX() > 0 ? Robot.DIAMETER : -Robot.DIAMETER); //should be divided by 2, isn't being devided currelty because of lack of precision 
+		double offset = (goal.getFrontNorth().getX() > 0 ? Robot.DIAMETER -80 : -Robot.DIAMETER +80); //should be divided by 2, isn't being devided currelty because of lack of precision 
 		double newY = Math.tan(Math.toRadians(angle)) * (goal.getFrontNorth().getX() - ballPosition.getX()) + ballPosition.getY();
 //		double newY =  enemyPosition.getY() + (goal.getFrontNorth().getX() - enemyPosition.getX() - offset) * Math.tan(angle);
 

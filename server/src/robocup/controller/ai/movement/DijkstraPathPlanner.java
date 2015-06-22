@@ -204,12 +204,13 @@ public class DijkstraPathPlanner {
 
 		generateObjectList(robotId, avoidBall, avoidEastGoal, avoidWestGoal);
 		copyOfObjects = (ArrayList<Shape>)objects.clone();
-		while(isInsidePolygon(new Vertex(destination).toEllipse())){
-			if(getClosestVertexToPoint(destination) == null){
-				return null;
-			}
-			destination = getClosestVertexToPoint(destination).getPosition();
-		}
+//		while(isInsidePolygon(new Vertex(destination).toEllipse())){
+//			if(getClosestVertexToPoint(destination) == null){
+//				System.out.println("Fuck.");
+//				return null;
+//			}
+//			destination = getClosestVertexToPoint(destination).getPosition();
+//		}
 
 		// no object on route
 		if (!intersectsObject(new Vertex(beginNode), new Vertex(destination))) {
@@ -228,11 +229,13 @@ public class DijkstraPathPlanner {
 		Vertex source = setupSource(beginNode);
 		if(source == null){
 			allVertices = (ArrayList<Vertex>)vertices.clone();
+			System.out.println("Locked in source");
 			return null;					//Locked in
 		}
 		Vertex dest = setupDestination(destination);
 		if(dest == null){	//TODO  fix
 			allVertices = (ArrayList<Vertex>)vertices.clone();
+			System.out.println("Locked in destination");
 			return null;					//Locked in
 		}
 		
@@ -350,16 +353,14 @@ public class DijkstraPathPlanner {
 		for(Shape shape : objects){
 			Area areaA = new Area(shape);
 			areaA.intersect(new Area(source.toEllipse()));
-			if(!areaA.isEmpty()) {
-				// check whether it's in between source and destination.
-				Rectangle2D smallerRect = new Rectangle2D.Double(shape.getBounds2D().getX() + 40, shape.getBounds2D().getY() + 40, 180, 180);
-				if(smallerRect.intersectsLine(source.getPosition().getX(), source.getPosition().getY(), destination.getPosition()
-						.getX(), destination.getPosition().getY())) {
-					return false;
-				}
-			}
-			if(shape.contains(destination.getPosition().toPoint2D())){
-				return false;
+			if(areaA.isEmpty() && shape.contains(destination.getPosition().toPoint2D())) {
+				
+//				// check whether it's in between source and destination.
+//				Rectangle2D smallerRect = new Rectangle2D.Double(shape.getBounds2D().getX() + 40, shape.getBounds2D().getY() + 40, 180, 180);
+//				if(smallerRect.intersectsLine(source.getPosition().getX(), source.getPosition().getY(), destination.getPosition()
+//						.getX(), destination.getPosition().getY())) {
+//					return false;
+//				}
 			}
 		}
 		return true;
