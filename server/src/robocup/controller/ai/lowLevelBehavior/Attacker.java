@@ -3,7 +3,6 @@ package robocup.controller.ai.lowLevelBehavior;
 import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
-import robocup.model.World;
 import robocup.model.enums.RobotMode;
 
 public class Attacker extends LowLevelBehavior {
@@ -26,7 +25,7 @@ public class Attacker extends LowLevelBehavior {
 
 		this.role = RobotMode.ATTACKER;
 		go = new GotoPosition(robot, robot.getPosition(), ballPosition);
-		go.setStartupSpeedVelocity(350);
+		go.setStartupSpeedVelocity(300);
 		go.setMaxVelocity(1500);
 		go.setDistanceToSlowDown(500);
 		go.setMaxRotationSpeed(1400);

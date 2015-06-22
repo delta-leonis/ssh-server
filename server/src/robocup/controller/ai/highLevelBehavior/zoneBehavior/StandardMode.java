@@ -47,7 +47,25 @@ public class StandardMode extends Mode {
 			double shootDirection = world.hasFreeShot() == null ? 0 : ballPosition.getAngle(world.hasFreeShot());
 			chipKick = -100;
 			attacker.update(shootDirection, chipKick, ballPosition);
-		} else {
+		} else if (world.getGameState() == GameState.TAKING_KICKOFF
+				&& (world.getReferee().getPreviousCommand() == Command.PREPARE_KICKOFF_BLUE || world.getReferee()
+						.getPreviousCommand() == Command.PREPARE_KICKOFF_YELLOW)) {
+			ArrayList<Ally> runners = new ArrayList<Ally>();
+
+			for (RobotExecuter itExecuter : executers) {
+				Ally robot = (Ally) itExecuter.getRobot();
+
+				if (robot.getRole() == RobotMode.RUNNER)
+					runners.add(robot);
+
+				if (runners.size() > 0 && runners.get(0).getPosition() != null) {
+					double shootDirection = ballPosition.getAngle(runners.get(0).getPosition());
+					chipKick = -45;
+					attacker.update(shootDirection, chipKick, ballPosition);
+				}
+			}
+		} else if (world.getReferee().getCommand() == Command.PREPARE_KICKOFF_BLUE
+				|| world.getReferee().getCommand() == Command.PREPARE_KICKOFF_YELLOW) {
 			ArrayList<Ally> runners = new ArrayList<Ally>();
 
 			for (RobotExecuter itExecuter : executers) {
@@ -59,7 +77,7 @@ public class StandardMode extends Mode {
 
 			if (runners.size() > 0 && runners.get(0).getPosition() != null) {
 				double shootDirection = ballPosition.getAngle(runners.get(0).getPosition());
-				chipKick = world.getGameState() == GameState.TAKING_KICKOFF ? -50 : 0;
+				chipKick = 0;
 				attacker.update(shootDirection, chipKick, ballPosition);
 			}
 		}
