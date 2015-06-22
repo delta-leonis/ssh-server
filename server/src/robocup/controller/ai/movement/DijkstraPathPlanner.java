@@ -6,7 +6,6 @@ import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
-import java.beans.DesignMode;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -27,7 +26,7 @@ public class DijkstraPathPlanner {
 	// Distance from the middle of the robot to the vertices around it
 	// Basically the "Danger zone" for the Robot. A normal Robot has a radius of 90mm, so if DISTANCE_TO_ROBOT == 160mm,
 	// then it means we don't want to get within (160mm - 90mm = ) 70mm of any other Robot. (Based on their center points)
-	public static final int MIN_DISTANCE_TO_ROBOT = 180;
+	public static final int MIN_DISTANCE_TO_ROBOT = 160;
 	public static final int MAX_DISTANCE_TO_ROBOT = 270;
 	public static final int DISTANCE_TO_BALL = 120;
 	public static final int DISTANCE_TO_POLYGON = 90;
@@ -204,12 +203,13 @@ public class DijkstraPathPlanner {
 
 		generateObjectList(robotId, avoidBall, avoidEastGoal, avoidWestGoal);
 		copyOfObjects = (ArrayList<Shape>)objects.clone();
-		while(isInsidePolygon(new Vertex(destination).toEllipse())){
-			if(getClosestVertexToPoint(destination) == null){
-				return null;
-			}
-			destination = getClosestVertexToPoint(destination).getPosition();
-		}
+//		while(isInsidePolygon(new Vertex(destination).toEllipse())){
+//			if(getClosestVertexToPoint(destination) == null){
+//				System.out.println("Fuck.");
+//				return null;
+//			}
+//			destination = getClosestVertexToPoint(destination).getPosition();
+//		}
 
 		// no object on route
 		if (!intersectsObject(new Vertex(beginNode), new Vertex(destination))) {
@@ -228,11 +228,13 @@ public class DijkstraPathPlanner {
 		Vertex source = setupSource(beginNode);
 		if(source == null){
 			allVertices = (ArrayList<Vertex>)vertices.clone();
+			System.out.println("Locked in source");
 			return null;					//Locked in
 		}
 		Vertex dest = setupDestination(destination);
 		if(dest == null){	//TODO  fix
 			allVertices = (ArrayList<Vertex>)vertices.clone();
+			System.out.println("Locked in destination");
 			return null;					//Locked in
 		}
 		
@@ -289,7 +291,6 @@ public class DijkstraPathPlanner {
 			if(lockedIn)
 				return null;
 			
-			removeAllVectorsInRect(new Rectangle2D.Double(x - MIN_VERTEX_DISTANCE_TO_ROBOT + 1, y - MIN_VERTEX_DISTANCE_TO_ROBOT + 1, MIN_VERTEX_DISTANCE_TO_ROBOT * 2 - 2, MIN_VERTEX_DISTANCE_TO_ROBOT * 2 - 2));
 		}
 		
 		return source;
@@ -301,33 +302,25 @@ public class DijkstraPathPlanner {
 	 * @return The endNode in Vertex form.
 	 */
 	protected Vertex setupDestination(FieldPoint endNode) {
-		boolean lockedIn = true;
 		Vertex destination = new Vertex(endNode);
-		destination.setRemovable(false);
+//		destination.setRemovable(false);
 		vertices.add(destination);
 		double x = endNode.getX();
 		double y = endNode.getY();
 		
+		for(int i = 0; i < 8; ++i){
+			Vertex neighbour = new Vertex(new FieldPoint(x
+					+ Math.cos(Math.toRadians(45*i)) * MAX_VERTEX_DISTANCE_TO_ROBOT, y
+					+ Math.sin(Math.toRadians(45*i)) * MAX_VERTEX_DISTANCE_TO_ROBOT));
+			vertices.add(neighbour);
+			if (!isInsideObject(destination.toEllipse()))
+				neighbour.addNeighbour(destination);
+		}
+		
 		if (isInsideObject(destination.toEllipse())) {
-			for(int i = 0; i < 8; ++i){
-				Vertex neighbour = new Vertex(new FieldPoint(x
-						+ Math.cos(Math.toRadians(45*i)) * MAX_VERTEX_DISTANCE_TO_ROBOT, y
-						+ Math.sin(Math.toRadians(45*i)) * MAX_VERTEX_DISTANCE_TO_ROBOT));
-				if (isValidPosition(destination, neighbour)) {
-					lockedIn = false;
-					vertices.add(neighbour);
-					neighbour.addNeighbour(destination);
-				}
-			}
+			this.destination = getClosestVertexToPoint(endNode).getPosition();
+			return getClosestVertexToPoint(endNode);
 
-			if (lockedIn)
-				return getClosestVertexToPoint(endNode);
-
-			removeAllVectorsInRect(new Rectangle2D.Double(x
-					- MAX_VERTEX_DISTANCE_TO_ROBOT + 1, y
-					- MAX_VERTEX_DISTANCE_TO_ROBOT + 1,
-					MAX_VERTEX_DISTANCE_TO_ROBOT * 2 - 2,
-					MAX_VERTEX_DISTANCE_TO_ROBOT * 2 - 2));
 		}
 		return destination;
 	}
@@ -348,18 +341,19 @@ public class DijkstraPathPlanner {
 	 */
 	protected boolean isValidPosition(Vertex source, Vertex destination){
 		for(Shape shape : objects){
+			if(source.getPosition().getX() == shape.getBounds().getCenterX() && source.getPosition().getY() == shape.getBounds().getCenterY())
+				continue;
+			
 			Area areaA = new Area(shape);
 			areaA.intersect(new Area(source.toEllipse()));
-			if(!areaA.isEmpty()) {
-				// check whether it's in between source and destination.
-				Rectangle2D smallerRect = new Rectangle2D.Double(shape.getBounds2D().getX() + 40, shape.getBounds2D().getY() + 40, 180, 180);
-				if(smallerRect.intersectsLine(source.getPosition().getX(), source.getPosition().getY(), destination.getPosition()
-						.getX(), destination.getPosition().getY())) {
-					return false;
-				}
-			}
-			if(shape.contains(destination.getPosition().toPoint2D())){
+			if(areaA.isEmpty() && shape.contains(destination.getPosition().toPoint2D())) {
 				return false;
+//				// check whether it's in between source and destination.
+//				Rectangle2D smallerRect = new Rectangle2D.Double(shape.getBounds2D().getX() + 40, shape.getBounds2D().getY() + 40, 180, 180);
+//				if(smallerRect.intersectsLine(source.getPosition().getX(), source.getPosition().getY(), destination.getPosition()
+//						.getX(), destination.getPosition().getY())) {
+//					return false;
+//				}
 			}
 		}
 		return true;
