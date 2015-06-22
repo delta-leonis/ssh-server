@@ -173,7 +173,7 @@ public class GotoPosition {
 			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), avoidBall, avoidEastGoalArea, avoidWestGoalArea);
 			// If robot is locked up, the route will be null
 			if(route == null){
-				LOGGER.info("Robot #" + robot.getRobotId() + " can't reach destination.");
+				LOGGER.warning("Robot #" + robot.getRobotId() + " can't reach destination.");
 				if(SIMULATED){
 					output.sendForSimulation(robot.getRobotId(), 0, 0, 0, 0, 0, false);
 				}
@@ -196,7 +196,7 @@ public class GotoPosition {
 				return;
 			}
 			
-			double rotationToTarget = alwaysFaceTarget ? rotationToDest(robot.getPosition(), target) : rotationToDest(destination,target);
+			double rotationToTarget = rotationToDest(alwaysFaceTarget ? robot.getPosition() : destination,target);
 			double rotationToGoal = rotationToDest(robot.getPosition(), destination);
 			if(goStraightForward){
 				rotationToGoal = 0;
