@@ -71,12 +71,13 @@ public class EventSystem {
 		if (currentGameState != previousGameState)
 			return Event.GAMESTATE_CHANGED;
 
-		if (ball.getSpeed() < 100.0) {
-			previousBallOwner = currentBallOwner;
-			currentBallOwner = world.getClosestRobotToBall();
-			if (previousBallOwner == null) {
-				previousBallOwner = currentBallOwner;
-			}
+		previousBallOwner = currentBallOwner;
+		currentBallOwner = ball.getOwner();
+
+		if(currentBallOwner == null)
+			return Event.BALL_BECOMES_NEUTRAL;
+
+		if (previousBallOwner != null) {
 			if (previousBallOwner instanceof Ally) {
 				if (currentBallOwner instanceof Enemy) //Previous Ally, current Enemy
 					return Event.BALL_ENEMY_CAPTURE;
@@ -90,6 +91,8 @@ public class EventSystem {
 				else if (previousBallOwner != null && currentBallOwner != null && previousBallOwner.getRobotId() != currentBallOwner.getRobotId()) //Enemy retains possession of ball
 					return Event.BALL_ENEMY_CHANGEOWNER;
 			}
+		} else {
+			return currentBallOwner instanceof Ally ? Event.BALL_ALLY_CAPTURE : Event.BALL_ENEMY_CAPTURE;
 		}
 
 		if (previousBallPosition.getX() < 0 && currentBallPosition.getX() > 0 || previousBallPosition.getX() > 0

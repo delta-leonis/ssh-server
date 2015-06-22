@@ -22,6 +22,11 @@ import robocup.model.enums.TeamColor;
  */
 public class DetectionHandler {
 
+	//Max distance between ball and closest robot to be assigned to ballowner
+	private static final int MAX_DISTANCE = 160;
+
+	private static final double MAX_SPEED_WHILE_RETAINING_OWNERSHIP = 100;
+
 	private World world;
 
 	private Map<Integer, RobotUKF> allyFilter = new HashMap<Integer, RobotUKF>();
@@ -96,11 +101,17 @@ public class DetectionHandler {
 			return;
 
 		ballFilter.run(measuredPosition);
+		FieldPoint ballPosition = new FieldPoint(ballFilter.getX(), ballFilter.getY());
 		double speed = Math.sqrt(Math.pow(ballFilter.getXVelocity(), 2) + Math.pow(ballFilter.getYVelocity(), 2));
 		double direction = Math.toDegrees(Math.atan2(ballFilter.getYVelocity(), ballFilter.getXVelocity()));
-
-		world.getBall().update((long) time, new FieldPoint(ballFilter.getX(), ballFilter.getY()), ball.getZ(), speed,
-				direction);
+		Robot closestRobot = world.getClosestRobotToBall();
+		Robot owner = null;
+		if(closestRobot != null
+			&& closestRobot.getPosition().getDeltaDistance(ballPosition) < MAX_DISTANCE + Robot.DIAMETER
+			&& speed < MAX_SPEED_WHILE_RETAINING_OWNERSHIP)
+			owner = closestRobot;
+		world.getBall().update((long) time, ballPosition, ball.getZ(), speed,
+				direction, owner);
 	}
 
 	/**
