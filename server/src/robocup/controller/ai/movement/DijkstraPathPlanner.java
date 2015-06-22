@@ -65,7 +65,6 @@ public class DijkstraPathPlanner {
 		private ArrayList<Vertex> neighbours;
 		private Vertex previous = null;
 		private boolean removable = true;
-		private boolean stuck = false;			// if there is no path between start and destination
 
 		/**
 		 * Create a vertex which contains the position, 
@@ -186,22 +185,6 @@ public class DijkstraPathPlanner {
 		public void setRemovable(boolean removable) {
 			this.removable = removable;
 		}
-		
-		/**
-		 * checker method that checks if there is a path between the starting point and destination
-		 * @return
-		 */
-		public boolean isStuck(){
-			return stuck;
-		}
-		
-		/**
-		 * setter method that declares that indicates wether or not the start and endpoints can be connected
-		 * @param stuck
-		 */
-		public void setStuck(boolean stuck){
-			this.stuck = stuck;
-		}
 	}
 
 	/**
@@ -289,7 +272,6 @@ public class DijkstraPathPlanner {
 		vertices.add(source);
 		
 		if(isInsideObject(source.toEllipse())) {
-			source.setStuck(true);
 			double x = beginNode.getX();
 			double y = beginNode.getY();
 			for(int i = 0; i < 8; ++i){
@@ -325,7 +307,6 @@ public class DijkstraPathPlanner {
 		vertices.add(destination);
 		
 		if (isInsideObject(destination.toEllipse())) {
-			destination.setStuck(true);
 			double x = endNode.getX();
 			double y = endNode.getY();
 			for(int i = 0; i < 8; ++i){

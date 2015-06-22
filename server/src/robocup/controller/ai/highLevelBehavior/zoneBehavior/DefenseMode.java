@@ -131,21 +131,21 @@ public class DefenseMode extends Mode {
 			case 2:
 				if (robot.getPosition().getY() == Math.max(keeperDefenders.get(0).getPosition().getY(), keeperDefenders
 						.get(1).getPosition().getY()))
-					offset = -10;
+					offset = -8;
 				else
-					offset = 10;
+					offset = 8;
 				break;
 			case 3:
 				if (robot.getPosition().getY() == Math.max(
 						keeperDefenders.get(0).getPosition().getY(),
 						Math.max(keeperDefenders.get(1).getPosition().getY(), keeperDefenders.get(2).getPosition()
 								.getY())))
-					offset = -15;
+					offset = -16;
 				else if (robot.getPosition().getY() == Math.min(
 						keeperDefenders.get(0).getPosition().getY(),
 						Math.min(keeperDefenders.get(1).getPosition().getY(), keeperDefenders.get(2).getPosition()
 								.getY())))
-					offset = 15;
+					offset = 16;
 				else
 					offset = 0;
 				break;
