@@ -29,7 +29,7 @@ public class Attacker extends LowLevelBehavior {
 		go.setStartupSpeedVelocity(350);
 		go.setMaxVelocity(1500);
 		go.setDistanceToSlowDown(500);
-		go.setMaxRotationSpeed(1000);
+		go.setMaxRotationSpeed(1400);
 		go.setStartupSpeedRotation(80);
 //		go.setAvoidEastGoal(true);
 //		go.setAvoidWestGoal(true);
@@ -77,8 +77,7 @@ public class Attacker extends LowLevelBehavior {
 		go.setTarget(ballPosition);
 		if(chipKick == 0){
 			go.setDestination(newDestination);
-			go.setMaxRotationSpeed(1000);
-//			go.setMaxRotationSpeed(1400);
+			go.setMaxRotationSpeed(1400);
 			go.setForcedSpeed(0);
 			go.calculateTurnAroundTarget(250);
 			go.setGoStraightForward(false);
