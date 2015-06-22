@@ -270,10 +270,10 @@ public class DijkstraPathPlanner {
 		source.setDist(0);
 		source.setRemovable(false);
 		vertices.add(source);
+		double x = beginNode.getX();
+		double y = beginNode.getY();
 		
 		if(isInsideObject(source.toEllipse())) {
-			double x = beginNode.getX();
-			double y = beginNode.getY();
 			for(int i = 0; i < 8; ++i){
 				Vertex neighbour = new Vertex(new FieldPoint(x
 						+ Math.cos(Math.toRadians(45*i)) * MAX_VERTEX_DISTANCE_TO_ROBOT, y
@@ -305,10 +305,10 @@ public class DijkstraPathPlanner {
 		Vertex destination = new Vertex(endNode);
 		destination.setRemovable(false);
 		vertices.add(destination);
+		double x = endNode.getX();
+		double y = endNode.getY();
 		
 		if (isInsideObject(destination.toEllipse())) {
-			double x = endNode.getX();
-			double y = endNode.getY();
 			for(int i = 0; i < 8; ++i){
 				Vertex neighbour = new Vertex(new FieldPoint(x
 						+ Math.cos(Math.toRadians(45*i)) * MAX_VERTEX_DISTANCE_TO_ROBOT, y
