@@ -75,29 +75,17 @@ public class GotoPosition {
 	 * @param destination The {@link FieldPoint destination} we wish to move to.
 	 */
 	public GotoPosition(Robot robot, FieldPoint destination) {
-		this.robot = robot;
-		output = ComInterface.getInstance();
-		this.destination = destination;
-		this.target = destination;
-		lastKickTime = System.currentTimeMillis();
-		dplanner = new DijkstraPathPlanner();
-		world = World.getInstance();
+		this(robot, destination, destination);
 	}
 
 	/**
-	 * Setup this object to function for the given {@link Robot} and {@link FieldPoint target}
+	 * Setup this objGotoPositionect to function for the given {@link Robot} and {@link FieldPoint target}
 	 * Makes the given {@link Robot} turn towards the given {@link FieldObject target}
 	 * @param robot The {@link Robot} we wish to move.
 	 * @param target Target to look at (usually the ball)
 	 */
 	public GotoPosition(Robot robot, FieldObject target) {
-		this.robot = robot;
-		output = ComInterface.getInstance();
-		this.destination = target.getPosition();
-		this.target = this.destination;
-		lastKickTime = System.currentTimeMillis();
-		dplanner = new DijkstraPathPlanner();
-		world = World.getInstance();
+		this(robot, target.getPosition(), target.getPosition());
 	}
 
 	/**
@@ -124,14 +112,8 @@ public class GotoPosition {
 	 * @param forcedSpeed The speed in mm/s we wish to drive at. (Overrules the speed calculate by {@link #calculate()})
 	 */
 	public GotoPosition(Robot robot, FieldPoint destination, FieldPoint target, int forcedSpeed) {
-		this.robot = robot;
-		output = ComInterface.getInstance();
-		this.destination = destination;
-		this.target = target;
+		this(robot, destination, target);
 		this.forcedSpeed = forcedSpeed;
-		lastKickTime = System.currentTimeMillis();
-		dplanner = new DijkstraPathPlanner();
-		world = World.getInstance();
 	}
 
 	/**
