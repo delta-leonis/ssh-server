@@ -173,7 +173,7 @@ public class GotoPosition {
 			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), avoidBall, avoidEastGoalArea, avoidWestGoalArea);
 			// If robot is locked up, the route will be null
 			if(route == null){
-				LOGGER.info("Robot #" + robot.getRobotId() + " can't reach destination.");
+				LOGGER.warning("Robot #" + robot.getRobotId() + " can't reach destination.");
 				if(SIMULATED){
 					output.sendForSimulation(robot.getRobotId(), 0, 0, 0, 0, 0, false);
 				}
@@ -196,7 +196,7 @@ public class GotoPosition {
 				return;
 			}
 			
-			double rotationToTarget = alwaysFaceTarget ? rotationToDest(robot.getPosition(), target) : rotationToDest(destination,target);
+			double rotationToTarget = rotationToDest(alwaysFaceTarget ? robot.getPosition() : destination,target);
 			double rotationToGoal = rotationToDest(robot.getPosition(), destination);
 			if(goStraightForward){
 				rotationToGoal = 0;
@@ -222,7 +222,7 @@ public class GotoPosition {
 			}
 
 			currentSpeed = speed;
-			if(dribble && robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition()) < Robot.DIAMETER/2 + 10 && System.currentTimeMillis() > lastKickTime + 500 && chipKick != 0){
+			if(dribble && robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition()) < Robot.DIAMETER/2 + 20 && System.currentTimeMillis() > lastKickTime + 500 && chipKick != 0){
 				// Send the command
 				if(SIMULATED){
 					output.sendForSimulation(robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationToTarget, (int)rotationSpeed, chipKick, alwaysFaceTarget);
@@ -261,26 +261,26 @@ public class GotoPosition {
 	 * @return true, if we're allowed to move, false otherwise.
 	 */
 	public boolean prepareForTakeOff(){
-//		if(World.getInstance().getGameState() == GameState.HALTED){
-//			if(SIMULATED){
-//				output.sendForSimulation(robot.getRobotId(), 0, 0, 0, 0, 0, false);
-//			}
-//			else{
-//				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
-//			}			
-//			return false;
-//		}
-//		if(World.getInstance().getGameState() == GameState.STOPPED){
-//			FieldPoint ball = World.getInstance().getBall().getPosition();
-//			double deltaDistance = ball.getDeltaDistance(robot.getPosition());
-//			MAX_VELOCITY = 1500;
-//			if(deltaDistance < 700){
-//				double robotAngleBall = robot.getPosition().getAngle(ball);
-//				destination = new FieldPoint(robot.getPosition().getX() - Math.cos(Math.toRadians(robotAngleBall)) * (750 - deltaDistance),
-//														robot.getPosition().getY() - Math.sin(Math.toRadians(robotAngleBall)) * (750 - deltaDistance));
-//				return true;
-//			}
-//		}
+		if(World.getInstance().getGameState() == GameState.HALTED){
+			if(SIMULATED){
+				output.sendForSimulation(robot.getRobotId(), 0, 0, 0, 0, 0, false);
+			}
+			else{
+				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+			}			
+			return false;
+		}
+		if(World.getInstance().getGameState() == GameState.STOPPED){
+			FieldPoint ball = World.getInstance().getBall().getPosition();
+			double deltaDistance = ball.getDeltaDistance(robot.getPosition());
+			MAX_VELOCITY = 1500;
+			if(deltaDistance < 700){
+				double robotAngleBall = robot.getPosition().getAngle(ball);
+				destination = new FieldPoint(robot.getPosition().getX() - Math.cos(Math.toRadians(robotAngleBall)) * (750 - deltaDistance),
+														robot.getPosition().getY() - Math.sin(Math.toRadians(robotAngleBall)) * (750 - deltaDistance));
+				return true;
+			}
+		}
 		if (destination == null) {
 			if (target == null) {
 				if(SIMULATED){
