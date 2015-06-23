@@ -48,8 +48,8 @@ public class GotoPosition {
 	
 	private long lastKickTime;
 	
-	private boolean avoidEastGoalArea = false;
-	private boolean avoidWestGoalArea = false;
+	private boolean avoidEastGoalArea = true;
+	private boolean avoidWestGoalArea = true;
 	
 	private static Logger LOGGER = Logger.getLogger(Main.class.getName());
 
