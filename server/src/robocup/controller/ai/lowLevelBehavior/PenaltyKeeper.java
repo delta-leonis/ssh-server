@@ -25,7 +25,6 @@ public class PenaltyKeeper extends LowLevelBehavior {
 		enemy = null;
 		this.role = RobotMode.PENALTYKEEPER;
 		go = new GotoPosition(robot, robot.getPosition(), ballPosition);
-		go.setMaxRotationSpeed(600);
 		go.setDistanceToSlowDown(700);
 		go.setStartupSpeedVelocity(750);
 		go.setMaxVelocity(2000);
