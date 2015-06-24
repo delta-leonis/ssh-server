@@ -381,7 +381,7 @@ public class GotoPosition {
 				newDestination  = new FieldPoint(	target.getX() + offset * Math.cos(Math.toRadians(degreesToMove)),
 						target.getY() + offset * Math.sin(Math.toRadians(degreesToMove)));
 			}
-			else if(Math.abs(totalAngle - angleTargetAndRobot) > 5){
+			else if(Math.abs(totalAngle - angleTargetAndRobot) < 3){
 				newDestination = null;
 			}	
 			else{
@@ -394,7 +394,7 @@ public class GotoPosition {
 			// Use new angle to get position on circle around target
 			
 			destination = newDestination;
-			START_UP_MOVEMENT_SPEED = 500;
+//			START_UP_MOVEMENT_SPEED = 550;
 			forcedSpeed = CIRCLE_SPEED;
 			calculate(false, false);
 		}
