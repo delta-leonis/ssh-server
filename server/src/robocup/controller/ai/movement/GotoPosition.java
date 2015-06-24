@@ -38,7 +38,7 @@ public class GotoPosition {
 	@SuppressWarnings("unused")
 	private double DISTANCE_ROTATIONSPEED_COEFFICIENT = 5;
 	/** 1000 */
-	private int MAX_ROTATION_SPEED = 1000;
+	private int MAX_ROTATION_SPEED = 1500;
 	/** 100 */
 	private int START_UP_ROTATION_SPEED = 200;
 	// Circle Around Ball Move Variables
@@ -356,7 +356,7 @@ public class GotoPosition {
 		// Increase angle
 		double degreesToMove;
 		// If we're not in range of to circle around the target
-		if(robot.getPosition().getDeltaDistance(target) > (offset*1.2)){
+		if(robot.getPosition().getDeltaDistance(target) > (offset*2)){
 			if(Math.abs(toRelativeAngle(totalAngle - angleTargetAndRobot)) > 90){
 				double turnAmount = Math.abs(toRelativeAngle(totalAngle - angleTargetAndRobot)) - 90;
 				degreesToMove = angleTargetAndRobot + (toRelativeAngle((totalAngle - angleTargetAndRobot)) < 0 ? -turnAmount : turnAmount);
@@ -375,19 +375,26 @@ public class GotoPosition {
 			calculate(false, true);
 		}
 		else{
+			FieldPoint newDestination;
 			if(Math.abs(totalAngle - angleTargetAndRobot) > 15){
 				degreesToMove = angleTargetAndRobot + (toRelativeAngle((totalAngle - angleTargetAndRobot)) < 0 ? -15 : 15);
+				newDestination  = new FieldPoint(	target.getX() + offset * Math.cos(Math.toRadians(degreesToMove)),
+						target.getY() + offset * Math.sin(Math.toRadians(degreesToMove)));
 			}
+			else if(Math.abs(totalAngle - angleTargetAndRobot) > 5){
+				newDestination = null;
+			}	
 			else{
 				double turnAmount = Math.abs(totalAngle - angleTargetAndRobot);
 				degreesToMove = angleTargetAndRobot + (toRelativeAngle((totalAngle - angleTargetAndRobot)) < 0 ? -turnAmount : turnAmount);
+				newDestination  = new FieldPoint(	target.getX() + offset * Math.cos(Math.toRadians(degreesToMove)),
+						target.getY() + offset * Math.sin(Math.toRadians(degreesToMove)));
 			}
 			
 			// Use new angle to get position on circle around target
-			FieldPoint newDestination = new FieldPoint(	target.getX() + offset * Math.cos(Math.toRadians(degreesToMove)),
-														target.getY() + offset * Math.sin(Math.toRadians(degreesToMove)));
+			
 			destination = newDestination;
-			START_UP_MOVEMENT_SPEED = 650;
+			START_UP_MOVEMENT_SPEED = 500;
 			forcedSpeed = CIRCLE_SPEED;
 			calculate(false, false);
 		}

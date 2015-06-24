@@ -78,7 +78,7 @@ public class Attacker extends LowLevelBehavior {
 			go.setDestination(newDestination);
 			go.setMaxRotationSpeed(1400);
 			go.setForcedSpeed(0);
-			go.calculateTurnAroundTarget(250);
+			go.calculateTurnAroundTarget(300);
 			go.setGoStraightForward(false);
 		}
 		else{
