@@ -88,7 +88,13 @@ public class Attacker extends LowLevelBehavior {
 		orientation = orientation < 0 ? orientation + 360 : orientation;
 
 		double correctedShootDirection = shootDirection < 0 ? shootDirection + 360 : shootDirection;
-		return Math.abs(orientation - correctedShootDirection) < 8.0;
+		
+//				Math.abs(Math.abs(freeShot.getAngle(ballPosition))-Math.abs(ballPosition.getAngle(executer.getRobot().getPosition()))) < 2000 / executer.getRobot().getPosition().getDeltaDistance(ballPosition)
+//				// Check whether we're nearby enough
+//				&& executer.getRobot().getPosition().getDeltaDistance(ballPosition) < 850
+//				// Check whether the robot is facing the way it's supposed to face
+//				&& Math.abs(Math.abs(executer.getRobot().getOrientation()) - Math.abs(ballPosition.getAngle(freeShot))) < 3000 / executer.getRobot().getPosition().getDeltaDistance(ballPosition)) {
+		return Math.abs(orientation - correctedShootDirection) < 2000 / robot.getPosition().getDeltaDistance(ballPosition);
 	}
 
 	/**
