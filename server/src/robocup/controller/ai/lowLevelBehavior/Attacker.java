@@ -59,13 +59,21 @@ public class Attacker extends LowLevelBehavior {
 //					|| robot.getPosition().getDeltaDistance(ballPosition) > 300); //HAD JE COMM + Robot.DIAMETER/2ENTAAR 
 //			
 //
-			if(robot.getPosition().getDeltaDistance(ballPosition) < 500){
+			if (robot.getPosition().getDeltaDistance(ballPosition) < 500 && isValidOrientation()) {
 				go.setKick(chipKick);
 			}
 
-
 			changeDestination(newDestination);
 		}
+	}
+
+	private boolean isValidOrientation() {
+		double orientation = robot.getOrientation();
+		// correct orientation so you can compare it
+		orientation = orientation < 0 ? orientation + 360 : orientation;
+
+		double correctedShootDirection = shootDirection < 0 ? shootDirection + 360 : shootDirection;
+		return Math.abs(orientation - correctedShootDirection) < 5.0;
 	}
 
 	/**
@@ -74,7 +82,7 @@ public class Attacker extends LowLevelBehavior {
 	 */
 	private void changeDestination(FieldPoint newDestination) {
 		go.setTarget(ballPosition);
-		if(chipKick == 0){
+		if (go.getChipKick() == 0) {
 			go.setDestination(newDestination);
 			go.setMaxRotationSpeed(1400);
 			go.setForcedSpeed(0);

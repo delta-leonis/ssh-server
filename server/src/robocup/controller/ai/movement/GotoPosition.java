@@ -154,6 +154,10 @@ public class GotoPosition {
 	public void setKick(int chipKick) {
 		this.chipKick = chipKick;
 	}
+	
+	public int getChipKick() {
+		return chipKick;
+	}
 
 	/**
 	 * Calculates what message we need to send to the robot, based on the
