@@ -29,11 +29,11 @@ public class Attacker extends LowLevelBehavior {
 
 		this.role = RobotMode.ATTACKER;
 		go = new GotoPosition(robot, robot.getPosition(), ballPosition);
-		go.setStartupSpeedVelocity(450);
+		go.setStartupSpeedVelocity(500);
 		go.setMaxVelocity(1500);
 		go.setDistanceToSlowDown(500);
-		go.setMaxRotationSpeed(1400);
-		go.setStartupSpeedRotation(150);
+		go.setMaxRotationSpeed(1200);
+		go.setStartupSpeedRotation(180);
 		Referee referee = World.getInstance().getReferee();
 		if(	referee.getPreviousCommand().equals(Command.PREPARE_PENALTY_YELLOW) && referee.getAllyTeamColor().equals(TeamColor.YELLOW)
 				||
@@ -74,6 +74,9 @@ public class Attacker extends LowLevelBehavior {
 			if (robot.getPosition().getDeltaDistance(ballPosition) < 500 && isValidOrientation()) {
 				go.setKick(chipKick);
 			}
+			else{
+				go.setKick(0);
+			}
 
 			changeDestination(newDestination);
 		}
@@ -85,7 +88,7 @@ public class Attacker extends LowLevelBehavior {
 		orientation = orientation < 0 ? orientation + 360 : orientation;
 
 		double correctedShootDirection = shootDirection < 0 ? shootDirection + 360 : shootDirection;
-		return Math.abs(orientation - correctedShootDirection) < 5.0;
+		return Math.abs(orientation - correctedShootDirection) < 8.0;
 	}
 
 	/**
@@ -96,7 +99,7 @@ public class Attacker extends LowLevelBehavior {
 		go.setTarget(ballPosition);
 		if (go.getChipKick() == 0) {
 			go.setDestination(newDestination);
-			go.setMaxRotationSpeed(1400);
+			go.setMaxRotationSpeed(1200);
 			go.setForcedSpeed(0);
 			go.calculateTurnAroundTarget(300);
 			go.setGoStraightForward(false);
@@ -106,9 +109,8 @@ public class Attacker extends LowLevelBehavior {
 			double overshootBallY = ballPosition.getY() + Math.sin(Math.toRadians(robot.getPosition().getAngle(ballPosition))) * 80;
 			
 			go.setDestination(new FieldPoint(overshootBallX, overshootBallY));
-			go.setStartupSpeedVelocity(450);
 
-			go.setForcedSpeed(1500); // 2000
+			go.setForcedSpeed(2000); // 2000
 //			go.goForwardUntilKick(3000);
 			go.setMaxRotationSpeed(300);
 			go.setGoStraightForward(true);

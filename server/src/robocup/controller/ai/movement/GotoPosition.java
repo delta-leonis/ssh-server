@@ -42,7 +42,7 @@ public class GotoPosition {
 	/** 100 */
 	private int START_UP_ROTATION_SPEED = 200;
 	// Circle Around Ball Move Variables
-	private int CIRCLE_SPEED = 2200;
+	private int CIRCLE_SPEED = 2000;
 	
 	private boolean goStraightForward = false;
 	
