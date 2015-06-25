@@ -60,7 +60,7 @@ public class StandardMode extends Mode {
 
 				if (runners.size() > 0 && runners.get(0).getPosition() != null) {
 					double shootDirection = ballPosition.getAngle(runners.get(0).getPosition());
-					chipKick = -45;
+					chipKick = -40;
 					attacker.update(shootDirection, chipKick, ballPosition);
 				}
 			}
@@ -78,6 +78,46 @@ public class StandardMode extends Mode {
 			if (runners.size() > 0 && runners.get(0).getPosition() != null) {
 				double shootDirection = ballPosition.getAngle(runners.get(0).getPosition());
 				chipKick = 0;
+				attacker.update(shootDirection, chipKick, ballPosition);
+			}
+		} else if (world.getReferee().getCommand() == Command.DIRECT_FREE_BLUE
+				|| world.getReferee().getCommand() == Command.DIRECT_FREE_YELLOW) {
+			FieldPoint freeShot = world.hasFreeShot();
+
+			if (freeShot != null) {
+				double shootDirection = ballPosition.getAngle(freeShot);
+				chipKick = -100;
+				attacker.update(shootDirection, chipKick, ballPosition);
+			} else {
+				ArrayList<Ally> runners = new ArrayList<Ally>();
+
+				for (RobotExecuter itExecuter : executers) {
+					Ally robot = (Ally) itExecuter.getRobot();
+
+					if (robot.getRole() == RobotMode.RUNNER)
+						runners.add(robot);
+				}
+
+				if (runners.size() > 0 && runners.get(0).getPosition() != null) {
+					double shootDirection = ballPosition.getAngle(runners.get(0).getPosition());
+					chipKick = -60;
+					attacker.update(shootDirection, chipKick, ballPosition);
+				}
+			}
+		} else if (world.getReferee().getCommand() == Command.INDIRECT_FREE_BLUE
+				|| world.getReferee().getCommand() == Command.INDIRECT_FREE_YELLOW) {
+			ArrayList<Ally> runners = new ArrayList<Ally>();
+
+			for (RobotExecuter itExecuter : executers) {
+				Ally robot = (Ally) itExecuter.getRobot();
+
+				if (robot.getRole() == RobotMode.RUNNER)
+					runners.add(robot);
+			}
+
+			if (runners.size() > 0 && runners.get(0).getPosition() != null) {
+				double shootDirection = ballPosition.getAngle(runners.get(0).getPosition());
+				chipKick = -60;
 				attacker.update(shootDirection, chipKick, ballPosition);
 			}
 		}

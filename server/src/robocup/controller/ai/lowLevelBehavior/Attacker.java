@@ -29,11 +29,11 @@ public class Attacker extends LowLevelBehavior {
 
 		this.role = RobotMode.ATTACKER;
 		go = new GotoPosition(robot, robot.getPosition(), ballPosition);
-		go.setStartupSpeedVelocity(400);
+		go.setStartupSpeedVelocity(500);
 		go.setMaxVelocity(1500);
 		go.setDistanceToSlowDown(500);
-		go.setMaxRotationSpeed(1400);
-		go.setStartupSpeedRotation(130);
+		go.setMaxRotationSpeed(1200);
+		go.setStartupSpeedRotation(180);
 		Referee referee = World.getInstance().getReferee();
 		if(	referee.getPreviousCommand().equals(Command.PREPARE_PENALTY_YELLOW) && referee.getAllyTeamColor().equals(TeamColor.YELLOW)
 				||
@@ -71,13 +71,24 @@ public class Attacker extends LowLevelBehavior {
 //					|| robot.getPosition().getDeltaDistance(ballPosition) > 300); //HAD JE COMM + Robot.DIAMETER/2ENTAAR 
 //			
 //
-			if(robot.getPosition().getDeltaDistance(ballPosition) < 500){
+			if (robot.getPosition().getDeltaDistance(ballPosition) < 500 && isValidOrientation()) {
 				go.setKick(chipKick);
 			}
-
+			else{
+				go.setKick(0);
+			}
 
 			changeDestination(newDestination);
 		}
+	}
+
+	private boolean isValidOrientation() {
+		double orientation = robot.getOrientation();
+		// correct orientation so you can compare it
+		orientation = orientation < 0 ? orientation + 360 : orientation;
+
+		double correctedShootDirection = shootDirection < 0 ? shootDirection + 360 : shootDirection;
+		return Math.abs(orientation - correctedShootDirection) < 8.0;
 	}
 
 	/**
@@ -86,9 +97,9 @@ public class Attacker extends LowLevelBehavior {
 	 */
 	private void changeDestination(FieldPoint newDestination) {
 		go.setTarget(ballPosition);
-		if(chipKick == 0){
+		if (go.getChipKick() == 0) {
 			go.setDestination(newDestination);
-			go.setMaxRotationSpeed(1400);
+			go.setMaxRotationSpeed(1200);
 			go.setForcedSpeed(0);
 			go.calculateTurnAroundTarget(300);
 			go.setGoStraightForward(false);
@@ -98,9 +109,8 @@ public class Attacker extends LowLevelBehavior {
 			double overshootBallY = ballPosition.getY() + Math.sin(Math.toRadians(robot.getPosition().getAngle(ballPosition))) * 80;
 			
 			go.setDestination(new FieldPoint(overshootBallX, overshootBallY));
-			go.setStartupSpeedVelocity(400);
 
-			go.setForcedSpeed(1500); // 2000
+			go.setForcedSpeed(2000); // 2000
 //			go.goForwardUntilKick(3000);
 			go.setMaxRotationSpeed(300);
 			go.setGoStraightForward(true);

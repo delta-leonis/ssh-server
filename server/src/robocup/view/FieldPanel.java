@@ -745,6 +745,15 @@ public class FieldPanel extends JPanel {
 						}
 					}
 				}
+				else{
+					if(pathPlanner.getDestination() != null){
+						g.setColor(Color.RED);
+						((Graphics2D)g).setStroke(new BasicStroke(5));
+						g.drawOval(x - 10, y - 10, 20, 20);
+						((Graphics2D)g).setStroke(new BasicStroke(1));
+						g.drawString(""+robotId, x+20, y);
+					}
+				}
 			}
 
 		}

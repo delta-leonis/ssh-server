@@ -186,7 +186,7 @@ public class World extends Observable {
 				currentGameState = GameState.STOPPED;
 			else if (referee.getCommand() == Command.HALT)
 				currentGameState = GameState.HALTED;
-			else if (ball.getPosition().getDeltaDistance(ballPositionForGameState) > 100) {
+			else if (ball.getPosition().getDeltaDistance(ballPositionForGameState) > 500) {
 				ballPositionForGameState = null;
 				currentGameState = GameState.NORMAL_PLAY;
 			}
