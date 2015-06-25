@@ -32,15 +32,6 @@ public class Counter extends LowLevelBehavior {
 		go.setDistanceToSlowDown(300);
 		go.setMaxRotationSpeed(1200);
 		go.setStartupSpeedRotation(200);
-		
-		boolean isEastTeam = World.getInstance().getReferee().getEastTeam()
-				.equals(World.getInstance().getReferee().getAlly());
-		if(isEastTeam){
-			go.setAvoidEastGoal(true);
-		}
-		else{
-			go.setAvoidWestGoal(true);
-		}
 	}
 
 	/**
