@@ -23,7 +23,6 @@ import robocup.output.ComInterface;
  * @see {@link robocup.output.ComInterface ComInterface}
  */
 public class GotoPosition {
-	public static final boolean SIMULATED = false;
 	// Movement Speed Variables
 	/** 450 */
 	private int DISTANCE_TO_SLOW_DOWN = 450;
@@ -174,12 +173,7 @@ public class GotoPosition {
 			// If robot is locked up, the route will be null
 			if(route == null){
 				LOGGER.warning("Robot #" + robot.getRobotId() + " can't reach destination.");
-				if(SIMULATED){
-					output.sendForSimulation(robot.getRobotId(), 0, 0, 0, 0, 0, false);
-				}
-				else{
-					output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
-				}
+				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
 				return;
 			}
 			
@@ -187,12 +181,7 @@ public class GotoPosition {
 			if (route.size() > 0 && route.get(0) != null) {
 				destination = route.get(0);
 			} else {
-				if(SIMULATED){
-					output.sendForSimulation(robot.getRobotId(), 0, 0, 0, 0, 0, false);
-				}
-				else{
-					output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
-				}
+				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
 				return;
 			}
 			
@@ -224,24 +213,13 @@ public class GotoPosition {
 			currentSpeed = speed;
 			if(dribble && robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition()) < Robot.DIAMETER/2 + 20 && System.currentTimeMillis() > lastKickTime + 500 && chipKick != 0){
 				// Send the command
-				if(SIMULATED){
-					output.sendForSimulation(robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationToTarget, (int)rotationSpeed, chipKick, alwaysFaceTarget);
-				}
-				else{
-					output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, chipKick, dribble);
-				}
+				output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, chipKick, dribble);
 				LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + "," + chipKick + "," + dribble);
 				lastKickTime = System.currentTimeMillis();
 			}
 			// Don't kick or chip if we aren't nearby.
 			else{
-				// Send the command
-				if(SIMULATED){
-					output.sendForSimulation(robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationToTarget, (int)rotationSpeed, 0, alwaysFaceTarget);
-				}
-				else{
-					output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, 0, dribble);
-				}
+				output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, 0, dribble);
 				LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + ",0 ," + dribble);
 			}
 //			System.out.println("\t " + robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)currentSpeed + "," + (int)rotationSpeed );
@@ -262,12 +240,7 @@ public class GotoPosition {
 	 */
 	public boolean prepareForTakeOff(){
 		if(World.getInstance().getGameState() == GameState.HALTED){
-			if(SIMULATED){
-				output.sendForSimulation(robot.getRobotId(), 0, 0, 0, 0, 0, false);
-			}
-			else{
-				output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
-			}			
+			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
 			return false;
 		}
 		if(World.getInstance().getGameState() == GameState.STOPPED){
@@ -283,21 +256,10 @@ public class GotoPosition {
 		}
 		if (destination == null) {
 			if (target == null) {
-				if(SIMULATED){
-					output.sendForSimulation(robot.getRobotId(), 0, 0, 0, 0, 0, false);
-				}
-				else{
 					output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
-				}
 				return false;
 			} else {
-				if(SIMULATED){
-					double rotation = rotationToDest(robot.getPosition(), target);;
-					output.sendForSimulation(robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotation,0), (int)rotation, 0, dribble);
-				}
-				else{
 					output.send(1, robot.getRobotId(), 0, 0, (int)getRotationSpeed(rotationToDest(robot.getPosition(), target),0), 0, dribble);
-				}
 				return false;
 			}
 		}
