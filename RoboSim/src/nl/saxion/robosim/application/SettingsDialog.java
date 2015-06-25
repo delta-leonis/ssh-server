@@ -5,10 +5,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import nl.saxion.robosim.model.Model;
 import nl.saxion.robosim.model.Settings;
-
 import org.controlsfx.dialog.Dialog;
 
 /**
@@ -19,6 +19,7 @@ public class SettingsDialog {
     TextArea outputIp, inputIp;
     TextArea outputPort, inputPort;
     TextArea refIp, refPort;
+    TextArea accel, speed;
     Button cancelButton, acceptButton;
     Model model;
     Stage stage;
@@ -71,6 +72,20 @@ public class SettingsDialog {
         refIp.setMaxHeight(30);
         refIp.setMaxWidth(200);
 
+        //robot settings
+        //speed
+        accel = new TextArea();
+        accel.setText("" + settings.getSpeed());
+        accel.setPromptText("Robot max speed");
+        accel.setMaxHeight(30);
+        accel.setMaxWidth(100);
+        //acceleration
+        speed = new TextArea();
+        speed.setText("" + settings.getAcceleration());
+        speed.setPromptText("Robot max acceleration");
+        speed.setMaxHeight(30);
+        speed.setMaxWidth(100);
+
         GridPane grid = new GridPane();
 
         //add input fields to grid
@@ -87,6 +102,12 @@ public class SettingsDialog {
         grid.add(refIp,0,5);
         grid.add(refPort,1,5);
 
+        grid.add(new Label("Robot speed mm/s"), 3, 0);
+        grid.add(speed, 3,1);
+
+        grid.add(new Label("Robot acceleration mm/s"),3,2);
+        grid.add(accel, 3,3);
+
         //grid.setMaxHeight(400);
         acceptButton = new Button("Accept");
         acceptButton.setStyle("-fx-background-color: #5cb808; -fx-background-radius: 0; -fx-text-fill: #ffffff; -fx-padding: 15px 25px;");
@@ -97,7 +118,7 @@ public class SettingsDialog {
         cancelButton = new Button("Cancel");
         cancelButton.setStyle("-fx-background-color: #101010; -fx-background-radius: 0; -fx-text-fill: #ffffff; -fx-padding: 15px 25px;");
 
-        dlg.setMasthead("Communication Settings");
+        dlg.setMasthead("Settings");
         dlg.getMasthead().setStyle("-fx-background-color: #101010; ");
         dlg.getMasthead().lookup(".label").setStyle("  -fx-text-fill: #ffffff;");
         grid.add(acceptButton,0,6);
@@ -124,6 +145,12 @@ public class SettingsDialog {
         refIp.textProperty().addListener((observable, oldValue, newValue) -> {
             checkInput();
         });
+        speed.textProperty().addListener((observable, oldValue, newValue) -> {
+            checkInput();
+        });
+        accel.textProperty().addListener((observable, oldValue, newValue) -> {
+            checkInput();
+        });
 
         acceptButton.setOnAction(event -> accept());
         cancelButton.setOnAction(event -> dlg.hide());
@@ -131,8 +158,7 @@ public class SettingsDialog {
         dlg.setResizable(false);
         checkInput();
 
-        dlg.setContent(grid);
-//        dlg = DialogStyle.style(dlg, grid);
+        dlg = DialogStyle.style(dlg, grid);
         dlg.show();
     }
 
@@ -143,6 +169,7 @@ public class SettingsDialog {
         Settings settings = Settings.getInstance();
         settings.setCommunicationSettings(inputIp.getText(), inputPort.getText(),outputIp.getText(),outputPort.getText());
         settings.setRefSettings(refIp.getText(), refPort.getText());
+        settings.setRobotSettings(accel.getText(), speed.getText());
         dlg.hide(); 
     }
 
@@ -150,7 +177,7 @@ public class SettingsDialog {
      * Checks wether all input fields have data.
      */
     private void checkInput() {
-        if(inputIp.getText().length() > 0 && inputPort.getText().length() > 0 && outputIp.getText().length() > 0 && outputPort.getText().length() > 0 && refPort.getText().length() > 0 && refIp.getText().length() > 0) {
+        if(inputIp.getText().length() > 0 && inputPort.getText().length() > 0 && outputIp.getText().length() > 0 && outputPort.getText().length() > 0 && refPort.getText().length() > 0 && refIp.getText().length() > 0 && speed.getText().length() > 0 && accel.getText().length() > 0) {
             acceptButton.setDisable(false);
         } else {
             acceptButton.setDisable(true);

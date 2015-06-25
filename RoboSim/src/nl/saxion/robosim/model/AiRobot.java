@@ -18,7 +18,7 @@ import java.util.List;
 public class AiRobot {
 
     private LinkedList<Target> targetList = new LinkedList<>();
-    private double velocity, orientation, currentX, currentY, rotationSpeed, shootkicker, scale = 1;
+    private double velocity, orientation, direction, currentX, currentY, rotationSpeed, shootkicker, scale = 1;
     private boolean dribble;
     private int id;
     private double velocity_X, velocity_Y;
@@ -34,13 +34,13 @@ public class AiRobot {
         System.out.println("X : " + currentX + " : Y : " + currentY);
         this.currentX = currentX;
         this.currentY = currentY;
-        orientation = 270;
+        orientation = 90;
         velocity = 0;
         this.id = id;
     }
 
-    public synchronized void setOrientation(float orientation) {
-        this.orientation = orientation;
+    public synchronized void setDirection(float direction) {
+        this.direction = -direction;
     }
 
     public synchronized void setShootkicker(float shootkicker) {
@@ -88,11 +88,31 @@ public class AiRobot {
      * Gets called by the {@link Model} when de AiRobot should update it's dataset
      */
     public synchronized void update() {
-        double velocity_X = (velocity / 60) * Math.cos(orientation);
-        double velocity_Y = (velocity / 60) * Math.sin(orientation);
+        Settings s = Settings.getInstance();
+
+        double wantedVelX = (Math.min(/*500*/s.getSpeed(), velocity) / 60) * Math.cos(direction);
+        double wantedVelY = (Math.min(/*500*/s.getSpeed(), velocity) / 60) * Math.sin(direction);
+
+        //acceleration
+        if (Math.abs(velocity_X - wantedVelX) < 20) {
+            velocity_X = wantedVelX;
+        } else {
+            velocity_X += s.getAcceleration()/*2*/;
+        }
+
+        if (Math.abs(velocity_Y - wantedVelY) < 20) {
+            velocity_Y = wantedVelY;
+        } else {
+            velocity_Y += s.getAcceleration();// 2;
+        }
 
         currentX += velocity_X;
         currentY += velocity_Y;
+    }
+
+    public void setOrientationToBall(float x, float y) {
+        double targetDegrees = Math.toDegrees(Math.atan2(y - currentY, x - currentX));
+        orientation = (float) targetDegrees + 90f;
     }
 
     public void setY(float y) {
@@ -139,8 +159,8 @@ public class AiRobot {
                 // Calculate angle towards
                 double targetDegrees = Math.toDegrees(Math.atan2(target.getY() - currentY, target.getX() - currentX));
                 orientation = (float) targetDegrees + 90f;
-                velocity_X = (1000 / 60) * Math.cos(targetDegrees);
-                velocity_Y = (1000 / 60) * Math.sin(targetDegrees);
+                velocity_X = (100 / 60) * Math.cos(targetDegrees);
+                velocity_Y = (100 / 60) * Math.sin(targetDegrees);
             }
             currentX += velocity_X;
             currentY += velocity_Y;

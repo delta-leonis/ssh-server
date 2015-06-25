@@ -1,49 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.canvas.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            onKeyPressed="#exitOnEscape" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.saxion.robosim.controller.UIController">
+
+<BorderPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#exitOnEscape" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.saxion.robosim.controller.UIController">
     <top>
         <BorderPane fx:id="menubar" BorderPane.alignment="CENTER">
             <left>
                 <ImageView fitHeight="75.0" fitWidth="300.0" pickOnBounds="true" BorderPane.alignment="CENTER">
                     <image>
-                        <Image url="@RoboSim-logo-sm.png"/>
+                        <Image url="@RoboSim-logo-sm.png" />
                     </image>
                 </ImageView>
             </left>
             <center>
                 <FlowPane>
                     <children>
-                        <Button maxHeight="70.0" mnemonicParsing="false" onAction="#showFileChooser" text="Open log"/>
-                        <Button maxHeight="70.0" mnemonicParsing="false" onAction="#showSettings" text="Settings"/>
+                        <Button maxHeight="70.0" mnemonicParsing="false" onAction="#showFileChooser" text="Open log" />
+                        <Button maxHeight="70.0" mnemonicParsing="false" onAction="#showSettings" text="Settings" />
+                        <Button maxHeight="70.0" mnemonicParsing="false" onAction="#resetAI" text="Reset" />
                     </children>
                 </FlowPane>
             </center>
             <right>
                 <FlowPane alignment="TOP_RIGHT">
                     <children>
-                        <VBox fx:id="top" alignment="CENTER" prefWidth="75.0" styleClass="green"
-                              GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <VBox fx:id="top" alignment="CENTER" prefWidth="75.0" styleClass="green" GridPane.columnIndex="0" GridPane.rowIndex="0">
                             <children>
-                                <Label fx:id="FPS" styleClass="labelInfo"/>
-                                <Label styleClass="labelSpecial" text="FPS"/>
+                                <Label fx:id="FPS" styleClass="labelInfo" />
+                                <Label styleClass="labelSpecial" text="FPS" />
                             </children>
                         </VBox>
 
-                        <VBox fx:id="top" alignment="CENTER" prefWidth="75.0" styleClass="green"
-                              GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <VBox fx:id="top" alignment="CENTER" prefWidth="75.0" styleClass="green" GridPane.columnIndex="1" GridPane.rowIndex="0">
                             <children>
-                                <Label fx:id="RDR" styleClass="labelInfo"/>
-                                <Label styleClass="labelSpecial" text="RDR"/>
+                                <Label fx:id="RDR" styleClass="labelInfo" />
+                                <Label styleClass="labelSpecial" text="RDR" />
                             </children>
                         </VBox>
-                        <Button mnemonicParsing="false" onAction="#exitApplication" text="Exit"/>
+                        <Button mnemonicParsing="false" onAction="#exitApplication" text="Exit" />
                     </children>
                 </FlowPane>
             </right>
@@ -54,13 +55,13 @@
             <children>
                 <ImageView fitWidth="300.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
                     <image>
-                        <Image url="@logo.png"/>
+                        <Image url="@logo.png" />
                     </image>
                 </ImageView>
 
                 <ComboBox fx:id="refereeCommands" prefWidth="260.0">
                     <VBox.margin>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                     </VBox.margin>
                 </ComboBox>
                 <HBox fx:id="cmdID" prefHeight="60.0" prefWidth="300.0">
@@ -68,15 +69,15 @@
 
                         <VBox fx:id="labelLeft" alignment="CENTER" prefWidth="150.0" styleClass="green">
                             <children>
-                                <Label fx:id="CMD" styleClass="labelInfo"/>
-                                <Label styleClass="labelSpecial" text="CMD"/>
+                                <Label fx:id="CMD" styleClass="labelInfo" />
+                                <Label styleClass="labelSpecial" text="CMD" />
                             </children>
                         </VBox>
 
                         <VBox fx:id="labelRight" alignment="CENTER" prefWidth="150.0" styleClass="green">
                             <children>
-                                <Label fx:id="RobotId" styleClass="labelInfo"/>
-                                <Label styleClass="labelSpecial" text="ID"/>
+                                <Label fx:id="RobotId" styleClass="labelInfo" />
+                                <Label styleClass="labelSpecial" text="ID" />
                             </children>
                         </VBox>
                     </children>
@@ -86,8 +87,8 @@
 
                         <VBox alignment="CENTER" prefWidth="100.0" styleClass="vbox">
                             <children>
-                                <Label fx:id="RobotX" styleClass="labelInfo"/>
-                                <Label styleClass="labelSpecial" text="X"/>
+                                <Label fx:id="RobotX" styleClass="labelInfo" />
+                                <Label styleClass="labelSpecial" text="X" />
 
 
                             </children>
@@ -95,22 +96,22 @@
 
                         <VBox alignment="CENTER" prefWidth="100.0" styleClass="green">
                             <children>
-                                <Label fx:id="RobotY" styleClass="labelInfo"/>
-                                <Label styleClass="labelSpecial" text="Y"/>
+                                <Label fx:id="RobotY" styleClass="labelInfo" />
+                                <Label styleClass="labelSpecial" text="Y" />
                             </children>
                         </VBox>
 
                         <VBox alignment="CENTER" prefWidth="100.0" styleClass="vbox">
                             <children>
-                                <Label fx:id="RobotOrientation" styleClass="labelInfo"/>
-                                <Label styleClass="labelSpecial" text="Orientation"/>
+                                <Label fx:id="RobotOrientation" styleClass="labelInfo" />
+                                <Label styleClass="labelSpecial" text="Orientation" />
                             </children>
                         </VBox>
                     </children>
                 </HBox>
 
 
-                <ListView fx:id="frameList" onKeyPressed="#keyUpDown" prefHeight="200.0" prefWidth="200.0"/>
+                <ListView fx:id="frameList" onKeyPressed="#keyUpDown" prefHeight="200.0" prefWidth="200.0" />
 
             </children>
         </VBox>
@@ -120,44 +121,37 @@
             <center>
                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                     <children>
-                        <Canvas fx:id="canvas" height="600" width="900"/>
+                        <Canvas fx:id="canvas" height="600" width="900" />
                     </children>
                 </AnchorPane>
             </center>
             <bottom>
                 <BorderPane fx:id="buttonWrapper" prefHeight="105.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                     <left>
-                        <ImageView fx:id="backward_button" fitHeight="67.0" fitWidth="200.0"
-                                   onMouseClicked="#backwardClick" pickOnBounds="true" preserveRatio="true"
-                                   BorderPane.alignment="CENTER">
+                        <ImageView fx:id="backward_button" fitHeight="67.0" fitWidth="200.0" onMouseClicked="#backwardClick" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
                             <image>
-                                <Image url="@backward.png"/>
+                                <Image url="@backward.png" />
                             </image>
                         </ImageView>
                     </left>
                     <right>
-                        <ImageView fx:id="forward_button" fitHeight="67.0" fitWidth="200.0"
-                                   onMouseClicked="#forwardClick" pickOnBounds="true" preserveRatio="true"
-                                   BorderPane.alignment="CENTER">
+                        <ImageView fx:id="forward_button" fitHeight="67.0" fitWidth="200.0" onMouseClicked="#forwardClick" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
                             <image>
-                                <Image url="@forward.png"/>
+                                <Image url="@forward.png" />
                             </image>
                         </ImageView>
                     </right>
                     <center>
-                        <FlowPane alignment="CENTER" columnHalignment="CENTER" prefHeight="200.0" prefWidth="200.0"
-                                  BorderPane.alignment="CENTER">
+                        <FlowPane alignment="CENTER" columnHalignment="CENTER" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                             <children>
-                                <ImageView fitHeight="67.0" fitWidth="67.0" onMouseClicked="#stopClick"
-                                           pickOnBounds="true" preserveRatio="true">
+                                <ImageView fitHeight="67.0" fitWidth="67.0" onMouseClicked="#stopClick" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@stop.png"/>
+                                        <Image url="@stop.png" />
                                     </image>
                                 </ImageView>
-                                <ImageView fx:id="start_button" fitHeight="67.0" fitWidth="67.0"
-                                           onMouseClicked="#startClick" pickOnBounds="true" preserveRatio="true">
+                                <ImageView fx:id="start_button" fitHeight="67.0" fitWidth="67.0" onMouseClicked="#startClick" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@play.png"/>
+                                        <Image url="@play.png" />
                                     </image>
                                 </ImageView>
 
@@ -167,11 +161,11 @@
                     <bottom>
                         <Pane fx:id="sliderPane">
                             <BorderPane.margin>
-                                <Insets bottom="20.0" left="20.0" right="20.0"/>
+                                <Insets bottom="20.0" left="20.0" right="20.0" />
                             </BorderPane.margin>
                             <children>
 
-                                <Slider fx:id="slider"/>
+                                <Slider fx:id="slider" />
 
                             </children>
                         </Pane>

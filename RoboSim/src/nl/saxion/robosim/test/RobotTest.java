@@ -1,5 +1,6 @@
 package nl.saxion.robosim.test;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionRobot;
 import org.junit.Test;
 
@@ -7,25 +8,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Created by Fieldhof on 27-5-2015.
  */
 public class RobotTest {
 
-    public SSL_DetectionRobot makeRobot() {
+    public SSL_DetectionRobot makeRobot(String filePath) throws IOException{
         byte[] data;
-
-        try {
-            data = Files.readAllBytes(Paths.get("src\\nl\\saxion\\robosim\\test\\test_createrobot.log"));
-            return SSL_DetectionRobot.parseFrom(data);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-
+        data = Files.readAllBytes(Paths.get(filePath));
+        return SSL_DetectionRobot.parseFrom(data);
     }
 
     /**
@@ -41,8 +34,15 @@ public class RobotTest {
      * height: 145.0
      */
     @Test
-    public void testRobotCreation() {
-        SSL_DetectionRobot robot = makeRobot();
+    public void testRobot() {
+        SSL_DetectionRobot robot;
+        try {
+            robot = makeRobot("src\\nl\\saxion\\robosim\\test\\log\\test_robot.log");
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+            return;
+        }
         assertNotNull(robot);
 
         assertEquals(0.9520438, robot.getConfidence(), 1e-4);
@@ -53,5 +53,15 @@ public class RobotTest {
         assertEquals(690.9697, robot.getPixelX(), 1e-4);
         assertEquals(23.454546, robot.getPixelY(), 1e-4);
         assertEquals(145.0, robot.getHeight(), 1e-4);
+    }
+
+    @Test (expected = InvalidProtocolBufferException.class)
+    public void testWrongLog() throws IOException{
+        makeRobot("src\\nl\\saxion\\robosim\\test\\log\\test_random.log");
+    }
+
+    @Test (expected = InvalidProtocolBufferException.class)
+    public void testEmptyLog() throws IOException {
+        makeRobot("src\\nl\\saxion\\robosim\\test\\log\\test_empty.log");
     }
 }
