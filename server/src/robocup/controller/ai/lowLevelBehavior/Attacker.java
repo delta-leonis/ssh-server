@@ -1,9 +1,13 @@
 package robocup.controller.ai.lowLevelBehavior;
 
 import robocup.controller.ai.movement.GotoPosition;
+import robocup.input.protobuf.Referee.SSL_Referee.Command;
 import robocup.model.FieldPoint;
+import robocup.model.Referee;
 import robocup.model.Robot;
+import robocup.model.World;
 import robocup.model.enums.RobotMode;
+import robocup.model.enums.TeamColor;
 
 public class Attacker extends LowLevelBehavior {
 
@@ -30,9 +34,17 @@ public class Attacker extends LowLevelBehavior {
 		go.setDistanceToSlowDown(500);
 		go.setMaxRotationSpeed(1400);
 		go.setStartupSpeedRotation(130);
-//		go.setAvoidEastGoal(true);
-//		go.setAvoidWestGoal(true);
-		
+		Referee referee = World.getInstance().getReferee();
+		if(	referee.getPreviousCommand().equals(Command.PREPARE_PENALTY_YELLOW) && referee.getAllyTeamColor().equals(TeamColor.YELLOW)
+				||
+			referee.getPreviousCommand().equals(Command.PREPARE_PENALTY_BLUE) && referee.getAllyTeamColor().equals(TeamColor.BLUE)){
+			go.setAvoidEastGoal(false);
+			go.setAvoidWestGoal(false);
+		}
+		else{
+			go.setAvoidEastGoal(true);
+			go.setAvoidWestGoal(true);
+		}
 	}
 
 	/**

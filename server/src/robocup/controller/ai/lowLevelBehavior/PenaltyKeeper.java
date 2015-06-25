@@ -28,6 +28,8 @@ public class PenaltyKeeper extends LowLevelBehavior {
 		go.setDistanceToSlowDown(700);
 		go.setStartupSpeedVelocity(750);
 		go.setMaxVelocity(2000);
+		go.setAvoidEastGoal(false);
+		go.setAvoidWestGoal(false);
 	}
 
 	@Override

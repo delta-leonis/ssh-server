@@ -33,6 +33,8 @@ public class Keeper extends LowLevelBehavior {
 		this.role = RobotMode.KEEPER;
 		go = new GotoPosition(robot, centerGoalPosition, ballPosition);
 		go.setStartupSpeedVelocity(800);
+		go.setAvoidEastGoal(false);
+		go.setAvoidWestGoal(false);
 	}
 
 	/**
