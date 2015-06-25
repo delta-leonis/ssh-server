@@ -29,11 +29,11 @@ public class Attacker extends LowLevelBehavior {
 
 		this.role = RobotMode.ATTACKER;
 		go = new GotoPosition(robot, robot.getPosition(), ballPosition);
-		go.setStartupSpeedVelocity(400);
+		go.setStartupSpeedVelocity(450);
 		go.setMaxVelocity(1500);
 		go.setDistanceToSlowDown(500);
 		go.setMaxRotationSpeed(1400);
-		go.setStartupSpeedRotation(130);
+		go.setStartupSpeedRotation(150);
 		Referee referee = World.getInstance().getReferee();
 		if(	referee.getPreviousCommand().equals(Command.PREPARE_PENALTY_YELLOW) && referee.getAllyTeamColor().equals(TeamColor.YELLOW)
 				||
@@ -106,7 +106,7 @@ public class Attacker extends LowLevelBehavior {
 			double overshootBallY = ballPosition.getY() + Math.sin(Math.toRadians(robot.getPosition().getAngle(ballPosition))) * 80;
 			
 			go.setDestination(new FieldPoint(overshootBallX, overshootBallY));
-			go.setStartupSpeedVelocity(400);
+			go.setStartupSpeedVelocity(450);
 
 			go.setForcedSpeed(1500); // 2000
 //			go.goForwardUntilKick(3000);
