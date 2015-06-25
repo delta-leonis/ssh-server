@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 
@@ -43,8 +44,10 @@ public class VisibleRobotSection extends SectionBox {
 			checkboxes.add(checkbox);
 			add(checkbox, (numberOfRobots - 1 == i) ? "wrap" : "");
 		}
-
-		add(new JButton(new AbstractAction("Autoselect") {
+		
+		Box buttonBox = Box.createHorizontalBox();
+		
+		buttonBox.add( new JButton( new AbstractAction("Autoselect") {
 			/**
 			 * Loops all existing {@link Ally}s, when {@link Robot} is not onsight it is 
 			 * removed from view
@@ -58,7 +61,31 @@ public class VisibleRobotSection extends SectionBox {
 				}
 				world.getGUI().update("robotBoxes");
 			}
-		}), "span");
+		}));
+		
+		buttonBox.add( new JButton( new AbstractAction("All") {
+			/**
+			 * Selects all checkboxes, so all of the robots are visible
+			 */
+			public void actionPerformed(ActionEvent actionEvent) {
+				for (JCheckBox checkBox : checkboxes) 							checkBox.setSelected(true);
+				for (Robot robot : world.getReferee().getAlly().getRobots()) 	robot.setVisible(true);
+				world.getGUI().update("robotBoxes");
+			}
+		} ) );
+		
+		buttonBox.add( new JButton( new AbstractAction("None") {
+			/**
+			 * Deselects all checkboxes, so none of the robots are visible
+			 */
+			public void actionPerformed(ActionEvent actionEvent) {
+				for (JCheckBox checkBox : checkboxes)  							checkBox.setSelected(false);
+				for (Robot robot : world.getReferee().getAlly().getRobots()) 	robot.setVisible(false);
+				world.getGUI().update("robotBoxes");
+			}
+		} ) );
+		
+		add(buttonBox, "Span 6");
 	}
 
 	/**
