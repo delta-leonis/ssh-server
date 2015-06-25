@@ -2,6 +2,7 @@ package robocup.view;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -22,6 +23,7 @@ import robocup.model.enums.RobotMode;
 public class RobotBox extends JPanel {
 	private Robot robot;
 	private JLabel robotStatus, robotPosition, robotRole;
+	private boolean missing = false;
 
 	/**
 	 * Creates a {@link JPanel} with the information of a single {@link Robot}
@@ -72,9 +74,10 @@ public class RobotBox extends JPanel {
 	}
 
 	public static Color getRoleColor(RobotMode robotMode) {
-		Color[] colors = {Color.BLUE.brighter().brighter(), Color.CYAN, Color.GREEN, Color.MAGENTA, Color.ORANGE, Color.YELLOW,  Color.RED, new Color(255, 150, 50), new Color(50, 150, 255), new Color(255, 50, 150), Color.PINK};
 		if(robotMode == null)
 			return Color.LIGHT_GRAY;
+
+		Color[] colors = {Color.BLUE.brighter().brighter(), Color.CYAN, Color.GREEN, Color.MAGENTA, Color.ORANGE, Color.YELLOW,  Color.RED, new Color(255, 150, 50), new Color(50, 150, 255), new Color(255, 50, 150), Color.PINK};
 		return colors[Math.min(robotMode.ordinal(), colors.length-1)];
 	}
 	
@@ -90,5 +93,20 @@ public class RobotBox extends JPanel {
 			setBackground(getRoleColor(((Ally)robot).getRole()).darker());
 		else
 			setBackground(getRoleColor(((Ally)robot).getRole()));
+		
+		missing = (robot.getPosition() != null && !robot.isOnSight());
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public void paint(Graphics g){
+		super.paint(g);
+		if(missing){
+			g.setColor(getRoleColor(((Ally)robot).getRole()).darker().darker());
+			for(int x = 0; x <= getWidth() + 50; x+=10)
+				g.drawLine(x, 0, x-50, getHeight());
+		}
 	}
 }
