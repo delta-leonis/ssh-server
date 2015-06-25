@@ -74,6 +74,28 @@ public abstract class FieldObject {
 		this.position = position;
 	}
 
+	/**
+	 * 
+	 * @param object	object to compare to
+	 * @param distance	maximum distance to object
+	 * @param angle		maximum difference in angle to object
+	 * @return			true when object is close
+	 */
+	public boolean isCloseTo(Robot robot, int distance, int angle){
+		return Math.abs(
+				Math.abs(robot.getOrientation()) - Math.abs(robot.getPosition().getAngle(getPosition()))) < angle
+				&& robot.getPosition().getDeltaDistance(getPosition()) < distance;
+	}
+	/**
+	 * 
+	 * @param object	object to compare to
+	 * @param distance	maximum distance to object
+	 * @return			true when object is close
+	 */
+	public boolean isCloseTo(FieldObject object, int distance){
+		return object.getPosition().getDeltaDistance(getPosition()) < distance ;
+	}
+	
 	@Override
 	public String toString() {
 		return "position=" + position + ", lastUpdateTime=" + lastUpdateTime + ", direction=" + direction + ", speed="
