@@ -83,7 +83,7 @@ public class SettingsSection extends SectionBox {
 		add(new JLabel("Field half"));
 		add(fieldHalfBox);
 		add(setHalfButton, "span 2, growx");
-		add(new JLabel("Field frequency"));
+		add(new JLabel("Basestation frequency"));
 		add(frequencyBox);
 		add(setFrequencyButton, "span 2, growx");
 		add(new JLabel("Minimum logger level"));
