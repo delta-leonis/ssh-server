@@ -282,6 +282,13 @@ public class UIController implements Initializable {
         new SettingsDialog().startDialog((Stage) canvas.getScene().getWindow());
     }
 
+    /**
+     * Reset robots position to bench
+     */
+    public void resetRobots() {
+
+    }
+
     public void updateRobotUI(int selectedId, float xPos, float yPos, float orientation) {
         RobotId.setText("" + selectedId);
         RobotY.setText(String.format("%.2f", yPos));
@@ -397,5 +404,9 @@ public class UIController implements Initializable {
         RobotY.setText("");
         RobotX.setText("");
         RobotOrientation.setText("");
+    }
+
+    public void resetAI() {
+        model.moveAiToBench();
     }
 }

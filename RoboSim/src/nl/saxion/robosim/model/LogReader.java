@@ -1,11 +1,12 @@
 package nl.saxion.robosim.model;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import javafx.application.Platform;
+import nl.saxion.robosim.exception.InvalidLogFileException;
 import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionFrame;
 import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionRobot;
-import nl.saxion.robosim.model.protobuf.SslWrapper.SSL_WrapperPacket;
 import nl.saxion.robosim.model.protobuf.SslReferee.SSL_Referee;
+import nl.saxion.robosim.model.protobuf.SslReferee.SSL_Referee.TeamInfo;
+import nl.saxion.robosim.model.protobuf.SslWrapper.SSL_WrapperPacket;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -41,72 +42,54 @@ public class LogReader {
 
     private SSL_DetectionFrame curFrame;
     private SSL_Referee curReferee;
+
     private Map<Integer, Long> blueTimes, yellowTimes;
     private long updateCount = 0;
     private boolean fieldIsSet = false;
 
     /**
-     * Constructor for Logreader
-     * Sets the filename to "RoboSim\\2013-06-29-133738_odens_mrl.log"
+     * Constructor for LogReader
+     * @param fileName
+     * @throws FileNotFoundException, InvalidProtocolBufferException, InvalidLogFileException, IOException
      */
-    public LogReader() {
-        this("RoboSim\\2013-06-29-133738_odens_mrl.log");
-    }
-
-    /**
-     * Constructor for Logreader
-     * Sets the filename to the given fileName
-     */
-    public LogReader(String fileName) {
-        assert fileName != null : "File name can't be null";
+    public LogReader(String fileName) throws IOException{
         Model model = Model.getInstance();
         model.clear();
-        System.out.println("FILEDIALOG");
-
         blueTimes = new HashMap<>();
         yellowTimes = new HashMap<>();
 
         frames = new LinkedList<>();
         referees = new LinkedList<>();
 
-        try {
-            System.out.println("FILEDIALOG");
-            fileStream = new FileInputStream(fileName);
-            readFrames();
-            model.setFrames(frames);
-            model.setReferees(referees);
-            Platform.runLater(model::update);
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("Could not read from file");
-            e.printStackTrace();
-        }
+        fileStream = new FileInputStream(fileName);
+
+        readFrames();
+        model.setFrames(frames);
+        model.setReferees(referees);
     }
 
     /**
-     * Reads the SslDetection and SslReferee objects from the file
+     * Reads the SslDetection and SslReferee objects from the SSL Log File file
      *
      * @throws IOException
      */
     public void readFrames() throws IOException {
         System.out.println("Read Frames");
-        long oldTime = 0, newTime, totalTime = 0, bytesRead = 0;
-
-        //fileStream to read the bytes from
+        long oldTime = 0, newTime, totalTime = 0;
 
         //The first 12 bytes of the file must be a String with value "SSL_LOG_FILE"
         byte[] byteArray = new byte[12];
-        bytesRead = fileStream.read(byteArray);
-        assert bytesRead == 12 : "File header not long enough!";
-        assert new String(byteArray).equals("SSL_LOG_FILE") : "This file is not a SSL log file";
+        fileStream.read(byteArray);
+        if(!new String(byteArray).equals("SSL_LOG_FILE")) {
+            throw new InvalidLogFileException("Log file doesn't begin with \"SSL_LOG_FILE\"");
+        }
 
         //The next 4 bytes must be a int. This int is a version number, we can only read version 1
         byteArray = new byte[4];
-        bytesRead = fileStream.read(byteArray);
-        assert bytesRead == 4 : "File version not long enough!";
-        assert ByteBuffer.wrap(byteArray).getInt() == 1 : "This file is not version 1";
+        fileStream.read(byteArray);
+        if(ByteBuffer.wrap(byteArray).getInt() != 1) {
+            throw new InvalidLogFileException("Log file isn't version 1");
+        }
 
         //The rest of the file are the messages
         byte[] array;
@@ -115,8 +98,8 @@ public class LogReader {
         while (fileStream.available() != 0) {
             //Read new time
             array = new byte[8];
-            bytesRead = fileStream.read(array);
-            assert bytesRead == 8 : "File time was not long enough";
+            fileStream.read(array);
+
             newTime = ByteBuffer.wrap(array).getLong();
             if (oldTime == 0) {
                 oldTime = newTime;
@@ -126,20 +109,17 @@ public class LogReader {
 
             //Read messagetype
             array = new byte[4];
-            bytesRead = fileStream.read(array);
-            assert bytesRead == 4 : "File messageType was not long enough";
+            fileStream.read(array);
             messageType = ByteBuffer.wrap(array).getInt();
 
             //Read length of protobuf
             array = new byte[4];
-            bytesRead = fileStream.read(array);
-            assert bytesRead == 4 : "File protobuf length was not long enough";
+            fileStream.read(array);
             lengthProtoBuf = ByteBuffer.wrap(array).getInt();
 
             //Read message
             array = new byte[lengthProtoBuf];
-            bytesRead = fileStream.read(array);
-            assert bytesRead == lengthProtoBuf : "File message length was not long enough";
+            fileStream.read(array);
 
             switch (messageType) {
                 case MESSAGE_BLANK:
@@ -155,7 +135,7 @@ public class LogReader {
                     break;
                 case MESSAGE_SSL_REFBOX_2013:
                     //update bytes that describe referee
-                    curReferee = SSL_Referee.parseFrom(array);
+                    curReferee = parseReferee(SSL_Referee.parseFrom(array));
                     break;
             }
 
@@ -166,7 +146,6 @@ public class LogReader {
                 curFrame = SSL_DetectionFrame.parseFrom(curFrame.toByteArray());
                 referees.add(curReferee);
                 totalTime -= FRAMETIME;
-//                System.out.println("total time " + totalTime );
             }
         }
         fileStream.close();
@@ -199,7 +178,6 @@ public class LogReader {
             return;
         }
 
-        //frame with new information
         SSL_DetectionFrame newFrame = message.getDetection();
 
         //create a builder from the current frame to edit it.
@@ -244,8 +222,8 @@ public class LogReader {
 
         //update other components
         builder = builder.setFrameNumber(newFrame.getFrameNumber())
-                        .setTCapture(newFrame.getTCapture())
-                        .setTSent(newFrame.getTSent());
+                .setTCapture(newFrame.getTCapture())
+                .setTSent(newFrame.getTSent());
 
         //build the updated frame
         curFrame = builder.build();
@@ -264,6 +242,29 @@ public class LogReader {
             }
         }
         return -1;
+    }
+
+    /**
+     * Method for setting the keeper id
+     * @param referee referee object to change
+     * @return the changed referee object
+     */
+    private SSL_Referee parseReferee (SSL_Referee referee) {
+        Settings settings = Settings.getInstance();
+
+        SSL_Referee.Builder builder = referee.toBuilder();
+        int keeperID = settings.getKeeperId();
+
+        if (!settings.hasTeamYellow()) {
+            TeamInfo teamInfo = builder.getYellowBuilder().setGoalie(keeperID).build();
+            builder = builder.setYellow(teamInfo);
+        }
+        if (!settings.hasTeamBlue()) {
+            TeamInfo teamInfo = builder.getBlueBuilder().setGoalie(keeperID).build();
+            builder = builder.setBlue(teamInfo);
+        }
+
+        return builder.build();
     }
 
     /**

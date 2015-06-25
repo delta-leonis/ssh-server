@@ -44,12 +44,7 @@ public class MultiCastServer {
 
         refIp = s.getRefIp();
         refPort = Integer.parseInt(s.getRefPort());
-        aiSocket = new MulticastSocket();
-        aiGroup = InetAddress.getByName(aiIp);
-        aiSocket.joinGroup(aiGroup);
-        refGroup = InetAddress.getByName(refIp);
-        refSocket = new MulticastSocket(refPort);
-        refSocket.joinGroup(refGroup);
+        set(aiIp, aiPort, refIp, refPort);
     }
 
     /**
@@ -140,6 +135,20 @@ public class MultiCastServer {
 //        System.out.println("robot: " + robot.getX() + " - " + robot.getY());
 
         return robot.getX() != y;
+    }
+
+    public void set(String ip, int port, String refip, int refport) throws IOException {
+        aiIp = ip;
+        aiPort = port;
+        refIp = refip;
+        refPort = refport;
+
+        aiSocket = new MulticastSocket();
+        aiGroup = InetAddress.getByName(aiIp);
+        aiSocket.joinGroup(aiGroup);
+        refGroup = InetAddress.getByName(refIp);
+        refSocket = new MulticastSocket(refPort);
+        refSocket.joinGroup(refGroup);
     }
 }
 

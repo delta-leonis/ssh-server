@@ -1,11 +1,12 @@
 package nl.saxion.robosim.test;
 
-import static org.junit.Assert.assertNotNull;
 import nl.saxion.robosim.model.LogReader;
 import nl.saxion.robosim.model.Model;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 /**
  * Created by DaanBrandt on 22-5-2015.
@@ -20,10 +21,12 @@ public class ModelTest {
 
     @Test
     public void testModelAfter() {
-        Model.destroy();
+        try {
+            new LogReader("2013-06-29-133738_odens_mrl.log");
+        } catch (Exception e) {
+            fail();
+        }
         Model model = Model.getInstance();
-
-        new LogReader("2013-06-29-133738_odens_mrl.log");
         assertNotNull(model.getSSLField()); // kijkt of er een veld uit de log is gelezen
         assertNotNull(model.getLastFrame()); // kijkt of het volgende frame aanwezig is
         assertNotNull(model.getLastReferee()); // kijkt of de volgende referee gevuld is

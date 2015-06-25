@@ -7,6 +7,7 @@ import nl.saxion.robosim.communications.MultiCastServer;
 import nl.saxion.robosim.controller.Renderer;
 import nl.saxion.robosim.controller.SSL_Field;
 import nl.saxion.robosim.controller.UIController;
+import nl.saxion.robosim.model.protobuf.SslDetection;
 import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionFrame;
 import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionRobot;
 import nl.saxion.robosim.model.protobuf.SslGeometry.SSL_GeometryData;
@@ -164,12 +165,17 @@ public class Model {
             }
         }
 
-        aiRobots.forEach(AiRobot::update);
+
+        float x = lastFrame.getBalls(0).getX(), y = lastFrame.getBalls(0).getY();
+        aiRobots.forEach(robot -> {
+            robot.setOrientationToBall(x, y);
+                robot.update();
+        });
         if (!hasTeamYellow || !hasTeamBlue) addAiToSSLFrame();
         multicastServer.send(nextPacket(), lastReferee);
         if (getSelectedRobot() != null) {
             SSL_DetectionRobot robot = getSelectedRobot();
-            controller.updateRobotUI(robot.getRobotId(), robot.getX(), robot.getY(), robot.getOrientation());
+            controller.updateRobotUI(robot.getRobotId(), robot.getX(), -robot.getY(), robot.getOrientation());
         }
 
         double position = (double) frameIterator.nextIndex() / (double) frames.size() * 100;
@@ -180,7 +186,13 @@ public class Model {
         return lastFrame;
     }
 
+    /**
+     * Set the simulation position to the specified position.
+     *
+     * @param frameNumber Position to move to
+     */
     public void setCurrentFrame(int frameNumber) {
+        assert frameNumber < frames.size() : "frameNumber is larger then amount of frames";
         frameIterator = frames.listIterator(frameNumber);
         refereeIterator = referees.listIterator(frameNumber);
     }
@@ -192,6 +204,11 @@ public class Model {
 
     //-------------Referee methods-------------
 
+    /**
+     * Sets the list of {@link SSL_Referee Referees}. The extracts all the commands that exist in the loaded log.
+     *
+     * @param referees The list with referees that will be set.
+     */
     public void setReferees(LinkedList<SSL_Referee> referees) {
         assert referees != null : "referees null";
 
@@ -236,6 +253,12 @@ public class Model {
         }
     }
 
+    /**
+     * Sets a new {link SSL_GeometryData} object. this triggers the recalculation of all the field's sizes as they
+     * meight have been changed.
+     *
+     * @param geometry Da geometry data containing field mesurements
+     */
     public void setGeometry(SSL_GeometryData geometry) {
         assert geometry != null : "Setting null SSLField";
 
@@ -339,17 +362,14 @@ public class Model {
      * @param render True if the {@link Renderer} needs to be re-rendered
      */
     public void selectRobotByPosition(double x, double y, boolean render) {
-        if (SSLField != null) {
-            double scale = SSLField.getScale();
-            x = x / scale - SSLField.getCenter_x();
-            y = y / scale - SSLField.getCenter_y();
-        } else {
-            return;
-        }
+        if (SSLField == null) return;
+        double scale = SSLField.getScale();
+        x = x / scale - SSLField.getCenter_x();
+        y = y / scale - SSLField.getCenter_y();
 
         if (lastFrame != null) {
             for (SSL_DetectionRobot robot : lastFrame.getRobotsBlueList()) {
-                if (clickIsInRobot(x, y, robot)) {
+                if (clickIsInRobot(x, -y, robot)) {
                     controller.updateRobotUI(robot.getRobotId(), robot.getX(), robot.getY(), robot.getOrientation());
                     selectedRobot = robot.getRobotId();
                     selectedTeam = 0;
@@ -358,7 +378,7 @@ public class Model {
                 }
             }
             for (SSL_DetectionRobot robot : lastFrame.getRobotsYellowList()) {
-                if (clickIsInRobot(x, y, robot)) {
+                if (clickIsInRobot(x, -y, robot)) {
                     controller.updateRobotUI(robot.getRobotId(), robot.getX(), robot.getY(), robot.getOrientation());
                     selectedRobot = robot.getRobotId();
                     selectedTeam = 1;
@@ -385,23 +405,38 @@ public class Model {
             AiRobot robot = aiRobots.get(selectedRobot);
             double scale = SSLField.getScale();
             robot.setX((float) (x / scale - SSLField.getCenter_x()));
-            robot.setY((float) (y / scale - SSLField.getCenter_y()));
+            robot.setY((float) -(y / scale - SSLField.getCenter_y()));
+
+            robot.setOrientationToBall(lastFrame.getBalls(0).getX(), lastFrame.getBalls(0).getY());
             if (!hasTeamYellow || !hasTeamBlue) addAiToSSLFrame();
             if (render) renderer.render();
         }
     }
 
+    /**
+     * Checks if the robot should be snapped in his bench and if so; it is snapped in the bench.
+     *
+     * @param x      x-position
+     * @param y      y-position
+     * @param render True if the {@link Renderer} needs to be re-rendered
+     */
     public void setInBench(double x, double y, boolean render) {
         if (!aiRobots.isEmpty() && positionInBench(x, y) && (selectedTeam != 0) == Settings.getInstance().hasTeamBlue() && selectedRobot >= 0) {
             AiRobot robot = aiRobots.get(selectedRobot);
             robot.setX((float) SSLField.getBench_real_x());
-            robot.setY((float) SSLField.getBenchPosition(robot.getId()));
+            robot.setY((float) -SSLField.getBenchPosition(robot.getId()));
             if (!hasTeamYellow || !hasTeamBlue) addAiToSSLFrame();
             if (render) renderer.render();
             model.setTargetBench();
         }
     }
 
+    /**
+     * Rotates the currently selected {@link AiRobot}.
+     *
+     * @param deltaY The amount it should me rotated.
+     * @param render True if the {@link Renderer} needs to be re-rendered
+     */
     public void rotateSelectedRobot(double deltaY, boolean render) {
         if (!aiRobots.isEmpty() && (selectedTeam != 0) == Settings.getInstance().hasTeamBlue() && selectedRobot >= 0) {
             AiRobot robot = aiRobots.get(selectedRobot);
@@ -411,6 +446,11 @@ public class Model {
         }
     }
 
+    /**
+     * Checks if the given positin is in the bench.
+     *
+     * @return True if the position is in the bench
+     */
     private boolean positionInBench(double x, double y) {
         double xDifference = x - SSLField.getBench_x();
         double yDifference = y - SSLField.getBench_y();
@@ -434,15 +474,18 @@ public class Model {
         acceleration = 1;
     }
 
+    /**
+     * Updates the model, should be called when a new log is loaded.
+     */
     public void update() {
         System.out.println("MODEL - update()");
         Settings s = Settings.getInstance();
         hasTeamYellow = s.hasTeamYellow();
-        hasTeamBlue  = s.hasTeamBlue();
+        hasTeamBlue = s.hasTeamBlue();
         setSSLField();
         aiRobots.forEach(robot -> {
                     robot.setX((float) (SSLField.getBench_real_x()));
-                    robot.setY((float) (SSLField.getBench_real_y() + SSLField.getRobot_real_size() * robot.getId()));
+                    robot.setY((float) -(SSLField.getBench_real_y() + SSLField.getRobot_real_size() * robot.getId()));
                 }
         );
         nextFrame();
@@ -539,5 +582,25 @@ public class Model {
      */
     public static void destroy() {
         model = null;
+    }
+
+    public void setMulticastIps() {
+        Settings s = Settings.getInstance();
+        try {
+            multicastServer.set(s.getOip(), Integer.parseInt(s.getOport()), s.getRefIp(), Integer.parseInt(s.getRefPort()));
+        } catch (IOException e) {
+            //TODO idk
+            e.printStackTrace();
+        }
+    }
+
+    public void moveAiToBench() {
+        aiRobots.forEach(robot -> {
+                    robot.setX((float) (SSLField.getBench_real_x()));
+                    robot.setY((float) (SSLField.getBench_real_y() + SSLField.getRobot_real_size() * robot.getId()));
+                }
+        );
+        this.nextFrame();
+        renderer.render();
     }
 }

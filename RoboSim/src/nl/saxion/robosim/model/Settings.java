@@ -13,6 +13,8 @@ public class Settings {
     //incoming ip / incoming port / outgoing ip, outgoing port
     private String iip, iport, oip, oport;
     private String refIp, refPort;
+    private String accel, speed;
+    private int keeperId;
     private final String CONFIG = "config.properties";
 
     //singleton variable
@@ -62,9 +64,12 @@ public class Settings {
             this.oport = prop.getProperty("outputPort");
             this.refIp = prop.getProperty("refereeIp");
             this.refPort = prop.getProperty("refereePort");
+            this.speed   = prop.getProperty("robotSpeed");
+            this.accel   = prop.getProperty("robotAcceleration");
             if (iip == null || iport == null ||
                     oip == null || oport == null ||
-                    refIp == null || refPort == null) {
+                    refIp == null || refPort == null ||
+                    speed == null || accel == null) {
                 reset(f);
             }
 
@@ -89,11 +94,14 @@ public class Settings {
      * @param yellow simulate team yellow?
      * @param file   what log to read.
      */
-    public void setSimulationSettings(boolean blue, boolean yellow, String file) {
+    public void setSimulationSettings(boolean blue, boolean yellow, String file, int keeperId) {
         this.teamBlue = blue;
         this.teamYellow = yellow;
         this.fileName = file;
+        this.keeperId = keeperId;
     }
+
+
 
     /**
      * Set communication settings, input receives from ai, output sends to ai.
@@ -122,9 +130,40 @@ public class Settings {
             props.setProperty("outputIp", oip);
             props.setProperty("inputPort", iport);
             props.setProperty("outputPort", oport);
+            props.setProperty("robotSpeed", speed + "");
+            props.setProperty("robotAcceleration", accel + "");
             props.store(out, null);
             out.close();
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setRobotSettings(String accel, String speed) {
+        this.accel = accel;
+        this.speed = speed;
+        FileInputStream in = null;
+        try {
+            in = new FileInputStream(CONFIG);
+            FileOutputStream out = new FileOutputStream(CONFIG);
+
+            Properties props = new Properties();
+            props.load(in);
+            in.close();
+            props.setProperty("refereeIp", refIp);
+            props.setProperty("refereePort", refPort);
+            props.setProperty("inputIp", iip);
+            props.setProperty("outputIp", oip);
+            props.setProperty("inputPort", iport);
+            props.setProperty("outputPort", oport);
+            props.setProperty("robotSpeed", speed + "");
+            props.setProperty("robotAcceleration" +
+                    "", accel + "");
+            props.store(out, null);
+            out.close();
+        }catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -148,6 +187,8 @@ public class Settings {
             props.setProperty("outputIp", oip);
             props.setProperty("inputPort", iport);
             props.setProperty("outputPort", oport);
+            props.setProperty("robotSpeed", speed + "");
+            props.setProperty("robotAcceleration", accel + "");
             props.store(out, null);
             out.close();
         } catch (FileNotFoundException e) {
@@ -182,9 +223,17 @@ public class Settings {
         return oport;
     }
 
+    public int getKeeperId() {
+        return keeperId;
+    }
+
     public String getFileName() {
         return fileName;
     }
+
+    public int getSpeed() {return Integer.parseInt(speed); }
+
+    public int getAcceleration() { return Integer.parseInt(accel); }
 
     public boolean hasTeamYellow() {
 
@@ -207,7 +256,9 @@ public class Settings {
                 "inputPort=1337\n" +
                 "refereePort=10003\n" +
                 "outputPort=10002\n" +
-                "refereeIp=224.5.23.1");
+                "refereeIp=224.5.23.1\n" +
+                "robotSpeed=500\n" +
+                "robotAcceleration=120\n");
         w.close();
 
     }
