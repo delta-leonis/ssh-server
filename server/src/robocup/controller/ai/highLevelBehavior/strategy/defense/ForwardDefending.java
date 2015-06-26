@@ -159,10 +159,7 @@ public class ForwardDefending extends Strategy {
 			// If we're clear
 			else {
 				// Going to center is priority
-				if (world.getEnemyRobotsInZone(FieldZone.EAST_CENTER).size() > 0) {
-					zonesForRole
-							.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.EAST_NORTH_SECONDPOST));
-				}
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.EAST_MIDDLE));
 			}
 		} else {
 			// Check for enemies on center first
@@ -182,10 +179,7 @@ public class ForwardDefending extends Strategy {
 			}
 			// If we're clear
 			else {
-				// Going to center is priority
-				if (world.getEnemyRobotsInZone(FieldZone.WEST_CENTER).size() > 0) {
-					zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.WEST_CENTER));
-				}
+				zonesForRole.add(new Pair<RobotMode, FieldZone>(RobotMode.COVERER, FieldZone.WEST_MIDDLE));
 			}
 		}
 	}
