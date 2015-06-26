@@ -21,7 +21,7 @@ public class KeeperDefender extends Keeper {
 	public void calculate() {
 		// calculate position
 		FieldPoint newDestination = getNewKeeperDestination(centerGoalPosition, ballPosition, distanceToObject, offset);
-		if (robot.getPosition() != null && newDestination != null && robot.getPosition().getDeltaDistance(newDestination) < 1000) {
+		if (robot.getPosition() != null && newDestination != null && robot.getPosition().getDeltaDistance(newDestination) < 500) {
 			robot.setIgnore(true);
 		} else {
 			robot.setIgnore(false);
