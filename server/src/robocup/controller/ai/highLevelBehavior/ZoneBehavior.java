@@ -8,6 +8,7 @@ import robocup.controller.ai.highLevelBehavior.events.EventSystem;
 import robocup.controller.ai.highLevelBehavior.strategy.attack.FreeShotRoundPlay;
 import robocup.controller.ai.highLevelBehavior.strategy.defense.BarricadeDefending;
 import robocup.controller.ai.highLevelBehavior.strategy.defense.ForwardDefending;
+import robocup.controller.ai.highLevelBehavior.strategy.defense.ZonallyBackward;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.DirectFreeKickAttack;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.DirectFreeKickDefense;
 import robocup.controller.ai.highLevelBehavior.strategy.standard.GameStop;
@@ -61,7 +62,7 @@ public class ZoneBehavior extends Behavior {
 		defenseModes = new ArrayList<DefenseMode>();
 		defenseModes.add(new DefenseMode(new BarricadeDefending(), executers));
 		defenseModes.add(new DefenseMode(new ForwardDefending(), executers));
-//		defenseModes.add(new DefenseMode(new ZonallyBackward(), executers));
+		defenseModes.add(new DefenseMode(new ZonallyBackward(), executers));
 //		defenseModes.add(new DefenseMode(new ZonallyForward(), executers));
 		currentMode = new StandardMode(new KickOffDefense(), executers);
 	}
