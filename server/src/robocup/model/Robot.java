@@ -38,6 +38,19 @@ public abstract class Robot extends FieldObject {
 	}
 
 	/**
+	 * 
+	 * @param object	object to compare to
+	 * @param distance	maximum distance to object
+	 * @param angle		maximum difference in angle to object
+	 * @return			true when object is close
+	 */
+	public boolean isCloseTo(FieldObject object, int distance, int angle){
+		return Math.abs(
+				Math.abs(getOrientation()) - Math.abs(getPosition().getAngle(object.getPosition()))) < angle
+				&& getPosition().getDeltaDistance(object.getPosition()) < distance;
+	}
+
+	/**
 	 * @return whether the robot should be visible on the GUI
 	 */
 	public boolean isVisible(){

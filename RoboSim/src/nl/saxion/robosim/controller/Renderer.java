@@ -4,19 +4,14 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Stop;
 import javafx.scene.shape.ArcType;
 import javafx.scene.text.Font;
-import nl.saxion.robosim.model.AiRobot;
 import nl.saxion.robosim.model.Model;
 import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionBall;
 import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionFrame;
 import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionRobot;
 import nl.saxion.robosim.model.protobuf.SslReferee.SSL_Referee;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -30,10 +25,10 @@ import java.util.concurrent.TimeUnit;
  */
 @SuppressWarnings("SuspiciousNameCombination")
 public class Renderer {
-    private GraphicsContext graphicsContext;
     private final Model model;
     private final Image image_yellow, image_blue, image_bench;
     private final Font font;
+    private GraphicsContext graphicsContext;
     private SSL_Field field;
 
     /**
@@ -83,7 +78,7 @@ public class Renderer {
         graphicsContext.setFill(Color.ORANGE);
         for (SSL_DetectionBall ball : frame.getBallsList()) {
             graphicsContext.fillOval((ball.getX() + field.center_x - 5) * field.scale,
-                    (ball.getY() + field.center_y - 5) * field.scale, 10, 10);
+                    (field.center_y - ball.getY() - 5) * field.scale, 10, 10);
         }
 
         /* Draw in-canvas ui */
@@ -102,8 +97,8 @@ public class Renderer {
      */
     private void renderSSLRobot(SSL_DetectionRobot robot, Image image, int teamId) {
         graphicsContext.save();
-        graphicsContext.translate((robot.getX() + field.center_x) * field.scale, (robot.getY() + field.center_y) * field.scale);
-        graphicsContext.rotate(Math.toDegrees(robot.getOrientation()) - 90);
+        graphicsContext.translate((robot.getX() + field.center_x) * field.scale, (field.center_y - robot.getY()) * field.scale);
+        graphicsContext.rotate(-Math.toDegrees(robot.getOrientation()) - 90);
 
         /* Check if this Robot is selected */
         if (model.getSelectedTeam() == teamId && model.getSelectedRobotId() == robot.getRobotId()) {
@@ -115,7 +110,7 @@ public class Renderer {
         graphicsContext.drawImage(image, -field.robot_size / 2, -field.robot_size / 2, field.robot_size, field.robot_size);
         graphicsContext.restore();
         graphicsContext.fillText(robot.getRobotId() + "", (robot.getX() + field.center_x + 180 + 2) * field.scale,
-                (robot.getY() + field.center_y + 180 / 2) * field.scale);
+                (field.center_y - robot.getY()  + 180 / 2) * field.scale);
     }
 
     /**
@@ -123,7 +118,7 @@ public class Renderer {
      * {@link SSL_Field}.
      */
     public void drawField() {
-        if(field == null) {
+        if (field == null) {
             field = model.getSSLField();
             System.out.println("field == null: " + (field == null));
             graphicsContext.setLineWidth(field.line_width);
@@ -172,36 +167,66 @@ public class Renderer {
      * @param referee The referee object that contains match information
      */
     private void drawScore(SSL_Referee referee) {
-        if(referee == null) {
+        if (referee == null) {
             return;
         }
-
+        int blueWidth = referee.getBlue().getName().length() * 18;
+        int yellowWidth = referee.getYellow().getName().length() * 18;
         graphicsContext.setFill(Color.web("101010"));
-        graphicsContext.fillRect(20, 5, 280, 35);
+        graphicsContext.fillRect(20, 5, blueWidth + yellowWidth + 80, 35);
         graphicsContext.setFill(Color.web("5cb808"));
-        graphicsContext.fillRect(300, 5, 100, 35);
+        graphicsContext.fillRect(blueWidth + yellowWidth + 80, 5, 100, 35);
 
         graphicsContext.setFill(Color.WHITE);
         graphicsContext.setFont(font);
 
-        graphicsContext.fillText(referee.getBlue().getName(), 35, 25);
-        graphicsContext.fillText(referee.getBlue().getScore() + ":" + referee.getYellow().getScore(), 140, 25);
-        graphicsContext.fillText(referee.getYellow().getName(), 175, 25);
+
+        graphicsContext.fillText(referee.getBlue().getName(), 35, 30);
+        graphicsContext.fillText(referee.getBlue().getScore() + ":" + referee.getYellow().getScore(), blueWidth + 20, 30);
+        graphicsContext.fillText(referee.getYellow().getName(), blueWidth + 60, 30);
 
         /* Draw the time that is left */
         long microsecondsLeft = referee.getStageTimeLeft();
         long minutes = TimeUnit.MINUTES.convert(microsecondsLeft, TimeUnit.MICROSECONDS);
         long seconds = TimeUnit.SECONDS.convert(microsecondsLeft, TimeUnit.MICROSECONDS) % 60;
-        graphicsContext.fillText(String.format("%02d:%02d", minutes, seconds), 330, 25);
+        graphicsContext.fillText(String.format("%02d:%02d", minutes, seconds), blueWidth + yellowWidth + 110, 30);
+
+           /* Draw red and yellow cards  */
+        graphicsContext.setFill(Color.web("ff0000"));
+        int blueRedCards = referee.getBlue().getRedCards();
+        int blueYellowCards = referee.getBlue().getYellowCards();
+        int yellowRedCards = referee.getYellow().getRedCards();
+        int yellowYellowCards = referee.getYellow().getYellowCards();
+
+        graphicsContext.setStroke(Color.web("000000"));
+        for (int i = 0; i < blueRedCards; i++) {
+            graphicsContext.fillRect(20 + (i * 10), 0, 8, 12);
+            graphicsContext.strokeRect(20 + (i * 10), 0, 8, 12);
+        }
+        for (int i = 0; i < yellowRedCards; i++) {
+            graphicsContext.fillRect(blueWidth + 80 + (i * 10), 0, 8, 12);
+            graphicsContext.strokeRect(blueWidth + 80 + (i * 10), 0, 8, 12);
+        }
+        graphicsContext.setFill(Color.web("ffff00"));
+        for (int i = 0; i < blueYellowCards; i++) {
+            graphicsContext.fillRect(20 + ((blueRedCards * 10) + (i * 10)), 0, 8, 12);
+            graphicsContext.strokeRect(20 + ((blueRedCards * 10) + (i * 10)), 0, 8, 12);
+        }
+
+        for (int i = 0; i < yellowYellowCards; i++) {
+            graphicsContext.fillRect(blueWidth + 80 + (i * 10), 0, 8, 12);
+            graphicsContext.strokeRect(blueWidth + 80 + (i * 10), 0, 8, 12);
+        }
+        graphicsContext.setStroke(Color.web("ffffff"));
     }
 
     private void drawChairs() {
 
     }
 
-    private void drawBench(){
+    private void drawBench() {
         graphicsContext.setFill(Color.WHITE);
-        graphicsContext.drawImage(image_bench,field.bench_x,field.bench_y,field.bench_width,field.bench_height);
+        graphicsContext.drawImage(image_bench, field.bench_x, field.bench_y, field.bench_width, field.bench_height);
     }
 
 //    private void drawTargets(List<AiRobot> robots) {

@@ -169,9 +169,8 @@ public class GotoPosition {
 		if (robot.isOnSight()) {
 		if(prepareForTakeOff()) {
 			// Dribble when the ball is close by
-			dribble = Math.abs(
-					Math.abs(robot.getOrientation()) - Math.abs(robot.getPosition().getAngle(world.getBall().getPosition()))) < 20
-					&& robot.getPosition().getDeltaDistance(world.getBall().getPosition()) < Robot.DIAMETER / 2 + 200;
+			dribble = robot.isCloseTo(world.getBall(), Robot.DIAMETER/2 + 200, 20);
+			
 			// Calculate the route using the DijkstraPathPlanner
 			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), avoidBall, avoidEastGoalArea, avoidWestGoalArea);
 			// If robot is locked up, the route will be null
@@ -215,7 +214,7 @@ public class GotoPosition {
 			}
 
 			currentSpeed = speed;
-			if(dribble && robot.getPosition().getDeltaDistance(World.getInstance().getBall().getPosition()) < Robot.DIAMETER/2 + 20 && System.currentTimeMillis() > lastKickTime + 500 && chipKick != 0){
+			if(dribble && robot.isCloseTo(world.getBall(), Robot.DIAMETER/2+20) && System.currentTimeMillis() > lastKickTime + 500 && chipKick != 0){
 				// Send the command
 				output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, chipKick, dribble);
 				LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + "," + chipKick + "," + dribble);
