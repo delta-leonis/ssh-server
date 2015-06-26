@@ -29,10 +29,10 @@ public class Attacker extends LowLevelBehavior {
 
 		this.role = RobotMode.ATTACKER;
 		go = new GotoPosition(robot, robot.getPosition(), ballPosition);
-		go.setStartupSpeedVelocity(500);
+		go.setStartupSpeedVelocity(550);
 		go.setMaxVelocity(1500);
 		go.setDistanceToSlowDown(500);
-		go.setMaxRotationSpeed(1200);
+		go.setMaxRotationSpeed(1300);
 		go.setStartupSpeedRotation(180);
 		Referee referee = World.getInstance().getReferee();
 		if(	referee.getPreviousCommand().equals(Command.PREPARE_PENALTY_YELLOW) && referee.getAllyTeamColor().equals(TeamColor.YELLOW)
@@ -88,13 +88,15 @@ public class Attacker extends LowLevelBehavior {
 		orientation = orientation < 0 ? orientation + 360 : orientation;
 
 		double correctedShootDirection = shootDirection < 0 ? shootDirection + 360 : shootDirection;
-		
-//				Math.abs(Math.abs(freeShot.getAngle(ballPosition))-Math.abs(ballPosition.getAngle(executer.getRobot().getPosition()))) < 2000 / executer.getRobot().getPosition().getDeltaDistance(ballPosition)
-//				// Check whether we're nearby enough
-//				&& executer.getRobot().getPosition().getDeltaDistance(ballPosition) < 850
-//				// Check whether the robot is facing the way it's supposed to face
-//				&& Math.abs(Math.abs(executer.getRobot().getOrientation()) - Math.abs(ballPosition.getAngle(freeShot))) < 3000 / executer.getRobot().getPosition().getDeltaDistance(ballPosition)) {
-		return Math.abs(orientation - correctedShootDirection) < 2000 / robot.getPosition().getDeltaDistance(ballPosition);
+
+		double ballToRobot = robot.getPosition().getAngle(ballPosition);
+		ballToRobot = ballToRobot < 0 ? ballToRobot + 360 : ballToRobot;
+				
+		boolean orientationOkay = Math.abs(orientation - correctedShootDirection) < 2000 / robot.getPosition().getDeltaDistance(ballPosition);
+
+		boolean positionOkay = Math.abs(correctedShootDirection - ballToRobot) < 3000 / robot.getPosition().getDeltaDistance(ballPosition);
+
+		return orientationOkay && positionOkay;
 	}
 
 	/**
@@ -105,7 +107,7 @@ public class Attacker extends LowLevelBehavior {
 		go.setTarget(ballPosition);
 		if (go.getChipKick() == 0) {
 			go.setDestination(newDestination);
-			go.setMaxRotationSpeed(1200);
+			go.setMaxRotationSpeed(1300);
 			go.setForcedSpeed(0);
 			go.calculateTurnAroundTarget(300);
 			go.setGoStraightForward(false);
