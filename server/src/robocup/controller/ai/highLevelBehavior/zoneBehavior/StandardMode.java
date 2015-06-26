@@ -323,6 +323,7 @@ public class StandardMode extends Mode {
 					offset = 0;
 				break;
 			default:
+				offset = executer.getRobot().getRobotId() * 15 - 60;
 				break;
 			}
 
