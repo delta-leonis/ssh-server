@@ -170,7 +170,7 @@ public class GotoPosition {
 		if(prepareForTakeOff()) {
 			// Dribble when the ball is close by
 			dribble = robot.isCloseTo(world.getBall(), Robot.DIAMETER/2 + 200, 20);
-			if(World.getInstance().getGameState() == GameState.STOPPED){
+			if(world.getGameState() == GameState.STOPPED && world.getReferee().getAlly().getGoalie() == robot.getRobotId()){
 				// Calculate the route using the DijkstraPathPlanner
 				route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), 750, avoidEastGoalArea, avoidWestGoalArea);
 			}
@@ -247,11 +247,11 @@ public class GotoPosition {
 	 * @return true, if we're allowed to move, false otherwise.
 	 */
 	public boolean prepareForTakeOff(){
-		if(World.getInstance().getGameState() == GameState.HALTED){
+		if(world.getGameState() == GameState.HALTED){
 			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
 			return false;
 		}
-		if(World.getInstance().getGameState() == GameState.STOPPED){
+		if(world.getGameState() == GameState.STOPPED && world.getReferee().getAlly().getGoalie() == robot.getRobotId()){
 			FieldPoint ball = World.getInstance().getBall().getPosition();
 			double deltaDistance = ball.getDeltaDistance(robot.getPosition());
 			MAX_VELOCITY = 1500;
