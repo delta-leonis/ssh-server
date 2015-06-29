@@ -264,13 +264,6 @@ public class TestPathPlanner extends DijkstraPathPlanner {
 		}
 	}
 
-	public void generateAll() {
-		generateObjectList(0, false, false, false);
-		generateVertices(false);
-		removeCollidingVertices();
-		generateNeighbours();
-	}
-
 	/**
 	 * Creates one {@link Robot} for the specified {@link Team} and sets it
 	 * "on sight"

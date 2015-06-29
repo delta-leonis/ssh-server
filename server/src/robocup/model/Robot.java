@@ -4,6 +4,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 
 import robocup.controller.ai.movement.DijkstraPathPlanner;
+import robocup.controller.ai.movement.GotoPosition;
 
 /**
  * Represents a Robot on the {@link Field}.
@@ -165,7 +166,7 @@ public abstract class Robot extends FieldObject {
 	public Ellipse2D getDangerEllipse(int minDistance, int maxDistance){
 		double x = getPosition().getX();
 		double y = getPosition().getY();
-		double actualDistance = minDistance + ((getSpeed() *(maxDistance - minDistance)) / 5);
+		double actualDistance = minDistance + ((getSpeed() *(maxDistance - minDistance)) / (GotoPosition.MAX_VELOCITY/1000));
 		return new Ellipse2D.Double(x - actualDistance, y - actualDistance, actualDistance*2, actualDistance*2);
 	}
 

@@ -25,11 +25,11 @@ import robocup.output.ComInterface;
 public class GotoPosition {
 	// Movement Speed Variables
 	/** 450 */
-	private int DISTANCE_TO_SLOW_DOWN = 450;
+	private int DISTANCE_TO_SLOW_DOWN = 750;
 	/** 3000 */
 	public static int MAX_VELOCITY = 3000;
 	/** 100 */
-	private int START_UP_MOVEMENT_SPEED = 200;
+	private int START_UP_MOVEMENT_SPEED = 550;
 	/** 450 */
 	private int DISTANCE_TO_SLOW_DOWN_FORCED = 75;
 	// Rotation Speed Variables
@@ -37,7 +37,7 @@ public class GotoPosition {
 	@SuppressWarnings("unused")
 	private double DISTANCE_ROTATIONSPEED_COEFFICIENT = 5;
 	/** 1000 */
-	private int MAX_ROTATION_SPEED = 1500;
+	private int MAX_ROTATION_SPEED = 600;
 	/** 100 */
 	private int START_UP_ROTATION_SPEED = 200;
 	// Circle Around Ball Move Variables
