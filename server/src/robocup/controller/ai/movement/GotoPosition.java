@@ -165,14 +165,19 @@ public class GotoPosition {
 	 * @param alwaysFaceTarget True if you want the robot to constantly face the target, 
 	 * 							false if you want the robot to face the direction it should face at its destination
 	 */
-	public void calculate(boolean avoidBall, boolean alwaysFaceTarget) {
+	public void calculate(int avoidBall, boolean alwaysFaceTarget) {
 		if (robot.isOnSight()) {
 		if(prepareForTakeOff()) {
 			// Dribble when the ball is close by
 			dribble = robot.isCloseTo(world.getBall(), Robot.DIAMETER/2 + 200, 20);
-			
-			// Calculate the route using the DijkstraPathPlanner
-			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), avoidBall, avoidEastGoalArea, avoidWestGoalArea);
+			if(World.getInstance().getGameState() == GameState.STOPPED){
+				// Calculate the route using the DijkstraPathPlanner
+				route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), 750, avoidEastGoalArea, avoidWestGoalArea);
+			}
+			else{
+				// Calculate the route using the DijkstraPathPlanner
+				route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), avoidBall, avoidEastGoalArea, avoidWestGoalArea);
+			}
 			// If robot is locked up, the route will be null
 			if(route == null){
 				LOGGER.warning("Robot #" + robot.getRobotId() + " can't reach destination.");
@@ -337,7 +342,7 @@ public class GotoPosition {
 														target.getY() + offset * Math.sin(Math.toRadians(degreesToMove)));
 			destination = newDestination;
 			forcedSpeed = 0;
-			calculate(false, true);
+			calculate(0, true);
 		}
 		else{
 			FieldPoint newDestination;
@@ -361,7 +366,7 @@ public class GotoPosition {
 			destination = newDestination;
 //			START_UP_MOVEMENT_SPEED = 550;
 			forcedSpeed = CIRCLE_SPEED;
-			calculate(false, false);
+			calculate(0, false);
 		}
 	}
 	
