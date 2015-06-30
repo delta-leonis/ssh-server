@@ -1,8 +1,7 @@
 package nl.saxion.robosim.application;
 
 
-import java.io.File;
-
+import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
@@ -14,13 +13,16 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import nl.saxion.robosim.controller.Renderer;
+import nl.saxion.robosim.controller.UIController;
 import nl.saxion.robosim.model.LogReader;
 import nl.saxion.robosim.model.Model;
 import nl.saxion.robosim.model.Settings;
-
+import org.controlsfx.control.Notifications;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.ProgressDialog;
 
+import java.io.File;
+import java.io.IOException;
 
 
 /**
@@ -28,14 +30,15 @@ import org.controlsfx.dialog.ProgressDialog;
  */
 public class FileDialog {
     private final Renderer renderer;
-    Settings settings;
-    Button fileButton, acceptButton, cancelButton;
-    CheckBox yellowBox, blueBox;
-    TextArea fileloc;
-    Model model;
-    Dialog dlg;
-    Stage stage;
-    GridPane grid;
+    private Settings settings;
+    private Button fileButton, acceptButton, cancelButton;
+    private CheckBox yellowBox, blueBox;
+    private TextArea fileloc, keeperBox;
+    private Model model;
+    private Dialog dlg;
+    private Stage stage;
+    private GridPane grid;
+    private UIController ui;
 
     public FileDialog(Renderer renderer) {
         this.renderer = renderer;
@@ -45,13 +48,13 @@ public class FileDialog {
 
     /**
      * Starts the filepicker dialog
+     *
      * @param stage the stage on which to show the dialog
      */
     public void startDialog(Stage stage) {
         this.stage = stage;
         dlg = new Dialog(stage, "Settings");
         //dlg = Dialogs.create().styleClass(Dialog.STYLE_CLASS_UNDECORATED).masthead("select log file and teams");
-
 
 
         grid = new GridPane();
@@ -61,8 +64,8 @@ public class FileDialog {
         grid.setPadding(new Insets(0, 10, 0, 10));
 
         //create widgets
-        fileButton   = new Button("Choose file");
-        fileloc      = new TextArea();
+        fileButton = new Button("Choose file");
+        fileloc = new TextArea();
         fileloc.setMaxHeight(50);
         fileloc.setMaxWidth(300);
         fileloc.setEditable(false);
@@ -70,8 +73,12 @@ public class FileDialog {
         acceptButton = new Button("Accept");
         acceptButton.setDisable(true);
         cancelButton = new Button("Cancel");
-        yellowBox  = new CheckBox();
-        blueBox    = new CheckBox();
+        yellowBox = new CheckBox();
+        blueBox = new CheckBox();
+
+        keeperBox = new TextArea();
+        keeperBox.setMaxHeight(30);
+        keeperBox.setMaxWidth(50);
 
 
         acceptButton.setStyle("-fx-background-color: #5cb808; -fx-background-radius: 0; -fx-text-fill: #ffffff; -fx-padding: 15px 25px;");
@@ -84,8 +91,11 @@ public class FileDialog {
         grid.add(new Label("Team Yellow?"), 0, 2);
         grid.add(blueBox, 1, 3);
         grid.add(new Label("Team blue?"), 0, 3);
-        grid.add(acceptButton, 0,4);
-        grid.add(cancelButton, 4, 4);
+        grid.add(new Label("KeeperId:"), 0, 4);
+        grid.add(keeperBox, 1, 4);
+
+        grid.add(acceptButton, 0, 5);
+        grid.add(cancelButton, 5, 5);
 
         dlg.setMasthead("Select log file and team(s)");
 
@@ -94,8 +104,7 @@ public class FileDialog {
         grid.setPadding(new Insets(10, 10, 10, 10));
         grid.setMinHeight(200);
         grid.setMinWidth(200);
-        grid.add(fileloc, 1 , 0);
-
+        grid.add(fileloc, 1, 0);
 
 
         //onclick events
@@ -104,14 +113,15 @@ public class FileDialog {
         yellowBox.setOnAction(event -> checkInput());
         blueBox.setOnAction(event -> checkInput());
         fileButton.setOnAction(event -> openFile());
-
+        keeperBox.textProperty().addListener((observable, oldValue, newValue) -> {
+            checkInput();
+        });
 
 
         dlg.setResizable(false);
-       // dlg.setContent(grid);
+        // dlg.setContent(grid);
 
-        dlg.setContent(grid);
-//        dlg = DialogStyle.style(dlg, grid);
+        dlg = DialogStyle.style(dlg, grid);
         dlg.show();
     }
 
@@ -125,8 +135,8 @@ public class FileDialog {
         chooser.getExtensionFilters().add(extFilter);
 
 
-        File f = chooser.showOpenDialog((Stage)dlg.getContent().getScene().getWindow());
-        if(f != null) {
+        File f = chooser.showOpenDialog((Stage) dlg.getContent().getScene().getWindow());
+        if (f != null) {
             fileloc.setText(f.getPath());
         }
         checkInput();
@@ -137,7 +147,7 @@ public class FileDialog {
      */
     private void accept() {
         Settings settings = Settings.getInstance();
-        settings.setSimulationSettings(blueBox.isSelected(), yellowBox.isSelected(), fileloc.getText());
+        settings.setSimulationSettings(blueBox.isSelected(), yellowBox.isSelected(), fileloc.getText(), Integer.parseInt(keeperBox.getText()));
         dlg.hide();
         loadingDialog(fileloc.getText());
     }
@@ -147,28 +157,41 @@ public class FileDialog {
      */
     private void checkInput() {
         System.out.println(yellowBox.isSelected() + " - " + blueBox.isSelected() + " - " + fileloc.getText().length());
-        if((yellowBox.isSelected() || blueBox.isSelected()) && fileloc.getText().length() > 0) {
+        if (keeperBox.getText().length() > 1) {
+            keeperBox.setText(keeperBox.getText().substring(0, 1));
+        }
+        if ((yellowBox.isSelected() || blueBox.isSelected()) && fileloc.getText().length() > 0 && keeperBox.getText().length() > 0) {
+            try {
+                int keeper = Integer.parseInt(keeperBox.getText());
+                if (keeper > 5 || keeper < 0) {
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                return;
+            }
             acceptButton.setDisable(false);
-        } else {
-            acceptButton.setDisable(true);
+        } else if (yellowBox.isSelected() && blueBox.isSelected() && fileloc.getText().length() > 0) {
+            acceptButton.setDisable(false);
+        } else  {
+        acceptButton.setDisable(true);
         }
 
 
-    }
+}
 
     /**
      * Starts the logreader in a Service, and shows a loading dialog while this is busy.
+     *
      * @param file The filename to the log which needs to be read.
      */
     private void loadingDialog(String file) {
-
+        boolean failed;
         Service<Void> service = new Service<Void>() {
-
             @Override
             protected Task<Void> createTask() {
                 return new Task<Void>() {
                     @Override
-                    protected Void call() throws InterruptedException {
+                    protected Void call() throws InterruptedException, IOException {
                         new LogReader(file);
                         return null;
                     }
@@ -182,8 +205,29 @@ public class FileDialog {
         dlg.setTitle("");
         dlg.setHeaderText("Please wait, reading log");
 
+        service.setOnFailed(event ->
+                Platform.runLater(() ->
+                        showNotification("Invalid log file: \"" +
+                                service.getException().getClass().getSimpleName() + "\" " +
+                                service.getException().getMessage())));
+        service.setOnSucceeded(event ->
+                Platform.runLater(() -> {
+                    model.update();
+                    model.setMulticastIps();
+                }));
         service.start();
+
+
     }
+
+    public void showNotification(String message) {
+        Notifications.create()
+                .title("Error")
+                .text(message)
+                .showError();
+    }
+
+
 }
 
 

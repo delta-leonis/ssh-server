@@ -153,11 +153,6 @@ public class DefenseMode extends Mode {
 				break;
 			}
 
-			// Invert offset when on the left side of the field.
-			// This is done because the offset moves the other way on this side. 
-			if (robot.getPosition().getX() < 0)
-				offset = -offset;
-
 			keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset, world.getField().getWidth(), world
 					.getField().getLength());
 		}
@@ -177,50 +172,6 @@ public class DefenseMode extends Mode {
 		keeper.update(distanceToGoal, goToKick, ballPosition, world.getField().getWidth(), world.getField()
 					.getLength());
 		
-	}
-
-	private FieldPoint getPointToDefendForKeeper() {
-		// The direction we predict the ball to go.
-		double ballDirection;
-		FieldPoint ballPos = ball.getPosition();
-		double y; // Where the ball will go to.
-		double x;
-		boolean eastTeam = world.getReferee().getAlly()
-				.equals(world.getReferee().getEastTeam());
-		// Look for "Dangerous robots"
-		// Get closest enemy robot to ball
-		Robot robot = world.getClosestRobotToBall();
-		// If ball is floating
-		if (robot.getPosition().getDeltaDistance(ball.getPosition()) > 250 && ball.getSpeed() > 0.5) {
-			ballDirection = ball.getDirection();
-		}
-		// If enemy has ball
-		else if (robot instanceof Enemy
-				&& ((eastTeam && robot.getPosition().getX() > 0) || (!eastTeam && robot.getPosition().getX() < 0))) {
-			//	If enemy in danger zone
-			// Where the ball is likely to go if the robot were to shoot.
-			// Maybe for the future: Take the direction of the robot into account, as well.
-			ballDirection = robot.getPosition().getAngle(ball.getPosition());
-		} else {
-			return null;
-		}
-
-		if (eastTeam && Math.cos(Math.toRadians(ballDirection)) > 0) { // Ball moves towards the east.
-			x = world.getField().getLength() / 2;
-		} else if (!eastTeam && Math.cos(Math.toRadians(ballDirection)) < 0) {
-			x = -world.getField().getLength() / 2;
-		} else {
-			// Ball is moving away from us, and thus, no special measures need to be taken.
-			return null;
-		}
-
-		y = Math.tan(Math.toRadians(ballDirection)) * (x - ballPos.getX()) + ballPos.getY(); // <-- Where the ball will hit
-		double goalWidth = world.getField().getEastGoal().getWidth();
-		if (y < goalWidth / 2 && y > -goalWidth / 2) {
-			// if the ball is going towards the goal
-			return new FieldPoint(x, y);
-		}
-		return null;
 	}
 
 	@Override

@@ -126,8 +126,8 @@ public abstract class Mode {
 				getClosestAllyToBallWithoutRole().setRole(role);
 			} else {
 				ArrayList<Ally> allyRobots = getAllyRobotsWithoutRole();
-				if (allyRobots.size() != 0) {
-					Ally robot = allyRobots.get((int) (Math.random() * allyRobots.size()));
+				if (allyRobots.size() > 0) {
+					Ally robot = allyRobots.get(0);
 					robot.setRole(role);
 				}
 			}

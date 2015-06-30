@@ -1,5 +1,6 @@
 package nl.saxion.robosim.test;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import nl.saxion.robosim.model.protobuf.SslReferee.SSL_Referee;
 import org.junit.Test;
 
@@ -31,7 +32,7 @@ public class RefereeTest {
         SSL_Referee referee;
 
         try {
-            data = Files.readAllBytes(Paths.get("src\\nl\\saxion\\robosim\\test\\test_referee.log"));
+            data = Files.readAllBytes(Paths.get("src\\nl\\saxion\\robosim\\test\\log\\test_referee.log"));
             referee = SSL_Referee.parseFrom(data);
         } catch (IOException e) {
             e.printStackTrace();
@@ -39,13 +40,23 @@ public class RefereeTest {
             return;
         }
 
-
-
-        assertEquals("NORMAL_FIRST_HALF", referee.getStage());
+        assertEquals(SSL_Referee.Stage.NORMAL_FIRST_HALF, referee.getStage());
         assertEquals(599887758, referee.getStageTimeLeft());
-        assertEquals("NORMAL_START", referee.getCommand());
+        assertEquals(SSL_Referee.Command.NORMAL_START, referee.getCommand());
         assertEquals(3, referee.getCommandCounter());
         assertEquals(Long.parseLong("1372513037636896"), referee.getCommandTimestamp());
+    }
+
+    @Test (expected = InvalidProtocolBufferException.class)
+    public void testWrongLog() throws IOException{
+        byte[] data = Files.readAllBytes(Paths.get("src\\nl\\saxion\\robosim\\test\\log\\test_random.log"));
+        SSL_Referee.parseFrom(data);
+    }
+
+    @Test (expected = InvalidProtocolBufferException.class)
+    public void testEmptyLog() throws IOException{
+        byte[] data = Files.readAllBytes(Paths.get("src\\nl\\saxion\\robosim\\test\\log\\test_empty.log"));
+        SSL_Referee.parseFrom(data);
     }
 
 }

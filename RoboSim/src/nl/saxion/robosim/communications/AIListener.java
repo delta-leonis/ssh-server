@@ -1,7 +1,6 @@
 package nl.saxion.robosim.communications;
 
 import nl.saxion.robosim.model.AiData;
-import nl.saxion.robosim.model.AiRobot;
 import nl.saxion.robosim.model.Model;
 import nl.saxion.robosim.model.Settings;
 
@@ -10,7 +9,6 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
-import java.util.ArrayList;
 
 /**
  * The AIListener listens to input from the Artificial Intelligence and parses the data for the {@link Model}.
@@ -71,7 +69,7 @@ public class AIListener extends Thread {
                 // Update the AiRobots
                 model.getAiRobots().stream().filter(r -> r.getId() == info.getRobotID()).forEach(r -> {
                     r.setDribble(info.getDribble());
-                    r.setOrientation(info.getDirection());
+                    r.setDirection(info.getDirection());
                     r.setRotationSpeed(info.getRotationSpeed());
                     r.setVelocity(info.getDirectionSpeed());
                     r.setShootkicker(info.getShootKicker());

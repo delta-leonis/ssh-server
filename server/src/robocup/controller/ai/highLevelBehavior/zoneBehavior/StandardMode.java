@@ -23,6 +23,7 @@ import robocup.model.enums.GameState;
 import robocup.model.enums.RobotMode;
 
 public class StandardMode extends Mode {
+	private double penaltyDirection;
 
 	public StandardMode(Strategy strategy, ArrayList<RobotExecuter> executers) {
 		super(strategy, executers);
@@ -40,13 +41,13 @@ public class StandardMode extends Mode {
 			FieldPoint freeShot = world.hasFreeShot();
 			double shootDirection = freeShot != null ? ballPosition.getAngle(world.hasFreeShot()) : world.getReferee()
 					.isEastTeamColor(world.getReferee().getAllyTeamColor()) ? 180.0 : 0.0;
+			penaltyDirection = shootDirection;
 			attacker.update(shootDirection, chipKick, ballPosition);
 		} else if (world.getGameState() == GameState.TAKING_KICKOFF
 				&& (world.getReferee().getPreviousCommand() == Command.PREPARE_PENALTY_YELLOW || world.getReferee()
 						.getPreviousCommand() == Command.PREPARE_PENALTY_BLUE)) {
-			double shootDirection = world.hasFreeShot() == null ? 0 : ballPosition.getAngle(world.hasFreeShot());
 			chipKick = -100;
-			attacker.update(shootDirection, chipKick, ballPosition);
+			attacker.update(penaltyDirection, chipKick, ballPosition);
 		} else if (world.getGameState() == GameState.TAKING_KICKOFF
 				&& (world.getReferee().getPreviousCommand() == Command.PREPARE_KICKOFF_BLUE || world.getReferee()
 						.getPreviousCommand() == Command.PREPARE_KICKOFF_YELLOW)) {
@@ -323,6 +324,7 @@ public class StandardMode extends Mode {
 					offset = 0;
 				break;
 			default:
+				offset = executer.getRobot().getRobotId() * 15 - 60;
 				break;
 			}
 

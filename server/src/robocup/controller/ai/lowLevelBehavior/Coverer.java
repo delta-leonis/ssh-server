@@ -4,7 +4,6 @@ import robocup.controller.ai.movement.GotoPosition;
 import robocup.model.Ball;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
-import robocup.model.World;
 import robocup.model.enums.RobotMode;
 
 /**
