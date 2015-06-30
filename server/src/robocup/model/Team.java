@@ -148,6 +148,16 @@ public class Team {
 	}
 
 	/**
+	 * Sets the yellow cards for this team. If this ArrayList contains two cards, a robot must be removed from the field.
+	 * @param remainingCardTimes: the new ArrayList with yellow card. This ArrayList contains Longs representing microseconds.
+	 * Suggestion: Rename to setYellowCards();
+	 * TODO: It is not sure what these microseconds stand for. Perhaps the time a Robot is removed from the game?
+	 */
+	public void setRemainingCardTimes(ArrayList<Integer> remainingCardTimes) {
+		this.remainingCardTimes = remainingCardTimes;
+	}
+	
+	/**
 	 * A Team can be penalized by giving them a yellow card.
 	 * Two yellow cards means that a robot must be removed from the game.
 	 * @return An ArrayList with Longs representing microseconds. 
@@ -158,26 +168,27 @@ public class Team {
 		return remainingCardTimes;
 	}
 
+
 	/**
-	 * Sets the yellow cards for this team. If this ArrayList contains two cards, a robot must be removed from the field.
-	 * @param remainingCardTimes: the new ArrayList with yellow card. This ArrayList contains Longs representing microseconds.
-	 * Suggestion: Rename to setYellowCards();
-	 * TODO: It is not sure what these microseconds stand for. Perhaps the time a Robot is removed from the game?
+	 * a function that returns the ammount of yellow cards that are currently in effect.
+	 * if all the given yellow cards from the game are required, use the function getYellowCards
+	 * @return ammount of yellow cards currently in play
 	 */
-	public void setRemainingCardTimes(ArrayList<Integer> remainingCardTimes) {
-		this.remainingCardTimes = remainingCardTimes;
-	}
-	
 	public int getCurrentYellowCards() {
 		return remainingCardTimes.size();
 	}
 	
-	public int getYellowCardTime(int index) {
+	/**
+	 * a function that retrieves the remaining time of a specific yellow card 
+	 * @param index the index of the location of the yellow card time in the arrayList
+	 * @return the time that this card remains in effect
+	 */
+	public int getCurrentYellowCardTime(int index) {
 		return remainingCardTimes.get(index);
 	}
 
 	/**
-	 * @return the yellowcards
+	 * @return the total ammount of yellow cards this team received
 	 * Suggestion: Removal. getRemainingCardTimes does what this function should be doing, already
 	 */
 	public int getYellowCards() {
@@ -185,8 +196,7 @@ public class Team {
 	}
 
 	/**
-	 * @param yellowcards the yellowcards to set
-	 * Suggestion: Removal. setRemainingCardTimes does what this function should be doing, already.
+	 * @param yellowcards the setter of the total yellow card variable
 	 */
 	public void setYellowCards(int yellowCards) {
 		this.yellowCards = yellowCards;
