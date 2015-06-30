@@ -122,7 +122,7 @@ public class Attacker extends LowLevelBehavior {
 //			go.goForwardUntilKick(3000);
 			go.setMaxRotationSpeed(300);
 			go.setGoStraightForward(true);
-			go.calculate(false, true);
+			go.calculate(0, true);
 		}
 	}
 }

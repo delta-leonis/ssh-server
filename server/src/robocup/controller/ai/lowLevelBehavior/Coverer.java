@@ -60,7 +60,7 @@ public class Coverer extends LowLevelBehavior {
 		go.setTarget(objectPosition);
 
 		if (robot.getPosition() != null)
-			go.calculate(false,true);
+			go.calculate(0,true);
 	}
 
 	/**

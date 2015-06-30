@@ -13,7 +13,7 @@ public class Team {
 	private TeamColor color;
 	private int score;
 	private int timeoutsLeft;
-	private ArrayList<Long> remainingCardTimes;
+	private ArrayList<Integer> remainingCardTimes;
 	private int yellowCards;
 	private int redCards;
 	private ArrayList<Robot> robots;
@@ -27,7 +27,7 @@ public class Team {
 		this.color = color;
 		this.onsiteTeamSize = onsiteTeamSize;
 		
-		remainingCardTimes = new ArrayList<Long>();
+		remainingCardTimes = new ArrayList<Integer>();
 		robots = new ArrayList<Robot>();
 	}
 	
@@ -41,7 +41,7 @@ public class Team {
 	 * @param timeoutsLeft	timeouts remaining
 	 * @param goalie		{@link Robot} ID that represents the goalie
 	 */
-	public Team(String name, TeamColor color, int yellowCards, int redCards, int score, int timeoutsLeft, int goalie) {
+	public Team(String name, TeamColor color, int yellowCards, ArrayList<Integer> remainingYellowCardTimes, int redCards, int score, int timeoutsLeft, int goalie) {
 		this.name = name;
 		this.color = color;
 		this.yellowCards = yellowCards;
@@ -49,7 +49,7 @@ public class Team {
 		this.score = score;
 		this.timeoutsLeft = timeoutsLeft;
 		this.goalie = goalie;
-		remainingCardTimes = new ArrayList<Long>();
+		remainingCardTimes = remainingYellowCardTimes;
 		robots = new ArrayList<Robot>();
 	}
 
@@ -62,11 +62,12 @@ public class Team {
 	 * @param timeoutsLeft	timeouts remaining
 	 * @param goalie		{@link Robot} ID that represents the goalie
 	 */
-	public void update(String name, int score, int redCards, int yellowCards, int timeoutsLeft, int goalie) {
+	public void update(String name, int score, int redCards, int yellowCards, ArrayList<Integer> remainingYellowCardTimes, int timeoutsLeft, int goalie) {
 		this.name = name;
 		this.score = score;
 		this.redCards = redCards;
 		this.yellowCards = yellowCards;
+		this.remainingCardTimes = remainingYellowCardTimes;
 		this.timeoutsLeft = timeoutsLeft;
 		this.goalie = goalie;
 	}
@@ -153,7 +154,7 @@ public class Team {
 	 * Suggestion: Rename to getYellowCards()
 	 * TODO: It is not sure what these microseconds stand for. Perhaps the time a Robot is removed from the game?
 	 */
-	public ArrayList<Long> getRemainingCardTimes() {
+	public ArrayList<Integer> getRemainingCardTimes() {
 		return remainingCardTimes;
 	}
 
@@ -163,8 +164,16 @@ public class Team {
 	 * Suggestion: Rename to setYellowCards();
 	 * TODO: It is not sure what these microseconds stand for. Perhaps the time a Robot is removed from the game?
 	 */
-	public void setRemainingCardTimes(ArrayList<Long> remainingCardTimes) {
+	public void setRemainingCardTimes(ArrayList<Integer> remainingCardTimes) {
 		this.remainingCardTimes = remainingCardTimes;
+	}
+	
+	public int getCurrentYellowCards() {
+		return remainingCardTimes.size();
+	}
+	
+	public int getYellowCardTime(int index) {
+		return remainingCardTimes.get(index);
 	}
 
 	/**

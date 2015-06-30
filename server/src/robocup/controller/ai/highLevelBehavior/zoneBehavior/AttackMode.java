@@ -189,8 +189,8 @@ public class AttackMode extends Mode {
 
 		// Invert offset when on the left side of the field.
 		// This is done because the offset moves the other way on this side. 
-		if (robot.getPosition().getX() < 0)
-			offset = -offset;
+//		if (robot.getPosition().getX() < 0)
+//			offset = -offset;
 
 		keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset, world.getField().getWidth(), world
 				.getField().getLength());

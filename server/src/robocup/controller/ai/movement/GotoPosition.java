@@ -25,11 +25,11 @@ import robocup.output.ComInterface;
 public class GotoPosition {
 	// Movement Speed Variables
 	/** 450 */
-	private int DISTANCE_TO_SLOW_DOWN = 450;
+	private int DISTANCE_TO_SLOW_DOWN = 750;
 	/** 3000 */
 	public static int MAX_VELOCITY = 3000;
 	/** 100 */
-	private int START_UP_MOVEMENT_SPEED = 200;
+	private int START_UP_MOVEMENT_SPEED = 550;
 	/** 450 */
 	private int DISTANCE_TO_SLOW_DOWN_FORCED = 75;
 	// Rotation Speed Variables
@@ -37,7 +37,7 @@ public class GotoPosition {
 	@SuppressWarnings("unused")
 	private double DISTANCE_ROTATIONSPEED_COEFFICIENT = 5;
 	/** 1000 */
-	private int MAX_ROTATION_SPEED = 1500;
+	private int MAX_ROTATION_SPEED = 600;
 	/** 100 */
 	private int START_UP_ROTATION_SPEED = 200;
 	// Circle Around Ball Move Variables
@@ -165,14 +165,19 @@ public class GotoPosition {
 	 * @param alwaysFaceTarget True if you want the robot to constantly face the target, 
 	 * 							false if you want the robot to face the direction it should face at its destination
 	 */
-	public void calculate(boolean avoidBall, boolean alwaysFaceTarget) {
+	public void calculate(int avoidBall, boolean alwaysFaceTarget) {
 		if (robot.isOnSight()) {
 		if(prepareForTakeOff()) {
 			// Dribble when the ball is close by
 			dribble = robot.isCloseTo(world.getBall(), Robot.DIAMETER/2 + 200, 20);
-			
-			// Calculate the route using the DijkstraPathPlanner
-			route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), avoidBall, avoidEastGoalArea, avoidWestGoalArea);
+			if(world.getGameState() == GameState.STOPPED && world.getReferee().getAlly().getGoalie() == robot.getRobotId()){
+				// Calculate the route using the DijkstraPathPlanner
+				route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), 750, avoidEastGoalArea, avoidWestGoalArea);
+			}
+			else{
+				// Calculate the route using the DijkstraPathPlanner
+				route = dplanner.getRoute(robot.getPosition(), destination, robot.getRobotId(), avoidBall, avoidEastGoalArea, avoidWestGoalArea);
+			}
 			// If robot is locked up, the route will be null
 			if(route == null){
 				LOGGER.warning("Robot #" + robot.getRobotId() + " can't reach destination.");
@@ -242,11 +247,11 @@ public class GotoPosition {
 	 * @return true, if we're allowed to move, false otherwise.
 	 */
 	public boolean prepareForTakeOff(){
-		if(World.getInstance().getGameState() == GameState.HALTED){
+		if(world.getGameState() == GameState.HALTED){
 			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
 			return false;
 		}
-		if(World.getInstance().getGameState() == GameState.STOPPED){
+		if(world.getGameState() == GameState.STOPPED && world.getReferee().getAlly().getGoalie() == robot.getRobotId()){
 			FieldPoint ball = World.getInstance().getBall().getPosition();
 			double deltaDistance = ball.getDeltaDistance(robot.getPosition());
 			MAX_VELOCITY = 1500;
@@ -337,7 +342,7 @@ public class GotoPosition {
 														target.getY() + offset * Math.sin(Math.toRadians(degreesToMove)));
 			destination = newDestination;
 			forcedSpeed = 0;
-			calculate(false, true);
+			calculate(0, true);
 		}
 		else{
 			FieldPoint newDestination;
@@ -361,7 +366,7 @@ public class GotoPosition {
 			destination = newDestination;
 //			START_UP_MOVEMENT_SPEED = 550;
 			forcedSpeed = CIRCLE_SPEED;
-			calculate(false, false);
+			calculate(0, false);
 		}
 	}
 	
