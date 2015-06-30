@@ -68,11 +68,11 @@ public class ComInterface {
 		byte[] dataPacket = createByteArray(messageType, robotID, direction, directionSpeed, rotationSpeed, (int)(shootKicker*0.7), dribble);
 		DatagramPacket sendPacket = new DatagramPacket(dataPacket, dataPacket.length, ipAddress, port);
 
-//		try {
-//			serverSocket.send(sendPacket);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			serverSocket.send(sendPacket);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
