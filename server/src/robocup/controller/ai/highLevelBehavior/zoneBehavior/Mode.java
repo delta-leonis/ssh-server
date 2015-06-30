@@ -80,8 +80,37 @@ public abstract class Mode {
 			((Ally) executer.getRobot()).setRole(null);
 			((Ally) executer.getRobot()).setPreferredZone(null);
 		}
+		
+		// start off by copying the strategies role list, so that we can remove any roles without altering the strategy itself
+		ArrayList<RobotMode> teamRoles = strategy.getRoles();
+		System.out.println("reached check 0");
+		// if our team is smaller because we received red cards
+		if (world.getReferee().getAlly().getRedCards() > 0) {
+			System.out.println("reached check 1");
+			// for each red card that has been given
+			for (int iter = 0; iter < world.getReferee().getAlly().getRedCards(); iter++) {
+				// role priority starts with 1, being most important, starting with 0 guarantees finding something
+				int leastImportantRole = 0;
 
-		for (RobotMode role : strategy.getRoles()) {
+				// iterate over all the role in this strategy, find the lowest priority number
+				for (RobotMode role : teamRoles) {
+					// compare current role with previous role priorities
+					leastImportantRole = Math.max(leastImportantRole, role.getPriority());
+				}
+				
+				// now leastImportantRole contains the highest priority queue (lowest priority)
+				// so we can remove it from the  list
+				for (int roleIter = 0; roleIter < teamRoles.size(); roleIter++) {
+					if (teamRoles.get(roleIter).getPriority() == leastImportantRole) {
+						System.out.println(teamRoles.get(roleIter).name() + " is removed");
+						teamRoles.remove(roleIter);
+						break;
+					}
+				}
+			}
+		}
+		
+		for (RobotMode role : teamRoles) {
 			FieldZone zone = strategy.getZoneForRole(role);
 
 			if (role == RobotMode.KEEPER || role == RobotMode.PENALTYKEEPER) {

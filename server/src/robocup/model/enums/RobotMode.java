@@ -6,15 +6,26 @@ package robocup.model.enums;
  * For documentation see "Tactiek_0.6.pdf" chapter "5. lowlevel behaviours"
  */
 public enum RobotMode {
-	KEEPER,
-	KEEPERDEFENDER,
-	PENALTYKEEPER,
-	DISTURBER,
-	COVERER,
-	GOALPOSTCOVERER,
-	ATTACKER,
-	COUNTER,
-	DISTURBER_COVERER,
-	KEEPERDEFENDER_COVERER,
-	RUNNER;
+	KEEPER(1),
+	KEEPERDEFENDER(2),
+	PENALTYKEEPER(1),
+	DISTURBER(4),
+	COVERER(5),
+	GOALPOSTCOVERER(6),
+	ATTACKER(7),
+	COUNTER(9),
+	DISTURBER_COVERER(4),
+	KEEPERDEFENDER_COVERER(3),
+	RUNNER(8);
+	
+	private final int priority;
+	
+	RobotMode (int priority)
+	{
+		this.priority = priority;
+	}
+	
+	public int getPriority() {
+		return priority;
+	}
 }
