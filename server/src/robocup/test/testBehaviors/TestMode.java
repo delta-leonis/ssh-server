@@ -51,11 +51,11 @@ public class TestMode extends Mode {
 		}
 //		testAttacker();
 //		testFollowBallFacing(robot);
-//		testFollowBallMovementFacing(robot);
+		testFollowBallMovementFacing(robot);
 //		testThreeKeeperDefenders(robots, MID_GOAL_NEGATIVE);
 //		testFollowBallMovement(robot);
 //		testTwoRobotFollowBall();
-		testCircleAroundBall(robot);
+//		testCircleAroundBall(robot);
 	}
 	
 	public void testTwoRobotFollowBall(){
@@ -74,13 +74,13 @@ public class TestMode extends Mode {
 				pos0,
 				World.getInstance().getBall().getPosition());
 		World.getInstance().getRobotExecuters().get(robotIDs[0]).getLowLevelBehavior().setGotoPosition(go);
-		go.calculate(false, false);
+		go.calculate(0, false);
 		
 		go = new GotoPosition(robots.get(1).getRobot(), 
 				pos1,
 				World.getInstance().getBall().getPosition());
 		World.getInstance().getRobotExecuters().get(robotIDs[1]).getLowLevelBehavior().setGotoPosition(go);
-		go.calculate(false, false);
+		go.calculate(0, false);
 	}
 	
 	public void testAttacker(){
@@ -100,7 +100,7 @@ public class TestMode extends Mode {
 				 World.getInstance().getBall().getPosition());
 		World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).getLowLevelBehavior().setGotoPosition(go);
 
-		go.calculate(false, true);
+		go.calculate(0, true);
 	}
 	
 	/**
@@ -125,7 +125,7 @@ public class TestMode extends Mode {
 				 new FieldPoint(0,0));
 		World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).getLowLevelBehavior().setGotoPosition(go);
 
-		go.calculate(false, true);
+		go.calculate(0, true);
 	}
 	
 	/**
@@ -137,7 +137,7 @@ public class TestMode extends Mode {
 				World.getInstance().getBall().getPosition());
 		World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).getLowLevelBehavior().setGotoPosition(go);
 //		go.setDribble(true);
-		go.calculate(false, true);
+		go.calculate(0, false);
 	}
 	
 	/**
@@ -151,7 +151,7 @@ public class TestMode extends Mode {
 				new FieldPoint(0,0)));
 		World.getInstance().getRobotExecuters().get(TestBehaviour.ROBOT_ID).getLowLevelBehavior().setGotoPosition(go);
 
-		go.calculate(false,true);
+		go.calculate(0,true);
 	}
 	
 	/**
@@ -201,7 +201,7 @@ public class TestMode extends Mode {
 				
 				go = new GotoPosition(robot.getRobot(), newDestination, subjectPosition);
 				World.getInstance().getRobotExecuters().get(robotIDs[i]).getLowLevelBehavior().setGotoPosition(go);
-				go.calculate(false, false);
+				go.calculate(0, false);
 				
 //				goes.set(i, new GotoPosition(robot.getRobot(), newDestination, subjectPosition));
 //				goes.get(i).calculate(false);

@@ -38,7 +38,7 @@ public class PenaltyKeeper extends LowLevelBehavior {
 
 		go.setTarget(ballPosition);
 		go.setDestination(newDestination);
-		go.calculate(false, true);
+		go.calculate(0, true);
 	}
 	
 	/**

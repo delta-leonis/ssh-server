@@ -38,6 +38,6 @@ public class Runner extends LowLevelBehavior {
 	public void calculate() {
 		go.setTarget(ballPosition);
 		go.setDestination(freePosition);
-		go.calculate(false, true);
+		go.calculate(0, true);
 	}
 }

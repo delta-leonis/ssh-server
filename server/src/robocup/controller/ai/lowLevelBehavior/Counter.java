@@ -56,6 +56,6 @@ public class Counter extends LowLevelBehavior {
 			go.setDestination(zone.getCenterPoint());
 
 		if (robot.getPosition() != null)
-			go.calculate(false, true);
+			go.calculate(0, true);
 	}
 }
