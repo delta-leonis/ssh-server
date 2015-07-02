@@ -381,11 +381,11 @@ public class World extends Observable {
 
 		if (ball.getPosition() != null) {
 			for (Robot robot : robots) {
-				if (minDistance == -1.0) {
-					minDistanceRobot = robot;
-					minDistance = robot.getPosition().getDeltaDistance(ball.getPosition());
-				} else {
-					if (robot.getPosition() != null) {
+				if (robot.getPosition() != null) {
+					if (minDistance == -1.0) {
+						minDistanceRobot = robot;
+						minDistance = robot.getPosition().getDeltaDistance(ball.getPosition());
+					} else {
 						double distance = robot.getPosition().getDeltaDistance(ball.getPosition());
 
 						if (distance < minDistance) {
@@ -615,7 +615,7 @@ public class World extends Observable {
 		ArrayList<Enemy> foundEnemies = new ArrayList<Enemy>();
 
 		for (Robot enemy : enemyTeam)
-			if (enemy.getPosition() != null && fieldZone.contains(enemy.getPosition()))
+			if (enemy.getPosition() != null && fieldZone != null && fieldZone.contains(enemy.getPosition()))
 				foundEnemies.add((Enemy) enemy);
 
 		return foundEnemies;

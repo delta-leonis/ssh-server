@@ -175,7 +175,6 @@ public class GotoPosition {
 	 */
 	public void calculate(int avoidBall, boolean alwaysFaceTarget) {
 		if ((robot.isOnSight() && !world.getAllRobotOffsight())) {
-			System.out.println("Now acting like robot is found");
 		if(prepareForTakeOff()) {
 			// Dribble when the ball is close by
 			dribble = robot.isCloseTo(world.getBall(), Robot.DIAMETER/2 + 200, 20);

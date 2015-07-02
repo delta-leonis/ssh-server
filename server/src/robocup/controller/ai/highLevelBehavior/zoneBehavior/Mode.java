@@ -158,7 +158,7 @@ public abstract class Mode {
 			case DISTURBER_COVERER:
 				FieldZone ballZone = world.locateFieldObject(ball);
 				FieldZone robotZone = world.locateFieldObject(executer.getRobot());
-				if (ballZone.equals(robotZone))
+				if (ballZone != null && ballZone.equals(robotZone))
 					handleDisturber(executer);
 				else
 					handleCoverer(executer);
