@@ -68,11 +68,8 @@ public class AIListener extends Thread {
 
                 // Update the AiRobots
                 model.getAiRobots().stream().filter(r -> r.getId() == info.getRobotID()).forEach(r -> {
-                    r.setDribble(info.getDribble());
                     r.setDirection(info.getDirection());
-                    r.setRotationSpeed(info.getRotationSpeed());
                     r.setVelocity(info.getDirectionSpeed());
-                    r.setShootkicker(info.getShootKicker());
                 });
             } catch (SocketException ignored) {
             } catch (IOException e) {

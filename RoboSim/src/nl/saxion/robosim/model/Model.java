@@ -1,14 +1,5 @@
 package nl.saxion.robosim.model;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.TreeSet;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.canvas.Canvas;
@@ -16,11 +7,15 @@ import nl.saxion.robosim.communications.MultiCastServer;
 import nl.saxion.robosim.controller.Renderer;
 import nl.saxion.robosim.controller.SSL_Field;
 import nl.saxion.robosim.controller.UIController;
+import nl.saxion.robosim.model.protobuf.SslDetection;
 import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionFrame;
 import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionRobot;
 import nl.saxion.robosim.model.protobuf.SslGeometry.SSL_GeometryData;
 import nl.saxion.robosim.model.protobuf.SslReferee.SSL_Referee;
 import nl.saxion.robosim.model.protobuf.SslWrapper;
+
+import java.io.IOException;
+import java.util.*;
 
 /**
  * The model for this project. Functions as a a central hub between the different modules. All the data about the
@@ -252,7 +247,7 @@ public class Model {
 
         this.SSLField = new SSL_Field(canvas, geometryData);
         if (aiRobots.isEmpty()) {
-            for (int i = 0; i < 6; i++) { // TODO 10
+            for (int i = 0; i < 6; i++) {
                 aiRobots.add(new AiRobot(i, (float) (SSLField.getBench_real_x()), (float) (SSLField.getBench_real_y() + SSLField.getRobot_real_size() * i)));
             }
         }
@@ -594,15 +589,14 @@ public class Model {
         try {
             multicastServer.set(s.getOip(), Integer.parseInt(s.getOport()), s.getRefIp(), Integer.parseInt(s.getRefPort()));
         } catch (IOException e) {
-            //TODO idk
             e.printStackTrace();
         }
     }
 
     public void moveAiToBench() {
         aiRobots.forEach(robot -> {
-                    robot.setX((float) (SSLField.getBench_real_x()));
-                    robot.setY((float) -(SSLField.getBench_real_y() + SSLField.getRobot_real_size() * robot.getId()));
+                    robot.setX((float) SSLField.getBench_real_x());
+                    robot.setY((float) -SSLField.getBenchPosition(robot.getId()));
                 }
         );
         this.nextFrame();
