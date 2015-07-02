@@ -30,12 +30,11 @@ public abstract class Mode {
 	protected Strategy strategy;
 	protected ArrayList<RobotExecuter> executers;
 	protected Logger LOGGER = Logger.getLogger(Main.class.getName());
-	
-    /** Co-ordinates of the goal on the left side of the field */
-    private static final FieldPoint MID_GOAL_NEGATIVE = new FieldPoint(-3000, 0);
-    /** Co-ordinates of the goal on the right side of the field */
-    private static final FieldPoint MID_GOAL_POSITIVE = new FieldPoint(3000, 0);
 
+	/** Co-ordinates of the goal on the left side of the field */
+	private static final FieldPoint MID_GOAL_NEGATIVE = new FieldPoint(-3000, 0);
+	/** Co-ordinates of the goal on the right side of the field */
+	private static final FieldPoint MID_GOAL_POSITIVE = new FieldPoint(3000, 0);
 
 	public Mode(Strategy strategy, ArrayList<RobotExecuter> executers) {
 		world = World.getInstance();
@@ -80,15 +79,16 @@ public abstract class Mode {
 			((Ally) executer.getRobot()).setRole(null);
 			((Ally) executer.getRobot()).setPreferredZone(null);
 		}
-		
+
 		// start off by copying the strategies role list, so that we can remove any roles without altering the strategy itself
 		ArrayList<RobotMode> teamRoles = strategy.getRoles();
-		System.out.println("reached check 0");
+
 		// if our team is smaller because we received red cards
 		if (world.getReferee().getAlly().getRedCards() > 0 || world.getReferee().getAlly().getCurrentYellowCards() > 0) {
 
 			// for each card in effect
-			for (int iter = 0; iter < world.getReferee().getAlly().getRedCards()+world.getReferee().getAlly().getCurrentYellowCards(); iter++) {
+			for (int iter = 0; iter < world.getReferee().getAlly().getRedCards()
+					+ world.getReferee().getAlly().getCurrentYellowCards(); iter++) {
 				// role priority starts with 1, being most important, starting with 0 guarantees finding something
 				int leastImportantRole = 0;
 
@@ -97,19 +97,18 @@ public abstract class Mode {
 					// compare current role with previous role priorities
 					leastImportantRole = Math.max(leastImportantRole, role.getPriority());
 				}
-				
+
 				// now leastImportantRole contains the highest priority queue (lowest priority)
 				// so we can remove it from the  list
 				for (int roleIter = 0; roleIter < teamRoles.size(); roleIter++) {
 					if (teamRoles.get(roleIter).getPriority() == leastImportantRole) {
-						System.out.println(teamRoles.get(roleIter).name() + " is removed");
 						teamRoles.remove(roleIter);
 						break;
 					}
 				}
 			}
 		}
-		
+
 		for (RobotMode role : teamRoles) {
 			FieldZone zone = strategy.getZoneForRole(role);
 
@@ -122,7 +121,7 @@ public abstract class Mode {
 					closestRobot.setRole(role);
 					closestRobot.setPreferredZone(zone);
 				}
-			} else if((role == RobotMode.DISTURBER || role == RobotMode.ATTACKER) && getClosestAllyToBall() != null){
+			} else if ((role == RobotMode.DISTURBER || role == RobotMode.ATTACKER) && getClosestAllyToBall() != null) {
 				getClosestAllyToBallWithoutRole().setRole(role);
 			} else {
 				ArrayList<Ally> allyRobots = getAllyRobotsWithoutRole();
@@ -243,7 +242,8 @@ public abstract class Mode {
 	 */
 	private void handleDisturber(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof Disturber)) {
-			FieldPoint centerGoalPosition = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE;
+			FieldPoint centerGoalPosition = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? MID_GOAL_POSITIVE
+					: MID_GOAL_NEGATIVE;
 			executer.setLowLevelBehavior(new Disturber(executer.getRobot(), centerGoalPosition));
 		}
 
@@ -329,7 +329,8 @@ public abstract class Mode {
 	 */
 	private void handleKeeperDefender(RobotExecuter executer) {
 		if (!(executer.getLowLevelBehavior() instanceof KeeperDefender)) {
-			FieldPoint centerGoalPosition = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE;
+			FieldPoint centerGoalPosition = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? MID_GOAL_POSITIVE
+					: MID_GOAL_NEGATIVE;
 			executer.setLowLevelBehavior(new KeeperDefender(executer.getRobot(), centerGoalPosition));
 		}
 
@@ -353,7 +354,8 @@ public abstract class Mode {
 
 		// TODO determine field half in a better way
 		if (!(executer.getLowLevelBehavior() instanceof Keeper)) {
-			FieldPoint centerGoalPosition = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? MID_GOAL_POSITIVE : MID_GOAL_NEGATIVE;
+			FieldPoint centerGoalPosition = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? MID_GOAL_POSITIVE
+					: MID_GOAL_NEGATIVE;
 			executer.setLowLevelBehavior(new Keeper(keeper, centerGoalPosition));
 		}
 
