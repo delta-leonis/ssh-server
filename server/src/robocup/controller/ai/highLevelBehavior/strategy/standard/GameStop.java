@@ -15,7 +15,7 @@ public class GameStop extends Strategy {
 		roles.add(RobotMode.KEEPER);
 		roles.add(RobotMode.DISTURBER);
 		roles.add(RobotMode.DISTURBER);
-		roles.add(RobotMode.COUNTER);
+		roles.add(RobotMode.DISTURBER);
 		roles.add(RobotMode.KEEPERDEFENDER);
 		roles.add(RobotMode.KEEPERDEFENDER);
 	}

@@ -23,6 +23,7 @@ import robocup.model.enums.GameState;
 import robocup.model.enums.RobotMode;
 
 public class StandardMode extends Mode {
+
 	private double penaltyDirection;
 
 	public StandardMode(Strategy strategy, ArrayList<RobotExecuter> executers) {
@@ -203,26 +204,21 @@ public class StandardMode extends Mode {
 		case "IndirectFreeKickAttack":
 		case "KickOffDefense":
 		case "KickOffAttack":
-		case "PenaltyDefense":
 			return null;
-		case "PenaltyAttack":
+		case "PenaltyDefense":
 			double maxY = Math.max(runners.get(0).getPosition().getY(), runners.get(1).getPosition().getY());
 
 			if (isEastTeam) {
 				if (robot.getPosition().getY() == maxY) {
 					FieldPoint point = FieldZone.WEST_NORTH_SECONDPOST.getCenterPoint();
 
-					point.setX(Math.max(point.getX(), -world.getField().getLength() / 2
-							+ world.getField().getPenaltyLineFromSpotDistance()
-							+ world.getField().getPenaltySpotFromFieldLineDistance()));
+					point.setX(1500);
 
 					return point;
 				} else {
 					FieldPoint point = FieldZone.WEST_SOUTH_SECONDPOST.getCenterPoint();
 
-					point.setX(Math.max(point.getX(), -world.getField().getLength() / 2
-							+ world.getField().getPenaltyLineFromSpotDistance()
-							+ world.getField().getPenaltySpotFromFieldLineDistance()));
+					point.setX(1500);
 
 					return point;
 				}
@@ -230,17 +226,45 @@ public class StandardMode extends Mode {
 				if (robot.getPosition().getY() == maxY) {
 					FieldPoint point = FieldZone.EAST_NORTH_SECONDPOST.getCenterPoint();
 
-					point.setX(Math.max(point.getX(), world.getField().getLength() / 2
-							- world.getField().getPenaltyLineFromSpotDistance()
-							- world.getField().getPenaltySpotFromFieldLineDistance()));
+					point.setX(-1500);
 
 					return point;
 				} else {
 					FieldPoint point = FieldZone.EAST_SOUTH_SECONDPOST.getCenterPoint();
 
-					point.setX(Math.max(point.getX(), world.getField().getLength() / 2
-							- world.getField().getPenaltyLineFromSpotDistance()
-							- world.getField().getPenaltySpotFromFieldLineDistance()));
+					point.setX(-1500);
+
+					return point;
+				}
+			}
+		case "PenaltyAttack":
+			maxY = Math.max(runners.get(0).getPosition().getY(), runners.get(1).getPosition().getY());
+
+			if (isEastTeam) {
+				if (robot.getPosition().getY() == maxY) {
+					FieldPoint point = FieldZone.WEST_NORTH_SECONDPOST.getCenterPoint();
+
+					point.setX(-1500);
+
+					return point;
+				} else {
+					FieldPoint point = FieldZone.WEST_SOUTH_SECONDPOST.getCenterPoint();
+
+					point.setX(-1500);
+
+					return point;
+				}
+			} else {
+				if (robot.getPosition().getY() == maxY) {
+					FieldPoint point = FieldZone.EAST_NORTH_SECONDPOST.getCenterPoint();
+
+					point.setX(1500);
+
+					return point;
+				} else {
+					FieldPoint point = FieldZone.EAST_SOUTH_SECONDPOST.getCenterPoint();
+
+					point.setX(1500);
 
 					return point;
 				}
