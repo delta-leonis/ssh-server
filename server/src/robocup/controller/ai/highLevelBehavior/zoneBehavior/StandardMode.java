@@ -206,36 +206,46 @@ public class StandardMode extends Mode {
 		case "KickOffAttack":
 			return null;
 		case "PenaltyDefense":
-			double maxY = Math.max(runners.get(0).getPosition().getY(), runners.get(1).getPosition().getY());
+			ArrayList<Ally> filteredRunners = new ArrayList<Ally>();
 
-			if (isEastTeam) {
-				if (robot.getPosition().getY() == maxY) {
-					FieldPoint point = FieldZone.WEST_NORTH_SECONDPOST.getCenterPoint();
+			for (Ally runner : runners)
+				if (runner.getPreferredZone() == null)
+					filteredRunners.add(runner);
 
-					point.setX(1500);
+			double maxY = Math.max(filteredRunners.get(0).getPosition().getY(), filteredRunners.get(1).getPosition()
+					.getY());
 
-					return point;
+			if (filteredRunners.size() == 2) {
+				if (isEastTeam) {
+					if (robot.getPosition().getY() == maxY) {
+						FieldPoint point = FieldZone.WEST_NORTH_SECONDPOST.getCenterPoint();
+						point.setX(1500);
+
+						return point;
+					} else {
+						FieldPoint point = FieldZone.WEST_SOUTH_SECONDPOST.getCenterPoint();
+						point.setX(1500);
+
+						return point;
+					}
 				} else {
-					FieldPoint point = FieldZone.WEST_SOUTH_SECONDPOST.getCenterPoint();
+					if (robot.getPosition().getY() == maxY) {
+						FieldPoint point = FieldZone.EAST_NORTH_SECONDPOST.getCenterPoint();
+						point.setX(-1500);
 
-					point.setX(1500);
+						return point;
+					} else {
+						FieldPoint point = FieldZone.EAST_SOUTH_SECONDPOST.getCenterPoint();
+						point.setX(-1500);
 
-					return point;
+						return point;
+					}
 				}
 			} else {
-				if (robot.getPosition().getY() == maxY) {
-					FieldPoint point = FieldZone.EAST_NORTH_SECONDPOST.getCenterPoint();
-
-					point.setX(-1500);
-
-					return point;
-				} else {
-					FieldPoint point = FieldZone.EAST_SOUTH_SECONDPOST.getCenterPoint();
-
-					point.setX(-1500);
-
-					return point;
-				}
+				if(isEastTeam)
+					return new FieldPoint(world.getField().getLength() / 2 - 1500, 0);
+				else
+					return new FieldPoint(-(world.getField().getLength() / 2 - 1500), 0);
 			}
 		case "PenaltyAttack":
 			maxY = Math.max(runners.get(0).getPosition().getY(), runners.get(1).getPosition().getY());
