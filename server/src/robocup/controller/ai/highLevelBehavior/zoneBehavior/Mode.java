@@ -83,12 +83,12 @@ public abstract class Mode {
 		
 		// start off by copying the strategies role list, so that we can remove any roles without altering the strategy itself
 		ArrayList<RobotMode> teamRoles = strategy.getRoles();
-		System.out.println("reached check 0");
+		//System.out.println("reached check 0");
 		// if our team is smaller because we received red cards
 		if (world.getReferee().getAlly().getRedCards() > 0 || world.getReferee().getAlly().getCurrentYellowCards() > 0) {
 
 			// for each card in effect
-			for (int iter = 0; iter < world.getReferee().getAlly().getRedCards()+world.getReferee().getAlly().getCurrentYellowCards(); iter++) {
+			for (int iter = 0; iter < world.getReferee().getAlly().getRedCards() + world.getReferee().getAlly().getCurrentYellowCards(); iter++) {
 				// role priority starts with 1, being most important, starting with 0 guarantees finding something
 				int leastImportantRole = 0;
 

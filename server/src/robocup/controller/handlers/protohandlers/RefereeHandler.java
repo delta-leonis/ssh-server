@@ -38,8 +38,10 @@ public class RefereeHandler {
 
 
 		// retrieve remaining card times for each team and convert the list into an ArrayList
-		ArrayList<Integer> blueTeamCardTimes = (ArrayList<Integer>)message.getBlue().getYellowCardTimesList();
-		ArrayList<Integer> yellowTeamCardTimes = (ArrayList<Integer>)message.getYellow().getYellowCardTimesList();
+		ArrayList<Integer> blueTeamCardTimes = new ArrayList<Integer>(message.getBlue().getYellowCardTimesList());
+		//(ArrayList<Integer>)message.getBlue().getYellowCardTimesList();
+		ArrayList<Integer> yellowTeamCardTimes = new ArrayList<Integer>(message.getYellow().getYellowCardTimesList());
+		//(ArrayList<Integer>)message.getYellow().getYellowCardTimesList();
 		
 		// Update Teams		
 		world.getTeamByColor(TeamColor.BLUE).update(message.getBlue().getName(), message.getBlue().getScore(),

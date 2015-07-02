@@ -158,6 +158,14 @@ public class GotoPosition {
 		return chipKick;
 	}
 
+	/** 
+	 * returns wheter the robots may use a return move in the current game state
+	 * this function serves as an adapter so that the return move or the gamestates can change
+	 */
+	public boolean mayMoveInGameState() {
+		return world.getGameState() == GameState.NORMAL_PLAY;
+	}
+	
 	/**
 	 * Calculates what message we need to send to the robot, based on the
 	 * parameters given in the constructor.
@@ -166,7 +174,8 @@ public class GotoPosition {
 	 * 							false if you want the robot to face the direction it should face at its destination
 	 */
 	public void calculate(int avoidBall, boolean alwaysFaceTarget) {
-		if (robot.isOnSight()) {
+		if ((robot.isOnSight() && !world.getAllRobotOffsight())) {
+			System.out.println("Now acting like robot is found");
 		if(prepareForTakeOff()) {
 			// Dribble when the ball is close by
 			dribble = robot.isCloseTo(world.getBall(), Robot.DIAMETER/2 + 200, 20);
@@ -237,7 +246,8 @@ public class GotoPosition {
 		}
 		}
 		// check if robot has a previous location if the robot is not onsight
-		else if (robot.getPosition() != null && !robot.isOnSight()) {
+		else if (robot.getPosition() != null && (!robot.isOnSight() || world.getAllRobotOffsight()) && mayMoveInGameState()) {
+			System.out.println("Now sending message 2");
 			output.send(2, robot.getRobotId());
 		}
 	}

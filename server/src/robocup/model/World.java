@@ -46,6 +46,8 @@ public class World extends Observable {
 	private ArrayList<Integer> validEnemyIDs = new ArrayList<Integer>();
 	
 	private boolean start = false;		// True for start, false for stop
+	/** boolean that simulates losing robots, true means all robots are offsight */
+	private boolean allRobotsOffsight = false;
 	
 	private ArrayList<RobotExecuter> robotExecuters;
 
@@ -1036,5 +1038,18 @@ public class World extends Observable {
 			if (id == robot.getRobotId())
 				return true;
 		return false;
+	}
+	
+	/** Method used to set the variable that indicates that all robots should be seen as offsight
+	 * this is a method useful for testing robot actions when the camera loses sight of them.
+	 */ 
+	public void setAllRobotsOffsight(boolean offsight) {
+		this.allRobotsOffsight = offsight;
+	}
+	/** Method used to get the variable that indicates that all robots should be seen as offsight
+	 * this is a method useful for testing robot actions when the camera loses sight of them.
+	 */ 
+	public boolean getAllRobotOffsight() {
+		return allRobotsOffsight;
 	}
 }

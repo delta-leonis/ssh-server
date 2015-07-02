@@ -25,6 +25,7 @@ import robocup.view.sections.ControlRobotSection;
 import robocup.view.sections.FieldControlSection;
 import robocup.view.sections.GameStatusSection;
 import robocup.view.sections.GamepadSection;
+import robocup.view.sections.LoseRobotSection;
 import robocup.view.sections.RecordSection;
 import robocup.view.sections.RotateRobotSection;
 import robocup.view.sections.SettingsSection;
@@ -152,6 +153,7 @@ public class GUI extends JFrame {
 		sectionContainer = new JPanel();
 		sectionContainer.setLayout(new MigLayout("wrap 1", "[grow]"));
 
+		sectionContainer.add(new LoseRobotSection(), "growx");
 		sectionContainer.add(new SettingsSection(), "growx");
 		sectionContainer.add(new GamepadSection(), "growx");
 		sectionContainer.add(new FieldControlSection(), "growx");
