@@ -437,6 +437,15 @@ public class StandardMode extends Mode {
 				offset = -10;
 			else
 				offset = 10;
+		} else if (disturbers.size() == 3) {
+			if (robot.getPosition().getY() == Math.max(disturbers.get(0).getPosition().getY(),
+					Math.max(disturbers.get(1).getPosition().getY(), disturbers.get(2).getPosition().getY())))
+				offset = -15;
+			else if (robot.getPosition().getY() == Math.min(disturbers.get(0).getPosition().getY(),
+					Math.min(disturbers.get(1).getPosition().getY(), disturbers.get(2).getPosition().getY())))
+				offset = 15;
+			else
+				offset = 0;
 		}
 
 		int distanceToObject = 700; // keep longer distance from ball in standardmode, as we are probably in GameState.STOPPED
