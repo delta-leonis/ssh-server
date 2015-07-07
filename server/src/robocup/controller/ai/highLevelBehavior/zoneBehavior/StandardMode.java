@@ -242,7 +242,7 @@ public class StandardMode extends Mode {
 					}
 				}
 			} else {
-				if(isEastTeam)
+				if (isEastTeam)
 					return new FieldPoint(world.getField().getLength() / 2 - 1500, 0);
 				else
 					return new FieldPoint(-(world.getField().getLength() / 2 - 1500), 0);
@@ -364,7 +364,7 @@ public class StandardMode extends Mode {
 
 			// Invert offset when on the left side of the field.
 			// This is done because the offset moves the other way on this side. 
-			if (robot.getPosition().getX() < 0)
+			if (world.getReferee().getAlly().equals(world.getReferee().getEastTeam()))
 				offset = -offset;
 
 			keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset, world.getField().getWidth(), world
@@ -452,11 +452,7 @@ public class StandardMode extends Mode {
 		FieldPoint objectPosition = ball.getPosition();
 		boolean goToKick = false;//world.getClosestRobotToBall().getPosition().getDeltaDistance(objectPosition) > Robot.DIAMETER;
 
-		// Invert offset when on the left side of the field.
-		disturber.update(distanceToObject, goToKick, objectPosition, world.getField().getWidth(), world.getField()
-				.getLength());
-		// This is done because the offset moves the other way on this side. 
-		if (robot.getPosition().getX() < 0)
+		if (world.getReferee().getAlly().equals(world.getReferee().getEastTeam()))
 			offset = -offset;
 
 		disturber.update(distanceToObject, goToKick, objectPosition, offset, world.getField().getWidth(), world
