@@ -150,16 +150,15 @@ import robocup.model.World;
 				double rightY = getHeight()/2 + Math.sin(Math.toRadians(-robotOrientation - 45.0)) * Robot.DIAMETER / 2.0 *ratio;
 				g2.setColor((robot instanceof Ally) ? allyColor : enemyColor);
 
-				if(isWindows()){
-					//SOLID COLOR
-					g2.fillArc(
-							(int) (getWidth()/2 - (double) (Robot.DIAMETER / 2) * ratio),
-							(int) (getHeight()/2 - (double) (Robot.DIAMETER / 2) * ratio),
-							(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio),
-							(int) robot.getOrientation() + 35, 295);
-					g2.fillPolygon(new int[] {(int) rightX, (int) leftX, getWidth()/2},
-							new int[] {(int) rightY, (int) leftY , (int)getHeight()/2}, 3);
-				}
+				//SOLID COLOR
+				g2.fillArc(
+						(int) (getWidth()/2 - (double) (Robot.DIAMETER / 2) * ratio),
+						(int) (getHeight()/2 - (double) (Robot.DIAMETER / 2) * ratio),
+						(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio),
+						(int) robot.getOrientation() + 35, 295);
+				g2.fillPolygon(new int[] {(int) rightX, (int) leftX, getWidth()/2},
+						new int[] {(int) rightY, (int) leftY , (int)getHeight()/2}, 3);
+
 				//BORDERS
 				g2.setColor(g2.getColor().darker());
 				g2.drawLine((int) (leftX),
