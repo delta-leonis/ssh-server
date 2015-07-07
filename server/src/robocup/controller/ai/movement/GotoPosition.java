@@ -238,7 +238,6 @@ public class GotoPosition {
 				output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, 0, dribble);
 				LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + ",0 ," + dribble);
 			}
-//			System.out.println("\t " + robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)currentSpeed + "," + (int)rotationSpeed );
 
 			// Set kick back to 0 to prevent kicking twice in a row
 			chipKick = 0;
@@ -246,7 +245,6 @@ public class GotoPosition {
 		}
 		// check if robot has a previous location if the robot is not onsight
 		else if (robot.getPosition() != null && (!robot.isOnSight() || world.getAllRobotOffsight()) && mayMoveInGameState()) {
-			System.out.println("Now sending message 2");
 			output.send(2, robot.getRobotId());
 		}
 	}

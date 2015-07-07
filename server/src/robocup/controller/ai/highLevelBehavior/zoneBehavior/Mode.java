@@ -32,9 +32,9 @@ public abstract class Mode {
 	protected Logger LOGGER = Logger.getLogger(Main.class.getName());
 
 	/** Co-ordinates of the goal on the left side of the field */
-	private static final FieldPoint MID_GOAL_NEGATIVE = new FieldPoint(-3000, 0);
+	private static FieldPoint MID_GOAL_NEGATIVE = new FieldPoint(-World.getInstance().getField().getLength() / 2, 0);
 	/** Co-ordinates of the goal on the right side of the field */
-	private static final FieldPoint MID_GOAL_POSITIVE = new FieldPoint(3000, 0);
+	private static FieldPoint MID_GOAL_POSITIVE = new FieldPoint(World.getInstance().getField().getLength() / 2, 0);
 
 	public Mode(Strategy strategy, ArrayList<RobotExecuter> executers) {
 		world = World.getInstance();
@@ -352,12 +352,9 @@ public abstract class Mode {
 	private void handleKeeper(RobotExecuter executer) {
 		Robot keeper = executer.getRobot();
 
-		// TODO determine field half in a better way
-		if (!(executer.getLowLevelBehavior() instanceof Keeper)) {
-			FieldPoint centerGoalPosition = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? MID_GOAL_POSITIVE
-					: MID_GOAL_NEGATIVE;
-			executer.setLowLevelBehavior(new Keeper(keeper, centerGoalPosition));
-		}
+		FieldPoint centerGoalPosition = world.getReferee().getEastTeam().equals(world.getReferee().getAlly()) ? MID_GOAL_POSITIVE
+				: MID_GOAL_NEGATIVE;
+		executer.setLowLevelBehavior(new Keeper(keeper, centerGoalPosition));
 
 		updateKeeper(executer);
 	}

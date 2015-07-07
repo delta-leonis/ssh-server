@@ -196,11 +196,14 @@ public class DijkstraPathPlanner {
 	@SuppressWarnings("unchecked")
 	public LinkedList<FieldPoint> getRoute(FieldPoint beginNode, FieldPoint desti, int robotId, int avoidBall, boolean avoidEastGoal, boolean avoidWestGoal) {
 		LinkedList<FieldPoint> route = new LinkedList<FieldPoint>();
+
 		boolean found = false;
 		source = beginNode;
 		destination = desti;
 
-		generateObjectList(robotId, avoidBall, avoidEastGoal, avoidWestGoal);
+		if (robotId != world.getReferee().getAlly().getGoalie())
+			generateObjectList(robotId, avoidBall, avoidEastGoal, avoidWestGoal);
+
 		copyOfObjects = (ArrayList<Shape>)objects.clone();
 //		while(isInsidePolygon(new Vertex(destination).toEllipse())){
 //			if(getClosestVertexToPoint(destination) == null){
