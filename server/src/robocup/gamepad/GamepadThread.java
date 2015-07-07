@@ -114,27 +114,26 @@ public class GamepadThread extends Thread {
 		int chipKick = 0;
 		double pollData = forceTrigger.getPollData();
 		if(kickButton.getPollData() > 0.1f && System.currentTimeMillis() - kickButtonTime > 250) {
-			chipKick = (int) ((isWindows() ? Math.abs(pollData) : pollData ) *100);
+			chipKick = (int) ((isWindows() ? Math.abs(pollData) : (pollData == -1.0 ? 0 : pollData) ) *100);
 			kickButtonTime = System.currentTimeMillis();
 			System.out.println(chipKick);
 		}
 		if(chipButton.getPollData() > 0.1f && System.currentTimeMillis() - chipButtonTime > 250) {
-			chipKick = (int) ((isWindows() ? Math.abs(pollData) : pollData ) * -100);
+			chipKick = (int) ((isWindows() ? Math.abs(pollData) : (pollData == -1.0 ? 0 : pollData) ) * -100);
 			chipButtonTime = System.currentTimeMillis();
-			System.out.println(chipKick);
 		}
 		return chipKick;
 	}
-	
+
+	private boolean isWindows() {
+		return System.getProperty("os.name").toLowerCase().contains("windows");
+	}
+
 	private void selectNextRobot(){
 		if(selectButton.getPollData() > 0.1f && System.currentTimeMillis() - selectButtonTime > 250){
 			World.getInstance().getGUI().selectNextRobot();
 			selectButtonTime = System.currentTimeMillis();
 		}
-	}
-	
-	private boolean isWindows(){
-		return System.getProperty("os.name").toLowerCase().contains("windows");
 	}
 
 	/**
