@@ -14,6 +14,7 @@ import robocup.model.Obstruction;
 import robocup.model.Robot;
 import robocup.model.World;
 import robocup.model.enums.FieldZone;
+import robocup.model.enums.GameState;
 
 /**
  * Pathplanner class based on Dijkstra's algorithm
@@ -567,7 +568,8 @@ public class DijkstraPathPlanner {
 		ArrayList<Vertex> filteredVertices = new ArrayList<Vertex>();
 		for (Shape shapes : objects)
 			for (Vertex v : vertices)
-				if (shapes.contains(v.getPosition().getX(), v.getPosition().getY()) && v.isRemovable())
+				if (shapes.contains(v.getPosition().getX(), v.getPosition().getY()) && v.isRemovable() || 
+						((world.getGameState() != GameState.WAITING_FOR_KICKOFF || world.getGameState() != GameState.TAKING_KICKOFF || world.getGameState() != GameState.WAITING_FOR_NORMAL_START) && (Math.abs(v.getPosition().getX()) > world.getField().getLength()/2)))
 					filteredVertices.add(v);
 
 		vertices.removeAll(filteredVertices);
