@@ -1,6 +1,9 @@
 package nl.saxion.robosim.application;
 
 
+import java.io.File;
+import java.io.IOException;
+
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -17,12 +20,10 @@ import nl.saxion.robosim.controller.UIController;
 import nl.saxion.robosim.model.LogReader;
 import nl.saxion.robosim.model.Model;
 import nl.saxion.robosim.model.Settings;
+
 import org.controlsfx.control.Notifications;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.ProgressDialog;
-
-import java.io.File;
-import java.io.IOException;
 
 
 /**
@@ -156,7 +157,7 @@ public class FileDialog {
      * Checks wether all input fields have data.
      */
     private void checkInput() {
-        System.out.println(yellowBox.isSelected() + " - " + blueBox.isSelected() + " - " + fileloc.getText().length());
+//        System.out.println(yellowBox.isSelected() + " - " + blueBox.isSelected() + " - " + fileloc.getText().length());
         if (keeperBox.getText().length() > 1) {
             keeperBox.setText(keeperBox.getText().substring(0, 1));
         }

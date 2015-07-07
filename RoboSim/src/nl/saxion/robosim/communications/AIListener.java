@@ -1,14 +1,14 @@
 package nl.saxion.robosim.communications;
 
-import nl.saxion.robosim.model.AiData;
-import nl.saxion.robosim.model.Model;
-import nl.saxion.robosim.model.Settings;
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
+
+import nl.saxion.robosim.model.AiData;
+import nl.saxion.robosim.model.Model;
+import nl.saxion.robosim.model.Settings;
 
 /**
  * The AIListener listens to input from the Artificial Intelligence and parses the data for the {@link Model}.
@@ -45,7 +45,7 @@ public class AIListener extends Thread {
         // The address from ssl 224.5.23.2
         InetAddress group = InetAddress.getByName(s.getIip());
         socket.joinGroup(group);
-        System.out.println("Start Listening");
+//        System.out.println("Start Listening");
     }
 
     /**
@@ -64,7 +64,7 @@ public class AIListener extends Thread {
                 data = new byte[packet.getLength()];
                 System.arraycopy(packet.getData(), packet.getOffset(), data, 0, packet.getLength());
                 AiData info = new AiData(data);
-                System.out.println(info);
+//                System.out.println(info);
 
                 // Update the AiRobots
                 model.getAiRobots().stream().filter(r -> r.getId() == info.getRobotID()).forEach(r -> {
@@ -76,7 +76,7 @@ public class AIListener extends Thread {
                 e.printStackTrace();
             }
         }
-        System.out.println("Listener Terminated");
+//        System.out.println("Listener Terminated");
     }
 }
 

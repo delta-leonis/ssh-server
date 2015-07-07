@@ -1,5 +1,14 @@
 package nl.saxion.robosim.model;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.TreeSet;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.canvas.Canvas;
@@ -7,15 +16,11 @@ import nl.saxion.robosim.communications.MultiCastServer;
 import nl.saxion.robosim.controller.Renderer;
 import nl.saxion.robosim.controller.SSL_Field;
 import nl.saxion.robosim.controller.UIController;
-import nl.saxion.robosim.model.protobuf.SslDetection;
 import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionFrame;
 import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionRobot;
 import nl.saxion.robosim.model.protobuf.SslGeometry.SSL_GeometryData;
 import nl.saxion.robosim.model.protobuf.SslReferee.SSL_Referee;
 import nl.saxion.robosim.model.protobuf.SslWrapper;
-
-import java.io.IOException;
-import java.util.*;
 
 /**
  * The model for this project. Functions as a a central hub between the different modules. All the data about the
@@ -263,7 +268,7 @@ public class Model {
         assert geometry != null : "Setting null SSLField";
 
         if (this.SSLField != null) {
-            System.out.println("Updating SSLField");
+//            System.out.println("Updating SSLField");
             this.SSLField.update(geometry);
         } else {
             this.SSLField = new SSL_Field(canvas, geometry);
@@ -463,7 +468,7 @@ public class Model {
      * Resets the entire game data
      */
     public void clear() {
-        System.out.println("MODEL - clear()");
+//        System.out.println("MODEL - clear()");
         SSLField = null;
         frames.clear();
         referees.clear();
@@ -478,7 +483,7 @@ public class Model {
      * Updates the model, should be called when a new log is loaded.
      */
     public void update() {
-        System.out.println("MODEL - update()");
+//        System.out.println("MODEL - update()");
         Settings s = Settings.getInstance();
         hasTeamYellow = s.hasTeamYellow();
         hasTeamBlue = s.hasTeamBlue();

@@ -31,7 +31,7 @@ public class AiRobot {
      * @param id
      */
     public AiRobot(int id, float currentX, float currentY) {
-        System.out.println("X : " + currentX + " : Y : " + currentY);
+//        System.out.println("X : " + currentX + " : Y : " + currentY);
         this.currentX = currentX;
         this.currentY = currentY;
         orientation = 90;
