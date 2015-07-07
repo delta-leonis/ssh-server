@@ -487,8 +487,9 @@ public class FieldPanel extends JPanel {
 			return;
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(2));
-		g2.setColor(Color.orange);
 		Ball ball = world.getBall();
+		
+		g2.setColor(ball.isOnSight() ? Color.orange : Color.black);
 
 		g2.fillOval((int) (ball.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX - (double) ball.SIZE / 2.0
 				* ratio), (int) (ball.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY - (double) ball.SIZE / 2.0

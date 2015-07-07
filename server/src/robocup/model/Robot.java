@@ -20,10 +20,7 @@ public abstract class Robot extends FieldObject {
 	 */
 	private double orientation;
 	private double height;
-	/** 
-	 * A robot is on sight if the camera currently detects it.
-	 */
-	private boolean onSight;
+
 	private boolean visible = true;		//true = visible in the GUI
 	private boolean ignore;
 
@@ -100,20 +97,6 @@ public abstract class Robot extends FieldObject {
 			return true;
 
 		return false;
-	}
-
-	/**
-	 * @return true if robot is visible on the {@link Field}
-	 */
-	public boolean isOnSight() {
-		return onSight || overrideOnsight();
-	}
-
-	/**
-	 * @param onSight robot visible on camera?
-	 */
-	public void setOnSight(boolean onSight) {
-		this.onSight = onSight;
 	}
 
 	/**
