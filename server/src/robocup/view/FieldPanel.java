@@ -583,16 +583,16 @@ public class FieldPanel extends JPanel {
 			g2.setColor((robot instanceof Ally) ? allyColor : enemyColor);
 			if(!robot.isOnSight())
 				g2.setColor(toGrayScale(g2.getColor()));
-			if(isWindows()){
-				//SOLID COLOR
-				g2.fillArc(
-						(int) (robotPosition.toGUIPoint(ratio, mirror).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
-						(int) (robotPosition.toGUIPoint(ratio, mirror).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
-						(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio),
-						(int) robot.getOrientation() + (mirror ?  215: 35), 295);
-				g2.fillPolygon(new int[] {(int) right.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) left.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) robot.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX},
-						new int[] {(int) right.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) left.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) robot.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY}, 3);
-			}
+
+			//SOLID COLOR
+			g2.fillArc(
+					(int) (robotPosition.toGUIPoint(ratio, mirror).getX() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferX),
+					(int) (robotPosition.toGUIPoint(ratio, mirror).getY() - (double) (Robot.DIAMETER / 2) * ratio + spaceBufferY),
+					(int) (Robot.DIAMETER * ratio), (int) (Robot.DIAMETER * ratio),
+					(int) robot.getOrientation() + (mirror ?  215: 35), 295);
+			g2.fillPolygon(new int[] {(int) right.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) left.toGUIPoint(ratio, mirror).getX() + spaceBufferX, (int) robot.getPosition().toGUIPoint(ratio, mirror).getX() + spaceBufferX},
+					new int[] {(int) right.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) left.toGUIPoint(ratio, mirror).getY() + spaceBufferY, (int) robot.getPosition().toGUIPoint(ratio, mirror).getY() + spaceBufferY}, 3);
+
 			//BORDERS
 			g2.setColor(g2.getColor().darker());
 			g2.drawLine((int) (left.toGUIPoint(ratio, mirror).getX() + spaceBufferX),
@@ -626,10 +626,6 @@ public class FieldPanel extends JPanel {
 	private Color toGrayScale(Color color) {
         int grayColor = (int)(color.getRed() * 0.299 + color.getGreen() * 0.587 + color.getBlue() * 0.114);
         return new Color(grayColor, grayColor, grayColor);
-	}
-
-	private boolean isWindows() {
-		return System.getProperty("os.name").toLowerCase().contains("windows");
 	}
 
 	/**
