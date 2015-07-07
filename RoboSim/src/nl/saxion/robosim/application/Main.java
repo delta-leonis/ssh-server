@@ -1,5 +1,7 @@
 package nl.saxion.robosim.application;
 
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,8 +10,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class Main extends Application {
 
@@ -32,7 +32,7 @@ public class Main extends Application {
 
         primaryStage.setScene(new Scene(root));
         primaryStage.setTitle("RoboSim");
-        primaryStage.setFullScreen(true);
+        primaryStage.setFullScreen(false);
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
         primaryStage.show();
 
