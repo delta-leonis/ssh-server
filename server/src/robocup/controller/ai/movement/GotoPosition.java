@@ -163,7 +163,8 @@ public class GotoPosition {
 	 * this function serves as an adapter so that the return move or the gamestates can change
 	 */
 	public boolean mayMoveInGameState() {
-		return world.getGameState() == GameState.NORMAL_PLAY;
+		//return world.getGameState() == GameState.NORMAL_PLAY; //wrong as of now
+		return true;
 	}
 	
 	/**
@@ -174,9 +175,11 @@ public class GotoPosition {
 	 * 							false if you want the robot to face the direction it should face at its destination
 	 */
 	public void calculate(int avoidBall, boolean alwaysFaceTarget) {
+
+		System.out.println("go to position reached");
 		if ((robot.isOnSight() && !world.getAllRobotOffsight())) {
-			System.out.println("Now acting like robot is found");
 		if(prepareForTakeOff()) {
+			System.out.println("reached checkpoint 1");
 			// Dribble when the ball is close by
 			dribble = robot.isCloseTo(world.getBall(), Robot.DIAMETER/2 + 200, 20);
 			if(world.getGameState() == GameState.STOPPED && world.getReferee().getAlly().getGoalie() == robot.getRobotId()){
@@ -239,7 +242,6 @@ public class GotoPosition {
 				output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, 0, dribble);
 				LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + ",0 ," + dribble);
 			}
-//			System.out.println("\t " + robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)currentSpeed + "," + (int)rotationSpeed );
 
 			// Set kick back to 0 to prevent kicking twice in a row
 			chipKick = 0;
@@ -247,8 +249,12 @@ public class GotoPosition {
 		}
 		// check if robot has a previous location if the robot is not onsight
 		else if (robot.getPosition() != null && (!robot.isOnSight() || world.getAllRobotOffsight()) && mayMoveInGameState()) {
-			System.out.println("Now sending message 2");
-			output.send(2, robot.getRobotId());
+			output.send(2, robot.getRobotId(), 0, 0, 0, 0, false);
+		}
+		// if this happens, something is wrong and the robot shoulnd't move at all
+		else {
+			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
+			System.out.println("gone wrong cuz is onsight: "+ robot.isOnSight() +" robotsoffsight "+ !world.getAllRobotOffsight());
 		}
 	}
 	
