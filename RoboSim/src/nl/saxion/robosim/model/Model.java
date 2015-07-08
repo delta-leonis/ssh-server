@@ -252,7 +252,7 @@ public class Model {
 
         this.SSLField = new SSL_Field(canvas, geometryData);
         if (aiRobots.isEmpty()) {
-            for (int i = 0; i < 6; i++) { // TODO 10
+            for (int i = 0; i < 6; i++) {
                 aiRobots.add(new AiRobot(i, (float) (SSLField.getBench_real_x()), (float) (SSLField.getBench_real_y() + SSLField.getRobot_real_size() * i)));
             }
         }
@@ -268,7 +268,7 @@ public class Model {
         assert geometry != null : "Setting null SSLField";
 
         if (this.SSLField != null) {
-            System.out.println("Updating SSLField");
+//            System.out.println("Updating SSLField");
             this.SSLField.update(geometry);
         } else {
             this.SSLField = new SSL_Field(canvas, geometry);
@@ -468,7 +468,7 @@ public class Model {
      * Resets the entire game data
      */
     public void clear() {
-        System.out.println("MODEL - clear()");
+//        System.out.println("MODEL - clear()");
         SSLField = null;
         frames.clear();
         referees.clear();
@@ -483,7 +483,7 @@ public class Model {
      * Updates the model, should be called when a new log is loaded.
      */
     public void update() {
-        System.out.println("MODEL - update()");
+//        System.out.println("MODEL - update()");
         Settings s = Settings.getInstance();
         hasTeamYellow = s.hasTeamYellow();
         hasTeamBlue = s.hasTeamBlue();
@@ -594,15 +594,14 @@ public class Model {
         try {
             multicastServer.set(s.getOip(), Integer.parseInt(s.getOport()), s.getRefIp(), Integer.parseInt(s.getRefPort()));
         } catch (IOException e) {
-            //TODO idk
             e.printStackTrace();
         }
     }
 
     public void moveAiToBench() {
         aiRobots.forEach(robot -> {
-                    robot.setX((float) (SSLField.getBench_real_x()));
-                    robot.setY((float) -(SSLField.getBench_real_y() + SSLField.getRobot_real_size() * robot.getId()));
+                    robot.setX((float) SSLField.getBench_real_x());
+                    robot.setY((float) -SSLField.getBenchPosition(robot.getId()));
                 }
         );
         this.nextFrame();

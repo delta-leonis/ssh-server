@@ -18,10 +18,10 @@ import java.util.List;
 public class AiRobot {
 
     private LinkedList<Target> targetList = new LinkedList<>();
-    private double velocity, orientation, direction, currentX, currentY, rotationSpeed, shootkicker, scale = 1;
-    private boolean dribble;
+    private double velocity, orientation, direction, currentX, currentY;
     private int id;
     private double velocity_X, velocity_Y;
+    private Settings settings;
 
     /**
      * Creates a AiRobot with the specified id.
@@ -31,33 +31,23 @@ public class AiRobot {
      * @param id
      */
     public AiRobot(int id, float currentX, float currentY) {
-        System.out.println("X : " + currentX + " : Y : " + currentY);
+//        System.out.println("X : " + currentX + " : Y : " + currentY);
         this.currentX = currentX;
         this.currentY = currentY;
         orientation = 90;
         velocity = 0;
         this.id = id;
+        settings = Settings.getInstance();
     }
 
     public synchronized void setDirection(float direction) {
         this.direction = -direction;
     }
 
-    public synchronized void setShootkicker(float shootkicker) {
-        this.shootkicker = shootkicker;
-    }
-
-    public synchronized void setDribble(boolean dribble) {
-        this.dribble = dribble;
-    }
-
     public synchronized void setVelocity(float velocity) {
         this.velocity = velocity;
     }
 
-    public synchronized void setRotationSpeed(float rotation) {
-        this.rotationSpeed = rotation;
-    }
 
     public void setX(float x) {
         currentX = x;
@@ -88,22 +78,20 @@ public class AiRobot {
      * Gets called by the {@link Model} when de AiRobot should update it's dataset
      */
     public synchronized void update() {
-        Settings s = Settings.getInstance();
-
-        double wantedVelX = (Math.min(/*500*/s.getSpeed(), velocity) / 60) * Math.cos(direction);
-        double wantedVelY = (Math.min(/*500*/s.getSpeed(), velocity) / 60) * Math.sin(direction);
+        double wantedVelX = (Math.min(settings.getSpeed(), velocity) / 60) * Math.cos(direction);
+        double wantedVelY = (Math.min(settings.getSpeed(), velocity) / 60) * Math.sin(direction);
 
         //acceleration
         if (Math.abs(velocity_X - wantedVelX) < 20) {
             velocity_X = wantedVelX;
         } else {
-            velocity_X += s.getAcceleration()/*2*/;
+            velocity_X += settings.getAcceleration()/*2*/;
         }
 
         if (Math.abs(velocity_Y - wantedVelY) < 20) {
             velocity_Y = wantedVelY;
         } else {
-            velocity_Y += s.getAcceleration();// 2;
+            velocity_Y += settings.getAcceleration();// 2;
         }
 
         currentX += velocity_X;
@@ -130,11 +118,8 @@ public class AiRobot {
                 '}';
     }
 
-    public void setScale(float scale) {
-        this.scale = scale;
-    }
-
     /* ################### TARGETING STUFF ######################## */
+    /* Can be used in the future to guide robots to a array of targets */
 
     public synchronized void setTargetList(LinkedList<Target> list) {
         this.targetList = list;

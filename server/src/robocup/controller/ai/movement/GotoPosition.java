@@ -254,7 +254,6 @@ public class GotoPosition {
 		// if this happens, something is wrong and the robot shoulnd't move at all
 		else {
 			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
-			System.out.println("gone wrong cuz is onsight: "+ robot.isOnSight() +" robotsoffsight "+ !world.getAllRobotOffsight());
 		}
 	}
 	

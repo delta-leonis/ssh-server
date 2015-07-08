@@ -12,6 +12,7 @@ import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.controller.handlers.protohandlers.DetectionHandler;
 import robocup.gamepad.GamepadModel;
 import robocup.model.enums.Command;
+import robocup.model.enums.Event;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.GameState;
 import robocup.model.enums.TeamColor;
@@ -29,6 +30,7 @@ public class World extends Observable {
 	private Ball ball;
 	private Referee referee;
 	private Field field;
+	private Event lastEvent = null;
 
 	private ArrayList<Robot> allyTeam;
 	private ArrayList<Robot> enemyTeam;
@@ -91,6 +93,15 @@ public class World extends Observable {
 		gamepadModel = new GamepadModel();
 		currentGameState = GameState.STOPPED;
 		ballPositionForGameState = null;
+	}
+	
+	public void setEvent(Event event) {
+		if (event != null)
+			lastEvent = event;
+	}
+	
+	public Event getLastEvent() {
+		return lastEvent;
 	}
 
 	/**
@@ -381,11 +392,11 @@ public class World extends Observable {
 
 		if (ball.getPosition() != null) {
 			for (Robot robot : robots) {
-				if (minDistance == -1.0) {
-					minDistanceRobot = robot;
-					minDistance = robot.getPosition().getDeltaDistance(ball.getPosition());
-				} else {
-					if (robot.getPosition() != null) {
+				if (robot.getPosition() != null) {
+					if (minDistance == -1.0) {
+						minDistanceRobot = robot;
+						minDistance = robot.getPosition().getDeltaDistance(ball.getPosition());
+					} else {
 						double distance = robot.getPosition().getDeltaDistance(ball.getPosition());
 
 						if (distance < minDistance) {
@@ -615,7 +626,7 @@ public class World extends Observable {
 		ArrayList<Enemy> foundEnemies = new ArrayList<Enemy>();
 
 		for (Robot enemy : enemyTeam)
-			if (enemy.getPosition() != null && fieldZone.contains(enemy.getPosition()))
+			if (enemy.getPosition() != null && fieldZone != null && fieldZone.contains(enemy.getPosition()))
 				foundEnemies.add((Enemy) enemy);
 
 		return foundEnemies;

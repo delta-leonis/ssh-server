@@ -1,5 +1,7 @@
 package nl.saxion.robosim.controller;
 
+import java.util.concurrent.TimeUnit;
+
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -11,8 +13,6 @@ import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionBall;
 import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionFrame;
 import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionRobot;
 import nl.saxion.robosim.model.protobuf.SslReferee.SSL_Referee;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * This class is responsible for rendering the canvas and thus the game itself. Every second, the {@link #render()}
@@ -120,7 +120,7 @@ public class Renderer {
     public void drawField() {
         if (field == null) {
             field = model.getSSLField();
-            System.out.println("field == null: " + (field == null));
+//            System.out.println("field == null: " + (field == null));
             graphicsContext.setLineWidth(field.line_width);
         }
         graphicsContext.clearRect(0, 0, field.canvasX, field.canvasY);

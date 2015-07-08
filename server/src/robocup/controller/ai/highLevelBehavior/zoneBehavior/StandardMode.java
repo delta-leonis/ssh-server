@@ -206,36 +206,46 @@ public class StandardMode extends Mode {
 		case "KickOffAttack":
 			return null;
 		case "PenaltyDefense":
-			double maxY = Math.max(runners.get(0).getPosition().getY(), runners.get(1).getPosition().getY());
+			ArrayList<Ally> filteredRunners = new ArrayList<Ally>();
 
-			if (isEastTeam) {
-				if (robot.getPosition().getY() == maxY) {
-					FieldPoint point = FieldZone.WEST_NORTH_SECONDPOST.getCenterPoint();
+			for (Ally runner : runners)
+				if (runner.getPreferredZone() == null)
+					filteredRunners.add(runner);
 
-					point.setX(1500);
+			double maxY = Math.max(filteredRunners.get(0).getPosition().getY(), filteredRunners.get(1).getPosition()
+					.getY());
 
-					return point;
+			if (filteredRunners.size() == 2) {
+				if (isEastTeam) {
+					if (robot.getPosition().getY() == maxY) {
+						FieldPoint point = FieldZone.WEST_NORTH_SECONDPOST.getCenterPoint();
+						point.setX(1500);
+
+						return point;
+					} else {
+						FieldPoint point = FieldZone.WEST_SOUTH_SECONDPOST.getCenterPoint();
+						point.setX(1500);
+
+						return point;
+					}
 				} else {
-					FieldPoint point = FieldZone.WEST_SOUTH_SECONDPOST.getCenterPoint();
+					if (robot.getPosition().getY() == maxY) {
+						FieldPoint point = FieldZone.EAST_NORTH_SECONDPOST.getCenterPoint();
+						point.setX(-1500);
 
-					point.setX(1500);
+						return point;
+					} else {
+						FieldPoint point = FieldZone.EAST_SOUTH_SECONDPOST.getCenterPoint();
+						point.setX(-1500);
 
-					return point;
+						return point;
+					}
 				}
 			} else {
-				if (robot.getPosition().getY() == maxY) {
-					FieldPoint point = FieldZone.EAST_NORTH_SECONDPOST.getCenterPoint();
-
-					point.setX(-1500);
-
-					return point;
-				} else {
-					FieldPoint point = FieldZone.EAST_SOUTH_SECONDPOST.getCenterPoint();
-
-					point.setX(-1500);
-
-					return point;
-				}
+				if (isEastTeam)
+					return new FieldPoint(world.getField().getLength() / 2 - 1500, 0);
+				else
+					return new FieldPoint(-(world.getField().getLength() / 2 - 1500), 0);
 			}
 		case "PenaltyAttack":
 			maxY = Math.max(runners.get(0).getPosition().getY(), runners.get(1).getPosition().getY());
@@ -354,7 +364,7 @@ public class StandardMode extends Mode {
 
 			// Invert offset when on the left side of the field.
 			// This is done because the offset moves the other way on this side. 
-			if (robot.getPosition().getX() < 0)
+			if (world.getReferee().getAlly().equals(world.getReferee().getEastTeam()))
 				offset = -offset;
 
 			keeperDefender.update(distanceToGoal, goToKick, ballPosition, offset, world.getField().getWidth(), world
@@ -427,17 +437,22 @@ public class StandardMode extends Mode {
 				offset = -10;
 			else
 				offset = 10;
+		} else if (disturbers.size() == 3) {
+			if (robot.getPosition().getY() == Math.max(disturbers.get(0).getPosition().getY(),
+					Math.max(disturbers.get(1).getPosition().getY(), disturbers.get(2).getPosition().getY())))
+				offset = -15;
+			else if (robot.getPosition().getY() == Math.min(disturbers.get(0).getPosition().getY(),
+					Math.min(disturbers.get(1).getPosition().getY(), disturbers.get(2).getPosition().getY())))
+				offset = 15;
+			else
+				offset = 0;
 		}
 
 		int distanceToObject = 700; // keep longer distance from ball in standardmode, as we are probably in GameState.STOPPED
 		FieldPoint objectPosition = ball.getPosition();
 		boolean goToKick = false;//world.getClosestRobotToBall().getPosition().getDeltaDistance(objectPosition) > Robot.DIAMETER;
 
-		// Invert offset when on the left side of the field.
-		disturber.update(distanceToObject, goToKick, objectPosition, world.getField().getWidth(), world.getField()
-				.getLength());
-		// This is done because the offset moves the other way on this side. 
-		if (robot.getPosition().getX() < 0)
+		if (world.getReferee().getAlly().equals(world.getReferee().getEastTeam()))
 			offset = -offset;
 
 		disturber.update(distanceToObject, goToKick, objectPosition, offset, world.getField().getWidth(), world

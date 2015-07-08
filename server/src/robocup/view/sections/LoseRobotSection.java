@@ -4,11 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.logging.Logger;
 
-import javax.swing.AbstractAction;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 
 import robocup.Main;
 import robocup.model.World;
@@ -33,7 +29,7 @@ public class LoseRobotSection extends SectionBox {
 		super("Lose Robot Section");
 		//add(new JLabel(new ImageIcon(LoseRobotSection.class.getResource("/robocup/view/penguin.png"))));
 
-		JCheckBox cb_LoseRobot = new JCheckBox("Set robots out of sight");
+		final JCheckBox cb_LoseRobot = new JCheckBox("Set robots out of sight");
 		
 		cb_LoseRobot.setSelected(false);
 		cb_LoseRobot.addActionListener(new ActionListener() {

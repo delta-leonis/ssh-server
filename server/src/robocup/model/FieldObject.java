@@ -12,10 +12,12 @@ public abstract class FieldObject {
 	protected double direction;
 	protected double speed;
 	private boolean overrideOnsight;
+	private boolean isOnsight;
 
 	public FieldObject() {
 		lastUpdateTime = 0;
 		position = null;
+		isOnsight = false;
 		overrideOnsight = false;
 	}
 
@@ -40,7 +42,21 @@ public abstract class FieldObject {
 	public void setOverrideOnsight(boolean override){
 		overrideOnsight = override;
 	}
-	
+
+	/**
+	 * @return true if robot is visible on the {@link Field}
+	 */
+	public boolean isOnSight() {
+		return isOnsight || overrideOnsight;
+	}
+
+	/**
+	 * @param onSight robot visible on camera?
+	 */
+	public void setOnSight(boolean onSight) {
+		isOnsight = onSight;
+	}
+
 	/**
 	 * @return The last time this object got updated in seconds.
 	 */

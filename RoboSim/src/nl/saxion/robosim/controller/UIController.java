@@ -159,7 +159,9 @@ public class UIController implements Initializable {
      * Stop's the threads that are sending/recieving
      */
     public void aiStop() {
-        ail.terminate();
+        if (ail != null) {
+            ail.terminate();
+        }
     }
 
     /**
