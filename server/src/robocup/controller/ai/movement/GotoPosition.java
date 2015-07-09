@@ -10,6 +10,7 @@ import robocup.model.FieldObject;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.World;
+import robocup.model.enums.Command;
 import robocup.model.enums.GameState;
 import robocup.output.ComInterface;
 
@@ -163,8 +164,7 @@ public class GotoPosition {
 	 * this function serves as an adapter so that the return move or the gamestates can change
 	 */
 	public boolean mayMoveInGameState() {
-		//return world.getGameState() == GameState.NORMAL_PLAY; //wrong as of now
-		return true;
+		return world.getReferee().getCommand() != Command.HALT;
 	}
 	
 	/**
@@ -175,11 +175,8 @@ public class GotoPosition {
 	 * 							false if you want the robot to face the direction it should face at its destination
 	 */
 	public void calculate(int avoidBall, boolean alwaysFaceTarget) {
-
-		System.out.println("go to position reached");
 		if ((robot.isOnSight() && !world.getAllRobotOffsight())) {
 		if(prepareForTakeOff()) {
-			System.out.println("reached checkpoint 1");
 			// Dribble when the ball is close by
 			dribble = robot.isCloseTo(world.getBall(), Robot.DIAMETER/2 + 200, 20);
 			if(world.getGameState() == GameState.STOPPED && world.getReferee().getAlly().getGoalie() == robot.getRobotId()){
