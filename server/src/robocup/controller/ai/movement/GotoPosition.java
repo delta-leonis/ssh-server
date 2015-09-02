@@ -10,6 +10,7 @@ import robocup.model.FieldObject;
 import robocup.model.FieldPoint;
 import robocup.model.Robot;
 import robocup.model.World;
+import robocup.model.enums.Command;
 import robocup.model.enums.GameState;
 import robocup.output.ComInterface;
 
@@ -163,7 +164,7 @@ public class GotoPosition {
 	 * this function serves as an adapter so that the return move or the gamestates can change
 	 */
 	public boolean mayMoveInGameState() {
-		return world.getGameState() == GameState.NORMAL_PLAY;
+		return world.getReferee().getCommand() != Command.HALT;
 	}
 	
 	/**
@@ -238,7 +239,6 @@ public class GotoPosition {
 				output.send(1, robot.getRobotId(), (int)rotationToGoal, (int)speed, (int)rotationSpeed, 0, dribble);
 				LOGGER.log(Level.INFO, robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)speed + "," + (int)rotationSpeed + ",0 ," + dribble);
 			}
-//			System.out.println("\t " + robot.getRobotId() + "," + (int)rotationToGoal + "," + (int)currentSpeed + "," + (int)rotationSpeed );
 
 			// Set kick back to 0 to prevent kicking twice in a row
 			chipKick = 0;
@@ -246,8 +246,11 @@ public class GotoPosition {
 		}
 		// check if robot has a previous location if the robot is not onsight
 		else if (robot.getPosition() != null && (!robot.isOnSight() || world.getAllRobotOffsight()) && mayMoveInGameState()) {
-			System.out.println("Now sending message 2");
-			output.send(2, robot.getRobotId());
+			output.send(2, robot.getRobotId(), 0, 0, 0, 0, false);
+		}
+		// if this happens, something is wrong and the robot shoulnd't move at all
+		else {
+			output.send(1, robot.getRobotId(), 0, 0, 0, 0, false);
 		}
 	}
 	

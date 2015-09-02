@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -28,7 +29,7 @@ public class ControlRobotPacketTestSection extends SectionBox{
 	private JTextField directionField;
 	private JTextField directionSpeedField;
 	private JTextField rotationSpeedField;
-	
+	private JCheckBox messagetypeCheckbox;
 	/**
 	 * Create ControlRobotSection
 	 */
@@ -49,7 +50,7 @@ public class ControlRobotPacketTestSection extends SectionBox{
 		directionSpeedField = new JTextField("0");
 		directionSpeedField.setPreferredSize(new Dimension(50, 20));
 		rotationSpeedField = new JTextField("0");
-
+		messagetypeCheckbox = new JCheckBox("Message type 2");
 
 		add(new JLabel("Direction"), "growx");
 		add(directionField, "growx");
@@ -59,6 +60,8 @@ public class ControlRobotPacketTestSection extends SectionBox{
 		
 		add(new JLabel("Rotation Speed"), "growx");
 		add(rotationSpeedField, "growx");
+
+		add(messagetypeCheckbox);
 		add(sendPacketButton, "growx");
 
 		setFocusable(true);
@@ -74,7 +77,12 @@ public class ControlRobotPacketTestSection extends SectionBox{
 			LOGGER.info(String.format("%s commando send to robot #%d", buttonText.split("\\s+" )[0], selectedRobotId));
 			switch (buttonText) {
 			case "Send":
-				send(directionField.getText(), directionSpeedField.getText(), rotationSpeedField.getText());
+				if (!messagetypeCheckbox.isSelected()) {
+					send(directionField.getText(), directionSpeedField.getText(), rotationSpeedField.getText());
+				}
+				else {
+					ComInterface.getInstance().send(2, selectedRobotId, 0, 0, 0, 0, false);
+				}
 				break;
 			}
 		}

@@ -84,7 +84,7 @@ public class FieldPanel extends JPanel {
 		g2.translate(getWidth()/2.0, getHeight()/2.0);							//origin at center of panel
 
 		g2.scale(scaleRatio, scaleRatio);										//posY upward, negY downwards
-
+		
 		g2.transform(AffineTransform.getQuadrantRotateInstance(model.getQuadrantRotation()));
 	    paintRaster(g2);
 	    
@@ -133,8 +133,7 @@ public class FieldPanel extends JPanel {
 		g2.setFont(new Font(g2.getFont().getFontName(), Font.BOLD, (int) 22));
 		g2.setColor(Color.YELLOW);
 		g2.drawString("FPS: " + FPS, getWidth() - 100, 25);
-	}
-	
+
 	private void paintCanvas(Graphics2D g2) {
 		g2.setColor(Color.GREEN.darker().darker());
 	    g2.fillRect(0, 0, getWidth(), getHeight());

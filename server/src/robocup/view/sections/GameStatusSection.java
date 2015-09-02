@@ -20,7 +20,7 @@ import robocup.view.SectionBox;
 @SuppressWarnings("serial")
 public class GameStatusSection extends SectionBox implements ActionListener{
 
-	private JTextField fieldHalfField, timePlayedField, refereeStatusField, refereeCommandField, gameStatusField, strategyField, goalsField, keeperIdField;
+	private JTextField fieldHalfField, timePlayedField, refereeStatusField, refereeCommandField, gameStatusField, eventField, strategyField, goalsField, keeperIdField;
 	private JButton startButton;
 	private JButton stopButton;
 	private World world;
@@ -45,6 +45,8 @@ public class GameStatusSection extends SectionBox implements ActionListener{
 		refereeCommandField.setEnabled(false);
 		gameStatusField = new JTextField();
 		gameStatusField.setEnabled(false);
+		eventField = new JTextField();
+		eventField.setEnabled(false);
 		strategyField = new JTextField();
 		strategyField.setEnabled(false);
 		goalsField = new JTextField();
@@ -66,6 +68,8 @@ public class GameStatusSection extends SectionBox implements ActionListener{
 		add(refereeCommandField, "growx");
 		add(new JLabel("Game Status"));
 		add(gameStatusField, "growx");
+		add(new JLabel("Last event"));
+		add(eventField, "growx");
 		add(new JLabel("Current strategy"));
 		add(strategyField, "growx");
 		add(new JLabel("Goals"));
@@ -99,6 +103,7 @@ public class GameStatusSection extends SectionBox implements ActionListener{
 		refereeCommandField.setText(world.getReferee().getCommand().toString());
 		refereeStatusField.setText(world.getReferee().getStage().toString());
 		gameStatusField.setText(world.getGameState().toString());
+		eventField.setText(world.getLastEvent() != null ? world.getLastEvent().toString() : "");
 		if(AiExecuter.behavior instanceof ZoneBehavior){
 			ZoneBehavior behavior = (ZoneBehavior) AiExecuter.behavior;
 			strategyField.setText(behavior == null || behavior.currentMode == null

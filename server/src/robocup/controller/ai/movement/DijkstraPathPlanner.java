@@ -14,6 +14,7 @@ import robocup.model.Obstruction;
 import robocup.model.Robot;
 import robocup.model.World;
 import robocup.model.enums.FieldZone;
+import robocup.model.enums.GameState;
 
 /**
  * Pathplanner class based on Dijkstra's algorithm
@@ -196,11 +197,14 @@ public class DijkstraPathPlanner {
 	@SuppressWarnings("unchecked")
 	public LinkedList<FieldPoint> getRoute(FieldPoint beginNode, FieldPoint desti, int robotId, int avoidBall, boolean avoidEastGoal, boolean avoidWestGoal) {
 		LinkedList<FieldPoint> route = new LinkedList<FieldPoint>();
+
 		boolean found = false;
 		source = beginNode;
 		destination = desti;
 
-		generateObjectList(robotId, avoidBall, avoidEastGoal, avoidWestGoal);
+		if (robotId != world.getReferee().getAlly().getGoalie())
+			generateObjectList(robotId, avoidBall, avoidEastGoal, avoidWestGoal);
+
 		copyOfObjects = (ArrayList<Shape>)objects.clone();
 //		while(isInsidePolygon(new Vertex(destination).toEllipse())){
 //			if(getClosestVertexToPoint(destination) == null){
@@ -564,7 +568,8 @@ public class DijkstraPathPlanner {
 		ArrayList<Vertex> filteredVertices = new ArrayList<Vertex>();
 		for (Shape shapes : objects)
 			for (Vertex v : vertices)
-				if (shapes.contains(v.getPosition().getX(), v.getPosition().getY()) && v.isRemovable())
+				if (shapes.contains(v.getPosition().getX(), v.getPosition().getY()) && v.isRemovable() || 
+						((world.getGameState() != GameState.WAITING_FOR_KICKOFF || world.getGameState() != GameState.TAKING_KICKOFF || world.getGameState() != GameState.WAITING_FOR_NORMAL_START) && (Math.abs(v.getPosition().getX()) > world.getField().getLength()/2)))
 					filteredVertices.add(v);
 
 		vertices.removeAll(filteredVertices);

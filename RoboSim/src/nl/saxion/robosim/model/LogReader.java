@@ -1,13 +1,5 @@
 package nl.saxion.robosim.model;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-import nl.saxion.robosim.exception.InvalidLogFileException;
-import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionFrame;
-import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionRobot;
-import nl.saxion.robosim.model.protobuf.SslReferee.SSL_Referee;
-import nl.saxion.robosim.model.protobuf.SslReferee.SSL_Referee.TeamInfo;
-import nl.saxion.robosim.model.protobuf.SslWrapper.SSL_WrapperPacket;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,6 +8,15 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import nl.saxion.robosim.exception.InvalidLogFileException;
+import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionFrame;
+import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionRobot;
+import nl.saxion.robosim.model.protobuf.SslReferee.SSL_Referee;
+import nl.saxion.robosim.model.protobuf.SslReferee.SSL_Referee.TeamInfo;
+import nl.saxion.robosim.model.protobuf.SslWrapper.SSL_WrapperPacket;
+
+import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
  * Reads Small Soccer League logs en parses the so they are usable for the {@link Model} by creating
@@ -74,7 +75,7 @@ public class LogReader {
      * @throws IOException
      */
     public void readFrames() throws IOException {
-        System.out.println("Read Frames");
+//        System.out.println("Read Frames");
         long oldTime = 0, newTime, totalTime = 0;
 
         //The first 12 bytes of the file must be a String with value "SSL_LOG_FILE"
@@ -123,10 +124,10 @@ public class LogReader {
 
             switch (messageType) {
                 case MESSAGE_BLANK:
-                    System.out.println("Blank message");
+//                    System.out.println("Blank message");
                     break;
                 case MESSAGE_UNKNOWN:
-                    System.out.println("Unknown message");
+//                    System.out.println("Unknown message");
                     break;
                 case MESSAGE_SSL_VISION_2010:
                     //update bytes that describe a frame

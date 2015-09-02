@@ -54,6 +54,11 @@ public class ZoneBehavior extends Behavior {
 		events = new EventSystem();
 		referee = world.getReferee();
 
+		initializeModes(executers);
+		currentMode = new StandardMode(new KickOffDefense(), executers);
+	}
+	
+	public void initializeModes(ArrayList<RobotExecuter> executers) {
 		attackModes = new ArrayList<AttackMode>();
 //		attackModes.add(new AttackMode(new CornerToCornerAttack(), executers));
 		attackModes.add(new AttackMode(new FreeShotRoundPlay(), executers));
@@ -65,7 +70,6 @@ public class ZoneBehavior extends Behavior {
 		defenseModes.add(new DefenseMode(new ForwardDefending(), executers));
 		defenseModes.add(new DefenseMode(new ZonallyBackward(), executers));
 		defenseModes.add(new DefenseMode(new ZonallyForward(), executers));
-		currentMode = new StandardMode(new KickOffDefense(), executers);
 	}
 
 	/**
@@ -90,6 +94,7 @@ public class ZoneBehavior extends Behavior {
 
 		if (event != null) {
 			LOGGER.info("Event: " + event.name());
+			world.setEvent(event);
 			switch (event) {
 			case BALL_ALLY_CAPTURE:
 				if (world.getGameState() == GameState.NORMAL_PLAY)
@@ -144,6 +149,7 @@ public class ZoneBehavior extends Behavior {
 	 * @return The AttackMode containing the chosen strategy
 	 */
 	private AttackMode chooseAttackStrategy(ArrayList<RobotExecuter> executers) {
+		initializeModes(executers);
 		AttackMode mode = attackModes.get((int) (Math.random() * attackModes.size()));
 		mode.assignRoles();
 		LOGGER.info("strategy: " + mode.getStrategy().getClass().getSimpleName());
@@ -156,6 +162,7 @@ public class ZoneBehavior extends Behavior {
 	 * @return The DefenseMode containing the chosen strategy
 	 */
 	private DefenseMode chooseDefenseStrategy(ArrayList<RobotExecuter> executers) {
+		initializeModes(executers);
 		DefenseMode mode = defenseModes.get((int) (Math.random() * defenseModes.size()));
 		mode.assignRoles();
 		LOGGER.info("strategy: " + mode.getStrategy().getClass().getSimpleName());

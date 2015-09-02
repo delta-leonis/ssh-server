@@ -2,8 +2,7 @@ package nl.saxion.robosim.controller;
 
 import javafx.scene.canvas.Canvas;
 import nl.saxion.robosim.model.protobuf.SslGeometry.SSL_GeometryData;
-
-import static nl.saxion.robosim.model.protobuf.SslGeometry.SSL_GeometryFieldSize;
+import nl.saxion.robosim.model.protobuf.SslGeometry.SSL_GeometryFieldSize;
 
 /**
  * Contains the data about the field sizes and calculates the scaled field size to be used by the {@link nl.saxion.robosim.controller.Renderer}.
@@ -82,8 +81,8 @@ public class SSL_Field{
             benchpositions[i] = bench_real_y + i * robot_real_size;
         }
 
-        System.out.println("stretch: " + field.getDefenseStretch() + "\nradius: " +
-                field.getDefenseRadius());
+//        System.out.println("stretch: " + field.getDefenseStretch() + "\nradius: " +
+//                field.getDefenseRadius());
 
         defence_arc_radius = field.getDefenseRadius() * scale;
         defence_stretch = field.getDefenseStretch() * scale;

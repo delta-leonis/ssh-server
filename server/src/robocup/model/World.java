@@ -12,6 +12,7 @@ import robocup.controller.ai.lowLevelBehavior.RobotExecuter;
 import robocup.controller.handlers.protohandlers.DetectionHandler;
 import robocup.gamepad.GamepadModel;
 import robocup.model.enums.Command;
+import robocup.model.enums.Event;
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.GameState;
 import robocup.model.enums.TeamColor;
@@ -30,6 +31,7 @@ public class World extends Observable {
 	private Ball ball;
 	private Referee referee;
 	private Field field;
+	private Event lastEvent = null;
 
 	private ArrayList<Robot> allyTeam;
 	private ArrayList<Robot> enemyTeam;
@@ -94,6 +96,15 @@ public class World extends Observable {
 		gamepadModel = new GamepadModel();
 		currentGameState = GameState.STOPPED;
 		ballPositionForGameState = null;
+	}
+	
+	public void setEvent(Event event) {
+		if (event != null)
+			lastEvent = event;
+	}
+	
+	public Event getLastEvent() {
+		return lastEvent;
 	}
 
 	/**

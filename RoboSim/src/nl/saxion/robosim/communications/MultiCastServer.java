@@ -1,5 +1,10 @@
 package nl.saxion.robosim.communications;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+
 import nl.saxion.robosim.controller.SSL_Field;
 import nl.saxion.robosim.model.Model;
 import nl.saxion.robosim.model.Settings;
@@ -8,12 +13,6 @@ import nl.saxion.robosim.model.protobuf.SslDetection.SSL_DetectionFrame;
 import nl.saxion.robosim.model.protobuf.SslReferee;
 import nl.saxion.robosim.model.protobuf.SslWrapper;
 import nl.saxion.robosim.model.protobuf.SslWrapper.SSL_WrapperPacket;
-
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Sends udp messages to the given ip and port.
@@ -76,7 +75,7 @@ public class MultiCastServer {
 
             int cameraId = getQuadrant(robotX, robotY);
             if(validRobot(blueRobot))
-                System.out.println("adding bluebot");
+//                System.out.println("adding bluebot");
                 frameBuilders[cameraId] = frameBuilders[cameraId].addRobotsBlue(blueRobot);
         }
 
