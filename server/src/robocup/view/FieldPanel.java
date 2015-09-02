@@ -58,7 +58,7 @@ public class FieldPanel extends JPanel {
 				int newX = (int) ((x - width/2) / getScaleRatio());
 				int newY = (int) ((y - length/2) / getScaleRatio());
 
-				if(model.getQuadrantRotation() %2 == 0 )
+				if(model.getQuadrantRotation() %2 == 0 )	
 					return new FieldPoint(newX *(model.getQuadrantRotation() == 2 ? -1 : 1) , newY*(model.getQuadrantRotation() == 0 ? -1 : 1));
 				else
 					return new FieldPoint(newY*(model.getQuadrantRotation() == 3 ? -1 : 1), newX*(model.getQuadrantRotation() == 3 ? -1 : 1));
@@ -133,7 +133,7 @@ public class FieldPanel extends JPanel {
 		g2.setFont(new Font(g2.getFont().getFontName(), Font.BOLD, (int) 22));
 		g2.setColor(Color.YELLOW);
 		g2.drawString("FPS: " + FPS, getWidth() - 100, 25);
-
+	}
 	private void paintCanvas(Graphics2D g2) {
 		g2.setColor(Color.GREEN.darker().darker());
 	    g2.fillRect(0, 0, getWidth(), getHeight());
