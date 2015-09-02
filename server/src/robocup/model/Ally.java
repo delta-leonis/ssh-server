@@ -1,5 +1,7 @@
 package robocup.model;
 
+import java.awt.Graphics2D;
+
 import robocup.model.enums.FieldZone;
 import robocup.model.enums.RobotMode;
 
@@ -88,5 +90,11 @@ public class Ally extends Robot {
 	 */
 	public void setPreferredZone(FieldZone preferredZone) {
 		this.preferredZone = preferredZone;
+	}
+
+	@Override
+	public void paint(Graphics2D g, FieldPoint origin) {
+		g.setColor(World.getInstance().getReferee().getAllyTeamColor().toColor());
+		super.paint(g, origin);
 	}
 }

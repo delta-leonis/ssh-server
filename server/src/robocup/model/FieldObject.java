@@ -1,10 +1,15 @@
 package robocup.model;
+
+import java.awt.Graphics2D;
+
+import com.sun.prism.Graphics;
+
 /**
  * Describes an object on the {@link Field}
  * 
  * TODO needs a rewrite and cleanup. Data might be different with 4 cameras.
  */
-public abstract class FieldObject {
+public abstract class FieldObject implements Drawable{
 
 	protected FieldPoint position;
 	// LastUpdateTime = time off the day in sec
@@ -100,5 +105,17 @@ public abstract class FieldObject {
 	public String toString() {
 		return "position=" + position + ", lastUpdateTime=" + lastUpdateTime + ", direction=" + direction + ", speed="
 				+ speed + "]";
+	}
+	
+	@Override
+	public void paint(Graphics2D g2){
+		FieldPoint position = (this.position == null ? new FieldPoint(0,0) : this.position ).mirrorY();
+		paint(g2, position);
+	}
+	
+	@Override
+	public void paint(Graphics2D g2, FieldPoint position){
+		g2.setFont(g2.getFont().deriveFont(22f));
+		g2.drawString("?", (int) position.getX(), (int)position.getY());
 	}
 }

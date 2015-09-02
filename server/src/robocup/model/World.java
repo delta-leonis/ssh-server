@@ -17,6 +17,7 @@ import robocup.model.enums.GameState;
 import robocup.model.enums.TeamColor;
 import robocup.output.ComInterface;
 import robocup.view.GUI;
+import robocup.view.GUIModel;
 
 /**
  * Model representation of the physical "world", including the {@link Field}, all the
@@ -33,6 +34,7 @@ public class World extends Observable {
 	private ArrayList<Robot> allyTeam;
 	private ArrayList<Robot> enemyTeam;
 	private ArrayList<Robot> robotList;
+	private GUIModel guiModel;
 
 	private int robotRadius = Robot.DIAMETER / 2;
 
@@ -67,6 +69,7 @@ public class World extends Observable {
 		ball.setPosition(new FieldPoint(-500, -500));
 		referee = new Referee();
 		field = new Field();
+		guiModel = new GUIModel();
 
 		// initialize all robots
 		allyTeam = new ArrayList<Robot>();
@@ -81,7 +84,7 @@ public class World extends Observable {
 		}
 		referee.initAllyTeam(allyTeam);
 		referee.initEnemyTeam(enemyTeam);
-
+		guiModel.setSelectedRobot(allyTeam.get(0));
 		robotList = new ArrayList<Robot>();
 		robotList.addAll(allyTeam);
 		robotList.addAll(enemyTeam);
@@ -1051,5 +1054,9 @@ public class World extends Observable {
 	 */ 
 	public boolean getAllRobotOffsight() {
 		return allRobotsOffsight;
+	}
+
+	public GUIModel getGuiModel() {
+		return guiModel;
 	}
 }

@@ -46,18 +46,26 @@ public class DetectionHandler {
 		case 0:
 			if (measuredPosition.getX() >= 0 || measuredPosition.getY() <= 0)
 				return false;
+			if(measuredPosition.getX() <= 0 && measuredPosition.getY() >= 0)
+				return true;
 			break;
 		case 1:
 			if (measuredPosition.getX() <= 0 || measuredPosition.getY() >= 0)
 				return false;
+			if(measuredPosition.getX() >= 0 && measuredPosition.getY() <= 0)
+				return true;
 			break;
 		case 2:
 			if (measuredPosition.getX() <= 0 || measuredPosition.getY() <= 0)
 				return false;
+			if(measuredPosition.getX() >= 0 && measuredPosition.getY() >= 0)
+				return true;
 			break;
 		case 3:
 			if (measuredPosition.getX() >= 0 || measuredPosition.getY() >= 0)
 				return false;
+			if(measuredPosition.getX() < 0 && measuredPosition.getY() < 0)
+				return true;
 			break;
 		}
 

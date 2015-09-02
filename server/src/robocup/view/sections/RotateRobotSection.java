@@ -55,12 +55,12 @@ public class RotateRobotSection extends SectionBox{
 	    	if(shouldBeRunning()){
 	    		textField.setText("" + (Integer.valueOf(textField.getText())*-1));
 	    		LOGGER.info("inverted rotation speed");
-				ComInterface.getInstance().send(1,  world.getGUI().getSelectedRobot().getRobotId(), 0, 0,  Integer.valueOf(textField.getText()),0, false);
+				ComInterface.getInstance().send(1,  world.getGuiModel().getSelectedRobot().getRobotId(), 0, 0,  Integer.valueOf(textField.getText()),0, false);
 				revertTimer = new Timer();
 				revertTimer.schedule(new ReverseDirectionTask(),  1000);
 	    	}else{
 	    		System.out.println("terminated");
-	    		ComInterface.getInstance().send(1,  world.getGUI().getSelectedRobot().getRobotId(), 0, 0, 0,0, false);
+	    		ComInterface.getInstance().send(1,  world.getGuiModel().getSelectedRobot().getRobotId(), 0, 0, 0,0, false);
 	    	}
 
 	    }
@@ -83,16 +83,16 @@ public class RotateRobotSection extends SectionBox{
 				case "Terminate":
 				{
 					run = false;
-					LOGGER.info("Terminate command send to robot #"+  world.getGUI().getSelectedRobot().getRobotId());
-					ComInterface.getInstance().send(1,  world.getGUI().getSelectedRobot().getRobotId(), 0, 0, 0,0, false);
+					LOGGER.info("Terminate command send to robot #"+  world.getGuiModel().getSelectedRobot().getRobotId());
+					ComInterface.getInstance().send(1,  world.getGuiModel().getSelectedRobot().getRobotId(), 0, 0, 0,0, false);
 					break;
 				}
 				
 				case "spin":
 				{
 					run = true;
-					LOGGER.info("Spin robot #" +  world.getGUI().getSelectedRobot().getRobotId() + ", speed " + Integer.valueOf(textField.getText()));
-					ComInterface.getInstance().send(1,  world.getGUI().getSelectedRobot().getRobotId(), 0, 0, Integer.valueOf(textField.getText()),0, false);
+					LOGGER.info("Spin robot #" +  world.getGuiModel().getSelectedRobot().getRobotId() + ", speed " + Integer.valueOf(textField.getText()));
+					ComInterface.getInstance().send(1,  world.getGuiModel().getSelectedRobot().getRobotId(), 0, 0, Integer.valueOf(textField.getText()),0, false);
 					revertTimer = new Timer();
 					revertTimer.schedule(new ReverseDirectionTask(),  1000);
 				}

@@ -310,4 +310,8 @@ public class Referee {
 				+ lastCommandTimestamp + "]" + "\r\n";
 	}
 
+	public TeamColor getEnemyTeamColor() {
+		return enemyTeam.getColor();
+	}
+
 }

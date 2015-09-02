@@ -1,5 +1,9 @@
 package robocup.model;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -7,13 +11,14 @@ import java.util.logging.Logger;
 
 import robocup.Main;
 import robocup.model.enums.FieldZone;
+import robocup.model.enums.TeamColor;
 
 /**
  * Class that describes all the properties of the Field we play on.
  * These properties are retrieved from config/field.properties
  * 
  */
-public class Field {
+public class Field implements Drawable {
 	private int length;
 	private int width;
 
@@ -365,5 +370,49 @@ public class Field {
 	 */
 	public Goal getEnemyGoal() {
 		return (World.getInstance().getReferee().getEastTeam().equals(World.getInstance().getReferee().getEnemy()) ? eastGoal : westGoal);
+	}
+
+	@Override
+	public void paint(Graphics2D g2) {
+		paint(g2, new FieldPoint(0,0));
+	}
+
+	@Override
+	public void paint(Graphics2D g2, FieldPoint origin) {
+		int lineWidth = Math.max(1, (int) (getLineWidth() ));
+		g2.setStroke(new BasicStroke(lineWidth));
+
+		// center line
+		g2.setColor(Color.WHITE);
+		g2.drawLine(0, -width/2, 0, width/2);
+
+		//borders
+		g2.drawRect(-length/2, -width/2, length, width);
+		
+		// center circle
+		g2.drawArc(-centerCircleRadius,-centerCircleRadius, centerCircleRadius * 2,
+				centerCircleRadius * 2, 0, 360);
+
+		// draw west penalty area
+		g2.drawArc(-length/2 - defenceRadius, -defenceRadius + defenceStretch / 2 ,
+				defenceRadius * 2, defenceRadius * 2, 270, 90);
+		g2.drawLine(-length/2 + defenceRadius -1, - defenceStretch/2, -length/2+ defenceRadius -1, defenceStretch/2);
+		g2.drawArc(-length/2 - defenceRadius, -defenceRadius - defenceStretch/2, defenceRadius*2, defenceRadius*2, 0, 90);
+
+		// draw east penalty area
+		g2.drawArc(length/2 - defenceRadius, -defenceRadius + defenceStretch / 2 ,
+				defenceRadius * 2, defenceRadius * 2, 270, -90);
+		g2.drawLine(length/2 - defenceRadius -1, - defenceStretch/2, length/2 - defenceRadius -1, defenceStretch/2);
+		g2.drawArc(length/2 - defenceRadius, -defenceRadius - defenceStretch/2, defenceRadius*2, defenceRadius*2, 180, -90);
+
+		// west penalty spot
+		g2.drawArc(-length/2 + getPenaltyLineFromSpotDistance() - 1,
+				- 1, 3, 3, 0, 360);
+		// east penalty spot
+		g2.drawArc(length/2 - ((int) (getPenaltyLineFromSpotDistance() )) - 1,
+				- 1, 3, 3, 0, 360);
+
+		// center spot
+		g2.drawArc(-2,-2, 4, 4, 0, 360);
 	}
 }

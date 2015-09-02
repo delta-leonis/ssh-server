@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
 import robocup.Main;
+import robocup.model.World;
 import robocup.output.ComInterface;
 import robocup.view.GUI;
 import robocup.view.SectionBox;
@@ -136,7 +137,7 @@ public class ControlRobotSection extends SectionBox{
 	 */
 	@Override
 	public void update() {
-		selectedRobotId = ((GUI) SwingUtilities.getWindowAncestor((this))).getSelectedRobot().getRobotId();
+		selectedRobotId = World.getInstance().getGuiModel().getSelectedRobot().getRobotId();
 		selectedRobotLabel.setText(String.format("Robot #%d selected", selectedRobotId));
 	}
 

@@ -83,7 +83,7 @@ public class GoToPositionSection extends SectionBox implements ActionListener{
 	 */
 	@Override
 	public void update() {
-		selectedRobotId = ((GUI) SwingUtilities.getWindowAncestor((this))).getSelectedRobot().getRobotId();
+		selectedRobotId = world.getGuiModel().getSelectedRobot().getRobotId();
 		robotIdLabel.setText(String.format("Robot #%d selected", selectedRobotId));
 	}
 

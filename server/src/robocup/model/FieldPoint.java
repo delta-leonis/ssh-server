@@ -142,4 +142,8 @@ public class FieldPoint {
 		FieldPoint p = (FieldPoint) point;
 		return Math.round(p.getX()) == Math.round(x) && Math.round(p.getY()) == Math.round(y);
 	}
+
+	public FieldPoint mirrorY() {
+		return new FieldPoint(getX(), -1*getY());
+	}
 }

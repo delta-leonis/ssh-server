@@ -189,11 +189,10 @@ INFO: Failed to open device (/dev/input/event5): Failed to open device /dev/inpu
 	public void run() {
 		findController();
 		initComponents();
-		gamepadModel.setRobot(World.getInstance().getGUI().getSelectedRobot());
 		while (!stop) {
 			gamepad.poll();
 
-			Robot robot = gamepadModel.getRobot();
+			Robot robot = World.getInstance().getGuiModel().getSelectedRobot();
 			if (useCamera) {
 				FieldPoint destination = calculateDestination(robot);
 				FieldPoint target = calculateTarget(robot);

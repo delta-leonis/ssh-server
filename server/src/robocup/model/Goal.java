@@ -1,11 +1,14 @@
 package robocup.model;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
  * Describes a goal on the {@link Field}
  */
-public class Goal {
+public class Goal extends FieldObject {
 	private FieldPoint frontNorth;
 	private FieldPoint frontSouth;
 	private FieldPoint backNorth;
@@ -137,4 +140,17 @@ public class Goal {
 				+ ", backSouth=" + backSouth + ", wallWidth=" + wallWidth + ", height=" + height + "]" + "\r\n";
 	}
 
+	@Override
+	public void paint(Graphics2D g2){
+		World world = World.getInstance();
+		Color eastTeamColor = world.getReferee().getEastTeam().getColor().toColor();
+		Color westTeamColor = world.getReferee().getWestTeam().getColor().toColor();
+		Goal eastGoal = world.getField().getEastGoal();
+		
+		g2.setColor(eastGoal.equals(this) ? eastTeamColor : westTeamColor);
+
+		g2.drawLine((int) backNorth.getX(), (int) backNorth.getY(), (int) frontNorth.getX(), (int) frontNorth.getY());
+		g2.drawLine((int) backNorth.getX(), (int) backNorth.getY(), (int) backSouth.getX(), (int) backSouth.getY());
+		g2.drawLine((int) backSouth.getX(), (int) backSouth.getY(), (int) frontSouth.getX(), (int) frontSouth.getY());
+	}
 }

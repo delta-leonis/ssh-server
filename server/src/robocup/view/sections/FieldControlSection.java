@@ -33,6 +33,8 @@ import robocup.model.Team;
 import robocup.model.World;
 import robocup.model.enums.TeamColor;
 import robocup.view.FieldPanel;
+import robocup.view.FieldPanel;
+import robocup.view.GUIModel;
 import robocup.view.SectionBox;
 
 /**
@@ -46,12 +48,13 @@ import robocup.view.SectionBox;
 public class FieldControlSection extends SectionBox {
 
 	private JFrame frame;
-	private FieldPanel fieldPanel;
+	private FieldPanel fieldpanel;
 	private HashMap<String, JPanel> tabs = new HashMap<String, JPanel>();
 	private Logger LOGGER = Logger.getLogger(Main.class.getName());
 	private JSlider orientationSlider;
 	private JPanel items = new JPanel();
 	private World world;
+	private GUIModel model;
 
 	public FieldControlSection() {
 		super("Field Control Section");
@@ -60,7 +63,9 @@ public class FieldControlSection extends SectionBox {
 		GraphicsDevice fieldMonitor = getSecondaryMonitor();
 
 		frame = new JFrame(fieldMonitor.getConfigurations()[0]);
-		fieldPanel = new FieldPanel();
+
+		model = world.getGuiModel();
+		fieldpanel = new FieldPanel();
 
 		setLayout(new MigLayout("", "[grow]"));
 		createItemTabs();
@@ -101,16 +106,19 @@ public class FieldControlSection extends SectionBox {
 		settingsTab.setLayout(new MigLayout("wrap 4", "[grow]",
 				"[grow][grow][grow]"));
 
+
 		ActionListener buttonListener = new ButtonListener();
 		JButton showField = new JButton("Show field");
 		showField.addActionListener(buttonListener);
-		settingsTab.add(showField, "growx, span 2, wrap");
+		settingsTab.add(showField, "growx, span 2");
+		JButton showField2 = new JButton("Turn field");
+		showField2.addActionListener(buttonListener);
+		settingsTab.add(showField2, "growx, span 2, wrap");
 
 		JCheckBox showRaster = new JCheckBox("Show raster");
 		showRaster.addActionListener(buttonListener);
 		settingsTab.add(showRaster, "growx");
 		showRaster.setSelected(true);
-		fieldPanel.toggleShowRaster();
 
 		JCheckBox showZones = new JCheckBox("Show zones");
 		showZones.addActionListener(buttonListener);
@@ -120,13 +128,11 @@ public class FieldControlSection extends SectionBox {
 		showRobots.addActionListener(buttonListener);
 		settingsTab.add(showRobots, "growx");
 		showRobots.setSelected(true);
-		fieldPanel.toggleShowRobots();
 
 		JCheckBox showBall = new JCheckBox("Show ball");
 		showBall.addActionListener(buttonListener);
 		settingsTab.add(showBall, "growx");
 		showBall.setSelected(true);
-		fieldPanel.toggleShowBall();
 
 		JCheckBox mirrorField = new JCheckBox("Mirror North/South");
 		mirrorField.addActionListener(buttonListener);
@@ -167,11 +173,10 @@ public class FieldControlSection extends SectionBox {
 
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
-			fieldPanel.setMouseObject(((ItemPanel) arg0.getSource()).getItem());
+			model.setMouseObject(((ItemPanel) arg0.getSource()).getItem());
 			for (Component component : tabs.get("items").getComponents())
 				if (component instanceof ItemPanel)
-					((ItemPanel) component).setSelected(((ItemPanel) arg0
-							.getSource()).equals((ItemPanel) component));
+					((ItemPanel)component).update();
 		}
 
 		@Override
@@ -189,16 +194,6 @@ public class FieldControlSection extends SectionBox {
 		@Override
 		public void mouseReleased(MouseEvent e) {
 		}
-	}
-
-	public FieldObject getSelectedObject() {
-		for (Component component : items.getComponents()) {
-			if (component instanceof ItemPanel) {
-				if (((ItemPanel) component).isSelected())
-					return ((ItemPanel) component).getItem();
-			}
-		}
-		return null;
 	}
 
 	private void createItemTabs() {
@@ -249,13 +244,13 @@ public class FieldControlSection extends SectionBox {
 	private class SliderListener implements ChangeListener {
 		@Override
 		public void stateChanged(ChangeEvent e) {
-			if (getSelectedObject() instanceof Robot) {
+			if (model.getMouseObject() instanceof Robot) {
 				int newOrientation = ((JSlider) e.getSource()).getValue();
-				((Robot) getSelectedObject()).setOrientation(newOrientation);
+				((Robot) model.getMouseObject()).setOrientation(newOrientation);
 			}
-			if (getSelectedObject() instanceof Obstruction) {
+			if (model.getMouseObject() instanceof Obstruction) {
 				int newOrientation = ((JSlider) e.getSource()).getValue();
-				((Obstruction) getSelectedObject())
+				((Obstruction) model.getMouseObject())
 						.setOrientation(newOrientation);
 			}
 		}
@@ -282,9 +277,8 @@ public class FieldControlSection extends SectionBox {
 								.getBounds().y);
 				frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 				frame.setTitle("Field");
-				frame.setSize(fieldPanel.getFrameSizeX(),
-						fieldPanel.getFrameSizeY());
-				frame.setContentPane(fieldPanel);
+				frame.setSize(400, 300);
+				frame.setContentPane(fieldpanel);
 				frame.setVisible(true);
 				((JButton) e.getSource()).setText("Hide field");
 				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -296,22 +290,28 @@ public class FieldControlSection extends SectionBox {
 				((JButton) e.getSource()).setText("Show field");
 				break;
 
+				
 			case "Show raster":
-				fieldPanel.toggleShowRaster();
+				model.setShowRaster(((JCheckBox)e.getSource()).isSelected());
 				break;
 
-			case "Show zones":
-				fieldPanel.toggleShowZones();
-				break;
+//			case "Show zones":
+//				model.setShowZones(((JCheckBox)e.getSource()).isSelected());
+//				break;
 
 			case "Show robots":
-				fieldPanel.toggleShowRobots();
+				model.setShowRobots(((JCheckBox)e.getSource()).isSelected());
 				break;
 
 			case "Show ball":
-				fieldPanel.toggleShowBall();
-				break;
 
+				model.setShowBall(((JCheckBox)e.getSource()).isSelected());
+				break;
+				
+			case "Turn field":
+				model.nextQuadrantRotation();
+				break;
+/*
 			case "Draw vectors":
 				fieldPanel.toggleShowVectors();
 				break;
@@ -343,6 +343,7 @@ public class FieldControlSection extends SectionBox {
 			case "Draw obstructions":
 				fieldPanel.toggleObstructions();
 				break;
+				*/
 			}
 
 		}
@@ -350,14 +351,14 @@ public class FieldControlSection extends SectionBox {
 
 	@Override
 	public void update() {
-		fieldPanel.update();
-		if (getSelectedObject() instanceof Robot && orientationSlider != null)
-			orientationSlider.setValue((int) ((Robot) getSelectedObject())
+		fieldpanel.update();
+		if (model.getMouseObject() instanceof Robot && orientationSlider != null)
+			orientationSlider.setValue((int) ((Robot) model.getMouseObject())
 					.getOrientation());
-		if (getSelectedObject() instanceof Obstruction
+		if (model.getMouseObject() instanceof Obstruction
 				&& orientationSlider != null)
 			orientationSlider
-					.setValue((int) ((Obstruction) getSelectedObject())
+					.setValue((int) ((Obstruction) model.getMouseObject())
 							.getOrientation());
 		items.repaint();
 	}

@@ -8,7 +8,6 @@ public class GamepadModel {
 	private GamepadThread gamepadThread;
 
 	private Controller gamepad;
-	private Robot robot;
 
 	private boolean dribble;
 	private int kickChip;
@@ -67,14 +66,6 @@ public class GamepadModel {
 
 	public void setGamepad(Controller gamepad) {
 		this.gamepad = gamepad;
-	}
-
-	public Robot getRobot() {
-		return robot;
-	}
-
-	public void setRobot(Robot robot) {
-		this.robot = robot;
 	}
 
 	public GamepadThread getGamepadThread() {

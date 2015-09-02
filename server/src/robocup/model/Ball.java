@@ -1,5 +1,8 @@
 package robocup.model;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -67,5 +70,11 @@ public class Ball extends FieldObject {
 	@Override
 	public String toString() {
 		return "Ball [posZ=" + posZ + ", " + super.toString() + "]" + "\r\n";
+	}
+	
+	@Override
+	public void paint(Graphics2D g2, FieldPoint position){
+		g2.setColor(Color.orange);
+		g2.fillArc((int) position.getX() -SIZE/2, (int)position.getY() -SIZE/2, SIZE, SIZE, 0, 360);
 	}
 }

@@ -13,3 +13,5 @@ graphicalClient/
 vision/
 dummyLoader/
 gamecontrol/
+server/src/robocup/view/buttonImages/ally.png
+server/src/robocup/view/buttonImages/enemy.png

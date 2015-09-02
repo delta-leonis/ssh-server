@@ -1,5 +1,9 @@
 package robocup.model;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 
@@ -10,7 +14,7 @@ import robocup.controller.ai.movement.GotoPosition;
  * Represents a Robot on the {@link Field}.
  * This class is abstract, so make sure your Robot is either from the {@link Ally} or {@link Enemy} class.
  */
-public abstract class Robot extends FieldObject {
+public abstract class Robot extends FieldObject implements Drawable {
 
 	public static final int DIAMETER = 180;	//In millimeters.
 	private int robotId;
@@ -175,5 +179,42 @@ public abstract class Robot extends FieldObject {
 	public String toString() {
 		return "robotID=" + robotId + ", isKeeper=" + (isKeeper() ? "true" : "false") + ", orientation=" + orientation + ", height=" + height
 				+ ", diameter=" + DIAMETER + ", " + super.toString() + "\r\n";
+	}
+	
+	public void paint(Graphics2D g2, FieldPoint position){
+		g2.setStroke(new BasicStroke((int) (Robot.DIAMETER*0.10)));
+		double robotOrientation = getOrientation();
+		double leftX = position.getX() + Math.cos(Math.toRadians(-robotOrientation + 45.0)) * Robot.DIAMETER / 2.0 ;
+		double leftY = position.getY() + Math.sin(Math.toRadians(-robotOrientation + 45.0)) * Robot.DIAMETER / 2.0 ;
+		double rightX = position.getX() + Math.cos(Math.toRadians(-robotOrientation - 45.0)) * Robot.DIAMETER / 2.0 ;
+		double rightY = position.getY() + Math.sin(Math.toRadians(-robotOrientation - 45.0)) * Robot.DIAMETER / 2.0 ;
+
+		//SOLID COLOR
+		g2.fillArc(
+				(int) (position.getX() - (double) (Robot.DIAMETER / 2) ),
+				(int) (position.getY() - (double) (Robot.DIAMETER / 2) ),
+				(int) (Robot.DIAMETER ), (int) (Robot.DIAMETER ),
+				(int) getOrientation() + 35, 295);
+		g2.fillPolygon(new int[] {(int) rightX, (int) leftX, (int) position.getX()},
+				new int[] {(int) rightY, (int) leftY , (int)position.getY()}, 3);
+
+		//BORDERS
+		g2.setColor(g2.getColor().darker());
+		g2.drawLine((int) (leftX),
+				(int) (leftY),
+				(int) (rightX),
+				(int) (rightY));
+
+		// draw round part of robot
+		g2.drawArc(
+				(int) (position.getX() - (double) (Robot.DIAMETER / 2) ),
+				(int) (position.getY()- (double) (Robot.DIAMETER / 2) ),
+				(int) (Robot.DIAMETER ), (int) (Robot.DIAMETER ),
+				(int) robotOrientation + 45, 270);
+
+		g2.setColor(Color.BLACK);
+		g2.setFont(new Font(g2.getFont().getFontName(), Font.BOLD, (int) (Robot.DIAMETER)/2));
+		g2.drawString("" + getRobotId(), (int) position.getX() -(getRobotId()/10 + 1)*(g2.getFont().getSize()/3),
+				(int) position.getY() +(g2.getFont().getSize()/3));
 	}
 }

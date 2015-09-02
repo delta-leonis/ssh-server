@@ -48,7 +48,6 @@ public class GUI extends JFrame {
 				   leftContainer,
 				   sectionContainer;
 	private JScrollPane scrollPane;
-	private Robot selectedRobot = world.getReferee().getAlly().getRobotByID(0);
 	private ArrayList<RobotBox> allRobotBoxes = new ArrayList<RobotBox>();
 	private Timer updateTimer;
 	private int updateFrequency = 30; //update frequency in Hertz
@@ -138,14 +137,6 @@ public class GUI extends JFrame {
 		}
 	}
 
-	/**world.getBall()
-	 * Returns the id of the {@link Robot} who's {@link RobotBox} is selected 
-	 * @return robotId
-	 */
-	public Robot getSelectedRobot() {
-		return selectedRobot;
-	}
-
 	/**
 	 * Adds all {@link SectionBox}es to a {@link JPanel} on the right of the GUI
 	 */
@@ -193,7 +184,7 @@ public class GUI extends JFrame {
 
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
-			selectRobot(((RobotBox) arg0.getSource()).getRobot());
+			world.getGuiModel().setSelectedRobot(((RobotBox) arg0.getSource()).getRobot());
 		}
 
 		@Override
@@ -211,11 +202,6 @@ public class GUI extends JFrame {
 		@Override
 		public void mouseReleased(MouseEvent e) {
 		}
-	}
-
-	public void selectRobot(Robot robot){
-		selectedRobot = robot;
-		world.getGamepadModel().setRobot(robot);
 	}
 	
 	/**
@@ -267,10 +253,10 @@ public class GUI extends JFrame {
 	}
 
 	public void selectNextRobot() {
-		int currentId = getSelectedRobot().getRobotId();
+		int currentId = world.getGuiModel().getSelectedRobot().getRobotId();
 		int newId = (currentId + 1 >= Main.POSSIBLE_IDS) ? 0 : currentId+1;
 		LOGGER.info("Selecting robot #" + newId + " as next robot");
 
-		selectRobot(world.getReferee().getAlly().getRobotByID(newId));
+		world.getGuiModel().setSelectedRobot(world.getReferee().getAlly().getRobotByID(newId));
 	}
 }
