@@ -1,7 +1,0 @@
-- Cholesky
-- SVD
-- Symmetric EVD
-- General EVD
-
-- How to handle complex eigenvectors in a real matrix?
-  * Use reflection?
