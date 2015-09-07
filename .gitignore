@@ -6,6 +6,7 @@ server/bin1/
 server/log/
 .metadata
 .recommenders
+.directory
 server/Logging.txt*
 cutecom-0.22.1/
 refbox/
