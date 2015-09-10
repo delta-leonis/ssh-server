@@ -2,7 +2,6 @@ package robocup.model;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -11,7 +10,6 @@ import java.util.logging.Logger;
 
 import robocup.Main;
 import robocup.model.enums.FieldZone;
-import robocup.model.enums.TeamColor;
 
 /**
  * Class that describes all the properties of the Field we play on.

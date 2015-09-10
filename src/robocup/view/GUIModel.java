@@ -2,7 +2,6 @@ package robocup.view;
 
 import robocup.model.FieldObject;
 import robocup.model.Robot;
-import robocup.model.World;
 
 public class GUIModel {
 	private boolean showCoordinates,

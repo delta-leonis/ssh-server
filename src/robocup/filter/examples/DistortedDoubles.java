@@ -23,10 +23,12 @@
  */
 package robocup.filter.examples;
 
-import robocup.filter.DistortedDoublesUKF;
 import java.util.Random;
+
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
+
+import robocup.filter.DistortedDoublesUKF;
 
 /**
  * Runs a test implementation of a UKF for a three-dimensional system with linear

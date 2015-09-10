@@ -23,8 +23,9 @@
  */
 package robocup.filter.examples;
 
-import robocup.filter.RobotUKF;
 import java.util.Random;
+
+import robocup.filter.RobotUKF;
 import robocup.model.FieldPoint;
 
 /**

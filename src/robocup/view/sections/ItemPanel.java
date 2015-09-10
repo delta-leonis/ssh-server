@@ -1,16 +1,11 @@
 package robocup.view.sections;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -19,8 +14,6 @@ import javax.swing.UIManager;
 import javax.swing.border.EtchedBorder;
 
 import net.miginfocom.swing.MigLayout;
-import robocup.model.Ally;
-import robocup.model.Ball;
 import robocup.model.Drawable;
 import robocup.model.FieldObject;
 import robocup.model.FieldPoint;

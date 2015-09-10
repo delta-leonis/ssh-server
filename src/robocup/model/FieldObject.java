@@ -2,8 +2,6 @@ package robocup.model;
 
 import java.awt.Graphics2D;
 
-import com.sun.prism.Graphics;
-
 /**
  * Describes an object on the {@link Field}
  * 

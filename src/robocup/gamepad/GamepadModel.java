@@ -1,6 +1,5 @@
 package robocup.gamepad;
 
-import robocup.model.Robot;
 import net.java.games.input.Controller;
 
 public class GamepadModel {

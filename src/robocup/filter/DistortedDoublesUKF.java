@@ -23,10 +23,10 @@
  */
 package robocup.filter;
 
-import robocup.model.StateModel;
-
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
+
+import robocup.model.StateModel;
 
 /**
  * A test implementation of a AbstractUKF for a three-dimensional system with linear
