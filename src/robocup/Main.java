@@ -54,7 +54,7 @@ public class Main {
 	 * Sets the library path correct for gamepad use.
 	 */
 	public static void initLibraryPath() {
-		String path = System.getProperty("java.library.path")  + File.pathSeparator + "../ssh-server/dist/";
+		String path = System.getProperty("java.library.path")  + File.pathSeparator + "/dist/";
 	    System.setProperty("java.library.path", path);
 	    Field sysPathsField;
 		try {
