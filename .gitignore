@@ -1,9 +1,9 @@
-server/.classpath
-server/.project
-server/.settings
-server/bin/
-server/bin1/
-server/log/
+.classpath
+.project
+.settings
+bin/
+bin1/
+log/
 .metadata
 .recommenders
 .directory
@@ -14,5 +14,5 @@ graphicalClient/
 vision/
 dummyLoader/
 gamecontrol/
-server/src/robocup/view/buttonImages/ally.png
-server/src/robocup/view/buttonImages/enemy.png
+src/robocup/view/buttonImages/ally.png
+src/robocup/view/buttonImages/enemy.png
