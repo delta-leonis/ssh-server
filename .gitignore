@@ -7,7 +7,7 @@ log/
 .metadata
 .recommenders
 .directory
-server/Logging.txt*
+Logging.txt*
 cutecom-0.22.1/
 refbox/
 graphicalClient/
