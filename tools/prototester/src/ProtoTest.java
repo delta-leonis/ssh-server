@@ -11,10 +11,11 @@ import protobuf.Radio.RadioProtocolWrapper;
 
 public class ProtoTest {
 	private static String	DEFAULT_IP				= "192.168.1.10";
-	private static int 		DEFAULT_COMMAND_COUNT 	= 3;  
-	private static int 		DEFAULT_WRAPPER_COUNT 	= 2;  
-	private static int 		DEFAULT_TIMEOUT	 		= 0; 
+	private static int 		DEFAULT_COMMAND_COUNT 	= 3;
+	private static int 		DEFAULT_WRAPPER_COUNT 	= 2;
+	private static int 		DEFAULT_TIMEOUT	 		= 0;
 	private static int 		DEFAULT_PORT	 		= 2002; 
+	private static boolean	DEFAULT_VERBOSE	 		= false; 
 	
 	
 	public static void main(String[] args) throws Exception {
@@ -28,6 +29,7 @@ public class ProtoTest {
 			System.out.printf("-c	defines number of commands per wrapper(default: %d)\n", DEFAULT_COMMAND_COUNT);
 			System.out.printf("-w	defines number of wrappers (default: %d)\n", DEFAULT_WRAPPER_COUNT );
 			System.out.printf("-t	defines timout (default: %d)\n", DEFAULT_TIMEOUT );
+			System.out.printf("-v	verbose output (default: %s)\n", DEFAULT_VERBOSE ? "true" : "false" );
 			System.exit(0);
 		}
 		
@@ -38,6 +40,7 @@ public class ProtoTest {
 			int wrapper_count = commands.containsKey("w") ? Integer.parseInt(commands.get("w")) : DEFAULT_WRAPPER_COUNT;
 			int port		  = commands.containsKey("p") ? Integer.parseInt(commands.get("p")) : DEFAULT_PORT;
 			int timeout		  = commands.containsKey("t") ? Integer.parseInt(commands.get("t")) : DEFAULT_TIMEOUT;
+			boolean verbose	  = commands.containsKey("v") ? commands.get("v").equalsIgnoreCase("true") : DEFAULT_VERBOSE;
 	
 			//initialize a communicator with received settings
 			UDPCommunicator Communicator = new UDPCommunicator(ip, port);
@@ -55,23 +58,39 @@ public class ProtoTest {
 							 .setVelocityX((float) Math.random())
 							 .setVelocityY((float) Math.random())
 							 .setVelocityR((float) Math.random());
-					//optional data
-					if(Math.random() > 0.5)
-							 command.setFlatKick((float) (Math.random() * 4.0))
-							 .setChipKick((float) (Math.random() * 4.0));
-					//optional data
-					if(Math.random() > 0.5)
-							 command.setDribblerSpin((float) Math.random());
-					//optional data
-					if(Math.random() > 0.5)
-							 command.setDistance((int) (Math.random() * 40));
 
+					if(verbose)
+						System.out.printf("Command: #%d\nVelocityX: %f\nVelocityY: %f\nVelocityR: %f\n", command.getRobotId()
+								   , command.getVelocityX()
+								   , command.getVelocityY()
+								   , command.getVelocityR());
+						
+					//optional data
+					if(Math.random() > 0.5){
+						 command.setFlatKick((float) (Math.random() * 4.0))
+						 .setChipKick((float) (Math.random() * 4.0));
+						if(verbose)
+							System.out.printf("FlatKick: %f\nChipKick: %f\n", command.getFlatKick(), command.getChipKick());
+					}
+					//optional data
+					if(Math.random() > 0.5){
+						 command.setDribblerSpin((float) Math.random());
+						if(verbose)
+							System.out.printf("dribblerSpin: %f\n", command.getDribblerSpin());
+					}
+					//optional data
+					if(Math.random() > 0.5){
+						 command.setDistance((int) (Math.random() * 40));
+						if(verbose)
+							System.out.printf("distance: %d\n", command.getDistance());
+					}
+					
 					wrapper.addCommand(command);
 				}
-				wrappers.add(wrapper);
-			}
+			wrappers.add(wrapper);
+		}
 			
-			wrappers.stream().forEach(e -> Communicator.send(e.build(), timeout));
+		wrappers.stream().forEach(command -> Communicator.send(command.build(), timeout));
 
 		} catch (SocketException uhe) {
 			System.err.printf("Socket already in use.\n");
