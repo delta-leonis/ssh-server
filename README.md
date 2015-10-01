@@ -23,6 +23,7 @@ This is the RoboCup server software for team SSH (Small Size Holland) for runnin
       |-  output/         This folder contains logic for output (sending commands to the robots)
       \-  strategy/       This folder contains logic for the strategy
         \-  shrouds       This folder contains mathematical models of game objects
+    config/               This folder contains configuration files for the project
     test/                 This folder contains tests
       |-  benchmarks/     This folder contains benchmark tests
       |-  integrations/   This folder contains integrations tests
