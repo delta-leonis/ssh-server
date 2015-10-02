@@ -171,6 +171,8 @@ public class Communicator {
 
 		// return success value
 		return filteredMethods.get(true).stream()
+			// send messages parallel
+			.parallel()
 			// send the message
 			.map(sendmethod -> senders.get(sendmethod).send(genericMessage))
 			// collect all success values and reduce to true if all senders succeeded; false otherwise 
