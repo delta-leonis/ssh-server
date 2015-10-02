@@ -1,0 +1,13 @@
+{
+    "schema": "gamelayout.schema.json",
+    "allyTeam":{
+    	"name": "Small Size Holland",
+    	"color": "YELLOW",
+    	"side": "WEST"
+    },
+    "enemyTeam":{
+    	"name": "ZheEnemy",
+    	"color": "BLUE",
+    	"side": "EAST"
+    }
+}

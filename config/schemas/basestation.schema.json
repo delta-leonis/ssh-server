@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "basestation",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "id": "basestation/schema",
+      "type": "string",
+      "default": "basestation.schema.json"
+    },
+    "nrf": {
+      "id": "basestation/nrf",
+      "type": "object",
+      "properties": {
+        "transfer_size": {
+          "id": "basestation/nrf/transfer_size",
+          "type": "integer",
+          "default": 16
+        },
+        "frequency": {
+          "id": "basestation/nrf/frequency",
+          "type": "integer",
+          "default": 2525
+        }
+      },
+      "additionalProperties": false
+    },
+    "multicast": {
+      "id": "basestation/multicast",
+      "type": "object",
+      "properties": {
+        "ip": {
+          "id": "basestation/multicast/ip",
+          "type": "string",
+          "default": "224.5.23.20"
+        },
+        "port": {
+          "id": "basestation/multicast/port",
+          "type": "integer",
+          "default": 1337
+        }
+      },
+      "additionalProperties": false
+    },
+    "server": {
+      "id": "basestation/server",
+      "type": "object",
+      "properties": {
+        "ip": {
+          "id": "basestation/server/ip",
+          "type": "string",
+          "default": "192.168.1.10"
+        },
+        "port": {
+          "id": "basestation/server/port",
+          "type": "integer",
+          "default": 10000
+        },
+        "timeout": {
+          "id": "basestation/server/timeout",
+          "type": "integer",
+          "default": 30000
+        }
+      },
+      "additionalProperties": false
+    },
+    "network": {
+      "id": "basestation/network",
+      "type": "object",
+      "properties": {
+        "ip": {
+          "id": "basestation/network/ip",
+          "type": "string",
+          "default": "192.168.1.2"
+        },
+        "gateway": {
+          "id": "basestation/network/gateway",
+          "type": "string",
+          "default": "192.168.1.1"
+        },
+        "mask": {
+          "id": "basestation/network/mask",
+          "type": "string",
+          "default": "255.255.255.0"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "nrf",
+    "multicast",
+    "server",
+    "network"
+  ]
+}
