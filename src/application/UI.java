@@ -36,10 +36,18 @@ public final class UI {
      *
      * @param primaryStage the primary stage
      */
-    public static void start(Stage primaryStage) {
+    public static boolean start(Stage primaryStage) {
         UI.uiControllers = new ArrayList<UIController>();
         UI.logger.info("Instantiating new window with id mainWindow");
-        UI.uiControllers.add(new MainWindow("main", primaryStage));
+        return UI.uiControllers.add(new MainWindow("main", primaryStage));
+    }
+    
+    /**
+     * @param window
+     * @return true, if successful
+     */
+    public static <T extends UIController> boolean addWindow(T window) {
+    	return UI.uiControllers.add(window);
     }
 
 }

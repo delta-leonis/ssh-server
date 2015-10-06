@@ -173,7 +173,20 @@ abstract public class UIController {
     public void spawnWindow() {
         this.getStage().setScene(this.getScene());
         this.getStage().setTitle(this.getTitle());
-        this.getStage().show();
+        this.show();
+    }
+    
+    /**
+     * Shows the window.
+     */
+    public void show() {
+    	this.getStage().show();
     }
 
+    /**
+     * Hides the window.
+     */
+    public void hide() {
+    	this.getStage().hide();
+    }
 }
