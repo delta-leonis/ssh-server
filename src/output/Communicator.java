@@ -176,7 +176,7 @@ public class Communicator {
 			// send the message
 			.map(sendmethod -> senders.get(sendmethod).send(genericMessage))
 			// collect all success values and reduce to true if all senders succeeded; false otherwise 
-			.reduce(true, (accumulator, success) -> accumulator == false ? false : success) 
+			.reduce(true, (accumulator, success) -> accumulator && success) 
 			&& filteredMethods.get(false).size() <= 0;
 	}
 	
