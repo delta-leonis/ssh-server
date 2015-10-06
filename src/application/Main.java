@@ -60,7 +60,7 @@ public class Main extends Application {
 
 
         // let's find one of the models we added and get the data from it
-        Models.get("dingenlijst").getData();
+        //Models.get("dingenlijst").getData();
         // and let's stop the consumer
         Services.get("stringisbeter").stop();
     }
