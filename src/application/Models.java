@@ -3,9 +3,9 @@ package application;
 import java.util.logging.Logger;
 
 import javafx.collections.ObservableList;
-import models.Model;
-import models.ModelController;
-import models.ui.ListModel;
+import model.Model;
+import model.ModelController;
+import model.ui.ListModel;
 
 /**
  * The Class Models.
