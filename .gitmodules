@@ -1,0 +1,3 @@
+[submodule "ssh-protobuf"]
+	path = ssh-protobuf
+	url = https://gitlab.com/smallsizeholland/ssh-protobuf.git
