@@ -39,7 +39,7 @@ public class ModelController {
      * @return          The requested model.
      */
     public Model get(String name) {
-        return (Model) this.listModels.stream().filter(listModel -> listModel.getName().equals(name)).limit(1);
+        return (Model) this.listModels.stream().filter(listModel -> listModel.getName().equals(name)).findFirst().get();
     }
 
     /**
