@@ -1,10 +1,10 @@
-package pipeline.packets;
+package examples;
 
 import pipeline.PipelinePacket;
 /**
- * The Class MysteryPacket.
+ * The Class PipelinePacketExample.
  */
-final public class MysteryPacket extends PipelinePacket {
+final public class PipelinePacketExample extends PipelinePacket {
 
     /** The data as a number. */
     final private Number numberData;
@@ -23,7 +23,7 @@ final public class MysteryPacket extends PipelinePacket {
      *
      * @param numberData the data as a number
      */
-    public MysteryPacket(Number numberData) {
+    public PipelinePacketExample(Number numberData) {
         this.numberData    = numberData;
         this.stringField   = null;
         this.magicIntField = 0;
@@ -38,7 +38,7 @@ final public class MysteryPacket extends PipelinePacket {
      * @param magicIntValue the int value
      * @param mysteryDoubleValue the value
      */
-    public MysteryPacket(Number numberValue, String stringValue, int magicIntValue, double mysteryDoubleValue) {
+    public PipelinePacketExample(Number numberValue, String stringValue, int magicIntValue, double mysteryDoubleValue) {
         this.numberData    = numberValue;
         this.stringField   = stringValue + "jwz";
         this.magicIntField = magicIntValue + 20;
@@ -57,9 +57,9 @@ final public class MysteryPacket extends PipelinePacket {
      * @see pipeline.PipelinePacket#save(java.lang.Object)
      */
     @Override
-    public MysteryPacket save(Object data) {
+    public PipelinePacketExample save(Object data) {
         final Number numberData = (Number) data;
-        return new MysteryPacket(numberData, numberData.toString(), numberData.intValue(), numberData.doubleValue());
+        return new PipelinePacketExample(numberData, numberData.toString(), numberData.intValue(), numberData.doubleValue());
     }
 
 	/**
