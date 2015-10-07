@@ -6,36 +6,37 @@ package model;
 abstract public class Model {
 
     /** The name. */
-    private String            name;
-
-    /** The data. */
-    private Object            data;
+    private String          name;
+    private String			suffix;
 
     /**
      * Instantiates a new model.
      *
      * @param name the name
      */
-    public Model(String name) {
+    public Model(String name, String suffix) {
         this.name = name;
+        this.suffix = suffix;
     }
 
     /**
-     * Adds the data.
+     * Instantiates a new model.
      *
-     * @param data the data
+     * @param name the name
      */
-    abstract public void   addData(Object data);
-
-    /**
-     * Gets the data.
-     *
-     * @return the data
-     */
-    public Object getData() {
-    	return this.data;
+    public Model(String name){
+    	this(name, "");
     }
 
+    /**
+     * Gets the name including the suffix
+     * 
+     * @return name and suffix
+     */
+    public String getFullName(){
+    	return String.format("%s %s", name, suffix);
+    }
+    
     /**
      * Gets the name.
      *
@@ -44,14 +45,28 @@ abstract public class Model {
     public String getName() {
         return this.name;
     }
-
+    
+    /**
+     * Sets suffix. <br>
+     * 
+     * Mostly used for defining specific models (robot A1, goal EAST etc.)
+     * 
+     * @param suffix the suffix
+     */
+    public void setSuffix(String suffix){
+    	this.suffix = suffix;
+    }
 
     /**
-     * Sets the data.
-     *
-     * @param data the new data
+     * Gets suffix.<br>
+     * 
+     * Mostly used for defining specific models (robot A1, goal EAST etc.)
+     * 
+     * @return the suffix
      */
-    abstract public void   setData(Object data);
+    public String getSuffix(){
+    	return suffix;
+    }
 
     /**
      * Sets the name.
@@ -60,5 +75,12 @@ abstract public class Model {
      */
     public void setName(String name) {
         this.name = name;
+    }
+    
+    /**
+     * Human readable string that describes this model
+     */
+    public String toString(){
+    	return String.format(getFullName());
     }
 }
