@@ -70,10 +70,9 @@ public class Pipeline<T> {
         final PipelinePacket pipelinePacket = this.queue.poll();
 
         final PipelinePacket resultPacket = ((Seq<Coupler>) this.couplers.entrySet().stream()
+                .sorted((leftMap, rightMap) -> 
+                	leftMap.getValue().ordinal() > rightMap.getValue().ordinal() ? -1 : 1)
                 .map(entryMap -> entryMap.getKey()))
-                // sort highest priority (URGENT) from left to right
-                //.sorted()
-                // apply the function from left to right
                 .foldLeft(pipelinePacket, (packet, coupler) -> coupler.process(packet));
 
         return this.consumers.stream().map(consumer -> consumer.consume(resultPacket))
