@@ -20,9 +20,9 @@ import services.Producer;
  * @param <T> the generic type
  */
 public class Pipeline<T> {
-	
-	/** The producers */
-	private final ArrayList<Producer>    producers;
+    
+    /** The producers */
+    private final ArrayList<Producer>    producers;
 
     /** The couplers. */
     private final Map<Coupler, Priority> couplers;
@@ -37,7 +37,7 @@ public class Pipeline<T> {
      * Instantiates a new pipeline.
      */
     public Pipeline() {
-    	this.producers = Services.getCompatibleProducers(this);
+        this.producers = Services.getCompatibleProducers(this);
         this.couplers  = Services.getCompatibleCouplers(this)
                 .stream()
                 .collect(Collectors.toMap(
@@ -147,4 +147,26 @@ public class Pipeline<T> {
                 .reduce(true, (accumulator, success) -> accumulator && success);
     }
 
+    /**
+     * Registers a coupler with the pipeline with a given priority.
+     *
+     * @param coupler the coupler
+     * @return true, if successful
+     */
+    public boolean registerCoupler(Priority priority, Coupler coupler) {
+        return this.couplers.put(coupler, priority) != null;
+    }
+
+    /**
+     * Register couplers.
+     *
+     * @param couplers the couplers
+     * @return true, if successful
+     */
+    public boolean registerCouplers(Priority priority, Coupler... couplers) {
+        return Stream.of(couplers).map(coupler -> this.registerCoupler(priority, coupler))
+                // collect all success values and reduce to true if all senders succeeded; false otherwise
+                .reduce(true, (accumulator, success) -> accumulator && success);
+    }
+    
 }
