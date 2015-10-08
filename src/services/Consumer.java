@@ -4,6 +4,8 @@ import pipeline.PipelinePacket;
 
 /**
  * The Class Consumer.
+ * 
+ * @author Rimon Oz
  */
 abstract public class Consumer extends Service {
 

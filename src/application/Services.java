@@ -15,6 +15,8 @@ import services.ServicesController;
 
 /**
  * The Class Services.
+ * 
+ * @author Rimon Oz
  */
 public final class Services {
     /**

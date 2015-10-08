@@ -10,6 +10,8 @@ import pipeline.Pipeline;
 
 /**
  * The Class ServicesController.
+ * 
+ * @author Rimon Oz
  */
 public class ServicesController {
 

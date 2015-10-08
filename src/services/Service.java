@@ -2,6 +2,8 @@ package services;
 
 /**
  * The Class Service.
+ * 
+ * @author Rimon Oz
  */
 abstract public class Service {
 

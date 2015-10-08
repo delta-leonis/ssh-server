@@ -4,6 +4,8 @@ import java.util.function.Function;
 
 /**
  * The Class PipelinePacket.
+ * 
+ * @author Rimon Oz
  */
 abstract public class PipelinePacket {
 

@@ -2,6 +2,8 @@ package pipeline;
 
 /**
  * The Enum Priority.
+ * 
+ * @author Rimon Oz
  */
 public enum Priority {
 

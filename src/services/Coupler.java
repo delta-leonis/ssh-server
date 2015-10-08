@@ -4,6 +4,8 @@ import pipeline.PipelinePacket;
 
 /**
  * The Class Coupler.
+ * 
+ * @author Rimon Oz
  */
 abstract public class Coupler extends Service {
 

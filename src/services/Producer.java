@@ -4,6 +4,8 @@ import java.util.concurrent.Callable;
 
 /**
  * The Class Producer.
+ * 
+ * @author Rimon Oz
  */
 abstract public class Producer extends Service {
 

@@ -17,6 +17,7 @@ import services.Producer;
 /**
  * The Class Pipeline.
  *
+ * @author Rimon Oz
  * @param <T> the generic type
  */
 public class Pipeline<T> {
