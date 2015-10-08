@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javafx.collections.ObservableList;
 import pipeline.Pipeline;
 import services.Consumer;
 import services.Coupler;
@@ -83,6 +84,24 @@ public final class Services {
      */
     public static Service get(String name) {
         return Services.servicesController.get(name);
+    }
+    
+    /**
+     * Gets all the services.
+     *
+     * @return all services
+     */
+    public ObservableList<Service> getAll() {
+        return Services.servicesController.getAll();
+    }
+
+    /**
+     * This method finds all services matching the name and returns them as an ArrayList<Service>
+     * @param name      The (fuzzy) name of the service you want to find.
+     * @return          The requested service.
+     */
+    public ArrayList<Service> getAll(String name) {
+        return Services.servicesController.getAll(name);
     }
 
     /**
