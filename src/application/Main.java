@@ -1,10 +1,10 @@
 package application;
 
+import examples.PipelinePacketExample;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import model.ui.ListModel;
 import pipeline.Pipeline;
-import pipeline.packets.MysteryPacket;
 import services.consumers.StringConsumer;
 import services.couplers.DoubleCoupler;
 import services.producers.IntProducer;
@@ -40,7 +40,7 @@ public class Main extends Application {
         /********************************/
 
         // make a pipeline for stuff
-        final Pipeline<MysteryPacket> mainPipeline = new Pipeline<MysteryPacket>();
+        final Pipeline<PipelinePacketExample> mainPipeline = new Pipeline<PipelinePacketExample>();
         // make some services
         final IntProducer    intService    = new IntProducer("gratisintegers");
         final DoubleCoupler  doubleService = new DoubleCoupler("meerdoubles");

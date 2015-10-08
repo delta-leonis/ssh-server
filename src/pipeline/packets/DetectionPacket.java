@@ -9,4 +9,16 @@ import pipeline.PipelinePacket;
  */
 public class DetectionPacket extends PipelinePacket {
 
+	@Override
+	public Object read() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object save(Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
