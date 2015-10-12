@@ -1,6 +1,7 @@
 package application;
 
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import util.Logger;
 
 import javafx.collections.ObservableList;
 import model.Model;
@@ -20,7 +21,7 @@ public final class Models {
     private static final Object instance = new Object();
 
     // a logger for good measure
-    private static Logger logger = Logger.getLogger(Models.class.toString());
+    private static Logger logger = Logger.getLogger();
 
     /**
      * This method adds a {@link ListModel} to the model store.
@@ -40,6 +41,15 @@ public final class Models {
      */
     public static Model get(String modelName) {
         return Models.modelController.get(modelName);
+    }
+    
+    /**
+     * This method finds all models matching the name and returns them as an ArrayList<Model>
+     * @param modelName The (fuzzy) name of the model you want to find.
+     * @return          The requested model.
+     */
+    public static ArrayList<Model> getAll(String modelName) {
+        return Models.modelController.getAll(modelName);
     }
 
     /**

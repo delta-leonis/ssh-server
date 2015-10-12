@@ -2,7 +2,7 @@ package model.ui;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+import util.Logger;
 
 import org.jooq.lambda.Unchecked;
 
@@ -19,7 +19,7 @@ public class ListModel<T> extends Model {
 
     /** The logger. */
     // a logger for good measure
-    private static Logger logger = Logger.getLogger(Services.class.toString());
+    private static Logger logger = Logger.getLogger();
 
     /** The data. */
     private final List<T> data;
