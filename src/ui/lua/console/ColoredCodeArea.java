@@ -35,7 +35,7 @@ public class ColoredCodeArea extends CodeArea{
             "new", "package", "private", "protected", "public",
             "return", "short", "static", "strictfp", "super",
             "switch", "synchronized", "this", "throw", "throws",
-            "transient", "try", "void", "volatile", "while", "function"
+            "transient", "try", "void", "volatile", "while", "function", "end"
     };
 
     private static final String KEYWORD_PATTERN = "\\b(" + String.join("|", KEYWORDS) + ")\\b";
