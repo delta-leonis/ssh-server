@@ -6,25 +6,27 @@ import java.io.IOException;
 
 import javax.swing.JTextArea;
 
-import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import ui.lua.console.ColoredCodeArea;
 
 /**
- * Test Module for loading and editing scripts into a {@link JTextArea}
+ * Test Module for loading and editing scripts into a {@link ColoredCodeArea}
  * The file gets saved automatically on close.
  */
 public class ScriptEditor extends Pane{
 	private ColoredCodeArea codeArea;
 	private IReloadable reloadable;
 	private String path;
-	private Scene scene;
 	private String styleSheet = "/css/java-keywords.css";
 	
+	/**
+	 * Creates a {@link ScriptEditor} and fills the codeArea with the code the {@link IReloadable} is pointing to.
+	 * @param reloadable The {@link IReloadable} the editor needs to present.
+	 */
 	public ScriptEditor(IReloadable reloadable){
 		this.reloadable = reloadable;
 		initializeTextArea();
-		setTextFromFile(path = reloadable.getPath());
+		setTextFromFile(reloadable.getPath());
 	}
 	
 	/**
@@ -42,6 +44,7 @@ public class ScriptEditor extends Pane{
 	 * @param path The path to the file that needs to be copied into the {@link ColoredCodeArea}
 	 */
 	public void setTextFromFile(String path){
+		this.path = path;
 		FileInputStream in;
         try {
 			in = new FileInputStream(path);
@@ -66,29 +69,18 @@ public class ScriptEditor extends Pane{
 			FileWriter writer = new FileWriter(path);
 			writer.write(codeArea.getText());
 			writer.close();
-			reloadable.reload();
+			if(reloadable != null && reload)
+				reloadable.reload();
 		} catch (IOException e) {
 			// TODO Logger
 			e.printStackTrace();
 		}
 	}
 	
-//	@Override
-//	public void start(Stage primaryStage) throws Exception {
-//		primaryStage.setTitle("Lua Editor");
-//		path = "scripts/initObjects/chicken.lua";
-//
-//        // Create base
-//        FlowPane root = new FlowPane();
-//        scene = new Scene(root, width, height, Color.WHITE);
-//        
-//        // Create TextArea
-//        initiliazeTextArea(path, root);
-//        
-//
-//        // Add TextArea
-//        root.getChildren().add(codeArea);        
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
-//	}
+	/**
+	 * @returns the path of what this {@link ScriptEditor} is currently editing.
+	 */
+	public String getPath(){
+		return path;
+	}
 }
