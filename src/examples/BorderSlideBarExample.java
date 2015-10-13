@@ -1,6 +1,5 @@
 package examples;
 
-
 import java.util.ArrayList;
 
 import javafx.application.Application;
@@ -18,6 +17,28 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ui.sections.BorderSlideBar;
 
+/**
+ * Example that shows the three different ways you can use the {@link BorderSlideBar}
+ * <ol>
+ * 	<li>
+ * 		A {@link BorderSlideBar} with a <i>preassigned button</i> </br>
+ * 		The following constructor is used for this: BorderSlideBar(expandedSize, button, Position, Node);
+ * 	</li>
+ *  <li> 
+ *  	A {@link BorderSlideBar} with a button that <i>stays stationary</i>
+ * 		The following constructor is used for this: BorderSlideBar(expandedSize, Position, Node, true);
+ *  </li>
+ *  <li> 
+ *  	A {@link BorderSlideBar} with a button that <i>moves with the {@link BorderSlideBar} </i>
+ * 		The following constructor is used for this: BorderSlideBar(expandedSize, Position, Node, false);
+ *  </li>
+ * </ol>
+ * 
+ * Notes have been put at the appropriate places to see the code snippets above in action
+ * 
+ * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
+ * 
+ */
 public class BorderSlideBarExample extends Application {
 
     @Override
@@ -31,21 +52,25 @@ public class BorderSlideBarExample extends Application {
         Scene scene = new Scene(stackPane);
         stage.setTitle("Game Logs");
         stage.setWidth(600);
-        stage.setHeight(431);
+        stage.setHeight(430);
         
         Button button = new Button("Activate!");        
         borderPane.setTop(button);
         
-        Label blueLabel = new Label("MIAUW.");
+        Label blueLabel = new Label("Hallo. Ik ben een kip.");
         blueLabel.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 10;");
+        
+        // See note 1 in {@link BorderSlideBarExample}
         BorderSlideBar bottomFlapBar = new BorderSlideBar(100, button, Pos.BOTTOM_CENTER, blueLabel);
         borderPane.setBottom(bottomFlapBar);
         
-        BorderSlideBar rightFlapBar = new BorderSlideBar(100, Pos.CENTER_RIGHT, new GameLogSection(30), false);
-        borderPane.setRight(rightFlapBar);
-        
+        // See note 2 in {@link BorderSlideBarExample}
         BorderSlideBar leftFlapBar = new BorderSlideBar(100, Pos.CENTER_LEFT, new GameLogSection(30), true);
         borderPane.setLeft(leftFlapBar);
+        
+        // See note 3 in {@link BorderSlideBarExample}
+        BorderSlideBar rightFlapBar = new BorderSlideBar(100, Pos.CENTER_RIGHT, new GameLogSection(30), false);
+        borderPane.setRight(rightFlapBar);
         
         stackPane.getChildren().addAll(testLabel,borderPane);
         stage.setScene(scene);
@@ -61,6 +86,12 @@ public class BorderSlideBarExample extends Application {
     /* ********* Private Classes ********** */
     /** *********************************** */
 
+    /**
+     * Sample section representing a list with {@link GameLog Gamelogs}
+     * 
+     * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
+     *
+     */
     private class GameLogSection extends VBox{
     	private ArrayList<GameLog> gamelogs;
     	private Button showMatchButton;
@@ -71,28 +102,24 @@ public class BorderSlideBarExample extends Application {
     	 * @param charLimit The amount of characters per item in the list (required for spacing. Recommended to use a font with the same character size for every character.)
     	 */
     	public GameLogSection(int charLimit){
-        	setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 10;");
-
     		gamelogs = new ArrayList<GameLog>();
     		init();
     		
+    		// Setup button
     		showMatchButton = new Button("Show Match");
-    		showMatchButton.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 10;");
     		showMatchButton.setMinWidth(0);
     		showMatchButton.setPrefHeight(50);
     		showMatchButton.setMinHeight(0);
     		showMatchButton.prefWidthProperty().bind(minWidthProperty());
     		
+    		// Setup ListView
     		ListView<String> listView = new ListView<String>();
     		listView.setPadding(new Insets(0,0,0,0));
     		listView.prefHeightProperty().bind(heightProperty());
-    		listView.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 10;");
-
-
-    		
     		listView.setStyle("-fx-font: 9pt \"Consolas\";");
 
-    		ObservableList<String> items =FXCollections.observableArrayList ();
+    		// Setup ObservableList for ListView
+    		ObservableList<String> items = FXCollections.observableArrayList ();
     		for(GameLog game : gamelogs){
     			String s = game.getFilename();
     			for(int i = 0; i < charLimit - game.getFilename().length() - game.getLength().length(); ++i){
@@ -103,15 +130,12 @@ public class BorderSlideBarExample extends Application {
     		}
     		listView.setItems(items);
     		
-
     		getChildren().addAll(showMatchButton, listView);
-    		
     	}
     	
-    	public void refresh(){
-    		// TODO Make a refresh function that adds new items to the list when created
-    	}
-    	
+    	/**
+    	 * Creates random {@link GameLog Gamelogs}
+    	 */
     	public void init(){
     		gamelogs.add(new GameLog("SSH - ERF", 34782));
     		gamelogs.add(new GameLog("RoboFei - MRL", 498293));
