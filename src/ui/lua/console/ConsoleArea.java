@@ -25,7 +25,7 @@ public class ConsoleArea extends ColoredCodeArea{
 	private boolean selecting = false;
 	private ListIterator<String> iterator;
 	private Console console;
-	private static final String styleSheet = "java-keywords.css";
+	private static final String styleSheet = "/css/java-keywords.css";
 	
 	/**
 	 * Overriding replaceText so that stuff can't be written in any previous lines
