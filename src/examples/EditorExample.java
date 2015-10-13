@@ -10,6 +10,8 @@ import ui.lua.editor.IReloadable;
 import ui.lua.editor.ScriptEditor;
 
 /**
+ * Example that opens several {@link ScriptEditor Editors}.
+ * Pressing the save button doesn't only save the file, but also reloads the class its connected to
  * 
  * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
  *
