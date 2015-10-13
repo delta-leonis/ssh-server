@@ -1,6 +1,5 @@
 package services.consumers;
 
-import application.Models;
 import pipeline.PipelinePacket;
 import services.Consumer;
 
@@ -24,7 +23,6 @@ public class StringConsumer extends Consumer {
     @Override
     public boolean consume(PipelinePacket pipelinePacket) {
     	System.out.println(pipelinePacket.toString());
-        Models.get("holystringlist").addData(pipelinePacket.toString());
         return true;
     }
 

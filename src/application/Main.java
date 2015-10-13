@@ -44,16 +44,11 @@ public class Main extends Application {
         final IntProducer    intService    = new IntProducer("gratisintegers");
         final DoubleCoupler  doubleService = new DoubleCoupler("meerdoubles");
         final StringConsumer stringService = new StringConsumer("stringisbeter");
-        // make a model
-        final ListModel<String> stringBank = new ListModel<String>("holystringlist");
-
 
         // add a pipeline to the services store
         Services.addPipeline(mainPipeline);
         // add the consumer to the services store
         Services.addService(intService);
-        // add a model to our model store
-        Models.addListModel(stringBank);
         // oh, and let's add some other things to the model store
         Services.addServices(doubleService, stringService);
 
