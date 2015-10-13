@@ -6,14 +6,17 @@ import java.io.IOException;
 
 import javax.swing.JTextArea;
 
-import javafx.scene.layout.Pane;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.layout.VBox;
 import ui.lua.console.ColoredCodeArea;
 
 /**
  * Test Module for loading and editing scripts into a {@link ColoredCodeArea}
  * The file gets saved automatically on close.
  */
-public class ScriptEditor extends Pane{
+public class ScriptEditor extends VBox{
 	private ColoredCodeArea codeArea;
 	private IReloadable reloadable;
 	private String path;
@@ -25,6 +28,7 @@ public class ScriptEditor extends Pane{
 	 */
 	public ScriptEditor(IReloadable reloadable){
 		this.reloadable = reloadable;
+		initializeMenu();
 		initializeTextArea();
 		setTextFromFile(reloadable.getPath());
 	}
@@ -37,6 +41,18 @@ public class ScriptEditor extends Pane{
         codeArea.prefWidthProperty().bind(widthProperty());
         codeArea.prefHeightProperty().bind(heightProperty());
         getChildren().add(codeArea);
+	}
+	
+	private void initializeMenu(){
+		MenuBar menubar = new MenuBar();
+		
+		Menu fileMenu = new Menu("File");
+		MenuItem saveItem = new MenuItem("Save\t\t\t");
+		fileMenu.getItems().add(saveItem);
+		saveItem.setOnAction(e -> saveFile(path));
+		
+		menubar.getMenus().addAll(fileMenu);
+		getChildren().add(menubar);
 	}
 	
 	/**
@@ -62,14 +78,13 @@ public class ScriptEditor extends Pane{
 	/**
 	 * Saves the file, and then reloads the given object.
 	 * @param path Path to the file to be displayed and edited by the {@link JTextArea} (Relative and absolute both work)
-	 * @param reload True if the {@link IReloadable} object needs to be reloaded after saving
 	 */
-	public void saveFile(String path, boolean reload){
+	public void saveFile(String path){
 		try {
 			FileWriter writer = new FileWriter(path);
 			writer.write(codeArea.getText());
 			writer.close();
-			if(reloadable != null && reload)
+			if(reloadable != null)
 				reloadable.reload();
 		} catch (IOException e) {
 			// TODO Logger
