@@ -25,7 +25,15 @@ import javafx.scene.layout.Pane;
 
 /**
  * Simple LuaJava console.
- * Use the {@link Functions} class to test functions like functions:hello()
+ * The {@link Console} has access to every class that uses the {@link AvailableInLua} annotation
+ * It features the following:
+ * <ul>
+ * 	<li> Autocomplete </li>
+ *  <li> Function and Object highlights </li>
+ *  <li> Command history (Use up and down keys) </li>
+ * </ul>
+ * 
+ * Remember: It's a lua console, so if you wanna call an object's function, it's called like object:function() (not object.function())
  * 
  * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
  * @see {@link Functions}
