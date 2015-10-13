@@ -1,11 +1,11 @@
 package application;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javafx.collections.ObservableList;
+import util.Logger;
 import pipeline.Pipeline;
 import services.Consumer;
 import services.Coupler;
@@ -28,7 +28,7 @@ public final class Services {
     private static final Object instance = new Object();
 
     // a logger for good measure
-    private static Logger logger = Logger.getLogger(Services.class.toString());
+    private static Logger logger = Logger.getLogger();
 
     /**
      * Adds a pipeline.
