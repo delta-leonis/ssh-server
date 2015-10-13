@@ -1,24 +1,28 @@
 package pipeline.packets;
 
+import com.google.protobuf.MessageOrBuilder;
+
 import pipeline.PipelinePacket;
+import protobuf.RefereeOuterClass.RefereeOrBuilder;
 
 /**
- * The DetectionPacket class.
+ * The GeometryPacket class.
  *  
  * @author Rimon Oz
  */
 public class RefereePacket extends PipelinePacket {
+	private RefereeOrBuilder data;
 
 	@Override
-	public Object read() {
-		// TODO Auto-generated method stub
-		return null;
+	public MessageOrBuilder read() {
+		return this.data;
 	}
 
 	@Override
-	public Object save(Object data) {
-		// TODO Auto-generated method stub
-		return null;
+	public <T extends PipelinePacket> T save(MessageOrBuilder data) {
+		this.data = (RefereeOrBuilder) data;
+		return (T)this;
 	}
+
 
 }

@@ -1,6 +1,9 @@
 package pipeline.packets;
 
+import com.google.protobuf.MessageOrBuilder;
+
 import pipeline.PipelinePacket;
+import protobuf.Geometry.GeometryDataOrBuilder;
 
 /**
  * The GeometryPacket class.
@@ -8,17 +11,16 @@ import pipeline.PipelinePacket;
  * @author Rimon Oz
  */
 public class GeometryPacket extends PipelinePacket {
+	private GeometryDataOrBuilder data;
 
 	@Override
-	public Object read() {
-		// TODO Auto-generated method stub
-		return null;
+	public MessageOrBuilder read() {
+		return this.data;
 	}
 
 	@Override
-	public Object save(Object data) {
-		// TODO Auto-generated method stub
-		return null;
+	public <T extends PipelinePacket> T save(MessageOrBuilder data) {
+		this.data = (GeometryDataOrBuilder) data;
+		return (T)this;
 	}
-
 }

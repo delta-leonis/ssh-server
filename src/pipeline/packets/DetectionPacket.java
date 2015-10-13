@@ -14,7 +14,7 @@ public class DetectionPacket extends PipelinePacket {
 	private DetectionRobotOrBuilder data;
 
 	@Override
-	public com.google.protobuf.MessageOrBuilder read() {
+	public MessageOrBuilder read() {
 		return this.data;
 	}
 
