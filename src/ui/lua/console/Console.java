@@ -91,10 +91,17 @@ public class Console extends Pane
         
         types.forEach(c -> {
         	try {
-        		for(Method m : c.getDeclaredMethods())
+        		boolean singleton = false;
+        		for(Method m : c.getDeclaredMethods()){
         			// Make sure every class has a getInstance function
-        			if(m.getName().equals("getInstance") && m.getReturnType().getSimpleName().equals(c.getSimpleName()) && m.getParameterCount() == 0)
+        			if(m.getName().equals("getInstance") && m.getReturnType().getSimpleName().equals(c.getSimpleName()) && m.getParameterCount() == 0){
+        				singleton = true;
         				objectArrayList.add(m.invoke(c));
+        			}
+        		}
+        		if(!singleton)
+        			objectArrayList.add(c.newInstance());	//TODO <-- Test whether this works properly
+        			
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
