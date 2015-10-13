@@ -12,9 +12,10 @@ import ui.lua.editor.ScriptEditor;
 public class EditorExample extends Application{
 	private int width = 600;
 	private int height = 400;
+	private static final String path = "resource/examples/scripteditor/";
 	
 	/**
-	 * Initializes every lua script in the folder "scripts/" and runs the "create" function.
+	 * Initializes every lua script in the folder "resource/examples/scripteditor/" and runs the "create" function.
 	 */
 	public static void main(String args[]){
 		launch();
@@ -22,7 +23,7 @@ public class EditorExample extends Application{
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		File folder = new File("resource/examples/scripteditor/");
+		File folder = new File(path);
 		File[] listOfFiles = folder.listFiles();
 		if(listOfFiles != null){
 			System.out.println("Length: " + listOfFiles.length);
@@ -39,6 +40,9 @@ public class EditorExample extends Application{
 		}
 	}
 	
+	/**
+	 * Shows the given {@link IReloadable} class in a {@link ScriptEditor}
+	 */
 	public void showInEditorWindow(IReloadable reloadable){
 		ScriptEditor root = new ScriptEditor(reloadable);
 		Stage stage = new Stage();
