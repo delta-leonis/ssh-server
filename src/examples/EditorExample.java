@@ -26,9 +26,7 @@ public class EditorExample extends Application{
 		File folder = new File(path);
 		File[] listOfFiles = folder.listFiles();
 		if(listOfFiles != null){
-			System.out.println("Length: " + listOfFiles.length);
 			for (int i = 0; i < listOfFiles.length; i++) {
-				System.out.println("Path: " + listOfFiles[i].getPath());
 				if (listOfFiles[i].isFile()) {
 					showInEditorWindow(new Animal(listOfFiles[i].getPath()));
 				} 
