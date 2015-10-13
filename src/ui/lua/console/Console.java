@@ -66,39 +66,6 @@ public class Console extends Pane
         }.start();
 	}
     
-//    @Override
-//    public void start(Stage primaryStage) {
-//        console = this;
-//    	functionClasses = getAllAvailableInLua();
-//        primaryStage.setTitle(title);
-//        out = new ConsoleOutput(this);
-//        primaryStage.setOnCloseRequest(e -> System.exit(0));
-//
-//        // Create base
-//        Pane root = new Pane();
-//        scene = new Scene(root, width, height, Color.WHITE);
-//        // Create TextArea
-//        consoleArea = new ConsoleArea(cursor, this, getClasses(), getFunctions());
-//        consoleArea.setWrapText(true);
-//        consoleArea.prefWidthProperty().bind(root.widthProperty());
-//        consoleArea.prefHeightProperty().bind(root.heightProperty());
-//        
-//        // Add TextArea
-//        root.getChildren().add(consoleArea);        
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
-//        
-//        // Make sure keypresses like tab and enter are handled
-//        addKeyListener();
-//        
-//        // Start the console loop
-//        new Thread(){
-//        	public void run(){
-//                consoleLoop();
-//        	}
-//        }.start();
-//    }
-    
     /**
      * Singleton
      * @return The only console instance
