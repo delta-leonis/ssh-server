@@ -18,7 +18,7 @@ import org.fxmisc.richtext.StyleSpansBuilder;
  * These colors can be edited in the java-keywords.css
  * 
  * 
- * @Author Thomas Hakkers
+ * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
  * Most code originates from https://github.com/TomasMikula/RichTextFX
  */
 public class ColoredCodeArea extends CodeArea{

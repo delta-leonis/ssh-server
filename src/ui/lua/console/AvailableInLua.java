@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * Annotation used to specify whether the class can be used in the lua console.
  * Warning: Make sure the class you annotate has a getInstance() function.
  * 
- * @author Thomas Hakkers
+ * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
  */
 @Target(value = ElementType.TYPE)
 @Retention(value = RetentionPolicy.RUNTIME)

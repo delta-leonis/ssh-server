@@ -12,6 +12,10 @@ import javafx.util.Duration;
 
 /**
  * Animates a node on and off screen to the top, right, bottom or left side.
+ * 
+ * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
+ * Modified from: <a href="http://blog.physalix.com/javafx2-borderpane-which-slides-in-and-out-on-command/"> Physalix </a>
+ * 
  */
 public class BorderSlideBar extends BorderPane {
     private double expandedSize;

@@ -9,6 +9,11 @@ import ui.lua.editor.Animal;
 import ui.lua.editor.IReloadable;
 import ui.lua.editor.ScriptEditor;
 
+/**
+ * 
+ * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
+ *
+ */
 public class EditorExample extends Application{
 	private int width = 600;
 	private int height = 400;

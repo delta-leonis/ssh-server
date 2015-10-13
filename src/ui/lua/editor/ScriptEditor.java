@@ -15,6 +15,9 @@ import ui.lua.console.ColoredCodeArea;
 /**
  * Test Module for loading and editing scripts into a {@link ColoredCodeArea}
  * The file gets saved automatically on close.
+ * 
+ * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
+ * 
  */
 public class ScriptEditor extends VBox{
 	private ColoredCodeArea codeArea;

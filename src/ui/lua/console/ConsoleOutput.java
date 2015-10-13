@@ -6,6 +6,9 @@ import java.io.OutputStream;
 /**
  * Custom OutputStream class, so that we don't bloat the entire Sytem.out
  * Use this stream to write to the {@link Console} instead of the System.out
+ * 
+ * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
+ * 
  */
 public class ConsoleOutput extends OutputStream{
 	private Console console;

@@ -18,6 +18,9 @@ import java.util.List;
  * 
  * You can however use the Lua functions for this
  * 	For example: functions:printFromJava(add(2,2)) and print(functions:add(2,2)) will work.
+ * 
+ * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
+ *
  */
 @AvailableInLua
 public class Functions{

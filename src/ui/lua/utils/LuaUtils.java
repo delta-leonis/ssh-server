@@ -8,7 +8,9 @@ import org.luaj.vm2.lib.jse.JsePlatform;
 
 
 /**
- * Class that can load lua scripts
+ * Class that has all sorts of utility functions for the luaj library
+ * 
+ * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
  */
 public class LuaUtils {
 	private static Globals globals = JsePlatform.standardGlobals();

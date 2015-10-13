@@ -7,6 +7,11 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import ui.lua.console.Console;
 
+/**
+ * 
+ * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
+ *
+ */
 public class ConsoleExample extends Application{
 	private int width = 600;
 	private int height = 400;
@@ -34,6 +39,4 @@ public class ConsoleExample extends Application{
         primaryStage.setScene(scene);
         primaryStage.show();
 	}
-	
-	
 }

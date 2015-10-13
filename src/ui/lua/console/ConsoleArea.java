@@ -17,6 +17,8 @@ import org.fxmisc.wellbehaved.event.EventHandlerHelper;
  * Class that extends the RTF {@link CodeArea}
  * Used to block certain inputs.
  *
+ * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
+ *
  */
 public class ConsoleArea extends ColoredCodeArea{	
 	// The cursor used by the console, usually "> "

@@ -27,6 +27,7 @@ import javafx.scene.layout.Pane;
  * Simple LuaJava console.
  * Use the {@link Functions} class to test functions like functions:hello()
  * 
+ * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
  * @see {@link Functions}
  * @see java-keyords.css for the stylesheet
  */

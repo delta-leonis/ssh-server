@@ -4,6 +4,9 @@ import ui.lua.utils.LuaUtils;
 
 /**
  * Example class that shows how to load a script
+ * 
+ * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
+ * 
  */
 public class Animal implements IReloadable{
 	private String name;
