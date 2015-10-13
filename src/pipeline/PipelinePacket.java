@@ -2,6 +2,8 @@ package pipeline;
 
 import java.util.function.Function;
 
+import com.google.protobuf.MessageOrBuilder;
+
 /**
  * The Class PipelinePacket.
  * 
@@ -12,17 +14,14 @@ abstract public class PipelinePacket {
     /** The is mutable. */
     private boolean   isMutable;
 
-    /** The data. */
-    protected Object  data;
-
     /**
      * Apply.
      *
      * @param function the function
      * @return the pipeline packet
      */
-    public PipelinePacket apply(Function<PipelinePacket, PipelinePacket> function) {
-        return function.apply(this);
+    public <T extends PipelinePacket> T apply(Function<T, T> function) {
+        return function.apply((T) this);
     }
 
     /**
@@ -39,7 +38,7 @@ abstract public class PipelinePacket {
      *
      * @return the object
      */
-    abstract public Object read();
+    abstract public MessageOrBuilder read();
 
     /**
      * Save.
@@ -47,15 +46,25 @@ abstract public class PipelinePacket {
      * @param data the data
      * @return the object
      */
-    abstract public Object save(Object data);
+    abstract public <T extends PipelinePacket> T save(MessageOrBuilder data);
 
     /**
      * Sets the mutability.
      *
      * @param mutability the new state
      */
-    public void setMutable(boolean mutability) {
+    public void setMutability(boolean mutability) {
         this.isMutable = mutability;
     }
+    
+    /**
+     * Gets the mutability.
+     *
+     * @return mutability the new state
+     */
+    public boolean getMutability() {
+        return this.isMutable;
+    }
+    
 
 }

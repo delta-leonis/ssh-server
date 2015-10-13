@@ -1,6 +1,9 @@
 package pipeline.packets;
 
+import com.google.protobuf.MessageOrBuilder;
+
 import pipeline.PipelinePacket;
+import protobuf.Detection.DetectionRobotOrBuilder;
 
 /**
  * The DetectionPacket class.
@@ -8,17 +11,18 @@ import pipeline.PipelinePacket;
  * @author Rimon Oz
  */
 public class DetectionPacket extends PipelinePacket {
+	private DetectionRobotOrBuilder data;
 
 	@Override
-	public Object read() {
-		// TODO Auto-generated method stub
-		return null;
+	public com.google.protobuf.MessageOrBuilder read() {
+		return this.data;
 	}
 
 	@Override
-	public Object save(Object data) {
-		// TODO Auto-generated method stub
-		return null;
+	public <T extends PipelinePacket> T save(MessageOrBuilder data) {
+		this.data = (DetectionRobotOrBuilder) data;
+		return (T)this;
 	}
+
 
 }
