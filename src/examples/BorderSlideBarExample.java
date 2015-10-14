@@ -60,17 +60,23 @@ public class BorderSlideBarExample extends Application {
         Label blueLabel = new Label("Hallo. Ik ben een kip.");
         blueLabel.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 10;");
         
+        Button buttonForTop = new Button("Top");
+        
         // See note 1 in {@link BorderSlideBarExample}
         BorderSlideBar bottomFlapBar = new BorderSlideBar(100, button, Pos.BOTTOM_CENTER, blueLabel);
         borderPane.setBottom(bottomFlapBar);
         
         // See note 2 in {@link BorderSlideBarExample}
-        BorderSlideBar leftFlapBar = new BorderSlideBar(100, Pos.CENTER_LEFT, new GameLogSection(30), true);
+        BorderSlideBar leftFlapBar = new BorderSlideBar(100, Pos.CENTER_LEFT, /*new GameLogSection(30)*/ buttonForTop, true);
         borderPane.setLeft(leftFlapBar);
         
         // See note 3 in {@link BorderSlideBarExample}
         BorderSlideBar rightFlapBar = new BorderSlideBar(100, Pos.CENTER_RIGHT, new GameLogSection(30), false);
         borderPane.setRight(rightFlapBar);
+        
+        // See note 1 in {@link BorderSlideBarExample}
+        BorderSlideBar topFlapBar = new BorderSlideBar(100, buttonForTop, Pos.TOP_CENTER, button);
+        borderPane.setTop(topFlapBar);
         
         stackPane.getChildren().addAll(testLabel,borderPane);
         stage.setScene(scene);

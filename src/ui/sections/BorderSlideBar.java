@@ -59,7 +59,7 @@ public class BorderSlideBar extends BorderPane {
     }
     
     private void init(double expandedSize, Pos location, Node node){
-    	setStyle(style);
+    	//setStyle(style);
     	setExpandedSize(expandedSize);
         this.node = node;
         node.setVisible(false);
