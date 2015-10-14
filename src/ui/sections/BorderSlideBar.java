@@ -69,6 +69,8 @@ public class BorderSlideBar extends BorderPane {
         }
         flapbarLocation = location;
         setCenter(node);
+        setMinWidth(0);
+        setMinHeight(0);
     }
     
     /**
