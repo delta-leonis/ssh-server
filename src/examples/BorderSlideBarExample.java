@@ -32,6 +32,11 @@ import ui.sections.BorderSlideBar;
  *  	A {@link BorderSlideBar} with a button that <i>moves with the {@link BorderSlideBar} </i>
  * 		The following constructor is used for this: BorderSlideBar(expandedSize, Position, Node, false);
  *  </li>
+ *  <li>
+ * 		A {@link BorderSlideBar} with a <i>preassigned button</i> </br>
+ * 		The following constructor is used for this: BorderSlideBar(expandedSize, button, Position, Node, Runnable);
+ * 		Use this constructor if you want the Button's ActionListener to perform an extra function before the SlideBar operates
+ *  </li>
  * </ol>
  * 
  * Notes have been put at the appropriate places to see the code snippets above in action
@@ -74,8 +79,8 @@ public class BorderSlideBarExample extends Application {
         BorderSlideBar rightFlapBar = new BorderSlideBar(100, Pos.CENTER_RIGHT, new GameLogSection(30), false);
         borderPane.setRight(rightFlapBar);
         
-        // See note 1 in {@link BorderSlideBarExample}
-        BorderSlideBar topFlapBar = new BorderSlideBar(100, buttonForTop, Pos.TOP_CENTER, button);
+        // See note 4 in {@link BorderSlideBarExample}
+        BorderSlideBar topFlapBar = new BorderSlideBar(100, buttonForTop, Pos.TOP_CENTER, button, () -> System.out.println("Extra Function"));
         borderPane.setTop(topFlapBar);
         
         stackPane.getChildren().addAll(testLabel,borderPane);

@@ -25,11 +25,26 @@ public class BorderSlideBar extends BorderPane {
 	private Node node;
 	private Button controlButton;
 	private boolean stationaryButton;
+	private Runnable lambda = null;
 	private static final String style = "-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 10;";	//TODO Move to css file
 
-    /**
-     * Creates a sidebar panel, containing an horizontal alignment
-     * of the given nodes.
+	/**
+     * Creates a sidebar panel, containing the given Node
+     * 
+     * @param expandedSize The size of the panel.
+     * @param button The button responsible to open/close slide bar.
+     * @param location The location of the panel (TOP_CENTER, BOTTOM_CENTER, CENTER_RIGHT, CENTER_LEFT).
+     * @param nodes Node inside the panel.
+     * @param lambda The function that gets called whenever the {@link Button} is pressed
+     */
+	public BorderSlideBar(double expandedSize, Button button, Pos location, Node node, Runnable lambda){
+		this(expandedSize, button, location, node);
+        this.lambda = lambda;
+	}
+	
+	/**
+     * Creates a sidebar panel, containing the given Node
+     * 
      * @param expandedSize The size of the panel.
      * @param button The button responsible to open/close slide bar.
      * @param location The location of the panel (TOP_CENTER, BOTTOM_CENTER, CENTER_RIGHT, CENTER_LEFT).
@@ -42,6 +57,7 @@ public class BorderSlideBar extends BorderPane {
         setCenter(node);
         setupButton();
     }
+    
     
     /**
      * Creates a sidebar panel in a BorderPane, which creates a default button for you.
@@ -80,6 +96,9 @@ public class BorderSlideBar extends BorderPane {
     	controlButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+            	if(lambda != null)
+                	lambda.run();
+            	
                 // Create an animation to hide the panel.
                 final Animation hidePanel = new Transition() {
                     {
@@ -216,6 +235,14 @@ public class BorderSlideBar extends BorderPane {
      */
     public void setExpandedSize(double expandedSize) {
         this.expandedSize = expandedSize;
+    }
+    
+    /**
+     * Sets the function that gets called whenever the {@link Button} is pressed
+     * @param lambda The function that gets called whenever the {@link Button} is pressed
+     */
+    public void setRunnable(Runnable lambda){
+    	this.lambda = lambda;
     }
    
 }
