@@ -107,8 +107,6 @@ public class Console extends Pane
         				objectArrayList.add(m.invoke(c));
         			}
         		}
-        		if(!singleton)
-        			objectArrayList.add(c.newInstance());	//TODO <-- Test whether this works properly
         			
 			} catch (Exception e) {
 				e.printStackTrace();
