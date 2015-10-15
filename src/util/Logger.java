@@ -1,5 +1,7 @@
 package util;
 
+import java.util.logging.LogManager;
+
 /**
  * Expanded Logger with build in formatter
  * 
@@ -23,8 +25,10 @@ public class Logger extends java.util.logging.Logger {
 	 * @return a suitable util.logger
 	 */
 	public static Logger getLogger() {
-		// TODO use reflections for more precision = more better
-		return getLogger(Thread.currentThread().getStackTrace()[1].getClassName());
+		//return getLogger(Thread.currentThread().getStackTrace()[1].getClassName());
+		// is this more better?
+		return getLogger(new SecurityManager() { String className = getClassContext()[2].getName(); }.className);
+		
 	}
 
 	/**
@@ -34,7 +38,11 @@ public class Logger extends java.util.logging.Logger {
 	 * @return	a suitable Logger
 	 */
     public static Logger getLogger(String name) {
-		return (Logger) java.util.logging.Logger.getLogger(name);
+        LogManager m = LogManager.getLogManager();
+        Object l = m.getLogger(name);
+        if (l == null) m.addLogger(new Logger(name, null));
+        l = m.getLogger(name);
+        return (Logger)l;
 	}
 	
     /**
