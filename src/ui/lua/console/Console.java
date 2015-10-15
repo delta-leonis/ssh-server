@@ -22,6 +22,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import model.enums.SendMethod;
 
 /**
  * Simple LuaJava console.
@@ -107,6 +108,9 @@ public class Console extends Pane
         				objectArrayList.add(m.invoke(c));
         			}
         		}
+        		
+        		if(!singleton)
+        			objectArrayList.add(Class.forName(c.getName()));
         			
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -121,7 +125,7 @@ public class Console extends Pane
      */
     public ArrayList<String> getClasses(){
     	ArrayList<String> strings = new ArrayList<String>();
-    	functionClasses.forEach(o -> strings.add(o.getClass().getSimpleName()));
+    	functionClasses.forEach(o -> strings.add(getSimpleName(o)));
     	strings.add("String");
     	return strings;
     }
@@ -191,7 +195,7 @@ public class Console extends Pane
     		// Autocomplete Class
     		String object = splitObjectsAndFunctions[0];
     		for(Object o : functionClasses){
-    			String simpleName = o.getClass().getSimpleName();
+    			String simpleName = getSimpleName(o);
         		if(simpleName.startsWith(object) && !simpleName.equals(object))
         			return simpleName.substring(object.length());
     		}
@@ -277,6 +281,15 @@ public class Console extends Pane
     }
     
     /**
+     * TODO: Javadoc
+     * @param o
+     * @return
+     */
+    private String getSimpleName(Object o){
+    	return o instanceof Class ? ((Class) o).getSimpleName() : o.getClass().getSimpleName();
+    }
+    
+    /**
      * Loop that constantly checks whether a command is available and executes it.
      */
     private void consoleLoop(){
@@ -290,11 +303,13 @@ public class Console extends Pane
     		
     		// Add every @AvailableInLua class to the luaj
     		for(Object o : functionClasses){
-    			e.put(o.getClass().getSimpleName(), o);
+    			e.put(getSimpleName(o), o);
     		}
+
     		// Important piece of code that fixed all bugs. Do not decode to check its contents.
     		e.eval(new String(Base64.decode("bG9jYWwgY293ID0gewpbWyAKICBcICAgICAgICAgICAsfi4KICAgIFwgICAgICwtJ19fIGAtLAogICAgICAgXCAgeywtJyAgYC4gfSAgICAgICAgICAgICAgLCcpCiAgICAgICAgICAsKCBhICkgICBgLS5fXyAgICAgICAgICwnLCcpfiwKICAgICAgICAgPD0uKSAoICAgICAgICAgYC0uX18sPT0nICcgJyAnfQogICAgICAgICAgICggICApICAgICAgICAgICAgICAgICAgICAgIC8pCiAgICAgICAgICAgIGAtJ1wgICAgLCAgICAgICAgICAgICAgICAgICAgKQoJICAgICAgIHwgIFwgICAgICAgICBgfi4gICAgICAgIC8KICAgICAgICAgICAgICAgXCAgICBgLl8gICAgICAgIFwgICAgICAgLwogICAgICAgICAgICAgICAgIFwgICAgICBgLl9fX19fLCcgICAgLCcKICAgICAgICAgICAgICAgICAgYC0uICAgICAgICAgICAgICwnCiAgICAgICAgICAgICAgICAgICAgIGAtLl8gICAgIF8sLScKICAgICAgICAgICAgICAgICAgICAgICAgIDc3amonCiAgICAgICAgICAgICAgICAgICAgICAgIC8vX3x8CiAgICAgICAgICAgICAgICAgICAgIF9fLy8tLScvYAoJICAgICAgICAgICAgLC0tJy9gICAnCl1dCn0KZnVuY3Rpb24gY2hpY2tlbnNheSh0ZXh0KQpsID0gdGV4dDpsZW4oKQphID0gbCAvIDEwCmZvciBpPTAsYSBkbwoJaW8ud3JpdGUoIlsiIC4uIHRleHQ6c3ViKGkqMTArMSwgKChpKzEpKjEwID4gbCkgYW5kIGwgb3IgKGkrMSkqMTAgKSAuLiAgIl1cbiIpCmVuZAoJcHJpbnQoY293WzFdKQplbmQK")));
 
+    		e.createBindings().put("wow", Console.class);
     		println(title);
     		printCursor();
 
