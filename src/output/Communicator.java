@@ -8,12 +8,17 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.luaj.vm2.LuaTable;
+import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.Varargs;
+
 import com.google.protobuf.Message;
 
 import model.enums.SendMethod;
 import protobuf.Radio;
 import protobuf.Radio.RadioProtocolCommand;
 import protobuf.Radio.RadioProtocolWrapper;
+import ui.lua.console.AvailableInLua;
 
 /**
  * Class that handles all the outgoing traffic, independent of what {@link SendMethod} is used.<br />
@@ -22,6 +27,7 @@ import protobuf.Radio.RadioProtocolWrapper;
  * @author Jeroen
  * @see SenderInterface
  */
+@AvailableInLua
 public class Communicator {
 
 	/**
@@ -180,4 +186,67 @@ public class Communicator {
 			&& filteredMethods.get(false).size() <= 0;
 	}
 	
+	/**
+	 * Old school method of sending packets to the robot. Builds a packet using
+	 * the maximum available arguments and sends it through the
+	 * {@link Communicator#send(com.google.protobuf.GeneratedMessage.Builder)
+	 *
+	 * @param robotId
+	 *            The id of the robot
+	 * @param velocityR
+	 *            The rotation velocity of the robot
+	 * @param velocityX
+	 *            The velocity in the X direction
+	 * @param velocityY
+	 *            The velocity in the Y direction
+	 * @param flatKick
+	 *            The flat kick value
+	 * @param chipKick
+	 *            The chip kick value
+	 * @param dribbleSpin
+	 *            The dribble value
+	 * @param distance
+	 *            The distance it still has to travel
+	 * @return success value
+	 */
+	public static boolean send(int robotId, float velocityR, float velocityX, float velocityY,
+			float flatKick, float chipKick, float dribbleSpin, int distance) {
+		return send(RadioProtocolCommand.newBuilder().setRobotId(robotId).setVelocityR(velocityR).setVelocityX(velocityX)
+				.setVelocityY(velocityY).setFlatKick(flatKick).setChipKick(chipKick).setDribblerSpin(dribbleSpin)
+				.setDistance(distance));
+	}
+
+	/**
+	 * Wraps a {@link RadioProtocolCommand} in a {@link RadioProtocolWrapper},
+	 * using the given table, and tries to send through
+	 * {@link #send(com.google.protobuf.GeneratedMessage.Builder)} If there are
+	 * less arguments than the amount in
+	 * {@link #send(int, float, float, float, float, float, float, int) send(args)}, the
+	 * rest will be filled up by 0's.
+	 *
+	 * @param table
+	 *            A {@link LuaTable} containing the arguments. Primarily used by
+	 *            the {@link Console}. Arguments are passed in the
+	 *            {@link Console} like so: Communicator:send({1,2,3,4,5})
+	 * @return succes value
+	 */
+	public static boolean send(LuaTable table){
+		float[] floats = new float[table.length()];
+		int index = 0;
+		LuaValue k = LuaValue.NIL;
+		while ( true ) {
+			Varargs n = table.next(k);
+			if ( (k = n.arg1()).isnil() )
+				break;
+			LuaValue v = n.arg(2);
+			floats[index++] = v.tofloat();
+		}
+		index = 0;
+
+		return send((int) ((index < table.length()) ? floats[index++] : 0), ((index < table.length()) ? floats[index++] : 0),
+				((index < table.length()) ? floats[index++] : 0), ((index < table.length()) ? floats[index++] : 0),
+				((index < table.length()) ? floats[index++] : 0), ((index < table.length()) ? floats[index++] : 0),
+				((index < table.length()) ? floats[index++] : 0),
+				(int) ((index < table.length()) ? floats[index++] : 0));
+	}
 }
