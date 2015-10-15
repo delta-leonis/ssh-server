@@ -23,7 +23,6 @@ import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-import model.enums.SendMethod;
 
 /**
  * Simple LuaJava console.
@@ -286,12 +285,11 @@ public class Console extends Pane
     }
     
     /**
-     * TODO: Javadoc
-     * @param o
-     * @return
+     * @param o The object we need the simple name of
+     * @return The simple name of the object. If an object has been turned into a {@link Class}, it won't return Class as simpleName
      */
     private String getSimpleName(Object o){
-    	return o instanceof Class ? ((Class) o).getSimpleName() : o.getClass().getSimpleName();
+    	return o instanceof Class ? ((Class<?>) o).getSimpleName() : o.getClass().getSimpleName();
     }
     
     /**
