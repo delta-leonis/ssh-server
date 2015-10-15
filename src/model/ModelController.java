@@ -1,10 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 /**
  * The Class ModelController.
@@ -22,7 +18,8 @@ public class ModelController {
      * @return          The requested model.
      */
     public Model get(String name) {
-    //    return (Model) this.listModels.stream().filter(listModel -> listModel.getName().equals(name)).findFirst().get();
+//        return (Model) this.listModels.stream().filter(listModel -> listModel.getName().equals(name)).findFirst().get();
+    	return null;
     }
 
     /**
@@ -35,6 +32,7 @@ public class ModelController {
 //                .filter(listModel -> listModel.getName().equals(name))
 //                .map(listModel -> (Model) listModel)
 //                .collect(Collectors.toList());
+    	return null;
     }
 
 

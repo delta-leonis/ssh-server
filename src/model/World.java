@@ -65,9 +65,9 @@ public class World {
 	 * @return
 	 */
 	public Robot getRobot(int id, Color teamColor){
-		return (Robot) getRobots(teamColor)
+		return getRobots(teamColor)
 				.stream()
-				.filter(robot -> ((Robot)robot).getRobotId() == id)
+				.filter(robot -> robot.getRobotId() == id)
 				.findFirst().get();
 	}
 

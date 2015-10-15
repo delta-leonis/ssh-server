@@ -80,7 +80,8 @@ abstract public class Model {
     /**
      * Human readable string that describes this model
      */
-    public String toString(){
+    @Override
+	public String toString(){
     	return String.format(getFullName());
     }
 }

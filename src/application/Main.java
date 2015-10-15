@@ -3,7 +3,6 @@ package application;
 import examples.PipelinePacketExample;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import model.ui.ListModel;
 import pipeline.Pipeline;
 import services.consumers.StringConsumer;
 import services.couplers.DoubleCoupler;

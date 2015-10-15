@@ -79,7 +79,7 @@ public class ServicesController {
      * @return          The requested service.
      */
     public Service get(String name) {
-        return (Service) this.servicesList.stream().filter(service -> service.getName().equals(name)).findFirst().get();
+        return this.servicesList.stream().filter(service -> service.getName().equals(name)).findFirst().get();
     }
 
     /**

@@ -116,7 +116,7 @@ public class Communicator {
 	 * @param commands	Array with {@link RadioProtocolCommand} to send
 	 * @return success value
 	 */
-	public static boolean send(ArrayList<Radio.RadioProtocolCommand> commands){
+	public static boolean send(ArrayList<Radio.RadioProtocolCommand.Builder> commands){
 		//create a wrapper-builder
 		RadioProtocolWrapper.Builder wrapperBuilder = Radio.RadioProtocolWrapper.newBuilder();
 		//and add all commands to the wrapper-builder

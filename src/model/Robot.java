@@ -16,6 +16,10 @@ public class Robot extends FieldObject{
 	 * teamcolor that controls this robot
 	 */
 	private Color teamColor;
+	/**
+	 * State of the dribbler
+	 */
+	private float dribbleSpeed;
 	
 	/**
 	 * Instansiates a new robot with specified properties
@@ -41,5 +45,21 @@ public class Robot extends FieldObject{
 	 */
 	public Color getTeamColor(){
 		return teamColor;
+	}
+
+	/**
+	 * sets the current speed of the dribbler for a robot
+	 * @param speed
+	 */
+	public void setDribbleSpeed(float speed){
+		dribbleSpeed = speed;
+	}
+	
+	/**
+	 * gets the current speed of the dribbler for a robot
+	 * @param speed
+	 */
+	public float getDribbleSpeed(){
+		return dribbleSpeed;
 	}
 }
