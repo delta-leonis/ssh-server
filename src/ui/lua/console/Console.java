@@ -17,6 +17,7 @@ import org.reflections.util.ConfigurationBuilder;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
+import examples.CommunicatorExample;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
@@ -33,6 +34,10 @@ import model.enums.SendMethod;
  *  <li> Function and Object highlights </li>
  *  <li> Command history (Use up and down keys) </li>
  * </ul>
+ * 
+ * Example Command stolen from {@link CommunicatorExample}: Communicator:register(SendMethod.UDP, luajava.newInstance("output.UDPSender" , "127.0.0.1", 9292))
+ * To make a new instance of something, call: luajava.newInstance(Object.class, Arguments...)
+ * To access a static variable in an object, use a period instead of a colon. So SendMethod.UDP, not SendMethod:UDP
  * 
  * Remember: It's a lua console, so if you wanna call an object's function, it's called like object:function() (not object.function())
  * 

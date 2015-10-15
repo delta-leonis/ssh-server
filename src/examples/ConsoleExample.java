@@ -18,6 +18,10 @@ import ui.lua.console.Console;
  *  <li> Command history (Use up and down keys) </li>
  * </ul>
  * 
+ * Example Command stolen from {@link CommunicatorExample}: Communicator:register(SendMethod.UDP, luajava.newInstance("output.UDPSender" , "127.0.0.1", 9292))
+ * To make a new instance of something, call: luajava.newInstance(Object.class, Arguments...)
+ * To access a static variable in an object, use a period instead of a colon. So SendMethod.UDP, not SendMethod:UDP
+ * 
  * Remember: It's a lua console, so if you wanna call an object's function, it's called like object:function() (not object.function())
  * 
  * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
