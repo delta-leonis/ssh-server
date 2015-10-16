@@ -31,18 +31,21 @@ public class ControllerExample {
 
 		layout = new ControllerLayout(schrödingersController.get());
 
-		layout.attach(getComponent("1").get(), ButtonFunction.KICK);
-		layout.attach(getComponent("0").get(), ButtonFunction.CHIP);
-		layout.attach(getComponent("3").get(), ButtonFunction.DRIBBLE);
-		layout.attach(getComponent("x").get(), ButtonFunction.DIRECTION_X);
-		layout.attach(getComponent("y").get(), ButtonFunction.DIRECTION_Y);
+		layout.attach(getComponent("1") .get(), ButtonFunction.KICK);
+		layout.attach(getComponent("0") .get(), ButtonFunction.CHIP);
+		layout.attach(getComponent("3") .get(), ButtonFunction.DRIBBLE);
+		layout.attach(getComponent("x") .get(), ButtonFunction.DIRECTION_X);
+		layout.attach(getComponent("y") .get(), ButtonFunction.DIRECTION_Y);
 		layout.attach(getComponent("rx").get(), ButtonFunction.ORIENTATION_X);
 		layout.attach(getComponent("ry").get(), ButtonFunction.ORIENTATION_Y);
-		layout.attach(getComponent("z").get(), ButtonFunction.CHIPKICK_STRENGTH);
-		
+		layout.attach(getComponent("z") .get(), ButtonFunction.CHIPKICK_STRENGTH);
+		layout.attach(getComponent("7") .get(), ButtonFunction.SELECT_NEXT_ROBOT);
+		layout.attach(getComponent("6") .get(), ButtonFunction.SELECT_PREV_ROBOT);
+		layout.attach(getComponent("8") .get(), ButtonFunction.STOP_ALL_ROBOTS);
 
-		ControllerListener listener = new ControllerListener(15);
-		listener.register(0, layout);
+		ControllerListener listener = new ControllerListener(15); //15 = no. robots
+		
+		listener.register(0, layout); 	//0 = robotid
 		
 		while(true){
 			listener.processControllers();

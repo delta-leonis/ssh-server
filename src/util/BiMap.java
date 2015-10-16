@@ -46,8 +46,11 @@ public class BiMap<T1, T2> implements Map<T1, T2>
 
 	@Override
 	public T2 get(Object key) {
-		// TODO Auto-generated method stub
-		return null;
+		return mapKeys.get(key);
+	}
+	
+	public T1 getbyValue(Object value){
+		return mapValues.get(value);
 	}
 
 	@Override

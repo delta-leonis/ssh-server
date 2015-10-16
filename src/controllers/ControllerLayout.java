@@ -82,17 +82,9 @@ public class ControllerLayout extends Model{
 	 * there should be 0 reason to use streams
 	 * 
 	 * @param function	buttonFunction to detach
-	 * @return	succes value
 	 */
-	public boolean detach(ButtonFunction function){
-		// check all bindings
-		return bindings.entrySet().stream()
-			// filter for the right binding
-			.filter(entry -> entry.getValue().equals(function))
-			// call the detach on this specific ButtonFunction
-			.map(entry -> detach(entry.getKey()))
-			//check for false return value
-			.reduce(true, (accumulator, succes) -> accumulator && succes);
+	public void detach(ButtonFunction function){
+		bindings.removeByValue(function);
 	}
 
 	/**
@@ -115,6 +107,10 @@ public class ControllerLayout extends Model{
 	}
 
 	public boolean containsBinding(ButtonFunction function) {
+		//TODO too hackisch
+		if((function.equals(ButtonFunction.CHIP_STRENGTH) || function.equals(ButtonFunction.KICK_STRENGTH)) && containsBinding(ButtonFunction.CHIPKICK_STRENGTH))
+			return true;
+
 		return bindings.entrySet().stream()
 				.filter(entry -> entry.getValue().equals(function))
 				.count() > 0;
@@ -123,7 +119,7 @@ public class ControllerLayout extends Model{
 	public float get(ButtonFunction function) {
 		//TODO dirty hackish
 		if((function.equals(ButtonFunction.CHIP_STRENGTH) || function.equals(ButtonFunction.KICK_STRENGTH)) && containsBinding(ButtonFunction.CHIPKICK_STRENGTH))
-			get(ButtonFunction.CHIPKICK_STRENGTH);
+			return get(ButtonFunction.CHIPKICK_STRENGTH);
 			
 
 		if(!containsBinding(function)){

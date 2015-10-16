@@ -5,11 +5,13 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import application.Models;
+import application.Services;
 import javafx.geometry.Point2D;
 import model.Robot;
 import model.enums.ButtonFunction;
 import protobuf.Radio.RadioProtocolCommand;
 import services.Producer;
+import services.Service;
 import util.Logger;
 
 /**
@@ -31,7 +33,7 @@ public class ControllerHandler extends Producer{
 	
 	//TODO should be read from a config of some sorts
 	float MAX_SPEED = 4f,
-			SOLANOID_SPEED = 1f;
+			MAX_STRENGTH = 1f;
 	
 	/**
 	 * Map with previous buttonstates and respective values
@@ -71,14 +73,14 @@ public class ControllerHandler extends Producer{
 		switch(function){
 		case KICK:
 			if(isPressed(buttonValue)) {
-				float kickStrength = layout.containsBinding(ButtonFunction.KICK_STRENGTH) ? layout.get(ButtonFunction.KICK_STRENGTH) : SOLANOID_SPEED;
+				float kickStrength = layout.containsBinding(ButtonFunction.KICK_STRENGTH) ? layout.get(ButtonFunction.KICK_STRENGTH) : MAX_STRENGTH;
 				packet.setFlatKick(kickStrength);
 			}
 			return true;
 		
 		case CHIP:
 			if(isPressed(buttonValue)) {
-				float chipStrength = layout.containsBinding(ButtonFunction.CHIP_STRENGTH) ? layout.get(ButtonFunction.CHIP_STRENGTH) : SOLANOID_SPEED;
+				float chipStrength = layout.containsBinding(ButtonFunction.CHIP_STRENGTH) ? layout.get(ButtonFunction.CHIP_STRENGTH) : MAX_STRENGTH;
 				packet.setChipKick(chipStrength);
 			}
 			return true;
@@ -158,10 +160,21 @@ public class ControllerHandler extends Producer{
 			}
 			return true;
 			
+			
+		case SELECT_NEXT_ROBOT: 
+		case SELECT_PREV_ROBOT:
+			((ControllerListener)Services.get("ControllerListener")).changeRobotId(this, function.equals(ButtonFunction.SELECT_NEXT_ROBOT));
+			
+			return true;
+			
 		default:
 			logger.warning("No implementation for %s.\n", button.getKey());
 			return false;
 		}
+	}
+	
+	public ControllerLayout getLayout(){
+		return layout;
 	}
 
 	/**
