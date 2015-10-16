@@ -1,6 +1,6 @@
 package pipeline;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.jooq.lambda.Seq;
+
+import com.google.common.reflect.TypeToken;
 
 import application.Services;
 import services.Consumer;
@@ -20,19 +22,22 @@ import services.Producer;
  * @author Rimon Oz
  * @param <T> the generic type
  */
-public class Pipeline<T> {
+public class Pipeline<T extends PipelinePacket> {
     
     /** The producers */
-    private final ArrayList<Producer>    producers;
+    private final List<Producer<T>>    producers;
 
     /** The couplers. */
-    private final Map<Coupler, Priority> couplers;
+    private final Map<Coupler<T>, Priority> couplers;
 
     /** The consumers. */
-    private final ArrayList<Consumer>    consumers;
+    private final List<Consumer<T>>    consumers;
 
     /** The queue. */
-    private final Queue<PipelinePacket>  queue = new ConcurrentLinkedQueue<PipelinePacket>();
+    private final Queue<T>  queue = new ConcurrentLinkedQueue<T>();
+    
+    /** The reflected TypeToken (o¬‿¬o ) */
+    public TypeToken<T> type = new TypeToken<T>(getClass()) {};
 
     /**
      * Instantiates a new pipeline.
@@ -54,7 +59,7 @@ public class Pipeline<T> {
      * @param pipelinePacket The new packet to be added.
      * @return true, if successful
      */
-    public boolean addPacket(PipelinePacket pipelinePacket) {
+    public boolean addPacket(T pipelinePacket) {
         return this.queue.add(pipelinePacket);
     }
 
@@ -70,7 +75,7 @@ public class Pipeline<T> {
 
         final PipelinePacket pipelinePacket = this.queue.poll();
 
-        final PipelinePacket resultPacket = ((Seq<Coupler>) this.couplers.entrySet().stream()
+        final PipelinePacket resultPacket = ((Seq<Coupler<T>>) this.couplers.entrySet().stream()
                 .sorted((leftMap, rightMap) -> 
                 	leftMap.getValue().ordinal() > rightMap.getValue().ordinal() ? -1 : 1)
                 .map(entryMap -> entryMap.getKey()))
@@ -87,7 +92,7 @@ public class Pipeline<T> {
      * @param producer the producer
      * @return true, if successful
      */
-    private boolean registerProducer(Producer producer) {
+    private boolean registerProducer(Producer<T> producer) {
         return this.producers.add(producer);
     }
 
@@ -97,7 +102,7 @@ public class Pipeline<T> {
      * @param producers the producers
      * @return true, if successful
      */
-    public boolean registerProducers(Producer... producers) {
+    public boolean registerProducers(Producer<T>... producers) {
         return Stream.of(producers).map(producer -> this.registerProducer(producer))
                 // collect all success values and reduce to true if all senders succeeded; false otherwise
                 .reduce(true, (accumulator, success) -> accumulator && success);
@@ -109,7 +114,7 @@ public class Pipeline<T> {
      * @param consumer the consumer
      * @return true, if successful
      */
-    private boolean registerConsumer(Consumer consumer) {
+    private boolean registerConsumer(Consumer<T> consumer) {
         return this.consumers.add(consumer);
     }
 
@@ -119,7 +124,7 @@ public class Pipeline<T> {
      * @param consumers the consumers
      * @return true, if successful
      */
-    public boolean registerConsumers(Consumer... consumers) {
+    public boolean registerConsumers(Consumer<T>... consumers) {
         return Stream.of(consumers).map(consumer -> this.registerConsumer(consumer))
                 // collect all success values and reduce to true if all senders succeeded; false otherwise
                 .reduce(true, (accumulator, success) -> accumulator && success);
@@ -131,7 +136,7 @@ public class Pipeline<T> {
      * @param coupler the coupler
      * @return true, if successful
      */
-    public boolean registerCoupler(Coupler coupler) {
+    public boolean registerCoupler(Coupler<T> coupler) {
         return this.couplers.put(coupler, Priority.MEDIUM) != null;
     }
 
@@ -141,7 +146,7 @@ public class Pipeline<T> {
      * @param couplers the couplers
      * @return true, if successful
      */
-    public boolean registerCouplers(Coupler... couplers) {
+    public boolean registerCouplers(Coupler<T>... couplers) {
         return Stream.of(couplers).map(coupler -> this.registerCoupler(coupler))
                 // collect all success values and reduce to true if all senders succeeded; false otherwise
                 .reduce(true, (accumulator, success) -> accumulator && success);
@@ -153,7 +158,7 @@ public class Pipeline<T> {
      * @param coupler the coupler
      * @return true, if successful
      */
-    public boolean registerCoupler(Priority priority, Coupler coupler) {
+    public boolean registerCoupler(Priority priority, Coupler<T> coupler) {
         return this.couplers.put(coupler, priority) != null;
     }
 
@@ -163,7 +168,7 @@ public class Pipeline<T> {
      * @param couplers the couplers
      * @return true, if successful
      */
-    public boolean registerCouplers(Priority priority, Coupler... couplers) {
+    public boolean registerCouplers(Priority priority, Coupler<T>... couplers) {
         return Stream.of(couplers).map(coupler -> this.registerCoupler(priority, coupler))
                 // collect all success values and reduce to true if all senders succeeded; false otherwise
                 .reduce(true, (accumulator, success) -> accumulator && success);

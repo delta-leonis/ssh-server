@@ -7,7 +7,7 @@ import pipeline.PipelinePacket;
  * 
  * @author Rimon Oz
  */
-abstract public class Coupler extends Service {
+abstract public class Coupler<T extends PipelinePacket> extends Service<T> {
 
     /**
      * Instantiates a new coupler.

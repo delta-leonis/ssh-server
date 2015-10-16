@@ -1,11 +1,12 @@
 package services.producers;
 
+import pipeline.packets.GeometryPacket;
 import services.Producer;
 
 /**
  * The Class IntProducer.
  */
-public class IntProducer extends Producer {
+public class IntProducer extends Producer<GeometryPacket> {
 
     /**
      * Instantiates a new int producer.
@@ -15,7 +16,7 @@ public class IntProducer extends Producer {
     public IntProducer (String name) {
         super(name);
         this.setCallable(() -> {
-            return 9001;
+            return new GeometryPacket();
         });
     }
 }

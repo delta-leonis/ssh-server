@@ -7,7 +7,7 @@ import pipeline.PipelinePacket;
  * 
  * @author Rimon Oz
  */
-abstract public class Consumer extends Service {
+abstract public class Consumer<T extends PipelinePacket> extends Service<T> {
 
     /**
      * Instantiates a new consumer.

@@ -1,12 +1,13 @@
 package services.couplers;
 
 import pipeline.PipelinePacket;
+import pipeline.packets.GeometryPacket;
 import services.Coupler;
 
 /**
  * The Class DoubleCoupler.
  */
-public class DoubleCoupler extends Coupler {
+public class DoubleCoupler extends Coupler<GeometryPacket> {
 
     /**
      * Instantiates a new double coupler.
@@ -24,7 +25,7 @@ public class DoubleCoupler extends Coupler {
     public PipelinePacket process(PipelinePacket potentiallyNotDouble) {
         return potentiallyNotDouble.apply((content) -> {
             final double doubleValue = Double.parseDouble(content.read().toString());
-            content.save(doubleValue);
+            //content.save(doubleValue);
             return content;
         });
     }

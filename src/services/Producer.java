@@ -2,12 +2,14 @@ package services;
 
 import java.util.concurrent.Callable;
 
+import pipeline.PipelinePacket;
+
 /**
  * The Class Producer.
  * 
  * @author Rimon Oz
  */
-abstract public class Producer extends Service {
+abstract public class Producer<T extends PipelinePacket> extends Service<T> {
 
     /** The callable. */
     private Callable<?> callable;

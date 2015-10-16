@@ -1,12 +1,13 @@
 package services.consumers;
 
 import pipeline.PipelinePacket;
+import pipeline.packets.GeometryPacket;
 import services.Consumer;
 
 /**
  * The Class StringConsumer.
  */
-public class StringConsumer extends Consumer {
+public class StringConsumer extends Consumer<GeometryPacket> {
 
     /**
      * Instantiates a new string consumer.

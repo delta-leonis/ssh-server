@@ -1,12 +1,15 @@
 package application;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javafx.collections.ObservableList;
 import util.Logger;
 import pipeline.Pipeline;
+import pipeline.PipelinePacket;
 import services.Consumer;
 import services.Coupler;
 import services.Producer;
@@ -28,7 +31,7 @@ public final class Services {
     private static final Object instance = new Object();
 
     // a logger for good measure
-    private static Logger logger = Logger.getLogger();
+    //private static Logger logger = Logger.getLogger();
 
     /**
      * Adds a pipeline.
@@ -37,7 +40,7 @@ public final class Services {
      * @return true, if successful
      */
     public static boolean addPipeline(Pipeline<?> pipeline) {
-        Services.logger.info("Adding pipeline: " + pipeline.getClass().getName());
+        //Services.logger.info("Adding pipeline: " + pipeline.getClass().getName());
         return Services.servicesController.addPipeline(pipeline);
     }
 
@@ -60,8 +63,8 @@ public final class Services {
      * @param service The service to be added.
      * @return true, if successful
      */
-    public static <T extends Service> boolean addService(T service) {
-        Services.logger.info("Adding Service: " + service.getClass().getName());
+    public static <T extends Service<?>> boolean addService(T service) {
+        //Services.logger.info("Adding Service: " + service.getClass().getName());
         return Services.servicesController.addService(service);
     }
 
@@ -72,7 +75,7 @@ public final class Services {
      * @param services A list of services that will be added to the services store.
      */
     @SafeVarargs
-    public static <T extends Service> void addServices(T... services) {
+    public static <S extends PipelinePacket, T extends Service<S>> void addServices(T... services) {
         Stream.of(services)
         //            .parallel()
         .forEach(Services::addService);
@@ -84,7 +87,7 @@ public final class Services {
      * @param string The name.
      * @return       The wanted service.
      */
-    public static Service get(String name) {
+    public static Service<?> get(String name) {
         return Services.servicesController.get(name);
     }
     
@@ -93,7 +96,7 @@ public final class Services {
      *
      * @return all services
      */
-    public ObservableList<Service> getAll() {
+    public ObservableList<Service<?>> getAll() {
         return Services.servicesController.getAll();
     }
 
@@ -102,7 +105,7 @@ public final class Services {
      * @param name      The (fuzzy) name of the service you want to find.
      * @return          The requested service.
      */
-    public ArrayList<Service> getAll(String name) {
+    public ArrayList<Service<?>> getAll(String name) {
         return Services.servicesController.getAll(name);
     }
 
@@ -112,11 +115,13 @@ public final class Services {
      * @param pipeline The given pipeline.
      * @return         The compatible consumers.
      */
-    public static ArrayList<Consumer> getCompatibleConsumers(Pipeline<?> pipeline) {
-        return (ArrayList<Consumer>) Services.servicesController.getAll().stream()
-                .filter(service -> service instanceof Consumer)
-                .map(consumer -> (Consumer) consumer)
+    public static <T extends PipelinePacket> List<Consumer<T>> getCompatibleConsumers(Pipeline<T> pipeline) {
+    	@SuppressWarnings("unchecked")
+		List<Consumer<T>> collect = (List<Consumer<T>>) Services.servicesController.getAll().stream()
+                .filter(service -> service.type.equals(pipeline.type))
+                .map(service -> service.type.getType().getClass().cast(service))
                 .collect(Collectors.toList());
+		return collect;
     }
 
     /**
@@ -125,11 +130,13 @@ public final class Services {
      * @param pipeline The given pipeline.
      * @return         The compatible couplers.
      */
-    public static ArrayList<Coupler> getCompatibleCouplers(Pipeline<?> pipeline) {
-        return (ArrayList<Coupler>) Services.servicesController.getAll().stream()
-                .filter(service -> service instanceof Coupler)
-                .map(coupler -> (Coupler) coupler)
+    public static <T extends PipelinePacket> List<Coupler<T>> getCompatibleCouplers(Pipeline<T> pipeline) {
+	    @SuppressWarnings("unchecked")
+		List<Coupler<T>> collect = (List<Coupler<T>>) Services.servicesController.getAll().stream()
+                .filter(service -> service.type.equals(pipeline.type))
+                .map(service -> service.type.getType().getClass().cast(service))
                 .collect(Collectors.toList());
+		return collect;
     }
 
     /**
@@ -138,13 +145,15 @@ public final class Services {
      * @param pipeline The given pipeline.
      * @return         The compatible producers.
      */
-    public static ArrayList<Producer> getCompatibleProducers(Pipeline<?> pipeline) {
-        return (ArrayList<Producer>) Services.servicesController.getAll().stream()
-                .filter(service -> service instanceof Producer)
-                .map(producer -> (Producer) producer)
+	public static <T extends PipelinePacket> List<Producer<T>> getCompatibleProducers(Pipeline<T> pipeline) {
+	    @SuppressWarnings("unchecked")
+		List<Producer<T>> collect = (List<Producer<T>>) Services.servicesController.getAll().stream()
+                .filter(service -> service.type.equals(pipeline.type))
+                .map(service -> service.type.getType().getClass().cast(service))
                 .collect(Collectors.toList());
+		return collect;
     }
-
+    
     /**
      * Gets the single instance of Services.
      *
@@ -153,14 +162,25 @@ public final class Services {
     public static Object getInstance() {
         return Services.instance;
     }
+    
+
+    /**
+     * This method periodically schedules a Runnable to be called with the given delay between
+     * termination of the previous execution and start of the next execution. 
+     * @param task   The Runnable to be executed periodically
+     * @param delay  Time between termination of previous execution and start of next execution in ms
+     * @return       A ScheduledFuture that can be used to cancel the periodic execution
+     */
+    public ScheduledFuture<?> scheduleTask(String taskName, Runnable task, long delay) {
+    	return Services.servicesController.scheduleTask(taskName, task, delay);
+    }
 
     /**
      * Start.
      */
     public static void start() {
-        Services.logger.info("Starting Services...");
+        //Services.logger.info("Starting Services...");
         Services.servicesController = new ServicesController();
-
     }
 
 }
