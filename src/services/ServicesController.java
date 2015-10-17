@@ -2,26 +2,23 @@ package services;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
-
-import application.Services;
-
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.google.common.collect.ImmutableList;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListenableScheduledFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.ListeningScheduledExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
+
 import pipeline.Pipeline;
 import pipeline.PipelinePacket;
 
@@ -33,13 +30,13 @@ import pipeline.PipelinePacket;
 public class ServicesController {
 
     /** The service pipeline list. */
-    private final ObservableList<Pipeline<?>> servicePipelineList;
+    private ImmutableList<Pipeline<?>> pipelineList;
 
     /** The services list. */
-    private final ObservableList<Service<?>>  servicesList;
+    private ImmutableList<Service<?>>  servicesList;
     
     /** The scheduler service. */
-    private final ScheduledExecutorService scheduler;
+    private final ListeningScheduledExecutorService scheduler;
     
     private Map<String, ScheduledFuture<? extends PipelinePacket>> scheduledTasks;
     
@@ -50,9 +47,9 @@ public class ServicesController {
      * Instantiates a new services controller.
      */
     public ServicesController() {
-        this.servicePipelineList = FXCollections.observableArrayList();
-        this.servicesList        = FXCollections.observableArrayList();
-        this.scheduler			 = Executors.newScheduledThreadPool(1);
+        this.pipelineList = ImmutableList.of();
+        this.servicesList        = ImmutableList.of();
+        this.scheduler			 = MoreExecutors.listeningDecorator(Executors.newScheduledThreadPool(1));
         this.taskService   		 = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
         this.scheduledTasks		 = new HashMap<String, ScheduledFuture<? extends PipelinePacket>>();
     }
@@ -64,8 +61,9 @@ public class ServicesController {
      * @return true, if successful
      */
     public boolean addPipeline(Pipeline<?> pipeline) {
-        return this.servicePipelineList.add(pipeline);
-    }
+    	this.pipelineList = ImmutableList.<Pipeline<?>>builder().addAll(this.pipelineList).add(pipeline).build();
+    	return true;
+	}
 
     /**
      * Adds the pipelines.
@@ -86,7 +84,8 @@ public class ServicesController {
      * @return true, if successful
      */
     public boolean addService(Service<?> service) {
-        return this.servicesList.add(service.getAsService());
+    	this.servicesList = ImmutableList.<Service<?>>builder().addAll(this.servicesList).add(service).build();
+    	return true;
     }
 
     /**
@@ -115,8 +114,8 @@ public class ServicesController {
      *
      * @return all services
      */
-    public ObservableList<Service<?>> getAll() {
-        return this.servicesList;
+    public List<Service<?>> getAll() {
+        return (List<Service<?>>)this.servicesList;
     }
 
     /**
@@ -137,35 +136,18 @@ public class ServicesController {
      * @param delay  Time between termination of previous execution and start of next execution in ms
      * @return       A ScheduledFuture that can be used to cancel the periodic execution
      */
-    public <T extends PipelinePacket> ScheduledFuture<T> scheduleTask(String taskName, Runnable task, long delay) {
+    public <T extends PipelinePacket> ListenableScheduledFuture<T> scheduleTask(String taskName, Runnable task, long delay) {
     	@SuppressWarnings("unchecked")
-    	ScheduledFuture<T> scheduledFuture = (ScheduledFuture<T>) this.scheduler.scheduleWithFixedDelay(task, 0, delay, TimeUnit.MICROSECONDS);
+    	ListenableScheduledFuture<T> scheduledFuture = (ListenableScheduledFuture<T>) this.scheduler.scheduleWithFixedDelay(task, 0, delay, TimeUnit.MICROSECONDS);
     	this.scheduledTasks.put(taskName, scheduledFuture);
     	return scheduledFuture;
     }
     
-    public <T extends PipelinePacket> ListenableFuture<T> runTask(Callable<T> task) {
-    	return this.taskService.submit(task);
-    }
+	public List<Pipeline<?>> getPipelines() {
+		return this.pipelineList.stream().collect(Collectors.toList());
+	}
 
-    public <T extends PipelinePacket> ListenableFuture<T> runTaskAsProducer(Callable<T> task) {
-    	ListenableFuture<T> producerFuture = this.runTask(task);
-    	Futures.addCallback(producerFuture, new FutureCallback<T>() {
-
-			@Override
-			public void onFailure(Throwable failPacket) {
-				// log error
-			}
-
-			@Override
-			public void onSuccess(T successPacket) {
-				// find generic type
-				
-				// find pipeline
-				
-				// add the packet
-			}
-    	});
-    	return producerFuture;
-    }
+	public <T extends PipelinePacket> ListenableFuture<T> submitTask(Callable<T> task) {
+		return this.taskService.submit(task);
+	}
 }

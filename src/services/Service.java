@@ -34,7 +34,7 @@ abstract public class Service<T extends PipelinePacket> {
      *
      * @return the as service
      */
-    public Service getAsService() {
+    public Service<?> getAsService() {
         return this;
     }
 
