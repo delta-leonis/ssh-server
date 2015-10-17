@@ -3,24 +3,33 @@ package pipeline.packets;
 import com.google.protobuf.MessageOrBuilder;
 
 import pipeline.PipelinePacket;
-import protobuf.Geometry.GeometryDataOrBuilder;
+import protobuf.Radio.RadioProtocolCommandOrBuilder;
 
 /**
- * The GeometryPacket class.
+ * The RadioPacket class.
  * 
  * @author Rimon Oz
  */
-public class GeometryPacket extends PipelinePacket {
+public class RadioPacket extends PipelinePacket {
     
     /** The data. */
-    private GeometryDataOrBuilder data;
+    private RadioProtocolCommandOrBuilder data;
+
+    /**
+     * Instantiates a new radio packet.
+     *
+     * @param builder the builder
+     */
+    public RadioPacket(MessageOrBuilder builder) {
+        this.data = (RadioProtocolCommandOrBuilder) builder;
+    }
 
     /**
      * Gets the data.
      *
      * @return the data
      */
-    public GeometryDataOrBuilder getData() {
+    public RadioProtocolCommandOrBuilder getData() {
         return this.data;
     }
 
@@ -38,7 +47,7 @@ public class GeometryPacket extends PipelinePacket {
     @SuppressWarnings("unchecked")
     @Override
     public <T extends PipelinePacket> T save(MessageOrBuilder data) {
-        this.data = (GeometryDataOrBuilder) data;
+        this.data = (RadioProtocolCommandOrBuilder) data;
         return (T) this;
     }
 }

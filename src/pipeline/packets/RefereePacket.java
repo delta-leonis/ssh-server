@@ -7,22 +7,29 @@ import protobuf.RefereeOuterClass.RefereeOrBuilder;
 
 /**
  * The GeometryPacket class.
- *  
+ * 
  * @author Rimon Oz
  */
 public class RefereePacket extends PipelinePacket {
-	private RefereeOrBuilder data;
+    
+    /** The data. */
+    private RefereeOrBuilder data;
 
-	@Override
-	public MessageOrBuilder read() {
-		return this.data;
-	}
+    /* (non-Javadoc)
+     * @see pipeline.PipelinePacket#read()
+     */
+    @Override
+    public MessageOrBuilder read() {
+        return this.data;
+    }
 
-	@Override
-	public <T extends PipelinePacket> T save(MessageOrBuilder data) {
-		this.data = (RefereeOrBuilder) data;
-		return (T)this;
-	}
-
-
+    /* (non-Javadoc)
+     * @see pipeline.PipelinePacket#save(com.google.protobuf.MessageOrBuilder)
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T extends PipelinePacket> T save(MessageOrBuilder data) {
+        this.data = (RefereeOrBuilder) data;
+        return (T) this;
+    }
 }
