@@ -22,7 +22,7 @@ public final class Services {
     /**
      * The services store has a controller that runs the store.
      */
-    private static ServicesController servicesController;
+    private static ServicesController servicesController = new ServicesController();
 
     /** The instance. */
     private static final Object instance = new Object();
