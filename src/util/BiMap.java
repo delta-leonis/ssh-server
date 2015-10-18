@@ -17,9 +17,17 @@ import java.util.Set;
 public class BiMap<T1, T2> implements Map<T1, T2>
 {
 
-    private final HashMap< T1, T2 > mapKeys = new HashMap<>();
-    private final HashMap< T2, T1 > mapValues = new HashMap<>();
-  
+    private HashMap< T1, T2 > mapKeys = new HashMap<>();
+    private HashMap< T2, T1 > mapValues = new HashMap<>();
+ 
+    public BiMap(){
+    }
+    
+    public BiMap(Object object, Object object2) {
+    	this.mapKeys = (HashMap< T1, T2 >) object;
+    	this.mapValues = (HashMap< T2, T1 >)object2;
+    }
+    
     /**
      * @return number of elements in this map
      */
@@ -49,6 +57,15 @@ public class BiMap<T1, T2> implements Map<T1, T2>
 		return mapKeys.get(key);
 	}
 	
+	/**
+	 * Returns the value to which the specified key is mapped, or null if this map contains no mapping for the key. 
+	 * 
+     * More formally, if this map contains a mapping from a key k to a value v such that (key==null ? k==null : key.equals(k)), then this method returns v; otherwise it returns null. (There can be at most one such mapping.) 
+     *
+     * If this map permits null values, then a return value of null does not necessarily indicate that the map contains no mapping for the key; it's also possible that the map explicitly maps the key to null. The containsKey operation may be used to distinguish these two cases.
+	 * @param value the key whose associated value is to be returned
+	 * @return the value to which the specified key is mapped, or null if this map contains no mapping for the key
+	 */
 	public T1 getbyValue(Object value){
 		return mapValues.get(value);
 	}
@@ -120,5 +137,10 @@ public class BiMap<T1, T2> implements Map<T1, T2>
     
     public  Set<Entry<T2, T1>> entrySetByValue(){
     	return mapValues.entrySet();
+    }
+    
+    @Override
+    public BiMap<T1, T2> clone() {
+    	return new BiMap(this.mapKeys.clone(), this.mapValues.clone());
     }
 }
