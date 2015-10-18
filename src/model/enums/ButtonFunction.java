@@ -16,7 +16,7 @@ public enum ButtonFunction {
 	CHIPKICK_STRENGTH(ButtonType.ANALOG, true),
 	DRIBBLE			 (ButtonType.DIGITAL, true),
 	DRIBBLE_TOGGLE	 (ButtonType.DIGITAL, false),
-	DRIBBLE_SPEED	 (ButtonType.ANALOG, false),
+	DRIBBLE_SPEED	 (ButtonType.ANALOG, true),
 	SELECT_NEXT_ROBOT(ButtonType.DIGITAL, false),
 	SELECT_PREV_ROBOT(ButtonType.DIGITAL, false),
 	STOP_ALL_ROBOTS  (ButtonType.DIGITAL, false),
@@ -31,7 +31,8 @@ public enum ButtonFunction {
 //	ORIENTATION_NORTH(ButtonType.DIGITAL),   use-case ?
 //	ORIENTATION_SOUTH(ButtonType.DIGITAL),
 	ORIENTATION_EAST (ButtonType.DIGITAL, true),
-	ORIENTATION_WEST (ButtonType.DIGITAL, true)
+	ORIENTATION_WEST (ButtonType.DIGITAL, true), 
+	DIRECTION_POV	 (ButtonType.DIGITAL, true)
 	;
 	
 	/**

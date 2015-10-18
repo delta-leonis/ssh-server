@@ -6,12 +6,12 @@ import java.util.stream.Collectors;
 
 import application.Models;
 import application.Services;
-import javafx.geometry.Point2D;
+import model.Model;
 import model.Robot;
 import model.enums.ButtonFunction;
+import net.java.games.input.Controller;
 import protobuf.Radio.RadioProtocolCommand;
 import services.Producer;
-import services.Service;
 import util.Logger;
 
 /**
@@ -20,10 +20,8 @@ import util.Logger;
  * 
  *  TODO
     * read max_speed and solandoid_speed from a config file
-    * read 
+    * calc speed vectors
     * stop_all_robots
-    * select_next_robot
-    * select_prev_robot
     * calc rad/s
  * 
  * @author Jeroen
@@ -101,6 +99,13 @@ public class ControllerHandler extends Producer{
 			packet.setDribblerSpin(dribbleSpeed);
 			return true;
 
+		case DIRECTION_POV:
+			if(isPressed(buttonValue)){
+				packet.setVelocityY((float) Math.sin(buttonValue * 2*Math.PI) *  MAX_SPEED);
+				packet.setVelocityX((float) Math.cos(buttonValue * 2*Math.PI) * -MAX_SPEED);
+			}
+			return true;
+			
 		case DIRECTION_FORWARD:
 			if(isPressed(buttonValue))
 				packet.setVelocityX(MAX_SPEED);
@@ -163,8 +168,8 @@ public class ControllerHandler extends Producer{
 			
 		case SELECT_NEXT_ROBOT: 
 		case SELECT_PREV_ROBOT:
-			((ControllerListener)Services.get("ControllerListener")).changeRobotId(this, function.equals(ButtonFunction.SELECT_NEXT_ROBOT));
-			
+			if(isPressed(buttonValue))
+				((ControllerListener)Services.get("ControllerListener")).changeRobotId(this, function.equals(ButtonFunction.SELECT_NEXT_ROBOT));
 			return true;
 			
 		default:
@@ -173,6 +178,9 @@ public class ControllerHandler extends Producer{
 		}
 	}
 	
+	/**
+	 * @return Layout for this handler
+	 */
 	public ControllerLayout getLayout(){
 		return layout;
 	}

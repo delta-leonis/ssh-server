@@ -1,12 +1,14 @@
 package controllers;
 
 import java.net.URI;
-import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import model.Model;
 import model.enums.ButtonFunction;
 import net.java.games.input.AbstractComponent;
 import net.java.games.input.Component;
+import net.java.games.input.Component.Identifier;
 import net.java.games.input.Controller;
 import util.BiMap;
 import util.Logger;
@@ -78,9 +80,6 @@ public class ControllerLayout extends Model{
 	/**
 	 * Detach a binding by {@link ButtonFunction}.
 	 * 
-	 * TODO refactor, since ButtonFunctions and AbstractComponents can only be bound to one of another, 
-	 * there should be 0 reason to use streams
-	 * 
 	 * @param function	buttonFunction to detach
 	 */
 	public void detach(ButtonFunction function){
@@ -142,5 +141,15 @@ public class ControllerLayout extends Model{
 	}
 	public boolean hasDirectionButtons(){
 		return bindings.entrySetByValue().stream().filter(entry -> entry.getKey().toString().contains("DIRECTION_")).count() > 0;	
+	}
+
+	public Optional<Component> getComponent(String identifier) {
+		return Stream.of(controller.getComponents())
+				.filter(component -> component.getIdentifier().getName().equals(identifier))
+				.findFirst();
+	}
+	
+	public Component getComponent(Identifier id){
+		return controller.getComponent(id);
 	}
 }
