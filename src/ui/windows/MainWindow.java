@@ -2,13 +2,16 @@ package ui.windows;
 
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import ui.UIController;
 
 /**
  * The Class MainWindow.
  */
-public class MainWindow extends UIController {
+public class MainWindow extends UIController<BorderPane> {
 
     /**
      * Instantiates the main window.
