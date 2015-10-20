@@ -9,10 +9,12 @@ import util.Logger;
 
 /**
  * The Class UI.
- * 
+ *
  * This class is one of the main components of the framework. UI.java gets
- * instantiated as lazy-loaded Singleton {@link https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom}.
- * This class holds references to all the windows and makes instantiating windows easier.
+ * instantiated as lazy-loaded Singleton
+ * {@link https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom}.
+ * This class holds references to all the windows and makes instantiating
+ * windows easier.
  *
  * @author Rimon Oz
  */
@@ -29,7 +31,30 @@ public final class UI {
     private static Logger logger = Logger.getLogger();
 
     /**
-     * Gets the Singleton instance of UI.
+     * Adds a window to the UI store.
+     *
+     * @param <T>    The type of Pane used as a root Node for the window.
+     * @param window The window to be added to the store.
+     * @return       true, if successful
+     */
+    public static <T extends UIController<?>> boolean addWindow(final T window) {
+        UI.logger.info("Adding new window named %s to the UI store", window.getName());
+        return UI.uiControllers.add(window);
+    }
+
+    /**
+     * Gets a window with the specified name.
+     *
+     * @param name The name of the requested window.
+     * @return     The window itself.
+     */
+    public static UIController<?> get(final String name) {
+        UI.logger.info("Getting a window named %s from the UI store", name);
+        return UI.uiControllers.stream().filter(controller -> controller.getName().equals(name)).findFirst().get();
+    }
+
+    /**
+     * Gets the Singleton instance of the UI store.
      *
      * @return The single instance.
      */
@@ -40,28 +65,14 @@ public final class UI {
     /**
      * Starts the UI store.
      *
-     * @param primaryStage The primary stage
+     * @param primaryStage
+     *            The primary stage
+     * @return true, if successful
      */
-    public static boolean start(Stage primaryStage) {
+    public static boolean start(final Stage primaryStage) {
         UI.uiControllers = new ArrayList<UIController<?>>();
         UI.logger.info("Instantiating new window with id mainWindow");
         return UI.uiControllers.add(new MainWindow("main", primaryStage));
     }
-    
-    /**
-     * Adds a window to the UI store.
-     * 
-     * @param window The window to be added to the store.
-     * @return       true, if successful
-     */
-    public static <T extends UIController<?>> boolean addWindow(T window) {
-    	UI.logger.info("Adding new window named %s to the UI store", window.getName());
-    	return UI.uiControllers.add(window);
-    }
-
-	public static UIController<?> get(String name) {
-		UI.logger.info("Getting a window named %s from the UI store", name);
-		return UI.uiControllers.stream().filter(controller -> controller.getName().equals(name)).findFirst().get();
-	}
 
 }
