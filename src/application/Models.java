@@ -7,6 +7,8 @@ import util.Logger;
 
 import model.Model;
 import model.ModelController;
+import model.ModelFactory;
+import model.Settings;
 
 /**
  * The Class Models.
@@ -41,6 +43,10 @@ public final class Models {
         return Models.modelController.getAll(modelName);
     }
 
+    public static ArrayList<Model> getAll(){
+    	return Models.modelController.getAll();
+    }
+    
     /**
      * Gets the single instance of Models.
      *
@@ -59,7 +65,31 @@ public final class Models {
      */
     public static void start() {
         Models.logger.info("Starting Models...");
+
         Models.modelController = new ModelController();
+        ModelFactory.create(Settings.class);
     }
+
+	public static boolean save(Model model) {
+		return Models.modelController.save(model);
+	}
+
+	public static boolean initializeAll(){
+		return modelController.initializeAll();
+	}
+	public static boolean reinitializeAll(){
+		return modelController.reinitializeAll();
+	}
+
+	public static boolean initialize(Model model){
+		return modelController.load(model);
+	}
+	public static boolean reinitialize(Model model){
+		return modelController.reinitialize(model);
+	}
+
+	public static boolean saveAsDefault(Model model) {
+		return modelController.saveAsDefault(model);
+	}
 
 }

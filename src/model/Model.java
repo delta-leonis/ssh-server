@@ -116,6 +116,30 @@ abstract public class Model {
         this.name = name;
     }
     
+    /**
+     * update this Model with a primitive array
+     * 
+     * @param changes	should exist of a even number of arguments, with each odd argument being a String representing a field
+     * 					and every even argument representing it's new contents
+     * @see {@link Model#update(Map)}
+     * @return
+     */
+    public boolean update(Object... changes){
+    	if(changes.length %2 != 0){
+    		logger.warning("Uneven number of updates");
+    		return false;
+    	}
+ 
+    	//new map for update(map) method
+    	Map<String, Object> changeMap = new HashMap<String, Object>();
+ 
+    	//map every odd Object as String, and every even Object as Object
+    	for(int i =0; i < changes.length-1; i++)
+    		changeMap.put((String)changes[i], changes[++i]);
+
+    	return update(changeMap);
+    }
+    
     public boolean update(Map<String, ?> changes){
 		Map<Boolean, List<Entry<String, ?>>> filteredMethods = changes.entrySet().stream().collect(Collectors.partitioningBy(entry -> Reflect.containsField(entry.getKey(), this.getClass())));
 		
@@ -152,10 +176,11 @@ abstract public class Model {
     
     public <T extends Object> boolean set(String fieldName, T value){
 		try {
-			Optional<Field> schrÃ¶dingersField = Reflect.getField( fieldName , this.getClass());
-			if(schrÃ¶dingersField.isPresent()){
-				Field field = schrÃ¶dingersField.get();
-				if(!field.isAccessible()) field.setAccessible(true);
+			Optional<Field> schrödingersField = Reflect.getField( fieldName , this.getClass());
+			if(schrödingersField.isPresent()){
+				Field field = schrödingersField.get();
+				if(!field.isAccessible())
+					field.setAccessible(true);
 				field.set(this, (field.getType().cast(value)));
 				return true;
 			} else {
