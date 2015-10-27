@@ -7,11 +7,11 @@ import javafx.scene.paint.Color;
  * @author Jeroen
  *
  */
-public class Robot extends FieldObject{
+public class Robot extends FieldObject {
 	/**
 	 * Unique robot id [0-15]
 	 */
-	private int robotId;
+	private transient Integer robotId;
 	/**
 	 * teamcolor that controls this robot
 	 */
@@ -27,16 +27,17 @@ public class Robot extends FieldObject{
 	 * @param robotId	robot id
 	 * @param teamColor	color that controls this robot
 	 */
-	public Robot(int robotId, Color teamColor) {
+	public Robot(Integer robotId, Color teamColor) {
 		super("robot", robotId + "");
 		//assign teamcolor
 		this.teamColor = teamColor;
+		this.robotId = robotId;
 	}
 
 	/**
 	 * @return robot ID [0-15]
 	 */
-	public int getRobotId(){
+	public Integer getRobotId(){
 		return robotId;
 	}
 

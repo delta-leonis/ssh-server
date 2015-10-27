@@ -1,8 +1,16 @@
 package pipeline;
 
+import java.lang.reflect.Field;
+import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.jooq.lambda.Unchecked;
 
 import com.google.protobuf.MessageOrBuilder;
+
+import util.Reflect;
 
 /**
  * The Class PipelinePacket.
@@ -69,5 +77,12 @@ abstract public class PipelinePacket {
      */
     public void setMutability(boolean mutability) {
         this.isMutable = mutability;
+    }
+
+    	
+    public Map<String, ?> toMap(Class<?> clazz){
+    	return Stream.of(clazz.getDeclaredFields())
+			    	.filter(field -> Reflect.containsField(field.getName(), this.getClass()))
+			    	.collect(Collectors.toMap(Field::getName, Unchecked.function(field -> field.get(this))));
     }
 }

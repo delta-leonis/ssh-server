@@ -1,6 +1,8 @@
 package application;
 
 import java.util.ArrayList;
+import java.util.Optional;
+
 import util.Logger;
 
 import model.Model;
@@ -26,7 +28,7 @@ public final class Models {
      * @param modelName The name of the model you want to find.
      * @return          The requested model.
      */
-    public static Model get(String modelName) {
+    public static Optional<Model> get(String modelName) {
         return Models.modelController.get(modelName);
     }
     
@@ -46,6 +48,10 @@ public final class Models {
      */
     public static Object getInstance() {
         return Models.instance;
+    }
+    
+    public static void add(Model model){
+    	Models.modelController.add(model);
     }
 
     /**

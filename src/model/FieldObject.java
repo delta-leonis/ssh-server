@@ -11,7 +11,7 @@ import util.Logger;
  */
 public class FieldObject extends Model{
 	// respective logger
-	private Logger logger = Logger.getLogger();
+	private transient Logger logger = Logger.getLogger();
 	/**
 	 * Position of this object on the {@link Field} in mm,
 	 * according to the Cartesian system with the origin in the center  

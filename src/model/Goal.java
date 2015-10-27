@@ -14,7 +14,7 @@ public class Goal extends FieldObject {
 	/**
 	 * respective logger unit
 	 */
-	private Logger logger = Logger.getLogger();
+	private transient Logger logger = Logger.getLogger();
 
 	/**
 	 * Location of this goal

@@ -1,15 +1,26 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  * The Class ModelController.
  */
 public class ModelController {
+	private ArrayList<Model> models = new ArrayList<Model>();
+	
     /**
      * Instantiates a new model controller.
      */
     public ModelController() {
+    }
+    
+    public void add(Model model){
+    	models.add(model);
     }
 
     /**
@@ -17,9 +28,8 @@ public class ModelController {
      * @param modelName The name of the model you want to find.
      * @return          The requested model.
      */
-    public Model get(String name) {
-//        return (Model) this.listModels.stream().filter(listModel -> listModel.getName().equals(name)).findFirst().get();
-    	return null;
+    public Optional<Model> get(String name) {
+    	return models.stream().filter(model -> model.getFullName().trim().equals(name.trim())).findFirst();
     }
 
     /**
@@ -28,11 +38,12 @@ public class ModelController {
      * @return          The requested model.
      */
     public ArrayList<Model> getAll(String name) {
-//        return (ArrayList<Model>) this.listModels.stream()
-//                .filter(listModel -> listModel.getName().equals(name))
-//                .map(listModel -> (Model) listModel)
-//                .collect(Collectors.toList());
-    	return null;
+    	return (ArrayList<Model>) models.stream().filter(model -> model.getFullName().equals(name))
+                .collect(Collectors.toList());
+    }
+    
+    public ArrayList<Model> getAll(){
+    	return models;
     }
 
 
