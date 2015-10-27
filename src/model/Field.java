@@ -87,26 +87,4 @@ public class Field extends Model{
 	public int getBoundaryWidth() {
 		return field.getBoundaryWidth();
 	}
-	
-	/**
-	 * Updates this field with new {@link GeometryData}
-	 * @param newData 	new {@link GeometryData}
-	 * @return succes value
-	 */
-	public boolean update(GeometryData newData){
-		//make sure data is correct
-		if(!newData.isInitialized())
-			return false;
-
-		//update field dimensions
-		field = newData.getField();
-		logger.info("Updated to new field dimensions");
-
-		//updates the goals
-		 return goals.stream()
-				 //call individual update methods
-				.map(goal -> goal.update(field.getGoalDepth(), field.getGoalWidth()))
-				//check for negative succes values
-				.reduce(true, (accumulator, succes) -> accumulator && succes);
-	}
 }

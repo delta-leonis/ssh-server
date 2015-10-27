@@ -16,7 +16,7 @@ public class FieldObject extends Model{
 	 * Position of this object on the {@link Field} in mm,
 	 * according to the Cartesian system with the origin in the center  
 	 */
-	private Point2D position;
+	protected Point2D position;
 
 	/**
 	 * Create a fieldObject

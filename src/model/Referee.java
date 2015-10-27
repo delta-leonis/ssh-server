@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import application.Models;
 import model.enums.RefereeCommand;
 import model.enums.Stage;
-import protobuf.RefereeOuterClass;
 import util.Logger;
 
 /**
@@ -75,33 +74,6 @@ public class Referee extends Model{
 	 */
 	public ArrayList<Stage> getStages(){
 		return stageHistory;
-	}
-	
-	/**
-	 * update this referee with new data
-	 * 
-	 * @param newData new referee data 
-	 */
-	public boolean update(RefereeOuterClass.Referee newData){
-		//make sure data is correct
-		if(!newData.isInitialized())
-			return false;
-
-		//sets timestamp
-		setLastPacketTimestamp(System.currentTimeMillis());
-		
-		//set timestamp-left 
-		setStageTimeLeft(newData.getStageTimeLeft());
-		
-		//update teaminfo
-		((Team)Models.get("team yellow")).update(newData.getYellow());
-		((Team)Models.get("team blue")).update(newData.getBlue());
-
-		//update history lists
-		commandHistory.add(RefereeCommand.valueOf(newData.getCommand().toString()));
-		stageHistory.add(Stage.valueOf(newData.getStage().toString()));
-
-		return true;
 	}
 
 	/**

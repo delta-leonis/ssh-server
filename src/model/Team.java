@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import javafx.scene.paint.Color;
 
 import model.enums.Direction;
-import protobuf.RefereeOuterClass.Referee.TeamInfo;
 
 /**
  * Describes a team<br />
@@ -83,25 +82,6 @@ public class Team extends Model{
 	 */
 	public Color getTeamColor(){
 		return teamColor;
-	}
-
-	/**
-	 * update a team with the new data
-	 * 
-	 * @param newData new data provided by refbox
-	 */
-	public void update(TeamInfo newData) {
-		if(yellowCards.size() < newData.getYellowCards())
-			yellowCards.add(System.currentTimeMillis());
-		if(redCards.size() < newData.getRedCards())
-			redCards.add(System.currentTimeMillis());
-		if(score.size() < newData.getScore())
-			score.add(System.currentTimeMillis());
-
-		setTeamName(newData.getName());
-		setGoalieId(newData.getGoalie());
-		setTimeouts(newData.getTimeouts());
-		setTimeoutLeft(newData.getTimeoutTime());
 	}
 
 	/**

@@ -56,37 +56,4 @@ public class Goal extends FieldObject {
 	public int getGoalDepth(){
 		return goalDepth;
 	}
-
-	/**
-	 * update goal dimensions
-	 * 
-	 * @param goalWidth width of goal in mm
-	 * @param goalDepth depth of goal in mm
-	 * 
-	 * @return succes value
-	 */
-	public boolean update(int goalWidth, int goalDepth) {
-		this.goalDepth = goalDepth;
-		this.goalWidth = goalWidth;
-		logger.info("Updated goal dimensions");
-		return true;
-	}
-
-	/**
-	 * update goal position
-	 * 
-	 * @param newDirection fieldhalf to place goal on
-	 * @return succes value
-	 */
-	public boolean update(Direction newDirection){
-		this.fieldHalf = newDirection;
-		//change name suffix for model searching
-		setSuffix(fieldHalf.toString());
-
-		//change position coordinates of the goal
-		update(new Point2D(((Field) Models.get("field")).getFieldLength()/2, 0));
-
-		return true;
-	}
-
 }
