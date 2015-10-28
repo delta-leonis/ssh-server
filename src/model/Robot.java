@@ -4,6 +4,7 @@ import javafx.scene.paint.Color;
 
 /**
  * Describes a Robot on the {@link Field} as a {@link FieldObject}
+ * 
  * @author Jeroen
  *
  */
@@ -16,10 +17,6 @@ public class Robot extends FieldObject {
 	 * teamcolor that controls this robot
 	 */
 	private Color teamColor;
-	/**
-	 * State of the dribbler
-	 */
-	private float dribbleSpeed;
 	
 	/**
 	 * Instansiates a new robot with specified properties
@@ -28,10 +25,11 @@ public class Robot extends FieldObject {
 	 * @param teamColor	color that controls this robot
 	 */
 	public Robot(Integer robotId, Color teamColor) {
-		super("robot", robotId + "");
+		super("robot", ""); //TODO refactor this call
 		//assign teamcolor
 		this.teamColor = teamColor;
 		this.robotId = robotId;
+		setSuffix(getTeamColorIdentifier() + robotId);
 	}
 
 	/**
@@ -49,18 +47,19 @@ public class Robot extends FieldObject {
 	}
 
 	/**
-	 * sets the current speed of the dribbler for a robot
-	 * @param speed
+	 * @return a char that identifies this robot as B(lue) or Y(ellow)
 	 */
-	public void setDribbleSpeed(float speed){
-		dribbleSpeed = speed;
+	public String getTeamColorIdentifier(){
+		return teamColor.getBlue() > 0 ? "B" : "Y";
 	}
 	
 	/**
-	 * gets the current speed of the dribbler for a robot
-	 * @param speed
+	 * example: model.RobotB2.json for robot with ID 2 and teamColor Blue
+	 * @see {@link Robot#getTeamColor()}
+	 * @return Config name for robot models. 
 	 */
-	public float getDribbleSpeed(){
-		return dribbleSpeed;
+	@Override
+	public String getConfigName(){
+		return this.getClass().getName() + getTeamColorIdentifier() + robotId + ".json";
 	}
 }

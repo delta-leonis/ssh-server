@@ -2,27 +2,28 @@ package model;
 
 import java.util.ArrayList;
 
+import application.Models;
 import javafx.scene.paint.Color;
-
 import model.enums.Direction;
 
 /**
  * Describes a team<br />
- * NOTE: teams don't contain a list with all robots, since the robots which a team controls can change during runtime. 
- * The robots should be accessed from {@link Models} class or via the {@link World}
+ * NOTE: teams don't contain a list with all robots, since the robots which a
+ * team controls can change during runtime. The robots should be accessed from
+ * {@link Models} class or via the {@link World}
  * 
  * @author Jeroen
  * @see Models
  * @see World
  *
  */
-public class Team extends Model{
+public class Team extends Model {
 	/**
 	 * Side that this team plays on as a cardinal direction
 	 */
 	private Direction direction;
 	/**
-	 * color that this team controls 
+	 * color that this team controls
 	 */
 	private Color teamColor;
 
@@ -32,26 +33,28 @@ public class Team extends Model{
 	private String teamName;
 
 	/**
-	 * log with recieved cards and score, index is the count-value and Object is the timestamp
+	 * log with recieved cards and score, index is the count-value and Object is
+	 * the timestamp
 	 */
-	private ArrayList<Long> yellowCards = new ArrayList<Long>(),
-							redCards 	= new ArrayList<Long>(),
-							score 		= new ArrayList<Long>();
+	private ArrayList<Long> yellowCards = new ArrayList<Long>(), redCards = new ArrayList<Long>(),
+			scores = new ArrayList<Long>();
 
 	/**
-	 * team properties as tiem left for timeouts, number of timeouts and the goalie ID
+	 * team properties as time left for timeouts, number of timeouts and the
+	 * goalie ID
 	 */
 	private int goalieId, timeoutLeft, timeouts;
-	
-	
+
 	/**
 	 * Instantiates a new team that plays on a specified field half
 	 * 
-	 * @param direction field half that this team plays on
-	 * @param teamcolor the color of the {@link Robot robots} that this team controls
+	 * @param direction
+	 *            field half that this team plays on
+	 * @param teamcolor
+	 *            the color of the {@link Robot robots} that this team controls
 	 */
 	public Team(Direction direction, Color teamColor) {
-		super("team", String.format("%s %s",  direction.name(), teamColor.toString()));
+		super("team", String.format("%s %s", direction.name(), teamColor.toString()));
 		this.direction = direction;
 		this.teamColor = teamColor;
 	}
@@ -59,28 +62,29 @@ public class Team extends Model{
 	/**
 	 * @return Side that this team plays on as a cardinal direction
 	 */
-	public Direction getDirection(){
+	public Direction getDirection() {
 		return direction;
 	}
-	
+
 	/**
-	 * inverts the side that this team plays on based on {@link Direction Direction.getOpposite()}
+	 * inverts the side that this team plays on based on {@link Direction
+	 * Direction.getOpposite()}
 	 */
-	public void swapDirection(){
+	public void swapDirection() {
 		this.direction = direction.getOpposite();
 	}
-	
+
 	/**
 	 * Inverst the teamcolor, so BLUE becomes YELLOW and vice versa
 	 */
-	public void swapColor(){
+	public void swapColor() {
 		this.teamColor = teamColor == Color.BLUE ? Color.YELLOW : Color.BLUE;
 	}
-	
+
 	/**
 	 * @return color that this team controls
 	 */
-	public Color getTeamColor(){
+	public Color getTeamColor() {
 		return teamColor;
 	}
 
@@ -93,6 +97,7 @@ public class Team extends Model{
 
 	/**
 	 * sets a goalie id for this team
+	 * 
 	 * @param goalieId
 	 */
 	public void setGoalieId(int goalieId) {
@@ -108,6 +113,7 @@ public class Team extends Model{
 
 	/**
 	 * sets time left for timeouts for this team
+	 * 
 	 * @param timeoutLeft
 	 */
 	public void setTimeoutLeft(int timeoutLeft) {
@@ -123,6 +129,7 @@ public class Team extends Model{
 
 	/**
 	 * sets number of timeouts
+	 * 
 	 * @param timeouts
 	 */
 	public void setTimeouts(int timeouts) {
@@ -138,9 +145,53 @@ public class Team extends Model{
 
 	/**
 	 * sets a new teamname as provided by the refbox
+	 * 
 	 * @param teamName
 	 */
 	public void setTeamName(String teamName) {
 		this.teamName = teamName;
+	}
+
+	/**
+	 * gets all yellowcards. Value represents
+	 * <em>System.currentTimeMillis();</em>.
+	 */
+	public ArrayList<Long> getYellowCards() {
+		return yellowCards;
+	}
+
+	/**
+	 * adds 1 yellow card to the count with current timestamp
+	 */
+	public void addYellowCard() {
+		yellowCards.add(System.currentTimeMillis());
+	}
+
+	/**
+	 * gets all redcards. Value represents <em>System.currentTimeMillis();</em>.
+	 */
+	public ArrayList<Long> getRedCards() {
+		return redCards;
+	}
+
+	/**
+	 * adds 1 red card to the count with current timestamp
+	 */
+	public void addRedCard() {
+		redCards.add(System.currentTimeMillis());
+	}
+
+	/**
+	 * gets all scores. Value represents <em>System.currentTimeMillis();</em>.
+	 */
+	public ArrayList<Long> getScores() {
+		return scores;
+	}
+
+	/**
+	 * adds 1 red card to the count with current timestamp
+	 */
+	public void addScore() {
+		scores.add(System.currentTimeMillis());
 	}
 }

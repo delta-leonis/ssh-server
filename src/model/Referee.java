@@ -2,77 +2,79 @@ package model;
 
 import java.util.ArrayList;
 
-import application.Models;
 import model.enums.RefereeCommand;
 import model.enums.Stage;
 import util.Logger;
 
 /**
- * Implements handling of the {@link RefereeOuterClass.Referee referee messages},
- * also updates respective {@link Team teams}
- *  
+ * Implements handling of the {@link RefereeOuterClass.Referee referee messages}
+ * , also updates respective {@link Team teams}
+ * 
  * @author Jeroen
  *
  */
-public class Referee extends Model{
-	//respective logger 
+public class Referee extends Model {
+	// respective logger
 	private Logger logger = Logger.getLogger();
-	
+
 	/**
-	 * history of all the {@link Stage stages}, last index is last received {@link Stage stage}
+	 * history of all the {@link Stage stages}, last index is last received
+	 * {@link Stage stage}
 	 */
 	private ArrayList<Stage> stageHistory = new ArrayList<Stage>();
 	/**
-	 * history of all the {@link RefereeCommand commands}, last index is last received {@link RefereeCommand command}
+	 * history of all the {@link RefereeCommand commands}, last index is last
+	 * received {@link RefereeCommand command}
 	 */
 	private ArrayList<RefereeCommand> commandHistory = new ArrayList<RefereeCommand>();
 	/**
-	 * timestamp in ms of the last parsed {@link RefereeOuterClass.Referee referee message}
+	 * timestamp in ms of the last parsed {@link RefereeOuterClass.Referee
+	 * referee message}
 	 */
 	private long lastPacketTimestamp;
-	
+
 	private int stageTimeLeft, commandCounter;
-	
+
 	/**
 	 * Instantiates a new Referee
 	 */
 	public Referee() {
 		super("Referee");
 	}
-	
+
 	/**
 	 * @return last received {@link RefereeCommand command}, may return null
 	 */
-	public RefereeCommand getLastCommand(){
-		if(commandHistory.isEmpty()){
+	public RefereeCommand getLastCommand() {
+		if (commandHistory.isEmpty()) {
 			logger.warning("There are no previous commands");
 			return null;
 		}
-		return commandHistory.get(commandHistory.size() -1);
+		return commandHistory.get(commandHistory.size() - 1);
 	}
-	
+
 	/**
 	 * @return whole history of {@link RefereeCommand commands}
 	 */
-	public ArrayList<RefereeCommand> getCommands(){
+	public ArrayList<RefereeCommand> getCommands() {
 		return commandHistory;
 	}
-	
+
 	/**
 	 * @return last received {@link Stage stage}, may return null
 	 */
-	public Stage getCurrentStage(){
-		if(stageHistory.isEmpty()){
+	public Stage getCurrentStage() {
+		if (stageHistory.isEmpty()) {
 			logger.warning("There are no previous commands");
 			return null;
 		}
-		return stageHistory.get(stageHistory.size() -1);
+		return stageHistory.get(stageHistory.size() - 1);
 	}
 
 	/**
 	 * @return whole history of {@link Stage stages}
 	 */
-	public ArrayList<Stage> getStages(){
+	public ArrayList<Stage> getStages() {
 		return stageHistory;
 	}
 
@@ -85,6 +87,7 @@ public class Referee extends Model{
 
 	/**
 	 * sets the number of commands
+	 * 
 	 * @param commandCounter
 	 */
 	public void setCommandCounter(int commandCounter) {
@@ -100,6 +103,7 @@ public class Referee extends Model{
 
 	/**
 	 * sets timestamp of last received packet in ms
+	 * 
 	 * @param lastPacketTimestamp
 	 */
 	public void setLastPacketTimestamp(long lastPacketTimestamp) {
@@ -115,6 +119,7 @@ public class Referee extends Model{
 
 	/**
 	 * sets time left in current stage
+	 * 
 	 * @param stageTimeLeft
 	 */
 	public void setStageTimeLeft(int stageTimeLeft) {

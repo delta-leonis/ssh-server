@@ -2,11 +2,8 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
-import util.Logger;
-
 import protobuf.Geometry.FieldCicularArc;
 import protobuf.Geometry.FieldLineSegment;
-import protobuf.Geometry.GeometryData;
 import protobuf.Geometry.GeometryFieldSize;
 
 /**
@@ -16,8 +13,6 @@ import protobuf.Geometry.GeometryFieldSize;
  *
  */
 public class Field extends Model{
-	// respective logger
-	private Logger logger = Logger.getLogger();
 	
 	/**
 	 * Field object from protobuf packet
