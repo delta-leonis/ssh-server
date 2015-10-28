@@ -2,6 +2,7 @@ package controllers;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import application.Models;
@@ -9,6 +10,7 @@ import application.Services;
 import model.Model;
 import model.Robot;
 import model.enums.ButtonFunction;
+import model.enums.ProducerType;
 import net.java.games.input.Controller;
 import protobuf.Radio.RadioProtocolCommand;
 import services.Producer;
@@ -27,7 +29,7 @@ import util.Logger;
  * @author Jeroen
  *
  */
-public class ControllerHandler extends Producer{
+public class ControllerHandler extends Producer {
 	
 	//TODO should be read from a config of some sorts
 	float MAX_SPEED = 4f,
@@ -49,7 +51,7 @@ public class ControllerHandler extends Producer{
 	 * @param layout
 	 */
 	public ControllerHandler(ControllerLayout layout){
-		super("ControllerHandler " + layout.getController().getName());
+		super("ControllerHandler " + layout.getController().getName(), ProducerType.SCHEDULED);
 		//fill previousButtonState array
 		layout.getBindings().entrySet().forEach(entry -> previousButtonState.put(entry.getValue(), 0f));
 		
@@ -89,8 +91,14 @@ public class ControllerHandler extends Producer{
 			
 		case DRIBBLE_TOGGLE:
 			if(isPressed(buttonValue)){
-				float dribbleSpeed = ((Robot)Models.get("robot A" + packet.getRobotId())).getDribbleSpeed() == 0f ? 1f : 0f;
-				packet.setDribblerSpin(dribbleSpeed);
+				//TODO Get robot of the right team
+				Optional<Model> oRobot = Models.get("robot B" + packet.getRobotId());
+				if(!oRobot.isPresent())
+					logger.warning("Could not find robot %d", packet.getRobotId());
+				else{
+					float dribbleSpeed = ((Robot)oRobot.get()).getDribbleSpeed() == 0f ? 1f : 0f;
+					packet.setDribblerSpin(dribbleSpeed);
+				}
 			}
 			return true;
 

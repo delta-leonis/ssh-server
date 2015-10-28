@@ -42,16 +42,16 @@ public class ControllerExample {
 		//create 3 controller handlers
 		for(int i = 0; i < 3; i++){
 			//maybe find a controller that is available
-			Optional<Controller> schrödingersController = findAvailableController("360");
+			Optional<Controller> schrÃ¶dingersController = findAvailableController("360");
 	
 			//check if we found one
-			if(!schrödingersController.isPresent()) {
+			if(!schrÃ¶dingersController.isPresent()) {
 				logger.warning("No controller #%d present", i);
 				break;
 			}
 	
 			//create a layout for this specific controller
-			ControllerLayout layout = new ControllerLayout(schrödingersController.get());
+			ControllerLayout layout = new ControllerLayout(schrÃ¶dingersController.get());
 	
 			//assign a bunch of buttons (note that the identifiernames are specific for Windows
 			//since this is only a demo it shouldn't be much of a problem

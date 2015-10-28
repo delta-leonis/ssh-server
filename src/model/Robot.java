@@ -17,6 +17,11 @@ public class Robot extends FieldObject {
 	 * teamcolor that controls this robot
 	 */
 	private Color teamColor;
+
+	/**
+	 * current dribble speed (-1 is max backward, 1 is max forward)
+	 */
+	private float dribbleSpeed;
 	
 	/**
 	 * Instansiates a new robot with specified properties
@@ -61,5 +66,12 @@ public class Robot extends FieldObject {
 	@Override
 	public String getConfigName(){
 		return this.getClass().getName() + getTeamColorIdentifier() + robotId + ".json";
+	}
+
+	/**
+	 * @return current dribblespeed
+	 */
+	public float getDribbleSpeed() {
+		return dribbleSpeed;
 	}
 }
