@@ -1,4 +1,4 @@
-package ui.sections;
+package ui.components;
 
 import javafx.animation.Animation;
 import javafx.animation.Transition;

@@ -1,4 +1,4 @@
-package ui.sections.timerslider;
+package ui.components.timerslider;
 
 import java.io.IOException;
 
@@ -9,7 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import ui.sections.BorderSlideBar;
+import ui.components.BorderSlideBar;
 
 /**
  * Example pane that partially implements the bottom bar of the end-implementation.

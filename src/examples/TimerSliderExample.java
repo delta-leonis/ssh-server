@@ -6,7 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import ui.sections.timerslider.TimerPane;
+import ui.components.timerslider.TimerPane;
 
 /**
  * Example that uses the {@link TimerPane} and {@link TimerSlider}

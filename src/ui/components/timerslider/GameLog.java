@@ -1,4 +1,4 @@
-package ui.sections.timerslider;
+package ui.components.timerslider;
 
 import java.util.ArrayList;
 

@@ -15,7 +15,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import ui.sections.BorderSlideBar;
+import ui.components.BorderSlideBar;
 
 /**
  * Example that shows the three different ways you can use the {@link BorderSlideBar}
