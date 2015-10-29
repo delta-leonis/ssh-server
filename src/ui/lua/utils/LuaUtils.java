@@ -1,10 +1,19 @@
 package ui.lua.utils;
 
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Set;
+
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 import org.luaj.vm2.lib.jse.JsePlatform;
+import org.reflections.Reflections;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+
+import ui.lua.console.AvailableInLua;
 
 
 /**
@@ -69,5 +78,48 @@ public class LuaUtils {
         LuaValue func = globals.get(functionname);
         // Call the function using a LuaValue
         func.call( luaobj );
+    }
+	
+	/**
+	 * Makes sure all classes annotated with @AvailableInLua are loaded into the global variables in lua.
+	 */
+	public static void initGlobals(){
+		getAllAvailableInLua().forEach(o -> 
+				globals.load(o.getClass().getSimpleName() +							//Name of global variable
+						" = luajava.bindClass('" + o.getClass().getName() + "')")	//Class name
+				.call());
+	}
+	
+    /**
+     * Function that collects every class that has the {@link AvailableInLua} annotation
+     * and returns it as an ArrayList<Object>
+     */
+    public static ArrayList<Object> getAllAvailableInLua(){
+    	Reflections reflections = new Reflections(
+        	    new ConfigurationBuilder()
+        	        .setUrls(ClasspathHelper.forJavaClassPath())
+        	);
+        Set<Class<?>> types = reflections.getTypesAnnotatedWith(AvailableInLua.class);
+        ArrayList<Object> objectArrayList = new ArrayList<Object>();
+        
+        types.forEach(c -> {
+        	try {
+        		boolean singleton = false;
+        		for(Method m : c.getDeclaredMethods()){
+        			// Make sure every class has a getInstance function
+        			if(m.getName().equals("getInstance") && m.getReturnType().getSimpleName().equals(c.getSimpleName()) && m.getParameterCount() == 0){
+        				singleton = true;
+        				objectArrayList.add(m.invoke(c));
+        			}
+        		}
+        		
+        		if(!singleton)
+        			objectArrayList.add(Class.forName(c.getName()));
+        			
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        });
+        return objectArrayList;
     }
 }

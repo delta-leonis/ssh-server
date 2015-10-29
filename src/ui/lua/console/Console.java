@@ -23,6 +23,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import ui.lua.utils.LuaUtils;
 
 /**
  * Simple LuaJava console.
@@ -59,7 +60,7 @@ public class Console extends Pane
 	
 	public Console(){
 		console = this;
-    	functionClasses = getAllAvailableInLua();
+    	functionClasses = LuaUtils.getAllAvailableInLua();
         out = new ConsoleOutput(this);
 
         // Create TextArea
@@ -88,39 +89,6 @@ public class Console extends Pane
     	if(console == null)
     		console = new Console();
     	return console;
-    }
-    
-    /**
-     * Function that collects every class that has the {@link AvailableInLua} annotation
-     * and returns it as an ArrayList<Object>
-     */
-    public ArrayList<Object> getAllAvailableInLua(){
-    	Reflections reflections = new Reflections(
-        	    new ConfigurationBuilder()
-        	        .setUrls(ClasspathHelper.forJavaClassPath())
-        	);
-        Set<Class<?>> types = reflections.getTypesAnnotatedWith(AvailableInLua.class);
-        ArrayList<Object> objectArrayList = new ArrayList<Object>();
-        
-        types.forEach(c -> {
-        	try {
-        		boolean singleton = false;
-        		for(Method m : c.getDeclaredMethods()){
-        			// Make sure every class has a getInstance function
-        			if(m.getName().equals("getInstance") && m.getReturnType().getSimpleName().equals(c.getSimpleName()) && m.getParameterCount() == 0){
-        				singleton = true;
-        				objectArrayList.add(m.invoke(c));
-        			}
-        		}
-        		
-        		if(!singleton)
-        			objectArrayList.add(Class.forName(c.getName()));
-        			
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-        });
-        return objectArrayList;
     }
     
     /**
