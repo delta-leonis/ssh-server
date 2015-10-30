@@ -7,6 +7,7 @@ import ui.UIController;
  * The Class WidgetWindow.
  * 
  * @author Rimon Oz
+ * @author Joost Overeem
  */
 public class WidgetWindow extends UIController<GridPane> {
 

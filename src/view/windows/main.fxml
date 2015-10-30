@@ -1,7 +1,192 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.GridPane?>
 
-<BorderPane id="rootNode" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane id="rootNode" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 
-</BorderPane>
+	<fx:define>
+		<Double fx:value="1.7976931348623157E308" fx:id="maxValue" />
+	</fx:define>
+
+	<children>
+	<GridPane id="basePane" fx:id="basePane">
+		<columnConstraints>
+			<ColumnConstraints percentWidth="100.0" />
+		</columnConstraints>
+		<rowConstraints>
+			<RowConstraints percentHeight="20.0" />
+			<RowConstraints percentHeight="73.0" />
+			<RowConstraints percentHeight="7.0" />
+		</rowConstraints>
+		<children>
+		<GridPane id="baseTop" fx:id="baseTop" GridPane.columnIndex="0" GridPane.rowIndex="0">
+			<columnConstraints>
+				<ColumnConstraints percentWidth="100.0" />
+			</columnConstraints>
+			<rowConstraints>
+				<RowConstraints percentHeight="30.0" />
+				<RowConstraints percentHeight="70.0" />
+			</rowConstraints>
+			<children>
+			<StackPane id="topbar" GridPane.columnIndex="0" GridPane.rowIndex="0">
+				<children>
+					<GridPane id="scorebox">
+						<columnConstraints>
+							<ColumnConstraints fillWidth="true" />
+							<ColumnConstraints prefWidth="13" />
+							<ColumnConstraints fillWidth="true" />
+							<ColumnConstraints fillWidth="true" />
+							<ColumnConstraints fillWidth="true" />
+							<ColumnConstraints prefWidth="13" />
+							<ColumnConstraints fillWidth="true" />
+						</columnConstraints>
+						<rowConstraints>
+							<RowConstraints percentHeight="50.0" />
+							<RowConstraints percentHeight="50.0" />
+						</rowConstraints>
+						<children>
+						<Pane id="leftScoreSpacer" pickOnBounds="false" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
+						<StackPane fx:id="canvasfitHome" minHeight="0" minWidth="0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+							<children>
+							<Canvas fx:id="ballcanvasHome" StackPane.alignment="CENTER" />
+							</children>
+						</StackPane>
+						<Label id="hometeam" text="Home" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+						<Label text="-" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+						<Label id="awayteam" text="Away" GridPane.columnIndex="4" GridPane.rowIndex="0" />
+						<StackPane fx:id="canvasfitAway" minHeight="0" minWidth="0" GridPane.columnIndex="5" GridPane.rowIndex="0">
+							<children>
+							<Canvas fx:id="ballcanvasAway" StackPane.alignment="CENTER" />
+							</children>
+						</StackPane>
+						<Pane id="rightScoreSpacer" pickOnBounds="false" GridPane.columnIndex="6" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
+						<Label id="scorehome" alignment="BOTTOM_RIGHT" maxHeight="Infinity" maxWidth="Infinity" text="3" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+						<Label alignment="BOTTOM_CENTER" text=":" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+						<Label id="scoreaway" alignment="BOTTOM_LEFT" maxHeight="Infinity" maxWidth="Infinity" text="5" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+						</children>
+					</GridPane>
+					<GridPane id="TopBarIcons">
+						<columnConstraints>
+							<ColumnConstraints percentWidth="20.0" />
+							<ColumnConstraints fillWidth="true" />
+							<ColumnConstraints maxWidth="35.0" />
+							<ColumnConstraints maxWidth="35.0" />
+							<ColumnConstraints maxWidth="35.0" />
+						</columnConstraints>
+						<rowConstraints>
+							<RowConstraints percentHeight="100.0" />
+						</rowConstraints>
+						<children>
+						<Button id="profileButton" maxHeight="${maxValue}" maxWidth="${maxValue}" text="Current User" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS">
+							<graphic>
+								<ImageView>
+									<image>
+										<Image url="@../icon/user24.png" />
+									</image>
+								</ImageView>
+							</graphic>
+						</Button>
+						<Pane id="topButtonsSpacer" maxHeight="${maxValue}" pickOnBounds="false" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS">
+						</Pane>
+						<Button id="iconizeButton" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS">
+							<graphic>
+								<ImageView>
+									<image>
+										<Image url="@../icon/iconize16.png" />
+									</image>
+								</ImageView>
+							</graphic>
+						</Button>
+						<Button id="minimizeButton" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS">
+							<graphic>
+								<ImageView>
+									<image>
+										<Image url="@../icon/minimize16.png" />
+									</image>
+								</ImageView>
+							</graphic>
+						</Button>
+						<Button id="exitButton" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.columnIndex="4" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS">
+							<graphic>
+								<ImageView>
+									<image>
+										<Image url="@../icon/exit16.png" />
+									</image>
+								</ImageView>
+							</graphic>
+						</Button>
+						</children>
+					</GridPane>
+				</children>
+			</StackPane>
+			</children>
+		</GridPane>
+
+		<StackPane id="baseCenter" fx:id="baseCenter" GridPane.columnIndex="0" GridPane.rowIndex="1">
+			<children>
+			<Group fx:id="fieldbase">
+			</Group>
+			</children>
+		</StackPane>
+
+		<GridPane id="baseBottom" fx:id="baseBottom" GridPane.columnIndex="0" GridPane.rowIndex="2">
+			<columnConstraints>
+					<ColumnConstraints fillWidth="true" />
+					<ColumnConstraints fillWidth="true" />
+					<ColumnConstraints fillWidth="true" />
+				</columnConstraints>
+				<rowConstraints>
+					<RowConstraints percentHeight="100.0" />
+				</rowConstraints>
+				
+				<children>
+				<Button id="enrollButton" maxHeight="${maxValue}" GridPane.columnIndex="0" GridPane.rowIndex="0">
+					<graphic>
+						<ImageView id="enrollIcon">
+							<image>
+								<Image url="@../icon/enrollup32.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+				<Button id="secondscreenButton" maxHeight="${maxValue}" GridPane.columnIndex="2" GridPane.rowIndex="0">
+					<graphic>
+						<ImageView>
+							<image>
+								<Image url="@../icon/secondscreen32.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+				</children>
+			</GridPane>
+
+		</children>
+	</GridPane>
+
+	<GridPane id="overlay" fx:id="overlay" opacity="0.0" pickOnBounds="false">
+		<columnConstraints>
+			<ColumnConstraints percentWidth="20.0" />
+			<ColumnConstraints percentWidth="80.0" />
+		</columnConstraints>
+		<rowConstraints>
+			<RowConstraints percentHeight="6.0" />
+			<RowConstraints percentHeight="30.0" />
+			<RowConstraints percentHeight="64.0" />
+		</rowConstraints>
+	</GridPane>
+	</children>
+</StackPane>

@@ -209,8 +209,13 @@ abstract public class UIController<T extends Pane> {
      */
     public boolean loadFXML(final String fileName) {
         try {
+        	
             // load the file
-            final Parent documentRoot = FXMLLoader.load(this.getClass().getResource("/view/windows/" + fileName));
+            final FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/view/windows/" + fileName));
+            // set this class to be the controller so the subclass will link its methods and attributes
+            fxmlLoader.setController(this);
+            // extract the Nodes
+            final Parent documentRoot = (Parent) fxmlLoader.load();
             // if the root node is of the wrong type
             if (!documentRoot.getClass().equals(this.getType())) {
                 // warn the user
@@ -220,6 +225,7 @@ abstract public class UIController<T extends Pane> {
             // put the nodes in the window
             this.setRootNode(documentRoot);
         } catch (final IOException exception) {
+        	exception.printStackTrace();
             UIController.logger.warning("Couldn't load FXML file: " + fileName);
             return false;
         }
