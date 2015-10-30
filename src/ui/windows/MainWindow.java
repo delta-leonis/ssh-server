@@ -2,15 +2,19 @@ package ui.windows;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Group;
+import javafx.scene.SceneAntialiasing;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import ui.UIComponent;
 import ui.UIController;
+import view.components.field.FieldGame;
 
 /**
  * The Class MainWindow.
@@ -36,6 +40,8 @@ public class MainWindow extends UIController<StackPane> {
 	private StackPane canvasfitHome;
 	@FXML
 	private Canvas ballcanvasHome;
+	@FXML
+	private Group fieldBase;
 
 	/**
 	 * Instantiates the main window.
@@ -62,18 +68,17 @@ public class MainWindow extends UIController<StackPane> {
 
 		// setup in here
 		// let's add a component
-		// this.add(new WindowSpawnComponent("testcomponent"));
-		// this.addToTop(new WindowSpawnComponent("testcomponent"), 0, 0);
+		FieldGame field = new FieldGame(new Group(), 500, 500, true, SceneAntialiasing.BALANCED, this.getScene());
+		field.InternalInitialize();
+		this.addToFieldBase(field);
 
-		// FieldSubScene field in fieldbase
 		// MatchlogSelector in baseCenter pickOnBounds="false"
 		// Toolbox in baseCenter pickOnBounds="false"
 		// Time slider in baseBottom(1,0 GridPane.hgrow="ALWAYS")
 		// Profile menu in overlay(0,1)
 
-		
-		// field.heightProperty().bind(fieldbase.heightProperty());
-		// field.widthProperty().bind(fieldbase.widthProperty());
+		field.heightProperty().bind(baseCenter.heightProperty());
+		field.widthProperty().bind(baseCenter.widthProperty());
 
 		ballcanvasHome.heightProperty().bind(canvasfitHome.widthProperty());
 		ballcanvasHome.widthProperty().bind(canvasfitHome.widthProperty());
@@ -104,6 +109,10 @@ public class MainWindow extends UIController<StackPane> {
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		gc.setFill(color);
 		gc.fillOval(0, 0, diameter, diameter);
+	}
+
+	public void addToFieldBase(FieldGame game) {
+		this.fieldBase.getChildren().add(game);
 	}
 
 	public <T extends UIComponent> void addToTop(T component, int column, int row) {

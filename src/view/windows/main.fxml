@@ -137,7 +137,7 @@
 
 		<StackPane id="baseCenter" fx:id="baseCenter" GridPane.columnIndex="0" GridPane.rowIndex="1">
 			<children>
-			<Group fx:id="fieldbase">
+			<Group fx:id="fieldBase">
 			</Group>
 			</children>
 		</StackPane>
