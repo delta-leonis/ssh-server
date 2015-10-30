@@ -37,7 +37,7 @@ public class ConsoleArea extends ColoredCodeArea{
     public void replaceText(int start, int end, String text) {
 		int s = start;
 		int e = end;
-		int length = console.getCurrentLine()+2;
+		int length = console.getCurrentLine()+cursor.length();
 		if(e < length)
 			e = length;
 
