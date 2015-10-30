@@ -179,7 +179,7 @@ public class Console extends Pane
         	String prefix = splitObjectsAndFunctions[splitObjectsAndFunctions.length - 1];
         		
         	for(Object o : functionClasses)
-        		if(o.getClass().getSimpleName().equals(object))
+        		if(getSimpleName(o).equals(object))
         			for(Method m : o.getClass().getDeclaredMethods())
         				if(m.getName().startsWith(prefix) && !m.getName().equals(prefix))
         					return m.getName().substring(prefix.length()) + "(" + (m.getParameterCount() == 0 ? ")" : "");
