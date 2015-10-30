@@ -43,7 +43,9 @@ import ui.lua.utils.LuaUtils;
  */
 public class Console extends Pane
 {
-
+	/*
+	 * TODO: Add globals to autocomplete
+	 */
 	private ConsoleArea consoleArea;
 	private ConsoleOutput out;
 	private String currentCommand;
