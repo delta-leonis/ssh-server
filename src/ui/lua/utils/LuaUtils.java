@@ -22,7 +22,7 @@ import ui.lua.console.AvailableInLua;
  * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
  */
 public class LuaUtils {
-	private static Globals globals = JsePlatform.standardGlobals();
+	private static final Globals globals = JsePlatform.standardGlobals();
 	
 	/**
 	 * Run a lua function using one argument.
@@ -79,6 +79,15 @@ public class LuaUtils {
         // Call the function using a LuaValue
         func.call( luaobj );
     }
+	
+	
+	/**
+	 * Runs a lua script with the given path
+	 * @param path The path that leads to the lua script.
+	 */
+	public static void runScript(String path){
+		globals.loadfile(path).call();
+	}
 	
 	/**
 	 * Makes sure all classes annotated with @AvailableInLua are loaded into the global variables in lua.
