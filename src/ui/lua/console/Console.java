@@ -4,16 +4,12 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Set;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import org.luaj.vm2.LuaError;
-import org.reflections.Reflections;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
@@ -109,7 +105,7 @@ public class Console extends Pane
     public ArrayList<String> getFunctions(){
     	ArrayList<String> strings = new ArrayList<String>();
     	functionClasses.forEach(o -> 
-    							new ArrayList<Method>(Arrays.asList(o.getClass().getDeclaredMethods())).
+    							new ArrayList<Method>(Arrays.asList(getClass(o).getDeclaredMethods())).
     							forEach(m -> 
     									strings.add(m.getName())));
     	return strings;
@@ -180,7 +176,7 @@ public class Console extends Pane
         		
         	for(Object o : functionClasses)
         		if(getSimpleName(o).equals(object))
-        			for(Method m : o.getClass().getDeclaredMethods())
+        			for(Method m : getClass(o).getDeclaredMethods())
         				if(m.getName().startsWith(prefix) && !m.getName().equals(prefix))
         					return m.getName().substring(prefix.length()) + "(" + (m.getParameterCount() == 0 ? ")" : "");
     	}
@@ -258,6 +254,20 @@ public class Console extends Pane
      */
     private String getSimpleName(Object o){
     	return o instanceof Class ? ((Class<?>) o).getSimpleName() : o.getClass().getSimpleName();
+    }
+    
+    /**
+     * Function used to get the {@link Class} of a certain object properly.
+     * Motivation:
+     * 	The classes retrieved by LuaUtils are a mix of Class instances and normal instances.
+     * 	When you call getClass() on each of these objects, you won't get what you want when when it's called on something that's a Class already.
+     *  For example: You'd get Chicken.getClass().getClass() which would return `Class` rather than `Chicken`.
+     * @param o The object to (maybe) call `getClass()` on
+     * @return The valid {@link Class} of o.
+     */
+    @SuppressWarnings("rawtypes")
+	private Class getClass(Object o){
+    	return o instanceof Class ? (Class)o : o.getClass();
     }
     
     /**
