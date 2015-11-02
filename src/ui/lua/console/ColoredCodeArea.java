@@ -140,7 +140,6 @@ public class ColoredCodeArea extends CodeArea{
     	URL url = this.getClass().getResource(path);
         if (url == null) {
             System.err.println("Resource " + path + " not found. Aborting.");
-            replaceText(0, 0, "Resource " + path + " not found. Aborting.");
         }
         return url.toExternalForm(); 
     }
