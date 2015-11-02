@@ -215,19 +215,9 @@ public class Console extends Pane
     		public void run(){
 	    	   	int i = consoleArea.getLength();
 	    	    consoleArea.replaceText(i, i, '\n' + cursor);
-	    		currentLine = consoleArea.getText().length()-2;
+	    		currentLine = consoleArea.getText().length()-cursor.length();
     		}
     	});
-    }
-    
-    /**
-     * Prints a line and moves the command cursor down.
-     * Please use this function for logging.
-     * @param s The String you want to print, without messing up any commands
-     */
-    public void printlnSafely(String s){
-    	print(s);
-    	printCursor();
     }
     
     /**
@@ -288,6 +278,7 @@ public class Console extends Pane
     		for(Object o : functionClasses){
     			e.put(getSimpleName(o), o);
     		}
+    		e.eval("local clock = os.clock function sleep(n) local t0 = clock() * 1000 while clock() * 1000 - t0 <= n do end end");
 
     		// Important piece of code that fixed all bugs. Do not decode to check its contents.  (If this gives errors, see: http://www.digizol.com/2008/09/eclipse-access-restriction-on-library.html) 
     		e.eval(new String(Base64.decode("bG9jYWwgY293ID0gewpbWyAKICBcICAgICAgICAgICAsfi4KICAgIFwgICAgICwtJ19fIGAtLAogICAgICAgXCAgeywtJyAgYC4gfSAgICAgICAgICAgICAgLCcpCiAgICAgICAgICAsKCBhICkgICBgLS5fXyAgICAgICAgICwnLCcpfiwKICAgICAgICAgPD0uKSAoICAgICAgICAgYC0uX18sPT0nICcgJyAnfQogICAgICAgICAgICggICApICAgICAgICAgICAgICAgICAgICAgIC8pCiAgICAgICAgICAgIGAtJ1wgICAgLCAgICAgICAgICAgICAgICAgICAgKQoJICAgICAgIHwgIFwgICAgICAgICBgfi4gICAgICAgIC8KICAgICAgICAgICAgICAgXCAgICBgLl8gICAgICAgIFwgICAgICAgLwogICAgICAgICAgICAgICAgIFwgICAgICBgLl9fX19fLCcgICAgLCcKICAgICAgICAgICAgICAgICAgYC0uICAgICAgICAgICAgICwnCiAgICAgICAgICAgICAgICAgICAgIGAtLl8gICAgIF8sLScKICAgICAgICAgICAgICAgICAgICAgICAgIDc3amonCiAgICAgICAgICAgICAgICAgICAgICAgIC8vX3x8CiAgICAgICAgICAgICAgICAgICAgIF9fLy8tLScvYAoJICAgICAgICAgICAgLC0tJy9gICAnCl1dCn0KZnVuY3Rpb24gY2hpY2tlbnNheSh0ZXh0KQpsID0gdGV4dDpsZW4oKQphID0gbCAvIDEwCmZvciBpPTAsYSBkbwoJaW8ud3JpdGUoIlsiIC4uIHRleHQ6c3ViKGkqMTArMSwgKChpKzEpKjEwID4gbCkgYW5kIGwgb3IgKGkrMSkqMTAgKSAuLiAgIl1cbiIpCmVuZAoJcHJpbnQoY293WzFdKQplbmQK")));
@@ -312,8 +303,10 @@ public class Console extends Pane
 		    			
 	    			// Gotta catch it while we're still in the while loop.
     			} catch(ScriptException | LuaError exc){
-    	        	 printlnSafely(exc.getClass().getSimpleName() + " in line: " + line);
+    	        	 println(exc.getClass().getSimpleName() + " in line: " + line);
     			}
+    			
+    			// TODO: Block input until here?
     			printCursor();
     		}
          } catch (Exception e) {
