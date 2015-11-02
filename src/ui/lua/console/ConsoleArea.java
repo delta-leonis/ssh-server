@@ -73,9 +73,9 @@ public class ConsoleArea extends ColoredCodeArea{
 		recentCommands = new ArrayList<String>();
 		// TODO: Disable drag text
 		EventHandlerHelper.install(onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(BACK_SPACE)).act(event -> backspace()).create());
-		EventHandlerHelper.install(onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(Z, CONTROL_DOWN)).act(event -> nothing()).create());
-		EventHandlerHelper.install(onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(TAB)).act(event -> nothing()).create());
-		EventHandlerHelper.install(onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(ENTER)).act(event -> nothing()).create());
+		EventHandlerHelper.install(onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(Z, CONTROL_DOWN)).act(event -> {}).create());
+		EventHandlerHelper.install(onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(TAB)).act(event -> {}).create());
+		EventHandlerHelper.install(onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(ENTER)).act(event -> {}).create());
 		EventHandlerHelper.install(onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(UP)).act(event -> up()).create());
 		EventHandlerHelper.install(onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(DOWN)).act(event -> down()).create());
 	}
@@ -132,12 +132,6 @@ public class ConsoleArea extends ColoredCodeArea{
 		if(isValid()){
 			replaceText(getAnchor()-1, getAnchor(), "");
 		}
-	}
-	
-	/**
-	 * Does nothing
-	 */
-	private void nothing(){
 	}
 	
 	/**
