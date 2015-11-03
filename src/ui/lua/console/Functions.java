@@ -24,70 +24,15 @@ import java.util.List;
  */
 @AvailableInLua
 public class Functions{
-	private Console console;
-	private static Functions functions;
-	
-	public Functions(Console console){
-		this.console = console;
-	}
 	/**
-	 * Test function for Lua. Prints "Hello From Java"
-	 */
-	public void hello(){
-		System.out.println("Hello from Java");
-	}
-	
-	public static Functions getInstance(){
-		if(functions == null)
-			functions = new Functions(Console.getInstance());
-		return functions;
-	}
-	/**
-	 * Test function for Lua. Adds two numbers.
-	 */
-	public int add(int a, int b){
-		return a+b;
-	}
-	/**
-	 * Prints the given string using the System.out
-	 */
-	public void printFromJava(String string){
-		System.out.println(string);
-	}
-	/**
-	 * Functions to test whether functions:getNewFunctions():printFromJava("Hello") works
-	 */
-	public Functions getNewFunctions(){
-		return new Functions(console);
-	}
-	/**
-	 * A function used to test whether functions:testObjectPassing(functions:getNewFunctions()) doesn't give an error
-	 */
-	public void testObjectPassing(Functions functions){
-		System.out.println("Test passed");
-	}
-	/**
-	 * Prints the given int using the System.out
-	 */
-	public void printInt(int i){
-		System.out.println(i);
-	}
-	
-	public void testFunction(String s, int i, Functions function, boolean b){
-		
-	}
-	
-	public void printFunctions(){
-		getFunctions().forEach(f -> console.println(f));
-	}
-	/**
-	 * Note to self: Can be applied to any function
+	 * Function that returns all functions in the given object
+	 * TODO: Streams
 	 */
 	@SuppressWarnings("rawtypes")
-	public List<String> getFunctions(){
+	public static final List<String> getFunctions(Object object){
 		List<String> list = new ArrayList<String>();
 		String currentString = "";
-		for(Method m : this.getClass().getDeclaredMethods()){
+		for(Method m : object.getClass().getDeclaredMethods()){
 			currentString = m.getName() + "(";
 			Class[] classes = m.getParameterTypes();
 			for(int i = 0; i < classes.length; ++i){
