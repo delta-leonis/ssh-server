@@ -29,7 +29,7 @@ public class SkyboxGO extends GameObject {
 		
 		try {
 			
-			fs = new FileInputStream("./assets/textures/skybox.png");
+			fs = new FileInputStream("./assets/textures/skybox.jpg");
 			
 		} catch (FileNotFoundException e) {
 			
