@@ -59,15 +59,18 @@ public class ColoredCodeArea extends CodeArea{
     public ColoredCodeArea(String path, ArrayList<String> objectHighlights, ArrayList<String> functionHighlights){
     	super();
     	
+    	// Make sure we don't get any errors if null is passed
     	if(objectHighlights == null)
     		objectHighlights = new ArrayList<String>();
     	if(functionHighlights == null)
     		functionHighlights = new ArrayList<String>();
+    	// Make sure we don't get any errors if empty arraylists are passed
     	if(objectHighlights.isEmpty())
     		objectHighlights.add(" ");
     	if(functionHighlights.isEmpty())
     		functionHighlights.add(" ");
     	
+    	// Creates a pattern for everything that needs to be highlighted
     	PATTERN = Pattern.compile(
                 "(?<KEYWORD>" + KEYWORD_PATTERN + ")"
                 // Add the Java Objects and Functions that need to be highlighted
@@ -89,11 +92,15 @@ public class ColoredCodeArea extends CodeArea{
      * Method used to highlight the text
      */
     private static StyleSpans<Collection<String>> computeHighlighting(String text) {
+    	// Create a matcher to look for patterns in the given text
         Matcher matcher = PATTERN.matcher(text);
         int lastKwEnd = 0;
+        // Create a StyleSpansBuilder to color the text
         StyleSpansBuilder<Collection<String>> spansBuilder
                 = new StyleSpansBuilder<>();
+        // Look for anything that matches the pattern
         while(matcher.find()) {
+        	// Switch what css block to use based on the group found by the matcher
             String styleClass =
                     matcher.group("KEYWORD") != null ? "keyword" :
                     matcher.group("OBJ") != null ? "obj" :
@@ -106,11 +113,16 @@ public class ColoredCodeArea extends CodeArea{
                     matcher.group("COMMENT") != null ? "comment" :
                     matcher.group("DEFAULT") != null ? "default" :
                     null; /* never happens */ assert styleClass != null;
+            // Put the last found pattern indices in the spansBuilder
             spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
+            // Assign the appropiate style the the section highlighted in the previous line.
             spansBuilder.add(Collections.singleton(styleClass), matcher.end() - matcher.start());
+            // Remember where we left off
             lastKwEnd = matcher.end();
         }
+        // Don't forget the last bit of text
         spansBuilder.add(Collections.emptyList(), text.length() - lastKwEnd);
+        // Create the StyleSpans<Collection<String>>
         return spansBuilder.create();
     }
     
@@ -119,13 +131,13 @@ public class ColoredCodeArea extends CodeArea{
      * The color coding works by constantly calling the {@link #computeHighlighting(String)} whenever text is changed
      */
     public void setupColorCoding(){
-    	// Set line numbers on
+    	// Turn on paragraph numbers
     	setParagraphGraphicFactory(LineNumberFactory.get(this));
-
+    	// Make sure any changes in textcoloring are being notified to this text area
     	richChanges().subscribe(change -> {
             setStyleSpans(0, computeHighlighting(getText()));
         });
-        
+        // Add stylesheets to this text area
         getStylesheets().add(getCssSheet(styleSheet));
         getStyleClass().add("background");
     }
