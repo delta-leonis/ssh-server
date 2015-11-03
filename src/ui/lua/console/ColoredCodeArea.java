@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,7 +49,7 @@ public class ColoredCodeArea extends CodeArea{
     private static final String DEFAULT = ".";
 
     private static Pattern PATTERN;
-
+    
     /**
      * Constructor for the ColorCodeArea.
      * 
@@ -56,9 +57,7 @@ public class ColoredCodeArea extends CodeArea{
      * @param objectHighlights The Java Objects that need to be highlighted
      * @param functionHighlights The Java Functions that need to be highlighted
      */
-    public ColoredCodeArea(String path, ArrayList<String> objectHighlights, ArrayList<String> functionHighlights){
-        super();
-        
+    public void setupColoredCodeArea(String path, List<String> objectHighlights, List<String> functionHighlights){      
         // Make sure we don't get any errors if null is passed
         if(objectHighlights == null)
             objectHighlights = new ArrayList<String>();
