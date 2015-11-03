@@ -53,8 +53,6 @@ public class Console extends UIComponent {
     private ConsoleArea consoleArea;
     /** Custom outputstream */
     private ConsoleOutput out;
-    /** The command that's currently being called */
-    private String currentCommand;
     /** The cursor used by the console */
     private static final String cursor = "> ";
     /** The title that shows when starting up the console */
@@ -75,14 +73,13 @@ public class Console extends UIComponent {
     public Console(String name) {
         super(name, "console.fxml");
         // Use reflection to obtain all classes annotated with {@link AvailableInLua}
-//        functionClasses = LuaUtils.getAllAvailableInLua();
+        functionClasses = LuaUtils.getAllAvailableInLua();
         // Create an outputstream that use the {@link Console} to write in the {@link ConsoleArea}
         out = new ConsoleOutput(this);
 
-
         // Create TextArea using the classes and functions found using reflection
         consoleArea = new ConsoleArea();
-        consoleArea.setupConsoleArea(cursor, this, getClasses(), getFunctions());
+        consoleArea.setupConsoleArea(this, getClasses(), getFunctions());
         consoleArea.setWrapText(true);
 //        consoleArea.prefWidthProperty().bind(widthProperty());
 //        consoleArea.prefHeightProperty().bind(heightProperty());
@@ -134,9 +131,6 @@ public class Console extends UIComponent {
                 .flatMap(l -> l.stream())
                 // Collect everything back into a List<String>
                 .collect(Collectors.toList());
-//        ArrayList<String> strings = new ArrayList<String>();
-//        functionClasses.forEach(o -> new ArrayList<Method>(Arrays.asList(getClass(o).getDeclaredMethods()))
-//                .forEach(m -> strings.add(m.getName())));
         return strings;
     }
 
@@ -148,24 +142,32 @@ public class Console extends UIComponent {
      */
     private void addKeyListener() {
         consoleArea.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-
-                int lastLine = consoleArea.getText().length();
-                if (event.getCode() == KeyCode.ENTER) {
-                    if (event.isAltDown()) {
-                        println("");
-                    } else if (currentCommand == null
-                            && consoleArea.getText(currentLine, lastLine).length() > cursor.length() - 1) {
-                        currentCommand = consoleArea.getText(currentLine, lastLine).substring(cursor.length());
-                        executeCommand(currentCommand);
-                        println("");
-                    }
-                } else if (event.getCode() == KeyCode.TAB) {
-                    int caretPos = consoleArea.getCaretPosition();
-                    String command = consoleArea.getText(currentLine, caretPos).substring(cursor.length());
-                    String result = handleTab(command);
-                    if (result != null)
-                        consoleArea.replaceText(caretPos, caretPos, result);
+            // Save the last line, since it's used often
+            int lastLine = consoleArea.getText().length();
+            // When enter is pressed
+            if (event.getCode() == KeyCode.ENTER) {
+                // Check whether it's alt+enter. (Only println in this case)
+                if (event.isAltDown()) {
+                    println("");
+                } 
+                // Else, retrieve the current command and execute it
+                else {
+                    String currentCommand = consoleArea.getText(currentLine, lastLine);
+                    executeCommand(currentCommand);
                 }
+            // When Tab is pressed
+            } else if (event.getCode() == KeyCode.TAB) {
+                // Where the cursor is located (caret)
+                int caretPos = consoleArea.getCaretPosition();
+                // The command we're currently auto completing is a substring of the currentline till our cursor
+                String command = consoleArea.getText(currentLine, caretPos);
+                // Handle the tab using this unfinished command
+                String result = handleTab(command);
+                // If the handleTab function returns anything useful
+                if (result != null)
+                    // Use it
+                    consoleArea.replaceText(caretPos, caretPos, result);
+            }
         });
     }
 
@@ -202,12 +204,27 @@ public class Console extends UIComponent {
             String object = splitObjectsAndFunctions[splitObjectsAndFunctions.length - 2];
             String prefix = splitObjectsAndFunctions[splitObjectsAndFunctions.length - 1];
 
-            for (Object o : functionClasses)
-                if (getSimpleName(o).equals(object))
-                    for (Method m : getClass(o).getDeclaredMethods())
-                        if (m.getName().startsWith(prefix) && !m.getName().equals(prefix))
-                            return m.getName().substring(prefix.length()) + "("
-                                    + (m.getParameterCount() == 0 ? ")" : "");
+            // Turn into stream
+            Method method = functionClasses.stream()
+            // Retrieve the Class this function belongs to
+            .filter(o -> getSimpleName(o).equals(object))
+            .map(o -> getClass(o).getDeclaredMethods())
+            // Turn Method[] into multiple streams
+            .map(me -> Arrays.stream(me)
+                    // Collect into a list of List<List<String>>
+                    .collect(Collectors.toList()))
+            // Turn these lists into one stream
+            .flatMap(l -> l.stream())
+            // Return the function that starts with the prefix
+            .filter(m -> m.getName().startsWith(prefix) && !m.getName().equals(prefix))
+            .findAny()
+            .get();
+            
+            // If we have a method
+            if(method != null)
+                // Return the part that's missing from the prefix
+                return method.getName().substring(prefix.length()) + "("
+                + (method.getParameterCount() == 0 ? ")" : "");
         }
         return null;
     }
@@ -243,7 +260,7 @@ public class Console extends UIComponent {
         Platform.runLater(() -> {
             int i = consoleArea.getLength();
             consoleArea.replaceText(i, i, '\n' + cursor);
-            currentLine = consoleArea.getText().length() - cursor.length();
+            currentLine = consoleArea.getText().length();
         });
     }
 
@@ -283,8 +300,7 @@ public class Console extends UIComponent {
     }
 
     /**
-     * Loop that constantly checks whether a command is available and executes
-     * it.
+     * Sets up the {@link ScriptEngine}, making the classes annotated with {@link AvailableInLua} available as well.
      */
     private void setupScriptEngine() {
         try {
@@ -309,28 +325,35 @@ public class Console extends UIComponent {
 
             println(title);
             printCursor();
-
+            
+            // Set the line from where we need to start reading commands.
             currentLine = consoleArea.getText().length();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     
-    private void executeCommand(String line){
+    /**
+     * Executes the given command using the lua {@link ScriptEngine}
+     * @param command The command to be executed.
+     */
+    private void executeCommand(String command){
         try {
-            consoleArea.addCommand(line);
+            println("");
+            consoleArea.addCommand(command);
             // Leave console if exit
-            if (line.equals("exit"))
+            if (command.equals("exit"))
                 System.exit(0);
 
-            scriptEngine.eval(line);
+            scriptEngine.eval(command);
 
             // Gotta catch it while we're still in the while loop.
         } catch (ScriptException | LuaError exc) {
-            println(exc.getClass().getSimpleName() + " in line: " + line);
+            println(exc.getClass().getSimpleName() + " in line: " + command);
         }
 
         // TODO: Block input until here?
         printCursor();
+        currentLine = consoleArea.getText().length();
     }
 }
