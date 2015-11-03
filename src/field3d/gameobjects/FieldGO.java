@@ -249,9 +249,42 @@ public class FieldGO extends GameObject {
 		Vector3f goalTopDefencePos = new Vector3f((float)(FieldGame.FIELD_WIDTH / 2.0 - 500), 10.0f, 0.0f);
 		Vector3f goalTopDefenceDim = new Vector3f((float)FieldGame.FIELD_LINE_WIDTH, 10.0f, 500.0f);
 		
-		addLine(goalTopLeftPos, goalTopLeftDim);
-		addLine(goalTopRightPos, goalTopRightDim);
-		addLine(goalTopTopPos, goalTopTopDim);
+		addLine(goalTopLeftPos, goalTopLeftDim).setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				
+				// TODO: Show context menu
+				_goalContextMenu.Translate(goalTopLeftPos.x - 500, goalTopLeftPos.y, goalTopLeftPos.z - 500);
+				_goalContextMenu.Rotate(0.0, 90.0, 0.0);
+				_goalContextMenu.Show();
+				
+		
+			} } );
+		addLine(goalTopRightPos, goalTopRightDim).setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				
+				// TODO: Show context menu
+				_goalContextMenu.Translate(goalTopRightPos.x -500, goalTopRightPos.y, goalTopRightPos.z + 500);
+				_goalContextMenu.Rotate(0.0, 90.0, 0.0);
+				_goalContextMenu.Show();
+			}
+			
+		});;
+		addLine(goalTopTopPos, goalTopTopDim).setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				
+				// TODO: Show context menu
+				_goalContextMenu.Translate(goalTopTopPos.x, goalTopTopPos.y + (goalTopTopDim.y / 2.0), goalTopTopPos.z);
+				_goalContextMenu.Rotate(0.0, 90.0, 0.0);
+				_goalContextMenu.Show();
+			}
+		});;
+		
 		addLine(goalTopDefencePos, goalTopDefenceDim);
 		
 		
