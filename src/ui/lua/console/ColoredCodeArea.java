@@ -48,7 +48,7 @@ public class ColoredCodeArea extends CodeArea{
     private static final String DEFAULT = ".";
 
     private static Pattern PATTERN;
-    
+
     /**
      * Constructor for the ColorCodeArea.
      * 
@@ -57,21 +57,21 @@ public class ColoredCodeArea extends CodeArea{
      * @param functionHighlights The Java Functions that need to be highlighted
      */
     public ColoredCodeArea(String path, ArrayList<String> objectHighlights, ArrayList<String> functionHighlights){
-    	super();
-    	
-    	// Make sure we don't get any errors if null is passed
-    	if(objectHighlights == null)
-    		objectHighlights = new ArrayList<String>();
-    	if(functionHighlights == null)
-    		functionHighlights = new ArrayList<String>();
-    	// Make sure we don't get any errors if empty arraylists are passed
-    	if(objectHighlights.isEmpty())
-    		objectHighlights.add(" ");
-    	if(functionHighlights.isEmpty())
-    		functionHighlights.add(" ");
-    	
-    	// Creates a pattern for everything that needs to be highlighted
-    	PATTERN = Pattern.compile(
+        super();
+        
+        // Make sure we don't get any errors if null is passed
+        if(objectHighlights == null)
+            objectHighlights = new ArrayList<String>();
+        if(functionHighlights == null)
+            functionHighlights = new ArrayList<String>();
+        // Make sure we don't get any errors if empty arraylists are passed
+        if(objectHighlights.isEmpty())
+            objectHighlights.add(" ");
+        if(functionHighlights.isEmpty())
+            functionHighlights.add(" ");
+
+        // Creates a pattern for everything that needs to be highlighted
+        PATTERN = Pattern.compile(
                 "(?<KEYWORD>" + KEYWORD_PATTERN + ")"
                 // Add the Java Objects and Functions that need to be highlighted
                 + "|(?<OBJ>" + "\\b(" + String.join("|", objectHighlights) + ")\\b" + ")"
@@ -84,15 +84,15 @@ public class ColoredCodeArea extends CodeArea{
                 + "|(?<COMMENT>" + COMMENT_PATTERN + ")"
                 + "|(?<DEFAULT>" + DEFAULT + ")"
         );
-    	styleSheet = path;
-    	setupColorCoding();
+        styleSheet = path;
+        setupColorCoding();
     }
 
     /**
      * Method used to highlight the text
      */
     private static StyleSpans<Collection<String>> computeHighlighting(String text) {
-    	// Create a matcher to look for patterns in the given text
+        // Create a matcher to look for patterns in the given text
         Matcher matcher = PATTERN.matcher(text);
         int lastKwEnd = 0;
         // Create a StyleSpansBuilder to color the text
@@ -100,7 +100,7 @@ public class ColoredCodeArea extends CodeArea{
                 = new StyleSpansBuilder<>();
         // Look for anything that matches the pattern
         while(matcher.find()) {
-        	// Switch what css block to use based on the group found by the matcher
+            // Switch what css block to use based on the group found by the matcher
             String styleClass =
                     matcher.group("KEYWORD") != null ? "keyword" :
                     matcher.group("OBJ") != null ? "obj" :
@@ -125,16 +125,16 @@ public class ColoredCodeArea extends CodeArea{
         // Create the StyleSpans<Collection<String>>
         return spansBuilder.create();
     }
-    
+
     /**
      * Makes sure everything is configured for the {@link ColoredCodeArea}
      * The color coding works by constantly calling the {@link #computeHighlighting(String)} whenever text is changed
      */
     public void setupColorCoding(){
-    	// Turn on paragraph numbers
-    	setParagraphGraphicFactory(LineNumberFactory.get(this));
-    	// Make sure any changes in textcoloring are being notified to this text area
-    	richChanges().subscribe(change -> {
+        // Turn on paragraph numbers
+        setParagraphGraphicFactory(LineNumberFactory.get(this));
+        // Make sure any changes in textcoloring are being notified to this text area
+        richChanges().subscribe(change -> {
             setStyleSpans(0, computeHighlighting(getText()));
         });
         // Add stylesheets to this text area
@@ -149,7 +149,7 @@ public class ColoredCodeArea extends CodeArea{
      * @return The path to the css file that works.
      */
     public String getCssSheet(String path){
-    	URL url = this.getClass().getResource(path);
+        URL url = this.getClass().getResource(path);
         if (url == null) {
             System.err.println("Resource " + path + " not found. Aborting.");
         }
