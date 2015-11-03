@@ -84,13 +84,25 @@ public class Arc3D {
 		int indicies[] = new int[(numDivisions * 2) * 6];
 		int triangleCounter = 0;
 		
+		// Loop through faces, 2 faces(triangles) per division
 		for (int i = 0; i < numDivisions * 2; i++) {
 			
-			indicies[i * 6] = i;
-			indicies[(i * 6) + 2] = i + 1;
-			indicies[(i * 6) + 4] = i + 2;
+			// Map faces counter-clockwise so it faces towards us 
+			if (i % 2 == 0) {
+				
+				indicies[i * 6] = i + 2;
+				indicies[(i * 6) + 2] = i + 1;
+				indicies[(i * 6) + 4] = i;
+			
+			} else {
+			
+				indicies[i * 6] = i;
+				indicies[(i * 6) + 2] = i + 1;
+				indicies[(i * 6) + 4] = i + 2;
+			}
 			
 			
+			// Map texture coords
 			if (triangleCounter == 0) {
 				
 				indicies[(i * 6) + 1] = 2;
@@ -121,7 +133,7 @@ public class Arc3D {
 			
 			triangleCounter++;
 		}
-		
+
 		return indicies;
 	}
 }
