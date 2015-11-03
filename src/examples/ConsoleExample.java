@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import ui.lua.console.AvailableInLua;
 import ui.lua.console.Console;
+import ui.lua.console.ConsoleArea;
 
 /**
  * Example that runs a {@link Console}
@@ -40,10 +41,13 @@ public class ConsoleExample extends Application{
         primaryStage.setTitle(title);
         primaryStage.setOnCloseRequest(e -> System.exit(0));
         
-        Console console = new Console("bottom-console");
+        // Create a {@link ConsoleArea} to be used by the {@link Console}
+        ConsoleArea consoleArea = new ConsoleArea();
+        // Create a new {@link Console} used to manipulate the consoleArea in the line above
+        new Console("bottom-console", consoleArea);
         
         // Create base
-        Scene scene = new Scene(console, width, height, Color.WHITE);
+        Scene scene = new Scene(consoleArea, width, height, Color.WHITE);
         
         // Add TextArea
         primaryStage.setScene(scene);

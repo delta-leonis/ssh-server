@@ -70,7 +70,7 @@ public class Console extends UIComponent {
      * After that it looks for all classes for auto complete and sets up the {@link ConsoleArea}
      * And last of all, it starts a thread for reading out commands.
      */
-    public Console(String name) {
+    public Console(String name, ConsoleArea consoleArea) {
         super(name, "console.fxml");
         // Use reflection to obtain all classes annotated with {@link AvailableInLua}
         functionClasses = LuaUtils.getAllAvailableInLua();
@@ -78,12 +78,9 @@ public class Console extends UIComponent {
         out = new ConsoleOutput(this);
 
         // Create TextArea using the classes and functions found using reflection
-        consoleArea = new ConsoleArea();
+        this.consoleArea = consoleArea;
         consoleArea.setupConsoleArea(this, getClasses(), getFunctions());
         consoleArea.setWrapText(true);
-//        consoleArea.prefWidthProperty().bind(widthProperty());
-//        consoleArea.prefHeightProperty().bind(heightProperty());
-        this.add(consoleArea);
 
         // Make sure keypresses like tab and enter are handled
         addKeyListener();
