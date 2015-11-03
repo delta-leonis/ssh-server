@@ -41,15 +41,11 @@ public class ConsoleExample extends Application{
         primaryStage.setOnCloseRequest(e -> System.exit(0));
         
         Console console = new Console("bottom-console");
-        System.out.println("Console: " + console);
         
         // Create base
         Scene scene = new Scene(console, width, height, Color.WHITE);
-        //console.prefWidthProperty().bind(root.widthProperty());
-        //console.prefHeightProperty().bind(root.heightProperty());
         
         // Add TextArea
-        //root.getChildren().add(console);  
         primaryStage.setScene(scene);
         primaryStage.show();
 	}
