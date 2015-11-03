@@ -32,7 +32,7 @@ public class ConsoleExample extends Application{
 	private int height = 400;
 	private String title = "Lua Console";
 	
-	public static void main(String args){
+	public static void main(String[] args){
 		launch(args);
 	}
 
