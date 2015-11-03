@@ -6,6 +6,7 @@ import static javafx.scene.input.KeyCode.*;
 import static org.fxmisc.wellbehaved.event.EventPattern.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 
 import static javafx.scene.input.KeyCombination.*;
@@ -20,13 +21,16 @@ import org.fxmisc.wellbehaved.event.EventHandlerHelper;
  * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
  *
  */
-public class ConsoleArea extends ColoredCodeArea{	
-	// The cursor used by the console, usually "> "
-	private String cursor;
-	private ArrayList<String> recentCommands;
+public class ConsoleArea extends ColoredCodeArea{
+    /** A list containing all previous commands */
+	private List<String> recentCommands;
+	/** selecting = true when the user is selecting commands using the up and down keys */
 	private boolean selecting = false;
+	/** Used to iterate through the recentCommands */
 	private ListIterator<String> iterator;
+	/** Mostly used to retrieve at what line we're currently allowed to type */
 	private Console console;
+	/** The path to the stylesheet */
 	private static final String styleSheet = "/css/java-keywords.css";
 	
 	/**
@@ -35,16 +39,13 @@ public class ConsoleArea extends ColoredCodeArea{
 	 */
 	@Override
     public void replaceText(int start, int end, String text) {
-		int s = start;
-		int e = end;
-		int length = console.getCurrentLine()+cursor.length();
-		if(e < length)
-			e = length;
-
-		if(s < length)
-			s = length;
+	    // Save the line we're currently writing on for further use
+		int length = console.getCurrentLine();
 		
-		super.replaceText(s, e, text);
+		// Only replace text on valid positions (Any position below length is invalid)
+		super.replaceText( start < length ? length : start,
+		                   end < length ? end : end,
+		                   text);
     }
 
 	/**
@@ -65,19 +66,18 @@ public class ConsoleArea extends ColoredCodeArea{
 	 * Disabled ctrl+Z and changes the behaviour of Backspace so that it can't be used to wipe out the cursor.
 	 * @param cursor The cursor used by this console (Usually something like "> " ) 
 	 */
-	public ConsoleArea(String cursor, Console console, ArrayList<String> objectHighlights, ArrayList<String> functionHighlights){
-		super(styleSheet, objectHighlights, functionHighlights);
-
-		this.cursor = cursor;
-		this.console = console;
-		recentCommands = new ArrayList<String>();
-		// TODO: Disable drag text
-		EventHandlerHelper.install(onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(BACK_SPACE)).act(event -> backspace()).create());
-		EventHandlerHelper.install(onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(Z, CONTROL_DOWN)).act(event -> {}).create());
-		EventHandlerHelper.install(onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(TAB)).act(event -> {}).create());
-		EventHandlerHelper.install(onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(ENTER)).act(event -> {}).create());
-		EventHandlerHelper.install(onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(UP)).act(event -> up()).create());
-		EventHandlerHelper.install(onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(DOWN)).act(event -> down()).create());
+	public void setupConsoleArea(Console console, List<String> objectHighlights, List<String> functionHighlights){
+	    super.setupColoredCodeArea(styleSheet, objectHighlights, functionHighlights);
+        this.console = console;
+        recentCommands = new ArrayList<String>();
+        // TODO: Disable drag text
+        // Custom key events
+        EventHandlerHelper.install(onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(BACK_SPACE)).act(event -> backspace()).create());
+        EventHandlerHelper.install(onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(Z, CONTROL_DOWN)).act(event -> {}).create());
+        EventHandlerHelper.install(onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(TAB)).act(event -> {}).create());
+        EventHandlerHelper.install(onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(ENTER)).act(event -> {}).create());
+        EventHandlerHelper.install(onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(UP)).act(event -> up()).create());
+        EventHandlerHelper.install(onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(DOWN)).act(event -> down()).create());
 	}
 	
 	/**
@@ -85,15 +85,20 @@ public class ConsoleArea extends ColoredCodeArea{
 	 * Goes to the previous command in the array
 	 */
 	private void up(){
+	    // If there are any previous commands
 		if(!recentCommands.isEmpty()){
+		    // If we're not scrolling through commands yet
 			if(!selecting){
+			    // Start selecting
 				selecting = true;
+				// Make a new iterator starting at the last command
 				iterator = recentCommands.listIterator(recentCommands.size());
 			}
+			// Scroll through list, make sure we don't go too far
 			if(!iterator.hasPrevious())
 				iterator = recentCommands.listIterator(recentCommands.size());
-			
-			replaceText(console.getCurrentLine() + cursor.length(), getLength(), iterator.previous());
+			// Display the command
+			replaceText(console.getCurrentLine(), getLength(), iterator.previous());
 		}
 	}
 	
@@ -102,11 +107,13 @@ public class ConsoleArea extends ColoredCodeArea{
 	 * Goes to the next command in the array
 	 */
 	private void down(){
+	    // If we're busy scrolling through commands
 		if(selecting){
+		    // Scroll through the commands
 			if(!iterator.hasNext())
 				iterator = recentCommands.listIterator(0);
-
-			replaceText(console.getCurrentLine() + cursor.length(), getLength(), iterator.next());
+			// Display the command
+			replaceText(console.getCurrentLine(), getLength(), iterator.next());
 		}
 	}
 	
@@ -120,6 +127,7 @@ public class ConsoleArea extends ColoredCodeArea{
 			recentCommands.remove(command);
 		
 		recentCommands.add(command);
+		// We're not selecting anymore
 		selecting = false;
 	}
 	
