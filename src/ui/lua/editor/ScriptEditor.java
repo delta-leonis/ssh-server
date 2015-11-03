@@ -40,7 +40,8 @@ public class ScriptEditor extends VBox{
 	 * Initializes the {@link ColoredCodeArea}
 	 */
 	private void initializeTextArea(){
-		codeArea = new ColoredCodeArea(styleSheet, null, null);
+		codeArea = new ColoredCodeArea();
+		codeArea.setupColoredCodeArea(styleSheet, null, null);
         codeArea.prefWidthProperty().bind(widthProperty());
         codeArea.prefHeightProperty().bind(heightProperty());
         getChildren().add(codeArea);
