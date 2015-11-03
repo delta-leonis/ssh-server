@@ -94,7 +94,6 @@ public class ConsoleArea extends ColoredCodeArea{
 				iterator = recentCommands.listIterator(recentCommands.size());
 			
 			replaceText(console.getCurrentLine() + cursor.length(), getLength(), iterator.previous());
-
 		}
 	}
 	
@@ -108,7 +107,6 @@ public class ConsoleArea extends ColoredCodeArea{
 				iterator = recentCommands.listIterator(0);
 
 			replaceText(console.getCurrentLine() + cursor.length(), getLength(), iterator.next());
-
 		}
 	}
 	
