@@ -2,7 +2,6 @@ package examples;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import ui.lua.console.AvailableInLua;
@@ -41,16 +40,16 @@ public class ConsoleExample extends Application{
         primaryStage.setTitle(title);
         primaryStage.setOnCloseRequest(e -> System.exit(0));
         
-        Console console = new Console();
+        Console console = new Console("bottom-console");
+        System.out.println("Console: " + console);
         
         // Create base
-        Pane root = new Pane();
-        Scene scene = new Scene(root, width, height, Color.WHITE);
-        console.prefWidthProperty().bind(root.widthProperty());
-        console.prefHeightProperty().bind(root.heightProperty());
+        Scene scene = new Scene(console, width, height, Color.WHITE);
+        //console.prefWidthProperty().bind(root.widthProperty());
+        //console.prefHeightProperty().bind(root.heightProperty());
         
         // Add TextArea
-        root.getChildren().add(console);  
+        //root.getChildren().add(console);  
         primaryStage.setScene(scene);
         primaryStage.show();
 	}
