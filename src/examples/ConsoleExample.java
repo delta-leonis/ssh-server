@@ -6,7 +6,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import ui.lua.console.AvailableInLua;
 import ui.lua.console.Console;
-import ui.lua.console.ConsoleArea;
 
 /**
  * Example that runs a {@link Console}
@@ -22,7 +21,7 @@ import ui.lua.console.ConsoleArea;
  * To make a new instance of something, call: luajava.newInstance(Object.class, Arguments...)
  * To access a static variable in an object, use a period instead of a colon. So SendMethod.UDP, not SendMethod:UDP
  * 
- * Remember: It's a lua console, so if you wanna call an object's function, it's called like object:function() (not object.function())
+ * Remember: It's a lua console, so if you want to call an object's function, it's called like object:function() (not object.function())
  * 
  * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
  *
@@ -41,13 +40,11 @@ public class ConsoleExample extends Application{
         primaryStage.setTitle(title);
         primaryStage.setOnCloseRequest(e -> System.exit(0));
         
-        // Create a {@link ConsoleArea} to be used by the {@link Console}
-        ConsoleArea consoleArea = new ConsoleArea();
-        // Create a new {@link Console} used to manipulate the consoleArea in the line above
-        new Console("bottom-console", consoleArea);
+        // Create a new {@link Console} used to manipulate a {@link ConsoleArea}
+        Console console = new Console("bottom-console");
         
         // Create base
-        Scene scene = new Scene(consoleArea, width, height, Color.WHITE);
+        Scene scene = new Scene(console, width, height, Color.WHITE);
         
         // Add TextArea
         primaryStage.setScene(scene);

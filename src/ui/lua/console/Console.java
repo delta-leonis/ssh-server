@@ -38,7 +38,7 @@ import ui.lua.utils.LuaUtils;
  * in an object, use a period instead of a colon. So SendMethod.UDP, not
  * SendMethod:UDP
  * 
- * Remember: It's a lua console, so if you wanna call an object's function, it's
+ * Remember: It's a lua console, so if you want to call an object's function, it's
  * called like object:function() (not object.function())
  * 
  * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
@@ -70,7 +70,7 @@ public class Console extends UIComponent {
      * After that it looks for all classes for auto complete and sets up the {@link ConsoleArea}
      * And last of all, it starts a thread for reading out commands.
      */
-    public Console(String name, ConsoleArea consoleArea) {
+    public Console(String name) {
         super(name, "console.fxml");
         // Use reflection to obtain all classes annotated with {@link AvailableInLua}
         functionClasses = LuaUtils.getAllAvailableInLua();
@@ -78,9 +78,10 @@ public class Console extends UIComponent {
         out = new ConsoleOutput(this);
 
         // Create TextArea using the classes and functions found using reflection
-        this.consoleArea = consoleArea;
+        consoleArea = new ConsoleArea();
         consoleArea.setupConsoleArea(this, getClasses(), getFunctions());
         consoleArea.setWrapText(true);
+        this.add(consoleArea);
 
         // Make sure keypresses like tab and enter are handled
         addKeyListener();
