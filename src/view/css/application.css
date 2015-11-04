@@ -1,3 +1,4 @@
+/* *** Slider Styles *** */
 .slider .track {
     -fx-background-color:null;  /* Hide the track */
 }
@@ -5,3 +6,13 @@
 .slider .thumb {
     -fx-padding: 7;
 }
+/* Markers used for the squares in the slider */
+.goal-marker {
+    -fx-fill: yellow;
+}
+
+.timeout-marker {
+	-fx-fill: orange;
+}
+
+/* Check slider.css to see how icons can be applied to buttons */
