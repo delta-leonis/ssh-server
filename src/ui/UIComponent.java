@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.layout.Region;
 import util.Logger;
 
 /**
@@ -14,7 +15,7 @@ import util.Logger;
  *
  * @author Rimon Oz
  */
-abstract public class UIComponent extends Parent {
+abstract public class UIComponent extends Region {
 
     /** The name. */
     private String name;
@@ -95,10 +96,12 @@ abstract public class UIComponent extends Parent {
             // extract the Nodes
             final Parent documentRoot = (Parent) fxmlLoader.load();
             // update the list of children
-            Platform.runLater(() -> this.getChildren().setAll(documentRoot));
+            //this.getChildren().add(documentRoot);
+            Platform.runLater(() -> this.getChildren().add(documentRoot));
         } catch (final IOException exception) {
             UIComponent.logger.warning("Couldn't load FXML file /view/components/%s into UIComponent %s", fileName,
                     this.getName());
+            exception.printStackTrace();
             return false;
         }
         UIComponent.logger.info("Loaded FXML file %s into UIComponent %s", fileName, this.getName());

@@ -1,11 +1,13 @@
 package ui.windows;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -14,6 +16,12 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import ui.UIComponent;
 import ui.UIController;
+import ui.sections.MatchlogSelector;
+import ui.sections.Profilemenu;
+import ui.sections.Timeslider;
+import ui.sections.Toolbox;
+import view.components.Enrollbox;
+import view.components.Enrollbox.Direction;
 import view.components.field.FieldGame;
 
 /**
@@ -25,23 +33,19 @@ import view.components.field.FieldGame;
 public class MainWindow extends UIController<StackPane> {
 
 	@FXML
-	private GridPane basePane;
+	private StackPane rootNode, baseCenter, canvasfitHome, canvasfitAway;
 	@FXML
-	private GridPane baseTop;
+	private GridPane basePane, baseTop, baseBottom;
 	@FXML
-	private StackPane baseCenter;
+	private BorderPane matchlog, toolbox, profilemenu;
 	@FXML
-	private GridPane baseBottom;
+	private Pane centerwrapper, timesliderContainer;
 	@FXML
-	private StackPane canvasfitAway;
-	@FXML
-	private Canvas ballcanvasAway;
-	@FXML
-	private StackPane canvasfitHome;
-	@FXML
-	private Canvas ballcanvasHome;
+	private Canvas ballcanvasAway, ballcanvasHome;
 	@FXML
 	private Group fieldBase;
+
+	private Enrollbox toolboxEnroller, profilemenuEnroller;
 
 	/**
 	 * Instantiates the main window.
@@ -53,7 +57,9 @@ public class MainWindow extends UIController<StackPane> {
 	 */
 	public MainWindow(final String name, final Stage primaryStage) {
 		super(name, "main.fxml", primaryStage);
-		this.setMinimumDimensions(600, 400);
+		// if your screen has a lower resolution than this, you are to inferior
+		// to use the software
+		this.setMinimumDimensions(800, 730);
 
 		// When one screen is connected the application should be displayed on
 		// fullscreen, otherwise it should be maximized and set op top (when not
@@ -69,24 +75,59 @@ public class MainWindow extends UIController<StackPane> {
 		// setup in here
 		// let's add a component
 		FieldGame field = new FieldGame(new Group(), 500, 500, true, SceneAntialiasing.BALANCED, this.getScene());
+		// Call the big initialise function that provides the complete field
 		field.InternalInitialize();
-		this.addToFieldBase(field);
-
-		// MatchlogSelector in baseCenter pickOnBounds="false"
-		// Toolbox in baseCenter pickOnBounds="false"
-		// Time slider in baseBottom(1,0 GridPane.hgrow="ALWAYS")
-		// Profile menu in overlay(0,1)
-
+		// Add the field SubScene to the Group defined in the fxml
+		this.fieldBase.getChildren().add(field);
+		// Bind the height and width properties of the field to the basecenter
+		// so that the field is sized in
+		// the middlemost vertical 73% of the stage
 		field.heightProperty().bind(baseCenter.heightProperty());
 		field.widthProperty().bind(baseCenter.widthProperty());
+		// Some property binding to keep the field within the middlemost
+		// vertical 73% of the stage
+		baseCenter.minHeightProperty().bind(centerwrapper.heightProperty());
+		baseCenter.maxHeightProperty().bind(centerwrapper.heightProperty());
+		baseCenter.minWidthProperty().bind(centerwrapper.widthProperty());
+		baseCenter.maxWidthProperty().bind(centerwrapper.widthProperty());
 
+		// Toolbox wrapped in an Enrollbox for fancy up and down sliding
+		toolboxEnroller = new Enrollbox(Direction.UP, new Toolbox());
+		// MinHeight is set to 0.0, otherwise the slider would be partially
+		// visible when slider is collapsed
+		toolboxEnroller.setMinHeight(0.0);
+		// Add the enroller to the pane defined in the fxml
+		this.toolbox.setBottom(toolboxEnroller);
+
+		// Profile menu wrapped in an Enrollbox for fancy up and down sliding
+		profilemenuEnroller = new Enrollbox(Direction.DOWN, new Profilemenu());
+		// MinHeight is set to 0.0, otherwise the slider would be partially
+		// visible when slider is collapsed
+		profilemenuEnroller.setMinHeight(0.0);
+		// Add the enroller to the pane defined in the fxml
+		this.profilemenu.setTop(profilemenuEnroller);
+		// Time slider in baseBottom(1,0 GridPane.hgrow="ALWAYS")
+		profilemenu.heightProperty()
+				.addListener((arg0, oldValue, newValue) -> profilemenuEnroller.setExpandSize((double) newValue));
+
+		// Matchlog selector wrapped in Enrollbox for fancy horizontal sliding.
+		// This is an enrollbox with the button included and 250 pixels width.
+		this.matchlog.setLeft(new Enrollbox(250, Direction.RIGHT, new MatchlogSelector(), false));
+
+		// Do some binding to fit the little teamcollored balls next to the
+		// teamnames in their canvas
+		// Both height- and widthproperty are bound to the widthproperty because
+		// that keeps the balls round in stead of oval
 		ballcanvasHome.heightProperty().bind(canvasfitHome.widthProperty());
 		ballcanvasHome.widthProperty().bind(canvasfitHome.widthProperty());
+		// Redraw them every sizechange to prevent the balls from growing huge
+		// like yo mama
 		ballcanvasHome.widthProperty()
 				.addListener(observable -> redrawCircle(ballcanvasHome, Color.BLUE, ballcanvasHome.getWidth()));
 		ballcanvasHome.heightProperty()
 				.addListener(observable -> redrawCircle(ballcanvasHome, Color.BLUE, ballcanvasHome.getWidth()));
 
+		// Now all the same binding, but for the other ball
 		ballcanvasAway.heightProperty().bind(canvasfitAway.widthProperty());
 		ballcanvasAway.widthProperty().bind(canvasfitAway.widthProperty());
 		ballcanvasAway.widthProperty()
@@ -94,6 +135,12 @@ public class MainWindow extends UIController<StackPane> {
 		ballcanvasAway.heightProperty()
 				.addListener(observable -> redrawCircle(ballcanvasAway, Color.YELLOW, ballcanvasAway.getWidth()));
 
+		Timeslider timeslider = new Timeslider();
+		timesliderContainer.getChildren().add(timeslider);
+		timeslider.minHeightProperty().bind(timesliderContainer.heightProperty());
+		timeslider.maxHeightProperty().bind(timesliderContainer.heightProperty());
+		timeslider.minWidthProperty().bind(timesliderContainer.widthProperty());
+		timeslider.maxWidthProperty().bind(timesliderContainer.widthProperty());
 		// spawn the window
 		this.spawnWindow();
 
@@ -111,15 +158,37 @@ public class MainWindow extends UIController<StackPane> {
 		gc.fillOval(0, 0, diameter, diameter);
 	}
 
-	public void addToFieldBase(FieldGame game) {
-		this.fieldBase.getChildren().add(game);
-	}
-
 	public <T extends UIComponent> void addToTop(T component, int column, int row) {
 		this.baseTop.add(component, column, row);
 	}
 
 	public <T extends UIComponent> void addToBottom(T component, int column, int row) {
 		this.baseBottom.add(component, column, row);
+	}
+
+	@FXML
+	private void enrollToolbox(ActionEvent e) {
+		toolboxEnroller.handleRolling(e);
+	}
+
+	@FXML
+	private void enrollProfilemenu(ActionEvent e) {
+		profilemenuEnroller.handleRolling(e);
+	}
+
+	@FXML
+	private void minimize(ActionEvent e) {
+		((Stage) this.getScene().getWindow()).setFullScreen(!((Stage) this.getScene().getWindow()).isFullScreen());
+	}
+
+	@FXML
+	private void iconize(ActionEvent e) {
+		((Stage) this.getScene().getWindow()).setIconified(true);
+	}
+
+	@FXML
+	private void exit(ActionEvent e) {
+		Platform.exit();
+		System.exit(0);
 	}
 }

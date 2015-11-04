@@ -38,7 +38,6 @@ public class KeyInputHandler extends GameObject {
 		
 		_keyPressedHandler = new KeyPressedHandler();
 		_keyReleasedHandler = new KeyReleasedHandler();		
-		System.out.println("KeyInputHandler()");
 	}
 	
 	

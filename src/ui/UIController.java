@@ -14,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import util.Logger;
@@ -71,6 +72,7 @@ abstract public class UIController<T extends Pane> {
         // load the template from file
         this.loadFXML(fxmlFile);
         this.setTitle(this.getName());
+        this.setIcon();
         this.setScene(new Scene(this.getRootNode(), width, height));
     }
 
@@ -90,6 +92,7 @@ abstract public class UIController<T extends Pane> {
         // load the template from file
         this.loadFXML(fxmlFile);
         this.setTitle(name);
+        this.setIcon();
         this.setScene(new Scene(this.getRootNode(), 600, 400));
         this.loadCSS("application.css");
     }
@@ -299,6 +302,13 @@ abstract public class UIController<T extends Pane> {
         this.title = title;
         this.getStage().setTitle(this.getTitle());
     }
+
+    /**
+     * Sets the icon of the stage (the icon shown in the taskbar).
+     */
+	public void setIcon() {
+		this.getStage().getIcons().add(new Image("/view/icon/icon32.png"));
+	}
 
     /**
      * Shows the window.

@@ -14,8 +14,9 @@
 <?import javafx.scene.Group?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.BorderPane?>
 
-<StackPane id="rootNode" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane fx:id="rootNode" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 
 	<fx:define>
 		<Double fx:value="1.7976931348623157E308" fx:id="maxValue" />
@@ -90,7 +91,7 @@
 							<RowConstraints percentHeight="100.0" />
 						</rowConstraints>
 						<children>
-						<Button id="profileButton" maxHeight="${maxValue}" maxWidth="${maxValue}" text="Current User" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS">
+						<Button id="profileButton" maxHeight="${maxValue}" maxWidth="${maxValue}" text="Current User" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#enrollProfilemenu">
 							<graphic>
 								<ImageView>
 									<image>
@@ -101,7 +102,7 @@
 						</Button>
 						<Pane id="topButtonsSpacer" maxHeight="${maxValue}" pickOnBounds="false" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS">
 						</Pane>
-						<Button id="iconizeButton" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS">
+						<Button id="iconizeButton" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#iconize">
 							<graphic>
 								<ImageView>
 									<image>
@@ -110,7 +111,7 @@
 								</ImageView>
 							</graphic>
 						</Button>
-						<Button id="minimizeButton" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS">
+						<Button id="minimizeButton" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#minimize">
 							<graphic>
 								<ImageView>
 									<image>
@@ -119,7 +120,7 @@
 								</ImageView>
 							</graphic>
 						</Button>
-						<Button id="exitButton" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.columnIndex="4" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS">
+						<Button id="exitButton" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.columnIndex="4" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#exit">
 							<graphic>
 								<ImageView>
 									<image>
@@ -135,12 +136,29 @@
 			</children>
 		</GridPane>
 
-		<StackPane id="baseCenter" fx:id="baseCenter" GridPane.columnIndex="0" GridPane.rowIndex="1">
+		<Pane fx:id="centerwrapper" GridPane.columnIndex="0" GridPane.rowIndex="1">
 			<children>
-			<Group fx:id="fieldBase">
-			</Group>
+			<StackPane id="baseCenter" fx:id="baseCenter">
+				<children>
+				<Group fx:id="fieldBase">
+				</Group>
+				<BorderPane fx:id="matchlog" pickOnBounds="false"></BorderPane>
+				<GridPane pickOnBounds="false">
+					<columnConstraints>
+						<ColumnConstraints percentWidth="100.0" />
+					</columnConstraints>
+					<rowConstraints>
+						<RowConstraints percentHeight="50.0" />
+						<RowConstraints percentHeight="50.0" />
+					</rowConstraints>
+					<children>
+					<BorderPane fx:id="toolbox" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="1"></BorderPane>
+				</children>
+				</GridPane>
 			</children>
-		</StackPane>
+			</StackPane>
+			</children>
+		</Pane>
 
 		<GridPane id="baseBottom" fx:id="baseBottom" GridPane.columnIndex="0" GridPane.rowIndex="2">
 			<columnConstraints>
@@ -153,7 +171,7 @@
 				</rowConstraints>
 				
 				<children>
-				<Button id="enrollButton" maxHeight="${maxValue}" GridPane.columnIndex="0" GridPane.rowIndex="0">
+				<Button id="enrollButton" maxHeight="${maxValue}" GridPane.columnIndex="0" GridPane.rowIndex="0" onAction="#enrollToolbox">
 					<graphic>
 						<ImageView id="enrollIcon">
 							<image>
@@ -162,6 +180,7 @@
 						</ImageView>
 					</graphic>
 				</Button>
+				<Pane fx:id="timesliderContainer" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.hgrow="ALWAYS" GridPane.columnIndex="1" GridPane.rowIndex="0"></Pane>
 				<Button id="secondscreenButton" maxHeight="${maxValue}" GridPane.columnIndex="2" GridPane.rowIndex="0">
 					<graphic>
 						<ImageView>
@@ -173,11 +192,10 @@
 				</Button>
 				</children>
 			</GridPane>
-
 		</children>
 	</GridPane>
 
-	<GridPane id="overlay" fx:id="overlay" opacity="0.0" pickOnBounds="false">
+	<GridPane id="overlay" fx:id="overlay" pickOnBounds="false">
 		<columnConstraints>
 			<ColumnConstraints percentWidth="20.0" />
 			<ColumnConstraints percentWidth="80.0" />
@@ -187,6 +205,9 @@
 			<RowConstraints percentHeight="30.0" />
 			<RowConstraints percentHeight="64.0" />
 		</rowConstraints>
+		<children>
+		<BorderPane fx:id="profilemenu" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="1" minHeight="0.0"></BorderPane>
+		</children>
 	</GridPane>
 	</children>
 </StackPane>
