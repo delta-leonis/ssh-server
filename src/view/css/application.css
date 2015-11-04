@@ -1,0 +1,7 @@
+.slider .track {
+    -fx-background-color:null;  /* Hide the track */
+}
+
+.slider .thumb {
+    -fx-padding: 7;
+}
