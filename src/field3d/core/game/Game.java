@@ -37,13 +37,16 @@ public abstract class Game extends SubScene {
 	
 	private KeyInputHandler _keyInputHandler;
 	private MouseInputHandler _mouseInputHandler;
+	private SubScene _3dScene;
 	
 	private Camera _camera;
 	private ThirdPersonCamera _thirdPersonCamera;
-	
-	private Group _rootGroup;
+
 	private Group _worldGroup;
 	private Group _cameraGroup;
+	
+	private Group _2dGroup;
+	private Group _3dGroup;
 	
 	private long _curTime, _prevTime;
 	
@@ -60,16 +63,16 @@ public abstract class Game extends SubScene {
 		super(root, width, height);
 		
 		// Initialize
-		initialize();
+		initialize(width, height, true, SceneAntialiasing.DISABLED);
 	}
 	
 	public Game(Parent root, double width, double height, boolean depthBuffer, SceneAntialiasing antiAliasing) {
 		
 		// Initialize super class
-		super(root, width, height, depthBuffer, antiAliasing);
+		super(root, width, height, false, antiAliasing);
 		
 		// Initialize
-		initialize();
+		initialize(width, height, depthBuffer, antiAliasing);
 	}
 	
 	
@@ -180,9 +183,11 @@ public abstract class Game extends SubScene {
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	//public Scene GetMainScene() { return _mainScene; }
 	
-	public Group GetRootGroup() { return _rootGroup; }
 	public Group GetWorldGroup() { return _worldGroup; }
 	public Group GetCameraGroup() { return _cameraGroup; }
+	
+	public Group Get2DGroup() { return _2dGroup; }
+	public Group Get3DGroup() { return _3dGroup; }
 	
 	public KeyInputHandler GetKeyInputHandler() { return _keyInputHandler; }
 	public MouseInputHandler GetMouseInputHandler() { return _mouseInputHandler; }
@@ -206,7 +211,7 @@ public abstract class Game extends SubScene {
 	//	Private methods
 	//
 	///////////////////////////////////////////////////////////////////////////////////////////////
-	private void initialize() {
+	private void initialize(double width, double height, boolean depthBuffer, SceneAntialiasing antiAliasing) {
 		
 		EventHandler<ActionEvent> onFinished = new EventHandler<ActionEvent>() {
 			
@@ -220,6 +225,8 @@ public abstract class Game extends SubScene {
 		// Creating groups
 		_cameraGroup = new Group();
 		_worldGroup = new Group();
+		_2dGroup = new Group();
+		_3dGroup = new Group();
 		
 		// Creating new array list for the game objects
 		_gameObjects = new ArrayList<GameObject>();
@@ -238,24 +245,31 @@ public abstract class Game extends SubScene {
 		_animationTimerHandler = new AnimationTimerHandler();
 		_timeline = new Timeline();
 		
+		// Create 3D Scene
+		_3dScene = new SubScene(_3dGroup, width, height, depthBuffer, antiAliasing);
 		
-		// Setting root group
-		_rootGroup = (Group)getRoot();
+		
+		// Get 2d group (root of this SubScene);
+		_2dGroup = (Group)this.getRoot();
+		
+		// Add 3d scene to scene
+		_2dGroup.getChildren().add(_3dScene);
+		
 		// Setting default values
 		_curTime = _prevTime = 0;
 		
 		
 		// Adding camera group to the root group
-		_rootGroup.getChildren().add(_cameraGroup);
+		_3dGroup.getChildren().add(_cameraGroup);
 		// Adding world group to the root group
-		_rootGroup.getChildren().add(_worldGroup);
+		_3dGroup.getChildren().add(_worldGroup);
 		
 		// Add key frame to our time line
 		_timeline.getKeyFrames().add(keyFrame);
 		
 		
-		//setCamera(this.GetCamera().getPerspectiveCamera());
-		setCamera(_thirdPersonCamera.GetPerspectiveCamera());
+		// Setting the camera of the 3D SubScene
+		_3dScene.setCamera(_thirdPersonCamera.GetPerspectiveCamera());
 	}
 	
 	private void updateGameObjects(long timeDivNano) {
