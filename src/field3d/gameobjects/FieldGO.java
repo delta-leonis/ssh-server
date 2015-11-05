@@ -26,6 +26,10 @@ import javafx.scene.transform.Rotate;
 // TODO: Javadoc, cleanup
 public class FieldGO extends GameObject {
 	
+	// TODO: read from model
+	public static final double FIELD_PENALTY_SPOT = 1000.0;
+	public static final double FIELD_PENALTY_SPOT_SIZE = 10.0;
+	
 	
 	private ArrayList<Box> _fieldTiles;
 	private ArrayList<Box> _fieldLines;
@@ -33,6 +37,8 @@ public class FieldGO extends GameObject {
 	private PhongMaterial _grassMaterial;
 	private Image _grassTexture;
 	private GoalContextMenu _goalContextMenu;
+	private PenaltySpotGO _penaltySpot1;
+	private PenaltySpotGO _penaltySpot2;
 	
 	private double _width, _height; 
 	private double _tileWidth, _tileHeight;
@@ -49,6 +55,8 @@ public class FieldGO extends GameObject {
 		_fieldLines = new ArrayList<Box>();
 		_grassMaterial = new PhongMaterial(Color.LAWNGREEN);
 		_goalContextMenu = new GoalContextMenu(GetGame(), 1000, 500);
+		_penaltySpot1 = new PenaltySpotGO(GetGame(), new Vector3f((float)((width / 2.0) - FIELD_PENALTY_SPOT), 20, 0), FIELD_PENALTY_SPOT_SIZE);
+		_penaltySpot2 = new PenaltySpotGO(GetGame(), new Vector3f((float)(-(width / 2.0) + FIELD_PENALTY_SPOT), 20, 0), FIELD_PENALTY_SPOT_SIZE);
 		
 		
 		_width = width;
@@ -88,6 +96,8 @@ public class FieldGO extends GameObject {
 		generateArcs();
 		
 		GetGame().AddGameObject(_goalContextMenu);
+		GetGame().AddGameObject(_penaltySpot1);
+		GetGame().AddGameObject(_penaltySpot2);
 	}
 
 	@Override

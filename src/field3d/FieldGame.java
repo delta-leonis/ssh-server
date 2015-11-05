@@ -35,8 +35,7 @@ public class FieldGame extends Game {
 	public static final double FIELD_GOAL_DEPTH = 200.0;
 	public static final double FIELD_GOAL_HEIGHT = 190.0;
 	public static final double FIELD_GOAL_LINE_WIDTH = 5.0;
-	public static final double FIELD_PENALTY_SPOT = 1000.0;
-	public static final double FIELD_PENALTY_SPOT_SIZE = 10.0;
+	
 	
 	
 
@@ -52,9 +51,6 @@ public class FieldGame extends Game {
 	private FieldGO _field;
 	private SkyboxGO _skybox;
 	private CameraPresetOverlay _cameraPresetOverlay;
-	// TODO: move to field
-	private PenaltySpotGO _penaltySpot1;
-	private PenaltySpotGO _penaltySpot2;
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////
@@ -62,14 +58,6 @@ public class FieldGame extends Game {
 	//	Constructors
 	//
 	///////////////////////////////////////////////////////////////////////////////////////////////
-	/*public FieldGame(Parent root, double width, double height, Scene mainScene) {
-		
-		// Initialize super class
-		super(root, width, height, mainScene);
-		
-		initialize();
-	}*/
-	
 	public FieldGame(Parent root, double width, double height, SceneAntialiasing antiAliasing) {
 		
 		// Initialize super class
@@ -98,8 +86,6 @@ public class FieldGame extends Game {
 		// Adding game objects
 		AddGameObject(_field);
 		//AddGameObject(_skybox);
-		AddGameObject(_penaltySpot1);
-		AddGameObject(_penaltySpot2);
 		AddGameObject(_cameraPresetOverlay);
 		
 		CarGO car = new CarGO(this);
@@ -148,8 +134,7 @@ public class FieldGame extends Game {
 		_cameraPresetOverlay = new CameraPresetOverlay(this);
 		
 		// TODO: move to field
-		_penaltySpot1 = new PenaltySpotGO(this, new Vector3f((float)((FIELD_WIDTH / 2.0) - FIELD_PENALTY_SPOT), 20, 0), FIELD_PENALTY_SPOT_SIZE);
-		_penaltySpot2 = new PenaltySpotGO(this, new Vector3f((float)(-(FIELD_WIDTH / 2.0) + FIELD_PENALTY_SPOT), 20, 0), FIELD_PENALTY_SPOT_SIZE);
+		
 	
 		
 		// Setup lights
