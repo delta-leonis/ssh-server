@@ -25,27 +25,29 @@ import org.fxmisc.richtext.StyleSpansBuilder;
 public class ColoredCodeArea extends CodeArea{
 	private String styleSheet;
 
-	// Java Keywords Variables
-	private static final String[] KEYWORDS = new String[] {
-            "abstract", "assert", "boolean", "break", "byte",
-            "case", "catch", "char", "class", "const",
-            "continue", "default", "do", "double", "else",
-            "enum", "extends", "final", "finally", "float",
-            "for", "goto", "if", "implements", "import",
-            "instanceof", "int", "interface", "long", "native",
-            "new", "package", "private", "protected", "public",
-            "return", "short", "static", "strictfp", "super",
-            "switch", "synchronized", "this", "throw", "throws",
-            "transient", "try", "void", "volatile", "while", "function", "end"
-    };
+    /** Lua keyword variables */
+    private static final String[] KEYWORDS = new String[] { 
+            "and", "break", "do", "else", "elseif", "end", "false",
+            "finally", "float", "for", "function", "if", "in", 
+            "local", "nil", "not", "or", "repeat", "return", "then",
+            "true", "until", "while" 
+            };
 
+	/** Joins all keywords together into a pattern*/
     private static final String KEYWORD_PATTERN = "\\b(" + String.join("|", KEYWORDS) + ")\\b";
+    /** Pattern for Parentheses:  ( ) */
     private static final String PAREN_PATTERN = "\\(|\\)";
+    /** Pattern for Braces: { } */
     private static final String BRACE_PATTERN = "\\{|\\}";
+    /** Pattern for Brackets: [ ] */
     private static final String BRACKET_PATTERN = "\\[|\\]";
+    /** Pattern for Semicolon: ; */
     private static final String SEMICOLON_PATTERN = "\\;";
+    /** Pattern for a String: "string" (Anything between quotes gets colored too)*/
     private static final String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"";
-    private static final String COMMENT_PATTERN = "//[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/";
+    /** Pattern for comments: singleline:  -- Comment   Multiline: --[[ Comment ]]-- */
+    private static final String COMMENT_PATTERN =   "--\\[\\[" + "(.|\\R)*?" + "\\]\\]--" + "|" + "--[^\n]*";
+    /** Default pattern. Works on anything */
     private static final String DEFAULT = ".";
 
     private static Pattern PATTERN;
