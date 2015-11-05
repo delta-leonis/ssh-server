@@ -2,6 +2,8 @@ package examples;
 
 import java.util.ArrayList;
 
+import org.ssh.ui.components.BorderSlideBar;
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,7 +17,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import ui.components.BorderSlideBar;
 
 /**
  * Example that shows the three different ways you can use the {@link BorderSlideBar}

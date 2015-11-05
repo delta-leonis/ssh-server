@@ -2,12 +2,13 @@ package examples;
 
 import java.io.File;
 
+import org.ssh.ui.lua.editor.Animal;
+import org.ssh.ui.lua.editor.IReloadable;
+import org.ssh.ui.lua.editor.ScriptEditor;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import ui.lua.editor.Animal;
-import ui.lua.editor.IReloadable;
-import ui.lua.editor.ScriptEditor;
 
 /**
  * Example that opens several {@link ScriptEditor Editors}.

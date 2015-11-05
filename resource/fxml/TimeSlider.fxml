@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox id="HBox" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.sections.timerslider.TimerSlider">
+<HBox id="HBox" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ssh.ui.sections.timerslider.TimerSlider">
 <children>
       <GridPane maxHeight="44.0" maxWidth="66.0" minHeight="44.0" minWidth="66.0">
         <columnConstraints>

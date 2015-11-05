@@ -4,13 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import application.Models;
+import org.ssh.managers.Models;
+import org.ssh.models.FieldObject;
+import org.ssh.models.Model;
+import org.ssh.models.Robot;
+import org.ssh.util.Logger;
+
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
-import model.FieldObject;
-import model.Model;
-import model.Robot;
-import util.Logger;
 
 public class ModelExample {
 	private static Logger logger = Logger.getLogger();
@@ -28,12 +29,12 @@ public class ModelExample {
 		// with json
 		Models.create(Robot.class, 12, Color.YELLOW);
 
-		// Retrieve a model
+		// Retrieve a org.ssh.models
 		Optional<Model> oRobot = Models.get("robot Y3");
 
 		// check if found
 		if (!oRobot.isPresent()) {
-			logger.severe("robot model Y3 not found");
+			logger.severe("robot org.ssh.models Y3 not found");
 			return;
 		}
 

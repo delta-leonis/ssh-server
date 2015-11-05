@@ -242,13 +242,13 @@ public final class Radio {
       return true;
     }
 
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
+    public void writeTo(com.google.protobuf.CodedOutputStream org.ssh.senders)
                         throws java.io.IOException {
       getSerializedSize();
       for (int i = 0; i < command_.size(); i++) {
-        output.writeMessage(1, command_.get(i));
+        org.ssh.senders.writeMessage(1, command_.get(i));
       }
-      getUnknownFields().writeTo(output);
+      getUnknownFields().writeTo(org.ssh.senders);
     }
 
     private int memoizedSerializedSize = -1;
@@ -1354,34 +1354,34 @@ public final class Radio {
       return true;
     }
 
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
+    public void writeTo(com.google.protobuf.CodedOutputStream org.ssh.senders)
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeInt32(1, robotId_);
+        org.ssh.senders.writeInt32(1, robotId_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeFloat(2, velocityX_);
+        org.ssh.senders.writeFloat(2, velocityX_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeFloat(3, velocityY_);
+        org.ssh.senders.writeFloat(3, velocityY_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeFloat(4, velocityR_);
+        org.ssh.senders.writeFloat(4, velocityR_);
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeFloat(5, flatKick_);
+        org.ssh.senders.writeFloat(5, flatKick_);
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        output.writeFloat(6, chipKick_);
+        org.ssh.senders.writeFloat(6, chipKick_);
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
-        output.writeFloat(7, dribblerSpin_);
+        org.ssh.senders.writeFloat(7, dribblerSpin_);
       }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
-        output.writeInt32(8, distance_);
+        org.ssh.senders.writeInt32(8, distance_);
       }
-      getUnknownFields().writeTo(output);
+      getUnknownFields().writeTo(org.ssh.senders);
     }
 
     private int memoizedSerializedSize = -1;

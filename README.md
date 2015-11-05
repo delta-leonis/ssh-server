@@ -11,17 +11,17 @@ This is the RoboCup server software for team SSH (Small Size Holland) for runnin
     lib/                  This folder contains external libraries
     protobuf/             This folder contains the protobuf files
     src/                  This folder contains the project's source code
-      |-  controllers/    This folder contains logic for external (handheld) controllers
+      |-  org.ssh.controllers/    This folder contains logic for external (handheld) org.ssh.controllers
       |-  gui/            This folder contains logic for the graphical interface
         |-  lua           This folder contains logic for the LUA-engine
         \-  media         This folder contains media related to the graphical interface
-      |-  input/          This folder contains logic for the data-pipeline
-        \-  parser/       This folder contains the data-pipeline's parser
-      |-  model/          This folder contains the model of the application
+      |-  input/          This folder contains logic for the data-org.ssh.services.pipeline
+        \-  parser/       This folder contains the data-org.ssh.services.pipeline's parser
+      |-  org.ssh.models/          This folder contains the org.ssh.models of the org.ssh.managers
         |-  enum/         This folder contains all enum's for the project.
         \-  message/      This folder contains logic for the SSL-Vision messages (protobuf)
-      |-  output/         This folder contains logic for output (sending commands to the robots)
-      \-  strategy/       This folder contains logic for the strategy
+      |-  org.ssh.senders/         This folder contains logic for org.ssh.senders (sending commands to the robots)
+      \-  org.ssh.strategy/       This folder contains logic for the org.ssh.strategy
         \-  shrouds       This folder contains mathematical models of game objects
     config/               This folder contains configuration files for the project
     test/                 This folder contains tests

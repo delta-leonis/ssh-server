@@ -4,22 +4,23 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.stream.Stream;
 
-import application.Models;
-import application.Services;
-import controllers.ControllerHandler;
-import controllers.ControllerLayout;
-import controllers.ControllerListener;
-import model.enums.ButtonFunction;
-import model.enums.SendMethod;
+import org.ssh.controllers.ControllerHandler;
+import org.ssh.controllers.ControllerLayout;
+import org.ssh.controllers.ControllerListener;
+import org.ssh.managers.Models;
+import org.ssh.managers.Services;
+import org.ssh.models.enums.ButtonFunction;
+import org.ssh.models.enums.SendMethod;
+import org.ssh.pipelines.RadioPipeline;
+import org.ssh.senders.DebugSender;
+import org.ssh.senders.UDPSender;
+import org.ssh.services.consumers.RadioPacketConsumer;
+import org.ssh.services.producers.Communicator;
+import org.ssh.util.Logger;
+
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
-import output.Communicator;
-import output.Debug;
-import output.RadioPacketConsumer;
-import output.UDPSender;
-import pipelines.RadioPipeline;
-import util.Logger;
 
 /**
  * Example to show how to create {@link ControllerHandler ControllerHandlers}, {@link ControllerLayout ControllerLayouts} and a {@link ControllerListener}.
@@ -37,18 +38,18 @@ public class ControllerExample {
 	public static void main(String[] args) throws InterruptedException {
 		// make models available
 		Models.start();
-		// make services available
+		// make org.ssh.services available
 		Services.start();
-		// create a comminucation pipeline
-		Services.addPipeline(new RadioPipeline("communication pipeline"));
+		// create a comminucation org.ssh.services.pipeline
+		Services.addPipeline(new RadioPipeline("communication org.ssh.services.pipeline"));
 		// create communicator (producer for RadioPackets)
 		Services.addService(new Communicator());
 		
 		RadioPacketConsumer radioConsumer = new RadioPacketConsumer();
-		radioConsumer.register(SendMethod.DEBUG, new Debug(Level.INFO));
+		radioConsumer.register(SendMethod.DEBUG, new DebugSender(Level.INFO));
 
 		//add a consumer voor radiopackets
-		Services.getPipeline("communication pipeline")
+		Services.getPipeline("communication org.ssh.services.pipeline")
 			.registerConsumer(radioConsumer);
 
 
@@ -106,9 +107,9 @@ public class ControllerExample {
 	 */
 	public static Optional<Controller> findAvailableController(String contains){
 		return Stream.of(ControllerEnvironment.getDefaultEnvironment().getControllers())
-				// filter controllers that met the name conditions
+				// filter org.ssh.controllers that met the name conditions
 				.filter(controller -> controller.getName().contains(contains))
-				// filter controllers that are available
+				// filter org.ssh.controllers that are available
 				.filter(controller -> availableController(controller))
 				//find the first in the list
 				.findFirst();

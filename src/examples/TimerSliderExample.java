@@ -1,12 +1,13 @@
 package examples;
 
+import org.ssh.ui.components.timerslider.TimerPane;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import ui.components.timerslider.TimerPane;
 
 /**
  * Example that uses the {@link TimerPane} and {@link TimerSlider}

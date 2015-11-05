@@ -13,15 +13,15 @@ rm -rf /tmp/ssh-protobuf/
 git clone -b development git@gitlab.com:smallsizeholland/ssh-protobuf.git /tmp/ssh-protobuf
 # get hash of current HEAD (used for naming later on)
 HASH=$( cd /tmp/ssh-protobuf/ && git rev-parse --short HEAD )
-# create output folder for java files and class files
-mkdir -p /tmp/ssh-protobuf/output
+# create org.ssh.senders folder for java files and class files
+mkdir -p /tmp/ssh-protobuf/org.ssh.senders
 # compile the .proto to .java
-protoc --java_out=/tmp/ssh-protobuf/output/ --proto_path=/tmp/ssh-protobuf/ /tmp/ssh-protobuf/*.proto
+protoc --java_out=/tmp/ssh-protobuf/org.ssh.senders/ --proto_path=/tmp/ssh-protobuf/ /tmp/ssh-protobuf/*.proto
 # compile .java to .class
-javac -d /tmp/ssh-protobuf/output/ -cp protobuf-java-3.0.0-beta-1.jar /tmp/ssh-protobuf/output/*/*.java
+javac -d /tmp/ssh-protobuf/org.ssh.senders/ -cp protobuf-java-3.0.0-beta-1.jar /tmp/ssh-protobuf/org.ssh.senders/*/*.java
 # package .class in .jar
-( cd /tmp/ssh-protobuf/output/ ; jar cvf protobuf-$HASH.jar */*.class )
+( cd /tmp/ssh-protobuf/org.ssh.senders/ ; jar cvf protobuf-$HASH.jar */*.class )
 # copy protobuf-HASH.jar to cwd
-cp /tmp/ssh-protobuf/output/*.jar ./
+cp /tmp/ssh-protobuf/org.ssh.senders/*.jar ./
 # clean /tmp/ssh-protobuf
 rm -rf /tmp/ssh-protobuf/
