@@ -3,6 +3,7 @@ package ui.sections;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -70,8 +71,7 @@ public class Timeslider extends UIComponent {
         // displayed
         goalCheckBox.setOnAction(e -> updateSlider());
         timeoutCheckBox.setOnAction(e -> updateSlider());
-        heightProperty().addListener(o -> updateSlider());
-        widthProperty().addListener(o -> updateSlider());
+        widthProperty().addListener(o -> Platform.runLater(() -> updateSlider()));
         
         setupTimer();
         setupButtonPane();
@@ -162,7 +162,6 @@ public class Timeslider extends UIComponent {
     private void addMarker(int x, String cssMarker) {
         double pos = x > slider.getMax() ? slider.getMax() : x / slider.getMax() * slider.getWidth();
         // TODO: Figure out a way to change size in css 
-        // TODO: Make Rectangles Observers? Resizing causes flickering now
         Rectangle sliderPoint = new Rectangle(pos - 2, progressBar.getHeight(), 4, 14); 
         sliderPoint.getStyleClass().add(cssMarker);
         sliderPoint.setLayoutX(pos - sliderPoint.getWidth());
