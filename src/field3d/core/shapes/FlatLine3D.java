@@ -1,11 +1,3 @@
-/**
- * FlatLine3D class
- * 
- * 	This class represents a flat(2d plane) line in 3d space, it gets drawn on the x, z axis.
- * 
- * @author Mark Lefering - 33043
- * @date 5 - 11 - 2015
- */
 package field3d.core.shapes;
 
 
@@ -13,6 +5,14 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
 
+/**
+ * FlatLine3D class
+ * 
+ * 	This class represents a flat(2d plane) line in 3d space, it gets drawn on the x, z axis.
+ * 
+ * @author Mark Lefering - 33043
+ * @date 5-11-2015
+ */
 public class FlatLine3D {
 	
 	
@@ -45,9 +45,9 @@ public class FlatLine3D {
 	//
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	/**
-	 * Constructor
 	 * 
-	 * This method is responsible for building the triangle mesh of the line
+	 * Constructor
+	 *
 	 * @param startX Start of the line, x coordinate.
 	 * @param startZ Start of the line, z coordinate.
 	 * @param endX End of the line, x coordinate.
@@ -82,7 +82,8 @@ public class FlatLine3D {
 	/**
 	 * Build mesh method.
 	 * 
-	 * This method is responsible for building the triangle mesh of the line
+	 * This method is responsible for building the triangle mesh of the line.
+	 * 
 	 * @param startX Start of the line, x coordinate.
 	 * @param startZ Start of the line, z coordinate.
 	 * @param endX End of the line, x coordinate.
