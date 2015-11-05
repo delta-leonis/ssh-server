@@ -43,5 +43,4 @@ public abstract class GameObject {
 	//
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	public Game GetGame() { return _game; }
-	public KeyInputHandler GetKeyInputHandler() { return _game.GetKeyInputHandler(); }
 }

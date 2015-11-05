@@ -7,6 +7,7 @@ import field3d.gameobjects.CarGO;
 import field3d.gameobjects.FieldGO;
 import field3d.gameobjects.RobotGO;
 import field3d.gameobjects.overlay.CameraControlOverlayGO;
+
 import javafx.scene.AmbientLight;
 import javafx.scene.Parent;
 import javafx.scene.PointLight;
@@ -53,7 +54,7 @@ public class FieldGame extends Game {
 	
 	private FieldGO _field;
 	private CameraControlOverlayGO _cameraControlOverlay;
-	private CarGO _easterCar = new CarGO(this);
+	private CarGO _easterCar;
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////

@@ -24,7 +24,7 @@ public class CarGO extends GameObject {
 		
 		if (modelImporter.getImport().length > 0) {
 			
-			System.out.println(modelImporter.getImport().length);
+			//System.out.println(modelImporter.getImport().length);
 			
 			for (int i = 0; i < modelImporter.getImport().length; i++) {
 				
