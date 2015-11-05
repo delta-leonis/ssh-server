@@ -18,7 +18,7 @@ import javafx.scene.input.MouseEvent;
  * @author marklef2
  * @date 5-11-2015
  */
-public class CameraPresetOverlay extends GameObject {
+public class CameraControlOverlayGO extends GameObject {
 	
 	// TODO: move to config
 	private static final int BUTTON_OFFSET = 35;
@@ -38,7 +38,7 @@ public class CameraPresetOverlay extends GameObject {
 	private Button _buttonZoomOut;
 	
 
-	public CameraPresetOverlay(Game game) {
+	public CameraControlOverlayGO(Game game) {
 		
 		// Initialize super class
 		super(game);
