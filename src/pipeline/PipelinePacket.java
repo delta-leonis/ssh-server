@@ -59,7 +59,7 @@ abstract public class PipelinePacket {
      *
      * @return The data inside the packet.
      */
-    abstract public MessageOrBuilder read();
+    abstract public Object read();
 
     /**
      * Save.

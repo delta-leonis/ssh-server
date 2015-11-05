@@ -17,6 +17,8 @@ import util.Logger;
  * Used for binding {@link AbstractComponent Components} as found in a {@link Controller} to a {@link ButtonFunction}.<br>
  * note: {@link ButtonFunctions} and {@link AbstractComponent} cannot be mounted more than one at a time.  
  * 
+ * TODO finish javadoc
+ * 
  * @author Jeroen
  *
  */
@@ -151,5 +153,10 @@ public class ControllerLayout extends Model{
 	
 	public Component getComponent(Identifier id){
 		return controller.getComponent(id);
+	}
+	
+	@Override
+	public String getConfigName(){
+		return Controller.class.getName() + controller.getName() +".json";
 	}
 }

@@ -25,7 +25,7 @@ import util.Logger;
  * @author Rimon Oz
  * @param <T> A PipelinePacket this Pipeline can work with.
  */
-abstract public class Pipeline<T extends PipelinePacket> {
+public abstract class Pipeline<T extends PipelinePacket> {
 
     /**  The name of the Pipeline. */
     private final String name;
@@ -139,9 +139,9 @@ abstract public class Pipeline<T extends PipelinePacket> {
      * @param consumer The Consumer to be registered with the Pipeline.
      * @return         true, if successful
      */
-    public boolean registerConsumer(Consumer<T> consumer) {
+    public <P extends PipelinePacket, C extends Consumer<P>> boolean registerConsumer(C consumer) {
         Pipeline.logger.info("Consumer named %s registered to pipeline %s.", consumer.getName(), this.getName());
-        return this.consumers.add(consumer);
+        return this.consumers.add((Consumer<T>) consumer);
     }
 
     /**
@@ -164,9 +164,9 @@ abstract public class Pipeline<T extends PipelinePacket> {
      * @param consumer The Coupler to be registered with the Pipeline.
      * @return         true, if successful
      */
-    public boolean registerCoupler(Coupler<T> coupler) {
+    public <P extends PipelinePacket, C extends Coupler<P>> boolean registerCoupler(C coupler) {
         Pipeline.logger.info("Coupler named %s registered to pipeline %s.", coupler.getName(), this.getName());
-        return this.couplers.put(coupler, Priority.MEDIUM) != null;
+        return this.couplers.put((Coupler<T>) coupler, Priority.MEDIUM) != null;
     }
 
     /**

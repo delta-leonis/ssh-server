@@ -48,7 +48,7 @@ public final class Services {
      * @see            services.ServicesController#addPipeline(Pipeline)
      */
     public static boolean addPipeline(Pipeline<?> pipeline) {
-        Services.logger.info("Adding pipeline: " + pipeline.getClass().getName());
+        Services.logger.info("Adding pipeline<%s>: %s", pipeline.getType(), pipeline.getClass().getName());
         return Services.servicesController.addPipeline(pipeline);
     }
 
@@ -197,9 +197,11 @@ public final class Services {
      * @param name The name of the Pipeline.
      * @return     The requested Pipeline.
      */
-    public static Pipeline<?> getPipeline(String name) {
+    public static <T extends PipelinePacket> Pipeline<?> getPipeline(String name) {
         Services.logger.info("Getting Pipeline named %s", name);
-        return Services.servicesController.getPipeline(name);
+        Pipeline<T> pipeline = Services.servicesController.getPipeline(name);
+        logger.info(pipeline.getType().toString());
+        return pipeline;
     }
 
     /**

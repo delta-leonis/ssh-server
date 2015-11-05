@@ -6,6 +6,7 @@ import java.util.ListIterator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import application.Services;
 import net.java.games.input.Controller;
 import output.Communicator;
 import protobuf.Radio.RadioProtocolCommand;
@@ -15,6 +16,9 @@ import util.Logger;
 
 /**
  * A {@link Service} that manages all {@link ControllerHandler controllers} for every robotId
+ * 
+ *TODO
+ *Rimon fixt deze shit nog naar pipeline
  * 
  * @author Jeroen
  *
@@ -31,6 +35,10 @@ public class ControllerListener extends Service {
 	 * Whenever handlers should be updated, tmpHandlers != null. 
 	 */
 	private BiMap<Integer, ControllerHandler> tmpHandlers;
+	/**
+	 * A reference to the {@link Communicator} service
+	 */
+	Communicator communicator;
 	//respective logger
 	private Logger logger = Logger.getLogger();
 	
@@ -43,6 +51,7 @@ public class ControllerListener extends Service {
 		super("ControllerListener");
 		//TODO remove noRobots, read it from Models or something
 		IntStream.range(0, noRobots).forEach(index -> handlers.put(index, null));
+		communicator = (Communicator) Services.get("communicator");
 	}
 	
 	/**
@@ -158,12 +167,12 @@ public class ControllerListener extends Service {
 		handlers = tmpHandlers == null ? handlers : tmpHandlers;
 		tmpHandlers = null;
 
-		return Communicator.send((ArrayList<RadioProtocolCommand.Builder>) 
+		return communicator.send((ArrayList<RadioProtocolCommand.Builder>) 
 								//get all handlers
 								handlers.entrySet().stream()
 									// only proces handlers with a ControllerHandler assigned
 									.filter(entry -> isAssigned(entry.getKey()))
-									// process every ControlelrHandler
+									// process every ControllerHandler
 									.map(entry -> entry.getValue().process(entry.getKey()))
 									//collect the packets to a list
 									.collect(Collectors.toList()));

@@ -17,6 +17,5 @@ public class RadioPipeline extends Pipeline<RadioPacket> {
      */
     public RadioPipeline(String name) {
         super(name);
-        // TODO setup pipeline
     }
 }

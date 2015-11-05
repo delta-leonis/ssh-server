@@ -12,7 +12,7 @@ import pipeline.PipelinePacket;
  * @author Rimon Oz
  * @param <T> A PipelinePacket this Consumer can work with.
  */
-abstract public class Consumer<T extends PipelinePacket> extends Service<T> {
+public abstract class Consumer<T extends PipelinePacket> extends Service<T> {
 
     /**
      * Instantiates a new Consumer.

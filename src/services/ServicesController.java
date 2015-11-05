@@ -144,8 +144,8 @@ public class ServicesController {
      * @param name The name of the requested Pipeline.
      * @return     The requested Pipeline.
      */
-    public Pipeline<?> getPipeline(String name) {
-        return this.pipelineList.stream().filter(pipeline -> pipeline.getName().equals(name)).findFirst().get();
+    public <T extends PipelinePacket> Pipeline<T> getPipeline(String name) {
+        return (Pipeline<T>) this.pipelineList.stream().filter(pipeline -> pipeline.getName().equals(name)).findFirst().get();
     }
 
     /**

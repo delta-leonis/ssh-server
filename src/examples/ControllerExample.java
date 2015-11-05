@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.stream.Stream;
 
+import application.Models;
 import application.Services;
 import controllers.ControllerHandler;
 import controllers.ControllerLayout;
@@ -15,6 +16,9 @@ import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
 import output.Communicator;
 import output.Debug;
+import output.RadioPacketConsumer;
+import output.UDPSender;
+import pipelines.RadioPipeline;
 import util.Logger;
 
 /**
@@ -31,8 +35,22 @@ public class ControllerExample {
 	private static Logger logger = Logger.getLogger();
 
 	public static void main(String[] args) throws InterruptedException {
-		//register a new send method to monitor the output
-		Communicator.register(SendMethod.DEBUG, new Debug(Level.INFO));
+		// make models available
+		Models.start();
+		// make services available
+		Services.start();
+		// create a comminucation pipeline
+		Services.addPipeline(new RadioPipeline("communication pipeline"));
+		// create communicator (producer for RadioPackets)
+		Services.addService(new Communicator());
+		
+		RadioPacketConsumer radioConsumer = new RadioPacketConsumer();
+		radioConsumer.register(SendMethod.DEBUG, new Debug(Level.INFO));
+
+		//add a consumer voor radiopackets
+		Services.getPipeline("communication pipeline")
+			.registerConsumer(radioConsumer);
+
 
 		//create the service for the controller
 		ControllerListener listener = new ControllerListener(15); //15 = no. robots

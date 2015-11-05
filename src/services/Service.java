@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 
 import com.google.common.reflect.TypeToken;
 
+import application.Services;
 import pipeline.PipelinePacket;
 import util.Logger;
 
@@ -41,6 +42,7 @@ abstract public class Service<T extends PipelinePacket> {
     public Service(String name) {
         this.name = name;
         Service.logger.info("New Service instantiated of type %s named %s", this.type.toString(), name);
+        Services.addService(this);
     }
 
     /**

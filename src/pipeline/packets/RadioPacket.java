@@ -1,9 +1,12 @@
 package pipeline.packets;
 
+import com.google.protobuf.Message;
 import com.google.protobuf.MessageOrBuilder;
 
+import model.enums.SendMethod;
 import pipeline.PipelinePacket;
-import protobuf.Radio.RadioProtocolCommandOrBuilder;
+import protobuf.Radio.RadioProtocolWrapper;
+import protobuf.Radio.RadioProtocolWrapper.Builder;
 
 /**
  * The RadioPacket class.
@@ -13,24 +16,50 @@ import protobuf.Radio.RadioProtocolCommandOrBuilder;
 public class RadioPacket extends PipelinePacket {
     
     /** The data. */
-    private RadioProtocolCommandOrBuilder data;
+    private MessageOrBuilder data;
+	private SendMethod[] sendMethods;
 
     /**
      * Instantiates a new radio packet.
      *
-     * @param builder the builder
+     * @param builder	the message
+     * @param methods	specify senders different than default
      */
-    public RadioPacket(MessageOrBuilder builder) {
-        this.data = (RadioProtocolCommandOrBuilder) builder;
+    public RadioPacket(MessageOrBuilder message, SendMethod... methods) {
+        this.data = message;
+        this.sendMethods = methods;
     }
 
+    @Override
+    public boolean isMutable(){
+    	return (data instanceof Builder);
+    }
+    
     /**
      * Gets the data.
      *
      * @return the data
      */
-    public RadioProtocolCommandOrBuilder getData() {
+    public MessageOrBuilder getData() {
         return this.data;
+    }
+    
+
+    /**
+     * if neccesary will builds a {@link Message}, otherwise just casts it
+     * @return
+     */
+    public Message getMessage(){
+    	return isMutable() ? ((Builder)this.getData()).build() : (RadioProtocolWrapper) this.getData();
+    }
+
+    /**
+     * Will return {@link Builder} if {@link #getData()} is mutable (and thus an instance of {@link Builder}).
+     * otherwise will return a new {@link Builder}
+     * @return
+     */
+    public Builder getBuilder(){
+    	return isMutable() ? (Builder)this.getData() : ((RadioProtocolWrapper)this.getData()).toBuilder();
     }
 
     /* (non-Javadoc)
@@ -42,12 +71,16 @@ public class RadioPacket extends PipelinePacket {
     }
 
     /* (non-Javadoc)
-     * @see pipeline.PipelinePacket#save(com.google.protobuf.MessageOrBuilder)
+     * @see pipeline.PipelinePacket#save(Object)
      */
-    @SuppressWarnings("unchecked")
     @Override
-    public <T extends PipelinePacket> T save(MessageOrBuilder data) {
-        this.data = (RadioProtocolCommandOrBuilder) data;
+    @SuppressWarnings("unchecked")
+    public <T extends PipelinePacket> T save(MessageOrBuilder message) {
+        this.data = (MessageOrBuilder)message;
         return (T) this;
     }
+
+	public SendMethod[] getSendMethods() {
+		return this.sendMethods;
+	}
 }
