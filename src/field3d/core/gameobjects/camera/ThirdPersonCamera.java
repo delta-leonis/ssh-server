@@ -198,9 +198,6 @@ public class ThirdPersonCamera extends GameObject {
 		
 		if (_pivot.z < _locZMin) { _pivot.z = (float) _locZMin; }
 		else if (_pivot.z > _locZMax) { _pivot.z = (float) _locZMax; }
-		
-		
-		
 	}
 
 	@Override
