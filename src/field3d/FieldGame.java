@@ -7,15 +7,13 @@ import field3d.gameobjects.FieldGO;
 import field3d.gameobjects.PenaltySpotGO;
 import field3d.gameobjects.RobotGO;
 import field3d.gameobjects.SkyboxGO;
-
-
+import field3d.gameobjects.overlay.CameraPresetOverlay;
 import javafx.scene.AmbientLight;
 import javafx.scene.Parent;
 import javafx.scene.PointLight;
-import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
+
 
 
 
@@ -53,6 +51,7 @@ public class FieldGame extends Game {
 	
 	private FieldGO _field;
 	private SkyboxGO _skybox;
+	private CameraPresetOverlay _cameraPresetOverlay;
 	// TODO: move to field
 	private PenaltySpotGO _penaltySpot1;
 	private PenaltySpotGO _penaltySpot2;
@@ -101,10 +100,12 @@ public class FieldGame extends Game {
 		//AddGameObject(_skybox);
 		AddGameObject(_penaltySpot1);
 		AddGameObject(_penaltySpot2);
+		AddGameObject(_cameraPresetOverlay);
 		
 		CarGO car = new CarGO(this);
 		
 		AddGameObject(car);
+		
 		
 		// Create some robots
 		createRobots();
@@ -144,6 +145,7 @@ public class FieldGame extends Game {
 			
 		_field = new FieldGO(this, FIELD_REAL_WIDTH, FIELD_REAL_DEPTH);
 		_skybox = new SkyboxGO(this);
+		_cameraPresetOverlay = new CameraPresetOverlay(this);
 		
 		// TODO: move to field
 		_penaltySpot1 = new PenaltySpotGO(this, new Vector3f((float)((FIELD_WIDTH / 2.0) - FIELD_PENALTY_SPOT), 20, 0), FIELD_PENALTY_SPOT_SIZE);
