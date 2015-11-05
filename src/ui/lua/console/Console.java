@@ -1,16 +1,22 @@
 package ui.lua.console;
 
+import static javafx.scene.input.KeyCode.DOWN;
+import static javafx.scene.input.KeyCode.UP;
+import static org.fxmisc.wellbehaved.event.EventPattern.keyPressed;
+
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.stream.Collectors;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import org.fxmisc.wellbehaved.event.EventHandlerHelper;
 import org.luaj.vm2.LuaError;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
@@ -64,6 +70,13 @@ public class Console extends UIComponent {
     private List<Object> functionClasses;
     /** ScriptEngine for handling scripts in lua */
     private ScriptEngine scriptEngine;
+        /* Variables for handling command history */
+    /** A list containing all previous commands */
+    private List<String> recentCommands;
+    /** selecting = true when the user is selecting commands using the up and down keys */
+    private boolean selecting = false;
+    /** Used to iterate through the recentCommands */
+    private ListIterator<String> iterator;
 
     /**
      * The constructor of the {@link Console}. 
@@ -76,15 +89,17 @@ public class Console extends UIComponent {
         functionClasses = LuaUtils.getAllAvailableInLua();
         // Create an outputstream that use the {@link Console} to write in the {@link ConsoleArea}
         out = new ConsoleOutput(this);
+        // Initialize the command history
+        recentCommands = new ArrayList<String>();
 
         // Create TextArea using the classes and functions found using reflection
-        consoleArea = new ConsoleArea();
-        consoleArea.setupConsoleArea(this, getClasses(), getFunctions());
+        consoleArea = new ConsoleArea(getClasses(), getFunctions());
+        // Make the area resizable
         consoleArea.setWrapText(true);
         this.add(consoleArea);
 
         // Make sure keypresses like tab and enter are handled
-        addKeyListener();
+        addKeyListeners();
         
         // Sets up the script engine
         setupScriptEngine();
@@ -99,10 +114,10 @@ public class Console extends UIComponent {
     private List<String> getClasses() {
         if(functionClasses == null)
             return null;
-        // Create empty arraylist
-        List<String> strings = functionClasses.stream().map(o -> getSimpleName(o)).collect(Collectors.toList());
-        // Add String to the list
-        strings.add("String");
+        // Turn everything into a stream
+        List<String> strings = functionClasses.stream().map(o ->
+                // and get the simple name of each class
+                getSimpleName(o)).collect(Collectors.toList());
         return strings;
     }
 
@@ -136,37 +151,56 @@ public class Console extends UIComponent {
      * Makes sure code gets executed when enter or tab is pressed. <br/>
      * If enter is pressed, the command will get executed <br/>
      * If alt-enter is pressed, a new line will be printed <br/>
-     * If tab is pressed, the word you're currently typing will autocomplete.
+     * If tab is pressed, the word you're currently typing will autocomplete. <br/>
+     * If Up is pressed, the last command will show. Also used to scroll through commands <br/>
+     * If Down is pressed, you can scroll through the commands.
      */
-    private void addKeyListener() {
-        consoleArea.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            // Save the last line, since it's used often
-            int lastLine = consoleArea.getText().length();
-            // When enter is pressed
-            if (event.getCode() == KeyCode.ENTER) {
-                // Check whether it's alt+enter. (Only println in this case)
-                if (event.isAltDown()) {
-                    println("");
-                } 
-                // Else, retrieve the current command and execute it
-                else {
-                    String currentCommand = consoleArea.getText(currentLine, lastLine);
-                    executeCommand(currentCommand);
-                }
-            // When Tab is pressed
-            } else if (event.getCode() == KeyCode.TAB) {
-                // Where the cursor is located (caret)
-                int caretPos = consoleArea.getCaretPosition();
-                // The command we're currently auto completing is a substring of the currentline till our cursor
-                String command = consoleArea.getText(currentLine, caretPos);
-                // Handle the tab using this unfinished command
-                String result = handleTab(command);
-                // If the handleTab function returns anything useful
-                if (result != null)
-                    // Use it
-                    consoleArea.replaceText(caretPos, caretPos, result);
+    private void addKeyListeners() {
+        EventHandlerHelper.install(consoleArea.onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(UP)).act(event -> up()).create());
+        EventHandlerHelper.install(consoleArea.onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(DOWN)).act(event -> down()).create());
+        EventHandlerHelper.install(consoleArea.onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(KeyCode.ENTER)).act(event -> handleEnter(event)).create());
+        EventHandlerHelper.install(consoleArea.onKeyPressedProperty(), EventHandlerHelper.on(keyPressed(KeyCode.TAB)).act(event -> handleTab(event)).create());
+    }
+
+    /**
+     * Function that gets called when tab is pressed
+     * Autocompletes the current command
+     * @param event The KeyEvent generated by the event
+     */
+    private void handleTab(KeyEvent event){
+     // Where the cursor is located (caret)
+        int caretPos = consoleArea.getCaretPosition();
+        // The command we're currently auto completing is a substring of the currentline till our cursor
+        String command = consoleArea.getText(currentLine, caretPos);
+        // Handle the tab using this unfinished command
+        String result = autocomplete(command);
+        // If the handleTab function returns anything useful
+        if (result != null)
+            // Use it
+            consoleArea.replaceText(caretPos, caretPos, result);
+    }
+
+    /**
+     * Eventhandler when enter is pressed
+     * Either executes the current command,
+     * or creates a new line when alt is held at the same time
+     * @param event The event generated by a keyevent
+     */
+    private void handleEnter(KeyEvent event){
+     // Save the last line, since it's used often
+        int lastLine = consoleArea.getText().length();
+        // When enter is pressed
+        if (event.getCode() == KeyCode.ENTER) {
+            // Check whether it's alt+enter. (Only println in this case)
+            if (event.isAltDown()) {
+                println("");
             }
-        });
+            // Else, retrieve the current command and execute it
+            else {
+                String currentCommand = consoleArea.getText(currentLine, lastLine);
+                executeCommand(currentCommand);
+            }
+        }
     }
 
     /**
@@ -178,7 +212,7 @@ public class Console extends UIComponent {
      * @return The part of the command that's missing, for example
      *         "tFunctions()" or "tions"
      */
-    private String handleTab(String command) {
+    private String autocomplete(String command) {
         // Split whatever was before it
         String[] split = command.split("\\(|\\)|(\\r?\\n)|\\s+");
 
@@ -263,13 +297,6 @@ public class Console extends UIComponent {
     }
 
     /**
-     * @return the currentLine (Where the current command starts)
-     */
-    public int getCurrentLine() {
-        return currentLine;
-    }
-
-    /**
      * @param o
      *            The object we need the simple name of
      * @return The simple name of the object. If an object has been turned into
@@ -338,7 +365,7 @@ public class Console extends UIComponent {
     private void executeCommand(String command){
         try {
             println("");
-            consoleArea.addCommand(command);
+            addCommand(command);
             // Leave console if exit
             if (command.equals("exit"))
                 System.exit(0);
@@ -353,5 +380,61 @@ public class Console extends UIComponent {
         // TODO: Block input until here?
         printCursor();
         currentLine = consoleArea.getText().length();
+        consoleArea.setCurrentLine(currentLine);
+    }
+
+    /** *************************************** **/
+    ///  Functions that handle command history  ///
+    /** *************************************** **/
+
+    /**
+     * Function that gets called when the up arrow is pressed
+     * Goes to the previous command in the array
+     */
+    private void up(){
+        // If there are any previous commands
+        if(!recentCommands.isEmpty()){
+            // If we're not scrolling through commands yet
+            if(!selecting){
+                // Start selecting
+                selecting = true;
+                // Make a new iterator starting at the last command
+                iterator = recentCommands.listIterator(recentCommands.size());
+            }
+            // Scroll through list, make sure we don't go too far
+            if(!iterator.hasPrevious())
+                iterator = recentCommands.listIterator(recentCommands.size());
+            // Display the command
+            consoleArea.replaceText(currentLine, consoleArea.getLength(), iterator.previous());
+        }
+    }
+
+    /**
+     * Function that gets called when the down arrow is pressed
+     * Goes to the next command in the array
+     */
+    private void down(){
+        // If we're busy scrolling through commands
+        if(selecting){
+            // Scroll through the commands
+            if(!iterator.hasNext())
+                iterator = recentCommands.listIterator(0);
+            // Display the command
+            consoleArea.replaceText(currentLine, consoleArea.getLength(), iterator.next());
+        }
+    }
+
+    /**
+     * Call this after every function. Saves the command in a list which can be accessed by using the up and down keys.
+     * @param command The commands that'll be saved
+     */
+    private void addCommand(String command){
+        // Move existing commands up
+        if(recentCommands.contains(command))
+            recentCommands.remove(command);
+
+        recentCommands.add(command);
+        // We're not selecting anymore
+        selecting = false;
     }
 }
