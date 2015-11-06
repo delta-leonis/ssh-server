@@ -95,7 +95,7 @@ abstract public class UIController<T extends Pane> {
         this.setTitle(name);
         this.setIcon();
         this.setScene(new Scene(this.getRootNode(), 600, 400));
-        this.loadCSS("org.ssh.managers.css");
+        this.loadCSS("application.css");
     }
 
     /**
@@ -202,7 +202,7 @@ abstract public class UIController<T extends Pane> {
     public void loadCSS(final String fileName) {
         UIController.logger.info("Loaded CSS file %s into UIController %s.", fileName, this.getName());
         // apply the stylesheet
-        this.getScene().getStylesheets().add(this.getClass().getResource("/org.ssh.view/css/" + fileName).toExternalForm());
+        this.getScene().getStylesheets().add(this.getClass().getResource("/org/ssh/view/css/" + fileName).toExternalForm());
     }
 
     /**
@@ -215,7 +215,7 @@ abstract public class UIController<T extends Pane> {
         try {
         	
             // load the file
-            final FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/org.ssh.view/windows/" + fileName));
+            final FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/org/ssh/view/windows/" + fileName));
             // set this class to be the controller so the subclass will link its methods and attributes
             fxmlLoader.setController(this);
             // extract the Nodes
@@ -224,7 +224,7 @@ abstract public class UIController<T extends Pane> {
             if (!documentRoot.getClass().equals(this.getType())) {
                 // warn the user
                 UIController.logger.warning("Incorrect type of root Pane! Expected %s but found a %s in %s.",
-                        this.getType().toString(), documentRoot.getClass().toString(), "/org.ssh.view/" + fileName);
+                        this.getType().toString(), documentRoot.getClass().toString(), "/org/ssh/view/" + fileName);
             }
             // put the nodes in the window
             this.setRootNode(documentRoot);
@@ -308,7 +308,7 @@ abstract public class UIController<T extends Pane> {
      * Sets the icon of the stage (the icon shown in the taskbar).
      */
 	public void setIcon() {
-		this.getStage().getIcons().add(new Image("/org.ssh.view/icon/icon32.png"));
+		this.getStage().getIcons().add(new Image("/org/ssh/view/icon/icon32.png"));
 	}
 
     /**

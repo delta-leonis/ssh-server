@@ -75,10 +75,10 @@ abstract public class UIComponent extends Region {
      * @param fileName The name of the file (e.g. "org.ssh.managers.css")
      */
     public void loadCSS(final String fileName) {
-        UIComponent.logger.info("Loaded CSS file /org.ssh.view/css/%s into UIComponent %s.", fileName, this.getName());
+        UIComponent.logger.info("Loaded CSS file /org/ssh/view/css/%s into UIComponent %s.", fileName, this.getName());
         // apply the stylesheet
         Platform.runLater(() -> this.getScene().getStylesheets()
-                .addAll(this.getClass().getResource("/org.ssh.view/css/" + fileName).toExternalForm()));
+                .addAll(this.getClass().getResource("/org/ssh/view/css/" + fileName).toExternalForm()));
     }
 
     /**
@@ -91,7 +91,7 @@ abstract public class UIComponent extends Region {
     public boolean loadFXML(final String fileName) {
         try {
             // load the file
-            final FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/org.ssh.view/components/" + fileName));
+            final FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/org/ssh/view/components/" + fileName));
             // set this class to be the controller so the subclass will link its methods and attributes
             fxmlLoader.setController(this);
             // extract the Nodes
@@ -100,7 +100,7 @@ abstract public class UIComponent extends Region {
             //this.getChildren().add(documentRoot);
             Platform.runLater(() -> this.getChildren().add(documentRoot));
         } catch (final IOException exception) {
-            UIComponent.logger.warning("Couldn't load FXML file /org.ssh.view/components/%s into UIComponent %s", fileName,
+            UIComponent.logger.warning("Couldn't load FXML file /org/ssh/view/components/%s into UIComponent %s", fileName,
                     this.getName());
             exception.printStackTrace();
             return false;
