@@ -1,6 +1,7 @@
 package org.ssh.models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.ssh.models.enums.RefereeCommand;
 import org.ssh.models.enums.Stage;
@@ -10,37 +11,46 @@ import protobuf.RefereeOuterClass;
 
 /**
  * Implements handling of the {@link RefereeOuterClass.Referee referee messages} , also updates
- * respective {@link Team teams}
+ * respective {@link Team teams}.
  *
- * @author Jeroen
- *        
+ * @author Jeroen de Jong
+ *         
  */
+@SuppressWarnings ("serial")
 public class Referee extends Model {
     
-    // respective logger
-    private final Logger                    logger         = Logger.getLogger();
-                                                           
+    // Respective logger
+    private static final Logger        LOG = Logger.getLogger();
+                                           
     /**
-     * history of all the {@link Stage stages}, last index is last received {@link Stage stage}
+     * History of all the {@link Stage stages}, last index is last received {@link Stage stage}
      */
-    private final ArrayList<Stage>          stageHistory   = new ArrayList<Stage>();
+    private final List<Stage>          stageHistory;
     /**
-     * history of all the {@link RefereeCommand commands}, last index is last received
+     * History of all the {@link RefereeCommand commands}, last index is last received
      * {@link RefereeCommand command}
      */
-    private final ArrayList<RefereeCommand> commandHistory = new ArrayList<RefereeCommand>();
+    private final List<RefereeCommand> commandHistory;
     /**
-     * timestamp in ms of the last parsed {@link RefereeOuterClass.Referee referee message}
+     * Timestamp in ms of the last parsed {@link RefereeOuterClass.Referee referee message}
      */
-    private long                            lastPacketTimestamp;
-                                            
-    private int                             stageTimeLeft, commandCounter;
-                                            
+    private long                       lastPacketTimestamp;
+    /**
+     * Time until the current {@link Stage} is finished
+     */
+    private int                        stageTimeLeft;
+    /**
+     * The amount of {@link RefereeCommand commands} we've currently received.
+     */
+    private int                        commandCounter;
+                                       
     /**
      * Instantiates a new Referee
      */
     public Referee() {
         super("Referee");
+        stageHistory = new ArrayList<Stage>();
+        commandHistory = new ArrayList<RefereeCommand>();
     }
     
     /**
@@ -53,7 +63,7 @@ public class Referee extends Model {
     /**
      * @return whole history of {@link RefereeCommand commands}
      */
-    public ArrayList<RefereeCommand> getCommands() {
+    public List<RefereeCommand> getCommands() {
         return this.commandHistory;
     }
     
@@ -62,7 +72,7 @@ public class Referee extends Model {
      */
     public Stage getCurrentStage() {
         if (this.stageHistory.isEmpty()) {
-            this.logger.warning("There are no previous commands");
+            Referee.LOG.warning("There are no previous commands");
             return null;
         }
         return this.stageHistory.get(this.stageHistory.size() - 1);
@@ -73,7 +83,7 @@ public class Referee extends Model {
      */
     public RefereeCommand getLastCommand() {
         if (this.commandHistory.isEmpty()) {
-            this.logger.warning("There are no previous commands");
+            Referee.LOG.warning("There are no previous commands");
             return null;
         }
         return this.commandHistory.get(this.commandHistory.size() - 1);
@@ -89,7 +99,7 @@ public class Referee extends Model {
     /**
      * @return whole history of {@link Stage stages}
      */
-    public ArrayList<Stage> getStages() {
+    public List<Stage> getStages() {
         return this.stageHistory;
     }
     
@@ -103,7 +113,7 @@ public class Referee extends Model {
     /**
      * sets the number of commands
      * 
-     * @param commandCounter
+     * @param {@link #commandCounter}
      */
     public void setCommandCounter(final int commandCounter) {
         this.commandCounter = commandCounter;

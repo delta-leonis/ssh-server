@@ -1,5 +1,6 @@
 package org.ssh.models;
 
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -13,30 +14,36 @@ import org.ssh.managers.Models;
 import org.ssh.util.Logger;
 import org.ssh.util.Reflect;
 
+import com.google.common.reflect.Reflection;
+
 /**
  * The Class Model.<br />
- * <br />
  *
- * Note: A lot of refactoring is being done for this class, to keep this class dynamic enough.
- * Remember to use the transient {@link Modifier} for {@link Field Fields} that don't need to be
- * saved in a json file by the {@link #save()} method.
+ * Note: A lot of refactoring is being done for this class, to keep this class dynamic. Remember to
+ * use the transient {@link Modifier} for {@link Field Fields} that don't need to be saved in a json
+ * file by the {@link #save()} method.
  *
  * @see {@link #update(Map)}
  * @see {@link ModelFactory}
  * @see {@link ModelController}
- * @author Jeroen
+ * @see {@link Reflection}
+ * @author Jeroen de Jong
  */
-abstract public class Model {
+
+// Serializable is only implemented to use transient modifiers,
+// but wont be serialized.
+@SuppressWarnings ("serial")
+public abstract class Model implements Serializable {
     
     /** The name. */
-    private transient String name;
-    /** unique suffix for this org.ssh.models **/
-    private transient String suffix;
+    private transient String              name;
+    /** unique suffix for this models **/
+    private transient String              suffix;
     // respective logger
-    private transient Logger logger = Logger.getLogger();
-                                    
+    private transient static final Logger LOG = Logger.getLogger();
+                                              
     /**
-     * Instantiates a new org.ssh.models.
+     * Instantiates a new models.
      *
      * @param name
      *            the name
@@ -46,7 +53,7 @@ abstract public class Model {
     }
     
     /**
-     * Instantiates a new org.ssh.models.
+     * Instantiates a new models.
      *
      * @param name
      *            the name
@@ -93,7 +100,7 @@ abstract public class Model {
     }
     
     /**
-     * Save this org.ssh.models in current Profile
+     * Save this models in current Profile
      * 
      * @return success value
      */
@@ -102,7 +109,7 @@ abstract public class Model {
     }
     
     /**
-     * Save this org.ssh.models as org.ssh.managers-wide default
+     * Save this models as sytem-wide default
      * 
      * @return success value
      */
@@ -114,7 +121,7 @@ abstract public class Model {
      * Set a specific {@link Field} to a specific value
      * 
      * @param fieldName
-     *            field to set
+     *            string name of a field to set
      * @param value
      *            value to set
      * @return success value
@@ -134,13 +141,14 @@ abstract public class Model {
             }
             else {
                 // field doesn't exist
-                this.logger.info("%s does not exist.\n", fieldName);
+                Model.LOG.info("%s does not exist.\n", fieldName);
                 return false;
             }
         }
-        catch (IllegalAccessException | ClassCastException e) {
+        catch (IllegalAccessException | ClassCastException exception) {
             // field is either not accessible, or the fieldType didn't match
-            this.logger.info("%s is not a (accessible) field.\n", fieldName);
+            Model.LOG.info("%s is not a (accessible) field.\n", fieldName);
+            Model.LOG.exception(exception);
             return false;
         }
     }
@@ -158,7 +166,7 @@ abstract public class Model {
     /**
      * Sets suffix. <br>
      * 
-     * Mostly used for defining specific models (robot A1, goal EAST etc.)
+     * Mostly used for defining specific models (robot A1, goal EAST etc.).
      * 
      * @param suffix
      *            the suffix
@@ -168,7 +176,7 @@ abstract public class Model {
     }
     
     /**
-     * Generates a human-readable string of all {@link Field Fields} in this class by refactoring
+     * Generates a human-readable string of all {@link Field Fields} in this class by refactoring.
      */
     @Override
     public String toString() {
@@ -203,13 +211,13 @@ abstract public class Model {
      * that field.
      * 
      * @param changes
-     *            changes to make to this org.ssh.models
+     *            changes to make to this models
      * @return success value
      */
     public boolean update(final Map<String, ?> changes) {
         // loop all changes
         return changes.entrySet().stream()
-                // check wheter this field exists
+                // check whether this field exists
                 .filter(entry -> Reflect.containsField(entry.getKey(), this.getClass()))
                 // set this value
                 .map(entry -> this.set(entry.getKey(), entry.getValue()))
@@ -218,18 +226,25 @@ abstract public class Model {
     }
     
     /**
-     * update this Model with a primitive array
+     * update this Model with a primitive array.
      * 
      * @param changes
-     *            should exist of a even number of arguments, with each odd argument being a String
-     *            representing a field and every even argument representing it's new contents
+     *            should consist of a even number of arguments, with each odd argument being a
+     *            String representing a field and every even argument representing it's new
+     *            contents.
+     * @example
+     *          
+     *          <pre>
+     *          Model.update("position", new Point2D(123, 123), "robotId", 12);
+     *          </pre>
+     * 
      * @see {@link Model#update(Map)}
-     * @return
+     * @return success value
      */
     public boolean update(final Object... changes) {
-        // this method will only work if there are a even number of changes
+        // this method will only work if there are an even number of changes
         if ((changes.length % 2) != 0) {
-            this.logger.warning("Uneven number of changes.");
+            Model.LOG.warning("Uneven number of changes.");
             return false;
         }
         

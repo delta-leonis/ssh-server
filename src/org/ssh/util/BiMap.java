@@ -7,6 +7,9 @@ import java.util.Set;
 
 /**
  * A one-to-one hashmap with a unique key and value
+ * 
+ * TODO
+ * Replace with {@link com.google.common.collect.BiMap}
  *
  * @author http://stackoverflow.com/users/2219808/user2219808
  * @see http://stackoverflow.com/a/31636492

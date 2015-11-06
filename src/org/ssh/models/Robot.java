@@ -8,6 +8,7 @@ import javafx.scene.paint.Color;
  * @author Jeroen
  *        
  */
+@SuppressWarnings ("serial")
 public class Robot extends FieldObject {
     
     /**
@@ -25,7 +26,7 @@ public class Robot extends FieldObject {
     private float             dribbleSpeed;
                               
     /**
-     * Instansiates a new robot with specified properties
+     * Instantiates a new robot with specified properties
      * 
      * @param robotId
      *            robot id
@@ -37,11 +38,12 @@ public class Robot extends FieldObject {
         // assign teamcolor
         this.teamColor = teamColor;
         this.robotId = robotId;
+        // Set unique identifier for a class
         this.setSuffix(this.getTeamColorIdentifier() + robotId);
     }
     
     /**
-     * example: org.ssh.models.RobotB2.json for robot with ID 2 and teamColor Blue
+     * example: org.ssh.models.RobotB2.json is a robot with ID 2 (RobotB-2) and teamColor Blue (Robot-B-2)
      * 
      * @see {@link Robot#getTeamColor()}
      * @return Config name for robot models.

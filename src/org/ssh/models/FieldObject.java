@@ -3,16 +3,16 @@ package org.ssh.models;
 import javafx.geometry.Point2D;
 
 /**
- * Describes a object on the {@link Field}
+ * Describes an object on the {@link Field}. Such as a {@link Robot}, or a {@link Ball}
  *
- * @author Jeroen
+ * @author Jeroen de Jong
  *        
  */
 public class FieldObject extends Model {
     
     /**
      * Position of this object on the {@link Field} in mm, according to the Cartesian system with
-     * the origin in the center
+     * the origin in the center.
      */
     protected Point2D position;
     
@@ -29,9 +29,9 @@ public class FieldObject extends Model {
     }
     
     /**
-     * position of this object according to the Cartesian system with the origin in the center
+     * position of this object according to the Cartesian system with the origin in the center.
      * 
-     * @return position of this object in mm
+     * @return position of this object in mm.
      */
     public Point2D getPosition() {
         return this.position;

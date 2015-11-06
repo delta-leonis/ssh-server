@@ -10,10 +10,11 @@ import org.ssh.util.Logger;
 
 import javafx.scene.paint.Color;
 
-// TODO lazy-singleton
 
 /**
  * World contains generic models for a match-setup
+ *
+ * @TODO make it a lazy-singleton
  *
  * @author Jeroen
  */
@@ -25,23 +26,21 @@ public class World {
     /**
      * All teams in the game
      */
-    private final ArrayList<Team> teams  = new ArrayList<Team>();
+    private final List<Team> teams  = new ArrayList<Team>();
                                          
     /**
-     * Gets a {@link Robot} object, specified by these parameters
-     * 
      * @param id
      *            robot ID
      * @param teamColor
-     *            teamColor of the Robot
-     * @return
+     *            teamColor of the Robot.
+     * @return a {@link Robot} object, specified by these parameters. 
      */
     public Robot getRobot(final int id, final Color teamColor) {
         return this.getRobots(teamColor).stream().filter(robot -> robot.getRobotId() == id).findFirst().get();
     }
     
     /**
-     * Gets all robots of a specified teamcolor
+     * Gets all robots of a specified teamcolor.
      * 
      * @param teamColor
      *            specific teamcolor to sort on
@@ -64,11 +63,11 @@ public class World {
     }
     
     /**
-     * Gets the Team that is assigned to control a specific robot
+     * Gets the Team that is assigned to control a specific robot.
      * 
      * @param Lost_and_damned_robot
      *            robot to get the team from
-     * @return team that controls this robot
+     * @return team that controls this robot.
      */
     public Team getTeam(final Robot Lost_and_damned_robot) {
         return (Team) Models.getAll("team")
@@ -81,7 +80,7 @@ public class World {
     }
     
     /**
-     * Swap the colors that the teams control
+     * Swap the colors that the teams control.
      */
     public void swapColors() {
         this.logger.info("Swapped team colors");
@@ -89,7 +88,7 @@ public class World {
     }
     
     /**
-     * Swap the sides for the teams
+     * Swap the sides for the teams.
      */
     public void swapSides() {
         this.logger.info("Swapped team sides");

@@ -8,31 +8,33 @@ import protobuf.Geometry.FieldLineSegment;
 import protobuf.Geometry.GeometryFieldSize;
 
 /**
- * Describes a field with {@link Goal goals} and a {@link GeometryFieldSize field size}
+ * Describes a field with {@link Goal goals} and a {@link GeometryFieldSize field size}.
  *
- * @author Jeroen
- *        
+ * @author Jeroen de Jong
+ *         
  */
+@SuppressWarnings ("serial")
 public class Field extends Model {
     
     /**
      * Field object from protobuf packet
      */
-    private final GeometryFieldSize field = null;
+    private GeometryFieldSize field;
     /**
      * All the goals on this field
      */
-    private final ArrayList<Goal>   goals = new ArrayList<Goal>();
-                                          
+    private List<Goal>        goals;
+                              
     /**
-     * instansiates a field
+     * Instantiates a field.
      */
     public Field() {
         super("field");
+        this.goals = new ArrayList<Goal>();
     }
     
     /**
-     * @return Width of the boundary around the field
+     * @return Width of the boundary around the field.
      */
     public int getBoundaryWidth() {
         return this.field.getBoundaryWidth();
@@ -50,14 +52,14 @@ public class Field extends Model {
     }
     
     /**
-     * @return all {@link FieldCicularArc arc segments} on the field
+     * @return all {@link FieldCicularArc arc segments} on the field.
      */
     public List<FieldCicularArc> getFieldArcs() {
         return this.field.getFieldArcsList();
     }
     
     /**
-     * @return Length of the field
+     * @return Length of the field.
      */
     public int getFieldLength() {
         return this.field.getFieldLength();
@@ -75,14 +77,14 @@ public class Field extends Model {
     }
     
     /**
-     * @return all {@link FieldLineSegments line segments} on the field
+     * @return all {@link FieldLineSegments line segments} on the field.
      */
     public List<FieldLineSegment> getFieldLines() {
         return this.field.getFieldLinesList();
     }
     
     /**
-     * @return Width of the field
+     * @return Width of the field.
      */
     public int getFieldWidth() {
         return this.field.getFieldWidth();

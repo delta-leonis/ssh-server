@@ -1,6 +1,7 @@
 package org.ssh.models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.ssh.managers.Models;
 import org.ssh.models.enums.Direction;
@@ -11,47 +12,48 @@ import javafx.scene.paint.Color;
  * Describes a team<br />
  * NOTE: teams don't contain a list with all robots, since the robots which a team controls can
  * change during runtime. The robots should be accessed from {@link Models} class or via the
- * {@link World}
+ * {@link World}.
  *
  * @author Jeroen
  * @see Models
  * @see World
- *     
+ *      
  */
+@SuppressWarnings ("serial")
 public class Team extends Model {
     
     /**
-     * Side that this team plays on as a cardinal direction
+     * Side that this team plays on as a cardinal direction.
      */
-    private Direction             direction;
+    private Direction        direction;
     /**
      * color that this team controls
      */
-    private Color                 teamColor;
-                                  
+    private Color            teamColor;
+                             
     /**
      * teamname given by {@link Referee}
      */
-    private String                teamName;
-                                  
+    private String           teamName;
+                             
     /**
-     * log with recieved cards and score, index is the count-value and Object is the timestamp
+     * log with received cards and score, index is the count-value and Object is the timestamp.
      */
-    private final ArrayList<Long> yellowCards = new ArrayList<Long>(),
-                                          redCards = new ArrayList<Long>(), scores = new ArrayList<Long>();
-                                          
+    private final List<Long> yellowCards = new ArrayList<Long>(),
+                                redCards = new ArrayList<Long>(), scores = new ArrayList<Long>();
+                                     
     /**
-     * team properties as time left for timeouts, number of timeouts and the goalie ID
+     * team properties as time left for timeouts, number of timeouts and the goalie ID.
      */
-    private int                   goalieId, timeoutLeft, timeouts;
-                                  
+    private int              goalieId, timeoutLeft, timeouts;
+                             
     /**
-     * Instantiates a new team that plays on a specified field half
+     * Instantiates a new team that plays on a specified field half.
      * 
      * @param direction
-     *            field half that this team plays on
+     *            field half that this team plays on.
      * @param teamcolor
-     *            the color of the {@link Robot robots} that this team controls
+     *            the color of the {@link Robot robots} that this team controls.
      */
     public Team(final Direction direction, final Color teamColor) {
         super("team", String.format("%s %s", direction.name(), teamColor.toString()));
@@ -97,14 +99,14 @@ public class Team extends Model {
     /**
      * gets all redcards. Value represents <em>System.currentTimeMillis();</em>.
      */
-    public ArrayList<Long> getRedCards() {
+    public List<Long> getRedCards() {
         return this.redCards;
     }
     
     /**
      * gets all scores. Value represents <em>System.currentTimeMillis();</em>.
      */
-    public ArrayList<Long> getScores() {
+    public List<Long> getScores() {
         return this.scores;
     }
     
@@ -139,7 +141,7 @@ public class Team extends Model {
     /**
      * gets all yellowcards. Value represents <em>System.currentTimeMillis();</em>.
      */
-    public ArrayList<Long> getYellowCards() {
+    public List<Long> getYellowCards() {
         return this.yellowCards;
     }
     
@@ -180,7 +182,7 @@ public class Team extends Model {
     }
     
     /**
-     * Inverst the teamcolor, so BLUE becomes YELLOW and vice versa
+     * Inverts the teamcolor, so {@link Color.BLUE} becomes {@link Color.YELLOW} and vice versa.
      */
     public void swapColor() {
         this.teamColor = this.teamColor == Color.BLUE ? Color.YELLOW : Color.BLUE;
