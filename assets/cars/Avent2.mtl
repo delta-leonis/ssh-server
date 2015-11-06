@@ -216,7 +216,7 @@ Ks 0.050000 0.050000 0.050000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd /home/marklef2/workspace/JavaFX%203D%20Field/assets/cars/interior_lod0.tga
+map_Kd interior_lod0.tga
 
 newmtl lines
 Ns 252.941176
@@ -235,7 +235,7 @@ Ks 0.050000 0.050000 0.050000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd /home/marklef2/workspace/JavaFX%203D%20Field/assets/cars/interior_lod0.tga
+map_Kd interior_lod0.tga
 
 newmtl signs
 Ns 252.941176
@@ -245,7 +245,7 @@ Ks 0.050000 0.050000 0.050000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd /home/marklef2/workspace/JavaFX%203D%20Field/assets/cars/interior_lod0.tga
+map_Kd interior_lod0.tga
 
 newmtl speedometer
 Ns 252.941176
