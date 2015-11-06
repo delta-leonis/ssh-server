@@ -5,23 +5,20 @@ package org.ssh.field3d.core.math;
  *
  * Copyright © 2015, Heiko Brumme
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION Vector2fOF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION Vector2fOF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 /**
@@ -30,10 +27,10 @@ package org.ssh.field3d.core.math;
  * @author Heiko Brumme
  */
 public class Vector2f {
-
+    
     public float x;
     public float y;
-
+                 
     /**
      * Creates a default 3-tuple vector with all values set to 0.
      */
@@ -41,121 +38,130 @@ public class Vector2f {
         this.x = 0f;
         this.y = 0f;
     }
-
+    
     /**
      * Creates a 3-tuple vector with specified values.
      *
-     * @param x x value
-     * @param y y value
-     * @param z z value
+     * @param x
+     *            x value
+     * @param y
+     *            y value
+     * @param z
+     *            z value
      */
-    public Vector2f(float x, float y) {
+    public Vector2f(final float x, final float y) {
         this.x = x;
         this.y = y;
     }
-
+    
     /**
-     * Calculates the squared length of the vector.
+     * Adds this vector to another vector.
      *
-     * @return Squared length of this vector
+     * @param other
+     *            The other vector
+     * @return Sum of this + other
      */
-    public float lengthSquared() {
-        return x * x + y * y;
+    public Vector2f add(final Vector2f other) {
+        final float x = this.x + other.x;
+        final float y = this.y + other.y;
+        
+        return new Vector2f(x, y);
     }
-
+    
+    /**
+     * Divides a vector by a scalar.
+     *
+     * @param scalar
+     *            Scalar to multiply
+     * @return Scalar quotient of this / scalar
+     */
+    public Vector2f divide(final float scalar) {
+        return this.scale(1f / scalar);
+    }
+    
+    /**
+     * Calculates the dot product of this vector with another vector.
+     *
+     * @param other
+     *            The other vector
+     * @return Dot product of this * other
+     */
+    public float dot(final Vector2f other) {
+        return (this.x * other.x) + (this.y * other.y);
+    }
+    
     /**
      * Calculates the length of the vector.
      *
      * @return Length of this vector
      */
     public float length() {
-        return (float) Math.sqrt(lengthSquared());
+        return (float) Math.sqrt(this.lengthSquared());
     }
-
+    
     /**
-     * Normalizes the vector.
+     * Calculates the squared length of the vector.
      *
-     * @return Normalized vector
+     * @return Squared length of this vector
      */
-    public Vector2f normalize() {
-        float length = length();
-        return divide(length);
+    public float lengthSquared() {
+        return (this.x * this.x) + (this.y * this.y);
     }
-
+    
     /**
-     * Adds this vector to another vector.
+     * Calculates a linear interpolation between this vector with another vector.
      *
-     * @param other The other vector
-     * @return Sum of this + other
+     * @param other
+     *            The other vector
+     * @param alpha
+     *            The alpha value, must be between 0.0 and 1.0
+     * @return Linear interpolated vector
      */
-    public Vector2f add(Vector2f other) {
-        float x = this.x + other.x;
-        float y = this.y + other.y;
-       
-        return new Vector2f(x, y);
+    public Vector2f lerp(final Vector2f other, final float alpha) {
+        return this.scale(1f - alpha).add(other.scale(alpha));
     }
-
+    
     /**
      * Negates this vector.
      *
      * @return Negated vector
      */
     public Vector2f negate() {
-        return scale(-1f);
+        return this.scale(-1f);
     }
-
+    
     /**
-     * Subtracts this vector from another vector.
+     * Normalizes the vector.
      *
-     * @param other The other vector
-     * @return Difference of this - other
+     * @return Normalized vector
      */
-    public Vector2f subtract(Vector2f other) {
-        return this.add(other.negate());
+    public Vector2f normalize() {
+        final float length = this.length();
+        return this.divide(length);
     }
-
+    
     /**
      * Multiplies a vector by a scalar.
      *
-     * @param scalar Scalar to multiply
+     * @param scalar
+     *            Scalar to multiply
      * @return Scalar product of this * scalar
      */
-    public Vector2f scale(float scalar) {
-        float x = this.x * scalar;
-        float y = this.y * scalar;
-
+    public Vector2f scale(final float scalar) {
+        final float x = this.x * scalar;
+        final float y = this.y * scalar;
+        
         return new Vector2f(x, y);
     }
-
+    
     /**
-     * Divides a vector by a scalar.
+     * Subtracts this vector from another vector.
      *
-     * @param scalar Scalar to multiply
-     * @return Scalar quotient of this / scalar
+     * @param other
+     *            The other vector
+     * @return Difference of this - other
      */
-    public Vector2f divide(float scalar) {
-        return scale(1f / scalar);
-    }
-
-    /**
-     * Calculates the dot product of this vector with another vector.
-     *
-     * @param other The other vector
-     * @return Dot product of this * other
-     */
-    public float dot(Vector2f other) {
-        return this.x * other.x + this.y * other.y;
-    }
-
-    /**
-     * Calculates a linear interpolation between this vector with another
-     * vector.
-     *
-     * @param other The other vector
-     * @param alpha The alpha value, must be between 0.0 and 1.0
-     * @return Linear interpolated vector
-     */
-    public Vector2f lerp(Vector2f other, float alpha) {
-        return this.scale(1f - alpha).add(other.scale(alpha));
+    public Vector2f subtract(final Vector2f other) {
+        return this.add(other.negate());
     }
 }

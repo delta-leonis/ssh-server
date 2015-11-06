@@ -1,316 +1,293 @@
 package org.ssh.view.components;
 
-import java.util.Optional;
-
-import org.ssh.managers.UI;
 import org.ssh.ui.UIComponent;
 
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.util.Duration;
 
-//TODO Fix it that enrollbox automatically resizes in parent bounds (Works now, but not in every case)
+// TODO Fix it that enrollbox automatically resizes in parent bounds (Works now, but not in every
+// case)
 public class Enrollbox extends BorderPane {
-	private double expandedSize;
-	private Region node;
-	private Button controlButton;
-	private boolean stationaryButton;
-	private Direction slideDirection;
-
-	public static enum Direction {
-		UP, DOWN, LEFT, RIGHT
-	}
-
-	public Enrollbox(Direction slideDirection, UIComponent content) {
-		node = content;
-		node.setStyle("-fx-background-color: rgba(0, 100, 100, 1.0); -fx-background-radius: 10 10 10 10;");
-		this.slideDirection = slideDirection;
-		expandedSize = 250;
-		setExpandedSize(expandedSize);
-		node.setVisible(false);
-		if (slideDirection == null) {
-			// Set default location
-			slideDirection = Direction.DOWN;
-		}
-		this.slideDirection = slideDirection;
-		setCenter(node);
-		setMaxHeight(0);
-		switch (slideDirection) {
-		case DOWN:
-			setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 0 0 10 10;");
-			break;
-		case LEFT:
-			setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 10 0 0 10;");
-			break;
-		case RIGHT:
-			setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 0 10 10 0;");
-			break;
-		case UP:
-			setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 10 10 0 0;");
-			break;
-		default:
-			break;
-		}
-	}
-
-	public void setExpandSize(double expandSize) {
-		if (slideDirection == Direction.UP || slideDirection == Direction.DOWN) {
-			this.setHeight(expandSize);
-		} else {
-			this.setWidth(expandSize);
-		}
-		expandedSize = expandSize;
-	}
-
-	/**
-	 * Creates a sidebar panel in a BorderPane, containing an horizontal
-	 * alignment of the given nodes.
-	 * 
-	 * @param expandedSize
-	 *            The size of the panel.
-	 * @param controlButton
-	 *            The button responsible to open/close slide bar.
-	 * @param location
-	 *            The location of the panel (TOP_LEFT, BOTTOM_LEFT,
-	 *            BASELINE_RIGHT, BASELINE_LEFT).
-	 * @param nodes
-	 *            Nodes inside the panel.
-	 */
-	public Enrollbox(double expandedSize, Button button, Direction location, Region node) {
-		setExpandedSize(expandedSize);
-		this.node = node;
-		node.setVisible(false);
-		// Set location
-		if (location == null) {
-			slideDirection = Direction.DOWN; // Set default location
-		}
-		slideDirection = location;
-
-		setMaxHeight(0);
-		controlButton = button;
-		setCenter(node);
-
-		controlButton.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				handleRolling(event);
-			}
-		});
-		switch (slideDirection) {
-		case DOWN:
-			setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 0 0 10 10;");
-			break;
-		case LEFT:
-			setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 10 0 0 10;");
-			break;
-		case RIGHT:
-			setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 0 10 10 0;");
-			break;
-		case UP:
-			setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 10 10 0 0;");
-			break;
-		default:
-			break;
-		}
-	}
-
-	/**
-	 * Creates a sidebar panel in a BorderPane, which creates a default button
-	 * for you.
-	 * 
-	 * @param expandedSize
-	 *            The size of the panel.
-	 * @param location
-	 *            The location of the panel (TOP_LEFT, BOTTOM_LEFT,
-	 *            BASELINE_RIGHT, BASELINE_LEFT).
-	 * @param nodes
-	 *            Nodes inside the panel.
-	 * @param stationaryButton
-	 *            True if the button should stay in place, false otherwise
-	 */
-	public Enrollbox(double expandedSize, Direction location, Region node, boolean stationaryButton) {
-		this.stationaryButton = stationaryButton;
-		setExpandedSize(expandedSize);
-		this.node = node;
-		this.setMinWidth(0.0);
-		node.setVisible(false);
-		// Set location
-		if (location == null) {
-			slideDirection = Direction.DOWN; // Set default location
-		}
-		slideDirection = location;
-		setCenter(node);
-		controlButton = new Button(".");
-		controlButton.setMinWidth(35);
-		controlButton.setMinHeight(35);
-		setup();
-
-		controlButton.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				handleRolling(event);
-			}
-		});
-		switch (slideDirection) {
-		case DOWN:
-			setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 0 0 10 10;");
-			break;
-		case LEFT:
-			setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 10 0 0 10;");
-			break;
-		case RIGHT:
-			setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 0 10 10 0;");
-			break;
-		case UP:
-			setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 10 10 0 0;");
-			break;
-		default:
-			break;
-		}
-	}
-
-	public void handleRolling(ActionEvent actionEvent) {
-		// Create an animation to hide the panel.
-		final Animation hidePanel = new Transition() {
-			{
-				setCycleDuration(Duration.millis(250));
-			}
-
-			@Override
-			protected void interpolate(double frac) {
-				final double size = getExpandedSize() * (1.0 - frac);
-				translateByPos(size);
-			}
-		};
-
-		hidePanel.onFinishedProperty().set(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent actionEvent) {
-				node.setVisible(false);
-			}
-		});
-
-		// Create an animation to show the panel.
-		final Animation showPanel = new Transition() {
-			{
-				setCycleDuration(Duration.millis(250));
-			}
-
-			@Override
-			protected void interpolate(double frac) {
-				final double size = getExpandedSize() * frac;
-				translateByPos(size);
-			}
-		};
-
-		showPanel.onFinishedProperty().set(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent actionEvent) {
-				node.setVisible(true);
-			}
-		});
-
-		if (showPanel.statusProperty().get() == Animation.Status.STOPPED
-				&& hidePanel.statusProperty().get() == Animation.Status.STOPPED) {
-
-			if (node.isVisible()) {
-				hidePanel.play();
-
-			} else {
-				node.setVisible(true);
-				showPanel.play();
-			}
-		}
-	}
-
-	public void setup() {
-		switch (slideDirection) {
-		case DOWN:
-			controlButton.prefWidthProperty().bind(widthProperty());
-			setMaxHeight(35);
-			setCenter(node);
-			if (stationaryButton)
-				setTop(controlButton);
-			else
-				setBottom(controlButton);
-			break;
-		case UP:
-			controlButton.prefWidthProperty().bind(widthProperty());
-			setMaxHeight(35);
-			setCenter(node);
-			if (stationaryButton)
-				setBottom(controlButton);
-			else
-				setTop(controlButton);
-			break;
-		case RIGHT:
-			controlButton.prefHeightProperty().bind(heightProperty());
-			setMaxWidth(35);
-			setCenter(node);
-			if (stationaryButton)
-				setLeft(controlButton);
-			else
-				setRight(controlButton);
-			break;
-		case LEFT:
-			controlButton.prefHeightProperty().bind(heightProperty());
-			setMaxWidth(35);
-			setCenter(node);
-			if (stationaryButton)
-				setRight(controlButton);
-			else
-				setLeft(controlButton);
-			break;
-		default:
-			break;
-		}
-	}
-
-	/**
-	 * Translate the VBox according to location Pos.
-	 *
-	 * @param size
-	 */
-	private void translateByPos(double size) {
-		switch (slideDirection) {
-		case DOWN:
-			setMinHeight(size);
-			break;
-		case UP:
-			setMinHeight(size);
-			break;
-		case RIGHT:
-		case LEFT:
-			setMinWidth(size);
-			break;
-		default:
-			break;
-		}
-	}
-
-	/**
-	 * @return the expandedSize
-	 */
-	public double getExpandedSize() {
-		return expandedSize;
-	}
-
-	/**
-	 * @param expandedSize
-	 *            the expandedSize to set
-	 */
-	public void setExpandedSize(double expandedSize) {
-		this.expandedSize = expandedSize;
-	}
+    
+    public static enum Direction {
+        UP, DOWN, LEFT, RIGHT
+    }
+    
+    private double       expandedSize;
+    private final Region node;
+    private Button       controlButton;
+    private boolean      stationaryButton;
+                         
+    private Direction    slideDirection;
+                         
+    public Enrollbox(Direction slideDirection, final UIComponent content) {
+        this.node = content;
+        this.node.setStyle("-fx-background-color: rgba(0, 100, 100, 1.0); -fx-background-radius: 10 10 10 10;");
+        this.slideDirection = slideDirection;
+        this.expandedSize = 250;
+        this.setExpandedSize(this.expandedSize);
+        this.node.setVisible(false);
+        if (slideDirection == null) {
+            // Set default location
+            slideDirection = Direction.DOWN;
+        }
+        this.slideDirection = slideDirection;
+        this.setCenter(this.node);
+        this.setMaxHeight(0);
+        switch (slideDirection) {
+            case DOWN:
+                this.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 0 0 10 10;");
+                break;
+            case LEFT:
+                this.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 10 0 0 10;");
+                break;
+            case RIGHT:
+                this.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 0 10 10 0;");
+                break;
+            case UP:
+                this.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 10 10 0 0;");
+                break;
+            default:
+                break;
+        }
+    }
+    
+    /**
+     * Creates a sidebar panel in a BorderPane, containing an horizontal alignment of the given
+     * nodes.
+     * 
+     * @param expandedSize
+     *            The size of the panel.
+     * @param controlButton
+     *            The button responsible to open/close slide bar.
+     * @param location
+     *            The location of the panel (TOP_LEFT, BOTTOM_LEFT, BASELINE_RIGHT, BASELINE_LEFT).
+     * @param nodes
+     *            Nodes inside the panel.
+     */
+    public Enrollbox(final double expandedSize, final Button button, final Direction location, final Region node) {
+        this.setExpandedSize(expandedSize);
+        this.node = node;
+        node.setVisible(false);
+        // Set location
+        if (location == null) {
+            this.slideDirection = Direction.DOWN; // Set default location
+        }
+        this.slideDirection = location;
+        
+        this.setMaxHeight(0);
+        this.controlButton = button;
+        this.setCenter(node);
+        
+        this.controlButton.setOnAction(event -> Enrollbox.this.handleRolling(event));
+        switch (this.slideDirection) {
+            case DOWN:
+                this.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 0 0 10 10;");
+                break;
+            case LEFT:
+                this.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 10 0 0 10;");
+                break;
+            case RIGHT:
+                this.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 0 10 10 0;");
+                break;
+            case UP:
+                this.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 10 10 0 0;");
+                break;
+            default:
+                break;
+        }
+    }
+    
+    /**
+     * Creates a sidebar panel in a BorderPane, which creates a default button for you.
+     * 
+     * @param expandedSize
+     *            The size of the panel.
+     * @param location
+     *            The location of the panel (TOP_LEFT, BOTTOM_LEFT, BASELINE_RIGHT, BASELINE_LEFT).
+     * @param nodes
+     *            Nodes inside the panel.
+     * @param stationaryButton
+     *            True if the button should stay in place, false otherwise
+     */
+    public Enrollbox(final double expandedSize,
+            final Direction location,
+            final Region node,
+            final boolean stationaryButton) {
+        this.stationaryButton = stationaryButton;
+        this.setExpandedSize(expandedSize);
+        this.node = node;
+        this.setMinWidth(0.0);
+        node.setVisible(false);
+        // Set location
+        if (location == null) {
+            this.slideDirection = Direction.DOWN; // Set default location
+        }
+        this.slideDirection = location;
+        this.setCenter(node);
+        this.controlButton = new Button(".");
+        this.controlButton.setMinWidth(35);
+        this.controlButton.setMinHeight(35);
+        this.setup();
+        
+        this.controlButton.setOnAction(event -> Enrollbox.this.handleRolling(event));
+        switch (this.slideDirection) {
+            case DOWN:
+                this.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 0 0 10 10;");
+                break;
+            case LEFT:
+                this.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 10 0 0 10;");
+                break;
+            case RIGHT:
+                this.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 0 10 10 0;");
+                break;
+            case UP:
+                this.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 10 10 0 0;");
+                break;
+            default:
+                break;
+        }
+    }
+    
+    /**
+     * @return the expandedSize
+     */
+    public double getExpandedSize() {
+        return this.expandedSize;
+    }
+    
+    public void handleRolling(final ActionEvent actionEvent) {
+        // Create an animation to hide the panel.
+        final Animation hidePanel = new Transition() {
+            
+            {
+                this.setCycleDuration(Duration.millis(250));
+            }
+            
+            @Override
+            protected void interpolate(final double frac) {
+                final double size = Enrollbox.this.getExpandedSize() * (1.0 - frac);
+                Enrollbox.this.translateByPos(size);
+            }
+        };
+        
+        hidePanel.onFinishedProperty().set(actionEvent1 -> Enrollbox.this.node.setVisible(false));
+        
+        // Create an animation to show the panel.
+        final Animation showPanel = new Transition() {
+            
+            {
+                this.setCycleDuration(Duration.millis(250));
+            }
+            
+            @Override
+            protected void interpolate(final double frac) {
+                final double size = Enrollbox.this.getExpandedSize() * frac;
+                Enrollbox.this.translateByPos(size);
+            }
+        };
+        
+        showPanel.onFinishedProperty().set(actionEvent1 -> Enrollbox.this.node.setVisible(true));
+        
+        if ((showPanel.statusProperty().get() == Animation.Status.STOPPED)
+                && (hidePanel.statusProperty().get() == Animation.Status.STOPPED)) {
+                
+            if (this.node.isVisible()) {
+                hidePanel.play();
+                
+            }
+            else {
+                this.node.setVisible(true);
+                showPanel.play();
+            }
+        }
+    }
+    
+    /**
+     * @param expandedSize
+     *            the expandedSize to set
+     */
+    public void setExpandedSize(final double expandedSize) {
+        this.expandedSize = expandedSize;
+    }
+    
+    public void setExpandSize(final double expandSize) {
+        if ((this.slideDirection == Direction.UP) || (this.slideDirection == Direction.DOWN)) {
+            this.setHeight(expandSize);
+        }
+        else {
+            this.setWidth(expandSize);
+        }
+        this.expandedSize = expandSize;
+    }
+    
+    public void setup() {
+        switch (this.slideDirection) {
+            case DOWN:
+                this.controlButton.prefWidthProperty().bind(this.widthProperty());
+                this.setMaxHeight(35);
+                this.setCenter(this.node);
+                if (this.stationaryButton)
+                    this.setTop(this.controlButton);
+                else
+                    this.setBottom(this.controlButton);
+                break;
+            case UP:
+                this.controlButton.prefWidthProperty().bind(this.widthProperty());
+                this.setMaxHeight(35);
+                this.setCenter(this.node);
+                if (this.stationaryButton)
+                    this.setBottom(this.controlButton);
+                else
+                    this.setTop(this.controlButton);
+                break;
+            case RIGHT:
+                this.controlButton.prefHeightProperty().bind(this.heightProperty());
+                this.setMaxWidth(35);
+                this.setCenter(this.node);
+                if (this.stationaryButton)
+                    this.setLeft(this.controlButton);
+                else
+                    this.setRight(this.controlButton);
+                break;
+            case LEFT:
+                this.controlButton.prefHeightProperty().bind(this.heightProperty());
+                this.setMaxWidth(35);
+                this.setCenter(this.node);
+                if (this.stationaryButton)
+                    this.setRight(this.controlButton);
+                else
+                    this.setLeft(this.controlButton);
+                break;
+            default:
+                break;
+        }
+    }
+    
+    /**
+     * Translate the VBox according to location Pos.
+     *
+     * @param size
+     */
+    private void translateByPos(final double size) {
+        switch (this.slideDirection) {
+            case DOWN:
+                this.setMinHeight(size);
+                break;
+            case UP:
+                this.setMinHeight(size);
+                break;
+            case RIGHT:
+            case LEFT:
+                this.setMinWidth(size);
+                break;
+            default:
+                break;
+        }
+    }
 }

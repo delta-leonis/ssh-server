@@ -8,14 +8,14 @@ import protobuf.Geometry.GeometryDataOrBuilder;
 
 /**
  * The GeometryPacket class.
- * 
+ *
  * @author Rimon Oz
  */
 public class GeometryPacket extends PipelinePacket {
-    
+
     /** The data. */
     private GeometryDataOrBuilder data;
-
+    
     /**
      * Gets the data.
      *
@@ -24,21 +24,25 @@ public class GeometryPacket extends PipelinePacket {
     public GeometryDataOrBuilder getData() {
         return this.data;
     }
-
-    /* (non-Javadoc)
+    
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.ssh.services.pipeline.PipelinePacket#read()
      */
     @Override
     public MessageOrBuilder read() {
         return this.data;
     }
-
-    /* (non-Javadoc)
+    
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.ssh.services.pipeline.PipelinePacket#save(com.google.protobuf.MessageOrBuilder)
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings ("unchecked")
     @Override
-    public <T extends PipelinePacket> T save(MessageOrBuilder data) {
+    public <T extends PipelinePacket> T save(final MessageOrBuilder data) {
         this.data = (GeometryDataOrBuilder) data;
         return (T) this;
     }

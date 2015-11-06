@@ -5,170 +5,200 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
-
 public class Xform extends Group {
-
+    
     public enum RotateOrder {
         XYZ, XZY, YXZ, YZX, ZXY, ZYX
     }
-
-    public Translate t  = new Translate(); 
-    public Translate p  = new Translate(); 
-    public Translate ip = new Translate(); 
-    public Rotate rx = new Rotate();
-    { rx.setAxis(Rotate.X_AXIS); }
-    public Rotate ry = new Rotate();
-    { ry.setAxis(Rotate.Y_AXIS); }
-    public Rotate rz = new Rotate();
-    { rz.setAxis(Rotate.Z_AXIS); }
-    public Scale s = new Scale();
-
-    public Xform() { 
-        super(); 
-        getTransforms().addAll(t, rz, ry, rx, s); 
+    
+    public Translate t  = new Translate();
+    public Translate p  = new Translate();
+    public Translate ip = new Translate();
+    public Rotate    rx = new Rotate();
+                        
+    {
+        this.rx.setAxis(Rotate.X_AXIS);
     }
-
-    public Xform(RotateOrder rotateOrder) { 
-        super(); 
+    
+    public Rotate ry = new Rotate();
+    
+    {
+        this.ry.setAxis(Rotate.Y_AXIS);
+    }
+    
+    public Rotate rz = new Rotate();
+    
+    {
+        this.rz.setAxis(Rotate.Z_AXIS);
+    }
+    
+    public Scale s = new Scale();
+    
+    public Xform() {
+        super();
+        this.getTransforms().addAll(this.t, this.rz, this.ry, this.rx, this.s);
+    }
+    
+    public Xform(final RotateOrder rotateOrder) {
+        super();
         // choose the order of rotations based on the rotateOrder
         switch (rotateOrder) {
-        case XYZ:
-            getTransforms().addAll(t, p, rz, ry, rx, s, ip); 
-            break;
-        case XZY:
-            getTransforms().addAll(t, p, ry, rz, rx, s, ip); 
-            break;
-        case YXZ:
-            getTransforms().addAll(t, p, rz, rx, ry, s, ip); 
-            break;
-        case YZX:
-            getTransforms().addAll(t, p, rx, rz, ry, s, ip);  // For Camera
-            break;
-        case ZXY:
-            getTransforms().addAll(t, p, ry, rx, rz, s, ip); 
-            break;
-        case ZYX:
-            getTransforms().addAll(t, p, rx, ry, rz, s, ip); 
-            break;
+            case XYZ:
+                this.getTransforms().addAll(this.t, this.p, this.rz, this.ry, this.rx, this.s, this.ip);
+                break;
+            case XZY:
+                this.getTransforms().addAll(this.t, this.p, this.ry, this.rz, this.rx, this.s, this.ip);
+                break;
+            case YXZ:
+                this.getTransforms().addAll(this.t, this.p, this.rz, this.rx, this.ry, this.s, this.ip);
+                break;
+            case YZX:
+                this.getTransforms().addAll(this.t, this.p, this.rx, this.rz, this.ry, this.s, this.ip); // For
+                                                                                                         // Camera
+                break;
+            case ZXY:
+                this.getTransforms().addAll(this.t, this.p, this.ry, this.rx, this.rz, this.s, this.ip);
+                break;
+            case ZYX:
+                this.getTransforms().addAll(this.t, this.p, this.rx, this.ry, this.rz, this.s, this.ip);
+                break;
         }
     }
-
-    public void setTranslate(double x, double y, double z) {
-        t.setX(x);
-        t.setY(y);
-        t.setZ(z);
+    
+    public void debug() {
+        System.out.println("t = (" + this.t.getX() + ", " + this.t.getY() + ", " + this.t.getZ() + ")  " + "r = ("
+                + this.rx.getAngle() + ", " + this.ry.getAngle() + ", " + this.rz.getAngle() + ")  " + "s = ("
+                + this.s.getX() + ", " + this.s.getY() + ", " + this.s.getZ() + ")  " + "p = (" + this.p.getX() + ", "
+                + this.p.getY() + ", " + this.p.getZ() + ")  " + "ip = (" + this.ip.getX() + ", " + this.ip.getY()
+                + ", " + this.ip.getZ() + ")");
     }
-
-    public void setTranslate(double x, double y) {
-        t.setX(x);
-        t.setY(y);
+    
+    public void reset() {
+        this.t.setX(0.0);
+        this.t.setY(0.0);
+        this.t.setZ(0.0);
+        this.rx.setAngle(0.0);
+        this.ry.setAngle(0.0);
+        this.rz.setAngle(0.0);
+        this.s.setX(1.0);
+        this.s.setY(1.0);
+        this.s.setZ(1.0);
+        this.p.setX(0.0);
+        this.p.setY(0.0);
+        this.p.setZ(0.0);
+        this.ip.setX(0.0);
+        this.ip.setY(0.0);
+        this.ip.setZ(0.0);
     }
-
-    // Cannot override these methods as they are final:
-    // public void setTranslateX(double x) { t.setX(x); }
-    // public void setTranslateY(double y) { t.setY(y); }
-    // public void setTranslateZ(double z) { t.setZ(z); }
-    // Use these methods instead:
-    public void setTx(double x) { t.setX(x); }
-    public void setTy(double y) { t.setY(y); }
-    public void setTz(double z) { t.setZ(z); }
-
-    public void setRotate(double x, double y, double z) {
-        rx.setAngle(x);
-        ry.setAngle(y);
-        rz.setAngle(z);
+    
+    public void resetTSP() {
+        this.t.setX(0.0);
+        this.t.setY(0.0);
+        this.t.setZ(0.0);
+        this.s.setX(1.0);
+        this.s.setY(1.0);
+        this.s.setZ(1.0);
+        this.p.setX(0.0);
+        this.p.setY(0.0);
+        this.p.setZ(0.0);
+        this.ip.setX(0.0);
+        this.ip.setY(0.0);
+        this.ip.setZ(0.0);
     }
-
-    public void setRotateX(double x) { rx.setAngle(x); }
-    public void setRotateY(double y) { ry.setAngle(y); }
-    public void setRotateZ(double z) { rz.setAngle(z); }
-    public void setRx(double x) { rx.setAngle(x); }
-    public void setRy(double y) { ry.setAngle(y); }
-    public void setRz(double z) { rz.setAngle(z); }
-
-    public void setScale(double scaleFactor) {
-        s.setX(scaleFactor);
-        s.setY(scaleFactor);
-        s.setZ(scaleFactor);
+    
+    public void setPivot(final double x, final double y, final double z) {
+        this.p.setX(x);
+        this.p.setY(y);
+        this.p.setZ(z);
+        this.ip.setX(-x);
+        this.ip.setY(-y);
+        this.ip.setZ(-z);
     }
-
-    public void setScale(double x, double y, double z) {
-        s.setX(x);
-        s.setY(y);
-        s.setZ(z);
+    
+    public void setRotate(final double x, final double y, final double z) {
+        this.rx.setAngle(x);
+        this.ry.setAngle(y);
+        this.rz.setAngle(z);
     }
-
+    
+    public void setRotateX(final double x) {
+        this.rx.setAngle(x);
+    }
+    
+    public void setRotateY(final double y) {
+        this.ry.setAngle(y);
+    }
+    
+    public void setRotateZ(final double z) {
+        this.rz.setAngle(z);
+    }
+    
+    public void setRx(final double x) {
+        this.rx.setAngle(x);
+    }
+    
+    public void setRy(final double y) {
+        this.ry.setAngle(y);
+    }
+    
+    public void setRz(final double z) {
+        this.rz.setAngle(z);
+    }
+    
+    public void setScale(final double scaleFactor) {
+        this.s.setX(scaleFactor);
+        this.s.setY(scaleFactor);
+        this.s.setZ(scaleFactor);
+    }
+    
+    public void setScale(final double x, final double y, final double z) {
+        this.s.setX(x);
+        this.s.setY(y);
+        this.s.setZ(z);
+    }
+    
     // Cannot override these methods as they are final:
     // public void setScaleX(double x) { s.setX(x); }
     // public void setScaleY(double y) { s.setY(y); }
     // public void setScaleZ(double z) { s.setZ(z); }
     // Use these methods instead:
-    public void setSx(double x) { s.setX(x); }
-    public void setSy(double y) { s.setY(y); }
-    public void setSz(double z) { s.setZ(z); }
-
-    public void setPivot(double x, double y, double z) {
-        p.setX(x);
-        p.setY(y);
-        p.setZ(z);
-        ip.setX(-x);
-        ip.setY(-y);
-        ip.setZ(-z);
+    public void setSx(final double x) {
+        this.s.setX(x);
     }
-
-    public void reset() {
-        t.setX(0.0);
-        t.setY(0.0);
-        t.setZ(0.0);
-        rx.setAngle(0.0);
-        ry.setAngle(0.0);
-        rz.setAngle(0.0);
-        s.setX(1.0);
-        s.setY(1.0);
-        s.setZ(1.0);
-        p.setX(0.0);
-        p.setY(0.0);
-        p.setZ(0.0);
-        ip.setX(0.0);
-        ip.setY(0.0);
-        ip.setZ(0.0);
+    
+    public void setSy(final double y) {
+        this.s.setY(y);
     }
-
-    public void resetTSP() {
-        t.setX(0.0);
-        t.setY(0.0);
-        t.setZ(0.0);
-        s.setX(1.0);
-        s.setY(1.0);
-        s.setZ(1.0);
-        p.setX(0.0);
-        p.setY(0.0);
-        p.setZ(0.0);
-        ip.setX(0.0);
-        ip.setY(0.0);
-        ip.setZ(0.0);
+    
+    public void setSz(final double z) {
+        this.s.setZ(z);
     }
-
-    public void debug() {	
-        System.out.println("t = (" +
-                           t.getX() + ", " +
-                           t.getY() + ", " +
-                           t.getZ() + ")  " +
-                           "r = (" +
-                           rx.getAngle() + ", " +
-                           ry.getAngle() + ", " +
-                           rz.getAngle() + ")  " +
-                           "s = (" +
-                           s.getX() + ", " + 
-                           s.getY() + ", " + 
-                           s.getZ() + ")  " +
-                           "p = (" +
-                           p.getX() + ", " + 
-                           p.getY() + ", " + 
-                           p.getZ() + ")  " +
-                           "ip = (" +
-                           ip.getX() + ", " + 
-                           ip.getY() + ", " + 
-                           ip.getZ() + ")");
+    
+    public void setTranslate(final double x, final double y) {
+        this.t.setX(x);
+        this.t.setY(y);
+    }
+    
+    public void setTranslate(final double x, final double y, final double z) {
+        this.t.setX(x);
+        this.t.setY(y);
+        this.t.setZ(z);
+    }
+    
+    // Cannot override these methods as they are final:
+    // public void setTranslateX(double x) { t.setX(x); }
+    // public void setTranslateY(double y) { t.setY(y); }
+    // public void setTranslateZ(double z) { t.setZ(z); }
+    // Use these methods instead:
+    public void setTx(final double x) {
+        this.t.setX(x);
+    }
+    
+    public void setTy(final double y) {
+        this.t.setY(y);
+    }
+    
+    public void setTz(final double z) {
+        this.t.setZ(z);
     }
 }

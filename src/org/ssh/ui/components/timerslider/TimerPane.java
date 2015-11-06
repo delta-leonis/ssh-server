@@ -14,40 +14,41 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 /**
- * Example pane that partially implements the bottom bar of the
- * end-implementation.
- * 
- * @Deprecated Please remove as soon as possible. Don't forget to update
- *             {@link TimerSliderExample} first
- * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
+ * Example pane that partially implements the bottom bar of the end-implementation.
  *
+ * @Deprecated Please remove as soon as possible. Don't forget to update {@link TimerSliderExample}
+ *             first
+ * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
+ *        
  */
 public class TimerPane extends VBox {
-    private Button slideBarButton;
-    private Parent slider;
-    private BorderSlideBar borderSlideBar;
-    private HBox root;
-
+    
+    private final Button         slideBarButton;
+    private Parent               slider;
+    private final BorderSlideBar borderSlideBar;
+    private final HBox           root;
+                                 
     public TimerPane() {
-        root = new HBox();
-        root.setStyle("-fx-background-color: \"white\";");
-        root.setSpacing(10);
-        slideBarButton = new Button("^");
-        slideBarButton.setStyle("-fx-font: 16px \"Serif\";");
-        slideBarButton.prefHeightProperty().bind(root.heightProperty());
-
+        this.root = new HBox();
+        this.root.setStyle("-fx-background-color: \"white\";");
+        this.root.setSpacing(10);
+        this.slideBarButton = new Button("^");
+        this.slideBarButton.setStyle("-fx-font: 16px \"Serif\";");
+        this.slideBarButton.prefHeightProperty().bind(this.root.heightProperty());
+        
         try {
-            slider = FXMLLoader.load(getClass().getResource("/fxml/TimeSlider.fxml"));
-            slider.getStylesheets().add(getClass().getResource("/css/slider.css").toString());
-        } catch (IOException e) {
+            this.slider = FXMLLoader.load(this.getClass().getResource("/fxml/TimeSlider.fxml"));
+            this.slider.getStylesheets().add(this.getClass().getResource("/css/slider.css").toString());
+        }
+        catch (final IOException e) {
             e.printStackTrace();
         }
-
-        Label blueLabel = new Label("MIAUW.");
+        
+        final Label blueLabel = new Label("MIAUW.");
         blueLabel.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 10;");
-        borderSlideBar = new BorderSlideBar(100, slideBarButton, Pos.BOTTOM_CENTER, blueLabel);
-
-        root.getChildren().addAll(slideBarButton, slider);
-        getChildren().addAll(borderSlideBar, root);
+        this.borderSlideBar = new BorderSlideBar(100, this.slideBarButton, Pos.BOTTOM_CENTER, blueLabel);
+        
+        this.root.getChildren().addAll(this.slideBarButton, this.slider);
+        this.getChildren().addAll(this.borderSlideBar, this.root);
     }
 }

@@ -7,19 +7,20 @@ import org.ssh.services.pipeline.packets.GeometryPacket;
 
 /**
  * The Class OftenProducer.
- * 
+ *
  * This is an example implementation of a scheduled Producer
- * 
+ *
  * @author Rimon Oz
  */
 public class OftenProducer extends Producer<GeometryPacket> {
-
+    
     /**
      * Instantiates a new scheduled Producer
      *
-     * @param name The name of the new Producer
+     * @param name
+     *            The name of the new Producer
      */
-    public OftenProducer(String name) {
+    public OftenProducer(final String name) {
         // set the name and priority
         super(name, ProducerType.SCHEDULED);
         // update the work function

@@ -12,61 +12,65 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
 public class Toolbox extends UIComponent {
-
-	@FXML
-	private GridPane toolboxcontainer;
-	
-	Pane widgetPane = new Pane(new Label("Widgets"));
-	Pane consolePane = new Pane(new Label("Console"));
-	Pane luaPane = new Pane(new Label("LUA"));
-	Pane settingsPane = new Pane(new Label("Settings"));
-	
-	public Toolbox() {
-		super("toolbox", "toolbox.fxml");
-		toolboxcontainer.minHeightProperty().bind(this.heightProperty());
-		toolboxcontainer.maxHeightProperty().bind(this.heightProperty());
-		toolboxcontainer.minWidthProperty().bind(this.widthProperty());
-		toolboxcontainer.maxWidthProperty().bind(this.widthProperty());
-		toolboxcontainer.add(widgetPane, 1, 0);
-	}
-
-	@FXML
-	private void enrollWidgets(ActionEvent e) {
-		Optional<Node> optionalNode = toolboxcontainer.getChildren().parallelStream().filter(node -> GridPane.getRowIndex(node) == 0)
-				.filter(node -> GridPane.getColumnIndex(node) == 1).findFirst();
-		if (optionalNode.isPresent()) {
-			toolboxcontainer.getChildren().remove((Node) optionalNode.get());
-			toolboxcontainer.add(widgetPane, 1, 0);
-		}
-	}
-
-	@FXML
-	private void enrollConsole(ActionEvent e) {
-		Optional<Node> optionalNode = toolboxcontainer.getChildren().parallelStream().filter(node -> GridPane.getRowIndex(node) == 0)
-				.filter(node -> GridPane.getColumnIndex(node) == 1).findFirst();
-		if (optionalNode.isPresent()) {
-			toolboxcontainer.getChildren().remove((Node) optionalNode.get());
-			toolboxcontainer.add(consolePane, 1, 0);
-		}
-	}
-
-	@FXML
-	private void enrollLua(ActionEvent e) {
-		Optional<Node> optionalNode = toolboxcontainer.getChildren().parallelStream().filter(node -> GridPane.getRowIndex(node) == 0)
-				.filter(node -> GridPane.getColumnIndex(node) == 1).findFirst();
-		if (optionalNode.isPresent()) {
-			toolboxcontainer.getChildren().remove((Node) optionalNode.get());
-			toolboxcontainer.add(luaPane, 1, 0);
-		}
-	}
-
-	@FXML
-	private void enrollSettings(ActionEvent e) {
-		Optional<Node> optionalNode = toolboxcontainer.getChildren().parallelStream().filter(node -> GridPane.getRowIndex(node) == 0)
-				.filter(node -> GridPane.getColumnIndex(node) == 1).findFirst();
-		if (optionalNode.isPresent()) {
-			toolboxcontainer.getChildren().remove((Node) optionalNode.get());
-			toolboxcontainer.add(settingsPane, 1, 0);
-		}
-	}
+    
+    @FXML
+    private GridPane toolboxcontainer;
+                     
+    Pane             widgetPane   = new Pane(new Label("Widgets"));
+    Pane             consolePane  = new Pane(new Label("Console"));
+    Pane             luaPane      = new Pane(new Label("LUA"));
+    Pane             settingsPane = new Pane(new Label("Settings"));
+                                  
+    public Toolbox() {
+        super("toolbox", "toolbox.fxml");
+        this.toolboxcontainer.minHeightProperty().bind(this.heightProperty());
+        this.toolboxcontainer.maxHeightProperty().bind(this.heightProperty());
+        this.toolboxcontainer.minWidthProperty().bind(this.widthProperty());
+        this.toolboxcontainer.maxWidthProperty().bind(this.widthProperty());
+        this.toolboxcontainer.add(this.widgetPane, 1, 0);
+    }
+    
+    @FXML
+    private void enrollConsole(final ActionEvent e) {
+        final Optional<Node> optionalNode = this.toolboxcontainer.getChildren().parallelStream()
+                .filter(node -> GridPane.getRowIndex(node) == 0).filter(node -> GridPane.getColumnIndex(node) == 1)
+                .findFirst();
+        if (optionalNode.isPresent()) {
+            this.toolboxcontainer.getChildren().remove(optionalNode.get());
+            this.toolboxcontainer.add(this.consolePane, 1, 0);
+        }
+    }
+    
+    @FXML
+    private void enrollLua(final ActionEvent e) {
+        final Optional<Node> optionalNode = this.toolboxcontainer.getChildren().parallelStream()
+                .filter(node -> GridPane.getRowIndex(node) == 0).filter(node -> GridPane.getColumnIndex(node) == 1)
+                .findFirst();
+        if (optionalNode.isPresent()) {
+            this.toolboxcontainer.getChildren().remove(optionalNode.get());
+            this.toolboxcontainer.add(this.luaPane, 1, 0);
+        }
+    }
+    
+    @FXML
+    private void enrollSettings(final ActionEvent e) {
+        final Optional<Node> optionalNode = this.toolboxcontainer.getChildren().parallelStream()
+                .filter(node -> GridPane.getRowIndex(node) == 0).filter(node -> GridPane.getColumnIndex(node) == 1)
+                .findFirst();
+        if (optionalNode.isPresent()) {
+            this.toolboxcontainer.getChildren().remove(optionalNode.get());
+            this.toolboxcontainer.add(this.settingsPane, 1, 0);
+        }
+    }
+    
+    @FXML
+    private void enrollWidgets(final ActionEvent e) {
+        final Optional<Node> optionalNode = this.toolboxcontainer.getChildren().parallelStream()
+                .filter(node -> GridPane.getRowIndex(node) == 0).filter(node -> GridPane.getColumnIndex(node) == 1)
+                .findFirst();
+        if (optionalNode.isPresent()) {
+            this.toolboxcontainer.getChildren().remove(optionalNode.get());
+            this.toolboxcontainer.add(this.widgetPane, 1, 0);
+        }
+    }
 }

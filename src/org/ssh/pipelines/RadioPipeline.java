@@ -9,13 +9,14 @@ import org.ssh.services.pipeline.packets.RadioPacket;
  * @author Rimon Oz
  */
 public class RadioPipeline extends Pipeline<RadioPacket> {
-
+    
     /**
      * Instantiates a new radio org.ssh.services.pipeline.
      *
-     * @param name the name
+     * @param name
+     *            the name
      */
-    public RadioPipeline(String name) {
+    public RadioPipeline(final String name) {
         super(name);
     }
 }
