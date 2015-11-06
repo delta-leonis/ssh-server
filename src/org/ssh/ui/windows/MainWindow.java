@@ -30,6 +30,13 @@ import javafx.stage.Stage;
  *
  * @author Rimon Oz
  * @author Joost Overeem
+ * 
+ * @TODO javadoc for attributes
+ * @TODO solution for all the bind()s
+ * @TODO fix naming convention (camelCasing)
+ * @TODO Platform.runLater() for addToTop, etc.
+ * @TODO create Stage getWindow() in UIController
+ * @TODO change variable/attribute names to more than 4 chars (be descriptive!)
  */
 public class MainWindow extends UIController<StackPane> {
     

@@ -1,4 +1,6 @@
-package org.ssh.field3d;
+package examples;
+
+import org.ssh.field3d.FieldGame;
 
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -7,7 +9,7 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+public class Field3DExample extends Application {
     
     public static void main(final String[] args) {
         

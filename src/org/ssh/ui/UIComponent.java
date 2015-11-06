@@ -13,24 +13,28 @@ import javafx.scene.layout.Region;
 
 /**
  * The Class UIComponent.
+ * 
+ * This class represents a component that is placed inside a window (see {@link UIController}).
  *
  * @author Rimon Oz
+ * 
+ * @TODO add remove()
  */
 abstract public class UIComponent extends Region {
-    
-    // a logger for good measure
-    private static Logger logger = Logger.getLogger();
                                  
-    /** The name. */
-    private String        name;
-                          
+    /** The name of the component. */
+    private String              name;
+
+    // a logger for good measure
+    private static final Logger LOG = Logger.getLogger();
+    
     /**
      * Instantiates a new UI component.
      *
      * @param name
-     *            The name
+     *            The name of the component
      * @param fxmlFile
-     *            The fxml file
+     *            The FXML file.
      */
     public UIComponent(final String name, final String fxmlFile) {
         // set attributes
@@ -40,16 +44,17 @@ abstract public class UIComponent extends Region {
     }
     
     /**
-     * Adds a Node to the component's children.
+     * Adds a {@link Node} to the component's children.
      *
      * @param <N>
-     *            The Node type
+     *            The {@link Node} type
      * @param node
-     *            The Node itself.
+     *            The {@link Node} itself.
      * @return true, if successful
      */
     public <N extends Node> void add(final N node) {
-        UIComponent.logger.info("Adding a Node to UIController %s", this.getName());
+        UIComponent.LOG.info("Adding a Node to UIController %s", this.getName());
+        // add the child on the UI thread
         Platform.runLater(() -> this.getChildren().add(node));
     }
     
@@ -69,30 +74,30 @@ abstract public class UIComponent extends Region {
     /**
      * Gets the name of the component.
      *
-     * @return the name
+     * @return The name of the component.
      */
     public String getName() {
         return this.name;
     }
     
     /**
-     * Sets a CSS-file from /org.ssh.view/css/ on the UI component.
+     * Sets a CSS-file from /org/ssh/view/css/ on the UI component.
      *
      * @param fileName
-     *            The name of the file (e.g. "org.ssh.managers.css")
+     *            The name of the file (e.g. "application.css")
      */
     public void loadCSS(final String fileName) {
-        UIComponent.logger.info("Loaded CSS file /org/ssh/view/css/%s into UIComponent %s.", fileName, this.getName());
+        UIComponent.LOG.fine("Loaded CSS file /org/ssh/view/css/%s into UIComponent %s.", fileName, this.getName());
         // apply the stylesheet
         Platform.runLater(() -> this.getScene().getStylesheets()
                 .addAll(this.getClass().getResource("/org/ssh/view/css/" + fileName).toExternalForm()));
     }
     
     /**
-     * Load fxml.
+     * Load FXML file into the component.
      *
      * @param fileName
-     *            the file name
+     *            The name of the file.
      * @return true, if successful
      */
     public boolean loadFXML(final String fileName) {
@@ -110,13 +115,13 @@ abstract public class UIComponent extends Region {
             Platform.runLater(() -> this.getChildren().add(documentRoot));
         }
         catch (final IOException exception) {
-            UIComponent.logger.warning("Couldn't load FXML file /org/ssh/view/components/%s into UIComponent %s",
+            UIComponent.LOG.warning("Couldn't load FXML file /org/ssh/view/components/%s into UIComponent %s",
                     fileName,
                     this.getName());
-            exception.printStackTrace();
+            UIComponent.LOG.exception(exception);
             return false;
         }
-        UIComponent.logger.info("Loaded FXML file %s into UIComponent %s", fileName, this.getName());
+        UIComponent.LOG.fine("Loaded FXML file %s into UIComponent %s", fileName, this.getName());
         return true;
     }
     

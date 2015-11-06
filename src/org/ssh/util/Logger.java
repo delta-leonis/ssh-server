@@ -6,6 +6,7 @@ import java.util.logging.LogManager;
  * Expanded Logger with build in formatter
  *
  * @author Jeroen de Jong
+ * @author Rimon Oz
  *        
  */
 public class Logger extends java.util.logging.Logger {

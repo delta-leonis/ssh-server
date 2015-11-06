@@ -19,27 +19,31 @@ import javafx.scene.paint.Color;
  * is created & managed.
  *
  * @author Mark Lefering - 330430
+ * 
+ * @TODO remove underscores in variable names
+ * @TODO change method names (camelCasing)
+ * @TODO remove region commentblocks
  *        
  */
 public class FieldGame extends Game {
     
-    // TODO: move to config file, or get from org.ssh.models
-    public static final double           FIELD_TILE_WIDTH      = 500.0;
-    public static final double           FIELD_TILE_DEPTH      = 500.0;
-    public static final double           FIELD_WIDTH           = 9000.0;
-    public static final double           FIELD_DEPTH           = 6000.0;
-    public static final double           FIELD_REAL_WIDTH      = FieldGame.FIELD_WIDTH
+    // TODO: move to config file, or get from models
+    public static final double FIELD_TILE_WIDTH      = 500.0;
+    public static final double FIELD_TILE_DEPTH      = 500.0;
+    public static final double FIELD_WIDTH           = 9000.0;
+    public static final double FIELD_DEPTH           = 6000.0;
+    public static final double FIELD_REAL_WIDTH      = FieldGame.FIELD_WIDTH
             + (2.0 * FieldGame.FIELD_TILE_WIDTH);
-    public static final double           FIELD_REAL_DEPTH      = FieldGame.FIELD_DEPTH
+    public static final double FIELD_REAL_DEPTH      = FieldGame.FIELD_DEPTH
             + (2.0 * FieldGame.FIELD_TILE_DEPTH);
             
-    public static final double           FIELD_LINE_HEIGHT     = 5.0;
-    public static final double           FIELD_LINE_WIDTH      = 10.0f;
-    public static final double           FIELD_HEIGHT          = 1.0;
-    public static final double           FIELD_GOAL_WIDTH      = 1000.0;
-    public static final double           FIELD_GOAL_DEPTH      = 200.0;
-    public static final double           FIELD_GOAL_HEIGHT     = 190.0;
-    public static final double           FIELD_GOAL_LINE_WIDTH = 5.0;
+    public static final double FIELD_LINE_HEIGHT     = 5.0;
+    public static final double FIELD_LINE_WIDTH      = 10.0f;
+    public static final double FIELD_HEIGHT          = 1.0;
+    public static final double FIELD_GOAL_WIDTH      = 1000.0;
+    public static final double FIELD_GOAL_DEPTH      = 200.0;
+    public static final double FIELD_GOAL_HEIGHT     = 190.0;
+    public static final double FIELD_GOAL_LINE_WIDTH = 5.0;
                                                                
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //

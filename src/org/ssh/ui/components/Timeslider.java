@@ -20,6 +20,15 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
+/**
+ * @author Thomas Hakkers
+ * @author Joost Overeem
+ * 
+ * @TODO replace intToTime() with DateTime
+ * @TODO replace onAction() with FXML onAction="#"
+ * @TODO javadoc all the things \o/
+ *
+ */
 public class Timeslider extends UIComponent {
     
     @FXML

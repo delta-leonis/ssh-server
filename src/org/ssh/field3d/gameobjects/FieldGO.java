@@ -20,6 +20,12 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 
 // TODO: Javadoc, cleanup
+/**
+ * @author Mark Lefering
+ * 
+ * @TODO change attribute type from ArrayList to List
+ *
+ */
 public class FieldGO extends GameObject {
     
     // TODO: read from org.ssh.models
@@ -88,6 +94,7 @@ public class FieldGO extends GameObject {
         this._fieldLines.add(box);
         
         // Add to world group
+        // TODO: Platform.runLater()
         this.GetGame().GetWorldGroup().getChildren().add(box);
         
         return box;
@@ -360,6 +367,7 @@ public class FieldGO extends GameObject {
                 // Set box material
                 tmpBox.setMaterial(this._grassMaterial);
                 
+                // TODO: Platform.runLater()
                 this.GetGame().GetWorldGroup().getChildren().add(tmpBox);
                 
                 this._fieldTiles.add(tmpBox);
