@@ -1,34 +1,53 @@
 # ssh-server
 
-This is the RoboCup server software for team SSH (Small Size Holland) for running SSL-games. Runnable jar-files are located in `build/dist`.
+This is the RoboCup server software for team SSH (Small Size Holland) for running SSL-games. Runnable jar-files are to be found on the CI-server (URI TBA).
 
 ## Directory structure
 
-    dist/                 This folder contains binaries
-      |-  bin
-      \-  build
-    docs/                 This folder contains the JavaDoc
-    lib/                  This folder contains external libraries
-    protobuf/             This folder contains the protobuf files
-    src/                  This folder contains the project's source code
-      |-  org.ssh.controllers/    This folder contains logic for external (handheld) org.ssh.controllers
-      |-  gui/            This folder contains logic for the graphical interface
-        |-  lua           This folder contains logic for the LUA-engine
-        \-  media         This folder contains media related to the graphical interface
-      |-  input/          This folder contains logic for the data-org.ssh.services.pipeline
-        \-  parser/       This folder contains the data-org.ssh.services.pipeline's parser
-      |-  org.ssh.models/          This folder contains the org.ssh.models of the org.ssh.managers
-        |-  enum/         This folder contains all enum's for the project.
-        \-  message/      This folder contains logic for the SSL-Vision messages (protobuf)
-      |-  org.ssh.senders/         This folder contains logic for org.ssh.senders (sending commands to the robots)
-      \-  org.ssh.strategy/       This folder contains logic for the org.ssh.strategy
-        \-  shrouds       This folder contains mathematical models of game objects
-    config/               This folder contains configuration files for the project
-    test/                 This folder contains tests
-      |-  benchmarks/     This folder contains benchmark tests
-      |-  integrations/   This folder contains integrations tests
-      \-  unit/           This folder contains unit tests
-    tools/                This folder contains (helper-)tools related to the project
+    .
+    ├── bin                                 This folder contains binaries
+    ├── config                              This folder contains application configuration and personal profiles
+    │   └── default
+    ├── lib                                 This folder contains third party libraries
+    │   └── dist
+    ├── LICENSE
+    ├── README.md
+    └── src                                 This folder contains the source code of the project
+        ├── examples
+        └── org
+            └── ssh
+                ├── controllers             This folder contains logic that deals with controllers (keyboard, mouse, etc.)
+                ├── field3d                 This folder contains logic that deals with the 3D representation of the field
+                │   ├── core
+                │   └── gameobjects
+                ├── managers                This folder contains logic that deals with the application framework
+                ├── models                  This folder contains model implementations
+                │   ├── enums
+                │   └── message
+                ├── pipelines               This folder contains pipeline implementations
+                ├── senders                 This folder contains output/broadcasting implementations
+                ├── services                This folder contains logic that deals with services their implementations
+                │   ├── consumers
+                │   ├── couplers
+                │   ├── pipeline            This folder contains logic that deals with pipelines
+                │   │   └── packets
+                │   └── producers
+                ├── strategy                This folder contains logic that deals with strategy
+                │   └── shrouds
+                ├── ui                      This folder contains logic that deals with the user interface
+                │   ├── components
+                │   ├── lua
+                │   │   ├── console
+                │   │   └── editor
+                │   └── windows
+                ├── util                    This folder contains utility classes
+                └── view                    This folder contains all assets used by the application              
+                    ├── components
+                    ├── css
+                    ├── models
+                    ├── textures
+                    ├── icons
+                    └── windows    
 
 ## Motivation
 
@@ -54,7 +73,7 @@ The project currently doesn't have any testing facilities.
     Nanko Schrijver  - ELT
     Nick van Deth    - MT
     Jelle Meijerink  - MT
-    Mark Leferink    - TI
+    Mark Lefering    - TI
     Michel Teterissa - MT
     Sven Dicker      - MT
     Emre Elmas       - ELT
