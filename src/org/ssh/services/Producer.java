@@ -1,4 +1,4 @@
-package org.ssh.services.pipeline;
+package org.ssh.services;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +6,6 @@ import java.util.concurrent.Callable;
 
 import org.ssh.managers.Services;
 import org.ssh.models.enums.ProducerType;
-import org.ssh.services.Pipeline;
-import org.ssh.services.Service;
 import org.ssh.util.Logger;
 
 import com.google.common.util.concurrent.FutureCallback;

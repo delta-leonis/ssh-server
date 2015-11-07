@@ -3,12 +3,12 @@ package org.ssh;
 import org.ssh.managers.Models;
 import org.ssh.managers.Services;
 import org.ssh.managers.UI;
-import org.ssh.pipelines.GeometryPipeline;
-import org.ssh.pipelines.RadioPipeline;
+import org.ssh.models.enums.PacketPriority;
 import org.ssh.services.consumers.StringConsumer;
 import org.ssh.services.couplers.ChangeCoupler;
 import org.ssh.services.couplers.VerboseCoupler;
-import org.ssh.services.pipeline.Priority;
+import org.ssh.services.pipeline.pipelines.GeometryPipeline;
+import org.ssh.services.pipeline.pipelines.RadioPipeline;
 import org.ssh.services.producers.OftenProducer;
 import org.ssh.services.producers.OnceProducer;
 
@@ -70,7 +70,7 @@ public class Main extends Application {
         Services.addServices(dingService, changeService, stringService);
 
         verboseCoupler.attachToCompatiblePipelines();
-        changeService.attachToCompatiblePipelines(Priority.LOWEST);
+        changeService.attachToCompatiblePipelines(PacketPriority.LOWEST);
         stringService.attachToCompatiblePipelines();
         dingService.attachToCompatiblePipelines();
         intService.attachToCompatiblePipelines();

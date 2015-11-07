@@ -1,6 +1,6 @@
 package org.ssh.services.pipeline.packets;
 
-import org.ssh.services.pipeline.PipelinePacket;
+import org.ssh.services.PipelinePacket;
 
 import com.google.protobuf.MessageOrBuilder;
 

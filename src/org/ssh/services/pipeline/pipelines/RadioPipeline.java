@@ -1,4 +1,4 @@
-package org.ssh.pipelines;
+package org.ssh.services.pipeline.pipelines;
 
 import org.ssh.services.Pipeline;
 import org.ssh.services.pipeline.packets.RadioPacket;

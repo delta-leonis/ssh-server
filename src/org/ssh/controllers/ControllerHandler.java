@@ -12,7 +12,7 @@ import org.ssh.models.Model;
 import org.ssh.models.Robot;
 import org.ssh.models.enums.ButtonFunction;
 import org.ssh.models.enums.ProducerType;
-import org.ssh.services.pipeline.Producer;
+import org.ssh.services.Producer;
 import org.ssh.util.Logger;
 
 import net.java.games.input.Controller;

@@ -10,10 +10,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Stream;
 
 import org.jooq.lambda.Seq;
-import org.ssh.services.pipeline.Consumer;
-import org.ssh.services.pipeline.Coupler;
-import org.ssh.services.pipeline.PipelinePacket;
-import org.ssh.services.pipeline.Priority;
+import org.ssh.models.enums.PacketPriority;
 import org.ssh.util.Logger;
 
 import com.google.common.reflect.TypeToken;
@@ -21,8 +18,8 @@ import com.google.common.reflect.TypeToken;
 /**
  * The Class Pipeline.
  *
- * A Pipeline processes data using {@link org.ssh.services.pipeline.Producer},
- * {@link org.ssh.services.pipeline.Coupler}, and {@link org.ssh.services.pipeline.Consumer}.
+ * A Pipeline processes data using {@link org.ssh.services.Producer},
+ * {@link org.ssh.services.Coupler}, and {@link org.ssh.services.Consumer}.
  *
  * @author Rimon Oz
  * @param <T>
@@ -34,7 +31,7 @@ public abstract class Pipeline<T extends PipelinePacket> {
     private final String                    name;
                                             
     /** The Couplers registered to this Pipeline. */
-    private final Map<Coupler<T>, Priority> couplers;
+    private final Map<Coupler<T>, PacketPriority> couplers;
                                             
     /** The Consumers registered to this Pipeline. */
     private final List<Consumer<T>>         consumers;
@@ -60,14 +57,14 @@ public abstract class Pipeline<T extends PipelinePacket> {
     public Pipeline(final String name) {
         // set attributes
         this.name = name;
-        this.couplers = new HashMap<Coupler<T>, Priority>();
+        this.couplers = new HashMap<Coupler<T>, PacketPriority>();
         this.consumers = new ArrayList<Consumer<T>>();
 
         Pipeline.LOG.info("New org.ssh.services.pipeline created with name %s", name);
     }
     
     /**
-     * Adds a {@link org.ssh.services.pipeline.PipelinePacket} to the Pipeline.
+     * Adds a {@link org.ssh.services.PipelinePacket} to the Pipeline.
      *
      * @param pipelinePacket
      *            The packet to be added to the Pipeline.
@@ -143,7 +140,7 @@ public abstract class Pipeline<T extends PipelinePacket> {
     }
     
     /**
-     * Registers a {@link org.ssh.services.pipeline.Consumer} with the Pipeline.
+     * Registers a {@link org.ssh.services.Consumer} with the Pipeline.
      *
      * @param consumer
      *            The Consumer to be registered with the Pipeline.
@@ -157,7 +154,7 @@ public abstract class Pipeline<T extends PipelinePacket> {
     }
     
     /**
-     * Register a list of {@link org.ssh.services.pipeline.Consumer} with the Pipeline.
+     * Register a list of {@link org.ssh.services.Consumer} with the Pipeline.
      *
      * @param consumer
      *            The Consumers to be registered with the Pipeline.
@@ -172,7 +169,7 @@ public abstract class Pipeline<T extends PipelinePacket> {
     }
     
     /**
-     * Registers a {@link org.ssh.services.pipeline.Coupler} with the Pipeline.
+     * Registers a {@link org.ssh.services.Coupler} with the Pipeline.
      *
      * @param consumer
      *            The Coupler to be registered with the Pipeline.
@@ -182,29 +179,29 @@ public abstract class Pipeline<T extends PipelinePacket> {
         Pipeline.LOG.fine("Coupler named %s registered to org.ssh.services.pipeline %s.",
                 coupler.getName(),
                 this.getName());
-        return this.couplers.put((Coupler<T>) coupler, Priority.MEDIUM) != null;
+        return this.couplers.put((Coupler<T>) coupler, PacketPriority.MEDIUM) != null;
     }
     
     /**
-     * Registers a {@link org.ssh.services.pipeline.Coupler} with the Pipeline with the given
+     * Registers a {@link org.ssh.services.Coupler} with the Pipeline with the given
      * Priority.
      *
-     * @param priority
+     * @param packetPriority
      *            The priority with which the Coupler is to be registered.
      * @param consumer
      *            The Consumers to be registered with the Pipeline.
      * @return true, if successful
      */
-    public boolean registerCoupler(final Priority priority, final Coupler<T> coupler) {
+    public boolean registerCoupler(final PacketPriority packetPriority, final Coupler<T> coupler) {
         Pipeline.LOG.fine("Consumer named %s registered to org.ssh.services.pipeline %s with priority %s.",
                 coupler.getName(),
                 this.getName(),
-                priority.toString());
-        return this.couplers.put(coupler, priority) != null;
+                packetPriority.toString());
+        return this.couplers.put(coupler, packetPriority) != null;
     }
     
     /**
-     * Registers a list of {@link org.ssh.services.pipeline.Coupler} with the Pipeline.
+     * Registers a list of {@link org.ssh.services.Coupler} with the Pipeline.
      *
      * @param consumer
      *            The Couplers to be registered with the Pipeline.
@@ -219,18 +216,18 @@ public abstract class Pipeline<T extends PipelinePacket> {
     }
     
     /**
-     * Registers a list of {@link org.ssh.services.pipeline.Coupler} with the Pipeline with the
+     * Registers a list of {@link org.ssh.services.Coupler} with the Pipeline with the
      * given Priority.
      *
-     * @param priority
+     * @param packetPriority
      *            The priority with which the Couplers are to be registered.
      * @param consumer
      *            The Consumers to be registered with the Pipeline.
      * @return true, if successful
      */
     @SuppressWarnings ("unchecked")
-    public boolean registerCouplers(final Priority priority, final Coupler<T>... couplers) {
-        return Stream.of(couplers).map(coupler -> this.registerCoupler(priority, coupler))
+    public boolean registerCouplers(final PacketPriority packetPriority, final Coupler<T>... couplers) {
+        return Stream.of(couplers).map(coupler -> this.registerCoupler(packetPriority, coupler))
                 // collect all success values and reduce to true if all senders
                 // succeeded; false otherwise
                 .reduce(true, (accumulator, success) -> accumulator && success);

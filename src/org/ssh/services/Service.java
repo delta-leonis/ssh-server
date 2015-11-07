@@ -3,7 +3,6 @@ package org.ssh.services;
 import java.lang.reflect.Type;
 
 import org.ssh.managers.Services;
-import org.ssh.services.pipeline.PipelinePacket;
 import org.ssh.util.Logger;
 
 import com.google.common.reflect.TypeToken;
@@ -57,7 +56,7 @@ public abstract class Service<T extends PipelinePacket> {
     }
     
     /**
-     * Gets the genericType of {@link org.ssh.services.pipeline.PipelinePacket} on which this Service
+     * Gets the genericType of {@link org.ssh.services.PipelinePacket} on which this Service
      * operates.
      *
      * @return The genericType of PipelinePacket on which this Service operates.

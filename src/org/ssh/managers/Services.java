@@ -6,13 +6,13 @@ import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.ssh.services.Consumer;
+import org.ssh.services.Coupler;
 import org.ssh.services.Pipeline;
+import org.ssh.services.PipelinePacket;
+import org.ssh.services.Producer;
 import org.ssh.services.Service;
 import org.ssh.services.ServicesController;
-import org.ssh.services.pipeline.Consumer;
-import org.ssh.services.pipeline.Coupler;
-import org.ssh.services.pipeline.PipelinePacket;
-import org.ssh.services.pipeline.Producer;
 import org.ssh.util.Logger;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -42,8 +42,8 @@ public final class Services {
                                                          
     /**
      * Adds a org.ssh.services.pipeline that can be used by a
-     * {@link org.ssh.services.pipeline.Producer}, {@link org.ssh.services.pipeline.Coupler}, or
-     * {@link org.ssh.services.pipeline.Consumer}.
+     * {@link org.ssh.services.Producer}, {@link org.ssh.services.Coupler}, or
+     * {@link org.ssh.services.Consumer}.
      *
      * @param org.ssh.services.pipeline
      *            The org.ssh.services.pipeline to be added.
@@ -121,11 +121,11 @@ public final class Services {
     }
     
     /**
-     * Gets a List of available {@link org.ssh.services.pipeline.Consumer} compatible with the given
+     * Gets a List of available {@link org.ssh.services.Consumer} compatible with the given
      * {@link org.ssh.services.Pipeline}.
      *
      * @param <T>
-     *            The generic genericType of the {@link org.ssh.services.pipeline.PipelinePacket} handled
+     *            The generic genericType of the {@link org.ssh.services.PipelinePacket} handled
      *            by the Consumer and Service.
      * @param org.ssh.services.pipeline
      *            The given org.ssh.services.pipeline.
@@ -150,11 +150,11 @@ public final class Services {
     }
     
     /**
-     * Gets a List of available {@link org.ssh.services.pipeline.Coupler} compatible with the given
+     * Gets a List of available {@link org.ssh.services.Coupler} compatible with the given
      * {@link org.ssh.services.Pipeline}.
      *
      * @param <T>
-     *            The generic genericType of the {@link org.ssh.services.pipeline.PipelinePacket} handled
+     *            The generic genericType of the {@link org.ssh.services.PipelinePacket} handled
      *            by the Coupler and Service.
      * @param org.ssh.services.pipeline
      *            The given org.ssh.services.pipeline.
@@ -179,11 +179,11 @@ public final class Services {
     }
     
     /**
-     * Gets a List of available {@link org.ssh.services.pipeline.Producer} compatible with the given
+     * Gets a List of available {@link org.ssh.services.Producer} compatible with the given
      * {@link org.ssh.services.Pipeline}.
      *
      * @param <T>
-     *            The generic genericType of the {@link org.ssh.services.pipeline.PipelinePacket} handled
+     *            The generic genericType of the {@link org.ssh.services.PipelinePacket} handled
      *            by the Producer and Service.
      * @param org.ssh.services.pipeline
      *            The given org.ssh.services.pipeline.
@@ -232,7 +232,7 @@ public final class Services {
     
     /**
      * Gets a list of {@link org.ssh.services.Pipeline} that operates on the supplied Type of
-     * {@link org.ssh.services.pipeline.PipelinePacket}.
+     * {@link org.ssh.services.PipelinePacket}.
      *
      * @param packetType
      *            The Type with which the Pipelines need to be compatible.
@@ -256,7 +256,7 @@ public final class Services {
      * the previous execution and start of the next execution.
      *
      * @param <T>
-     *            The generic genericType of {@link org.ssh.services.pipeline.PipelinePacket} which the
+     *            The generic genericType of {@link org.ssh.services.PipelinePacket} which the
      *            Runnable produces.
      * @param taskName
      *            The name of the task

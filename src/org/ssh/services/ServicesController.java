@@ -12,8 +12,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.ssh.services.pipeline.PipelinePacket;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableScheduledFuture;
@@ -177,7 +175,7 @@ public class ServicesController {
      * the previous execution and start of the next execution.
      *
      * @param <T>
-     *            The generic type of {@link org.ssh.services.pipeline.PipelinePacket} which the
+     *            The generic type of {@link org.ssh.services.PipelinePacket} which the
      *            Runnable produces.
      * @param taskName
      *            The name of the task

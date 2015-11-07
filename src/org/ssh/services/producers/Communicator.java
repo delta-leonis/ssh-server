@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import org.ssh.managers.Services;
 import org.ssh.models.enums.ProducerType;
 import org.ssh.models.enums.SendMethod;
-import org.ssh.pipelines.RadioPipeline;
 import org.ssh.senders.SenderInterface;
 import org.ssh.services.Pipeline;
-import org.ssh.services.pipeline.Producer;
+import org.ssh.services.Producer;
 import org.ssh.services.pipeline.packets.RadioPacket;
+import org.ssh.services.pipeline.pipelines.RadioPipeline;
 import org.ssh.ui.lua.console.AvailableInLua;
 
 import protobuf.Radio;

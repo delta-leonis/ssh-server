@@ -1,8 +1,6 @@
-package org.ssh.services.pipeline;
+package org.ssh.services;
 
 import org.ssh.managers.Services;
-import org.ssh.services.Pipeline;
-import org.ssh.services.Service;
 
 /**
  * The Class Consumer.

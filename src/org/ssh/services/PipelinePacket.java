@@ -1,4 +1,4 @@
-package org.ssh.services.pipeline;
+package org.ssh.services;
 
 import java.lang.reflect.Field;
 import java.util.Map;

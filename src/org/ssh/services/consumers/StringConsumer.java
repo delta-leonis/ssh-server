@@ -1,8 +1,8 @@
 package org.ssh.services.consumers;
 
+import org.ssh.services.Consumer;
+import org.ssh.services.PipelinePacket;
 import org.ssh.services.Service;
-import org.ssh.services.pipeline.Consumer;
-import org.ssh.services.pipeline.PipelinePacket;
 import org.ssh.services.pipeline.packets.RadioPacket;
 
 /**

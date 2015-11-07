@@ -1,8 +1,8 @@
 package org.ssh.services.producers;
 
 import org.ssh.models.enums.ProducerType;
+import org.ssh.services.Producer;
 import org.ssh.services.Service;
-import org.ssh.services.pipeline.Producer;
 import org.ssh.services.pipeline.packets.GeometryPacket;
 
 /**

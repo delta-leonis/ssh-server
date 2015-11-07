@@ -11,9 +11,9 @@ import org.ssh.managers.Models;
 import org.ssh.managers.Services;
 import org.ssh.models.enums.ButtonFunction;
 import org.ssh.models.enums.SendMethod;
-import org.ssh.pipelines.RadioPipeline;
 import org.ssh.senders.DebugSender;
 import org.ssh.services.consumers.RadioPacketConsumer;
+import org.ssh.services.pipeline.pipelines.RadioPipeline;
 import org.ssh.services.producers.Communicator;
 import org.ssh.util.Logger;
 

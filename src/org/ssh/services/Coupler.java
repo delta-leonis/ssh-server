@@ -1,13 +1,12 @@
-package org.ssh.services.pipeline;
+package org.ssh.services;
 
 import org.ssh.managers.Services;
-import org.ssh.services.Pipeline;
-import org.ssh.services.Service;
+import org.ssh.models.enums.PacketPriority;
 
 /**
  * The Class Coupler.
  *
- * A Coupler takes a {@link org.ssh.services.pipeline.PipelinePacket} and returns a PipelinePacket
+ * A Coupler takes a {@link org.ssh.services.PipelinePacket} and returns a PipelinePacket
  * of the same genericType.
  *
  * @author Rimon Oz
@@ -52,7 +51,7 @@ public abstract class Coupler<T extends PipelinePacket> extends Service<T> {
      * @return The Coupler itself.
      */
     @SuppressWarnings ("unchecked")
-    public Coupler<T> attachToCompatiblePipelines(final Priority couplerPriority) {
+    public Coupler<T> attachToCompatiblePipelines(final PacketPriority couplerPriority) {
         // TODO: make sure the org.ssh.services.pipeline handles the genericType
         // get a list of all the org.ssh.pipelines
         Services.getPipelines(this.getType()).stream()

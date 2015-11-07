@@ -1,11 +1,11 @@
-package org.ssh.services.pipeline;
+package org.ssh.models.enums;
 
 /**
  * The Enum Priority.
  *
  * @author Rimon Oz
  */
-public enum Priority {
+public enum PacketPriority {
     
     /** The lowest priority. */
     LOWEST,

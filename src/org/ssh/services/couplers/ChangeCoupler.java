@@ -1,8 +1,8 @@
 package org.ssh.services.couplers;
 
+import org.ssh.services.Coupler;
+import org.ssh.services.PipelinePacket;
 import org.ssh.services.Service;
-import org.ssh.services.pipeline.Coupler;
-import org.ssh.services.pipeline.PipelinePacket;
 import org.ssh.services.pipeline.packets.RadioPacket;
 
 import protobuf.Radio.RadioProtocolCommand;

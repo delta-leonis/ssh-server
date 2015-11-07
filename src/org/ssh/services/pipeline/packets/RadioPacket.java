@@ -1,7 +1,7 @@
 package org.ssh.services.pipeline.packets;
 
 import org.ssh.models.enums.SendMethod;
-import org.ssh.services.pipeline.PipelinePacket;
+import org.ssh.services.PipelinePacket;
 
 import com.google.protobuf.Message;
 import com.google.protobuf.MessageOrBuilder;

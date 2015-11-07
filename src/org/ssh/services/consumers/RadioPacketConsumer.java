@@ -9,8 +9,8 @@ import java.util.stream.Stream;
 
 import org.ssh.models.enums.SendMethod;
 import org.ssh.senders.SenderInterface;
-import org.ssh.services.pipeline.Consumer;
-import org.ssh.services.pipeline.PipelinePacket;
+import org.ssh.services.Consumer;
+import org.ssh.services.PipelinePacket;
 import org.ssh.services.pipeline.packets.RadioPacket;
 import org.ssh.util.Logger;
 
