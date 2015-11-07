@@ -8,6 +8,7 @@ import org.ssh.managers.Services;
 import org.ssh.models.enums.ProducerType;
 import org.ssh.services.Pipeline;
 import org.ssh.services.Service;
+import org.ssh.util.Logger;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -17,23 +18,26 @@ import com.google.common.util.concurrent.ListenableScheduledFuture;
 /**
  * The Class Producer.
  *
- * A Producer generates packets of the type (or subtype of) {@link PipelinePacket}. It does this by
+ * A Producer generates packets of the genericType (or subtype of) {@link PipelinePacket}. It does this by
  * running single or scheduled tasks.
  *
  * @author Rimon Oz
  * @param <T>
  *            A PipelinePacket this Producer can work with.
  */
-abstract public class Producer<T extends PipelinePacket> extends Service<T> {
+public abstract class Producer<T extends PipelinePacket> extends Service<T> {
     
     /** The work function which generates PipelinePackets. */
     private Callable<T>             workerLambda;
                                     
-    /** The type of the Producer. */
+    /** The genericType of the Producer. */
     private ProducerType            producerType;
                                     
-    /** The org.ssh.pipelines subscribed to this Producer . */
+    /** The pipeline subscribed to this Producer . */
     private final List<Pipeline<T>> registeredPipelines;
+    
+    // a logger for good measure
+    private static final Logger     LOG = Logger.getLogger();
                                     
     /**
      * Instantiates a new Producer.
@@ -41,7 +45,7 @@ abstract public class Producer<T extends PipelinePacket> extends Service<T> {
      * @param name
      *            The name of the new Producer.
      * @param producerType
-     *            The type of the new Producer
+     *            The genericType of the new Producer
      */
     public Producer(final String name, final ProducerType producerType) {
         super(name);
@@ -51,14 +55,14 @@ abstract public class Producer<T extends PipelinePacket> extends Service<T> {
     }
     
     /**
-     * Attach to compatible org.ssh.pipelines.
+     * Attach to compatible pipelines.
      */
     @SuppressWarnings ("unchecked")
     public void attachToCompatiblePipelines() {
         // find compatible org.ssh.pipelines
-        Services.getPipelines(this.type.getType()).stream()
+        Services.getPipelines(this.getType()).stream()
                 // .parallel()
-                .filter(pipeline -> pipeline.type.equals(this.type)).map(pipeline -> pipeline.getClass().cast(pipeline))
+                .filter(pipeline -> pipeline.getType().equals(this.getType())).map(pipeline -> pipeline.getClass().cast(pipeline))
                 .forEach(pipeline -> this.registerPipeline(pipeline));
     }
     
@@ -81,8 +85,8 @@ abstract public class Producer<T extends PipelinePacket> extends Service<T> {
             try {
                 Producer.this.getCallable().call();
             }
-            catch (final Exception e) {
-                // TODO handle error
+            catch (final Exception exception) {
+                Producer.LOG.exception(exception);
             }
         };
     }
@@ -98,15 +102,13 @@ abstract public class Producer<T extends PipelinePacket> extends Service<T> {
         // submit the task to the worker pool in the org.ssh.services store.
         final ListenableFuture<T> producerFuture = Services.submitTask(taskName, this.getCallable());
         // add callbacks to the future that get triggered once the thread is done executing
-        Futures.addCallback(producerFuture, new FutureCallback<T>() {
-            
+        FutureCallback<T> taskCallback = new FutureCallback<T>() { 
             /**
              * Task failed to execute or threw an error!
              */
             @Override
             public void onFailure(final Throwable failPacket) {
-                // log error
-                System.out.println(failPacket.toString());
+                Producer.LOG.exception((Exception)failPacket);
             }
             
             /**
@@ -115,17 +117,18 @@ abstract public class Producer<T extends PipelinePacket> extends Service<T> {
             @SuppressWarnings ("unchecked")
             @Override
             public void onSuccess(final T successPacket) {
-                Service.logger.info("Task named %s completed by %s", taskName, Producer.this.getName());
-
+                Producer.LOG.fine("Task named %s completed by %s", taskName, Producer.this.getName());
                 // TODO: make sure producer is registered with org.ssh.services.pipeline
-                // find org.ssh.pipelines that can process this packet
+                // find pipelines that can process this packet
                 Services.getPipelines(successPacket.getClass()).stream()
                         // start them up
                         .map(pipeline -> (Pipeline<T>) pipeline)
                         // process the packet!
                         .forEach(pipeline -> pipeline.addPacket(successPacket).processPacket());
             }
-        });
+        };
+        
+        Futures.addCallback(producerFuture, taskCallback);
         // return the future so the user can use it
         return producerFuture;
     }
@@ -141,10 +144,11 @@ abstract public class Producer<T extends PipelinePacket> extends Service<T> {
      */
     public ListenableFuture<T> produceSchedule(final String taskName, final long taskInterval) {
         // add the task to the scheduled worker pool
-        final ListenableScheduledFuture<T> producerFuture = Services.scheduleTask(taskName,
+        final ListenableScheduledFuture<T> scheduleFuture = Services.scheduleTask(taskName,
                 this.getRunnable(),
                 taskInterval);
-        Futures.addCallback(producerFuture, new FutureCallback<T>() {
+        
+            FutureCallback<T> scheduleCallback = new FutureCallback<T>() {
             
             /**
              * Task failed to execute or threw an error!
@@ -152,7 +156,7 @@ abstract public class Producer<T extends PipelinePacket> extends Service<T> {
             @Override
             public void onFailure(final Throwable failPacket) {
                 // log error
-                System.out.println(failPacket.toString());
+                Producer.LOG.exception((Exception)failPacket);
             }
 
             /**
@@ -161,19 +165,20 @@ abstract public class Producer<T extends PipelinePacket> extends Service<T> {
             @SuppressWarnings ("unchecked")
             @Override
             public void onSuccess(final T successPacket) {
-                Service.logger.info("Task completed by %s", Producer.this.getName());
-
+                Producer.LOG.fine("Task completed by %s", Producer.this.getName());
                 // TODO: make sure producer is registered with org.ssh.services.pipeline
-                // find org.ssh.pipelines that can process this packet
+                // find pipelines that can process this packet
                 Services.getPipelines(successPacket.getClass()).stream()
                         // start them up
                         .map(pipeline -> (Pipeline<T>) pipeline)
                         // process the packet
                         .forEach(pipeline -> pipeline.addPacket(successPacket).processPacket());
             }
-        });
+        };
+        
+        Futures.addCallback(scheduleFuture, scheduleCallback);
         // return the future so the user can use it
-        return producerFuture;
+        return scheduleFuture;
     }
     
     /**
@@ -184,7 +189,7 @@ abstract public class Producer<T extends PipelinePacket> extends Service<T> {
      * @return true, if successful.
      */
     public boolean registerPipeline(final Pipeline<T> pipeline) {
-        Service.logger.info("Producer %s registered to Pipeline %s", this.getName(), pipeline.getName());
+        Producer.LOG.info("Producer %s registered to Pipeline %s", this.getName(), pipeline.getName());
         return this.registeredPipelines.add(pipeline);
     }
     
@@ -199,10 +204,10 @@ abstract public class Producer<T extends PipelinePacket> extends Service<T> {
     }
     
     /**
-     * Sets the type of the Producer.
+     * Sets the genericType of the Producer.
      *
      * @param producerType
-     *            The new type of the producer.
+     *            The new genericType of the producer.
      */
     public void setType(final ProducerType producerType) {
         this.producerType = producerType;
@@ -216,14 +221,14 @@ abstract public class Producer<T extends PipelinePacket> extends Service<T> {
     @Override
     public void start() {
         super.start();
-        // check the type of the Producer and start the correct production
+        // check the genericType of the Producer and start the correct production
         if (this.producerType.equals(ProducerType.SINGLE)) {
-            Service.logger.info("Producer %s is starting a single production ...", this.getName());
+            Producer.LOG.fine("Producer %s is starting a single production ...", this.getName());
             // start a single production
             this.produceOnce(this.getName());
         }
         else if (this.producerType.equals(ProducerType.SCHEDULED)) {
-            Service.logger.info("Producer %s is starting scheduled production ...", this.getName());
+            Producer.LOG.fine("Producer %s is starting scheduled production ...", this.getName());
             // start a scheduled production with a default interval
             this.produceSchedule(this.getName(), 1000000);
         }

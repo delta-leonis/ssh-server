@@ -8,6 +8,7 @@ import org.ssh.ui.UIController;
 import org.ssh.ui.windows.MainWindow;
 import org.ssh.util.Logger;
 
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 /**
@@ -35,8 +36,15 @@ public final class UI {
     private static final Object               instance = new Object();
                                                        
     // a logger for good measure
-    private static Logger                     LOG      = Logger.getLogger();
-                                                       
+    private static final Logger               LOG      = Logger.getLogger();
+
+    
+    /**
+     * Private constructor to hide the implicit public one.
+     */
+    private UI() {
+    }
+    
     /**
      * Adds a window to the UI store.
      *
@@ -58,12 +66,14 @@ public final class UI {
      *            The name of the requested window.
      * @return An Optional containing the window.
      */
-    public static Optional<UIController<?>> get(final String name) {
+    @SuppressWarnings ("unchecked")
+    public static <P extends Pane> Optional<UIController<P>> get(final String name) {
         UI.LOG.fine("Getting a window named %s from the UI store", name);
         // get a stream of all the windows
         return UI.uiControllers.stream()
             // filter out the window with the correct name
             .filter(controller -> controller.getName().equals(name))
+            .map(controller -> (UIController<P>)controller)
             // and return the first one in the list
             .findFirst();
     }

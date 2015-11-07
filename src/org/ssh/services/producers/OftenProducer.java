@@ -25,7 +25,7 @@ public class OftenProducer extends Producer<GeometryPacket> {
         super(name, ProducerType.SCHEDULED);
         // update the work function
         this.setCallable(() -> {
-            Service.logger.info("Produced a GeometryPacket!");
+            Service.LOG.info("Produced a GeometryPacket!");
             // create a new packet
             return new GeometryPacket();
         });

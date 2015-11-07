@@ -27,9 +27,9 @@ import javafx.stage.Stage;
  *
  * @author Rimon Oz
  * @param <T>
- *            The generic type of Pane used as a root Node for this window
+ *            The generic genericType of Pane used as a root Node for this window
  */
-abstract public class UIController<T extends Pane> {
+public abstract class UIController<T extends Pane> {
     
     /** The main scene of the window. */
     private Scene                   mainScene;
@@ -49,11 +49,11 @@ abstract public class UIController<T extends Pane> {
     /** The components used in the window. */
     private final List<UIComponent> components;
                                     
-    /** The parameterized type of the window (<T extends Pane>).
+    /** The parameterized genericType of the window (<T extends Pane>).
      *  @see {@link https://github.com/google/guava/wiki/ReflectionExplained} 
      */
     @SuppressWarnings ("serial")
-    public TypeToken<T>             type = new TypeToken<T>(this.getClass()) {};
+    public TypeToken<T>             genericType = new TypeToken<T>(this.getClass()) {};
                                          
     // a logger for good measure
     private static final Logger     LOG  = Logger.getLogger();
@@ -115,7 +115,7 @@ abstract public class UIController<T extends Pane> {
      * Adds a Node to the window's children.
      *
      * @param <N>
-     *            The Node type
+     *            The Node genericType
      * @param node
      *            The Node itself.
      * @return true, if successful
@@ -129,7 +129,7 @@ abstract public class UIController<T extends Pane> {
      * Adds a list of Nodes to the window's children.
      *
      * @param <N>
-     *            The Node type
+     *            The Node genericType
      * @param nodes
      *            The nodes as an array
      */
@@ -145,7 +145,7 @@ abstract public class UIController<T extends Pane> {
      */
     @SuppressWarnings ("unchecked")
     public ObservableList<Node> getChildren() {
-        // cast the root Node from Parent to the correct type and return its children
+        // cast the root Node from Parent to the correct genericType and return its children
         return ((T) this.getRootNode()).getChildren();
     }
     
@@ -200,7 +200,7 @@ abstract public class UIController<T extends Pane> {
      * @return The parameterized {@link Type} of the window.
      */
     public Type getType() {
-        return this.type.getType();
+        return this.genericType.getType();
     }
     
     /**
@@ -242,10 +242,10 @@ abstract public class UIController<T extends Pane> {
             fxmlLoader.setController(this);
             // extract the Nodes
             final Parent documentRoot = (Parent) fxmlLoader.load();
-            // if the root node is of the wrong type
+            // if the root node is of the wrong genericType
             if (!documentRoot.getClass().equals(this.getType())) {
                 // warn the user
-                UIController.LOG.warning("Incorrect type of root Pane! Expected %s but found a %s in %s.",
+                UIController.LOG.warning("Incorrect genericType of root Pane! Expected %s but found a %s in %s.",
                         this.getType().toString(),
                         documentRoot.getClass().toString(),
                         "/org/ssh/view/" + fileName);

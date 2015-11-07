@@ -27,7 +27,7 @@ public class OnceProducer extends Producer<RadioPacket> {
         super(name, ProducerType.SINGLE);
         // update the work function
         this.setCallable(() -> {
-            Service.logger.finer("Produced a RadioPacket!");
+            Service.LOG.finer("Produced a RadioPacket!");
             // create a new RadioPacket
             return new RadioPacket(RadioProtocolCommand.newBuilder().setRobotId(4).setVelocityR(0.2f).setVelocityX(4.0f)
                     .setVelocityY(9293932.0f));

@@ -28,7 +28,7 @@ public class RadioPacketConsumer extends Consumer<RadioPacket> {
     private final List<SendMethod>                 sendMethods = new ArrayList<SendMethod>();
                                                                
     // respective logger
-    private final Logger                           LOG         = Logger.getLogger();
+    private static final Logger                    LOG         = Logger.getLogger();
                                                                
     public RadioPacketConsumer() {
         super("RadioPacketConsumer");
@@ -67,7 +67,7 @@ public class RadioPacketConsumer extends Consumer<RadioPacket> {
     
     @Override
     public boolean consume(final PipelinePacket pipelinePacket) {
-        // cast to the right packet-type
+        // cast to the right packet-genericType
         final RadioPacket packet = (RadioPacket) pipelinePacket;
         // get default sendmethods
         SendMethod[] methods = packet.getSendMethods();

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
@@ -116,8 +117,10 @@ public class ServicesController {
      *            The name of the requested Service.
      * @return The requested service.
      */
-    public Service<?> get(final String name) {
-        return this.servicesList.stream().filter(service -> service.getName().equals(name)).findFirst().get();
+    @SuppressWarnings ("unchecked")
+    public <T extends PipelinePacket> Optional<Service<T>> get(final String name) {
+        return this.servicesList.stream().filter(service -> service.getName().equals(name))
+                .map(service -> (Service<T>) service).findFirst();
     }
     
     /**
@@ -125,8 +128,9 @@ public class ServicesController {
      *
      * @return All the Services.
      */
-    public List<Service<?>> getAll() {
-        return this.servicesList;
+    @SuppressWarnings ("unchecked")
+    public <T extends PipelinePacket> List<Service<T>> getAll() {
+        return this.servicesList.stream().map(service -> (Service<T>) service).collect(Collectors.toList());
     }
     
     /**
@@ -136,8 +140,10 @@ public class ServicesController {
      *            The (fuzzy) name of the service you want to find.
      * @return The requested service.
      */
-    public ArrayList<Service<?>> getAll(final String name) {
-        return (ArrayList<Service<?>>) this.servicesList.stream().filter(service -> service.getName().equals(name))
+    @SuppressWarnings ("unchecked")
+    public <T extends PipelinePacket> List<Service<T>> getAll(final String name) {
+        return this.servicesList.stream().filter(service -> service.getName().equals(name))
+                .map(service -> (Service<T>) service)
                 .collect(Collectors.toList());
     }
     
@@ -148,9 +154,10 @@ public class ServicesController {
      *            The name of the requested Pipeline.
      * @return The requested Pipeline.
      */
-    public <T extends PipelinePacket> Pipeline<T> getPipeline(final String name) {
-        return (Pipeline<T>) this.pipelineList.stream().filter(pipeline -> pipeline.getName().equals(name)).findFirst()
-                .get();
+    @SuppressWarnings ("unchecked")
+    public <T extends PipelinePacket> Optional<Pipeline<T>> getPipeline(final String name) {
+        return this.pipelineList.stream().filter(pipeline -> pipeline.getName().equals(name))
+                .map(pipeline -> (Pipeline<T>) pipeline).findFirst();
     }
     
     /**
@@ -158,8 +165,11 @@ public class ServicesController {
      *
      * @return All the Pipelines in the Services store.
      */
-    public List<Pipeline<?>> getPipelines() {
-        return this.pipelineList.stream().collect(Collectors.toList());
+    @SuppressWarnings ("unchecked")
+    public <T extends PipelinePacket> List<Pipeline<T>> getPipelines() {
+        return this.pipelineList.stream()
+            .map(pipeline -> (Pipeline<T>) pipeline)
+            .collect(Collectors.toList());
     }
     
     /**

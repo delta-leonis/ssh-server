@@ -18,7 +18,7 @@ import com.google.protobuf.MessageOrBuilder;
  *
  * @author Rimon Oz
  */
-abstract public class PipelinePacket {
+public abstract class PipelinePacket {
     
     /** The mutability setting. */
     private boolean isMutable;
@@ -60,18 +60,18 @@ abstract public class PipelinePacket {
      *
      * @return The data inside the packet.
      */
-    abstract public Object read();
+    public abstract Object read();
     
     /**
      * Save.
      *
      * @param <T>
-     *            The type of the PipelinePacket
+     *            The genericType of the PipelinePacket
      * @param data
      *            The data to be put inside the packet.
      * @return The packet itself.
      */
-    abstract public <T extends PipelinePacket> T save(MessageOrBuilder data);
+    public abstract <T extends PipelinePacket> T save(MessageOrBuilder data);
     
     /**
      * Sets the mutability of the packet.
@@ -83,9 +83,15 @@ abstract public class PipelinePacket {
         this.isMutable = mutability;
     }
     
-    public Map<String, ?> toMap(final Class<?> clazz) {
+    /**
+     * Saves the data in the packet as a Map<String, O extends Object>
+     * @param clazz
+     * @return
+     */
+    @SuppressWarnings ("unchecked")
+    public <O extends Object> Map<String, O> toMap(final Class<?> clazz) {
         return Stream.of(clazz.getDeclaredFields())
                 .filter(field -> Reflect.containsField(field.getName(), this.getClass()))
-                .collect(Collectors.toMap(Field::getName, Unchecked.function(field -> field.get(this))));
+                .collect(Collectors.toMap(Field::getName, Unchecked.function(field -> (O)field.get(this))));
     }
 }

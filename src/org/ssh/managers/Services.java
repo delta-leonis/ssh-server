@@ -1,7 +1,6 @@
 package org.ssh.managers;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
@@ -39,7 +38,7 @@ public final class Services {
     private static final Object       instance           = new Object();
                                                          
     // a logger for good measure
-    private static final Logger       logger             = Logger.getLogger();
+    private static final Logger       LOG                = Logger.getLogger();
                                                          
     /**
      * Adds a org.ssh.services.pipeline that can be used by a
@@ -52,7 +51,7 @@ public final class Services {
      * @see org.ssh.services.ServicesController#addPipeline(Pipeline)
      */
     public static boolean addPipeline(final Pipeline<?> pipeline) {
-        Services.logger.info("Adding org.ssh.services.pipeline<%s>: %s",
+        Services.LOG.info("Adding org.ssh.services.pipeline<%s>: %s",
                 pipeline.getType(),
                 pipeline.getClass().getName());
         return Services.servicesController.addPipeline(pipeline);
@@ -75,14 +74,14 @@ public final class Services {
      * Adds a {@link org.ssh.services.Service} to the Services store.
      *
      * @param <T>
-     *            A generic type extending Service.
+     *            A generic genericType extending Service.
      * @param service
      *            The service to be added.
      * @return true, if successful.
      * @see org.ssh.services.ServicesController#addService(Service)
      */
     public static <T extends Service<?>> boolean addService(final T service) {
-        Services.logger.info("Adding Service: " + service.getClass().getName());
+        Services.LOG.info("Adding Service: " + service.getClass().getName());
         return Services.servicesController.addService(service);
     }
     
@@ -106,9 +105,9 @@ public final class Services {
      *            The name of the wanted Service
      * @return The wanted Service.
      */
-    public static Service<?> get(final String name) {
-        Services.logger.info("Getting a Service named: %s", name);
-        return Services.servicesController.get(name);
+    public static Service<PipelinePacket> get(final String name) {
+        Services.LOG.info("Getting a Service named: %s", name);
+        return Services.servicesController.get(name).get();
     }
     
     /**
@@ -117,7 +116,7 @@ public final class Services {
      * @return All the org.ssh.services.
      * @see org.ssh.services.ServicesController#getAll()
      */
-    public static List<Service<?>> getAll() {
+    public static List<Service<PipelinePacket>> getAll() {
         return Services.servicesController.getAll();
     }
     
@@ -126,26 +125,26 @@ public final class Services {
      * {@link org.ssh.services.Pipeline}.
      *
      * @param <T>
-     *            The generic type of the {@link org.ssh.services.pipeline.PipelinePacket} handled
+     *            The generic genericType of the {@link org.ssh.services.pipeline.PipelinePacket} handled
      *            by the Consumer and Service.
      * @param org.ssh.services.pipeline
      *            The given org.ssh.services.pipeline.
      * @return The compatible Consumers.
      */
-    public static <T extends PipelinePacket> List<Consumer<T>> getCompatibleConsumers(final Pipeline<T> pipeline) {
-        Services.logger.info("Getting compatible Consumers for type: %s", pipeline.type.toString());
+    public static <T extends PipelinePacket> List<Consumer<PipelinePacket>> getCompatibleConsumers(final Pipeline<T> pipeline) {
+        Services.LOG.info("Getting compatible Consumers for genericType: %s", pipeline.getType().toString());
 
         @SuppressWarnings ("unchecked")
         // get the list of org.ssh.services
-        final List<Consumer<T>> collect = (List<Consumer<T>>) Services.servicesController.getAll().stream()
+        final List<Consumer<PipelinePacket>> collect = (List<Consumer<PipelinePacket>>) Services.servicesController.getAll().stream()
                 // filter out the org.ssh.services compatible with this org.ssh.services.pipeline
-                .filter(service -> service.type.equals(pipeline.type))
-                // map them to the correct parametrized type and collect them in a list
-                .map(service -> service.getDataType().getClass().cast(service)).collect(Collectors.toList());
+                .filter(service -> service.getType().equals(pipeline.getType()))
+                // map them to the correct parameterized genericType and collect them in a list
+                .map(service -> service.getType().getClass().cast(service)).collect(Collectors.toList());
                 
-        Services.logger.info("%d Consumer found to be compatible with type %s",
+        Services.LOG.info("%d Consumer found to be compatible with genericType %s",
                 collect.size(),
-                pipeline.type.toString());
+                pipeline.getType().toString());
                 
         return collect;
     }
@@ -155,26 +154,26 @@ public final class Services {
      * {@link org.ssh.services.Pipeline}.
      *
      * @param <T>
-     *            The generic type of the {@link org.ssh.services.pipeline.PipelinePacket} handled
+     *            The generic genericType of the {@link org.ssh.services.pipeline.PipelinePacket} handled
      *            by the Coupler and Service.
      * @param org.ssh.services.pipeline
      *            The given org.ssh.services.pipeline.
      * @return The compatible Couplers.
      */
-    public static <T extends PipelinePacket> List<Coupler<T>> getCompatibleCouplers(final Pipeline<T> pipeline) {
-        Services.logger.info("Getting compatible Couplers for type: %s", pipeline.type.toString());
+    public static <T extends PipelinePacket> List<Coupler<PipelinePacket>> getCompatibleCouplers(final Pipeline<T> pipeline) {
+        Services.LOG.info("Getting compatible Couplers for genericType: %s", pipeline.getType().toString());
 
         @SuppressWarnings ("unchecked")
         // get the list of org.ssh.services
-        final List<Coupler<T>> collect = (List<Coupler<T>>) Services.servicesController.getAll().stream()
+        final List<Coupler<PipelinePacket>> collect = (List<Coupler<PipelinePacket>>) Services.servicesController.getAll().stream()
                 // filter out the org.ssh.services compatible with this org.ssh.services.pipeline
-                .filter(service -> service.type.equals(pipeline.type))
-                // map them to the correct parametrized type and collect them in a list
-                .map(service -> service.getDataType().getClass().cast(service)).collect(Collectors.toList());
+                .filter(service -> service.getType().equals(pipeline.getType()))
+                // map them to the correct parameterized genericType and collect them in a list
+                .map(service -> service.getType().getClass().cast(service)).collect(Collectors.toList());
                 
-        Services.logger.info("%d Couplers found to be compatible with type %s",
+        Services.LOG.info("%d Couplers found to be compatible with genericType %s",
                 collect.size(),
-                pipeline.type.toString());
+                pipeline.getType().toString());
                 
         return collect;
     }
@@ -184,26 +183,26 @@ public final class Services {
      * {@link org.ssh.services.Pipeline}.
      *
      * @param <T>
-     *            The generic type of the {@link org.ssh.services.pipeline.PipelinePacket} handled
+     *            The generic genericType of the {@link org.ssh.services.pipeline.PipelinePacket} handled
      *            by the Producer and Service.
      * @param org.ssh.services.pipeline
      *            The given org.ssh.services.pipeline.
      * @return The compatible Producers.
      */
-    public static <T extends PipelinePacket> List<Producer<T>> getCompatibleProducers(final Pipeline<T> pipeline) {
-        Services.logger.info("Getting compatible Producers for type: %s", pipeline.type.toString());
+    public static <T extends PipelinePacket> List<Producer<PipelinePacket>> getCompatibleProducers(final Pipeline<T> pipeline) {
+        Services.LOG.info("Getting compatible Producers for genericType: %s", pipeline.getType().toString());
 
         @SuppressWarnings ("unchecked")
         // get the list of org.ssh.services
-        final List<Producer<T>> collect = (List<Producer<T>>) Services.servicesController.getAll().stream()
+        final List<Producer<PipelinePacket>> collect = (List<Producer<PipelinePacket>>) Services.servicesController.getAll().stream()
                 // filter out the org.ssh.services compatible with this org.ssh.services.pipeline
-                .filter(service -> service.type.equals(pipeline.type))
-                // map them to the correct parametrized type and collect them in a list
-                .map(service -> service.getDataType().getClass().cast(service)).collect(Collectors.toList());
+                .filter(service -> service.getType().equals(pipeline.getType()))
+                // map them to the correct parametrized genericType and collect them in a list
+                .map(service -> service.getType().getClass().cast(service)).collect(Collectors.toList());
                 
-        Services.logger.info("%d Producers found to be compatible with type %s",
+        Services.LOG.info("%d Producers found to be compatible with genericType %s",
                 collect.size(),
-                pipeline.type.toString());
+                pipeline.getType().toString());
                 
         return collect;
     }
@@ -224,10 +223,10 @@ public final class Services {
      *            The name of the Pipeline.
      * @return The requested Pipeline.
      */
-    public static <T extends PipelinePacket> Pipeline<?> getPipeline(final String name) {
-        Services.logger.info("Getting Pipeline named %s", name);
-        final Pipeline<T> pipeline = Services.servicesController.getPipeline(name);
-        Services.logger.info(pipeline.getType().toString());
+    public static Pipeline<PipelinePacket> getPipeline(final String name) {
+        Services.LOG.info("Getting Pipeline named %s", name);
+        final Pipeline<PipelinePacket> pipeline = Services.servicesController.getPipeline(name).get();
+        Services.LOG.info(pipeline.getType().toString());
         return pipeline;
     }
     
@@ -239,15 +238,16 @@ public final class Services {
      *            The Type with which the Pipelines need to be compatible.
      * @return The list of compatible Pipelines.
      */
-    public static List<Pipeline<?>> getPipelines(final Type packetType) {
-        Services.logger.info("Getting compatible Pipelines for type: %s", packetType.getTypeName());
+    public static List<Pipeline<PipelinePacket>> getPipelines(final Type packetType) {
+        Services.LOG.info("Getting compatible Pipelines for genericType: %s", packetType.getTypeName());
 
         // get the list of org.ssh.pipelines
-        final List<Pipeline<?>> collect = Services.servicesController.getPipelines().stream()
-                // filter out the compatible ones by type
-                .filter(pipeline -> pipeline.getType().equals(packetType)).collect(Collectors.toList());
+        final List<Pipeline<PipelinePacket>> collect = Services.servicesController.getPipelines().stream()
+                // filter out the compatible ones by genericType
+                .filter(pipeline -> pipeline.getType().equals(packetType))
+                .collect(Collectors.toList());
                 
-        Services.logger.info("%d Pipelines found to be compatible with type %s", collect.size(), packetType.toString());
+        Services.LOG.info("%d Pipelines found to be compatible with genericType %s", collect.size(), packetType.toString());
         return collect;
     }
     
@@ -256,7 +256,7 @@ public final class Services {
      * the previous execution and start of the next execution.
      *
      * @param <T>
-     *            The generic type of {@link org.ssh.services.pipeline.PipelinePacket} which the
+     *            The generic genericType of {@link org.ssh.services.pipeline.PipelinePacket} which the
      *            Runnable produces.
      * @param taskName
      *            The name of the task
@@ -270,7 +270,7 @@ public final class Services {
     public static <T extends PipelinePacket> ListenableScheduledFuture<T> scheduleTask(final String taskName,
             final Runnable task,
             final long delay) {
-        Services.logger.info("Scheduling a task named %s with an interval of %d us", taskName, delay);
+        Services.LOG.info("Scheduling a task named %s with an interval of %d us", taskName, delay);
         return Services.servicesController.scheduleTask(taskName, task, delay);
     }
     
@@ -278,7 +278,7 @@ public final class Services {
      * Starts the Services store.
      */
     public static void start() {
-        Services.logger.info("Starting Services...");
+        Services.LOG.info("Starting Services...");
         Services.servicesController = new ServicesController();
     }
     
@@ -286,7 +286,7 @@ public final class Services {
      * Submits a task to the threadpool.
      *
      * @param <T>
-     *            The generic type of data generated by the task.
+     *            The generic genericType of data generated by the task.
      * @param taskName
      *            The name of the task.
      * @param task
@@ -296,7 +296,7 @@ public final class Services {
      */
     public static <T extends PipelinePacket> ListenableFuture<T> submitTask(final String taskName,
             final Callable<T> task) {
-        Services.logger.info("Submitting task named %s ...", taskName);
+        Services.LOG.info("Submitting task named %s ...", taskName);
         return Services.servicesController.submitTask(task);
     }
     
@@ -308,7 +308,7 @@ public final class Services {
      * @return The requested service.
      * @see org.ssh.services.ServicesController#getAll(String)
      */
-    public ArrayList<Service<?>> getAll(final String name) {
+    public List<Service<PipelinePacket>> getAll(final String name) {
         return Services.servicesController.getAll(name);
     }
 }

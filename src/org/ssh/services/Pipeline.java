@@ -29,9 +29,6 @@ import com.google.common.reflect.TypeToken;
  *            A PipelinePacket this Pipeline can work with.
  */
 public abstract class Pipeline<T extends PipelinePacket> {
-    
-    // a logger for good measure
-    private static final Logger             logger = Logger.getLogger();
                                                    
     /** The name of the Pipeline. */
     private final String                    name;
@@ -48,9 +45,12 @@ public abstract class Pipeline<T extends PipelinePacket> {
     /** The reflected TypeToken (o¬‿¬o ). */
     /* This is how we defeat Generics */
     @SuppressWarnings ("serial")
-    public TypeToken<T>                     type   = new TypeToken<T>(this.getClass()) {
-                                                   };
-                                                   
+    public TypeToken<T>                     genericType   = new TypeToken<T>(this.getClass()) {
+    };
+   
+    // a logger for good measure
+    private static final Logger             LOG = Logger.getLogger();
+   
     /**
      * Instantiates a new Pipeline.
      *
@@ -63,7 +63,7 @@ public abstract class Pipeline<T extends PipelinePacket> {
         this.couplers = new HashMap<Coupler<T>, Priority>();
         this.consumers = new ArrayList<Consumer<T>>();
 
-        Pipeline.logger.info("New org.ssh.services.pipeline created with name %s", name);
+        Pipeline.LOG.info("New org.ssh.services.pipeline created with name %s", name);
     }
     
     /**
@@ -76,7 +76,7 @@ public abstract class Pipeline<T extends PipelinePacket> {
     public Pipeline<T> addPacket(final T pipelinePacket) {
         // add the packet
         this.queue.add(pipelinePacket);
-        Pipeline.logger.info("Packet of type %s added to org.ssh.services.pipeline %s ...",
+        Pipeline.LOG.fine("Packet of genericType %s added to org.ssh.services.pipeline %s ...",
                 pipelinePacket.getClass().toString(),
                 this.getName());
                 
@@ -93,12 +93,12 @@ public abstract class Pipeline<T extends PipelinePacket> {
     }
     
     /**
-     * Gets the type of PipelinePackets this Pipeline operates on.
+     * Gets the genericType of PipelinePackets this Pipeline operates on.
      *
-     * @return The type of packets this Pipeline operates on.
+     * @return The genericType of packets this Pipeline operates on.
      */
     public Type getType() {
-        return this.type.getType();
+        return this.genericType.getType();
     }
     
     /**
@@ -112,7 +112,7 @@ public abstract class Pipeline<T extends PipelinePacket> {
             return false;
         }
 
-        Pipeline.logger.info("Starting to process packet on org.ssh.services.pipeline %s", this.getName());
+        Pipeline.LOG.fine("Starting to process packet on org.ssh.services.pipeline %s", this.getName());
         
         // get the packet
         final PipelinePacket pipelinePacket = this.queue.poll();
@@ -132,7 +132,7 @@ public abstract class Pipeline<T extends PipelinePacket> {
                 // the composition itself
                 (packet, coupler) -> coupler.process(packet));
                 
-        Pipeline.logger.info(
+        Pipeline.LOG.fine(
                 "Packet pushed through all couplers, now mapping to consumers on org.ssh.services.pipeline %s",
                 this.getName());
                 
@@ -150,7 +150,7 @@ public abstract class Pipeline<T extends PipelinePacket> {
      * @return true, if successful
      */
     public <P extends PipelinePacket, C extends Consumer<P>> boolean registerConsumer(final C consumer) {
-        Pipeline.logger.info("Consumer named %s registered to org.ssh.services.pipeline %s.",
+        Pipeline.LOG.fine("Consumer named %s registered to org.ssh.services.pipeline %s.",
                 consumer.getName(),
                 this.getName());
         return this.consumers.add((Consumer<T>) consumer);
@@ -179,7 +179,7 @@ public abstract class Pipeline<T extends PipelinePacket> {
      * @return true, if successful
      */
     public <P extends PipelinePacket, C extends Coupler<P>> boolean registerCoupler(final C coupler) {
-        Pipeline.logger.info("Coupler named %s registered to org.ssh.services.pipeline %s.",
+        Pipeline.LOG.fine("Coupler named %s registered to org.ssh.services.pipeline %s.",
                 coupler.getName(),
                 this.getName());
         return this.couplers.put((Coupler<T>) coupler, Priority.MEDIUM) != null;
@@ -196,7 +196,7 @@ public abstract class Pipeline<T extends PipelinePacket> {
      * @return true, if successful
      */
     public boolean registerCoupler(final Priority priority, final Coupler<T> coupler) {
-        Pipeline.logger.info("Consumer named %s registered to org.ssh.services.pipeline %s with priority %s.",
+        Pipeline.LOG.fine("Consumer named %s registered to org.ssh.services.pipeline %s with priority %s.",
                 coupler.getName(),
                 this.getName(),
                 priority.toString());

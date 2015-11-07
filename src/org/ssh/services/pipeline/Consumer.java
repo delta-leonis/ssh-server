@@ -32,10 +32,10 @@ public abstract class Consumer<T extends PipelinePacket> extends Service<T> {
      */
     @SuppressWarnings ("unchecked")
     public Consumer<T> attachToCompatiblePipelines() {
-        // TODO: make sure org.ssh.pipelines can handle same type
+        // TODO: make sure org.ssh.pipelines can handle same genericType
         // get all the org.ssh.services
-        Services.getPipelines(this.getDataType()).stream()
-                // map them to the correct type
+        Services.getPipelines(this.getType()).stream()
+                // map them to the correct genericType
                 .map(pipeline -> (Pipeline<T>) pipeline)
                 // register with the org.ssh.services.pipeline
                 .forEach(pipeline -> pipeline.registerConsumer(this));

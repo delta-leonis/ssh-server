@@ -36,7 +36,7 @@ public class ChangeCoupler extends Coupler<RadioPacket> {
     public PipelinePacket process(final PipelinePacket pipelinePacket) {
         // modify the packet and return it
         return pipelinePacket.apply(content -> {
-            Service.logger.info("Change Coupler is updating some values ....");
+            Service.LOG.info("Change Coupler is updating some values ....");
             // get the data
             final RadioProtocolCommand.Builder changeling = (Builder) ((RadioPacket) content).getData();
             // update it

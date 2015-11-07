@@ -34,7 +34,7 @@ public class VerboseCoupler extends Coupler<RadioPacket> {
         // modify the packet and return it
         return radioPacket.apply(content -> {
             // print the data
-            Service.logger.info("The VerboseCoupler ate a packet that looked like: \n%s",
+            Service.LOG.info("The VerboseCoupler ate a packet that looked like: \n%s",
                     ((RadioPacket) radioPacket).getData().toString());
             // and return it
             return content;

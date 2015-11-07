@@ -20,7 +20,7 @@ import javafx.scene.layout.Region;
  * 
  * @TODO add remove()
  */
-abstract public class UIComponent extends Region {
+public abstract class UIComponent extends Region {
                                  
     /** The name of the component. */
     private String              name;
@@ -111,7 +111,6 @@ abstract public class UIComponent extends Region {
             // extract the Nodes
             final Parent documentRoot = (Parent) fxmlLoader.load();
             // update the list of children
-            // this.getChildren().add(documentRoot);
             Platform.runLater(() -> this.getChildren().add(documentRoot));
         }
         catch (final IOException exception) {
