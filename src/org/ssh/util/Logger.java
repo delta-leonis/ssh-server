@@ -5,7 +5,7 @@ import java.util.logging.LogManager;
 /**
  * Expanded Logger with build in formatter
  *
- * @author Jeroen
+ * @author Jeroen de Jong
  *        
  */
 public class Logger extends java.util.logging.Logger {
@@ -221,4 +221,28 @@ public class Logger extends java.util.logging.Logger {
     public void warning(final String format, final Object... args) {
         super.warning(String.format(format, args));
     }
+    
+    /**
+    *
+    * Logs an EXCEPTION.
+    *
+    * If the logger is currently enabled for the EXCEPTION message level then the given message is
+    * forwarded to log level FINEST
+    * 
+    * @param format
+    *            A format string</a>
+    *           
+    * @param args
+    *            Arguments referenced by the format specifiers in the format string. If there are
+    *            more arguments than format specifiers, the extra arguments are ignored. The number
+    *            of arguments is variable and may be zero. The maximum number of arguments is
+    *            limited by the maximum dimension of a Java array as defined by <cite>The
+    *            Java&trade; Virtual Machine Specification</cite>. The behaviour on a {@code null}
+    *            argument depends on the conversion</a>.
+    *           
+    * @see java.util.Formatter
+    */
+   public void exception(final Exception exception) {
+       super.finest(exception.getStackTrace().toString());
+   }
 }

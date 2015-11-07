@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.logging.Logger;
+import org.ssh.util.Logger;
 
 import org.ssh.models.enums.SendMethod;
 import org.ssh.services.producers.Communicator;
@@ -15,18 +15,22 @@ import com.google.protobuf.Message;
  * Implements a way to send a Protobuf {@link Message} over {@link SendMethod UDP} to given
  * IPaddress and port
  *
- * @author Jeroen
+ * @author Jeroen de Jong
  * @see {@link Communicator}
- *     
+ *      
  */
 public class UDPSender implements SenderInterface {
     
-    private final Logger   logger = Logger.getLogger(UDPSender.class.toString());
-                                  
-    private InetAddress    ipAddress;
-    private int            port;
-    private DatagramSocket socket;
-                           
+    // respective logger
+    private final static Logger LOG = Logger.getLogger();
+                                    
+    /** IP address to send the packets to */
+    private InetAddress         ipAddress;
+    /** port that should be used for communication */
+    private int                 port;
+    /** Socket that maintains the open connection */
+    private DatagramSocket      socket;
+                                
     /**
      * Creates a {@link DatagramSocket} to be used for {@link #send(Message)} method
      * 
@@ -45,8 +49,9 @@ public class UDPSender implements SenderInterface {
             this.socket = new DatagramSocket();
             
         }
-        catch (final Exception e) {
-            this.logger.severe("Could not create DatagramSocket.");
+        catch (final Exception exception) {
+            UDPSender.LOG.exception(exception);
+            UDPSender.LOG.warning("Could not create DatagramSocket.");
         }
     }
     
@@ -63,12 +68,13 @@ public class UDPSender implements SenderInterface {
                     this.ipAddress,
                     this.port);
             this.socket.send(UDPpacket);
-            this.logger.info("Message has been sent over UDP");
+            UDPSender.LOG.fine("Message has been sent over UDP.");
             return true;
             
         }
-        catch (final IOException e) {
-            this.logger.warning(String.format("Could not send packet to %s:%d.\n", this.ipAddress, this.port));
+        catch (final IOException exception) {
+            UDPSender.LOG.exception(exception);
+            UDPSender.LOG.warning("Could not send packet to %s:%d.", this.ipAddress, this.port);
             return false;
         }
     }

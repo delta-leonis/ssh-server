@@ -24,7 +24,7 @@ abstract public class Service<T extends PipelinePacket> {
     protected static final Logger logger  = Logger.getLogger();
                                           
     /** Whether the service is enabled. */
-    public boolean                enabled = false;
+    public boolean                enabled;
                                           
     /** The name. */
     public String                 name;
@@ -43,6 +43,7 @@ abstract public class Service<T extends PipelinePacket> {
      */
     public Service(final String name) {
         this.name = name;
+        this.enabled = false;
         Service.logger.info("New Service instantiated of type %s named %s", this.type.toString(), name);
         Services.addService(this);
     }

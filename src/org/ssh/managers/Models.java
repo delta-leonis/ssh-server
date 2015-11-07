@@ -1,7 +1,7 @@
 package org.ssh.managers;
 
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.ssh.models.Model;
@@ -12,11 +12,12 @@ import org.ssh.util.Logger;
 /**
  * The Class Models. Contains the manager for all {@link Model Models} that are in use.
  *
- * TODO fuzzy searching for models
- *
+ * @TODO fuzzy searching for models
+ *       
  * @see #create(Class, Object...)
  * @see #get(String)
- * @author Jeroen
+ * 
+ * @author Jeroen de Jong
  */
 public final class Models {
     
@@ -29,7 +30,7 @@ public final class Models {
     private static final Object    instance = new Object();
                                             
     // respective logger
-    private static Logger          logger   = Logger.getLogger();
+    private static final Logger    LOG      = Logger.getLogger();
                                             
     /**
      * adds a org.ssh.models to this manager
@@ -48,8 +49,8 @@ public final class Models {
      * This method finds a org.ssh.models and returns it as a Model.
      * 
      * @param modelName
-     *            The name of the org.ssh.models you want to find.
-     * @return The requested org.ssh.models.
+     *            The name of the model you want to find.
+     * @return The requested model.
      */
     public static Optional<Model> get(final String modelName) {
         return Models.modelController.get(modelName);
@@ -58,18 +59,18 @@ public final class Models {
     /**
      * @return all Models currently in the modelcontroller
      */
-    public static ArrayList<Model> getAll() {
+    public static List<Model> getAll() {
         return Models.modelController.getAll();
     }
     
     /**
-     * This method finds all models matching the name and returns them as an ArrayList<Model>
+     * This method finds all models matching the name and returns them as an List<Model>
      * 
      * @param modelName
-     *            The (fuzzy) name of the org.ssh.models you want to find.
-     * @return The requested org.ssh.models.
+     *            The (fuzzy) name of the model you want to find.
+     * @return The requested models.
      */
-    public static ArrayList<Model> getAll(final String modelName) {
+    public static List<Model> getAll(final String modelName) {
         return Models.modelController.getAll(modelName);
     }
     
@@ -85,8 +86,8 @@ public final class Models {
     /**
      * Initialize all values in the configfile for given org.ssh.models
      * 
-     * @param org.ssh.models
-     *            org.ssh.models to initialize
+     * @param model
+     *            model to initialize
      * @return success value
      */
     public static boolean initialize(final Model model) {
@@ -106,7 +107,7 @@ public final class Models {
      * Set all non-{@link Modifier#TRANSIENT transient} fields of given org.ssh.models to null, and
      * reload values from configfile
      * 
-     * @param org.ssh.models
+     * @param model
      *            to reinitialize
      * @return success value
      */
@@ -149,11 +150,11 @@ public final class Models {
      * This method instantiates a controller to run the store.
      */
     public static void start() {
-        Models.logger.info("Starting Models...");
+        Models.LOG.info("Starting Models...");
         
         // create modelController
         Models.modelController = new ModelController();
-        // create a settings org.ssh.models (will self-assign in the factory)
+        // create a settings models (will self-assign in the factory)
         Models.create(Settings.class);
     }
 }

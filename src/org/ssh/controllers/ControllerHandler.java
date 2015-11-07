@@ -1,6 +1,7 @@
 package org.ssh.controllers;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,29 +22,31 @@ import protobuf.Radio.RadioProtocolCommand;
  * This class is used to process a {@link ControllerLayout Controller} {@link Model} and generate a
  * protobuf message accordingly
  *
- * TODO read max_speed and solandoid_speed from a config file calc speed vectors stop_all_robots
- * calc rad/s
- *
- * @author Jeroen
- *        
+ * @TODO read max_speed and solandoid_speed from a config file
+ * @TODO calc speed vectors
+ * @TODO stop_all_robots
+ * @TODO calc rad/s
+ *       
+ * @author Jeroen de Jong
+ *         
  */
 public class ControllerHandler extends Producer {
     
     // TODO should be read from a config of some sorts
-    float                                        MAX_SPEED           = 4f,
-                                                         MAX_STRENGTH = 1f;
-                                                         
+    float                                    MAX_SPEED           = 4f,
+                                                     MAX_STRENGTH = 1f;
+                                                     
     /**
      * Map with previous buttonstates and respective values
      */
-    private final HashMap<ButtonFunction, Float> previousButtonState = new HashMap<ButtonFunction, Float>();
+    private final Map<ButtonFunction, Float> previousButtonState = new HashMap<ButtonFunction, Float>();
     /**
      * Controllerlayout that should be used for inputprocessing
      */
-    private final ControllerLayout               layout;
+    private final ControllerLayout           layout;
     // respective logger
-    private final Logger                         logger              = Logger.getLogger();
-                                                                     
+    private final static Logger              LOG                 = Logger.getLogger();
+                                                                 
     /**
      * Instantiates a handler assigned to a specific layout
      * 
@@ -52,7 +55,7 @@ public class ControllerHandler extends Producer {
     public ControllerHandler(final ControllerLayout layout) {
         super("ControllerHandler " + layout.getController().getName(), ProducerType.SCHEDULED);
         // fill previousButtonState array
-        layout.getBindings().entrySet().forEach(entry -> this.previousButtonState.put(entry.getValue(), 0f));
+        resetPreviousState();
         
         this.layout = layout;
     }
@@ -73,6 +76,13 @@ public class ControllerHandler extends Producer {
      */
     public ControllerLayout getLayout() {
         return this.layout;
+    }
+    
+    /**
+     * Sets all possible binding values to zero.
+     */
+    private void resetPreviousState() {
+        layout.getBindings().entrySet().forEach(entry -> this.previousButtonState.put(entry.getValue(), 0f));
     }
     
     /**
@@ -103,8 +113,8 @@ public class ControllerHandler extends Producer {
         this.layout.getController().poll();
         
         // Make a list with all buttons that changed values
-        final HashMap<ButtonFunction, Float> currentButtonState = (HashMap<ButtonFunction, Float>) this.layout
-                .getBindings().entrySet().stream()
+        final Map<ButtonFunction, Float> currentButtonState = (HashMap<ButtonFunction, Float>) this.layout.getBindings()
+                .entrySet().stream()
                 // filter all buttons that don't describe a strength value
                 .filter(entry -> !entry.getValue().toString().contains("_STRENGTH"))
                 .filter(entry -> entry.getValue().isPersistant()
@@ -112,20 +122,19 @@ public class ControllerHandler extends Producer {
                 // and collect these to a map
                 .collect(Collectors.toMap(entry -> entry.getValue(), // buttonfunction
                         entry -> entry.getKey().getPollData())); // polldata from abstractbutton
-        // currentButtonState.entrySet().forEach(entry -> System.out.println(entry.getKey() + " -> "
-        // + entry.getValue()));
+
         // create a stream with current buttons
         if (!currentButtonState.entrySet().stream()
                 // process each button
                 .map(entry -> this.processInput(entry, packet))
                 // check for false succes values
                 .reduce(true, (accumulator, succes) -> accumulator && succes))
-            this.logger.warning("Not every button-press was processed succesfully (controller: %s).\n",
+            ControllerHandler.LOG.warning("Not every button-press was processed succesfully (controller: %s).\n",
                     this.layout.getFullName());
                     
         for (final Entry<ButtonFunction, Float> entry : currentButtonState.entrySet())
             this.previousButtonState.put(entry.getKey(),
-                    this.previousButtonState.get(entry.getKey()) == entry.getValue()
+                    this.previousButtonState.get(entry.getKey()).compareTo(entry.getValue()) == 0
                             ? this.previousButtonState.get(entry.getKey()) : entry.getValue());
                             
         // make sure the speed vector doesn't exceed MAX_SPEED
@@ -148,7 +157,7 @@ public class ControllerHandler extends Producer {
         final ButtonFunction function = button.getKey();
         final Float buttonValue = button.getValue();
         
-        // switch to the right function handeling
+        // switch to the right function handling
         switch (function) {
             case KICK:
                 if (this.isPressed(buttonValue)) {
@@ -175,7 +184,7 @@ public class ControllerHandler extends Producer {
                     // TODO Get robot of the right team
                     final Optional<Model> oRobot = Models.get("robot B" + packet.getRobotId());
                     if (!oRobot.isPresent())
-                        this.logger.warning("Could not find robot %d", packet.getRobotId());
+                        ControllerHandler.LOG.info("Could not find robot %d", packet.getRobotId());
                     else {
                         final float dribbleSpeed = ((Robot) oRobot.get()).getDribbleSpeed() == 0f ? 1f : 0f;
                         packet.setDribblerSpin(dribbleSpeed);
@@ -223,14 +232,14 @@ public class ControllerHandler extends Producer {
                 // make sure both axis are bound
                 if (!(this.layout.containsBinding(ButtonFunction.ORIENTATION_X)
                         && this.layout.containsBinding(ButtonFunction.ORIENTATION_Y))) {
-                    this.logger.warning("Both orientation directions (x and y) should be bound.");
+                    ControllerHandler.LOG.warning("Both orientation directions (x and y) should be bound.");
                     return false;
                 }
                 // calculate angle
                 final float rad = (float) Math.atan2(this.layout.get(ButtonFunction.ORIENTATION_X),
                         this.layout.get(ButtonFunction.ORIENTATION_Y));
-                final float rps = rad / 10; // TODO fix time divesion (read it from a config or
-                                            // something)
+                // TODO fix time divesion (read it from a config or something)
+                final float rps = rad / 10;
                 packet.setVelocityR(rps);
                 return true;
                 
@@ -250,7 +259,7 @@ public class ControllerHandler extends Producer {
                 if (this.isPressed(buttonValue)) {
                     // TODO implementation
                     // discuss possibility for a panic mode
-                    this.logger.info("Stopped all robots");
+                    ControllerHandler.LOG.info("Stopped all robots");
                 }
                 return true;
                 
@@ -261,7 +270,7 @@ public class ControllerHandler extends Producer {
                 return true;
                 
             default:
-                this.logger.warning("No implementation for %s.\n", button.getKey());
+                ControllerHandler.LOG.info("No implementation for %s.\n", button.getKey());
                 return false;
         }
     }

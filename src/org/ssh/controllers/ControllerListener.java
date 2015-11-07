@@ -19,9 +19,9 @@ import protobuf.Radio.RadioProtocolCommand;
  * A {@link Service} that manages all {@link ControllerHandler org.ssh.controllers} for every
  * robotId
  *
- * TODO Rimon fixt deze shit nog naar org.ssh.services.pipeline
+ * @TODO Rimon fixt deze shit nog naar pipeline
  *
- * @author Jeroen
+ * @author Jeroen de Jong
  *        
  */
 public class ControllerListener extends Service {
@@ -40,15 +40,15 @@ public class ControllerListener extends Service {
     /**
      * A reference to the {@link Communicator} service
      */
-    Communicator                              communicator;
+    private Communicator                              communicator;
     // respective logger
-    private final Logger                      logger   = Logger.getLogger();
+    private final  static Logger                      LOG   = Logger.getLogger();
                                                        
     /**
      * Create a controllerlistener
      * 
      * @param noRobots
-     *            total number of robots TODO remove this puke
+     *            total number of robots
      */
     public ControllerListener(final int noRobots) {
         super("ControllerListener");
@@ -90,7 +90,7 @@ public class ControllerListener extends Service {
         }
         
         if (this.tmpHandlers.get(robotId) != null) {
-            this.logger.info("Could not find a available robotid.");
+            Service.logger.info("Could not find a available robotid.");
             return;
         }
         this.tmpHandlers.put(robotId, handler);
@@ -155,13 +155,13 @@ public class ControllerListener extends Service {
     public boolean register(final int robotId, final ControllerLayout controller) {
         // check if the robotId is allready bound
         if (this.isAssigned(robotId)) {
-            this.logger.warning("Handler for %d is not empty, and will be overwriten.\n", robotId);
+            Service.logger.warning("Handler for %d is not empty, and will be overwriten.\n", robotId);
             this.unregister(robotId);
         }
         
         // check if all essential buttons are bound for this controller
         if (!controller.isComplete()) {
-            this.logger.warning("Could not register controller, essential buttons are not bound.");
+            Service.logger.warning("Could not register controller, essential buttons are not bound.");
             return false;
         }
         
@@ -179,7 +179,7 @@ public class ControllerListener extends Service {
     public boolean unregister(final int robotId) {
         // check if it is assigned at all
         if (!this.isAssigned(robotId)) {
-            this.logger.warning("Could not unregister controllerHandler for robot %d.\n", robotId);
+            Service.logger.warning("Could not unregister controllerHandler for robot %d.\n", robotId);
             return false;
         }
         

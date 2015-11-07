@@ -9,14 +9,13 @@ import com.google.protobuf.Message;
  * Interface that enforces a send method for generic protobuf messages.<br />
  * Note that implementations of the interface shouldn't implement any other send method,<br />
  * All different handlers for send should be implemented in {@link Communicator} so consistent
- * availability is present<br />
- * throughout the org.ssh.managers.<br />
+ * availability is present throughout the the code.<br />
  *
  *
- * @author Jeroen
+ * @author Jeroen de Jong
  * @see SendMethod
  * @see Communicator
- *     
+ *      
  */
 public interface SenderInterface {
     

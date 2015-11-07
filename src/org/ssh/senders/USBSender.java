@@ -1,6 +1,6 @@
 package org.ssh.senders;
 
-import java.util.logging.Logger;
+import org.ssh.util.Logger;
 
 import org.ssh.models.enums.BaudRate;
 import org.ssh.models.enums.SendMethod;
@@ -14,14 +14,14 @@ import jssc.SerialPortException;
  * Implements {@link SendMethod SendMethod.USB}. Currently it has no purpose other than showcasing
  * the epic {@link SenderInterface}.
  *
- * @author Jeroen
+ * @author Jeroen de Jong
  */
 public class USBSender implements SenderInterface {
     
     /**
      * Logger for this specific class
      */
-    private final Logger logger = Logger.getLogger(USBSender.class.toString());
+    private final static Logger LOG = Logger.getLogger();
     /**
      * Serialport that will be written to
      */
@@ -48,7 +48,7 @@ public class USBSender implements SenderInterface {
         }
         catch (final SerialPortException spe) {
             // something broke, go fix it
-            this.logger.severe(String.format("Could not open port %s", portName));
+            USBSender.LOG.severe(String.format("Could not open port %s", portName));
         }
     }
     
@@ -58,7 +58,7 @@ public class USBSender implements SenderInterface {
             
             // check if the port is open at all
             if (!this.serialPort.isOpened()) {
-                this.logger.warning("USB port is closed, can't send message");
+                USBSender.LOG.warning("USB port is closed, can't send message");
                 return false;
             }
             
@@ -67,12 +67,12 @@ public class USBSender implements SenderInterface {
             
         }
         catch (final SerialPortException spe) {
-            this.logger.warning("Could not send message over USB");
+            USBSender.LOG.warning("Could not send message over USB");
             return false;
         }
         
         // here it is safe to assume everything went fine
-        this.logger.info("Send message over USB");
+        USBSender.LOG.info("Send message over USB");
         return true;
     }
     
@@ -84,7 +84,7 @@ public class USBSender implements SenderInterface {
         try {
             // check if the port is open to begin with
             if (!this.serialPort.isOpened()) {
-                this.logger.info("Serialport was closed before");
+                USBSender.LOG.info("Serialport was closed before");
                 return true;
             }
             
@@ -92,7 +92,7 @@ public class USBSender implements SenderInterface {
             
         }
         catch (final SerialPortException e) {
-            this.logger.warning("Can't close serial connection");
+            USBSender.LOG.warning("Can't close serial connection");
             return false;
         }
     }
