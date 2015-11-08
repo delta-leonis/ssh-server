@@ -5,7 +5,7 @@ import org.ssh.Services;
 import org.ssh.services.pipeline.packets.RadioPacket;
 import org.ssh.services.pipeline.pipelines.RadioPipeline;
 
-import org.ssh.services.producers.UDPReceiver;
+//import org.ssh.services.producers.UDPReceiver;
 
 public class ReceiverExample {
 
@@ -17,8 +17,8 @@ public class ReceiverExample {
 		RadioPipeline pipa = new RadioPipeline("communication pipeline");
 		Services.addPipeline(pipa);
 		
-		UDPReceiver<RadioPacket> receiver = new UDPReceiver<RadioPacket>("host", 31337);
-		Services.addService(receiver);
+		//UDPReceiver<RadioPacket> receiver = new UDPReceiver<RadioPacket>("host", 31337);
+		//Services.addService(receiver);
 
 	}
 
