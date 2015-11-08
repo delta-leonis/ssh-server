@@ -406,7 +406,7 @@ public class FieldGO extends GameObject {
         this.addBox(goalWestLeftPos, goalWestLeftDim).setOnMouseClicked(event -> {
             
             // Translate context menu
-            this.goalContextMenu.Translate(goalWestLeftPos.x - 500, goalWestLeftPos.y, goalWestLeftPos.z - 500);
+            this.goalContextMenu.translate(goalWestLeftPos.x - 500, goalWestLeftPos.y, goalWestLeftPos.z - 500);
             // Show context menu
             this.goalContextMenu.show();
         });
@@ -414,7 +414,7 @@ public class FieldGO extends GameObject {
         this.addBox(goalWestRightPos, goalWestRightDim).setOnMouseClicked(event -> {
             
             // Translate context menu
-            this.goalContextMenu.Translate(goalWestRightPos.x - 500, goalWestRightPos.y, goalWestRightPos.z + 500);
+            this.goalContextMenu.translate(goalWestRightPos.x - 500, goalWestRightPos.y, goalWestRightPos.z + 500);
             // Show context menu
             this.goalContextMenu.show();
         });
@@ -422,7 +422,7 @@ public class FieldGO extends GameObject {
         this.addBox(goalWestBackPos, goalWestBackDim).setOnMouseClicked(event -> {
             
             // Translate context menu
-            this.goalContextMenu.Translate(goalWestBackPos.x,
+            this.goalContextMenu.translate(goalWestBackPos.x,
                     goalWestBackPos.y + (goalWestBackDim.y / 2.0),
                     goalWestBackPos.z);
             // Show context menu
@@ -460,7 +460,7 @@ public class FieldGO extends GameObject {
         this.addBox(goalEastLeftPos, goalEastLeftDim).setOnMouseClicked(event -> {
             
             // Translate context menu
-            this.goalContextMenu.Translate(goalEastLeftPos.x - 500, goalEastLeftPos.y, goalEastLeftPos.z - 500);
+            this.goalContextMenu.translate(goalEastLeftPos.x - 500, goalEastLeftPos.y, goalEastLeftPos.z - 500);
             // Show context menu
             this.goalContextMenu.show();
         });
@@ -468,7 +468,7 @@ public class FieldGO extends GameObject {
         this.addBox(goalEastRightPos, goalEastRightDim).setOnMouseClicked(event -> {
             
             // Translate context menu
-            this.goalContextMenu.Translate(goalEastRightPos.x - 500, goalEastRightPos.y, goalEastRightPos.z + 500);
+            this.goalContextMenu.translate(goalEastRightPos.x - 500, goalEastRightPos.y, goalEastRightPos.z + 500);
             // Show context menu
             this.goalContextMenu.show();
         });
@@ -476,7 +476,7 @@ public class FieldGO extends GameObject {
         this.addBox(goalEastBackPos, goalEastBackDim).setOnMouseClicked(event -> {
             
             // Translate context menu
-            this.goalContextMenu.Translate(goalEastBackPos.x,
+            this.goalContextMenu.translate(goalEastBackPos.x,
                     goalEastBackPos.y + (goalEastBackDim.y / 2.0),
                     goalEastBackPos.z);
             // Show context menu

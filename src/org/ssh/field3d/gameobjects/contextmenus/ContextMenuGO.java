@@ -173,7 +173,7 @@ public class ContextMenuGO extends GameObject {
      * @param z
      *            The z-coordinate to translate to.
      */
-    public void Translate(final double x, final double y, final double z) {
+    public void translate(final double x, final double y, final double z) {
         
         this.xform.setTranslate(x, y, z);
         this.loc = new Vector3f((float) x, (float) y, (float) z);
