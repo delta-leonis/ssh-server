@@ -52,7 +52,7 @@ import javafx.scene.input.KeyEvent;
 public class Console extends UIComponent {
     
     // A logger for errorhandling
-    private final static Logger              LOG                 = Logger.getLogger();
+    private static final Logger              LOG                 = Logger.getLogger();
 
     /** The cursor used by the console */
     private static final String  CURSOR      = "> ";
@@ -117,7 +117,8 @@ public class Console extends UIComponent {
      */
     private void addCommand(final String command) {
         // Move existing commands up
-        if (this.recentCommands.contains(command)) this.recentCommands.remove(command);
+        if (this.recentCommands.contains(command))
+            this.recentCommands.remove(command);
         
         this.recentCommands.add(command);
         // We're not selecting anymore
@@ -266,8 +267,8 @@ public class Console extends UIComponent {
             return new ArrayList<String>();
         // Turn everything into a stream
         return this.functionClasses.stream().map(o ->
-        // and get the simple name of each class
-        this.getSimpleName(o)).collect(Collectors.toList());
+            // and get the simple name of each class
+            this.getSimpleName(o)).collect(Collectors.toList());
     }
     
     /**
@@ -398,8 +399,9 @@ public class Console extends UIComponent {
             this.scriptEngine.getContext().setWriter(new OutputStreamWriter(this.out));
             
             // Add every @AvailableInLua class to the luaj
-            if (this.functionClasses != null) for (final Object o : this.functionClasses)
-                this.scriptEngine.put(this.getSimpleName(o), o);
+            if (this.functionClasses != null)
+                for (final Object o : this.functionClasses)
+                    this.scriptEngine.put(this.getSimpleName(o), o);
                 
             // Add a useful sleep script
             this.scriptEngine.eval(
