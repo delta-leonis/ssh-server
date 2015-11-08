@@ -30,25 +30,24 @@ import javafx.stage.Stage;
  */
 public class ConsoleExample extends Application {
     
+    private static final int    WIDTH  = 600;
+    private static final int    HEIGHT = 400;
+    private static final String TITLE  = "Lua Console";
+
     public static void main(final String[] args) {
         Application.launch(args);
     }
-    
-    private final int    width  = 600;
-    private final int    height = 400;
-                                
-    private final String title  = "Lua Console";
                                 
     @Override
     public void start(final Stage primaryStage) throws Exception {
-        primaryStage.setTitle(this.title);
+        primaryStage.setTitle(ConsoleExample.TITLE);
         primaryStage.setOnCloseRequest(e -> System.exit(0));
 
-        // Create a new {@link Console} used to manipulate a {@link ConsoleArea}
+        // Create a new Console used to manipulate a ConsoleArea
         final Console console = new Console("bottom-console");
 
         // Create base
-        final Scene scene = new Scene(console, this.width, this.height, Color.WHITE);
+        final Scene scene = new Scene(console, ConsoleExample.WIDTH, ConsoleExample.HEIGHT, Color.WHITE);
 
         // Add TextArea
         primaryStage.setScene(scene);
