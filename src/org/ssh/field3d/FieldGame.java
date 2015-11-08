@@ -110,9 +110,9 @@ public class FieldGame extends Game {
         this._pointLight4.setTranslateZ(FieldGame.FIELD_DEPTH / 4.0);
         
         // Set minimal mouse wheel value
-        this.getMouseInputHandler().SetMinMouseWheelValue(-1000);
+        this.getMouseInputHandler().setMinMouseWheelValue(-1000);
         // Set maximal mouse wheel value
-        this.getMouseInputHandler().SetMaxMouseWheelValue(1000);
+        this.getMouseInputHandler().setMaxMouseWheelValue(1000);
         
         // Set black fill color
         this.setFill(Color.BLACK);

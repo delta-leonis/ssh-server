@@ -117,13 +117,13 @@ public class ThirdPersonCamera extends GameObject {
         // TODO: Remove magic numbers
         
         // Check if middle button is down
-        if (this.GetGame().getMouseInputHandler().IsMidButtonDown()) {
+        if (this.GetGame().getMouseInputHandler().isMidButtonDown()) {
             
             // Rotate around y-axis
-            this.xForm1.ry.setAngle(this.xForm1.ry.getAngle() + (this.GetGame().getMouseInputHandler().GetMouseDeltaX()
+            this.xForm1.ry.setAngle(this.xForm1.ry.getAngle() + (this.GetGame().getMouseInputHandler().getMouseDeltaX()
                     * ThirdPersonCamera.MOUSE_LOOK_SENSITIVITY));
             // Rotate around x-axis
-            this.xForm1.rx.setAngle(this.xForm1.rx.getAngle() + (this.GetGame().getMouseInputHandler().GetMouseDeltaY()
+            this.xForm1.rx.setAngle(this.xForm1.rx.getAngle() + (this.GetGame().getMouseInputHandler().getMouseDeltaY()
                     * ThirdPersonCamera.MOUSE_LOOK_SENSITIVITY));
         }
         
@@ -138,7 +138,7 @@ public class ThirdPersonCamera extends GameObject {
         }
         
         // Calculate zoom value
-        double zoomCalc = (this.GetGame().getMouseInputHandler().GetScrollWheelYValue()
+        double zoomCalc = (this.GetGame().getMouseInputHandler().getScrollWheelYValue()
                 * ThirdPersonCamera.MOUSE_ZOOM_SENSITIVITY) + ThirdPersonCamera.INITIAL_CAMERA_DISTANCE;
                 
         // Limit zoom
@@ -156,15 +156,15 @@ public class ThirdPersonCamera extends GameObject {
         this.xForm1.setTranslate(this.pivot.x, this.pivot.y, this.pivot.z);
         
         final double movementScale = 1
-                - ((this.GetGame().getMouseInputHandler().GetScrollWheelYValue() + 990.0) / 2000.0);
+                - ((this.GetGame().getMouseInputHandler().getScrollWheelYValue() + 990.0) / 2000.0);
                 
         // Check if left mouse button is down
-        if (this.GetGame().getMouseInputHandler().IsLeftButtonDown()) {
+        if (this.GetGame().getMouseInputHandler().isLeftButtonDown()) {
             
             // Calculate mouse values
-            final double mouseXCalc = this.GetGame().getMouseInputHandler().GetMouseDeltaX()
+            final double mouseXCalc = this.GetGame().getMouseInputHandler().getMouseDeltaX()
                     * ThirdPersonCamera.MOUSE_MOVEMENT_SENSITIVITY;
-            final double mouseYCalc = this.GetGame().getMouseInputHandler().GetMouseDeltaY()
+            final double mouseYCalc = this.GetGame().getMouseInputHandler().getMouseDeltaY()
                     * ThirdPersonCamera.MOUSE_MOVEMENT_SENSITIVITY;
                     
             // Rotate mouse translation according to camera

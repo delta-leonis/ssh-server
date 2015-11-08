@@ -80,7 +80,7 @@ public class CarGO extends GameObject {
     public void Update(final long timeDivNano) {
         
         // Check if right mouse button is down
-        if (this.GetGame().getMouseInputHandler().IsRightButtonDown()) {
+        if (this.GetGame().getMouseInputHandler().isRightButtonDown()) {
             
             // Set model group to be visible
             this.modelGroup.setVisible(true);

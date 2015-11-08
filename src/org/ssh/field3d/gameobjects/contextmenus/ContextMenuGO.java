@@ -106,7 +106,7 @@ public class ContextMenuGO extends GameObject {
         
         // TODO: remove magic numbers
         // Calculate scale of the context menu
-        double scale = 1 - ((this.GetGame().getMouseInputHandler().GetScrollWheelYValue() + 1000.0) / 2000.0);
+        double scale = 1 - ((this.GetGame().getMouseInputHandler().getScrollWheelYValue() + 1000.0) / 2000.0);
         scale += MIN_SCALAR; // Add minimal scale
         
         // Rotate towards camera

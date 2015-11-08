@@ -1,14 +1,3 @@
-/**
- *
- * MouseInputHandler class
- *
- * - This class handles mouse input
- *
- * TODO: Javadoc
- *
- * @author marklef2
- * @date 13-10-2015
- */
 package org.ssh.field3d.core.gameobjects.input;
 
 import org.ssh.field3d.core.game.Game;
@@ -18,32 +7,182 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 
+/**
+ * MouseInputHandler class. This class handles mouse input.
+ *
+ * @see GameObject
+ *      
+ * @author Mark Lefering
+ */
+// TODO: Comment
+// TODO: Javadoc
+// TODO: Cleanup
 public class MouseInputHandler extends GameObject {
     
-    class OnMouseDragged implements EventHandler<MouseEvent> {
+    public static final int           NUM_BUTTONS            = 3;
+    public static final long          MAX_SCROLL_WHEEL_VALUE = 100000000;
+    public static final long          MIN_SCROLL_WHEEL_VALUE = -MouseInputHandler.MAX_SCROLL_WHEEL_VALUE;
+                                                           
+    private final OnMouseWheelChanged onMouseWheelChanged;
+    private final OnMouseMoved        onMouseMoved;
+    private final OnMousePressed      onMousePressed;
+    private final OnMouseReleased     onMouseReleased;
+    private final OnMouseDragged      onMouseDragged;
+                                      
+    private final boolean             buttonStates[];
+                                      
+    private double                    mouseX, mouseY;
+                                      
+    private double                    curMouseX, curMouseY, prevMouseX, prevMouseY;
+    private long                      scrollWheelXValue, scrollWheelYValue;
+                                      
+    private long                      maxScrollWheelValue, minScrollWheelValue;
+                                      
+    /**
+     * Constructor
+     * 
+     * @param game The {@link Game} of the {@link GameObject}.
+     */
+    public MouseInputHandler(final Game game) {
         
-        @Override
-        public void handle(final MouseEvent mouseEvent) {
-            
-            // Update mouse x & y
-            MouseInputHandler.this.SetMouseX(mouseEvent.getScreenX());
-            MouseInputHandler.this.SetMouseY(mouseEvent.getScreenY());
-        }
+        // Initialize super class
+        super(game);
+        
+        // Creating new event handlers
+        this.onMouseWheelChanged = new OnMouseWheelChanged();
+        this.onMouseMoved = new OnMouseMoved();
+        this.onMousePressed = new OnMousePressed();
+        this.onMouseReleased = new OnMouseReleased();
+        this.onMouseDragged = new OnMouseDragged();
+        
+        // Creating array for the mouse button states
+        this.buttonStates = new boolean[MouseInputHandler.NUM_BUTTONS];
+        
+        // Setting default values
+        this.scrollWheelXValue = this.scrollWheelYValue = 0;
+        this.mouseX = this.mouseY = 0;
+        this.maxScrollWheelValue = MouseInputHandler.MAX_SCROLL_WHEEL_VALUE;
+        this.minScrollWheelValue = MouseInputHandler.MIN_SCROLL_WHEEL_VALUE;
     }
     
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Inner classes
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public void Initialize() {
+        
+        // Hook events
+        this.GetGame().setOnMouseDragged(this.onMouseDragged);
+        this.GetGame().setOnMouseMoved(this.onMouseMoved);
+        this.GetGame().setOnScroll(this.onMouseWheelChanged);
+        this.GetGame().setOnMousePressed(this.onMousePressed);
+        this.GetGame().setOnMouseReleased(this.onMouseReleased);
+    }
+    
+    @Override
+    public void Update(final long timeDivNano) {
+        
+        // Update previous location
+        this.prevMouseX = this.curMouseX;
+        this.prevMouseY = this.curMouseY;
+        
+        this.curMouseX = this.mouseX;
+        this.curMouseY = this.mouseY;
+    }
+    
+    @Override
+    public void Destroy() {
+    }
+    
+    
+    
+    public double getMouseDeltaX() {
+        return this.curMouseX - this.prevMouseX;
+    }
+    
+    public double getMouseDeltaY() {
+        return this.curMouseY - this.prevMouseY;
+    }
+    
+    public double getMouseX() {
+        return this.mouseX;
+    }
+    
+    public double getMouseY() {
+        return this.mouseY;
+    }
+    
+    public long getScrollWheelXValue() {
+        return this.scrollWheelXValue;
+    }
+    
+    public long getScrollWheelYValue() {
+        return this.scrollWheelYValue;
+    }
+    
+    public boolean isButtonDown(final int buttonNumber) {
+        return this.buttonStates[buttonNumber];
+    }
+    
+    public boolean isButtonUp(final int buttonNumber) {
+        return !this.buttonStates[buttonNumber];
+    }
+    
+    public boolean isLeftButtonDown() {
+        return this.buttonStates[0];
+    }
+    
+    public boolean isLeftButtonUp() {
+        return !this.buttonStates[0];
+    }
+    
+    public boolean isMidButtonDown() {
+        return this.buttonStates[1];
+    }
+    
+    public boolean isMidButtonUp() {
+        return !this.buttonStates[1];
+    }
+    
+    public boolean isRightButtonDown() {
+        return this.buttonStates[2];
+    }
+    
+    public boolean isRightButtonUp() {
+        return !this.buttonStates[2];
+    }
+    
+    public void setMaxMouseWheelValue(final long value) {
+        
+        if (this.scrollWheelXValue > value) this.scrollWheelXValue = value;
+        
+        if (this.scrollWheelYValue > value) this.scrollWheelYValue = value;
+        
+        this.maxScrollWheelValue = value;
+    }
+    
+    public void setMinMouseWheelValue(final long value) {
+        
+        if (this.scrollWheelXValue < value) this.scrollWheelXValue = value;
+        
+        if (this.scrollWheelYValue < value) this.scrollWheelYValue = value;
+        
+        this.minScrollWheelValue = value;
+    }
+    
+    public synchronized void setMouseX(final double value) {
+        this.mouseX = value;
+    }
+    
+    public synchronized void setMouseY(final double value) {
+        this.mouseY = value;
+    }  
+    
     class OnMouseMoved implements EventHandler<MouseEvent> {
         
         @Override
         public void handle(final MouseEvent mouseEvent) {
             
             // Update mouse x & y
-            MouseInputHandler.this.SetMouseX(mouseEvent.getScreenX());
-            MouseInputHandler.this.SetMouseY(mouseEvent.getScreenY());
+            MouseInputHandler.this.setMouseX(mouseEvent.getScreenX());
+            MouseInputHandler.this.setMouseY(mouseEvent.getScreenY());
         }
     }
     
@@ -56,19 +195,19 @@ public class MouseInputHandler extends GameObject {
                 
                 // Left
                 case PRIMARY: {
-                    MouseInputHandler.this._buttonStates[0] = true;
+                    MouseInputHandler.this.buttonStates[0] = true;
                     break;
                 }
                     
                     // Mid
                 case MIDDLE: {
-                    MouseInputHandler.this._buttonStates[1] = true;
+                    MouseInputHandler.this.buttonStates[1] = true;
                     break;
                 }
                     
                     // Right
                 case SECONDARY: {
-                    MouseInputHandler.this._buttonStates[2] = true;
+                    MouseInputHandler.this.buttonStates[2] = true;
                     break;
                 }
                     
@@ -88,19 +227,19 @@ public class MouseInputHandler extends GameObject {
                 
                 // Left
                 case PRIMARY: {
-                    MouseInputHandler.this._buttonStates[0] = false;
+                    MouseInputHandler.this.buttonStates[0] = false;
                     break;
                 }
                     
                     // Mid
                 case MIDDLE: {
-                    MouseInputHandler.this._buttonStates[1] = false;
+                    MouseInputHandler.this.buttonStates[1] = false;
                     break;
                 }
                     
                     // Right
                 case SECONDARY: {
-                    MouseInputHandler.this._buttonStates[2] = false;
+                    MouseInputHandler.this.buttonStates[2] = false;
                     break;
                 }
                     
@@ -117,199 +256,31 @@ public class MouseInputHandler extends GameObject {
         public void handle(final ScrollEvent scrollEvent) {
             
             // Update scroll wheel value
-            MouseInputHandler.this._scrollWheelXValue += scrollEvent.getDeltaX();
-            MouseInputHandler.this._scrollWheelYValue += scrollEvent.getDeltaY();
+            MouseInputHandler.this.scrollWheelXValue += scrollEvent.getDeltaX();
+            MouseInputHandler.this.scrollWheelYValue += scrollEvent.getDeltaY();
             
             // Limit horizontal scroll
-            if (MouseInputHandler.this._scrollWheelXValue < MouseInputHandler.this._minScrollWheelValue)
-                MouseInputHandler.this._scrollWheelXValue = MouseInputHandler.this._minScrollWheelValue;
-            else if (MouseInputHandler.this._scrollWheelXValue > MouseInputHandler.this._maxScrollWheelValue)
-                MouseInputHandler.this._scrollWheelXValue = MouseInputHandler.this._maxScrollWheelValue;
+            if (MouseInputHandler.this.scrollWheelXValue < MouseInputHandler.this.minScrollWheelValue)
+                MouseInputHandler.this.scrollWheelXValue = MouseInputHandler.this.minScrollWheelValue;
+            else if (MouseInputHandler.this.scrollWheelXValue > MouseInputHandler.this.maxScrollWheelValue)
+                MouseInputHandler.this.scrollWheelXValue = MouseInputHandler.this.maxScrollWheelValue;
                 
             // Limit vertical scroll
-            if (MouseInputHandler.this._scrollWheelYValue < MouseInputHandler.this._minScrollWheelValue)
-                MouseInputHandler.this._scrollWheelYValue = MouseInputHandler.this._minScrollWheelValue;
-            else if (MouseInputHandler.this._scrollWheelYValue > MouseInputHandler.this._maxScrollWheelValue)
-                MouseInputHandler.this._scrollWheelYValue = MouseInputHandler.this._maxScrollWheelValue;
+            if (MouseInputHandler.this.scrollWheelYValue < MouseInputHandler.this.minScrollWheelValue)
+                MouseInputHandler.this.scrollWheelYValue = MouseInputHandler.this.minScrollWheelValue;
+            else if (MouseInputHandler.this.scrollWheelYValue > MouseInputHandler.this.maxScrollWheelValue)
+                MouseInputHandler.this.scrollWheelYValue = MouseInputHandler.this.maxScrollWheelValue;
         }
     }
     
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Public statics
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    public static final int           NUM_BUTTONS            = 3;
-    public static final long          MAX_SCROLL_WHEEL_VALUE = 100000000;
-    public static final long          MIN_SCROLL_WHEEL_VALUE = -MouseInputHandler.MAX_SCROLL_WHEEL_VALUE;
-                                                             
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Private variables
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    private final OnMouseWheelChanged _onMouseWheelChanged;
-    private final OnMouseMoved        _onMouseMoved;
-    private final OnMousePressed      _onMousePressed;
-    private final OnMouseReleased     _onMouseReleased;
-    private final OnMouseDragged      _onMouseDragged;
-                                      
-    private final boolean             _buttonStates[];
-                                      
-    private double                    _mouseX, _mouseY;
-                                      
-    private double                    _curMouseX, _curMouseY, _prevMouseX, _prevMouseY;
-    private long                      _scrollWheelXValue, _scrollWheelYValue;
-                                      
-    private long                      _maxScrollWheelValue, _minScrollWheelValue;
-                                      
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Constructors
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    public MouseInputHandler(final Game game) {
+    class OnMouseDragged implements EventHandler<MouseEvent> {
         
-        // Initialize super class
-        super(game);
-        
-        // Creating new event handlers
-        this._onMouseWheelChanged = new OnMouseWheelChanged();
-        this._onMouseMoved = new OnMouseMoved();
-        this._onMousePressed = new OnMousePressed();
-        this._onMouseReleased = new OnMouseReleased();
-        this._onMouseDragged = new OnMouseDragged();
-        
-        // Creating array for the mouse button states
-        this._buttonStates = new boolean[MouseInputHandler.NUM_BUTTONS];
-        
-        // Setting default values
-        this._scrollWheelXValue = this._scrollWheelYValue = 0;
-        this._mouseX = this._mouseY = 0;
-        this._maxScrollWheelValue = MouseInputHandler.MAX_SCROLL_WHEEL_VALUE;
-        this._minScrollWheelValue = MouseInputHandler.MIN_SCROLL_WHEEL_VALUE;
-    }
-    
-    @Override
-    public void Destroy() {
-    }
-    
-    public double GetMouseDeltaX() {
-        return this._curMouseX - this._prevMouseX;
-    }
-    
-    public double GetMouseDeltaY() {
-        return this._curMouseY - this._prevMouseY;
-    }
-    
-    public double GetMouseX() {
-        return this._mouseX;
-    }
-    
-    public double GetMouseY() {
-        return this._mouseY;
-    }
-    
-    public long GetScrollWheelXValue() {
-        return this._scrollWheelXValue;
-    }
-    
-    public long GetScrollWheelYValue() {
-        return this._scrollWheelYValue;
-    }
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Overridden methods from GameObject
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    @Override
-    public void Initialize() {
-        
-        // Hook events
-        this.GetGame().setOnMouseDragged(this._onMouseDragged);
-        this.GetGame().setOnMouseMoved(this._onMouseMoved);
-        this.GetGame().setOnScroll(this._onMouseWheelChanged);
-        this.GetGame().setOnMousePressed(this._onMousePressed);
-        this.GetGame().setOnMouseReleased(this._onMouseReleased);
-    }
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Getters
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    public boolean IsButtonDown(final int buttonNumber) {
-        return this._buttonStates[buttonNumber];
-    }
-    
-    public boolean IsButtonUp(final int buttonNumber) {
-        return !this._buttonStates[buttonNumber];
-    }
-    
-    public boolean IsLeftButtonDown() {
-        return this._buttonStates[0];
-    }
-    
-    public boolean IsLeftButtonUp() {
-        return !this._buttonStates[0];
-    }
-    
-    public boolean IsMidButtonDown() {
-        return this._buttonStates[1];
-    }
-    
-    public boolean IsMidButtonUp() {
-        return !this._buttonStates[1];
-    }
-    
-    public boolean IsRightButtonDown() {
-        return this._buttonStates[2];
-    }
-    
-    public boolean IsRightButtonUp() {
-        return !this._buttonStates[2];
-    }
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Setters
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    public void SetMaxMouseWheelValue(final long value) {
-        
-        if (this._scrollWheelXValue > value) this._scrollWheelXValue = value;
-        
-        if (this._scrollWheelYValue > value) this._scrollWheelYValue = value;
-        
-        this._maxScrollWheelValue = value;
-    }
-    
-    public void SetMinMouseWheelValue(final long value) {
-        
-        if (this._scrollWheelXValue < value) this._scrollWheelXValue = value;
-        
-        if (this._scrollWheelYValue < value) this._scrollWheelYValue = value;
-        
-        this._minScrollWheelValue = value;
-    }
-    
-    public synchronized void SetMouseX(final double value) {
-        this._mouseX = value;
-    }
-    
-    public synchronized void SetMouseY(final double value) {
-        this._mouseY = value;
-    }
-    
-    @Override
-    public void Update(final long timeDivNano) {
-        
-        // Update previous location
-        this._prevMouseX = this._curMouseX;
-        this._prevMouseY = this._curMouseY;
-        
-        this._curMouseX = this._mouseX;
-        this._curMouseY = this._mouseY;
+        @Override
+        public void handle(final MouseEvent mouseEvent) {
+            
+            // Update mouse x & y
+            MouseInputHandler.this.setMouseX(mouseEvent.getScreenX());
+            MouseInputHandler.this.setMouseY(mouseEvent.getScreenY());
+        }
     }
 }
