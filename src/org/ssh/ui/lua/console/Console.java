@@ -51,9 +51,9 @@ import javafx.scene.input.KeyEvent;
 public class Console extends UIComponent {
     
     /** The cursor used by the console */
-    private static final String  cursor      = "> ";
+    private static final String  CURSOR      = "> ";
     /** The title that shows when starting up the console */
-    private static final String  title       = "Lua Console";
+    private static final String  TITLE       = "Lua Console";
     /*
      * TODO: Add globals like "luajava.newInstance" to autocomplete
      */
@@ -360,7 +360,7 @@ public class Console extends UIComponent {
     public void printCursor() {
         Platform.runLater(() -> {
             final int i = this.consoleArea.getLength();
-            this.consoleArea.replaceText(i, i, '\n' + Console.cursor);
+            this.consoleArea.replaceText(i, i, '\n' + Console.CURSOR);
             this.currentLine = this.consoleArea.getText().length();
         });
     }
@@ -404,7 +404,7 @@ public class Console extends UIComponent {
             this.scriptEngine.eval(new String(Base64.decode(
                     "bG9jYWwgY293ID0gewpbWyAKICBcICAgICAgICAgICAsfi4KICAgIFwgICAgICwtJ19fIGAtLAogICAgICAgXCAgeywtJyAgYC4gfSAgICAgICAgICAgICAgLCcpCiAgICAgICAgICAsKCBhICkgICBgLS5fXyAgICAgICAgICwnLCcpfiwKICAgICAgICAgPD0uKSAoICAgICAgICAgYC0uX18sPT0nICcgJyAnfQogICAgICAgICAgICggICApICAgICAgICAgICAgICAgICAgICAgIC8pCiAgICAgICAgICAgIGAtJ1wgICAgLCAgICAgICAgICAgICAgICAgICAgKQoJICAgICAgIHwgIFwgICAgICAgICBgfi4gICAgICAgIC8KICAgICAgICAgICAgICAgXCAgICBgLl8gICAgICAgIFwgICAgICAgLwogICAgICAgICAgICAgICAgIFwgICAgICBgLl9fX19fLCcgICAgLCcKICAgICAgICAgICAgICAgICAgYC0uICAgICAgICAgICAgICwnCiAgICAgICAgICAgICAgICAgICAgIGAtLl8gICAgIF8sLScKICAgICAgICAgICAgICAgICAgICAgICAgIDc3amonCiAgICAgICAgICAgICAgICAgICAgICAgIC8vX3x8CiAgICAgICAgICAgICAgICAgICAgIF9fLy8tLScvYAoJICAgICAgICAgICAgLC0tJy9gICAnCl1dCn0KZnVuY3Rpb24gY2hpY2tlbnNheSh0ZXh0KQpsID0gdGV4dDpsZW4oKQphID0gbCAvIDEwCmZvciBpPTAsYSBkbwoJaW8ud3JpdGUoIlsiIC4uIHRleHQ6c3ViKGkqMTArMSwgKChpKzEpKjEwID4gbCkgYW5kIGwgb3IgKGkrMSkqMTAgKSAuLiAgIl1cbiIpCmVuZAoJcHJpbnQoY293WzFdKQplbmQK")));
                     
-            this.println(Console.title);
+            this.println(Console.TITLE);
             this.printCursor();
 
             // Set the line from where we need to start reading commands.
