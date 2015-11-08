@@ -4,20 +4,40 @@ import org.ssh.field3d.core.game.Game;
 
 import javafx.scene.control.Button;
 
+/**
+ * GoalContextMenu class. This class represents the context menu for the goals.
+ * 
+ * @author Mark Lefering
+ */
 public class GoalContextMenu extends ContextMenuGO {
     
-    private final Button _buttonSelectTeam;
+    private final Button buttonSelectTeam;
     
+    /**
+     * Constructor
+     * 
+     * @param game
+     *            The {@link Game} of the {@link GameObject}
+     * @param width
+     *            The width of the context menu.
+     * @param height
+     *            The height of the context menu.
+     */
     public GoalContextMenu(final Game game, final double width, final double height) {
         
         // Initialize super class
         super(game, width, height);
         
-        this._buttonSelectTeam = new Button("Switch to this side!");
+        // Creating new button
+        this.buttonSelectTeam = new Button("Switch to this side!");
         
-        this.getControlsGroup().getChildren().add(this._buttonSelectTeam);
+        // Adding button to the controls group
+        this.getControlsGroup().getChildren().add(this.buttonSelectTeam);
     }
     
+    /**
+     * Destroy method. This method class the super class's Destroy method.
+     */
     @Override
     public void Destroy() {
         
@@ -25,6 +45,9 @@ public class GoalContextMenu extends ContextMenuGO {
         super.Destroy();
     }
     
+    /**
+     * Initialize method. This method class the super class's Initialize method.
+     */
     @Override
     public void Initialize() {
         
@@ -32,6 +55,12 @@ public class GoalContextMenu extends ContextMenuGO {
         super.Initialize();
     }
     
+    /**
+     * Update method. This method class the super class's Update method.
+     * 
+     * @param timeDivNano
+     *            The time difference in nanoseconds.
+     */
     @Override
     public void Update(final long timeDivNano) {
         
