@@ -45,14 +45,14 @@ public class ColoredCodeArea extends CodeArea {
     private static final String   COMMENT_PATTERN   = "--\\[\\[" + "(.|\\R)*?" + "\\]\\]--" + "|" + "--[^\n]*";
     /** Default pattern. Works on anything */
     private static final String   DEFAULT           = ".";
-    private static Pattern        PATTERN;
+    private Pattern        pattern;
                                   
     /**
      * Method used to highlight the text
      */
-    private static StyleSpans<Collection<String>> computeHighlighting(final String text) {
+    private StyleSpans<Collection<String>> computeHighlighting(final String text) {
         // Create a matcher to look for patterns in the given text
-        final Matcher matcher = ColoredCodeArea.PATTERN.matcher(text);
+        final Matcher matcher = pattern.matcher(text);
         int lastKwEnd = 0;
         // Create a StyleSpansBuilder to color the text
         final StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
@@ -61,17 +61,15 @@ public class ColoredCodeArea extends CodeArea {
             // Switch what css block to use based on the group found by the matcher
             final String styleClass = matcher.group("KEYWORD") != null ? "keyword"
                     : matcher.group("OBJ") != null ? "obj"
-                            : matcher.group("FUNC") != null ? "func"
-                                    : matcher.group("PAREN") != null ? "paren"
-                                            : matcher.group("BRACE") != null ? "brace"
-                                                    : matcher.group("BRACKET") != null ? "bracket"
-                                                            : matcher.group("SEMICOLON") != null ? "semicolon"
-                                                                    : matcher.group("STRING") != null ? "string"
-                                                                            : matcher.group("COMMENT") != null
-                                                                                    ? "comment"
-                                                                                    : matcher.group("DEFAULT") != null
-                                                                                            ? "default" : null;
-            /* never happens */ assert styleClass != null;
+                    : matcher.group("FUNC") != null ? "func"
+                    : matcher.group("PAREN") != null ? "paren"
+                    : matcher.group("BRACE") != null ? "brace"
+                    : matcher.group("BRACKET") != null ? "bracket"
+                    : matcher.group("SEMICOLON") != null ? "semicolon"
+                    : matcher.group("STRING") != null ? "string"
+                    : matcher.group("COMMENT") != null ? "comment"
+                    : matcher.group("DEFAULT") != null ? "default" : null;
+                    /* never happens */ assert styleClass != null;
             // Put the last found pattern indices in the spansBuilder
             spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
             // Assign the appropiate style the the section highlighted in the previous line.
@@ -111,9 +109,8 @@ public class ColoredCodeArea extends CodeArea {
         // Turn on paragraph numbers
         this.setParagraphGraphicFactory(LineNumberFactory.get(this));
         // Make sure any changes in textcoloring are being notified to this text area
-        this.richChanges().subscribe(change -> {
-            this.setStyleSpans(0, ColoredCodeArea.computeHighlighting(this.getText()));
-        });
+        this.richChanges().subscribe(change -> 
+            this.setStyleSpans(0, computeHighlighting(this.getText())));
         // Add stylesheets to this text area
         this.getStylesheets().add(this.getCssSheet(this.styleSheet));
         this.getStyleClass().add("background");
@@ -134,21 +131,29 @@ public class ColoredCodeArea extends CodeArea {
             List<String> objectHighlights,
             List<String> functionHighlights) {
         // Make sure we don't get any errors if null is passed
-        if (objectHighlights == null) objectHighlights = new ArrayList<String>();
-        if (functionHighlights == null) functionHighlights = new ArrayList<String>();
+        if (objectHighlights == null) 
+            objectHighlights = new ArrayList<String>();
+        if (functionHighlights == null) 
+            functionHighlights = new ArrayList<String>();
         // Make sure we don't get any errors if empty arraylists are passed
-        if (objectHighlights.isEmpty()) objectHighlights.add(" ");
-        if (functionHighlights.isEmpty()) functionHighlights.add(" ");
+        if (objectHighlights.isEmpty()) 
+            objectHighlights.add(" ");
+        if (functionHighlights.isEmpty()) 
+            functionHighlights.add(" ");
         
         // Creates a pattern for everything that needs to be highlighted
-        ColoredCodeArea.PATTERN = Pattern.compile("(?<KEYWORD>" + ColoredCodeArea.KEYWORD_PATTERN + ")"
+        pattern = Pattern.compile("(?<KEYWORD>" + ColoredCodeArea.KEYWORD_PATTERN + ")"
         // Add the Java Objects and Functions that need to be highlighted
-                + "|(?<OBJ>" + "\\b(" + String.join("|", objectHighlights) + ")\\b" + ")" + "|(?<FUNC>" + "\\b("
-                + String.join("|", functionHighlights) + ")\\b" + ")" + "|(?<PAREN>" + ColoredCodeArea.PAREN_PATTERN
-                + ")" + "|(?<BRACE>" + ColoredCodeArea.BRACE_PATTERN + ")" + "|(?<BRACKET>"
-                + ColoredCodeArea.BRACKET_PATTERN + ")" + "|(?<SEMICOLON>" + ColoredCodeArea.SEMICOLON_PATTERN + ")"
-                + "|(?<STRING>" + ColoredCodeArea.STRING_PATTERN + ")" + "|(?<COMMENT>"
-                + ColoredCodeArea.COMMENT_PATTERN + ")" + "|(?<DEFAULT>" + ColoredCodeArea.DEFAULT + ")");
+                + "|(?<OBJ>" + "\\b(" + String.join("|", objectHighlights) + ")\\b" + ")" 
+                + "|(?<FUNC>" + "\\b(" + String.join("|", functionHighlights) + ")\\b" + ")" 
+                + "|(?<PAREN>" + ColoredCodeArea.PAREN_PATTERN + ")" 
+                + "|(?<BRACE>" + ColoredCodeArea.BRACE_PATTERN + ")" 
+                + "|(?<BRACKET>" + ColoredCodeArea.BRACKET_PATTERN + ")" 
+                + "|(?<SEMICOLON>" + ColoredCodeArea.SEMICOLON_PATTERN + ")"
+                + "|(?<STRING>" + ColoredCodeArea.STRING_PATTERN + ")" 
+                + "|(?<COMMENT>" + ColoredCodeArea.COMMENT_PATTERN + ")" 
+                + "|(?<DEFAULT>" + ColoredCodeArea.DEFAULT + ")");
+        
         this.styleSheet = path;
         this.setupColorCoding();
     }
