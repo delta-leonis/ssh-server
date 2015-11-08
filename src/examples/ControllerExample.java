@@ -43,7 +43,7 @@ public class ControllerExample {
      */
     private static boolean availableController(final Controller controller) {
         // get the managing service
-        return !((ControllerListener) Services.get("ControllerListener"))
+        return !((ControllerListener) Services.get("ControllerListener").get())
                 // check if it contains the controller
                 .containsController(controller);
     }
@@ -79,7 +79,7 @@ public class ControllerExample {
         radioConsumer.register(SendMethod.DEBUG, new DebugSender(Level.INFO));
         
         // add a consumer voor radiopackets
-        Services.getPipeline("communication org.ssh.services.pipeline").registerConsumer(radioConsumer);
+        Services.getPipeline("communication org.ssh.services.pipeline").get().registerConsumer(radioConsumer);
         
         // create the service for the controller
         final ControllerListener listener = new ControllerListener(15); // 15 = no. robots

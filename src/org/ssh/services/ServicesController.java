@@ -115,10 +115,9 @@ public class ServicesController {
      *            The name of the requested Service.
      * @return The requested service.
      */
-    @SuppressWarnings ("unchecked")
-    public <T extends PipelinePacket> Optional<Service<T>> get(final String name) {
+    public Optional<? extends Service<? extends PipelinePacket>> get(final String name) {
         return this.servicesList.stream().filter(service -> service.getName().equals(name))
-                .map(service -> (Service<T>) service).findFirst();
+                .findFirst();
     }
     
     /**
@@ -152,10 +151,9 @@ public class ServicesController {
      *            The name of the requested Pipeline.
      * @return The requested Pipeline.
      */
-    @SuppressWarnings ("unchecked")
-    public <T extends PipelinePacket> Optional<Pipeline<T>> getPipeline(final String name) {
+    public Optional<? extends Pipeline<? extends PipelinePacket>> getPipeline(final String name) {
         return this.pipelineList.stream().filter(pipeline -> pipeline.getName().equals(name))
-                .map(pipeline -> (Pipeline<T>) pipeline).findFirst();
+                .findFirst();
     }
     
     /**

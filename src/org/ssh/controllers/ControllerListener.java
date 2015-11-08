@@ -54,7 +54,7 @@ public class ControllerListener extends Service {
         super("ControllerListener");
         // TODO remove noRobots, read it from Models or something
         IntStream.range(0, noRobots).forEach(index -> this.handlers.put(index, null));
-        this.communicator = (Communicator) Services.get("communicator");
+        this.communicator = (Communicator) Services.get("communicator").get();
     }
     
     /**
@@ -90,7 +90,7 @@ public class ControllerListener extends Service {
         }
         
         if (this.tmpHandlers.get(robotId) != null) {
-            Service.logger.info("Could not find a available robotid.");
+            ControllerListener.LOG.fine("Could not find a available robotid.");
             return;
         }
         this.tmpHandlers.put(robotId, handler);
@@ -155,13 +155,13 @@ public class ControllerListener extends Service {
     public boolean register(final int robotId, final ControllerLayout controller) {
         // check if the robotId is allready bound
         if (this.isAssigned(robotId)) {
-            Service.logger.warning("Handler for %d is not empty, and will be overwriten.\n", robotId);
+            ControllerListener.LOG.warning("Handler for %d is not empty, and will be overwriten.\n", robotId);
             this.unregister(robotId);
         }
         
         // check if all essential buttons are bound for this controller
         if (!controller.isComplete()) {
-            Service.logger.warning("Could not register controller, essential buttons are not bound.");
+            ControllerListener.LOG.warning("Could not register controller, essential buttons are not bound.");
             return false;
         }
         
@@ -179,7 +179,7 @@ public class ControllerListener extends Service {
     public boolean unregister(final int robotId) {
         // check if it is assigned at all
         if (!this.isAssigned(robotId)) {
-            Service.logger.warning("Could not unregister controllerHandler for robot %d.\n", robotId);
+            this.LOG.warning("Could not unregister controllerHandler for robot %d.\n", robotId);
             return false;
         }
         

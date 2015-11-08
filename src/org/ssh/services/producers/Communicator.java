@@ -30,7 +30,7 @@ import protobuf.Radio.RadioProtocolWrapper;
 public class Communicator extends Producer<RadioPacket> {
     
     private final RadioPipeline commPipeline = (RadioPipeline) Services
-            .getPipeline("communication org.ssh.services.pipeline");
+            .getPipeline("communication pipeline").get();
             
     public Communicator() {
         super("communicator", ProducerType.SINGLE);

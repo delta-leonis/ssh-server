@@ -32,16 +32,16 @@ public class CommunicationExample {
         radioConsumer.addDefault(SendMethod.DEBUG); // at this moment both UDP and DEBUG are default
         
         // add a consumer voor radiopackets
-        Services.getPipeline("communication org.ssh.services.pipeline").registerConsumer(radioConsumer);
+        Services.getPipeline("communication org.ssh.services.pipeline").get().registerConsumer(radioConsumer);
         
-        Services.getPipeline("communication org.ssh.services.pipeline").registerCoupler(new RoundCoupler());
+        Services.getPipeline("communication org.ssh.services.pipeline").get().registerCoupler(new RoundCoupler());
         
         // create an example packet that will be processed and send
         final RadioProtocolCommand.Builder packet = RadioProtocolCommand.newBuilder().setRobotId(4).setVelocityR(0.2f)
                 .setVelocityX(4.234f).setVelocityY(92.939320f);
                 
         // retrieve the communicator from org.ssh.services
-        final Communicator comm = (Communicator) Services.get("communicator");
+        final Communicator comm = (Communicator) Services.get("communicator").get();
         // send a packet with the default sendmethods
         comm.send(packet);
         // send a packet with specifeid sendmethods

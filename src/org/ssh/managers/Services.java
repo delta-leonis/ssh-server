@@ -2,6 +2,7 @@ package org.ssh.managers;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -105,9 +106,9 @@ public final class Services {
      *            The name of the wanted Service
      * @return The wanted Service.
      */
-    public static Service<PipelinePacket> get(final String name) {
+    public static Optional<? extends Service<? extends PipelinePacket>> get(final String name) {
         Services.LOG.info("Getting a Service named: %s", name);
-        return Services.servicesController.get(name).get();
+        return Services.servicesController.get(name);
     }
     
     /**
@@ -223,11 +224,9 @@ public final class Services {
      *            The name of the Pipeline.
      * @return The requested Pipeline.
      */
-    public static Pipeline<PipelinePacket> getPipeline(final String name) {
+    public static Optional<? extends Pipeline<? extends PipelinePacket>> getPipeline(final String name) {
         Services.LOG.info("Getting Pipeline named %s", name);
-        final Pipeline<PipelinePacket> pipeline = Services.servicesController.getPipeline(name).get();
-        Services.LOG.info(pipeline.getType().toString());
-        return pipeline;
+        return Services.servicesController.getPipeline(name);
     }
     
     /**

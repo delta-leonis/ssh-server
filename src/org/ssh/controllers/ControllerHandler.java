@@ -265,7 +265,7 @@ public class ControllerHandler extends Producer {
                 
             case SELECT_NEXT_ROBOT:
             case SELECT_PREV_ROBOT:
-                if (this.isPressed(buttonValue)) ((ControllerListener) Services.get("ControllerListener"))
+                if (this.isPressed(buttonValue)) ((ControllerListener) Services.get("ControllerListener").get())
                         .changeRobotId(this, function.equals(ButtonFunction.SELECT_NEXT_ROBOT));
                 return true;
                 
