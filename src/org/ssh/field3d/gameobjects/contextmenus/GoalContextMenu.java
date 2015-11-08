@@ -15,7 +15,7 @@ public class GoalContextMenu extends ContextMenuGO {
         
         this._buttonSelectTeam = new Button("Switch to this side!");
         
-        this.GetControlsGroup().getChildren().add(this._buttonSelectTeam);
+        this.getControlsGroup().getChildren().add(this._buttonSelectTeam);
     }
     
     @Override

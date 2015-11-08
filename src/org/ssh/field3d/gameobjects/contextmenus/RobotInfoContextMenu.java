@@ -46,8 +46,8 @@ public class RobotInfoContextMenu extends ContextMenuGO {
         this._labelSpeed.setScaleY(3.0);
         this._labelSpeed.setScaleZ(3.0);
         
-        this.GetGroup().getChildren().add(this._labelLocation);
-        this.GetGroup().getChildren().add(this._labelSpeed);
+        this.getGroup().getChildren().add(this._labelLocation);
+        this.getGroup().getChildren().add(this._labelSpeed);
     }
     
     public void SetLabelLocationText(final String text) {

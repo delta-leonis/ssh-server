@@ -408,7 +408,7 @@ public class FieldGO extends GameObject {
             // Translate context menu
             this.goalContextMenu.Translate(goalWestLeftPos.x - 500, goalWestLeftPos.y, goalWestLeftPos.z - 500);
             // Show context menu
-            this.goalContextMenu.Show();
+            this.goalContextMenu.show();
         });
         // Add west right box
         this.addBox(goalWestRightPos, goalWestRightDim).setOnMouseClicked(event -> {
@@ -416,7 +416,7 @@ public class FieldGO extends GameObject {
             // Translate context menu
             this.goalContextMenu.Translate(goalWestRightPos.x - 500, goalWestRightPos.y, goalWestRightPos.z + 500);
             // Show context menu
-            this.goalContextMenu.Show();
+            this.goalContextMenu.show();
         });
         // Add west back box
         this.addBox(goalWestBackPos, goalWestBackDim).setOnMouseClicked(event -> {
@@ -426,7 +426,7 @@ public class FieldGO extends GameObject {
                     goalWestBackPos.y + (goalWestBackDim.y / 2.0),
                     goalWestBackPos.z);
             // Show context menu
-            this.goalContextMenu.Show();
+            this.goalContextMenu.show();
         });
         
         // Calculating East goal left border
@@ -462,7 +462,7 @@ public class FieldGO extends GameObject {
             // Translate context menu
             this.goalContextMenu.Translate(goalEastLeftPos.x - 500, goalEastLeftPos.y, goalEastLeftPos.z - 500);
             // Show context menu
-            this.goalContextMenu.Show();
+            this.goalContextMenu.show();
         });
         // Add east goal, right border to the field and add a mouse click listener
         this.addBox(goalEastRightPos, goalEastRightDim).setOnMouseClicked(event -> {
@@ -470,7 +470,7 @@ public class FieldGO extends GameObject {
             // Translate context menu
             this.goalContextMenu.Translate(goalEastRightPos.x - 500, goalEastRightPos.y, goalEastRightPos.z + 500);
             // Show context menu
-            this.goalContextMenu.Show();
+            this.goalContextMenu.show();
         });
         // Add east goal, back border to the field and add a mouse click listener
         this.addBox(goalEastBackPos, goalEastBackDim).setOnMouseClicked(event -> {
@@ -480,7 +480,7 @@ public class FieldGO extends GameObject {
                     goalEastBackPos.y + (goalEastBackDim.y / 2.0),
                     goalEastBackPos.z);
             // Show context menu
-            this.goalContextMenu.Show();
+            this.goalContextMenu.show();
         });
         
     }
