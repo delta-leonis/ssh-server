@@ -2,65 +2,108 @@ package org.ssh.field3d.gameobjects;
 
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
+import org.ssh.util.Logger;
 
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
+import javafx.application.Platform;
 import javafx.scene.Group;
-import javafx.scene.shape.MeshView;
 
+/**
+ * CarGO class. This class represents the easter egg car. It shows when the right mouse button is
+ * clicked.
+ * 
+ * @see GameObject
+ *      
+ * @author Mark Lefering
+ */
 public class CarGO extends GameObject {
     
-    MeshView model = null;
-    Group    group = null;
-                   
+    private static final Logger LOG            = Logger.getLogger("CarGO");
+    private static final String CAR_MODEL_FILE = "./assets/cars/Avent2.obj";
+                                               
+    private Group               modelGroup;
+                                
+    /**
+     * Constructor
+     * 
+     * @param game
+     *            The {@link Game} of the {@link GameObject}.
+     */
     public CarGO(final Game game) {
         
+        // Initialize super class
         super(game);
         
-        this.group = new Group();
+        // Creating new model importer
         final ObjModelImporter modelImporter = new ObjModelImporter();
+        // Creating new group for the model
+        this.modelGroup = new Group();
         
-        modelImporter.read("./assets/cars/Avent2.obj");
+        // Read model
+        modelImporter.read(CAR_MODEL_FILE);
         
+        // Check if the model importer read something
         if (modelImporter.getImport().length > 0) {
             
-            // System.out.println(modelImporter.getImport().length);
-            
+            // Loop through imports
             for (int i = 0; i < modelImporter.getImport().length; i++) {
                 
-                final MeshView model = modelImporter.getImport()[i];
-                this.group.getChildren().add(model);
+                // Adding imports to the model group
+                this.modelGroup.getChildren().add(modelImporter.getImport()[i]);
             }
-        }
-        
-    }
-    
-    @Override
-    public void Destroy() {
-        // TODO Auto-generated method stub
-        
-    }
-    
-    @Override
-    public void Initialize() {
-        // TODO Auto-generated method stub
-        
-        this.GetGame().GetWorldGroup().getChildren().add(this.group);
-    }
-    
-    @Override
-    public void Update(final long timeDivNano) {
-        // TODO Auto-generated method stub
-        
-        if (this.GetGame().GetMouseInputHandler().IsRightButtonDown()) {
-            
-            this.group.setVisible(true);
         }
         else {
             
-            this.group.setVisible(false);
+            // Log error
+            LOG.info("Could not load: " + CAR_MODEL_FILE);
+        }
+    }
+    
+    /**
+     * Initialize method. This method adds the model group to the world.
+     */
+    @Override
+    public void Initialize() {
+        
+        // Add model group to the world group
+        Platform.runLater(() -> this.GetGame().GetWorldGroup().getChildren().add(this.modelGroup));
+    }
+    
+    /**
+     * Update method. This method check if the car should be displayed or not.
+     * 
+     * @param timeDivNano
+     *            The time difference in nanoseconds.
+     */
+    @Override
+    public void Update(final long timeDivNano) {
+        
+        // Check if right mouse button is down
+        if (this.GetGame().GetMouseInputHandler().IsRightButtonDown()) {
+            
+            // Set model group to be visible
+            this.modelGroup.setVisible(true);
+        }
+        else {
+            
+            // Set model group to be not visible
+            this.modelGroup.setVisible(false);
         }
         
     }
     
+    /**
+     * Destroy method. This method removes the model group from the world group if needed.
+     */
+    @Override
+    public void Destroy() {
+        
+        // Check if we need to remove model group from the world group
+        if (this.GetGame().GetWorldGroup().getChildren().contains(modelGroup)) {
+            
+            // Remove model group from the world group
+            Platform.runLater(() -> this.GetGame().GetWorldGroup().getChildren().remove(modelGroup));
+        }
+    }
 }
