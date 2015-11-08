@@ -64,7 +64,8 @@ public class ConsoleArea extends ColoredCodeArea {
      * Checks whether the current position is a valid place to use backspace.
      */
     private boolean isValid() {
-        if (this.currentLine >= this.getCaretPosition()) return false;
+        if (this.currentLine >= this.getCaretPosition()) 
+            return false;
         
         return true;
     }
@@ -77,7 +78,8 @@ public class ConsoleArea extends ColoredCodeArea {
     @Override
     public void replaceSelection(final String text) {
         // Check whether it's a valid position
-        if (this.currentLine >= this.getCaretPosition()) this.selectRange(this.getLength(), this.getLength());
+        if (this.currentLine >= this.getCaretPosition())
+            this.selectRange(this.getLength(), this.getLength());
         
         super.replaceSelection(text);
     }
