@@ -19,6 +19,7 @@ import org.fxmisc.wellbehaved.event.EventHandlerHelper;
 import org.fxmisc.wellbehaved.event.EventPattern;
 import org.luaj.vm2.LuaError;
 import org.ssh.ui.UIComponent;
+import org.ssh.util.Logger;
 import org.ssh.util.LuaUtils;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
@@ -50,6 +51,9 @@ import javafx.scene.input.KeyEvent;
  */
 public class Console extends UIComponent {
     
+    // A logger for errorhandling
+    private final static Logger              LOG                 = Logger.getLogger();
+
     /** The cursor used by the console */
     private static final String  CURSOR      = "> ";
     /** The title that shows when starting up the console */
@@ -225,8 +229,9 @@ public class Console extends UIComponent {
             
             // Gotta catch it while we're still in the while loop.
         }
-        catch (ScriptException | LuaError exc) {
-            this.println(exc.getClass().getSimpleName() + " in line: " + command);
+        catch (ScriptException | LuaError exception) {
+            LOG.exception(exception);
+            this.println(exception.getClass().getSimpleName() + " in line: " + command);
         }
         
         // TODO: Block input until here?
@@ -412,8 +417,9 @@ public class Console extends UIComponent {
             // Set the line from where we need to start reading commands.
             this.currentLine = this.consoleArea.getText().length();
         }
-        catch (final Exception e) {
-            e.printStackTrace();
+        catch (final Exception exception) {
+            LOG.exception(exception);
+            this.println("Exception occured whilst setting up console");
         }
     }
     
