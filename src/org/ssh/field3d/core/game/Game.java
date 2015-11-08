@@ -346,7 +346,7 @@ public abstract class Game extends SubScene {
         this.group3d.getChildren().add(this.worldGroup);
         
         // Setting the camera of the 3D SubScene
-        this.scene3D.setCamera(this.thirdPersonCamera.GetPerspectiveCamera());
+        this.scene3D.setCamera(this.thirdPersonCamera.getPerspectiveCamera());
     }
     
     /**

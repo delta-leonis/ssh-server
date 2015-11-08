@@ -110,8 +110,8 @@ public class ContextMenuGO extends GameObject {
         scale += MIN_SCALAR; // Add minimal scale
         
         // Rotate towards camera
-        this.rotate(this.GetGame().getThirdPersonCamera().GetRotateX(),
-                this.GetGame().getThirdPersonCamera().GetRotateY(),
+        this.rotate(this.GetGame().getThirdPersonCamera().getRotateX(),
+                this.GetGame().getThirdPersonCamera().getRotateY(),
                 0.0);
                 
         // Translate to location
