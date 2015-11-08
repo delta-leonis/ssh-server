@@ -24,14 +24,14 @@ import javafx.scene.shape.CullFace;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 
-// TODO: Javadoc, cleanup
 /**
- * FieldGO class. This class creates the field it self, the goals and lines.
+ * FieldGO class. This class creates the field, the goals, lines and arcs.
  * 
  * @see GameObject.
  *      
  * @author marklef2
  */
+// TODO: Remove magic numbers
 // TODO: Change lines from box to FlatLine3D
 // TODO: Read public statics from model
 public class FieldGO extends GameObject {
@@ -43,10 +43,11 @@ public class FieldGO extends GameObject {
     public static final double     WEST_GOAL_ARC_LEFT_END    = 270.0;
     public static final double     WEST_GOAL_ARC_RIGHT_START = 90.0;
     public static final double     WEST_GOAL_ARC_RIGHT_END   = 180.0;
-    public static final double     EAST_GOAL_ARC_LEFT_START  = 180.0;
-    public static final double     EAST_GOAL_ARC_LEFT_END    = 270.0;
-    public static final double     EAST_GOAL_ARC_RIGHT_START = 90.0;
-    public static final double     EAST_GOAL_ARC_RIGHT_END   = 180.0;
+                                                             
+    public static final double     EAST_GOAL_ARC_RIGHT_START = 270.0;
+    public static final double     EAST_GOAL_ARC_RIGHT_END   = 360.0;
+    public static final double     EAST_GOAL_ARC_LEFT_START  = 0.0;
+    public static final double     EAST_GOAL_ARC_LEFT_END    = 90.0;
                                                              
     public static final double     GOAL_ARC_RADIUS           = 1000.0;
     public static final double     GOAL_ARC_THICKNESS        = 10.0;
@@ -124,14 +125,15 @@ public class FieldGO extends GameObject {
         }
         catch (final FileNotFoundException fileNotFoundException) {
             
-            // TODO: Log exception
+            // Log error
             LOG.info("Could not load " + GRASS_TEXTURE_FILE);
-            LOG.finest(fileNotFoundException.getStackTrace().toString());
+            LOG.exception(fileNotFoundException);
         }
         catch (IOException ioException) {
             
-            // TODO: Log exception
+            // Log error
             LOG.finest(ioException.getStackTrace().toString());
+            LOG.exception(ioException);
         }
     }
     
@@ -292,10 +294,11 @@ public class FieldGO extends GameObject {
                 GOAL_ARC_THICKNESS,
                 GOAL_ARC_NUM_DIVISIONS).MeshView();
         final MeshView goalWestArcRightMesh = new Arc3D(WEST_GOAL_ARC_RIGHT_START,
-                WEST_GOAL_ARC_LEFT_END,
+                WEST_GOAL_ARC_RIGHT_END,
                 GOAL_ARC_RADIUS,
                 GOAL_ARC_THICKNESS,
                 GOAL_ARC_NUM_DIVISIONS).MeshView();
+                
         final MeshView goalEastArcLeftMesh = new Arc3D(EAST_GOAL_ARC_LEFT_START,
                 EAST_GOAL_ARC_LEFT_END,
                 GOAL_ARC_RADIUS,
@@ -306,6 +309,7 @@ public class FieldGO extends GameObject {
                 GOAL_ARC_RADIUS,
                 GOAL_ARC_THICKNESS,
                 GOAL_ARC_NUM_DIVISIONS).MeshView();
+                
         final MeshView midCircleMesh = new Arc3D(0.0,
                 360.0,
                 MID_CIRCLE_RADIUS,
@@ -326,7 +330,6 @@ public class FieldGO extends GameObject {
         goalEastArcLeftMesh.setRotate(90.0);
         goalEastArcRightMesh.setRotate(90.0);
         
-        // TODO: use org.ssh.models
         // Translate arcs into position
         goalWestArcRightMesh.setTranslateX((FieldGame.FIELD_WIDTH / 2.0));
         goalWestArcRightMesh.setTranslateZ(500);
@@ -375,7 +378,7 @@ public class FieldGO extends GameObject {
         // Calculating West goal left border
         final Vector3f goalWestLeftPos = new Vector3f(
                 (float) ((FieldGame.FIELD_WIDTH / 2.0) + (FieldGame.FIELD_GOAL_DEPTH / 2.0)),
-                10.0f + (float) (FieldGame.FIELD_GOAL_HEIGHT / 2.0) + 200,
+                10.0f + (float) (FieldGame.FIELD_GOAL_HEIGHT / 2.0),
                 (float) -(FieldGame.FIELD_GOAL_WIDTH / 2.0));
         final Vector3f goalWestLeftDim = new Vector3f((float) FieldGame.FIELD_GOAL_DEPTH,
                 (float) FieldGame.FIELD_GOAL_HEIGHT,
@@ -402,27 +405,27 @@ public class FieldGO extends GameObject {
         // Add west left box
         this.addBox(goalWestLeftPos, goalWestLeftDim).setOnMouseClicked(event -> {
             
-            // TODO: Show context menu
-            FieldGO.this.goalContextMenu.Translate(goalWestLeftPos.x - 500, goalWestLeftPos.y, goalWestLeftPos.z - 500);
-            FieldGO.this.goalContextMenu.Show();
-            
+            // Translate context menu
+            this.goalContextMenu.Translate(goalWestLeftPos.x - 500, goalWestLeftPos.y, goalWestLeftPos.z - 500);
+            // Show context menu
+            this.goalContextMenu.Show();
         });
         // Add west right box
         this.addBox(goalWestRightPos, goalWestRightDim).setOnMouseClicked(event -> {
             
-         // Translate goal context menu into position
-            FieldGO.this.goalContextMenu.Translate(goalWestRightPos.x - 500,
-                    goalWestRightPos.y,
-                    goalWestRightPos.z + 500);
-            FieldGO.this.goalContextMenu.Show();
+            // Translate context menu
+            this.goalContextMenu.Translate(goalWestRightPos.x - 500, goalWestRightPos.y, goalWestRightPos.z + 500);
+            // Show context menu
+            this.goalContextMenu.Show();
         });
         // Add west back box
         this.addBox(goalWestBackPos, goalWestBackDim).setOnMouseClicked(event -> {
             
-            // Translate goal context menu into position
+            // Translate context menu
             this.goalContextMenu.Translate(goalWestBackPos.x,
                     goalWestBackPos.y + (goalWestBackDim.y / 2.0),
                     goalWestBackPos.z);
+            // Show context menu
             this.goalContextMenu.Show();
         });
         
@@ -453,33 +456,31 @@ public class FieldGO extends GameObject {
                 (float) FieldGame.FIELD_GOAL_HEIGHT,
                 (float) FieldGame.FIELD_GOAL_WIDTH);
                 
+        // Add east goal, left border to the field and add a mouse click listener
         this.addBox(goalEastLeftPos, goalEastLeftDim).setOnMouseClicked(event -> {
             
-            // TODO: Show context menu
-            FieldGO.this.goalContextMenu.Translate(goalEastLeftPos.x - 500, goalEastLeftPos.y, goalEastLeftPos.z - 500);
-            FieldGO.this.goalContextMenu.Rotate(0.0, 90.0, 0.0);
-            FieldGO.this.goalContextMenu.Show();
-            
+            // Translate context menu
+            this.goalContextMenu.Translate(goalEastLeftPos.x - 500, goalEastLeftPos.y, goalEastLeftPos.z - 500);
+            // Show context menu
+            this.goalContextMenu.Show();
         });
-        
+        // Add east goal, right border to the field and add a mouse click listener
         this.addBox(goalEastRightPos, goalEastRightDim).setOnMouseClicked(event -> {
             
-            // TODO: Show context menu
-            FieldGO.this.goalContextMenu.Translate(goalEastRightPos.x - 500,
-                    goalEastRightPos.y,
-                    goalEastRightPos.z + 500);
-            FieldGO.this.goalContextMenu.Rotate(0.0, 90.0, 0.0);
-            FieldGO.this.goalContextMenu.Show();
+            // Translate context menu
+            this.goalContextMenu.Translate(goalEastRightPos.x - 500, goalEastRightPos.y, goalEastRightPos.z + 500);
+            // Show context menu
+            this.goalContextMenu.Show();
         });
-        
+        // Add east goal, back border to the field and add a mouse click listener
         this.addBox(goalEastBackPos, goalEastBackDim).setOnMouseClicked(event -> {
             
-            // TODO: Show context menu
-            FieldGO.this.goalContextMenu.Translate(goalEastBackPos.x,
+            // Translate context menu
+            this.goalContextMenu.Translate(goalEastBackPos.x,
                     goalEastBackPos.y + (goalEastBackDim.y / 2.0),
                     goalEastBackPos.z);
-            FieldGO.this.goalContextMenu.Rotate(0.0, 90.0, 0.0);
-            FieldGO.this.goalContextMenu.Show();
+            // Show context menu
+            this.goalContextMenu.Show();
         });
         
     }
@@ -491,6 +492,7 @@ public class FieldGO extends GameObject {
         
         // TODO: change lines to FlatLine3D
         // TODO: remove magic numbers
+        
         // Calculate mid line
         final Vector3f midLinePos = new Vector3f(0.0f, 10.0f, 0.0f);
         final Vector3f midLineDim = new Vector3f(10.0f,
