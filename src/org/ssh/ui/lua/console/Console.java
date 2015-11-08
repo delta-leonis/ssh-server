@@ -216,10 +216,9 @@ public class Console extends UIComponent {
     private void executeCommand(final String command) {
         try {
             this.println("");
+            // Add command to the command history
             this.addCommand(command);
-            // Leave console if exit
-            if (command.equals("exit")) System.exit(0);
-            
+            // Execute the command
             this.scriptEngine.eval(command);
             
             // Gotta catch it while we're still in the while loop.
