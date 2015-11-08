@@ -1,158 +1,141 @@
-/**************************************************************************************************
- *
- * RobotGO This class is for our Robot GameObjects.
- *
- **************************************************************************************************
- *
- * TODO: change size according to zoom of camera TODO: javadoc TODO: comment TODO: cleanup
- *
- **************************************************************************************************
- * @see GameObject
- *      
- * @author marklef2
- * @date 15-10-2015
- */
 package org.ssh.field3d.gameobjects;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import org.ssh.field3d.FieldGame;
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.field3d.core.math.Vector3f;
 import org.ssh.field3d.core.shapes.Arc3D;
-import org.ssh.field3d.gameobjects.contextmenus.RobotInfoContextMenu;
+import org.ssh.util.Logger;
 
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.CullFace;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 
+/**
+ * 
+ * RobotGO This class is for robot game objects. This class loads the 3d model, textures and the
+ * selection arc.
+ * 
+ * @see GameObject
+ *      
+ * @author marklef2
+ *         
+ */
 public class RobotGO extends GameObject {
     
-    // TODO: MOVE TO CONFIG
-    public static final double         ROBOT_HEIGHT                     = 200.0;
-    public static final double         ROBOT_RADIUS                     = 250.0;
-    public static final double         ROBOT_SELECTION_CIRCLE_THICKNESS = 50.0;
-                                                                        
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Private variables
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    private MeshView                   _model;
-    private final MeshView             _selectionArcMesh;
-    private Vector3f                   _loc;
-    private final Vector3f             _vel;
-    private final PhongMaterial        _material;
-    private final PhongMaterial        _selectionCircleMaterial;
-    private final RobotInfoContextMenu _contextMenu;
-    private final Arc3D                _selectionArc;
-    private Color                      _selectionCircleColor;
-                                       
-    private boolean                    _isSelected;
-                                       
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Constructors
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // TODO: MOVE public static to config, or get from model
+    public static final double  ROBOT_HEIGHT                     = 200.0;
+    public static final double  ROBOT_RADIUS                     = 250.0;
+    public static final double  ROBOT_SELECTION_CIRCLE_THICKNESS = 50.0;
+    public static final float   ROBOT_STARTING_Y                 = 10.0f;
+    public static final int     ROBOT_NUM_OF_SEGMENTS            = 100;
+    public static final String  ROBOT_MODEL_FILE                 = "./assets/models/robot_model.obj";
+    public static final String  ROBOT_TEXTURE_FILE               = "./assets/textures/robotTextureTest2.png";
+                                                                 
+    private static final Logger LOG                              = Logger.getLogger("RobotGameObject");
+                                                                 
+    private final PhongMaterial material;
+    private final PhongMaterial selectionCircleMaterial;
+    private final Arc3D         selectionArc;
+    private final MeshView      selectionArcMesh;
+                                
+    private MeshView            model;
+    private Vector3f            location;
+                                
+    private boolean             isSelected;
+                                
+    /**
+     * 
+     * Constructor of {@link RobotGO }.
+     * 
+     * @param game
+     *            The robot's {@link Game }.
+     */
     public RobotGO(final Game game) {
         
+        // Initialize super class
         super(game);
         
+        // Creating model importer
         final ObjModelImporter modelImporter = new ObjModelImporter();
         
-        this._loc = new Vector3f(0.0f, 10.0f, 0.0f);
-        this._vel = new Vector3f();
-        this._selectionArc = new Arc3D(0.0, 360.0, RobotGO.ROBOT_RADIUS, RobotGO.ROBOT_SELECTION_CIRCLE_THICKNESS, 100);
+        // Create new location vector
+        this.location = new Vector3f(0.0f, ROBOT_STARTING_Y, 0.0f);
         
-        this._material = new PhongMaterial(Color.WHITE);
-        this._selectionCircleMaterial = new PhongMaterial();
-        this._contextMenu = new RobotInfoContextMenu(game);
+        // Creating selection circle
+        this.selectionArc = new Arc3D(0.0,
+                360.0,
+                RobotGO.ROBOT_RADIUS,
+                RobotGO.ROBOT_SELECTION_CIRCLE_THICKNESS,
+                ROBOT_NUM_OF_SEGMENTS);
+                
+        // Creating PhongMaterials
+        this.material = new PhongMaterial(Color.WHITE);
+        this.selectionCircleMaterial = new PhongMaterial();
         
-        this._selectionArcMesh = this._selectionArc.MeshView();
-        this._selectionArcMesh.setCullFace(CullFace.NONE);
-        this._selectionArcMesh.setRotationAxis(Rotate.X_AXIS);
-        this._selectionArcMesh.setRotate(90.0);
+        // Getting arc mesh
+        this.selectionArcMesh = this.selectionArc.MeshView();
+        // Rotate 90 degrees around x-axis
+        this.selectionArcMesh.setRotationAxis(Rotate.X_AXIS);
+        this.selectionArcMesh.setRotate(90.0);
         
-        // Setting selection circle color & material
-        this._selectionCircleColor = Color.BLUE;
-        this._selectionCircleMaterial.setDiffuseColor(this._selectionCircleColor);
-        this._selectionCircleMaterial.setSpecularColor(this._selectionCircleColor);
-        this._selectionCircleMaterial.setSpecularPower(20.0);
+        // Setting selection circle diffuse & specular color to Blue
+        this.selectionCircleMaterial.setDiffuseColor(Color.BLUE);
+        this.selectionCircleMaterial.setSpecularColor(Color.BLUE);
+        // Setting specular power
+        this.selectionCircleMaterial.setSpecularPower(20.0);
+        // Setting selection circle material
+        this.selectionArcMesh.setMaterial(this.selectionCircleMaterial);
         
-        this._selectionArcMesh.setMaterial(this._selectionCircleMaterial);
-        ;
+        // Read model into model importer
+        modelImporter.read(ROBOT_MODEL_FILE);
         
-        // Read org.ssh.models
-        modelImporter.read("./assets/models/robot_model.obj");
-        
-        // Check if we've loaded successfully
+        // Check if we have loaded something
         if (modelImporter.getImport().length > 0) {
             
-            // Getting org.ssh.models from the org.ssh.models importer
-            this._model = modelImporter.getImport()[0];
+            // Getting model from the model importer
+            this.model = modelImporter.getImport()[0];
             
             try {
-                this._material.setDiffuseMap(new Image(new FileInputStream("./assets/textures/robotTextureTest2.png")));
-                this._material.setSpecularColor(Color.WHITE);
+                
+                // Loading texture & setting diffuse map of the model material
+                this.material.setDiffuseMap(new Image(new FileInputStream(ROBOT_TEXTURE_FILE)));
             }
-            catch (final FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            catch (final FileNotFoundException fileNotFoundException) {
+                
+                // TODO: log exception
+                // Log error
+                LOG.info("Could not load " + ROBOT_TEXTURE_FILE);
+                LOG.finer(fileNotFoundException.getStackTrace().toString());
+                return;
             }
-            // Setting org.ssh.models material
-            this._model.setMaterial(this._material);
             
+            // Setting model material
+            this.model.setMaterial(this.material);
         }
         else {
             
-            // Show error
-            System.out.println("Missing ./assets/models/robots/yellow/robot_yellow_8.obj");
+            // Log error
+            LOG.info("Could not load " + ROBOT_MODEL_FILE);
+            return;
         }
         
         // Setting not selected
-        this._isSelected = false;
-        this.SetSelected(this._isSelected);
+        this.isSelected = false;
+        this.setSelected(this.isSelected);
     }
     
-    @Override
-    public void Destroy() {
-    }
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Getters
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    public Vector3f GetLocation() {
-        return this._loc;
-    }
-    
-    public boolean GetSelected() {
-        return this._isSelected;
-    }
-    
-    public Color GetSelectionCircleColor() {
-        return this._selectionCircleColor;
-    }
-    
-    public Vector3f GetVelocity() {
-        return this._vel;
-    }
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Overridden methods from GameObject
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Initialize method, overridden from {@link GameObject}.
+     */
     @Override
     public void Initialize() {
         
@@ -160,78 +143,95 @@ public class RobotGO extends GameObject {
         final Group modelGroup = new Group();
         
         // Add our org.ssh.models to the org.ssh.models group
-        modelGroup.getChildren().add(this._model);
-        modelGroup.getChildren().add(this._selectionArcMesh);
+        modelGroup.getChildren().add(this.model);
+        modelGroup.getChildren().add(this.selectionArcMesh);
         
-        // Add org.ssh.models group to the world group
-        this.GetGame().GetWorldGroup().getChildren().addAll(modelGroup);
-        
-        this.GetGame().AddGameObject(this._contextMenu);
-        
-        this._model.setOnMouseClicked(mouseEvent -> RobotGO.this.SetSelected(!RobotGO.this._isSelected));
+        // Add model group to the world group
+        Platform.runLater(() -> this.GetGame().GetWorldGroup().getChildren().addAll(modelGroup));
     }
     
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Setters
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    public void SetLocation(final Vector3f location) {
-        this._loc = location;
-    }
-    
-    public void SetSelected(final boolean isSelected) {
-        
-        this._isSelected = isSelected;
-        this._selectionArcMesh.setVisible(this._isSelected);
-    }
-    
-    public void SetSelectionCircleColor(final Color color) {
-        
-        // Set selection circle color
-        this._selectionCircleColor = color;
-        
-        // Update material
-        this._selectionCircleMaterial.setDiffuseColor(this._selectionCircleColor);
-        this._selectionCircleMaterial.setSpecularColor(this._selectionCircleColor);
-    }
-    
+    /**
+     * Update method, overridden from {@link GameObject}
+     * 
+     * @param timeDivNano
+     *            The time difference in nanoseconds
+     */
     @Override
     public void Update(final long timeDivNano) {
         
-        // Check if we are on the border
-        if (this._loc.z > (FieldGame.FIELD_DEPTH / 2)) {
-            
-            // Limit location
-            this._loc.z = (float) (FieldGame.FIELD_DEPTH / 2.0f);
-            // Invert velocity
-            this._vel.z *= -1;
-            
-        }
-        else if (this._loc.z < -(FieldGame.FIELD_DEPTH / 2)) {
-            
-            // Limit location
-            this._loc.z = (float) -(FieldGame.FIELD_DEPTH / 2.0f);
-            // Invert velocity
-            this._vel.z *= -1;
-        }
-        
-        // Update location
-        this._loc = this._loc.add(this._vel.scale(timeDivNano / 1000000000.0f));
-        
-        this._contextMenu.Translate(this._loc.x, this._loc.y + this._contextMenu.GetHeight(), this._loc.z);
-        
-        this._contextMenu.SetLabelLocationText("Location: " + this._loc);
-        this._contextMenu.SetLabelSpeedText("Speed: " + this._vel);
+        // TODO: Update location according to the vision model
         
         // Translate to location
-        this._model.setTranslateX(this._loc.x);
-        this._model.setTranslateY(this._loc.y);
-        this._model.setTranslateZ(this._loc.z);
+        this.model.setTranslateX(this.location.x);
+        this.model.setTranslateY(this.location.y);
+        this.model.setTranslateZ(this.location.z);
         
         // Translate selection circle to location
-        this._selectionArcMesh.setTranslateX(this._loc.x);
-        this._selectionArcMesh.setTranslateY(this._loc.y - (RobotGO.ROBOT_HEIGHT / 2.2));
-        this._selectionArcMesh.setTranslateZ(this._loc.z);
+        this.selectionArcMesh.setTranslateX(this.location.x);
+        this.selectionArcMesh.setTranslateY(this.location.y - (model.getBoundsInLocal().getHeight() / 1.8));
+        this.selectionArcMesh.setTranslateZ(this.location.z);
     }
+    
+    /**
+     * Destroy method, overridden from {@link GameObject}.
+     */
+    @Override
+    public void Destroy() {
+    }
+    
+    /**
+     * Gets the location of the robot.
+     * 
+     * @return Returns the location of the robot as a {@link Vector3f}.
+     */
+    public Vector3f getLocation() {
+        return this.location;
+    }
+    
+    /**
+     * Gets the selected state of the robot.
+     * 
+     * @return Returns the selected state of the robot as boolean.
+     */
+    public boolean getSelected() {
+        return this.isSelected;
+    }
+    
+    /**
+     * Sets the location of the robot.
+     * 
+     * @param location
+     *            The new location of the robot as {@link Vector3f}.
+     */
+    public void setLocation(final Vector3f location) {
+        this.location = location;
+    }
+    
+    /**
+     * Sets the selected state of the robot.
+     * 
+     * @param isSelected
+     *            the new selected state of the robot as boolean.
+     */
+    public void setSelected(final boolean isSelected) {
+        
+        // Setting selected state
+        this.isSelected = isSelected;
+        // Setting visibility of the selection arc mesh
+        this.selectionArcMesh.setVisible(this.isSelected);
+    }
+    
+    /**
+     * This method set the color of the selection circle material.
+     * 
+     * @param color
+     *            The {@link Color} of the circle.
+     */
+    public void setSelectionCircleColor(final Color color) {
+        
+        // Update material diffuse & specular color
+        this.selectionCircleMaterial.setDiffuseColor(color);
+        this.selectionCircleMaterial.setSpecularColor(color);
+    }
+    
 }
