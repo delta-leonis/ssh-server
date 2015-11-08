@@ -1,6 +1,7 @@
 package org.ssh.field3d.core.gameobjects.input;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
@@ -9,130 +10,142 @@ import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+/**
+ * KeyInputHandler class. This class is responsible for the handling the keyboard input for the 3d
+ * field.
+ * 
+ * @author Mark Lefering
+ */
 public class KeyInputHandler extends GameObject {
     
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Inner classes
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    class KeyPressedHandler implements EventHandler<KeyEvent> {
-        
-        @Override
-        public void handle(final KeyEvent event) {
-            
-            KeyInputHandler.this.setState(event.getCode(), true);
-        }
-    }
-    
-    class KeyReleasedHandler implements EventHandler<KeyEvent> {
-        
-        @Override
-        public void handle(final KeyEvent event) {
-            
-            KeyInputHandler.this.setState(event.getCode(), false);
-        }
-    }
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Private variables
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    private final HashMap<KeyCode, Boolean> _curKeyState;
-                                            
-    private final KeyPressedHandler         _keyPressedHandler;
-                                            
-    private final KeyReleasedHandler        _keyReleasedHandler;
-                                            
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Constructors
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    private final Map<KeyCode, Boolean> curKeyState;
+    private final KeyPressedHandler     keyPressedHandler;
+    private final KeyReleasedHandler    keyReleasedHandler;
+                                        
+    /**
+     * Constructor
+     * 
+     * @param game
+     *            The {@link Game} of the {@link GameObject}.
+     */
     public KeyInputHandler(final Game game) {
         
+        // Initialize super class
         super(game);
         
         // Creating new hash map
-        this._curKeyState = new HashMap<KeyCode, Boolean>();
+        this.curKeyState = new HashMap<KeyCode, Boolean>();
         
-        this._keyPressedHandler = new KeyPressedHandler();
-        this._keyReleasedHandler = new KeyReleasedHandler();
-        
+        // Creating key pressed and released handler
+        this.keyPressedHandler = new KeyPressedHandler();
+        this.keyReleasedHandler = new KeyReleasedHandler();
     }
     
-    @Override
-    public void Destroy() {
-    }
-    
-    /////////////////////////////////////////////////////////////////////// ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Setters
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Overridden methods from GameObject
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Initialize method. This method hooks the OnKeyPressed & OnKeyReleased events.
+     */
     @Override
     public void Initialize() {
         
-        System.out.println("KeyInputHandler()");
-        
-        // Hook on key pressed
-        this.GetGame().setOnKeyPressed(this._keyPressedHandler);
-        
-        // Hook on key released
-        this.GetGame().setOnKeyReleased(this._keyReleasedHandler);
+        // Hook keyboard events
+        this.GetGame().setOnKeyPressed(this.keyPressedHandler);
+        this.GetGame().setOnKeyReleased(this.keyReleasedHandler);
     }
     
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Getters
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Update method.
+     */
+    @Override
+    public void Update(final long timeDivNano) {
+    }
+    
+    /**
+     * Destroy method. This method unhooks the keyboard events.
+     */
+    @Override
+    public void Destroy() {
+        
+        // Unhook events
+        this.GetGame().setOnKeyPressed(null);
+        this.GetGame().setOnKeyReleased(null);
+    }
+    
     public boolean isKeyDown(final KeyCode keyCode) {
         
-        if (this._curKeyState.containsKey(keyCode)) {
+        // Check if the map contains the key code
+        if (this.curKeyState.containsKey(keyCode)) {
             
-            return this._curKeyState.get(keyCode);
+            // Return the state
+            return this.curKeyState.get(keyCode);
         }
         
+        // Return false
         return false;
     }
     
     public boolean isKeyUp(final KeyCode keyCode) {
         
-        if (this._curKeyState.containsKey(keyCode)) {
+        // Check if the map contains the key code
+        if (this.curKeyState.containsKey(keyCode)) {
             
-            return !this._curKeyState.get(keyCode);
+            // Return the not state
+            return !this.curKeyState.get(keyCode);
         }
         
+        // Return true
         return true;
     }
     
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Setters
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * setState method. This method set the state of a key.
+     * 
+     * @param keyCode
+     *            The {@link KeyCode} to set the state of.
+     * @param state
+     *            The state of the button, true for pressed, false for not pressed.
+     */
     public void setState(final KeyCode keyCode, final boolean state) {
         
-        if (this._curKeyState.containsKey(keyCode)) {
+        // Check if the map contains the key code
+        if (this.curKeyState.containsKey(keyCode)) {
             
             // Replace state
-            this._curKeyState.replace(keyCode, state);
-            
+            this.curKeyState.replace(keyCode, state);
         }
         else {
             
             // Add state
-            this._curKeyState.put(keyCode, state);
+            this.curKeyState.put(keyCode, state);
         }
     }
     
-    @Override
-    public void Update(final long timeDivNano) {
+    /**
+     * KeyPressedHandler class. This class handles the key pressed event.
+     * 
+     * @author Mark Lefering
+     */
+    class KeyPressedHandler implements EventHandler<KeyEvent> {
+        
+        @Override
+        public void handle(final KeyEvent event) {
+            
+            // Setting pressed stated
+            KeyInputHandler.this.setState(event.getCode(), true);
+        }
+    }
+    
+    /**
+     * KeyReleasedHandler class. This class handles the key released event.
+     * 
+     * @author Mark Lefering
+     */
+    class KeyReleasedHandler implements EventHandler<KeyEvent> {
+        
+        @Override
+        public void handle(final KeyEvent event) {
+            
+            // Setting released state
+            KeyInputHandler.this.setState(event.getCode(), false);
+        }
     }
 }
