@@ -91,7 +91,7 @@ public class ContextMenuGO extends GameObject {
     public void Initialize() {
         
         // Add context menu to world
-        Platform.runLater(() -> this.GetGame().GetWorldGroup().getChildren().add(this.xform));
+        Platform.runLater(() -> this.GetGame().getWorldGroup().getChildren().add(this.xform));
     }
     
     /**
@@ -106,12 +106,12 @@ public class ContextMenuGO extends GameObject {
         
         // TODO: remove magic numbers
         // Calculate scale of the context menu
-        double scale = 1 - ((this.GetGame().GetMouseInputHandler().GetScrollWheelYValue() + 1000.0) / 2000.0);
+        double scale = 1 - ((this.GetGame().getMouseInputHandler().GetScrollWheelYValue() + 1000.0) / 2000.0);
         scale += MIN_SCALAR; // Add minimal scale
         
         // Rotate towards camera
-        this.rotate(this.GetGame().GetThirdPersonCamera().GetRotateX(),
-                this.GetGame().GetThirdPersonCamera().GetRotateY(),
+        this.rotate(this.GetGame().getThirdPersonCamera().GetRotateX(),
+                this.GetGame().getThirdPersonCamera().GetRotateY(),
                 0.0);
                 
         // Translate to location
@@ -127,10 +127,10 @@ public class ContextMenuGO extends GameObject {
     public void Destroy() {
         
         // Check if we need to remove the context menu from the world group
-        if (this.GetGame().GetWorldGroup().getChildren().contains(this.xform)) {
+        if (this.GetGame().getWorldGroup().getChildren().contains(this.xform)) {
             
             // Remove context menu from the world group
-            Platform.runLater(() -> this.GetGame().GetWorldGroup().getChildren().remove((this.xform)));
+            Platform.runLater(() -> this.GetGame().getWorldGroup().getChildren().remove((this.xform)));
         }
     }
     

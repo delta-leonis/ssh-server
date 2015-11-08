@@ -110,9 +110,9 @@ public class FieldGame extends Game {
         this._pointLight4.setTranslateZ(FieldGame.FIELD_DEPTH / 4.0);
         
         // Set minimal mouse wheel value
-        this.GetMouseInputHandler().SetMinMouseWheelValue(-1000);
+        this.getMouseInputHandler().SetMinMouseWheelValue(-1000);
         // Set maximal mouse wheel value
-        this.GetMouseInputHandler().SetMaxMouseWheelValue(1000);
+        this.getMouseInputHandler().SetMaxMouseWheelValue(1000);
         
         // Set black fill color
         this.setFill(Color.BLACK);
@@ -128,7 +128,7 @@ public class FieldGame extends Game {
     public void AddRobot(final RobotGO robot) {
         
         // Add robot to game
-        this.AddGameObject(robot);
+        this.addGameObject(robot);
     }
     
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -150,12 +150,12 @@ public class FieldGame extends Game {
             robot.setLocation(new Vector3f(i * 500, ((float) RobotGO.ROBOT_HEIGHT / 2.0f) + 10.0f, 0));
             
             // Add robot to game objects
-            this.AddGameObject(robot);
+            this.addGameObject(robot);
         }
     }
     
     @Override
-    public void Destroy() {
+    public void destroy() {
     }
     
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -164,19 +164,19 @@ public class FieldGame extends Game {
     //
     ///////////////////////////////////////////////////////////////////////////////////////////////
     @Override
-    public void Initialize() {
+    public void initialize() {
         
         // Add lights to the world
-        this.GetWorldGroup().getChildren().add(this._ambientLight);
-        this.GetWorldGroup().getChildren().add(this._pointLight1);
-        this.GetWorldGroup().getChildren().add(this._pointLight2);
-        this.GetWorldGroup().getChildren().add(this._pointLight3);
-        this.GetWorldGroup().getChildren().add(this._pointLight4);
+        this.getWorldGroup().getChildren().add(this._ambientLight);
+        this.getWorldGroup().getChildren().add(this._pointLight1);
+        this.getWorldGroup().getChildren().add(this._pointLight2);
+        this.getWorldGroup().getChildren().add(this._pointLight3);
+        this.getWorldGroup().getChildren().add(this._pointLight4);
         
         // Adding game objects
-        this.AddGameObject(this._field);
-        this.AddGameObject(this._cameraControlOverlay);
-        this.AddGameObject(this._easterCar);
+        this.addGameObject(this._field);
+        this.addGameObject(this._cameraControlOverlay);
+        this.addGameObject(this._easterCar);
         
         // Create some robots
         this.createRobots();
@@ -192,10 +192,10 @@ public class FieldGame extends Game {
     public void RemoveRobot(final RobotGO robot) {
         
         // Remove robot from game
-        this.RemoveGameObject(robot);
+        this.removeGameObject(robot);
     }
     
     @Override
-    public void Update(final long timeDivNano) {
+    public void update(final long timeDivNano) {
     }
 }

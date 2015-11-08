@@ -67,7 +67,7 @@ public class PenaltySpotGO extends GameObject {
     public void Initialize() {
         
         // Add model to the world group
-        Platform.runLater(() -> this.GetGame().GetWorldGroup().getChildren().add(this.model));
+        Platform.runLater(() -> this.GetGame().getWorldGroup().getChildren().add(this.model));
     }
     
     /**
@@ -84,10 +84,10 @@ public class PenaltySpotGO extends GameObject {
     public void Destroy() {
         
         // Check if model in the world
-        if (this.GetGame().GetWorldGroup().getChildren().contains(this.model)) {
+        if (this.GetGame().getWorldGroup().getChildren().contains(this.model)) {
             
             // Remove org.ssh.models from world
-            this.GetGame().GetWorldGroup().getChildren().remove(this.model);
+            this.GetGame().getWorldGroup().getChildren().remove(this.model);
         }
     }
     

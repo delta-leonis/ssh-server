@@ -98,7 +98,7 @@ public class SkyboxGO extends GameObject {
     public void Initialize() {
         
         // Add models to world group
-        Platform.runLater(() -> this.GetGame().GetWorldGroup().getChildren().add(this.model));
+        Platform.runLater(() -> this.GetGame().getWorldGroup().getChildren().add(this.model));
     }
     
     /**
@@ -115,10 +115,10 @@ public class SkyboxGO extends GameObject {
     public void Destroy() {
         
         // Check if model is in the world group
-        if (this.GetGame().GetWorldGroup().getChildren().contains(this.model)) {
+        if (this.GetGame().getWorldGroup().getChildren().contains(this.model)) {
             
             // Remove from world
-            this.GetGame().GetWorldGroup().getChildren().remove(this.model);
+            this.GetGame().getWorldGroup().getChildren().remove(this.model);
         }
     }
     

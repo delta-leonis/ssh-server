@@ -47,7 +47,7 @@ public class Field3DExample extends Application {
         // _rootSceneGroup.getChildren().add(_fieldScene);
         
         // Initialize game
-        this._fieldGame.InternalInitialize();
+        this._fieldGame.internalInitialize();
         
         // Setting scene
         stage.setScene(this._scene);

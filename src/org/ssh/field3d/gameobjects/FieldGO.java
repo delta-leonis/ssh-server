@@ -156,9 +156,9 @@ public class FieldGO extends GameObject {
         this.generateArcs();
         
         // Adding game objects to the game
-        this.GetGame().AddGameObject(this.goalContextMenu);
-        this.GetGame().AddGameObject(this.penaltySpotEast);
-        this.GetGame().AddGameObject(this.penaltySpotWest);
+        this.GetGame().addGameObject(this.goalContextMenu);
+        this.GetGame().addGameObject(this.penaltySpotEast);
+        this.GetGame().addGameObject(this.penaltySpotWest);
     }
     
     /**
@@ -231,7 +231,7 @@ public class FieldGO extends GameObject {
         lineMesh.setTranslateY(LINE_Y_OFFSET);
         
         // Add to world group
-        Platform.runLater(() -> this.GetGame().GetWorldGroup().getChildren().add(line.GetMeshView()));
+        Platform.runLater(() -> this.GetGame().getWorldGroup().getChildren().add(line.GetMeshView()));
         
         // Return the line
         return line;
@@ -279,7 +279,7 @@ public class FieldGO extends GameObject {
         this.fieldBoxes.add(box);
         
         // Add box to the world group
-        Platform.runLater(() -> this.GetGame().GetWorldGroup().getChildren().add(box));
+        Platform.runLater(() -> this.GetGame().getWorldGroup().getChildren().add(box));
     }
     
     /**
@@ -360,11 +360,11 @@ public class FieldGO extends GameObject {
         // Add arcs to the world
         Platform.runLater(() -> {
             
-            this.GetGame().GetWorldGroup().getChildren().add(goalWestArcLeftMesh);
-            this.GetGame().GetWorldGroup().getChildren().add(goalWestArcRightMesh);
-            this.GetGame().GetWorldGroup().getChildren().add(goalEastArcLeftMesh);
-            this.GetGame().GetWorldGroup().getChildren().add(goalEastArcRightMesh);
-            this.GetGame().GetWorldGroup().getChildren().add(midCircleMesh);
+            this.GetGame().getWorldGroup().getChildren().add(goalWestArcLeftMesh);
+            this.GetGame().getWorldGroup().getChildren().add(goalWestArcRightMesh);
+            this.GetGame().getWorldGroup().getChildren().add(goalEastArcLeftMesh);
+            this.GetGame().getWorldGroup().getChildren().add(goalEastArcRightMesh);
+            this.GetGame().getWorldGroup().getChildren().add(midCircleMesh);
         });
     }
     

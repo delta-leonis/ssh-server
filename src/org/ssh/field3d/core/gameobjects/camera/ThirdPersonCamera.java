@@ -194,7 +194,7 @@ public class ThirdPersonCamera extends GameObject {
     public void Initialize() {
         
         // Add our camera Xform to the camera group
-        this.GetGame().GetCameraGroup().getChildren().add(this._xForm1);
+        this.GetGame().getCameraGroup().getChildren().add(this._xForm1);
     }
     
     public void SetMaxLocX(final double locXMax) {
@@ -248,15 +248,15 @@ public class ThirdPersonCamera extends GameObject {
         ///////////////////////////////////////////////
         // Rotation around pivot
         ///////////////////////////////////////////////
-        if (this.GetGame().GetMouseInputHandler().IsMidButtonDown()) {
+        if (this.GetGame().getMouseInputHandler().IsMidButtonDown()) {
             
             // Rotate around y-axis
             this._xForm1.ry
-                    .setAngle(this._xForm1.ry.getAngle() + (this.GetGame().GetMouseInputHandler().GetMouseDeltaX()
+                    .setAngle(this._xForm1.ry.getAngle() + (this.GetGame().getMouseInputHandler().GetMouseDeltaX()
                             * ThirdPersonCamera.MOUSE_LOOK_SENSITIVITY));
             // Rotate around x-axis
             this._xForm1.rx
-                    .setAngle(this._xForm1.rx.getAngle() + (this.GetGame().GetMouseInputHandler().GetMouseDeltaY()
+                    .setAngle(this._xForm1.rx.getAngle() + (this.GetGame().getMouseInputHandler().GetMouseDeltaY()
                             * ThirdPersonCamera.MOUSE_LOOK_SENSITIVITY));
         }
         
@@ -271,7 +271,7 @@ public class ThirdPersonCamera extends GameObject {
         ///////////////////////////////////////////////
         // Zoom
         ///////////////////////////////////////////////
-        double zoomCalc = (this.GetGame().GetMouseInputHandler().GetScrollWheelYValue()
+        double zoomCalc = (this.GetGame().getMouseInputHandler().GetScrollWheelYValue()
                 * ThirdPersonCamera.MOUSE_ZOOM_SENSITIVITY) + ThirdPersonCamera.INITIAL_CAMERA_DISTANCE;
                 
         // Limit zoom
@@ -289,17 +289,17 @@ public class ThirdPersonCamera extends GameObject {
         this._xForm1.setTranslate(this._pivot.x, this._pivot.y, this._pivot.z);
         
         final double movementScale = 1
-                - ((this.GetGame().GetMouseInputHandler().GetScrollWheelYValue() + 990.0) / 2000.0);
+                - ((this.GetGame().getMouseInputHandler().GetScrollWheelYValue() + 990.0) / 2000.0);
                 
         ///////////////////////////////////////////////
         // Move pivot
         ///////////////////////////////////////////////
-        if (this.GetGame().GetMouseInputHandler().IsLeftButtonDown()) {
+        if (this.GetGame().getMouseInputHandler().IsLeftButtonDown()) {
             
             // Calculate mouse values
-            final double mouseXCalc = this.GetGame().GetMouseInputHandler().GetMouseDeltaX()
+            final double mouseXCalc = this.GetGame().getMouseInputHandler().GetMouseDeltaX()
                     * ThirdPersonCamera.MOUSE_MOVEMENT_SENSITIVITY;
-            final double mouseYCalc = this.GetGame().GetMouseInputHandler().GetMouseDeltaY()
+            final double mouseYCalc = this.GetGame().getMouseInputHandler().GetMouseDeltaY()
                     * ThirdPersonCamera.MOUSE_MOVEMENT_SENSITIVITY;
                     
             // Rotate mouse translation according to camera

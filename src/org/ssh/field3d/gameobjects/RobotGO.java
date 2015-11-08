@@ -147,7 +147,7 @@ public class RobotGO extends GameObject {
         modelGroup.getChildren().add(this.selectionArcMesh);
         
         // Add model group to the world group
-        Platform.runLater(() -> this.GetGame().GetWorldGroup().getChildren().addAll(modelGroup));
+        Platform.runLater(() -> this.GetGame().getWorldGroup().getChildren().addAll(modelGroup));
     }
     
     /**

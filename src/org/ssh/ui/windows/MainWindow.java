@@ -85,7 +85,7 @@ public class MainWindow extends UIController<StackPane> {
         // let's add a component
         final FieldGame field = new FieldGame(new Group(), 500, 500, SceneAntialiasing.BALANCED);
         // Call the big initialise function that provides the complete field
-        field.InternalInitialize();
+        field.internalInitialize();
         // Add the field SubScene to the Group defined in the fxml
         this.fieldBase.getChildren().add(field);
         // Bind the height and width properties of the field to the basecenter

@@ -67,7 +67,7 @@ public class CarGO extends GameObject {
     public void Initialize() {
         
         // Add model group to the world group
-        Platform.runLater(() -> this.GetGame().GetWorldGroup().getChildren().add(this.modelGroup));
+        Platform.runLater(() -> this.GetGame().getWorldGroup().getChildren().add(this.modelGroup));
     }
     
     /**
@@ -80,7 +80,7 @@ public class CarGO extends GameObject {
     public void Update(final long timeDivNano) {
         
         // Check if right mouse button is down
-        if (this.GetGame().GetMouseInputHandler().IsRightButtonDown()) {
+        if (this.GetGame().getMouseInputHandler().IsRightButtonDown()) {
             
             // Set model group to be visible
             this.modelGroup.setVisible(true);
@@ -100,10 +100,10 @@ public class CarGO extends GameObject {
     public void Destroy() {
         
         // Check if we need to remove model group from the world group
-        if (this.GetGame().GetWorldGroup().getChildren().contains(modelGroup)) {
+        if (this.GetGame().getWorldGroup().getChildren().contains(modelGroup)) {
             
             // Remove model group from the world group
-            Platform.runLater(() -> this.GetGame().GetWorldGroup().getChildren().remove(modelGroup));
+            Platform.runLater(() -> this.GetGame().getWorldGroup().getChildren().remove(modelGroup));
         }
     }
 }

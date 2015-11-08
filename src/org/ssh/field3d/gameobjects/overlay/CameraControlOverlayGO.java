@@ -94,7 +94,7 @@ public class CameraControlOverlayGO extends GameObject {
     public void Initialize() {
         
         // Adding control group to 2d group
-        Platform.runLater(() -> this.GetGame().Get2DGroup().getChildren().add(this.controlsGroup));
+        Platform.runLater(() -> this.GetGame().get2DGroup().getChildren().add(this.controlsGroup));
         
         // Hook events
         this.button45DegView.setOnMouseClicked(new OnButton45DegViewClicked());
@@ -119,10 +119,10 @@ public class CameraControlOverlayGO extends GameObject {
         // TODO: remove event handlers
         
         // If 2d group contains the controls group
-        if (this.GetGame().Get2DGroup().getChildren().contains(this.controlsGroup)) {
+        if (this.GetGame().get2DGroup().getChildren().contains(this.controlsGroup)) {
             
             // Remove from 2d group
-            Platform.runLater(() -> this.GetGame().Get2DGroup().getChildren().remove(this.controlsGroup));
+            Platform.runLater(() -> this.GetGame().get2DGroup().getChildren().remove(this.controlsGroup));
         }
         
         // Unhook events
@@ -160,8 +160,8 @@ public class CameraControlOverlayGO extends GameObject {
         public void handle(final MouseEvent mouseEvent) {
             
             // TODO: Smooth out rotation
-            CameraControlOverlayGO.this.GetGame().GetThirdPersonCamera()
-                    .SetRotateX(CameraControlOverlayGO.this.GetGame().GetThirdPersonCamera().GetRotateX() - 10);
+            CameraControlOverlayGO.this.GetGame().getThirdPersonCamera()
+                    .SetRotateX(CameraControlOverlayGO.this.GetGame().getThirdPersonCamera().GetRotateX() - 10);
         }
         
     }
@@ -178,8 +178,8 @@ public class CameraControlOverlayGO extends GameObject {
         public void handle(final MouseEvent mouseEvent) {
             
             // TODO: Smooth out rotation
-            CameraControlOverlayGO.this.GetGame().GetThirdPersonCamera()
-                    .SetRotateY(CameraControlOverlayGO.this.GetGame().GetThirdPersonCamera().GetRotateY() - 10);
+            CameraControlOverlayGO.this.GetGame().getThirdPersonCamera()
+                    .SetRotateY(CameraControlOverlayGO.this.GetGame().getThirdPersonCamera().GetRotateY() - 10);
         }
     }
     
@@ -195,8 +195,8 @@ public class CameraControlOverlayGO extends GameObject {
         public void handle(final MouseEvent mouseEvent) {
             
             // TODO Smooth out rotation
-            CameraControlOverlayGO.this.GetGame().GetThirdPersonCamera()
-                    .SetRotateY(CameraControlOverlayGO.this.GetGame().GetThirdPersonCamera().GetRotateY() + 10);
+            CameraControlOverlayGO.this.GetGame().getThirdPersonCamera()
+                    .SetRotateY(CameraControlOverlayGO.this.GetGame().getThirdPersonCamera().GetRotateY() + 10);
         }
         
     }
@@ -213,8 +213,8 @@ public class CameraControlOverlayGO extends GameObject {
         public void handle(final MouseEvent mouseEvent) {
             
             // TODO: Smooth out rotation
-            CameraControlOverlayGO.this.GetGame().GetThirdPersonCamera()
-                    .SetRotateX(CameraControlOverlayGO.this.GetGame().GetThirdPersonCamera().GetRotateX() + 10);
+            CameraControlOverlayGO.this.GetGame().getThirdPersonCamera()
+                    .SetRotateX(CameraControlOverlayGO.this.GetGame().getThirdPersonCamera().GetRotateX() + 10);
         }
         
     }
@@ -232,8 +232,8 @@ public class CameraControlOverlayGO extends GameObject {
             
             // TODO: Set location to center
             // TODO: Set zoom
-            CameraControlOverlayGO.this.GetGame().GetThirdPersonCamera().SetRotateY(0);
-            CameraControlOverlayGO.this.GetGame().GetThirdPersonCamera().SetRotateX(0);
+            CameraControlOverlayGO.this.GetGame().getThirdPersonCamera().SetRotateY(0);
+            CameraControlOverlayGO.this.GetGame().getThirdPersonCamera().SetRotateX(0);
             
         }
         
@@ -252,8 +252,8 @@ public class CameraControlOverlayGO extends GameObject {
             
             // TODO: Set location to center
             // TODO: Set zoom
-            CameraControlOverlayGO.this.GetGame().GetThirdPersonCamera().SetRotateY(0);
-            CameraControlOverlayGO.this.GetGame().GetThirdPersonCamera().SetRotateX(45);
+            CameraControlOverlayGO.this.GetGame().getThirdPersonCamera().SetRotateY(0);
+            CameraControlOverlayGO.this.GetGame().getThirdPersonCamera().SetRotateX(45);
         }
     }
     
@@ -271,8 +271,8 @@ public class CameraControlOverlayGO extends GameObject {
             
             // TODO: Set location to center
             // TODO: Set zoom
-            CameraControlOverlayGO.this.GetGame().GetThirdPersonCamera().SetRotateY(0);
-            CameraControlOverlayGO.this.GetGame().GetThirdPersonCamera().SetRotateX(90);
+            CameraControlOverlayGO.this.GetGame().getThirdPersonCamera().SetRotateY(0);
+            CameraControlOverlayGO.this.GetGame().getThirdPersonCamera().SetRotateX(90);
         }
         
     }
