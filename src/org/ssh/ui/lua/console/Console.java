@@ -4,12 +4,12 @@ import static javafx.scene.input.KeyCode.DOWN;
 import static javafx.scene.input.KeyCode.UP;
 
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.script.ScriptEngine;
@@ -145,6 +145,11 @@ public class Console extends UIComponent {
                         .create());
     }
     
+    
+    /** ************************ */
+    /*   AUTOCOMPLETE FUNCTIONS  */
+    /** ************************ */
+    
     /**
      * Autocompletes the given command and returns the part that's missing
      *
@@ -154,22 +159,18 @@ public class Console extends UIComponent {
      */
     private String autocomplete(final String command) {
         // Split whatever was before it
-        final String[] split = command.split("\\(|\\)|(\\r?\\n)|\\s+");
-        
-        // If it's a function, the split has to be at least a size of 2
-        if (split.length == 0) 
-            return null;
+        final String[] separator = command.split("\\(|\\)|(\\r?\\n)|\\s+");
         
         // Split the last record in split.
-        final String[] splitObjectsAndFunctions = split[split.length - 1].split(":");
+        final String[] splitObjectsAndFunctions = separator[separator.length - 1].split(":");
         if (splitObjectsAndFunctions.length == 1) {
             // Autocomplete Class
             final String object = splitObjectsAndFunctions[0];
-            for (final Object o : this.functionClasses) {
-                final String simpleName = this.getSimpleName(o);
-                if (simpleName.startsWith(object) && !simpleName.equals(object))
-                    return simpleName.substring(object.length());
-            }
+            // Map the available classes into Strings
+            List<String> options = functionClasses.stream().map(clazz -> getSimpleName(clazz))
+                    .collect(Collectors.toList());
+            // Use those for autocompletion
+            return autocompleteBasedOnList(options, object);
         }
         else {
             // Autocomplete Function
@@ -178,24 +179,29 @@ public class Console extends UIComponent {
             final String prefix = splitObjectsAndFunctions[splitObjectsAndFunctions.length - 1];
             
             // Turn into stream
-            final Method method = this.functionClasses.stream()
+            final Object clazz = this.functionClasses.stream()
                     // Retrieve the Class this function belongs to
-                    .filter(o -> this.getSimpleName(o).equals(object)).map(o -> this.getClass(o).getDeclaredMethods())
-                    // Turn Method[] into multiple streams
-                    .map(me -> Arrays.stream(me)
-                            // Collect into a list of List<List<String>>
-                            .collect(Collectors.toList()))
-                    // Turn these lists into one stream
-                    .flatMap(l -> l.stream())
-                    // Return the function that starts with the prefix
-                    .filter(m -> m.getName().startsWith(prefix) && !m.getName().equals(prefix)).findAny().get();
-                    
-            // If we have a method
-            if (method != null)
-                // Return the part that's missing from the prefix
-                return method.getName().substring(prefix.length()) + "(" + (method.getParameterCount() == 0 ? ")" : "");
+                    .filter(o -> this.getSimpleName(o).equals(object)).findAny().get();
+            if(clazz != null){
+                return autocompleteBasedOnList(Arrays.asList(getClass(clazz).getDeclaredMethods()).stream()
+                        .map(method -> method.getName()).collect(Collectors.toList()), prefix);
+            }
         }
         return null;
+    }
+    
+    /**
+     * Autocompletes the given prefix based on a list of possible Strings (options)
+     * @param options The options the prefix can be
+     * @param prefix The prefix that needs to be completed, for example "Functions:ge" or "Func"
+     * @return The part of the prefix that's missing, for example "tFunctions()" or "tions"
+     */
+    private String autocompleteBasedOnList(List<String> options, String prefix){
+        // Turn the options into a stream
+        Optional<String> filteredString = options.stream()
+                // Find the option that starts with `prefix` and isn't equal to `prefix`
+                .filter(m -> m.startsWith(prefix) && !m.equals(prefix)).findAny();
+        return filteredString.isPresent() ? filteredString.get().substring(prefix.length()) : null;
     }
     
     /**
@@ -226,8 +232,6 @@ public class Console extends UIComponent {
             this.addCommand(command);
             // Execute the command
             this.scriptEngine.eval(command);
-            
-            // Gotta catch it while we're still in the while loop.
         }
         catch (ScriptException | LuaError exception) {
             LOG.exception(exception);
@@ -369,6 +373,7 @@ public class Console extends UIComponent {
             final int i = this.consoleArea.getLength();
             this.consoleArea.replaceText(i, i, '\n' + Console.CURSOR);
             this.currentLine = this.consoleArea.getText().length();
+            consoleArea.setCurrentLine(currentLine);
         });
     }
     
@@ -416,6 +421,7 @@ public class Console extends UIComponent {
 
             // Set the line from where we need to start reading commands.
             this.currentLine = this.consoleArea.getText().length();
+            consoleArea.setCurrentLine(currentLine);
         }
         catch (final Exception exception) {
             LOG.exception(exception);
