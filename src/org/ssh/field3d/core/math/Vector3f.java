@@ -1,21 +1,14 @@
-/**************************************************************************************************
+package org.ssh.field3d.core.math;
+
+/**
  *
  * Vector3f This class is for our 3d vectors.
- *
- **************************************************************************************************
- *
- * TODO: javadoc TODO: comment TODO: cleanup
- *
- **************************************************************************************************
+ * 
  * @see GameObject
  *      
  * @author marklef2
- * @date 15-10-2015
  */
-package org.ssh.field3d.core.math;
-
-import org.ssh.field3d.core.gameobjects.GameObject;
-
+// TODO: Replace with DenseMatrix
 public class Vector3f {
     
     public float x;
