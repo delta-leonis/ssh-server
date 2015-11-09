@@ -20,25 +20,31 @@ import javafx.scene.transform.Rotate;
  * SkyboxGO class. This class is the class used for creating a 3d skybox. It creates an enormous
  * {@link Sphere} and create a {@link PhongMaterial} from a file texture file. Face Culling is
  * disabled so the texture is rendered on the inside to.
- * 
- * @see GameObject
- *      
+ *
  * @author marklef2
  *         
+ * @see GameObject
  */
 public class SkyboxGO extends GameObject {
     
+    /** The logger */
     private static final Logger LOG                 = Logger.getLogger("SkyboxGO");
+                                                    
+    /** The texture file for the skybox */
     private static final String SKYBOX_TEXTURE_FILE = "./assets/textures/skybox.jpg";
                                                     
+    /** The sphere size of the skybox */
+    private static final double SPHERE_SIZE         = 300000.0;
+                                                    
+    /** The model. */
     private final Sphere        model;
+                                
+    /** The skybox material. */
     private final PhongMaterial skyMaterial;
-      
-    
+                                
     /**
-     * 
-     * Constructor
-     * 
+     * Constructor.
+     *
      * @param game
      *            The {@link GameObject}'s {@link Game}.
      */
@@ -49,23 +55,24 @@ public class SkyboxGO extends GameObject {
         
         // Define file input stream as null
         FileInputStream fs = null;
-        this.model = new Sphere(300000);
+        
+        // Create new sphere
+        this.model = new Sphere(SPHERE_SIZE);
+        // Create new material
         this.skyMaterial = new PhongMaterial(Color.WHITE);
         
         // Try to load texture
         try {
             
+            // Open texture file
             fs = new FileInputStream("./assets/textures/skybox.jpg");
             
         }
         catch (final FileNotFoundException fileNotFoundException) {
             
-            // TODO: Log exception
             // Log error
             LOG.info("Could not load: " + SKYBOX_TEXTURE_FILE);
-            LOG.finer(fileNotFoundException.getStackTrace().toString());
-            
-            return;
+            LOG.exception(fileNotFoundException);
         }
         
         // Setting diffuse color map
@@ -84,15 +91,16 @@ public class SkyboxGO extends GameObject {
         try {
             
             fs.close();
-        } catch (IOException ioException) {
+        }
+        catch (IOException ioException) {
             
-            // TODO: Log exception
-            LOG.finer(ioException.getStackTrace().toString());
+            // Log error
+            LOG.exception(ioException);
         }
     }
     
     /**
-     * Initialize method. Adds models to the world.
+     * {@inheritDoc}
      */
     @Override
     public void initialize() {
@@ -102,14 +110,14 @@ public class SkyboxGO extends GameObject {
     }
     
     /**
-     * Update method.
+     * {@inheritDoc}
      */
     @Override
     public void update(final long timeDivNano) {
     }
     
     /**
-     * Destroy method. Removes model from world. 
+     * {@inheritDoc}
      */
     @Override
     public void destroy() {
@@ -122,5 +130,4 @@ public class SkyboxGO extends GameObject {
         }
     }
     
-   
 }
