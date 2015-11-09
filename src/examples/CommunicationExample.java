@@ -2,8 +2,8 @@ package examples;
 
 import java.util.logging.Level;
 
-import org.ssh.managers.Models;
-import org.ssh.managers.Services;
+import org.ssh.Models;
+import org.ssh.Services;
 import org.ssh.models.enums.SendMethod;
 import org.ssh.senders.DebugSender;
 import org.ssh.senders.UDPSender;

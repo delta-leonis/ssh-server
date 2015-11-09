@@ -22,7 +22,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 /**
  * The Class ServicesController.
  *
- * ServicesController is responsible for maintaining {@link org.ssh.managers.Services}. It holds
+ * ServicesController is responsible for maintaining {@link org.ssh.Services}. It holds
  * references to the Pipelines, Producers, Couplers, and Consumers.
  *
  * @author Rimon Oz

@@ -1,4 +1,4 @@
-package org.ssh.managers;
+package org.ssh;
 
 import java.lang.reflect.Type;
 import java.util.List;

@@ -1,6 +1,6 @@
 package org.ssh.ui.components;
 
-import org.ssh.managers.UI;
+import org.ssh.UI;
 import org.ssh.ui.UIComponent;
 import org.ssh.ui.windows.WidgetWindow;
 

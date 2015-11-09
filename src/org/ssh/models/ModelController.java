@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.ssh.managers.Models;
+import org.ssh.Models;
 import org.ssh.util.Logger;
 import org.ssh.util.Reflect;
 

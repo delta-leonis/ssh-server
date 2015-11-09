@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import org.ssh.managers.Services;
+import org.ssh.Services;
 import org.ssh.models.enums.ProducerType;
 import org.ssh.util.Logger;
 

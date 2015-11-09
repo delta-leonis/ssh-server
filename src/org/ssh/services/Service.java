@@ -2,7 +2,7 @@ package org.ssh.services;
 
 import java.lang.reflect.Type;
 
-import org.ssh.managers.Services;
+import org.ssh.Services;
 import org.ssh.util.Logger;
 
 import com.google.common.reflect.TypeToken;

@@ -6,7 +6,7 @@ import java.util.ListIterator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.ssh.managers.Services;
+import org.ssh.Services;
 import org.ssh.services.Service;
 import org.ssh.services.producers.Communicator;
 import org.ssh.util.BiMap;

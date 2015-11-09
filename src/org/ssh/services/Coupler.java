@@ -1,6 +1,6 @@
 package org.ssh.services;
 
-import org.ssh.managers.Services;
+import org.ssh.Services;
 import org.ssh.models.enums.PacketPriority;
 
 /**
