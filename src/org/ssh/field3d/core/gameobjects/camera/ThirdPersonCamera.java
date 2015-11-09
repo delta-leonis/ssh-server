@@ -91,8 +91,8 @@ public class ThirdPersonCamera extends GameObject {
         this.xForm3.getChildren().add(this.perspectiveCamera);
         
         // Setting initial rotations
-        this.xForm1.rx.setAngle(ThirdPersonCamera.INITIAL_CAMERA_ROT_X);
-        this.xForm1.ry.setAngle(ThirdPersonCamera.INITIAL_CAMERA_ROT_Y);
+        this.xForm1.rotationX.setAngle(ThirdPersonCamera.INITIAL_CAMERA_ROT_X);
+        this.xForm1.rotationY.setAngle(ThirdPersonCamera.INITIAL_CAMERA_ROT_Y);
         
         // Flip y-axis so positive y is upwards
         this.xForm3.setRotateZ(180.0);
@@ -120,21 +120,21 @@ public class ThirdPersonCamera extends GameObject {
         if (this.getGame().getMouseInputHandler().isMidButtonDown()) {
             
             // Rotate around y-axis
-            this.xForm1.ry.setAngle(this.xForm1.ry.getAngle() + (this.getGame().getMouseInputHandler().getMouseDeltaX()
+            this.xForm1.rotationY.setAngle(this.xForm1.rotationY.getAngle() + (this.getGame().getMouseInputHandler().getMouseDeltaX()
                     * ThirdPersonCamera.MOUSE_LOOK_SENSITIVITY));
             // Rotate around x-axis
-            this.xForm1.rx.setAngle(this.xForm1.rx.getAngle() + (this.getGame().getMouseInputHandler().getMouseDeltaY()
+            this.xForm1.rotationX.setAngle(this.xForm1.rotationX.getAngle() + (this.getGame().getMouseInputHandler().getMouseDeltaY()
                     * ThirdPersonCamera.MOUSE_LOOK_SENSITIVITY));
         }
         
         // Limit x-axis rotation
-        if (this.xForm1.rx.getAngle() > 90.0) {
+        if (this.xForm1.rotationX.getAngle() > 90.0) {
             
-            this.xForm1.rx.setAngle(90.0);
+            this.xForm1.rotationX.setAngle(90.0);
         }
-        else if (this.xForm1.rx.getAngle() < 0.0) {
+        else if (this.xForm1.rotationX.getAngle() < 0.0) {
             
-            this.xForm1.rx.setAngle(0.0);
+            this.xForm1.rotationX.setAngle(0.0);
         }
         
         // Calculate zoom value
@@ -169,7 +169,7 @@ public class ThirdPersonCamera extends GameObject {
                     
             // Rotate mouse translation according to camera
             Point3D mouseMovement = new Point3D(mouseXCalc, 0.0, mouseYCalc);
-            mouseMovement = this.xForm1.ry.transform(mouseMovement);
+            mouseMovement = this.xForm1.rotationY.transform(mouseMovement);
             
             // Update pivot
             this.pivot.x += mouseMovement.getX() * movementScale;
@@ -256,24 +256,24 @@ public class ThirdPersonCamera extends GameObject {
                 this.xForm2.getTranslateY(),
                 this.xForm2.getTranslateZ());
         // Rotate the translation according to the rotation of the camera
-        tmpPoint = this.xForm1.rx.transform(tmpPoint);
-        tmpPoint = this.xForm1.ry.transform(tmpPoint);
-        tmpPoint = this.xForm1.rz.transform(tmpPoint);
+        tmpPoint = this.xForm1.rotationX.transform(tmpPoint);
+        tmpPoint = this.xForm1.rotationY.transform(tmpPoint);
+        tmpPoint = this.xForm1.rotationZ.transform(tmpPoint);
         
         // Create new vector out of the rotated values
         return new Vector3f((float) tmpPoint.getX(), (float) tmpPoint.getY(), (float) tmpPoint.getZ());
     }
     
     public double getRotateX() {
-        return this.xForm1.rx.getAngle();
+        return this.xForm1.rotationX.getAngle();
     }
     
     public double getRotateY() {
-        return this.xForm1.ry.getAngle();
+        return this.xForm1.rotationY.getAngle();
     }
     
     public double getRotateZ() {
-        return this.xForm1.rz.getAngle();
+        return this.xForm1.rotationZ.getAngle();
     }
     
     public void setMaxLocX(final double locXMax) {
@@ -305,15 +305,15 @@ public class ThirdPersonCamera extends GameObject {
     }
     
     public void setRotateX(final double angleX) {
-        this.xForm1.rx.setAngle(angleX);
+        this.xForm1.rotationX.setAngle(angleX);
     }
     
     public void setRotateY(final double angleY) {
-        this.xForm1.ry.setAngle(angleY);
+        this.xForm1.rotationY.setAngle(angleY);
     }
     
     public void setRotateZ(final double angleZ) {
-        this.xForm1.rz.setAngle(angleZ);
+        this.xForm1.rotationZ.setAngle(angleZ);
     }
     
 }

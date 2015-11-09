@@ -77,8 +77,8 @@ public class ContextMenuGO extends GameObject {
         this.controlsGroup.getChildren().add(this.rectangle);
         
         // Rotate and flip (so the controls are facing the right direction)
-        this.xform3.rx.setAngle(180);
-        this.xform3.ry.setAngle(180);
+        this.xform3.rotationX.setAngle(180);
+        this.xform3.rotationY.setAngle(180);
         
         // Setting not visible
         this.contextMenuGroup.setVisible(false);

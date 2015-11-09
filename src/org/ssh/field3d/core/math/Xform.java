@@ -5,200 +5,400 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
+/**
+ * The Xform class. This class is used for the 3d rotations and translations.
+ *
+ * @author Mark Lefering
+ */
 public class Xform extends Group {
     
+    /**
+     * The Enum RotateOrder.
+     */
     public enum RotateOrder {
-        XYZ, XZY, YXZ, YZX, ZXY, ZYX
+        
+        /** The x,y,z. */
+        XYZ,
+        /** The x,z,y. */
+        XZY,
+        /** The y,x,z. */
+        YXZ,
+        /** The y,z,x. */
+        YZX,
+        /** The z,x,y. */
+        ZXY,
+        /** The z,y,x. */
+        ZYX
     }
     
-    public Translate t  = new Translate();
-    public Translate p  = new Translate();
-    public Translate ip = new Translate();
-    public Rotate    rx = new Rotate();
-                        
-    {
-        this.rx.setAxis(Rotate.X_AXIS);
-    }
-    
-    public Rotate ry = new Rotate();
-    
-    {
-        this.ry.setAxis(Rotate.Y_AXIS);
-    }
-    
-    public Rotate rz = new Rotate();
-    
-    {
-        this.rz.setAxis(Rotate.Z_AXIS);
-    }
-    
-    public Scale s = new Scale();
-    
+    /** The translation. */
+    public Translate translate    = new Translate();
+                                  
+    /** The pivot translations. */
+    public Translate pivot        = new Translate();
+                                  
+    /** The inverse pivot translation. */
+    public Translate inversePivot = new Translate();
+                                  
+    /** The rotation around the x-axis. */
+    public Rotate    rotationX    = new Rotate();
+                                  
+    /** The rotation around the y-axis. */
+    public Rotate    rotationY    = new Rotate();
+                                  
+    /** The rotation around the z-axis. */
+    public Rotate    rotationZ    = new Rotate();
+                                  
+    /** The scale. */
+    public Scale     scale        = new Scale();
+                                  
+    /**
+     * Instantiates a new Xform.
+     */
     public Xform() {
+        
+        // Initialize super class
         super();
-        this.getTransforms().addAll(this.t, this.rz, this.ry, this.rx, this.s);
+        
+        // Setting rotation axes
+        this.rotationX.setAxis(Rotate.X_AXIS);
+        this.rotationY.setAxis(Rotate.Y_AXIS);
+        this.rotationZ.setAxis(Rotate.Z_AXIS);
+        
+        // Adding transformations
+        this.getTransforms().addAll(this.translate, this.rotationZ, this.rotationY, this.rotationX, this.scale);
     }
     
+    /**
+     * Instantiates a new xform.
+     *
+     * @param rotateOrder
+     *            The rotation order.
+     */
     public Xform(final RotateOrder rotateOrder) {
+        
+        // Initialize super class
         super();
-        // choose the order of rotations based on the rotateOrder
+        
+        // Choose order of rotation
         switch (rotateOrder) {
             case XYZ:
-                this.getTransforms().addAll(this.t, this.p, this.rz, this.ry, this.rx, this.s, this.ip);
+                this.getTransforms().addAll(this.translate,
+                        this.pivot,
+                        this.rotationZ,
+                        this.rotationY,
+                        this.rotationX,
+                        this.scale,
+                        this.inversePivot);
                 break;
+                
             case XZY:
-                this.getTransforms().addAll(this.t, this.p, this.ry, this.rz, this.rx, this.s, this.ip);
+                this.getTransforms().addAll(this.translate,
+                        this.pivot,
+                        this.rotationY,
+                        this.rotationZ,
+                        this.rotationX,
+                        this.scale,
+                        this.inversePivot);
                 break;
+                
             case YXZ:
-                this.getTransforms().addAll(this.t, this.p, this.rz, this.rx, this.ry, this.s, this.ip);
+                this.getTransforms().addAll(this.translate,
+                        this.pivot,
+                        this.rotationZ,
+                        this.rotationX,
+                        this.rotationY,
+                        this.scale,
+                        this.inversePivot);
                 break;
+                
             case YZX:
-                this.getTransforms().addAll(this.t, this.p, this.rx, this.rz, this.ry, this.s, this.ip); // For
-                                                                                                         // Camera
+                this.getTransforms().addAll(this.translate,
+                        this.pivot,
+                        this.rotationX,
+                        this.rotationZ,
+                        this.rotationY,
+                        this.scale,
+                        this.inversePivot);
                 break;
+                
             case ZXY:
-                this.getTransforms().addAll(this.t, this.p, this.ry, this.rx, this.rz, this.s, this.ip);
+                this.getTransforms().addAll(this.translate,
+                        this.pivot,
+                        this.rotationY,
+                        this.rotationX,
+                        this.rotationZ,
+                        this.scale,
+                        this.inversePivot);
                 break;
             case ZYX:
-                this.getTransforms().addAll(this.t, this.p, this.rx, this.ry, this.rz, this.s, this.ip);
+                this.getTransforms().addAll(this.translate,
+                        this.pivot,
+                        this.rotationX,
+                        this.rotationY,
+                        this.rotationZ,
+                        this.scale,
+                        this.inversePivot);
                 break;
         }
     }
     
-    public void debug() {
-        System.out.println("t = (" + this.t.getX() + ", " + this.t.getY() + ", " + this.t.getZ() + ")  " + "r = ("
-                + this.rx.getAngle() + ", " + this.ry.getAngle() + ", " + this.rz.getAngle() + ")  " + "s = ("
-                + this.s.getX() + ", " + this.s.getY() + ", " + this.s.getZ() + ")  " + "p = (" + this.p.getX() + ", "
-                + this.p.getY() + ", " + this.p.getZ() + ")  " + "ip = (" + this.ip.getX() + ", " + this.ip.getY()
-                + ", " + this.ip.getZ() + ")");
-    }
-    
+    /**
+     * reset method. This method resets all the variables used by the class.
+     */
     public void reset() {
-        this.t.setX(0.0);
-        this.t.setY(0.0);
-        this.t.setZ(0.0);
-        this.rx.setAngle(0.0);
-        this.ry.setAngle(0.0);
-        this.rz.setAngle(0.0);
-        this.s.setX(1.0);
-        this.s.setY(1.0);
-        this.s.setZ(1.0);
-        this.p.setX(0.0);
-        this.p.setY(0.0);
-        this.p.setZ(0.0);
-        this.ip.setX(0.0);
-        this.ip.setY(0.0);
-        this.ip.setZ(0.0);
+        this.translate.setX(0.0);
+        this.translate.setY(0.0);
+        this.translate.setZ(0.0);
+        this.rotationX.setAngle(0.0);
+        this.rotationY.setAngle(0.0);
+        this.rotationZ.setAngle(0.0);
+        this.scale.setX(1.0);
+        this.scale.setY(1.0);
+        this.scale.setZ(1.0);
+        this.pivot.setX(0.0);
+        this.pivot.setY(0.0);
+        this.pivot.setZ(0.0);
+        this.inversePivot.setX(0.0);
+        this.inversePivot.setY(0.0);
+        this.inversePivot.setZ(0.0);
     }
     
+    /**
+     * resetTSP method. This method only resets the translations.
+     */
     public void resetTSP() {
-        this.t.setX(0.0);
-        this.t.setY(0.0);
-        this.t.setZ(0.0);
-        this.s.setX(1.0);
-        this.s.setY(1.0);
-        this.s.setZ(1.0);
-        this.p.setX(0.0);
-        this.p.setY(0.0);
-        this.p.setZ(0.0);
-        this.ip.setX(0.0);
-        this.ip.setY(0.0);
-        this.ip.setZ(0.0);
+        this.translate.setX(0.0);
+        this.translate.setY(0.0);
+        this.translate.setZ(0.0);
+        this.scale.setX(1.0);
+        this.scale.setY(1.0);
+        this.scale.setZ(1.0);
+        this.pivot.setX(0.0);
+        this.pivot.setY(0.0);
+        this.pivot.setZ(0.0);
+        this.inversePivot.setX(0.0);
+        this.inversePivot.setY(0.0);
+        this.inversePivot.setZ(0.0);
     }
     
+    /**
+     * Sets the pivot of the transformation.
+     *
+     * @param x
+     *            The x-coordinate.
+     * @param y
+     *            The y-coordinate.
+     * @param z
+     *            The z-coordinate.
+     */
     public void setPivot(final double x, final double y, final double z) {
-        this.p.setX(x);
-        this.p.setY(y);
-        this.p.setZ(z);
-        this.ip.setX(-x);
-        this.ip.setY(-y);
-        this.ip.setZ(-z);
+        
+        // Setting pivot
+        this.pivot.setX(x);
+        this.pivot.setY(y);
+        this.pivot.setZ(z);
+        // Setting inverse pivot
+        this.inversePivot.setX(-x);
+        this.inversePivot.setY(-y);
+        this.inversePivot.setZ(-z);
     }
     
+    /**
+     * Sets the rotation of the entire transformation.
+     *
+     * @param x
+     *            The angle to rotate around x-axis.
+     * @param y
+     *            The angle to rotate around y-axis.
+     * @param z
+     *            The angle to rotate around z-axis.
+     */
     public void setRotate(final double x, final double y, final double z) {
-        this.rx.setAngle(x);
-        this.ry.setAngle(y);
-        this.rz.setAngle(z);
+        
+        // Rotate around x-axis
+        this.rotationX.setAngle(x);
+        // Rotate around y-axis
+        this.rotationY.setAngle(y);
+        // Rotate around z-axis
+        this.rotationZ.setAngle(z);
     }
     
+    /**
+     * Sets the rotation angle around the x-axis.
+     *
+     * @param x
+     *            The new rotation angle around the x-axis.
+     */
     public void setRotateX(final double x) {
-        this.rx.setAngle(x);
+        
+        // Set the rotation around the x-axis
+        this.rotationX.setAngle(x);
     }
     
+    /**
+     * Sets the rotation angle around the y-axis.
+     *
+     * @param y
+     *            The new rotation angle around the y-axis.
+     */
     public void setRotateY(final double y) {
-        this.ry.setAngle(y);
+        
+        // Set the rotation around the y-axis
+        this.rotationY.setAngle(y);
     }
     
+    /**
+     * Sets the rotation angle around the z-axis.
+     *
+     * @param z
+     *            The new rotation angle around the z-axis.
+     */
     public void setRotateZ(final double z) {
-        this.rz.setAngle(z);
+        
+        // Set the rotation around the z-axis
+        this.rotationZ.setAngle(z);
     }
     
-    public void setRx(final double x) {
-        this.rx.setAngle(x);
-    }
-    
-    public void setRy(final double y) {
-        this.ry.setAngle(y);
-    }
-    
-    public void setRz(final double z) {
-        this.rz.setAngle(z);
-    }
-    
+    /**
+     * Sets the scale of the transformation.
+     *
+     * @param scaleFactor
+     *            The new scale factor.
+     */
     public void setScale(final double scaleFactor) {
-        this.s.setX(scaleFactor);
-        this.s.setY(scaleFactor);
-        this.s.setZ(scaleFactor);
+        
+        // Scale all axes
+        this.scale.setX(scaleFactor);
+        this.scale.setY(scaleFactor);
+        this.scale.setZ(scaleFactor);
     }
     
+    /**
+     * Sets the scale of the transformation.
+     *
+     * @param x
+     *            The new scale of the x-axis.
+     * @param y
+     *            The new scale of the y-axis.
+     * @param z
+     *            The new scale of the z-axis.
+     */
     public void setScale(final double x, final double y, final double z) {
-        this.s.setX(x);
-        this.s.setY(y);
-        this.s.setZ(z);
+        
+        // Set scale of the x-axis
+        this.scale.setX(x);
+        // Set scale of the y-axis
+        this.scale.setY(y);
+        //
+        this.scale.setZ(z);
     }
     
-    // Cannot override these methods as they are final:
-    // public void setScaleX(double x) { s.setX(x); }
-    // public void setScaleY(double y) { s.setY(y); }
-    // public void setScaleZ(double z) { s.setZ(z); }
-    // Use these methods instead:
+    /**
+     * Sets the scale of the x-axis.
+     *
+     * @param x
+     *            The new scale of the x-axis.
+     */
     public void setSx(final double x) {
-        this.s.setX(x);
+        
+        // Set the scale of the x-axis
+        this.scale.setX(x);
     }
     
+    /**
+     * Sets the scale of the y-axis.
+     *
+     * @param y
+     *            The new scale of the y-axis.
+     */
     public void setSy(final double y) {
-        this.s.setY(y);
+        
+        // Set the scale of the y-axis
+        this.scale.setY(y);
     }
     
+    /**
+     * Sets the scale of the z-axis.
+     *
+     * @param z
+     *            The new scale of the z-axis.
+     */
     public void setSz(final double z) {
-        this.s.setZ(z);
+        
+        // Set the scale of the z-axis
+        this.scale.setZ(z);
     }
     
+    /**
+     * Sets the translation on the x-axis & y-axis.
+     *
+     * @param x
+     *            The new translation on the x-axis.
+     * @param y
+     *            The new translation on the y-axis.
+     */
     public void setTranslate(final double x, final double y) {
-        this.t.setX(x);
-        this.t.setY(y);
+        
+        // Set the translation on the x-axis
+        this.translate.setX(x);
+        // Set the translation on the y-axis
+        this.translate.setY(y);
     }
     
+    /**
+     * Sets the translation on the x-axis, y-axis & z-axis.
+     *
+     * @param x
+     *            The new translation on the x-axis.
+     * @param y
+     *            The new translation on the y-axis.
+     * @param z
+     *            The new translation on the z-axis.
+     */
     public void setTranslate(final double x, final double y, final double z) {
-        this.t.setX(x);
-        this.t.setY(y);
-        this.t.setZ(z);
+        
+        // Set the translation on the x-axis
+        this.translate.setX(x);
+        // Set the translation on the y-axis
+        this.translate.setY(y);
+        // Set the translation on the z-axis
+        this.translate.setZ(z);
     }
     
-    // Cannot override these methods as they are final:
-    // public void setTranslateX(double x) { t.setX(x); }
-    // public void setTranslateY(double y) { t.setY(y); }
-    // public void setTranslateZ(double z) { t.setZ(z); }
-    // Use these methods instead:
+    /**
+     * Sets the new translation on the x-axis.
+     *
+     * @param x
+     *            The new translation on the x-axis.
+     */
     public void setTx(final double x) {
-        this.t.setX(x);
+        
+        // Set translation on x-axis
+        this.translate.setX(x);
     }
     
+    /**
+     * Sets the new translation on the y-axis.
+     *
+     * @param y
+     *            The new translation on the y-axis.
+     */
     public void setTy(final double y) {
-        this.t.setY(y);
+        
+        // Set translation on y-axis
+        this.translate.setY(y);
     }
     
+    /**
+     * Sets the new translation on the z-axis.
+     *
+     * @param z
+     *            The new translation on the z-axis.
+     */
     public void setTz(final double z) {
-        this.t.setZ(z);
+        
+        // Set translation on y-axis
+        this.translate.setZ(z);
     }
 }
