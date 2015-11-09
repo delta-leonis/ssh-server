@@ -137,7 +137,7 @@ public class RobotGO extends GameObject {
      * Initialize method, overridden from {@link GameObject}.
      */
     @Override
-    public void Initialize() {
+    public void initialize() {
         
         // Create a org.ssh.models group
         final Group modelGroup = new Group();
@@ -147,7 +147,7 @@ public class RobotGO extends GameObject {
         modelGroup.getChildren().add(this.selectionArcMesh);
         
         // Add model group to the world group
-        Platform.runLater(() -> this.GetGame().getWorldGroup().getChildren().addAll(modelGroup));
+        Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().addAll(modelGroup));
     }
     
     /**
@@ -157,7 +157,7 @@ public class RobotGO extends GameObject {
      *            The time difference in nanoseconds
      */
     @Override
-    public void Update(final long timeDivNano) {
+    public void update(final long timeDivNano) {
         
         // TODO: Update location according to the vision model
         
@@ -176,7 +176,7 @@ public class RobotGO extends GameObject {
      * Destroy method, overridden from {@link GameObject}.
      */
     @Override
-    public void Destroy() {
+    public void destroy() {
     }
     
     /**

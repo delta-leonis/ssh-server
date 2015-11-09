@@ -64,30 +64,30 @@ public class PenaltySpotGO extends GameObject {
      * Initialize method. Adds model to the world group.
      */
     @Override
-    public void Initialize() {
+    public void initialize() {
         
         // Add model to the world group
-        Platform.runLater(() -> this.GetGame().getWorldGroup().getChildren().add(this.model));
+        Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(this.model));
     }
     
     /**
      * Update method.
      */
     @Override
-    public void Update(final long timeDivNano) {
+    public void update(final long timeDivNano) {
     }
     
     /**
      * Destroy method. Removes model from the world
      */
     @Override
-    public void Destroy() {
+    public void destroy() {
         
         // Check if model in the world
-        if (this.GetGame().getWorldGroup().getChildren().contains(this.model)) {
+        if (this.getGame().getWorldGroup().getChildren().contains(this.model)) {
             
             // Remove org.ssh.models from world
-            this.GetGame().getWorldGroup().getChildren().remove(this.model);
+            this.getGame().getWorldGroup().getChildren().remove(this.model);
         }
     }
     

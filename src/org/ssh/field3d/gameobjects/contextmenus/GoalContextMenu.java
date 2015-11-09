@@ -39,20 +39,20 @@ public class GoalContextMenu extends ContextMenuGO {
      * Destroy method. This method class the super class's Destroy method.
      */
     @Override
-    public void Destroy() {
+    public void destroy() {
         
         // Execute super Destroy method
-        super.Destroy();
+        super.destroy();
     }
     
     /**
      * Initialize method. This method class the super class's Initialize method.
      */
     @Override
-    public void Initialize() {
+    public void initialize() {
         
         // Execute super Initialize method
-        super.Initialize();
+        super.initialize();
     }
     
     /**
@@ -62,10 +62,10 @@ public class GoalContextMenu extends ContextMenuGO {
      *            The time difference in nanoseconds.
      */
     @Override
-    public void Update(final long timeDivNano) {
+    public void update(final long timeDivNano) {
         
         // Execute super Update method
-        super.Update(timeDivNano);
+        super.update(timeDivNano);
     }
     
 }

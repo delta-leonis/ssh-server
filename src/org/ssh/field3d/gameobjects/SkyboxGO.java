@@ -95,30 +95,30 @@ public class SkyboxGO extends GameObject {
      * Initialize method. Adds models to the world.
      */
     @Override
-    public void Initialize() {
+    public void initialize() {
         
         // Add models to world group
-        Platform.runLater(() -> this.GetGame().getWorldGroup().getChildren().add(this.model));
+        Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(this.model));
     }
     
     /**
      * Update method.
      */
     @Override
-    public void Update(final long timeDivNano) {
+    public void update(final long timeDivNano) {
     }
     
     /**
      * Destroy method. Removes model from world. 
      */
     @Override
-    public void Destroy() {
+    public void destroy() {
         
         // Check if model is in the world group
-        if (this.GetGame().getWorldGroup().getChildren().contains(this.model)) {
+        if (this.getGame().getWorldGroup().getChildren().contains(this.model)) {
             
             // Remove from world
-            this.GetGame().getWorldGroup().getChildren().remove(this.model);
+            this.getGame().getWorldGroup().getChildren().remove(this.model);
         }
     }
     

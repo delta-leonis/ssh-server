@@ -45,29 +45,29 @@ public class KeyInputHandler extends GameObject {
      * Initialize method. This method hooks the OnKeyPressed & OnKeyReleased events.
      */
     @Override
-    public void Initialize() {
+    public void initialize() {
         
         // Hook keyboard events
-        this.GetGame().setOnKeyPressed(this.keyPressedHandler);
-        this.GetGame().setOnKeyReleased(this.keyReleasedHandler);
+        this.getGame().setOnKeyPressed(this.keyPressedHandler);
+        this.getGame().setOnKeyReleased(this.keyReleasedHandler);
     }
     
     /**
      * Update method.
      */
     @Override
-    public void Update(final long timeDivNano) {
+    public void update(final long timeDivNano) {
     }
     
     /**
      * Destroy method. This method unhooks the keyboard events.
      */
     @Override
-    public void Destroy() {
+    public void destroy() {
         
         // Unhook events
-        this.GetGame().setOnKeyPressed(null);
-        this.GetGame().setOnKeyReleased(null);
+        this.getGame().setOnKeyPressed(null);
+        this.getGame().setOnKeyReleased(null);
     }
     
     public boolean isKeyDown(final KeyCode keyCode) {

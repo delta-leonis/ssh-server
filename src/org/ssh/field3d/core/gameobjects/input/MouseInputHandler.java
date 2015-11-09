@@ -90,21 +90,21 @@ public class MouseInputHandler extends GameObject {
      * {@inheritDoc}
      */
     @Override
-    public void Initialize() {
+    public void initialize() {
         
         // Hook events
-        this.GetGame().setOnMouseDragged(this.onMouseDragged);
-        this.GetGame().setOnMouseMoved(this.onMouseMoved);
-        this.GetGame().setOnScroll(this.onMouseWheelChanged);
-        this.GetGame().setOnMousePressed(this.onMousePressed);
-        this.GetGame().setOnMouseReleased(this.onMouseReleased);
+        this.getGame().setOnMouseDragged(this.onMouseDragged);
+        this.getGame().setOnMouseMoved(this.onMouseMoved);
+        this.getGame().setOnScroll(this.onMouseWheelChanged);
+        this.getGame().setOnMousePressed(this.onMousePressed);
+        this.getGame().setOnMouseReleased(this.onMouseReleased);
     }
     
     /**
      * {@inheritDoc}
      */
     @Override
-    public void Update(final long timeDivNano) {
+    public void update(final long timeDivNano) {
         
         // Update previous location
         this.prevMouseX = this.curMouseX;
@@ -118,7 +118,7 @@ public class MouseInputHandler extends GameObject {
      * {@inheritDoc}
      */
     @Override
-    public void Destroy() {
+    public void destroy() {
     }
     
     /**

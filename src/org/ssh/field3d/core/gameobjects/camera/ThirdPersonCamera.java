@@ -102,28 +102,28 @@ public class ThirdPersonCamera extends GameObject {
      * Initialize method. This method adds the camera to the camera group.
      */
     @Override
-    public void Initialize() {
+    public void initialize() {
         
         // Add our camera Xform to the camera group
-        Platform.runLater(() -> this.GetGame().getCameraGroup().getChildren().add(this.xForm1));
+        Platform.runLater(() -> this.getGame().getCameraGroup().getChildren().add(this.xForm1));
     }
     
     /**
      * Update method. This method updates the camera. Movement, rotation and zoom is handled here.
      */
     @Override
-    public void Update(final long timeDivNano) {
+    public void update(final long timeDivNano) {
         
         // TODO: Remove magic numbers
         
         // Check if middle button is down
-        if (this.GetGame().getMouseInputHandler().isMidButtonDown()) {
+        if (this.getGame().getMouseInputHandler().isMidButtonDown()) {
             
             // Rotate around y-axis
-            this.xForm1.ry.setAngle(this.xForm1.ry.getAngle() + (this.GetGame().getMouseInputHandler().getMouseDeltaX()
+            this.xForm1.ry.setAngle(this.xForm1.ry.getAngle() + (this.getGame().getMouseInputHandler().getMouseDeltaX()
                     * ThirdPersonCamera.MOUSE_LOOK_SENSITIVITY));
             // Rotate around x-axis
-            this.xForm1.rx.setAngle(this.xForm1.rx.getAngle() + (this.GetGame().getMouseInputHandler().getMouseDeltaY()
+            this.xForm1.rx.setAngle(this.xForm1.rx.getAngle() + (this.getGame().getMouseInputHandler().getMouseDeltaY()
                     * ThirdPersonCamera.MOUSE_LOOK_SENSITIVITY));
         }
         
@@ -138,7 +138,7 @@ public class ThirdPersonCamera extends GameObject {
         }
         
         // Calculate zoom value
-        double zoomCalc = (this.GetGame().getMouseInputHandler().getScrollWheelYValue()
+        double zoomCalc = (this.getGame().getMouseInputHandler().getScrollWheelYValue()
                 * ThirdPersonCamera.MOUSE_ZOOM_SENSITIVITY) + ThirdPersonCamera.INITIAL_CAMERA_DISTANCE;
                 
         // Limit zoom
@@ -156,15 +156,15 @@ public class ThirdPersonCamera extends GameObject {
         this.xForm1.setTranslate(this.pivot.x, this.pivot.y, this.pivot.z);
         
         final double movementScale = 1
-                - ((this.GetGame().getMouseInputHandler().getScrollWheelYValue() + 990.0) / 2000.0);
+                - ((this.getGame().getMouseInputHandler().getScrollWheelYValue() + 990.0) / 2000.0);
                 
         // Check if left mouse button is down
-        if (this.GetGame().getMouseInputHandler().isLeftButtonDown()) {
+        if (this.getGame().getMouseInputHandler().isLeftButtonDown()) {
             
             // Calculate mouse values
-            final double mouseXCalc = this.GetGame().getMouseInputHandler().getMouseDeltaX()
+            final double mouseXCalc = this.getGame().getMouseInputHandler().getMouseDeltaX()
                     * ThirdPersonCamera.MOUSE_MOVEMENT_SENSITIVITY;
-            final double mouseYCalc = this.GetGame().getMouseInputHandler().getMouseDeltaY()
+            final double mouseYCalc = this.getGame().getMouseInputHandler().getMouseDeltaY()
                     * ThirdPersonCamera.MOUSE_MOVEMENT_SENSITIVITY;
                     
             // Rotate mouse translation according to camera
@@ -198,13 +198,13 @@ public class ThirdPersonCamera extends GameObject {
      * Destroy method. This method removes the camera from the camera group.
      */
     @Override
-    public void Destroy() {
+    public void destroy() {
         
         // Check if we need to remove the camera
-        if (this.GetGame().getCameraGroup().getChildren().contains(this.xForm1)) {
+        if (this.getGame().getCameraGroup().getChildren().contains(this.xForm1)) {
             
             // Remove our camera Xform from the camera group
-            Platform.runLater(() -> this.GetGame().getCameraGroup().getChildren().remove(this.xForm1));
+            Platform.runLater(() -> this.getGame().getCameraGroup().getChildren().remove(this.xForm1));
         }
     }
     

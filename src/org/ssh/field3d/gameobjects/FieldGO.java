@@ -97,12 +97,12 @@ public class FieldGO extends GameObject {
         this.grassMaterial = new PhongMaterial(Color.LAWNGREEN);
         
         // Creating new goal context menu
-        this.goalContextMenu = new GoalContextMenu(this.GetGame(), 1000, 500);
+        this.goalContextMenu = new GoalContextMenu(this.getGame(), 1000, 500);
         // Creating penalty spots
-        this.penaltySpotEast = new PenaltySpotGO(this.GetGame(),
+        this.penaltySpotEast = new PenaltySpotGO(this.getGame(),
                 new Vector3f((float) ((width / 2.0) - FieldGO.FIELD_PENALTY_SPOT), 20, 0),
                 FieldGO.FIELD_PENALTY_SPOT_SIZE);
-        this.penaltySpotWest = new PenaltySpotGO(this.GetGame(),
+        this.penaltySpotWest = new PenaltySpotGO(this.getGame(),
                 new Vector3f((float) (-(width / 2.0) + FieldGO.FIELD_PENALTY_SPOT), 20, 0),
                 FieldGO.FIELD_PENALTY_SPOT_SIZE);
                 
@@ -141,7 +141,7 @@ public class FieldGO extends GameObject {
      * Initialize method. Generates tiles, lines, goals and arcs.
      */
     @Override
-    public void Initialize() {
+    public void initialize() {
         
         // Generate tiles
         this.generateTiles();
@@ -156,9 +156,9 @@ public class FieldGO extends GameObject {
         this.generateArcs();
         
         // Adding game objects to the game
-        this.GetGame().addGameObject(this.goalContextMenu);
-        this.GetGame().addGameObject(this.penaltySpotEast);
-        this.GetGame().addGameObject(this.penaltySpotWest);
+        this.getGame().addGameObject(this.goalContextMenu);
+        this.getGame().addGameObject(this.penaltySpotEast);
+        this.getGame().addGameObject(this.penaltySpotWest);
     }
     
     /**
@@ -168,14 +168,14 @@ public class FieldGO extends GameObject {
      *            Time difference in nanoseconds.
      */
     @Override
-    public void Update(final long timeDivNano) {
+    public void update(final long timeDivNano) {
     }
     
     /**
      * Destroy method. Destroys tiles and lines
      */
     @Override
-    public void Destroy() {
+    public void destroy() {
         
         // Check if we need to remove field boxes
         if ((this.fieldBoxes != null) && (this.fieldBoxes.size() > 0)) {
@@ -231,7 +231,7 @@ public class FieldGO extends GameObject {
         lineMesh.setTranslateY(LINE_Y_OFFSET);
         
         // Add to world group
-        Platform.runLater(() -> this.GetGame().getWorldGroup().getChildren().add(line.GetMeshView()));
+        Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(line.GetMeshView()));
         
         // Return the line
         return line;
@@ -279,7 +279,7 @@ public class FieldGO extends GameObject {
         this.fieldBoxes.add(box);
         
         // Add box to the world group
-        Platform.runLater(() -> this.GetGame().getWorldGroup().getChildren().add(box));
+        Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(box));
     }
     
     /**
@@ -360,11 +360,11 @@ public class FieldGO extends GameObject {
         // Add arcs to the world
         Platform.runLater(() -> {
             
-            this.GetGame().getWorldGroup().getChildren().add(goalWestArcLeftMesh);
-            this.GetGame().getWorldGroup().getChildren().add(goalWestArcRightMesh);
-            this.GetGame().getWorldGroup().getChildren().add(goalEastArcLeftMesh);
-            this.GetGame().getWorldGroup().getChildren().add(goalEastArcRightMesh);
-            this.GetGame().getWorldGroup().getChildren().add(midCircleMesh);
+            this.getGame().getWorldGroup().getChildren().add(goalWestArcLeftMesh);
+            this.getGame().getWorldGroup().getChildren().add(goalWestArcRightMesh);
+            this.getGame().getWorldGroup().getChildren().add(goalEastArcLeftMesh);
+            this.getGame().getWorldGroup().getChildren().add(goalEastArcRightMesh);
+            this.getGame().getWorldGroup().getChildren().add(midCircleMesh);
         });
     }
     

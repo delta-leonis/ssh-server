@@ -88,10 +88,10 @@ public class ContextMenuGO extends GameObject {
      * Initialize method. This method adds the context menu to the world group.
      */
     @Override
-    public void Initialize() {
+    public void initialize() {
         
         // Add context menu to world
-        Platform.runLater(() -> this.GetGame().getWorldGroup().getChildren().add(this.xform));
+        Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(this.xform));
     }
     
     /**
@@ -102,16 +102,16 @@ public class ContextMenuGO extends GameObject {
      *            The time difference in nanoseconds.
      */
     @Override
-    public void Update(final long timeDivNano) {
+    public void update(final long timeDivNano) {
         
         // TODO: remove magic numbers
         // Calculate scale of the context menu
-        double scale = 1 - ((this.GetGame().getMouseInputHandler().getScrollWheelYValue() + 1000.0) / 2000.0);
+        double scale = 1 - ((this.getGame().getMouseInputHandler().getScrollWheelYValue() + 1000.0) / 2000.0);
         scale += MIN_SCALAR; // Add minimal scale
         
         // Rotate towards camera
-        this.rotate(this.GetGame().getThirdPersonCamera().getRotateX(),
-                this.GetGame().getThirdPersonCamera().getRotateY(),
+        this.rotate(this.getGame().getThirdPersonCamera().getRotateX(),
+                this.getGame().getThirdPersonCamera().getRotateY(),
                 0.0);
                 
         // Translate to location
@@ -124,13 +124,13 @@ public class ContextMenuGO extends GameObject {
      * Destroy method
      */
     @Override
-    public void Destroy() {
+    public void destroy() {
         
         // Check if we need to remove the context menu from the world group
-        if (this.GetGame().getWorldGroup().getChildren().contains(this.xform)) {
+        if (this.getGame().getWorldGroup().getChildren().contains(this.xform)) {
             
             // Remove context menu from the world group
-            Platform.runLater(() -> this.GetGame().getWorldGroup().getChildren().remove((this.xform)));
+            Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().remove((this.xform)));
         }
     }
     
