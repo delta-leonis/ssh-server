@@ -20,44 +20,71 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 
 /**
- * 
  * RobotGO This class is for robot game objects. This class loads the 3d model, textures and the
  * selection arc.
- * 
- * @see GameObject
- *      
- * @author marklef2
+ *
+ * @author Mark Lefering
  *         
+ * @see GameObject
  */
+
+// TODO: add robot id
+// TODO: add robot team
+// TODO: get robot texture from id & team
 public class RobotGO extends GameObject {
     
     // TODO: MOVE public static to config, or get from model
+    /** The Constant ROBOT_HEIGHT. */
     public static final double  ROBOT_HEIGHT                     = 200.0;
+                                                                 
+    /** The Constant ROBOT_RADIUS. */
     public static final double  ROBOT_RADIUS                     = 250.0;
-    public static final double  ROBOT_SELECTION_CIRCLE_THICKNESS = 50.0;
-    public static final float   ROBOT_STARTING_Y                 = 10.0f;
-    public static final int     ROBOT_NUM_OF_SEGMENTS            = 100;
-    public static final String  ROBOT_MODEL_FILE                 = "./assets/models/robot_model.obj";
-    public static final String  ROBOT_TEXTURE_FILE               = "./assets/textures/robotTextureTest2.png";
                                                                  
-    private static final Logger LOG                              = Logger.getLogger("RobotGameObject");
+    /** The thickness of the selection circle. */
+    private static final double ROBOT_SELECTION_CIRCLE_THICKNESS = 50.0;
                                                                  
+    /** The starting y-coordinate for the robot model */
+    private static final float  ROBOT_STARTING_Y                 = 10.0f;
+                                                                 
+    /** The number of segments in the selection circle */
+    private static final int    ROBOT_SEL_CIRCLE_NUM_OF_SEGMENTS = 100;
+                                                                 
+    /** The file for the robot model. */
+    private static final String ROBOT_MODEL_FILE                 = "./assets/models/robot_model.obj";
+                                                                 
+    /** The file for the robot texture. */
+    private static final String ROBOT_TEXTURE_FILE               = "./assets/textures/robotTextureTest2.png";
+                                                                 
+    /** The logger. */
+    private static final Logger LOG                              = Logger.getLogger();
+                                                                 
+    /** The material for the robot model. */
     private final PhongMaterial material;
+                                
+    /** The selection circle material. */
     private final PhongMaterial selectionCircleMaterial;
+                                
+    /** The selection arc. */
     private final Arc3D         selectionArc;
+                                
+    /** The selection arc mesh. */
     private final MeshView      selectionArcMesh;
                                 
+    /** The model. */
     private MeshView            model;
+                                
+    /** The location of the robot model. */
     private Vector3f            location;
                                 
+    /** The selected state */
     private boolean             isSelected;
                                 
     /**
      * 
-     * Constructor of {@link RobotGO }.
+     * Constructor of {@link RobotGO}.
      * 
      * @param game
-     *            The robot's {@link Game }.
+     *            The {@link Game} of the {@link GameObject}.
      */
     public RobotGO(final Game game) {
         
@@ -75,7 +102,7 @@ public class RobotGO extends GameObject {
                 360.0,
                 RobotGO.ROBOT_RADIUS,
                 RobotGO.ROBOT_SELECTION_CIRCLE_THICKNESS,
-                ROBOT_NUM_OF_SEGMENTS);
+                ROBOT_SEL_CIRCLE_NUM_OF_SEGMENTS);
                 
         // Creating PhongMaterials
         this.material = new PhongMaterial(Color.WHITE);
@@ -111,10 +138,9 @@ public class RobotGO extends GameObject {
             }
             catch (final FileNotFoundException fileNotFoundException) {
                 
-                // TODO: log exception
                 // Log error
-                LOG.info("Could not load " + ROBOT_TEXTURE_FILE);
-                LOG.finer(fileNotFoundException.getStackTrace().toString());
+                LOG.warning("Could not load " + ROBOT_TEXTURE_FILE);
+                LOG.exception(fileNotFoundException);
                 return;
             }
             
@@ -134,7 +160,7 @@ public class RobotGO extends GameObject {
     }
     
     /**
-     * Initialize method, overridden from {@link GameObject}.
+     * {@inheritDoc}
      */
     @Override
     public void initialize() {
@@ -151,10 +177,7 @@ public class RobotGO extends GameObject {
     }
     
     /**
-     * Update method, overridden from {@link GameObject}
-     * 
-     * @param timeDivNano
-     *            The time difference in nanoseconds
+     * {@inheritDoc}
      */
     @Override
     public void update(final long timeDivNano) {
@@ -173,7 +196,7 @@ public class RobotGO extends GameObject {
     }
     
     /**
-     * Destroy method, overridden from {@link GameObject}.
+     * {@inheritDoc}
      */
     @Override
     public void destroy() {
@@ -191,7 +214,7 @@ public class RobotGO extends GameObject {
     /**
      * Gets the selected state of the robot.
      * 
-     * @return Returns the selected state of the robot as boolean.
+     * @return True, if selected.
      */
     public boolean getSelected() {
         return this.isSelected;
