@@ -222,7 +222,7 @@ public class FieldGO extends GameObject {
             final double thickness) {
             
         final FlatLine3D line = new FlatLine3D(startX, startZ, endX, endZ, thickness);
-        final MeshView lineMesh = line.GetMeshView();
+        final MeshView lineMesh = line.getMeshView();
         
         // Add to lines
         this.fieldLines.add(line);
@@ -231,7 +231,7 @@ public class FieldGO extends GameObject {
         lineMesh.setTranslateY(LINE_Y_OFFSET);
         
         // Add to world group
-        Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(line.GetMeshView()));
+        Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(line.getMeshView()));
         
         // Return the line
         return line;

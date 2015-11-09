@@ -8,35 +8,24 @@ import javafx.scene.shape.TriangleMesh;
  *
  * This class represents a flat(2d plane) line in 3d space, it gets drawn on the x, z axis.
  *
- * @author Mark Lefering - 33043
- * @date 5-11-2015
+ * @author Mark Lefering
  */
 public class FlatLine3D {
     
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Private Statics
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    /** The constant for half of a circle. */
     private static final float HALF_CIRCLE_DEG  = 180.0f;
+                                                
+    /** The constant for the faces. */
     private static final int   FACES[]          = { 0, 0, 1, 1, 2, 2, 1, 1, 3, 3, 2, 2 };
+                                                
+    /** The constant for the texture coordinates. */
     private static final float TEXTURE_COORDS[] = { 1, 1, 1, 0, 0, 1, 0, 0 };
                                                 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Private variables
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    private final TriangleMesh _mesh;
+    /** The mesh. */
+    private final TriangleMesh mesh;
                                
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Constructors
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
     /**
-     * 
-     * Constructor
+     * Constructor.
      *
      * @param startX
      *            Start of the line, x coordinate.
@@ -56,17 +45,12 @@ public class FlatLine3D {
             final double thickness) {
             
         // Create new mesh
-        this._mesh = new TriangleMesh();
+        this.mesh = new TriangleMesh();
         
         // Build the mesh
         this.buildMesh(startX, startZ, endX, endZ, thickness);
     }
     
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Private methods
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * Build mesh method.
      * 
@@ -114,28 +98,33 @@ public class FlatLine3D {
         final float vertices[] = { x1, 0.0f, z1, x2, 0.0f, z2, x3, 0.0f, z3, x4, 0.0f, z4 };
         
         // Clear mesh
-        this._mesh.getPoints().clear();
-        this._mesh.getTexCoords().clear();
-        this._mesh.getFaces().clear();
+        this.mesh.getPoints().clear();
+        this.mesh.getTexCoords().clear();
+        this.mesh.getFaces().clear();
         
         // Add vertices
-        this._mesh.getPoints().addAll(vertices);
+        this.mesh.getPoints().addAll(vertices);
         // Add texture coords
-        this._mesh.getTexCoords().addAll(FlatLine3D.TEXTURE_COORDS);
+        this.mesh.getTexCoords().addAll(FlatLine3D.TEXTURE_COORDS);
         // Add faces
-        this._mesh.getFaces().addAll(FlatLine3D.FACES);
+        this.mesh.getFaces().addAll(FlatLine3D.FACES);
     }
     
-    public MeshView GetMeshView() {
-        return new MeshView(this._mesh);
+    /**
+     * Gets the mesh view.
+     *
+     * @return The {@link MeshView} of the {@link TriangleMesh}.
+     */
+    public MeshView getMeshView() {
+        return new MeshView(this.mesh);
     }
     
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Getters
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    public TriangleMesh GetTriangleMesh() {
-        return this._mesh;
+    /**
+     * Gets the triangle mesh.
+     *
+     * @return The {@link TriangleMesh} of the line.
+     */
+    public TriangleMesh getTriangleMesh() {
+        return this.mesh;
     }
 }
