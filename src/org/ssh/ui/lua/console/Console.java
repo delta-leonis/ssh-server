@@ -93,9 +93,14 @@ public class Console extends UIComponent {
         this.out = new ConsoleOutput(this);
         // Initialize the command history
         this.recentCommands = new ArrayList<String>();
-        
+
         // Create TextArea using the classes and functions found using reflection
         this.consoleArea = new ConsoleArea(this.getClasses(), this.getFunctions());
+        consoleArea.minHeightProperty().bind(this.heightProperty());
+        consoleArea.maxHeightProperty().bind(this.heightProperty());
+        consoleArea.minWidthProperty().bind(this.widthProperty());
+        consoleArea.maxWidthProperty().bind(this.widthProperty());
+        
         // Make the area resizable
         this.consoleArea.setWrapText(true);
         this.add(this.consoleArea);

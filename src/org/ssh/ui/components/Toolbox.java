@@ -3,6 +3,8 @@ package org.ssh.ui.components;
 import java.util.Optional;
 
 import org.ssh.ui.UIComponent;
+import org.ssh.ui.lua.console.Console;
+import org.ssh.ui.lua.editor.ScriptEditor;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,8 +27,8 @@ public class Toolbox extends UIComponent {
     private GridPane toolboxcontainer;
                      
     Pane             widgetPane   = new Pane(new Label("Widgets"));
-    Pane             consolePane  = new Pane(new Label("Console"));
-    Pane             luaPane      = new Pane(new Label("LUA"));
+    UIComponent      consolePane  = new Console("bottom-console");
+    Pane             luaPane      = new ScriptEditor();
     Pane             settingsPane = new Pane(new Label("Settings"));
                                   
     public Toolbox() {

@@ -142,10 +142,10 @@ public class ColoredCodeArea extends CodeArea {
             List<String> objectHighlights,
             List<String> functionHighlights) {
         
-        String objPattern = "|(?<OBJ>" + "\\b(" + ((objectHighlights == null || objectHighlights.isEmpty())
-                ? String.join("|", objectHighlights) : String.join("|", objectHighlights)) + ")\\b" + ")";
-        String funcPattern = "|(?<FUNC>" + "\\b(" + ((functionHighlights == null || functionHighlights.isEmpty())
-                ? String.join("|", functionHighlights) : String.join("|", functionHighlights)) + ")\\b" + ")";
+        String objPattern = "|(?<OBJ>" + "\\b(" + (objectHighlights == null
+                ? " " : String.join("|", objectHighlights)) + ")\\b" + ")";
+        String funcPattern = "|(?<FUNC>" + "\\b(" + (functionHighlights == null
+                ? " " : String.join("|", functionHighlights)) + ")\\b" + ")";
         // Creates a pattern for everything that needs to be highlighted
         pattern = Pattern.compile("(?<KEYWORD>" + ColoredCodeArea.KEYWORD_PATTERN + ")"
         // Add the Java Objects and Functions that need to be highlighted
