@@ -1,7 +1,6 @@
 package org.ssh.ui.lua.console;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -12,6 +11,7 @@ import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleSpans;
 import org.fxmisc.richtext.StyleSpansBuilder;
+import org.ssh.util.Logger;
 
 /**
  * Class used to color code the given keywords. It colors the following symbols: ( ) { } [ ] "text"
@@ -23,10 +23,15 @@ import org.fxmisc.richtext.StyleSpansBuilder;
  */
 public class ColoredCodeArea extends CodeArea {
     
+    // A logger for errorhandling
+    private static final Logger              LOG                 = Logger.getLogger();
+    
     /** Lua keyword variables */
-    private static final String[] KEYWORDS          = new String[] { "and", "break", "do", "else", "elseif", "end",
-            "false", "finally", "float", "for", "function", "if", "in", "local", "nil", "not", "or", "repeat", "return",
-            "then", "true", "until", "while" };
+    private static final String[] KEYWORDS          = new String[] { 
+            "and", "break", "do", "else", "elseif", "end",
+            "false", "finally", "float", "for", "function",
+            "if", "in", "local", "nil", "not", "or", "repeat", 
+            "return", "then", "true", "until", "while" };
             
     /** Joins all keywords together into a pattern */
     private static final String   KEYWORD_PATTERN   = "\\b(" + String.join("|", ColoredCodeArea.KEYWORDS) + ")\\b";
@@ -46,6 +51,7 @@ public class ColoredCodeArea extends CodeArea {
     /** Default pattern. Works on anything */
     private static final String   DEFAULT           = ".";
     private Pattern        pattern;
+    private String styleSheet;
                                   
     /**
      * Method used to highlight the text
@@ -58,21 +64,10 @@ public class ColoredCodeArea extends CodeArea {
         final StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
         // Look for anything that matches the pattern
         while (matcher.find()) {
-            // Switch what css block to use based on the group found by the matcher
-            final String styleClass = matcher.group("KEYWORD") != null ? "keyword"
-                    : matcher.group("OBJ") != null ? "obj"
-                    : matcher.group("FUNC") != null ? "func"
-                    : matcher.group("PAREN") != null ? "paren"
-                    : matcher.group("BRACE") != null ? "brace"
-                    : matcher.group("BRACKET") != null ? "bracket"
-                    : matcher.group("SEMICOLON") != null ? "semicolon"
-                    : matcher.group("STRING") != null ? "string"
-                    : matcher.group("COMMENT") != null ? "comment"
-                    : matcher.group("DEFAULT") != null ? "default" : null;
-                    /* never happens */ assert styleClass != null;
+            String styleClass = getCssBasedOnPattern(matcher);
             // Put the last found pattern indices in the spansBuilder
             spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
-            // Assign the appropiate style the the section highlighted in the previous line.
+            // Assign the appropriate style the the section highlighted in the previous line.
             spansBuilder.add(Collections.singleton(styleClass), matcher.end() - matcher.start());
             // Remember where we left off
             lastKwEnd = matcher.end();
@@ -82,8 +77,21 @@ public class ColoredCodeArea extends CodeArea {
         // Create the StyleSpans<Collection<String>>
         return spansBuilder.create();
     }
-
-    private String styleSheet;
+    
+    private static String getCssBasedOnPattern(Matcher matcher){
+        // Switch what css block to use based on the group found by the matcher
+        return matcher.group("KEYWORD") != null ? "keyword"
+                : matcher.group("OBJ") != null ? "obj"
+                : matcher.group("FUNC") != null ? "func"
+                : matcher.group("PAREN") != null ? "paren"
+                : matcher.group("BRACE") != null ? "brace"
+                : matcher.group("BRACKET") != null ? "bracket"
+                : matcher.group("SEMICOLON") != null ? "semicolon"
+                : matcher.group("STRING") != null ? "string"
+                : matcher.group("COMMENT") != null ? "comment"
+                : matcher.group("DEFAULT") != null ? "default" 
+                : null;
+    }
     
     /**
      * Returns the url of the given path. Also prints an error on the {@link ColoredCodeArea} if the
@@ -96,7 +104,7 @@ public class ColoredCodeArea extends CodeArea {
     public String getCssSheet(final String path) {
         final URL url = this.getClass().getResource(path);
         if (url == null) {
-            System.err.println("Resource " + path + " not found. Aborting.");
+            LOG.warning("Resource " + path + " not found. Aborting.");
         }
         return url.toExternalForm();
     }
@@ -130,22 +138,17 @@ public class ColoredCodeArea extends CodeArea {
     public void setupColoredCodeArea(final String path,
             List<String> objectHighlights,
             List<String> functionHighlights) {
-        // Make sure we don't get any errors if null is passed
-        if (objectHighlights == null) 
-            objectHighlights = new ArrayList<String>();
-        if (functionHighlights == null) 
-            functionHighlights = new ArrayList<String>();
-        // Make sure we don't get any errors if empty arraylists are passed
-        if (objectHighlights.isEmpty()) 
-            objectHighlights.add(" ");
-        if (functionHighlights.isEmpty()) 
-            functionHighlights.add(" ");
         
         // Creates a pattern for everything that needs to be highlighted
         pattern = Pattern.compile("(?<KEYWORD>" + ColoredCodeArea.KEYWORD_PATTERN + ")"
         // Add the Java Objects and Functions that need to be highlighted
-                + "|(?<OBJ>" + "\\b(" + String.join("|", objectHighlights) + ")\\b" + ")" 
-                + "|(?<FUNC>" + "\\b(" + String.join("|", functionHighlights) + ")\\b" + ")" 
+                + "|(?<OBJ>" + "\\b("
+                + ((objectHighlights == null || objectHighlights.isEmpty()) ? String.join("|", objectHighlights)
+                        : String.join("|", objectHighlights))
+                + ")\\b" + ")" + "|(?<FUNC>" + "\\b("
+                + ((functionHighlights == null || functionHighlights.isEmpty()) ? String.join("|", functionHighlights)
+                        : String.join("|", functionHighlights))
+                + ")\\b" + ")" 
                 + "|(?<PAREN>" + ColoredCodeArea.PAREN_PATTERN + ")" 
                 + "|(?<BRACE>" + ColoredCodeArea.BRACE_PATTERN + ")" 
                 + "|(?<BRACKET>" + ColoredCodeArea.BRACKET_PATTERN + ")" 
