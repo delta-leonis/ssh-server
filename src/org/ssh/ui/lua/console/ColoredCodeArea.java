@@ -50,6 +50,11 @@ public class ColoredCodeArea extends CodeArea {
     private static final String   COMMENT_PATTERN   = "--\\[\\[" + "(.|\\R)*?" + "\\]\\]--" + "|" + "--[^\n]*";
     /** Default pattern. Works on anything */
     private static final String   DEFAULT           = ".";
+
+    /** Names for the patterns */
+    private static final String[] PATTERNS = new String[]{
+            "KEYWORD", "OBJ", "FUNC", "PAREN", "BRACE",
+            "BRACKET", "SEMICOLON", "STRING", "COMMENT", "DEFAULT"};
     private Pattern        pattern;
     private String styleSheet;
                                   
@@ -78,19 +83,17 @@ public class ColoredCodeArea extends CodeArea {
         return spansBuilder.create();
     }
     
+    /**
+     * Returns the proper css based on what the matcher finds
+     * @param matcher The matcher used on the textarea
+     * @return the css belonging to the right group. Null if nothing found (Should never happen)
+     */
     private static String getCssBasedOnPattern(Matcher matcher){
         // Switch what css block to use based on the group found by the matcher
-        return matcher.group("KEYWORD") != null ? "keyword"
-                : matcher.group("OBJ") != null ? "obj"
-                : matcher.group("FUNC") != null ? "func"
-                : matcher.group("PAREN") != null ? "paren"
-                : matcher.group("BRACE") != null ? "brace"
-                : matcher.group("BRACKET") != null ? "bracket"
-                : matcher.group("SEMICOLON") != null ? "semicolon"
-                : matcher.group("STRING") != null ? "string"
-                : matcher.group("COMMENT") != null ? "comment"
-                : matcher.group("DEFAULT") != null ? "default" 
-                : null;
+        for(String keyword : PATTERNS)
+            if(matcher.group(keyword) != null)
+                return keyword.toLowerCase();
+        return null;
     }
     
     /**
@@ -139,16 +142,15 @@ public class ColoredCodeArea extends CodeArea {
             List<String> objectHighlights,
             List<String> functionHighlights) {
         
+        String objPattern = "|(?<OBJ>" + "\\b(" + ((objectHighlights == null || objectHighlights.isEmpty())
+                ? String.join("|", objectHighlights) : String.join("|", objectHighlights)) + ")\\b" + ")";
+        String funcPattern = "|(?<FUNC>" + "\\b(" + ((functionHighlights == null || functionHighlights.isEmpty())
+                ? String.join("|", functionHighlights) : String.join("|", functionHighlights)) + ")\\b" + ")";
         // Creates a pattern for everything that needs to be highlighted
         pattern = Pattern.compile("(?<KEYWORD>" + ColoredCodeArea.KEYWORD_PATTERN + ")"
         // Add the Java Objects and Functions that need to be highlighted
-                + "|(?<OBJ>" + "\\b("
-                + ((objectHighlights == null || objectHighlights.isEmpty()) ? String.join("|", objectHighlights)
-                        : String.join("|", objectHighlights))
-                + ")\\b" + ")" + "|(?<FUNC>" + "\\b("
-                + ((functionHighlights == null || functionHighlights.isEmpty()) ? String.join("|", functionHighlights)
-                        : String.join("|", functionHighlights))
-                + ")\\b" + ")" 
+                + objPattern
+                + funcPattern
                 + "|(?<PAREN>" + ColoredCodeArea.PAREN_PATTERN + ")" 
                 + "|(?<BRACE>" + ColoredCodeArea.BRACE_PATTERN + ")" 
                 + "|(?<BRACKET>" + ColoredCodeArea.BRACKET_PATTERN + ")" 
