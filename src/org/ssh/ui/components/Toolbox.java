@@ -28,7 +28,7 @@ public class Toolbox extends UIComponent {
                      
     Pane             widgetPane   = new Pane(new Label("Widgets"));
     UIComponent      consolePane  = new Console("bottom-console");
-    Pane             luaPane      = new ScriptEditor();
+    UIComponent      luaPane      = new ScriptEditor("bottom-editor");
     Pane             settingsPane = new Pane(new Label("Settings"));
                                   
     public Toolbox() {
