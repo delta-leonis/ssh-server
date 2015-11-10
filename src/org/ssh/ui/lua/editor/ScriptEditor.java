@@ -10,6 +10,7 @@ import javax.swing.JTextArea;
 import org.ssh.ui.UIComponent;
 import org.ssh.ui.lua.console.ColoredCodeArea;
 import org.ssh.util.Logger;
+import org.ssh.util.LuaUtils;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -43,6 +44,10 @@ public class ScriptEditor extends UIComponent {
     public ScriptEditor(final String name){
         super(name, "scripteditor.fxml");
         this.root = new VBox();
+        root.minHeightProperty().bind(this.heightProperty());
+        root.maxHeightProperty().bind(this.heightProperty());
+        root.minWidthProperty().bind(this.widthProperty());
+        root.maxWidthProperty().bind(this.widthProperty());
 
         this.initializeMenu();
         this.initializeTextArea();
@@ -61,6 +66,9 @@ public class ScriptEditor extends UIComponent {
         return this.path;
     }
     
+    /**
+     * Initializes the {@link MenuBar} of the {@link ScriptEditor}, adding the right buttons
+     */
     private void initializeMenu() {
         final MenuBar menubar = new MenuBar();
 
@@ -86,11 +94,11 @@ public class ScriptEditor extends UIComponent {
      * Initializes the {@link ColoredCodeArea}
      */
     private void initializeTextArea() {
+        // Set up colored code area
         this.codeArea = new ColoredCodeArea();
-        // TODO: Add color coding
-        this.codeArea.setupColoredCodeArea(ScriptEditor.STYLESHEET, null, null);
-        this.codeArea.prefWidthProperty().bind(this.widthProperty());
-        this.codeArea.prefHeightProperty().bind(this.heightProperty());
+        this.codeArea.setupColoredCodeArea(ScriptEditor.STYLESHEET, LuaUtils.getLuaClasses(), LuaUtils.getLuaFunctions());
+        this.codeArea.prefWidthProperty().bind(root.widthProperty());
+        this.codeArea.prefHeightProperty().bind(root.heightProperty());
         this.root.getChildren().add(this.codeArea);
     }
 
