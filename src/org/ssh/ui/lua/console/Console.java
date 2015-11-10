@@ -95,7 +95,7 @@ public class Console extends UIComponent {
         this.recentCommands = new ArrayList<String>();
 
         // Create TextArea using the classes and functions found using reflection
-        this.consoleArea = new ConsoleArea(this.getClasses(), this.getFunctions());
+        this.consoleArea = new ConsoleArea(LuaUtils.getLuaClasses(), LuaUtils.getLuaFunctions());
         consoleArea.minHeightProperty().bind(this.heightProperty());
         consoleArea.maxHeightProperty().bind(this.heightProperty());
         consoleArea.minWidthProperty().bind(this.widthProperty());
@@ -172,7 +172,7 @@ public class Console extends UIComponent {
             // Autocomplete Class
             final String object = splitObjectsAndFunctions[0];
             // Map the available classes into Strings
-            List<String> options = functionClasses.stream().map(clazz -> getSimpleName(clazz))
+            List<String> options = functionClasses.stream().map(clazz -> LuaUtils.getSimpleName(clazz))
                     .collect(Collectors.toList());
             // Use those for autocompletion
             return autocompleteBasedOnList(options, object);
@@ -186,9 +186,9 @@ public class Console extends UIComponent {
             // Turn into stream
             final Object clazz = this.functionClasses.stream()
                     // Retrieve the Class this function belongs to
-                    .filter(o -> this.getSimpleName(o).equals(object)).findAny().get();
+                    .filter(o -> LuaUtils.getSimpleName(o).equals(object)).findAny().get();
             if(clazz != null){
-                return autocompleteBasedOnList(Arrays.asList(getClass(clazz).getDeclaredMethods()).stream()
+                return autocompleteBasedOnList(Arrays.asList(LuaUtils.getClass(clazz).getDeclaredMethods()).stream()
                         .map(method -> method.getName()).collect(Collectors.toList()), prefix);
             }
         }
@@ -248,70 +248,10 @@ public class Console extends UIComponent {
         this.currentLine = this.consoleArea.getText().length();
         this.consoleArea.setCurrentLine(this.currentLine);
     }
+
+
     
-    /**
-     * Function used to get the {@link Class} of a certain object properly. Motivation: The classes
-     * retrieved by LuaUtils are a mix of Class instances and normal instances. When you call
-     * getClass() on each of these objects, you won't get what you want when when it's called on
-     * something that's a Class already. For example: You'd get Chicken.getClass().getClass() which
-     * would return `Class` rather than `Chicken`.
-     *
-     * @param o
-     *            The object to (maybe) call `getClass()` on
-     * @return The valid {@link Class} of o.
-     */
-    @SuppressWarnings ("rawtypes")
-    private Class getClass(final Object o) {
-        return o instanceof Class ? (Class) o : o.getClass();
-    }
-    
-    /**
-     * Collects all Class names and puts them in an ArrayList<String>
-     *
-     * @return an ArrayList<String> containing every class in the functionClasses variable
-     */
-    private List<String> getClasses() {
-        if (this.functionClasses == null) 
-            return new ArrayList<String>();
-        // Turn everything into a stream
-        return this.functionClasses.stream().map(o ->
-            // and get the simple name of each class
-            this.getSimpleName(o)).collect(Collectors.toList());
-    }
-    
-    /**
-     * Collects all Function names and puts them in an ArrayList<String>
-     *
-     * @return an ArrayList<String> containing every Function in the functionClasses variable
-     */
-    private List<String> getFunctions() {
-        if (this.functionClasses == null) 
-            return new ArrayList<String>();
-        // Turn into stream
-        return this.functionClasses.stream()
-                // Get all declared methods as Method[]
-                .map(o -> this.getClass(o).getDeclaredMethods())
-                // Turn Method[] into multiple streams
-                .map(me -> Arrays.stream(me)
-                        // Retrieve names from methods
-                        .map(m -> m.getName())
-                        // Collect into a list of List<List<String>>
-                        .collect(Collectors.toList()))
-                // Turn List<List<String>> into a stream
-                .flatMap(l -> l.stream())
-                // Collect everything back into a List<String>
-                .collect(Collectors.toList());
-    }
-    
-    /**
-     * @param o
-     *            The object we need the simple name of
-     * @return The simple name of the object. If an object has been turned into a {@link Class}, it
-     *         won't return Class as simpleName
-     */
-    private String getSimpleName(final Object o) {
-        return o instanceof Class ? ((Class<?>) o).getSimpleName() : o.getClass().getSimpleName();
-    }
+
     
     /**
      * Eventhandler when enter is pressed Either executes the current command, or creates a new line
@@ -410,7 +350,7 @@ public class Console extends UIComponent {
             // Add every @AvailableInLua class to the luaj
             if (this.functionClasses != null)
                 for (final Object o : this.functionClasses)
-                    this.scriptEngine.put(this.getSimpleName(o), o);
+                    this.scriptEngine.put(LuaUtils.getSimpleName(o), o);
                 
             // Add a useful sleep script
             this.scriptEngine.eval(

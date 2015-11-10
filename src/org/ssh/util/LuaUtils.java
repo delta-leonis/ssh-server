@@ -2,8 +2,10 @@ package org.ssh.util;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaValue;
@@ -20,9 +22,12 @@ import org.ssh.ui.lua.console.AvailableInLua;
  * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
  */
 public class LuaUtils {
-    
-    private static final Globals globals = JsePlatform.standardGlobals();
-    
+
+    // A logger for errorhandling
+    private static final Logger              LOG                 = Logger.getLogger();
+
+    private static final Globals GLOBALS = JsePlatform.standardGlobals();
+
     /**
      * Function that collects every class that has the {@link AvailableInLua} annotation and returns
      * it as an ArrayList<Object>
@@ -51,26 +56,92 @@ public class LuaUtils {
                 if (!singleton) objectArrayList.add(Class.forName(c.getName()));
                 
             }
-            catch (final Exception e) {
-                e.printStackTrace();
+            catch (final Exception exception) {
+                LOG.exception(exception);
             }
         });
         return objectArrayList;
     }
-    
+
+    /**
+     * Collects all Class names and puts them in an ArrayList<String>
+     *
+     * @return an ArrayList<String> containing every class in the functionClasses variable
+     */
+    public static List<String> getLuaClasses() {
+        List<Object> functionClasses = getAllAvailableInLua();
+        if (functionClasses == null) 
+            return new ArrayList<String>();
+        // Turn everything into a stream
+        return functionClasses.stream().map(o ->
+            // and get the simple name of each class
+            LuaUtils.getSimpleName(o)).collect(Collectors.toList());
+    }
+
+    /**
+     * Collects all Function names and puts them in an ArrayList<String>
+     *
+     * @return an ArrayList<String> containing every Function in the functionClasses variable
+     */
+    public static List<String> getLuaFunctions() {
+        List<Object> functionClasses = getAllAvailableInLua();
+        if (functionClasses == null) 
+            return new ArrayList<String>();
+        // Turn into stream
+        return functionClasses.stream()
+                // Get all declared methods as Method[]
+                .map(o -> LuaUtils.getClass(o).getDeclaredMethods())
+                // Turn Method[] into multiple streams
+                .map(me -> Arrays.stream(me)
+                        // Retrieve names from methods
+                        .map(m -> m.getName())
+                        // Collect into a list of List<List<String>>
+                        .collect(Collectors.toList()))
+                // Turn List<List<String>> into a stream
+                .flatMap(l -> l.stream())
+                // Collect everything back into a List<String>
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * @param o
+     *            The object we need the simple name of
+     * @return The simple name of the object. If an object has been turned into a {@link Class}, it
+     *         won't return Class as simpleName
+     */
+    public static String getSimpleName(final Object o) {
+        return o instanceof Class ? ((Class<?>) o).getSimpleName() : o.getClass().getSimpleName();
+    }
+
+    /**
+     * Function used to get the {@link Class} of a certain object properly. Motivation: The classes
+     * retrieved by LuaUtils are a mix of Class instances and normal instances. When you call
+     * getClass() on each of these objects, you won't get what you want when when it's called on
+     * something that's a Class already. For example: You'd get Chicken.getClass().getClass() which
+     * would return `Class` rather than `Chicken`.
+     *
+     * @param o
+     *            The object to (maybe) call `getClass()` on
+     * @return The valid {@link Class} of o.
+     */
+    @SuppressWarnings ("rawtypes")
+    public static Class getClass(final Object o) {
+        return o instanceof Class ? (Class) o : o.getClass();
+    }
+
     /**
      * Makes sure all classes annotated with @AvailableInLua are loaded into the global variables in
      * lua.
      */
     public static void initGlobals() {
         LuaUtils.getAllAvailableInLua()
-                .forEach(o -> LuaUtils.globals
+                .forEach(o -> LuaUtils.GLOBALS
                         .load(o.getClass().getSimpleName() + // Name of global variable
                                 " = luajava.bindClass('" + o.getClass().getName() + "')") // Class
                                                                                           // name
                         .call());
     }
-    
+
     /**
      * Run a lua function using one argument.
      *
@@ -79,10 +150,10 @@ public class LuaUtils {
      * @return A LuaValue of what is returned.
      */
     public static LuaValue runFuction(final String functionname) {
-        final LuaValue func = LuaUtils.globals.get(functionname);
+        final LuaValue func = LuaUtils.GLOBALS.get(functionname);
         return func.call();
     }
-    
+
     /**
      * Run a lua function using one argument.
      *
@@ -93,10 +164,10 @@ public class LuaUtils {
      * @return A LuaValue of what is returned.
      */
     public static LuaValue runFunction(final String functionname, final Object arg1) {
-        final LuaValue func = LuaUtils.globals.get(functionname);
+        final LuaValue func = LuaUtils.GLOBALS.get(functionname);
         return func.call(CoerceJavaToLua.coerce(arg1));
     }
-    
+
     /**
      * Run a lua function using one argument.
      *
@@ -112,10 +183,10 @@ public class LuaUtils {
      *         isInt() functions.
      */
     public static LuaValue runFunction(final String functionname, final Object arg1, final Object arg2) {
-        final LuaValue func = LuaUtils.globals.get(functionname);
+        final LuaValue func = LuaUtils.GLOBALS.get(functionname);
         return func.call(CoerceJavaToLua.coerce(arg1), CoerceJavaToLua.coerce(arg2));
     }
-    
+
     /**
      * Runs a lua script with the given path
      *
@@ -123,9 +194,9 @@ public class LuaUtils {
      *            The path that leads to the lua script.
      */
     public static void runScript(final String path) {
-        LuaUtils.globals.loadfile(path).call();
+        LuaUtils.GLOBALS.loadfile(path).call();
     }
-    
+
     /**
      * Run a function from a specific script.
      *
@@ -138,11 +209,11 @@ public class LuaUtils {
      */
     public static void runScriptFunction(final String script, final String functionname, final Object calling_obj) {
         // Load a script into globals
-        LuaUtils.globals.get("dofile").call(LuaValue.valueOf(script));
+        LuaUtils.GLOBALS.get("dofile").call(LuaValue.valueOf(script));
         // Turn Java object into LuaValue
         final LuaValue luaobj = CoerceJavaToLua.coerce(calling_obj);
         // Get functions from globals
-        final LuaValue func = LuaUtils.globals.get(functionname);
+        final LuaValue func = LuaUtils.GLOBALS.get(functionname);
         // Call the function using a LuaValue
         func.call(luaobj);
     }
