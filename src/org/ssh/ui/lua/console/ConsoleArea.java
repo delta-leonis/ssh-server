@@ -1,8 +1,6 @@
 package org.ssh.ui.lua.console;
 
 import static javafx.scene.input.KeyCode.BACK_SPACE;
-import static javafx.scene.input.KeyCode.ENTER;
-import static javafx.scene.input.KeyCode.TAB;
 import static javafx.scene.input.KeyCode.Z;
 
 import java.util.List;
@@ -36,15 +34,14 @@ public class ConsoleArea extends ColoredCodeArea {
     public ConsoleArea(final List<String> objectHighlights, final List<String> functionHighlights) {
         super.setupColoredCodeArea(ConsoleArea.STYLESHEET, objectHighlights, functionHighlights);
         // TODO: Disable drag text
-        // Custom key events
+        // On Backspace, use a custom handler
         EventHandlerHelper.install(this.onKeyPressedProperty(),
-                EventHandlerHelper.on(EventPattern.keyPressed(BACK_SPACE)).act(event -> this.backspace()).create());
+                EventHandlerHelper.on(EventPattern.keyPressed(BACK_SPACE))
+                .act(event -> this.backspace()).create());
+        // On ctrl + Z, do nothing to avoid bugs
         EventHandlerHelper.install(this.onKeyPressedProperty(),
-                EventHandlerHelper.on(EventPattern.keyPressed(Z, KeyCombination.CONTROL_DOWN)).act(event -> doNothing()).create());
-        EventHandlerHelper.install(this.onKeyPressedProperty(),
-                EventHandlerHelper.on(EventPattern.keyPressed(TAB)).act(event -> doNothing()).create());
-        EventHandlerHelper.install(this.onKeyPressedProperty(),
-                EventHandlerHelper.on(EventPattern.keyPressed(ENTER)).act(event -> doNothing()).create());
+                EventHandlerHelper.on(EventPattern.keyPressed(Z, KeyCombination.CONTROL_DOWN))
+                .act(event -> ConsoleArea.doNothing()).create());
     }
     
     /**
