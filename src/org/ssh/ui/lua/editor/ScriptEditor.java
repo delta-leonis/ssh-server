@@ -1,17 +1,23 @@
 package org.ssh.ui.lua.editor;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.swing.JTextArea;
 
+import org.ssh.ui.UIComponent;
 import org.ssh.ui.lua.console.ColoredCodeArea;
+import org.ssh.util.Logger;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 
 /**
  * Test Module for loading and editing scripts into a {@link ColoredCodeArea} The file gets saved
@@ -20,25 +26,32 @@ import javafx.scene.layout.VBox;
  * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
  *         
  */
-public class ScriptEditor extends VBox {
+public class ScriptEditor extends UIComponent {
+
+    // A logger for errorhandling
+    private static final Logger              LOG                 = Logger.getLogger();
     
     private ColoredCodeArea   codeArea;
-    private final IReloadable reloadable;
     private String            path;
-    private final String      styleSheet = "/css/java-keywords.css";
-                                         
+    private static final String      STYLESHEET = "/css/java-keywords.css";
+    private FileChooser fileChooser;
+    private VBox root;
+
     /**
-     * Creates a {@link ScriptEditor} and fills the codeArea with the code the {@link IReloadable}
-     * is pointing to.
-     * 
-     * @param reloadable
-     *            The {@link IReloadable} the editor needs to present.
+     * Empty constructor for the {@link ScriptEditor}
      */
-    public ScriptEditor(final IReloadable reloadable) {
-        this.reloadable = reloadable;
+    public ScriptEditor(final String name){
+        super(name, "scripteditor.fxml");
+        this.root = new VBox();
+
         this.initializeMenu();
         this.initializeTextArea();
-        this.setTextFromFile(reloadable.getPath());
+
+        this.getChildren().add(root);
+        // Create a FileChooser for future use
+        this.fileChooser = new FileChooser();
+        this.fileChooser.setTitle("File Chooser");
+        this.fileChooser.getExtensionFilters().add(new ExtensionFilter("All Files", "*.*"));
     }
     
     /**
@@ -50,14 +63,23 @@ public class ScriptEditor extends VBox {
     
     private void initializeMenu() {
         final MenuBar menubar = new MenuBar();
-        
+
         final Menu fileMenu = new Menu("File");
+
         final MenuItem saveItem = new MenuItem("Save\t\t\t");
         fileMenu.getItems().add(saveItem);
-        saveItem.setOnAction(e -> this.saveFile(this.path));
-        
+        saveItem.setOnAction(actionEvent -> this.saveFile());
+
+        final MenuItem saveAsItem = new MenuItem("Save as...\t\t\t");
+        fileMenu.getItems().add(saveAsItem);
+        saveAsItem.setOnAction(actionEvent -> this.saveAsFile());
+
+        final MenuItem openItem = new MenuItem("Open\t\t\t");
+        fileMenu.getItems().add(openItem);
+        openItem.setOnAction(actionEvent -> this.openFile());
+
         menubar.getMenus().addAll(fileMenu);
-        this.getChildren().add(menubar);
+        this.root.getChildren().add(menubar);
     }
     
     /**
@@ -65,32 +87,64 @@ public class ScriptEditor extends VBox {
      */
     private void initializeTextArea() {
         this.codeArea = new ColoredCodeArea();
-        this.codeArea.setupColoredCodeArea(this.styleSheet, null, null);
+        // TODO: Add color coding
+        this.codeArea.setupColoredCodeArea(ScriptEditor.STYLESHEET, null, null);
         this.codeArea.prefWidthProperty().bind(this.widthProperty());
         this.codeArea.prefHeightProperty().bind(this.heightProperty());
-        this.getChildren().add(this.codeArea);
+        this.root.getChildren().add(this.codeArea);
     }
-    
+
     /**
      * Saves the file, and then reloads the given object.
      * 
      * @param path
      *            Path to the file to be displayed and edited by the {@link JTextArea} (Relative and
      *            absolute both work)
+     * @see {@link #saveAsFile()}
      */
-    public void saveFile(final String path) {
+    public void saveFile() {
         try {
-            final FileWriter writer = new FileWriter(path);
-            writer.write(this.codeArea.getText());
-            writer.close();
-            if (this.reloadable != null) this.reloadable.reload();
+            // Automatically saveAs if the path was null
+            if(this.path == null){
+                saveAsFile();
+            }
+            // If the path wasn't null, save the file
+            else{
+                final FileWriter writer = new FileWriter(this.path);
+                writer.write(this.codeArea.getText());
+                writer.close();
+            }
         }
-        catch (final IOException e) {
-            // TODO Logger
-            e.printStackTrace();
+        catch (final IOException exception) {
+            LOG.exception(exception);
         }
     }
-    
+
+    /**
+     * Save the {@link File} at the location that can be chosen from the {@link DirectoryChooser}
+     * @see {@link #saveAsFile()}
+     */
+    private void saveAsFile(){
+        // Select path
+        File file = fileChooser.showSaveDialog(this.getScene().getWindow());
+        // Only save file if path != null to avoid recursion
+        if(file != null){
+            this.path = file.getAbsolutePath();
+            saveFile();
+        }
+    }
+
+    /**
+     * Opens the {@link File} found using the {@link FileChooser}
+     */
+    public void openFile(){
+        // Select path
+        File file = fileChooser.showOpenDialog(this.getScene().getWindow());
+        // Set the text of the textarea if a file has been found.
+        if(file != null)
+            setTextFromFile(file.getAbsolutePath());
+    }
+
     /**
      * Prerequisites: {@link #initializeTextArea(String)} has to be called at least once before this
      * function is called.
@@ -105,13 +159,12 @@ public class ScriptEditor extends VBox {
             in = new FileInputStream(path);
             int c;
             while ((c = in.read()) != -1) {
-                this.codeArea.insertText(this.codeArea.getLength(), "" + ((char) c));
+                this.codeArea.insertText(this.codeArea.getLength(), "" + Character.toString((char)c));
             }
             in.close();
         }
-        catch (final IOException e) {
-            // TODO: logger
-            e.printStackTrace();
+        catch (final IOException exception) {
+            LOG.exception(exception);
         }
     }
 }
