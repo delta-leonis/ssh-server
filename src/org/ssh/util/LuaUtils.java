@@ -151,6 +151,42 @@ public class LuaUtils {
     }
 
     /**
+     * Function that returns all functions in the given object.
+     */
+    public static final List<String> getFunctions(final Object object) {
+        // Turn into stream
+        return Arrays.asList(object.getClass().getDeclaredMethods()).stream()
+                // Turn into pretty functions
+                .map(method -> getFunctionDescription(method))
+                // Collect into list and return it
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Generates a function description for the given Method.
+     * Example: If the method getFunctionDescription we're used, it would return getFunctionDescription(Method)
+     * @param method The method we want a description of
+     * @return A pretty representation of the function
+     * @see {@link Console}
+     */
+    @SuppressWarnings ("rawtypes")
+    private static final String getFunctionDescription(Method method){
+        // Method + (   = foo(
+        String currentString = method.getName() + "(";
+        final Class[] parameters = method.getParameterTypes();
+        for (int i = 0; i < parameters.length; ++i) {
+            // Add parameters
+            currentString += parameters[i].getSimpleName();
+            if ((parameters.length > 1) && (i < (parameters.length - 1)))
+                // Add commas to separate parameters
+                currentString += ",";
+        }
+        // Close function
+        currentString += ")";
+        return currentString;
+    }
+
+    /**
      * Makes sure all classes annotated with @AvailableInLua are loaded into the global variables in
      * lua.
      */
