@@ -29,6 +29,8 @@ public class LuaUtils {
 
     private static final Globals GLOBALS = JsePlatform.standardGlobals();
 
+    private static final List<Object> AVAILABLE_IN_LUA = LuaUtils.getAllAvailableInLua();
+
     /**
      * Private constructor
      */
@@ -40,7 +42,7 @@ public class LuaUtils {
      * it as an ArrayList<Object>
      */
     public static List<Object> getAllAvailableInLua() {
-        // Create {@link Reflections} object based on our classpath
+        // Create Reflections object based on our classpath
         final Reflections reflections = new Reflections(
                 new ConfigurationBuilder().setUrls(ClasspathHelper.forJavaClassPath()));
         // Find every class annotated with AvailableInLua
@@ -90,11 +92,8 @@ public class LuaUtils {
      * @return an ArrayList<String> containing every class in the functionClasses variable
      */
     public static List<String> getLuaClasses() {
-        List<Object> functionClasses = getAllAvailableInLua();
-        if (functionClasses == null) 
-            return new ArrayList<String>();
         // Turn everything into a stream
-        return functionClasses.stream().map(o ->
+        return LuaUtils.AVAILABLE_IN_LUA.stream().map(o ->
             // and get the simple name of each class
             LuaUtils.getSimpleName(o)).collect(Collectors.toList());
     }
@@ -105,11 +104,8 @@ public class LuaUtils {
      * @return an ArrayList<String> containing every Function in the functionClasses variable
      */
     public static List<String> getLuaFunctions() {
-        List<Object> functionClasses = getAllAvailableInLua();
-        if (functionClasses == null) 
-            return new ArrayList<String>();
         // Turn into stream
-        return functionClasses.stream()
+        return LuaUtils.AVAILABLE_IN_LUA.stream()
                 // Get all declared methods as Method[]
                 .map(o -> LuaUtils.getClass(o).getDeclaredMethods())
                 // Turn Method[] into multiple streams
@@ -151,11 +147,26 @@ public class LuaUtils {
     }
 
     /**
+     * Finds out whether the given string is an object found in lua globals and returns the object
+     * @param string The name of the object
+     * @return The {@link Object} this string belongs to
+     */
+    public static final Object getObjectBasedOnString(String string){
+        Optional<Object> optionalObject = LuaUtils.AVAILABLE_IN_LUA.stream()
+                // Find the object in the objects available in lua
+                .filter(object -> getSimpleName(object).equals(string)).findFirst();
+        // Return it if it exists
+        if(optionalObject.isPresent())
+            return optionalObject.get();
+        return null;
+    }
+
+    /**
      * Function that returns all functions in the given object.
      */
-    public static final List<String> getFunctions(final Object object) {
+    public static final List<String> getPrettyFunctions(final Object object) {
         // Turn into stream
-        return Arrays.asList(object.getClass().getDeclaredMethods()).stream()
+        return Arrays.asList(getClass(object).getDeclaredMethods()).stream()
                 // Turn into pretty functions
                 .map(method -> getFunctionDescription(method))
                 // Collect into list and return it
@@ -191,7 +202,7 @@ public class LuaUtils {
      * lua.
      */
     public static void initGlobals() {
-        LuaUtils.getAllAvailableInLua()
+        LuaUtils.AVAILABLE_IN_LUA
                 .forEach(o -> LuaUtils.GLOBALS
                         .load(o.getClass().getSimpleName() + // Name of global variable
                                 " = luajava.bindClass('" + o.getClass().getName() + "')") // Class
