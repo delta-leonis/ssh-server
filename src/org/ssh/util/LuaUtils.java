@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,6 +30,12 @@ public class LuaUtils {
     private static final Globals GLOBALS = JsePlatform.standardGlobals();
 
     /**
+     * Private constructor
+     */
+    private LuaUtils(){
+    }
+
+    /**
      * Function that collects every class that has the {@link AvailableInLua} annotation and returns
      * it as an ArrayList<Object>
      */
@@ -36,31 +43,45 @@ public class LuaUtils {
         // Create {@link Reflections} object based on our classpath
         final Reflections reflections = new Reflections(
                 new ConfigurationBuilder().setUrls(ClasspathHelper.forJavaClassPath()));
-        // Find every class annotated with {@link AvailableInLua}
+        // Find every class annotated with AvailableInLua
         final Set<Class<?>> types = reflections.getTypesAnnotatedWith(AvailableInLua.class);
         final ArrayList<Object> objectArrayList = new ArrayList<Object>();
         
-        // TODO: Turn into stream
         types.forEach(c -> {
-            try {
-                boolean singleton = false;
-                for (final Method m : c.getDeclaredMethods()) {
-                    // Check whether the class is a singleton
-                    if (m.getName().equals("getInstance") && m.getReturnType().getSimpleName().equals(c.getSimpleName())
-                            && (m.getParameterCount() == 0)) {
-                        singleton = true;
-                        objectArrayList.add(m.invoke(c));
-                    }
-                }
-                // If it's not a singleton, just return the Class
-                if (!singleton) objectArrayList.add(Class.forName(c.getName()));
-                
-            }
-            catch (final Exception exception) {
-                LOG.exception(exception);
-            }
+            Object object = getSingleton(c);
+            if(object != null)
+                objectArrayList.add(object);
         });
         return objectArrayList;
+    }
+
+    /**
+     * Look for a singleton in the given class
+     * @param clazz The potential singleton class
+     * @return A singleton of the object if it has one, else it just returns the Class.
+     */
+    @SuppressWarnings("rawtypes")
+    private static final Object getSingleton(final Class clazz){
+        try {
+            // Find any singletons
+            Optional<Method> method = Arrays.asList(clazz.getDeclaredMethods()).stream()
+                    .filter(singleton -> "getInstance".equals(singleton.getName())
+                        && singleton.getReturnType().getSimpleName().equals(clazz.getSimpleName())
+                        && (singleton.getParameterCount() == 0))
+                    .findFirst();
+            // If we find a singleton
+            if(method.isPresent())
+                // Use singleton for the list
+                return method.get().invoke(clazz);
+            else
+                // Use the class instead.
+                return Class.forName(clazz.getName());
+        }
+        catch (final Exception exception) {
+            LOG.exception(exception);
+            LOG.finest("Exception found in LuaUtils.getAllAvailalbeInLua. Probably a method that was invoked the wrong way.");
+            return null;
+        }
     }
 
     /**
@@ -204,14 +225,14 @@ public class LuaUtils {
      *            The path to the script.
      * @param functionname
      *            The name of the function without brackets.
-     * @param calling_obj
+     * @param callingObject
      *            The Object you're passing.
      */
-    public static void runScriptFunction(final String script, final String functionname, final Object calling_obj) {
+    public static final void runScriptFunction(final String script, final String functionname, final Object callingObject) {
         // Load a script into globals
         LuaUtils.GLOBALS.get("dofile").call(LuaValue.valueOf(script));
         // Turn Java object into LuaValue
-        final LuaValue luaobj = CoerceJavaToLua.coerce(calling_obj);
+        final LuaValue luaobj = CoerceJavaToLua.coerce(callingObject);
         // Get functions from globals
         final LuaValue func = LuaUtils.GLOBALS.get(functionname);
         // Call the function using a LuaValue
