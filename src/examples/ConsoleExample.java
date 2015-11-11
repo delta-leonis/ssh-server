@@ -25,7 +25,7 @@ import javafx.stage.Stage;
  * Remember: It's a lua console, so if you want to call an object's function, it's called like
  * object:function() (not object.function())
  *
- * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
+ * @author Thomas Hakkers
  *        
  */
 public class ConsoleExample extends Application {

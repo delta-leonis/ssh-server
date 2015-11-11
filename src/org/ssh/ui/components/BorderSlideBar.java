@@ -13,9 +13,8 @@ import javafx.util.Duration;
  *
  * Note: Works best in a {@link BorderPane}
  *
- * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com Modified from: <a href=
- *         "http://blog.physalix.com/javafx2-borderpane-which-slides-in-and-out-on-command/">
- *         Physalix </a>
+ * @author Thomas Hakkers 
+ * Modified from: <a href="http://blog.physalix.com/javafx2-borderpane-which-slides-in-and-out-on-command/">Physalix </a>
  *         
  */
 public class BorderSlideBar extends BorderPane {

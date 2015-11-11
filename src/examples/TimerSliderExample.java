@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 /**
  * Example that uses the {@link TimerPane} and {@link TimerSlider}
  *
- * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
+ * @author Thomas Hakkers
  *        
  */
 public class TimerSliderExample extends Application {

@@ -25,7 +25,7 @@ import javafx.util.Duration;
  * amount of {@link CheckBox checkboxes} can be extended in the future of course. Also makes use of
  * FXML.
  *
- * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
+ * @author Thomas Hakkers
  *        
  */
 public class TimerSlider implements Initializable {

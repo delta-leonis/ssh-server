@@ -21,7 +21,7 @@ import com.google.common.reflect.ClassPath;
 /**
  * Class that has all sorts of utility functions for the luaj library
  *
- * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
+ * @author Thomas Hakkers
  */
 public class LuaUtils {
 

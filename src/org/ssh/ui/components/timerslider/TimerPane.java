@@ -18,7 +18,7 @@ import javafx.scene.layout.VBox;
  *
  * @Deprecated Please remove as soon as possible. Don't forget to update {@link TimerSliderExample}
  *             first
- * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
+ * @author Thomas Hakkers
  *        
  */
 public class TimerPane extends VBox {

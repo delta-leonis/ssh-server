@@ -18,8 +18,8 @@ import org.ssh.util.Logger;
  * // ; These colors can be edited in the java-keywords.css
  *
  *
- * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com Most code originates from
- *         https://github.com/TomasMikula/RichTextFX
+ * @author Thomas Hakkers 
+ *  Most code originates from https://github.com/TomasMikula/RichTextFX
  */
 public class ColoredCodeArea extends CodeArea {
     

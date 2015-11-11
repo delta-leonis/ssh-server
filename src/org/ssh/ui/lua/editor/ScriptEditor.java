@@ -24,7 +24,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
  * Test Module for loading and editing scripts into a {@link ColoredCodeArea} The file gets saved
  * automatically on close.
  *
- * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
+ * @author Thomas Hakkers
  *         
  */
 public class ScriptEditor extends UIComponent {

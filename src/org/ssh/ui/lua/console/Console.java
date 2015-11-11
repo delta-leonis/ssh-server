@@ -41,7 +41,7 @@ import javafx.scene.input.KeyCombination;
  * Remember: It's a lua console, so if you want to call an object's function, it's called like
  * object:function() (not object.function())
  *
- * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
+ * @author Thomas Hakkers
  * @see java-keyords.css for the stylesheet
  */
 public class Console extends UIComponent {

@@ -14,7 +14,7 @@ import javafx.scene.input.KeyCombination;
 /**
  * Class that extends the RTF {@link CodeArea} Used to block certain inputs.
  *
- * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
+ * @author Thomas Hakkers
  *        
  */
 public class ConsoleArea extends ColoredCodeArea {

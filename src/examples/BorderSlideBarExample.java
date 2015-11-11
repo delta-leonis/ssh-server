@@ -36,7 +36,7 @@ import javafx.stage.Stage;
  *
  * Notes have been put at the appropriate places to see the code snippets above in action
  *
- * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
+ * @author Thomas Hakkers
  *         
  */
 public class BorderSlideBarExample extends Application {
@@ -77,7 +77,7 @@ public class BorderSlideBarExample extends Application {
     /**
      * Sample section representing a list with {@link GameLog Gamelogs}
      *
-     * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
+     * @author Thomas Hakkers
      *        
      */
     private class GameLogSection extends VBox {
