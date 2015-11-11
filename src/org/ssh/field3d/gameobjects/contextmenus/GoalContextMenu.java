@@ -9,13 +9,15 @@ import javafx.scene.control.Button;
  * 
  * @author Mark Lefering
  */
+// TODO: fxml
 public class GoalContextMenu extends ContextMenuGO {
     
+    /** The button for selecting a team. */
     private final Button buttonSelectTeam;
     
     /**
-     * Constructor
-     * 
+     * Constructor.
+     *
      * @param game
      *            The {@link Game} of the {@link GameObject}
      * @param width
@@ -36,7 +38,7 @@ public class GoalContextMenu extends ContextMenuGO {
     }
     
     /**
-     * Destroy method. This method class the super class's Destroy method.
+     * {@inheritDoc}
      */
     @Override
     public void destroy() {
@@ -46,7 +48,7 @@ public class GoalContextMenu extends ContextMenuGO {
     }
     
     /**
-     * Initialize method. This method class the super class's Initialize method.
+     * {@inheritDoc}
      */
     @Override
     public void initialize() {
@@ -56,10 +58,7 @@ public class GoalContextMenu extends ContextMenuGO {
     }
     
     /**
-     * Update method. This method class the super class's Update method.
-     * 
-     * @param timeDivNano
-     *            The time difference in nanoseconds.
+     * {@inheritDoc}
      */
     @Override
     public void update(final long timeDivNano) {
