@@ -13,13 +13,24 @@ import java.io.OutputStream;
 public class ConsoleOutput extends OutputStream {
     
     private final Console console;
+    private String currentLine = "";
     
     public ConsoleOutput(final Console console) {
         this.console = console;
     }
     
+    /**
+     * Adds a character to the currentLine buffer.
+     * The buffer gets pushed when a "\n" is passed
+     */
     @Override
     public void write(final int b) throws IOException {
-        this.console.print(String.valueOf((char) b));
+        String stringval = String.valueOf((char) b);
+        currentLine += stringval;
+        // Should work in both Windows and UNIX systems.
+        if("\n".equals(stringval)){
+            this.console.print(currentLine);
+            currentLine = "";
+        }
     }
 }

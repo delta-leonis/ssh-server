@@ -16,6 +16,7 @@ import javax.script.ScriptException;
 import org.fxmisc.wellbehaved.event.EventHandlerHelper;
 import org.fxmisc.wellbehaved.event.EventPattern;
 import org.luaj.vm2.LuaError;
+import org.ssh.managers.Services;
 import org.ssh.ui.UIComponent;
 import org.ssh.util.Logger;
 import org.ssh.util.LuaUtils;
@@ -254,22 +255,25 @@ public class Console extends UIComponent {
      *            The command to be executed.
      */
     private void executeCommand(final String command) {
-        try {
-            this.println("");
-            // Add command to the command history
-            this.addCommand(command);
-            // Execute the command
-            this.scriptEngine.eval(command);
-        }
-        catch (ScriptException | LuaError exception) {
-            LOG.exception(exception);
-            this.println(exception.getClass().getSimpleName() + " in line: " + command);
-        }
-        
-        // TODO: Block input until here?
-        this.printCursor();
-        this.currentLine = this.consoleArea.getText().length();
-        this.consoleArea.setCurrentLine(this.currentLine);
+        Services.submitTask("luacommand", () -> {
+            try {
+                this.println("");
+                // Add command to the command history
+                this.addCommand(command);
+                // Execute the command
+                this.scriptEngine.eval(command);
+            }
+            catch (ScriptException | LuaError exception) {
+                Console.LOG.exception(exception);
+                this.println(exception.getClass().getSimpleName() + " in line: " + command);
+            }
+
+            // TODO: Block input until here?
+            this.printCursor();
+            this.currentLine = this.consoleArea.getText().length();
+            this.consoleArea.setCurrentLine(this.currentLine);
+            return null;
+        });
     }
     
     /**
@@ -299,7 +303,7 @@ public class Console extends UIComponent {
         // currentline till our
         // cursor
         final String command = this.consoleArea.getText(this.currentLine, caretPos);
-        
+
         // Handle the tab using this unfinished command
         final String result = this.autocomplete(command);
         // If the handleTab function returns anything useful
@@ -314,11 +318,10 @@ public class Console extends UIComponent {
      * @param s
      *            String that you want to print
      */
-    public void print(final String s) {
-        Platform.runLater(() -> {
-            final int i = this.consoleArea.getLength();
-            this.consoleArea.replaceText(i, i, s);
-        });
+    public void print(final String s) {        
+        Platform.runLater(() -> 
+            this.consoleArea.insertText(this.consoleArea.getLength(), s)
+        );
     }
     
     /**
@@ -366,15 +369,15 @@ public class Console extends UIComponent {
             // Add a useful sleep script
             this.scriptEngine.eval(
                     "local clock = os.clock function sleep(n) local t0 = clock() * 1000 while clock() * 1000 - t0 <= n do end end");
-                    
+
             // Important piece of code that fixed all bugs. Do not decode to
             // check its contents.
             this.scriptEngine.eval(new String(Base64.getDecoder().decode(
                     "bG9jYWwgY293ID0gewpbWyAKICBcICAgICAgICAgICAsfi4KICAgIFwgICAgICwtJ19fIGAtLAogICAgICAgXCAgeywtJyAgYC4gfSAgICAgICAgICAgICAgLCcpCiAgICAgICAgICAsKCBhICkgICBgLS5fXyAgICAgICAgICwnLCcpfiwKICAgICAgICAgPD0uKSAoICAgICAgICAgYC0uX18sPT0nICcgJyAnfQogICAgICAgICAgICggICApICAgICAgICAgICAgICAgICAgICAgIC8pCiAgICAgICAgICAgIGAtJ1wgICAgLCAgICAgICAgICAgICAgICAgICAgKQoJICAgICAgIHwgIFwgICAgICAgICBgfi4gICAgICAgIC8KICAgICAgICAgICAgICAgXCAgICBgLl8gICAgICAgIFwgICAgICAgLwogICAgICAgICAgICAgICAgIFwgICAgICBgLl9fX19fLCcgICAgLCcKICAgICAgICAgICAgICAgICAgYC0uICAgICAgICAgICAgICwnCiAgICAgICAgICAgICAgICAgICAgIGAtLl8gICAgIF8sLScKICAgICAgICAgICAgICAgICAgICAgICAgIDc3amonCiAgICAgICAgICAgICAgICAgICAgICAgIC8vX3x8CiAgICAgICAgICAgICAgICAgICAgIF9fLy8tLScvYAoJICAgICAgICAgICAgLC0tJy9gICAnCl1dCn0KZnVuY3Rpb24gY2hpY2tlbnNheSh0ZXh0KQpsID0gdGV4dDpsZW4oKQphID0gbCAvIDEwCmZvciBpPTAsYSBkbwoJaW8ud3JpdGUoIlsiIC4uIHRleHQ6c3ViKGkqMTArMSwgKChpKzEpKjEwID4gbCkgYW5kIGwgb3IgKGkrMSkqMTAgKSAuLiAgIl1cbiIpCmVuZAoJcHJpbnQoY293WzFdKQplbmQK")));
-                    
+
             this.println(Console.TITLE);
             this.printCursor();
-            
+
             // Set the line from where we need to start reading commands.
             this.currentLine = this.consoleArea.getText().length();
             consoleArea.setCurrentLine(currentLine);
