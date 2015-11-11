@@ -42,14 +42,13 @@ import javafx.scene.input.KeyCombination;
  * object:function() (not object.function())
  *
  * @author Thomas Hakkers E-mail: ThomasHakkers@hotmail.com
- * @see {@link Functions}
  * @see java-keyords.css for the stylesheet
  */
 public class Console extends UIComponent {
     
     // A logger for errorhandling
-    private static final Logger              LOG                 = Logger.getLogger();
-
+    private static final Logger LOG          = Logger.getLogger();
+    
     /** The cursor used by the console */
     private static final String  CURSOR      = "> ";
     /** The title that shows when starting up the console */
@@ -72,11 +71,13 @@ public class Console extends UIComponent {
     /* Variables for handling command history */
     /** A list containing all previous commands */
     private final List<String>   recentCommands;
-    /** selecting = true when the user is selecting commands using the up and down keys */
+    /**
+     * selecting = true when the user is selecting commands using the up and down keys
+     */
     private boolean              selecting   = false;
     /** Used to iterate through the recentCommands */
     private ListIterator<String> iterator;
-                                 
+    
     /**
      * The constructor of the {@link Console}. After that it looks for all classes for auto complete
      * and sets up the {@link ConsoleArea} And last of all, it starts a thread for reading out
@@ -86,12 +87,14 @@ public class Console extends UIComponent {
         super(name, "console.fxml");
         // Use reflection to obtain all classes annotated with AvailableInLua
         this.functionClasses = LuaUtils.getAllAvailableInLua();
-        // Create an outputstream that use the Console to write in the ConsoleArea
+        // Create an outputstream that use the Console to write in the
+        // ConsoleArea
         this.out = new ConsoleOutput(this);
         // Initialize the command history
         this.recentCommands = new ArrayList<String>();
-
-        // Create TextArea using the classes and functions found using reflection
+        
+        // Create TextArea using the classes and functions found using
+        // reflection
         this.consoleArea = new ConsoleArea(LuaUtils.getLuaClasses(), LuaUtils.getLuaFunctions());
         consoleArea.minHeightProperty().bind(this.heightProperty());
         consoleArea.maxHeightProperty().bind(this.heightProperty());
@@ -104,7 +107,7 @@ public class Console extends UIComponent {
         
         // Make sure keypresses like tab and enter are handled
         this.addKeyListeners();
-
+        
         // Sets up the script engine
         this.setupScriptEngine();
     }
@@ -137,32 +140,25 @@ public class Console extends UIComponent {
     private void addKeyListeners() {
         // Keypress UP for command history
         EventHandlerHelper.install(this.consoleArea.onKeyPressedProperty(),
-                EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.UP)).act(
-                        event -> this.up()).create());
+                EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.UP)).act(event -> this.up()).create());
         // Keypress DOWN for command history
         EventHandlerHelper.install(this.consoleArea.onKeyPressedProperty(),
-                EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.DOWN)).act(
-                        event -> this.down()).create());
+                EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.DOWN)).act(event -> this.down()).create());
         // Keypress ENTER for running command
         EventHandlerHelper.install(this.consoleArea.onKeyPressedProperty(),
-                EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.ENTER)).act(
-                        event -> this.handleEnter()).create());
+                EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.ENTER)).act(event -> this.handleEnter())
+                        .create());
         // Keycombination ENTER + ALT for printlns
         EventHandlerHelper.install(this.consoleArea.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.ENTER, KeyCombination.ALT_DOWN))
-                .act(event -> this.println("")).create());
+                        .act(event -> this.println("")).create());
         // Keypress TAB for autocomplete
         EventHandlerHelper.install(this.consoleArea.onKeyPressedProperty(),
-                EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.TAB)).act(
-                        event -> this.handleTab()).create());
-        EventHandlerHelper.install(this.consoleArea.onKeyPressedProperty(),
-                EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.TAB, KeyCombination.CONTROL_DOWN))
-                .act(event -> this.handleControlTab()).create());
+                EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.TAB)).act(event -> this.handleTab()).create());
     }
     
-    
     /** ************************ */
-    /*   AUTOCOMPLETE FUNCTIONS  */
+    /* AUTOCOMPLETE FUNCTIONS */
     /** ************************ */
     
     /**
@@ -183,7 +179,8 @@ public class Console extends UIComponent {
             final String stringObject = splitObjectsAndFunctions[0];
             // If the Class is already autocompleted
             Object object = LuaUtils.getObjectBasedOnString(stringObject);
-            if(object != null){
+            if (object != null) {
+                this.addCommand(command);
                 println("");
                 // Show all the functions is has
                 LuaUtils.getPrettyFunctions(LuaUtils.getObjectBasedOnString(separator[separator.length - 1]))
@@ -191,7 +188,7 @@ public class Console extends UIComponent {
                 printCursor();
                 return "";
             }
-            else{
+            else {
                 // Map the available classes into Strings
                 List<String> options = functionClasses.stream().map(clazz -> LuaUtils.getSimpleName(clazz))
                         .collect(Collectors.toList());
@@ -209,28 +206,32 @@ public class Console extends UIComponent {
             final Object clazz = this.functionClasses.stream()
                     // Retrieve the Class this function belongs to
                     .filter(o -> LuaUtils.getSimpleName(o).equals(object)).findAny().get();
-            if(clazz != null){
+            if (clazz != null) {
                 return autocompleteBasedOnList(Arrays.asList(LuaUtils.getClass(clazz).getDeclaredMethods()).stream()
                         .map(method -> method.getName()).collect(Collectors.toList()), prefix) + "(";
             }
         }
         return null;
     }
-
+    
     /**
      * Autocompletes the given prefix based on a list of possible Strings (options)
-     * @param options The options the prefix can be
-     * @param prefix The prefix that needs to be completed, for example "Functions:ge" or "Func"
+     * 
+     * @param options
+     *            The options the prefix can be
+     * @param prefix
+     *            The prefix that needs to be completed, for example "Functions:ge" or "Func"
      * @return The part of the prefix that's missing, for example "tFunctions()" or "tions"
      */
-    private String autocompleteBasedOnList(List<String> options, String prefix){
+    private String autocompleteBasedOnList(List<String> options, String prefix) {
         // Turn the options into a stream
         Optional<String> filteredString = options.stream()
-                // Find the option that starts with `prefix` and isn't equal to `prefix`
+                // Find the option that starts with `prefix` and isn't equal to
+                // `prefix`
                 .filter(m -> m.startsWith(prefix) && !m.equals(prefix)).findAny();
         return filteredString.isPresent() ? filteredString.get().substring(prefix.length()) : null;
     }
-
+    
     /**
      * Function that gets called when the down arrow is pressed Goes to the next command in the
      * array
@@ -239,13 +240,13 @@ public class Console extends UIComponent {
         // If we're busy scrolling through commands
         if (this.selecting) {
             // Scroll through the commands
-            if (!this.iterator.hasNext())
+            if (!this.iterator.hasNext()) 
                 this.iterator = this.recentCommands.listIterator(0);
             // Display the command
             this.consoleArea.replaceText(this.currentLine, this.consoleArea.getLength(), this.iterator.next());
         }
     }
-
+    
     /**
      * Executes the given command using the lua {@link ScriptEngine}
      * 
@@ -264,13 +265,13 @@ public class Console extends UIComponent {
             LOG.exception(exception);
             this.println(exception.getClass().getSimpleName() + " in line: " + command);
         }
-
+        
         // TODO: Block input until here?
         this.printCursor();
         this.currentLine = this.consoleArea.getText().length();
         this.consoleArea.setCurrentLine(this.currentLine);
     }
-
+    
     /**
      * Eventhandler when enter is pressed Either executes the current command, or creates a new line
      * when alt is held at the same time
@@ -282,11 +283,12 @@ public class Console extends UIComponent {
         final String currentCommand = this.consoleArea.getText(this.currentLine, this.consoleArea.getText().length());
         this.executeCommand(currentCommand);
     }
-
+    
     /**
      * Function that gets called when tab is pressed Autocompletes the current command
-     * @param event 
      * 
+     * @param event
+     *            
      * @param event
      *            The KeyEvent generated by the event
      */
@@ -297,28 +299,13 @@ public class Console extends UIComponent {
         // currentline till our
         // cursor
         final String command = this.consoleArea.getText(this.currentLine, caretPos);
-
+        
         // Handle the tab using this unfinished command
         final String result = this.autocomplete(command);
         // If the handleTab function returns anything useful
         if (result != null)
             // Use it
             this.consoleArea.replaceText(caretPos, caretPos, result);
-    }
-
-    private void handleControlTab(){
-     // If alt is down, show all available functions instead
-
-        // Where the cursor is located (caret)
-        final int caretPos = this.consoleArea.getCaretPosition();
-        // The command we're currently auto completing is a substring of the currentline till our
-        // cursor
-        final String command = this.consoleArea.getText(this.currentLine, caretPos);
-            // Split whatever was before it
-            final String[] separator = command.split("\\(|\\)|(\\r?\\n)|\\s+");
-            LuaUtils.getPrettyFunctions(LuaUtils.getObjectBasedOnString(separator[separator.length-1]))
-                .forEach(method -> println(method));
-            printCursor();
     }
     
     /**
@@ -333,7 +320,7 @@ public class Console extends UIComponent {
             this.consoleArea.replaceText(i, i, s);
         });
     }
-
+    
     /**
      * Prints the cursor and sets the currentLine
      */
@@ -387,7 +374,7 @@ public class Console extends UIComponent {
                     
             this.println(Console.TITLE);
             this.printCursor();
-
+            
             // Set the line from where we need to start reading commands.
             this.currentLine = this.consoleArea.getText().length();
             consoleArea.setCurrentLine(currentLine);
