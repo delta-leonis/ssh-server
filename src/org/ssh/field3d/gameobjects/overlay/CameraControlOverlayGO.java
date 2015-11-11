@@ -10,33 +10,51 @@ import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 
 /**
- *
  * CameraPresetOverlay class
- *
- * This class is responsible for the 2d camera preset controls
+ * 
+ * This class is responsible for the 2d camera preset controls.
  *
  * @author Mark Lefering
  */
-
 // TODO: fxml
 public class CameraControlOverlayGO extends GameObject {
     
+    /** The offset between buttons. */
     private static final int BUTTON_OFFSET = 35;
                                            
+    /** The controls group. */
     private final Group      controlsGroup;
+                             
+    /** The button for the top view preset. */
     private final Button     buttonTopView;
+                             
+    /** The button for the side view preset. */
     private final Button     buttonSideView;
+                             
+    /** The button for the 45 deg view preset. */
     private final Button     button45DegView;
+                             
+    /** The button for rotating left. */
     private final Button     buttonRotateLeft;
+                             
+    /** The button for rotating right. */
     private final Button     buttonRotateRight;
+                             
+    /** The button for rotating up. */
     private final Button     buttonRotateUp;
+                             
+    /** The button for rotating down. */
     private final Button     buttonRotateDown;
+                             
+    /** The button for zooming in. */
     private final Button     buttonZoomIn;
+                             
+    /** The button for zooming out. */
     private final Button     buttonZoomOut;
                              
     /**
-     * Constructor
-     * 
+     * Constructor.
+     *
      * @param game
      *            The {@link Game} of the {@link GameObject}.
      */
@@ -88,7 +106,7 @@ public class CameraControlOverlayGO extends GameObject {
     }
     
     /**
-     * Initialize method. This method adds the control group to the 2d group and hooks events.
+     * {@inheritDoc}
      */
     @Override
     public void initialize() {
@@ -111,12 +129,10 @@ public class CameraControlOverlayGO extends GameObject {
     }
     
     /**
-     * Destroy method. This method removes the control group from the 2d group
+     * {@inheritDoc}
      */
     @Override
     public void destroy() {
-        
-        // TODO: remove event handlers
         
         // If 2d group contains the controls group
         if (this.getGame().get2DGroup().getChildren().contains(this.controlsGroup)) {
@@ -140,9 +156,7 @@ public class CameraControlOverlayGO extends GameObject {
     }
     
     /**
-     * 
-     * @param timeDivNano
-     *            The time difference in nanoseconds.
+     * {@inheritDoc}
      */
     @Override
     public void update(final long timeDivNano) {
@@ -156,6 +170,9 @@ public class CameraControlOverlayGO extends GameObject {
      */
     class OnButtonRotateDownClicked implements EventHandler<MouseEvent> {
         
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void handle(final MouseEvent mouseEvent) {
             
@@ -174,6 +191,9 @@ public class CameraControlOverlayGO extends GameObject {
      */
     class OnButtonRotateLeftClicked implements EventHandler<MouseEvent> {
         
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void handle(final MouseEvent mouseEvent) {
             
@@ -191,10 +211,13 @@ public class CameraControlOverlayGO extends GameObject {
      */
     class OnButtonRotateRightClicked implements EventHandler<MouseEvent> {
         
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void handle(final MouseEvent mouseEvent) {
             
-            // TODO Smooth out rotation
+            // TODO: Smooth out rotation
             CameraControlOverlayGO.this.getGame().getThirdPersonCamera()
                     .setRotateY(CameraControlOverlayGO.this.getGame().getThirdPersonCamera().getRotateY() + 10);
         }
@@ -209,6 +232,9 @@ public class CameraControlOverlayGO extends GameObject {
      */
     class OnButtonRotateUpClicked implements EventHandler<MouseEvent> {
         
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void handle(final MouseEvent mouseEvent) {
             
@@ -220,13 +246,15 @@ public class CameraControlOverlayGO extends GameObject {
     }
     
     /**
-     * 
-     * Button side view click event
-     * 
+     * Button side view click event.
+     *
      * @author Mark Lefering
      */
     class OnButtonSideViewClicked implements EventHandler<MouseEvent> {
         
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void handle(final MouseEvent mouseEvent) {
             
@@ -240,13 +268,15 @@ public class CameraControlOverlayGO extends GameObject {
     }
     
     /**
-     * 
-     * Button 45 degree view click event
-     * 
+     * Button 45 degree view click event.
+     *
      * @author Mark Lefering
      */
     class OnButton45DegViewClicked implements EventHandler<MouseEvent> {
         
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void handle(final MouseEvent mouseEvent) {
             
@@ -266,6 +296,9 @@ public class CameraControlOverlayGO extends GameObject {
      */
     class OnButtonTopViewClicked implements EventHandler<MouseEvent> {
         
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void handle(final MouseEvent event) {
             
@@ -285,6 +318,9 @@ public class CameraControlOverlayGO extends GameObject {
      */
     class OnButtonZoomInClicked implements EventHandler<MouseEvent> {
         
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void handle(final MouseEvent event) {
             
@@ -301,6 +337,9 @@ public class CameraControlOverlayGO extends GameObject {
      */
     class OnButtonZoomOutClicked implements EventHandler<MouseEvent> {
         
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void handle(final MouseEvent event) {
             
