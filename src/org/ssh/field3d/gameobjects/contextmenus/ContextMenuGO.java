@@ -11,28 +11,44 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 /**
- *
  * ContextMenuGO class. This class is the base class for a 3d context menu.
  *
  * @see GameObject
- *      
+ *     
  * @author Mark Lefering
  */
 public class ContextMenuGO extends GameObject {
     
+    /** The minimal scalar. */
     private static final double MIN_SCALAR    = 0.14;
+                                              
+    /** The scalar of the scalar. */
     private static final int    SCALAR_SCALAR = 5;
                                               
+    /** The rectangle for the background. */
     private final Rectangle     rectangle;
-    private final Xform         xform, xform2, xform3;
-    private final Group         contextMenuGroup, controlsGroup;
-    private final double        width, height;
                                 
-    private Vector3f            loc;
+    /** The transformations. */
+    private final Xform         xform, xform2, xform3;
+                                
+    /** The group for the entire context menu. */
+    private final Group         contextMenuGroup;
+                                
+    /** The controls group. */
+    private final Group         controlsGroup;
+                                
+    /** The width of the context menu. */
+    private final double        width;
+                                
+    /** The height of the context menu. */
+    private final double        height;
+                                
+    /** The location of the context menu */
+    private Vector3f            location;
                                 
     /**
-     * Constructor
-     * 
+     * Constructor.
+     *
      * @param game
      *            The {@link Game} of the {@link GameObject}
      * @param width
@@ -55,7 +71,7 @@ public class ContextMenuGO extends GameObject {
         this.controlsGroup = new Group();
         
         // Creating new vector for the location of the context menu
-        this.loc = new Vector3f();
+        this.location = new Vector3f();
         
         // Setting dimensions
         this.width = width;
@@ -85,7 +101,7 @@ public class ContextMenuGO extends GameObject {
     }
     
     /**
-     * Initialize method. This method adds the context menu to the world group.
+     * {@inheritDoc}
      */
     @Override
     public void initialize() {
@@ -95,11 +111,7 @@ public class ContextMenuGO extends GameObject {
     }
     
     /**
-     * Update method. This method rotates the context menu towards the camera and also scale it
-     * according to the zoom of the camera.
-     * 
-     * @param timeDivNano
-     *            The time difference in nanoseconds.
+     * {@inheritDoc}
      */
     @Override
     public void update(final long timeDivNano) {
@@ -115,13 +127,15 @@ public class ContextMenuGO extends GameObject {
                 0.0);
                 
         // Translate to location
-        this.xform.setTranslate(this.loc.x, this.loc.y + (scale * SCALAR_SCALAR * (this.height / 2.0)), this.loc.z);
+        this.xform.setTranslate(this.location.x,
+                this.location.y + (scale * SCALAR_SCALAR * (this.height / 2.0)),
+                this.location.z);
         // Scale
         this.xform3.setScale(scale * SCALAR_SCALAR, scale * SCALAR_SCALAR, scale * SCALAR_SCALAR);
     }
     
     /**
-     * Destroy method
+     * {@inheritDoc}
      */
     @Override
     public void destroy() {
@@ -142,7 +156,7 @@ public class ContextMenuGO extends GameObject {
     }
     
     /**
-     * This method shows the context menu
+     * This method shows the context menu.
      */
     public void show() {
         this.contextMenuGroup.setVisible(true);
@@ -176,21 +190,41 @@ public class ContextMenuGO extends GameObject {
     public void translate(final double x, final double y, final double z) {
         
         this.xform.setTranslate(x, y, z);
-        this.loc = new Vector3f((float) x, (float) y, (float) z);
+        this.location = new Vector3f((float) x, (float) y, (float) z);
     }
     
+    /**
+     * Gets the controls group.
+     *
+     * @return The controls {@link Group}.
+     */
     protected Group getControlsGroup() {
         return this.controlsGroup;
     }
     
+    /**
+     * Gets the context menu group.
+     *
+     * @return The context menu {@link Group}.
+     */
     protected Group getGroup() {
         return this.contextMenuGroup;
     }
     
+    /**
+     * Gets the height of the context menu.
+     *
+     * @return The height of the context menu.
+     */
     public double getHeight() {
         return this.height;
     }
     
+    /**
+     * Gets the width of the context menu.
+     *
+     * @return The width of the context menu.
+     */
     public double getWidth() {
         return this.width;
     }
