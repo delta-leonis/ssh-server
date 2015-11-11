@@ -1,21 +1,22 @@
 package org.ssh.util;
 
+import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 import org.luaj.vm2.lib.jse.JsePlatform;
-import org.reflections.Reflections;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
+
 import org.ssh.ui.lua.console.AvailableInLua;
+
+import com.google.common.reflect.ClassPath;
 
 /**
  * Class that has all sorts of utility functions for the luaj library
@@ -42,19 +43,41 @@ public class LuaUtils {
      * it as an ArrayList<Object>
      */
     public static List<Object> getAllAvailableInLua() {
-        // Create Reflections object based on our classpath
-        final Reflections reflections = new Reflections(
-                new ConfigurationBuilder().setUrls(ClasspathHelper.forJavaClassPath()));
-        // Find every class annotated with AvailableInLua
-        final Set<Class<?>> types = reflections.getTypesAnnotatedWith(AvailableInLua.class);
+        List<Class<?>> types = LuaUtils.getAllTypesAnnotatedWith(AvailableInLua.class, "org.ssh");
+
         final ArrayList<Object> objectArrayList = new ArrayList<Object>();
         
-        types.forEach(c -> {
-            Object object = getSingleton(c);
+        // For each class
+        types.forEach(clazz -> {
+            // Find out whether it has a singleton
+            Object object = getSingleton(clazz);
             if(object != null)
                 objectArrayList.add(object);
         });
         return objectArrayList;
+    }
+
+    /**
+     * Method used to find every class in the given package that is annotated with the given {@link Annotation}
+     * @param annotation The class that uses this annotation
+     * @param packageName The package we need to look in
+     * @return All classes in the package with the given annotation
+     */
+    private static <A extends Annotation> List<Class<?>> getAllTypesAnnotatedWith(Class<A> annotation,
+            String packageName) {
+        try {
+            // Get all classes in package
+            return ClassPath.from(Thread.currentThread().getContextClassLoader())
+                    .getTopLevelClassesRecursive(packageName).stream()
+                    // Filter based on annotation
+                    .filter(classInfo -> classInfo.load().getAnnotation(annotation) != null)
+                    // Load the required classes and collect them.
+                    .map(classInfo -> classInfo.load()).collect(Collectors.toList());
+        }
+        catch (IOException exception) {
+            LuaUtils.LOG.exception(exception);
+            return new ArrayList<Class<?>>();
+        }
     }
 
     /**
