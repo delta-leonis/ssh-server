@@ -20,8 +20,8 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 
 /**
- * RobotGO class This class is for robot game objects. This class loads the 3d model, textures and the
- * selection arc.
+ * RobotGO class This class is for robot game objects. This class loads the 3d model, textures and
+ * the selection arc.
  *
  * @author Mark Lefering
  *         
@@ -33,13 +33,6 @@ import javafx.scene.shape.MeshView;
 // TODO: get robot texture from id & team
 public class RobotGO extends GameObject {
     
-    // TODO: MOVE public static to config, or get from model
-    /** The Constant ROBOT_HEIGHT. */
-    public static final double  ROBOT_HEIGHT                     = 200.0;
-                                                                 
-    /** The Constant ROBOT_RADIUS. */
-    public static final double  ROBOT_RADIUS                     = 250.0;
-                                                                 
     /** The thickness of the selection circle. */
     private static final double ROBOT_SELECTION_CIRCLE_THICKNESS = 50.0;
                                                                  
@@ -65,11 +58,11 @@ public class RobotGO extends GameObject {
     private final PhongMaterial selectionCircleMaterial;
                                 
     /** The selection arc. */
-    private final FlatArc3D         selectionArc;
+    private final FlatArc3D     selectionArc;
                                 
     /** The selection arc mesh. */
     private final MeshView      selectionArcMesh;
-    
+                                
     private final Robot         visionRobotModel;
                                 
     /** The model. */
@@ -102,7 +95,7 @@ public class RobotGO extends GameObject {
         // Creating selection circle
         this.selectionArc = new FlatArc3D(0.0,
                 360.0,
-                RobotGO.ROBOT_RADIUS,
+                Robot.ROBOT_RADIUS,
                 RobotGO.ROBOT_SELECTION_CIRCLE_THICKNESS,
                 ROBOT_SEL_CIRCLE_NUM_OF_SEGMENTS);
                 
@@ -184,12 +177,13 @@ public class RobotGO extends GameObject {
     @Override
     public void update(final long timeDivNano) {
         
-        // TODO: Update location according to the vision model
+        // Checking if we have got valid data
         if (visionRobotModel != null && visionRobotModel.getPosition() != null) {
             
-            this.location.x = (float)visionRobotModel.getPosition().getX();
-            this.location.y = (float)(ROBOT_HEIGHT / 2.0f);
-            this.location.z = (float)visionRobotModel.getPosition().getY();
+            // Setting location
+            this.location.x = (float) visionRobotModel.getPosition().getX();
+            this.location.y = (float) (Robot.ROBOT_HEIGHT / 2.0f);
+            this.location.z = (float) visionRobotModel.getPosition().getY();
         }
         
         // Translate to location

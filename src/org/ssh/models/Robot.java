@@ -6,15 +6,22 @@ import javafx.scene.paint.Color;
  * Describes a Robot on the {@link Field} as a {@link FieldObject}
  *
  * @author Jeroen
- *        
+ *         
  */
 @SuppressWarnings ("serial")
 public class Robot extends FieldObject {
     
+    /** The robot height. */
+    public static final float ROBOT_HEIGHT = 200.0f;
+                                           
+    /** The robot radius */
+    public static final float ROBOT_RADIUS = 250.0f;
+                                           
     /**
      * Unique robot id [0-15]
      */
     private transient Integer robotId;
+                              
     /**
      * teamcolor that controls this robot
      */
@@ -43,7 +50,8 @@ public class Robot extends FieldObject {
     }
     
     /**
-     * example: org.ssh.models.RobotB2.json is a robot with ID 2 (RobotB-2) and teamColor Blue (Robot-B-2)
+     * example: org.ssh.models.RobotB2.json is a robot with ID 2 (RobotB-2) and teamColor Blue
+     * (Robot-B-2)
      * 
      * @see {@link Robot#getTeamColor()}
      * @return Config name for robot models.
