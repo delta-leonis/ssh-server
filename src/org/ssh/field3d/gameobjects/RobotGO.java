@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.field3d.core.math.Vector3f;
-import org.ssh.field3d.core.shapes.Arc3D;
+import org.ssh.field3d.core.shapes.FlatArc3D;
 import org.ssh.util.Logger;
 
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
@@ -65,7 +65,7 @@ public class RobotGO extends GameObject {
     private final PhongMaterial selectionCircleMaterial;
                                 
     /** The selection arc. */
-    private final Arc3D         selectionArc;
+    private final FlatArc3D         selectionArc;
                                 
     /** The selection arc mesh. */
     private final MeshView      selectionArcMesh;
@@ -98,7 +98,7 @@ public class RobotGO extends GameObject {
         this.location = new Vector3f(0.0f, ROBOT_STARTING_Y, 0.0f);
         
         // Creating selection circle
-        this.selectionArc = new Arc3D(0.0,
+        this.selectionArc = new FlatArc3D(0.0,
                 360.0,
                 RobotGO.ROBOT_RADIUS,
                 RobotGO.ROBOT_SELECTION_CIRCLE_THICKNESS,
@@ -110,9 +110,6 @@ public class RobotGO extends GameObject {
         
         // Getting arc mesh
         this.selectionArcMesh = this.selectionArc.MeshView();
-        // Rotate 90 degrees around x-axis
-        this.selectionArcMesh.setRotationAxis(Rotate.X_AXIS);
-        this.selectionArcMesh.setRotate(90.0);
         
         // Setting selection circle diffuse & specular color to Blue
         this.selectionCircleMaterial.setDiffuseColor(Color.BLUE);

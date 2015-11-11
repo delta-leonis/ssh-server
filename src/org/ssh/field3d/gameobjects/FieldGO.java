@@ -10,7 +10,7 @@ import org.ssh.field3d.FieldGame;
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.field3d.core.math.Vector3f;
-import org.ssh.field3d.core.shapes.Arc3D;
+import org.ssh.field3d.core.shapes.FlatArc3D;
 import org.ssh.field3d.core.shapes.FlatLine3D;
 import org.ssh.field3d.gameobjects.contextmenus.GoalContextMenu;
 import org.ssh.util.Logger;
@@ -66,8 +66,8 @@ public class FieldGO extends GameObject {
     /** The east goal left arc ending angle. */
     public static final double     EAST_GOAL_ARC_LEFT_END    = 90.0;
                                                              
-    /** The goal arc radius. */
-    public static final double     GOAL_ARC_RADIUS           = 1000.0;
+    /** The goal arc diameter. */
+    public static final double     GOAL_ARC_DIAMETER         = 1000.0;
     
     /** The goal arc thickness. */
     public static final double     GOAL_ARC_THICKNESS        = 10.0;
@@ -333,64 +333,50 @@ public class FieldGO extends GameObject {
     private void generateArcs() {
         
         // Create defense area arcs
-        final MeshView goalWestArcLeftMesh = new Arc3D(WEST_GOAL_ARC_LEFT_START,
+        final MeshView goalWestArcLeftMesh = new FlatArc3D(WEST_GOAL_ARC_LEFT_START,
                 WEST_GOAL_ARC_LEFT_END,
-                GOAL_ARC_RADIUS,
+                GOAL_ARC_DIAMETER,
                 GOAL_ARC_THICKNESS,
                 GOAL_ARC_NUM_DIVISIONS).MeshView();
-        final MeshView goalWestArcRightMesh = new Arc3D(WEST_GOAL_ARC_RIGHT_START,
+        final MeshView goalWestArcRightMesh = new FlatArc3D(WEST_GOAL_ARC_RIGHT_START,
                 WEST_GOAL_ARC_RIGHT_END,
-                GOAL_ARC_RADIUS,
+                GOAL_ARC_DIAMETER,
                 GOAL_ARC_THICKNESS,
                 GOAL_ARC_NUM_DIVISIONS).MeshView();
                 
-        final MeshView goalEastArcLeftMesh = new Arc3D(EAST_GOAL_ARC_LEFT_START,
+        final MeshView goalEastArcLeftMesh = new FlatArc3D(EAST_GOAL_ARC_LEFT_START,
                 EAST_GOAL_ARC_LEFT_END,
-                GOAL_ARC_RADIUS,
+                GOAL_ARC_DIAMETER,
                 GOAL_ARC_THICKNESS,
                 GOAL_ARC_NUM_DIVISIONS).MeshView();
-        final MeshView goalEastArcRightMesh = new Arc3D(EAST_GOAL_ARC_RIGHT_START,
+        final MeshView goalEastArcRightMesh = new FlatArc3D(EAST_GOAL_ARC_RIGHT_START,
                 EAST_GOAL_ARC_RIGHT_END,
-                GOAL_ARC_RADIUS,
+                GOAL_ARC_DIAMETER,
                 GOAL_ARC_THICKNESS,
                 GOAL_ARC_NUM_DIVISIONS).MeshView();
                 
-        final MeshView midCircleMesh = new Arc3D(0.0,
+        final MeshView midCircleMesh = new FlatArc3D(0.0,
                 360.0,
                 MID_CIRCLE_RADIUS,
                 MID_CIRCLE_THICKNESS,
                 MID_CIRCLE_NUM_DIVISIONS).MeshView();
-                
-        // Setting rotation axis
-        midCircleMesh.setRotationAxis(Rotate.X_AXIS);
-        goalEastArcLeftMesh.setRotationAxis(Rotate.X_AXIS);
-        goalEastArcRightMesh.setRotationAxis(Rotate.X_AXIS);
-        goalWestArcLeftMesh.setRotationAxis(Rotate.X_AXIS);
-        goalWestArcRightMesh.setRotationAxis(Rotate.X_AXIS);
-        
-        // Rotate arcs
-        midCircleMesh.setRotate(90.0);
-        goalWestArcLeftMesh.setRotate(90.0);
-        goalWestArcRightMesh.setRotate(90.0);
-        goalEastArcLeftMesh.setRotate(90.0);
-        goalEastArcRightMesh.setRotate(90.0);
         
         // Translate arcs into position
         goalWestArcRightMesh.setTranslateX((FieldGame.FIELD_WIDTH / 2.0));
-        goalWestArcRightMesh.setTranslateZ(500);
-        goalWestArcRightMesh.setTranslateY(-235);
+        goalWestArcRightMesh.setTranslateY(LINE_Y_OFFSET);
+        goalWestArcRightMesh.setTranslateZ(GOAL_ARC_DIAMETER / 4.0);        
         
         goalWestArcLeftMesh.setTranslateX(FieldGame.FIELD_WIDTH / 2.0);
-        goalWestArcLeftMesh.setTranslateY(265);
-        goalWestArcLeftMesh.setTranslateZ(-500);
+        goalWestArcLeftMesh.setTranslateY(LINE_Y_OFFSET);
+        goalWestArcLeftMesh.setTranslateZ(-GOAL_ARC_DIAMETER / 4.0);
         
         goalEastArcRightMesh.setTranslateX(-(FieldGame.FIELD_WIDTH / 2.0));
-        goalEastArcRightMesh.setTranslateY(265);
-        goalEastArcRightMesh.setTranslateZ(-500);
+        goalEastArcRightMesh.setTranslateY(LINE_Y_OFFSET);
+        goalEastArcRightMesh.setTranslateZ(-GOAL_ARC_DIAMETER / 4.0);
         
         goalEastArcLeftMesh.setTranslateX(-(FieldGame.FIELD_WIDTH / 2.0));
-        goalEastArcLeftMesh.setTranslateY(-235);
-        goalEastArcLeftMesh.setTranslateZ(500);
+        goalEastArcLeftMesh.setTranslateY(LINE_Y_OFFSET);
+        goalEastArcLeftMesh.setTranslateZ(GOAL_ARC_DIAMETER / 4.0);
         
         // Translate mid circle up
         midCircleMesh.setTranslateY(LINE_Y_OFFSET);
