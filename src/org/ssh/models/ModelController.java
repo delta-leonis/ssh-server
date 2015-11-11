@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -161,7 +162,7 @@ public class ModelController {
     /**
      * @return all Models currently in the modelcontroller
      */
-    public List<Model> getAll() {
+    public List<?> getAll() {
         return this.models;
     }
     
@@ -172,8 +173,9 @@ public class ModelController {
      *            The (fuzzy) name of the models you want to find.
      * @return The requested models.
      */
-    public ArrayList<Model> getAll(final String name) {
-        return (ArrayList<Model>) this.models.stream().filter(model -> model.getFullName().equals(name))
+    public List<?> getAll(final String name) {
+        return this.models.stream()
+                .filter(model -> model.getName().equals(name))
                 .collect(Collectors.toList());
     }
     
@@ -310,7 +312,8 @@ public class ModelController {
             // open configfile
             final File configFile = new File(filePath);
             // make dirs recursively
-            if (!configFile.getParentFile().mkdirs()) throw new IOException();
+            if(!configFile.getParentFile().isDirectory())
+                if (!configFile.getParentFile().mkdirs()) throw new IOException();
             // create file if it doesn't already
             if (!configFile.exists()) configFile.createNewFile();
             // write gson-object of all data in models to configFile
@@ -320,6 +323,7 @@ public class ModelController {
         catch (final IOException exception) {
             // either the creation of the dir(s) failed, or the writing
             // to a file failed.
+            ModelController.LOG.setLevel(Level.FINEST);
             ModelController.LOG.exception(exception);
             ModelController.LOG.warning("Could not save %s.", filePath);
             return false;

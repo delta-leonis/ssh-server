@@ -59,7 +59,7 @@ public final class Models {
     /**
      * @return all Models currently in the modelcontroller
      */
-    public static List<Model> getAll() {
+    public static List<?> getAll() {
         return Models.modelController.getAll();
     }
     
@@ -70,7 +70,7 @@ public final class Models {
      *            The (fuzzy) name of the model you want to find.
      * @return The requested models.
      */
-    public static List<Model> getAll(final String modelName) {
+    public static List<?> getAll(final String modelName) {
         return Models.modelController.getAll(modelName);
     }
     
