@@ -1,17 +1,25 @@
 package org.ssh.field3d;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.math.Vector3f;
 import org.ssh.field3d.gameobjects.CarGO;
 import org.ssh.field3d.gameobjects.FieldGO;
 import org.ssh.field3d.gameobjects.RobotGO;
 import org.ssh.field3d.gameobjects.overlay.CameraControlOverlayGO;
+import org.ssh.managers.Models;
+import org.ssh.managers.Services;
+import org.ssh.models.ModelController;
+import org.ssh.models.Robot;
 
 import javafx.scene.AmbientLight;
 import javafx.scene.Parent;
 import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.paint.Color;
+import net.java.games.input.ControllerEnvironment;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -99,6 +107,12 @@ public class FieldGame extends Game {
         
         // Initialize super class
         super(root, width, height, true, antiAliasing);
+        
+        // Create robots
+        Robot robot = (Robot)Models.create(Robot.class, 0, Color.BLUE);
+        Robot robot2 = (Robot)Models.create(Robot.class, 1, Color.BLUE);
+        Robot robot3 = (Robot)Models.create(Robot.class, 2, Color.BLUE);
+        Robot robot4 = (Robot)Models.create(Robot.class, 3, Color.BLUE);
         
         // Creating ambient light
         this.ambientLight = new AmbientLight(Color.DARKGRAY);
@@ -209,16 +223,19 @@ public class FieldGame extends Game {
      */
     private void createRobots() {
         
-        // Create 22 robots
-        for (int i = 0; i < 22; i++) {
+        @SuppressWarnings ("unchecked")
+        ArrayList<Robot> robotModels = (ArrayList<Robot>) Models.getAll("robot");
+        
+        
+        System.out.println("robots: " + robotModels.size());
+        for (Robot robot : robotModels) {
+                       
+            RobotGO tmpRobot = new RobotGO(this, robot);
             
-            // Create new robot
-            final RobotGO robot = new RobotGO(this);
-            // Set location of the robot
-            robot.setLocation(new Vector3f(i * 500, ((float) RobotGO.ROBOT_HEIGHT / 2.0f) + 10.0f, 0));
-            
-            // Add robot to game objects
-            this.addGameObject(robot);
+            addGameObject(tmpRobot);
         }
     }
+    
+    
+  
 }

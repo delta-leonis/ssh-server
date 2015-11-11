@@ -7,6 +7,7 @@ import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.field3d.core.math.Vector3f;
 import org.ssh.field3d.core.shapes.FlatArc3D;
+import org.ssh.models.Robot;
 import org.ssh.util.Logger;
 
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
@@ -17,10 +18,9 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
-import javafx.scene.transform.Rotate;
 
 /**
- * RobotGO This class is for robot game objects. This class loads the 3d model, textures and the
+ * RobotGO class This class is for robot game objects. This class loads the 3d model, textures and the
  * selection arc.
  *
  * @author Mark Lefering
@@ -69,6 +69,8 @@ public class RobotGO extends GameObject {
                                 
     /** The selection arc mesh. */
     private final MeshView      selectionArcMesh;
+    
+    private final Robot         visionRobotModel;
                                 
     /** The model. */
     private MeshView            model;
@@ -86,7 +88,7 @@ public class RobotGO extends GameObject {
      * @param game
      *            The {@link Game} of the {@link GameObject}.
      */
-    public RobotGO(final Game game) {
+    public RobotGO(final Game game, final Robot visionRobotModel) {
         
         // Initialize super class
         super(game);
@@ -107,6 +109,9 @@ public class RobotGO extends GameObject {
         // Creating PhongMaterials
         this.material = new PhongMaterial(Color.WHITE);
         this.selectionCircleMaterial = new PhongMaterial();
+        
+        // Setting vision robot model
+        this.visionRobotModel = visionRobotModel;
         
         // Getting arc mesh
         this.selectionArcMesh = this.selectionArc.MeshView();
@@ -180,6 +185,12 @@ public class RobotGO extends GameObject {
     public void update(final long timeDivNano) {
         
         // TODO: Update location according to the vision model
+        if (visionRobotModel != null && visionRobotModel.getPosition() != null) {
+            
+            this.location.x = (float)visionRobotModel.getPosition().getX();
+            this.location.y = (float)(ROBOT_HEIGHT / 2.0f);
+            this.location.z = (float)visionRobotModel.getPosition().getY();
+        }
         
         // Translate to location
         this.model.setTranslateX(this.location.x);
