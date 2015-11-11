@@ -115,7 +115,7 @@ public abstract class Game extends SubScene {
      * game closes.
      */
     public abstract void destroy();
-      
+    
     /**
      *
      * InternalInitialize method This is the internal initialization method for the game, this needs
@@ -146,7 +146,7 @@ public abstract class Game extends SubScene {
      * the game.
      */
     public void internalDestroy() {
-              
+        
         // Destroy game objects
         this.destroyGameObjects();
         // Destroy our self
@@ -170,6 +170,11 @@ public abstract class Game extends SubScene {
         // Calculate time difference
         timeDivNano = this.curTime - this.prevTime;
         
+        // Set 3d scene's width as this scene's width
+        this.scene3D.setWidth(this.getWidth());
+        // Set 3d scene's height as this scene's heights
+        this.scene3D.setHeight(this.getHeight());
+        
         // Update our game
         this.update(timeDivNano);
         // Update game objects
@@ -177,23 +182,23 @@ public abstract class Game extends SubScene {
     }
     
     /**
-    *
-    * AddGameObject method This is the method for adding game objects to the game.
-    *
-    * @param gameObject
-    *            The GameObject to add to the game.
-    */
-   public void addGameObject(final GameObject gameObject) {
-       
-       // Check if we need to add our game object
-       if ((this.gameObjects != null) && !this.gameObjects.contains(gameObject)) {
-           
-           // Initialize our game object
-           gameObject.initialize();
-           // Add to game objects
-           this.gameObjects.add(gameObject);
-       }
-   }
+     *
+     * AddGameObject method This is the method for adding game objects to the game.
+     *
+     * @param gameObject
+     *            The GameObject to add to the game.
+     */
+    public void addGameObject(final GameObject gameObject) {
+        
+        // Check if we need to add our game object
+        if ((this.gameObjects != null) && !this.gameObjects.contains(gameObject)) {
+            
+            // Initialize our game object
+            gameObject.initialize();
+            // Add to game objects
+            this.gameObjects.add(gameObject);
+        }
+    }
     
     /**
      *
