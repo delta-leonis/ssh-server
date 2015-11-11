@@ -9,25 +9,29 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.transform.Rotate;
 
-
+// TODO: Auto-generated Javadoc
 /**
  * PenaltySpotGO class. This is the class for a penalty spot game object. It represents a penalty
  * spot on the 3d field.
  * 
  * @see GameObject
- *      
- * @author Mark Lefering
+ *
+ * @author Mark Lefering   
  */
 public class PenaltySpotGO extends GameObject {
     
+    /** The location of the penalty spot. */
     private Vector3f     location;
+                         
+    /** The model (a circle). */
     private final Circle model;
                          
+    /** The radius of the penalty spot. */
     private double       radius;
                          
     /**
-     * Constructor
-     * 
+     * Constructor.
+     *
      * @param game
      *            The {@link Game} of the {@link GameObject}.
      * @param location
@@ -61,7 +65,7 @@ public class PenaltySpotGO extends GameObject {
     }
     
     /**
-     * Initialize method. Adds model to the world group.
+     * {@inheritDoc}
      */
     @Override
     public void initialize() {
@@ -71,14 +75,14 @@ public class PenaltySpotGO extends GameObject {
     }
     
     /**
-     * Update method.
+     * {@inheritDoc}
      */
     @Override
     public void update(final long timeDivNano) {
     }
     
     /**
-     * Destroy method. Removes model from the world
+     * {@inheritDoc}
      */
     @Override
     public void destroy() {
@@ -92,8 +96,8 @@ public class PenaltySpotGO extends GameObject {
     }
     
     /**
-     * Gets the location of the penalty spot
-     * 
+     * Gets the location of the penalty spot.
+     *
      * @return Returns a {@link Vector3f} containing the location of the penalty spot.
      */
     public Vector3f getLocation() {
@@ -102,8 +106,8 @@ public class PenaltySpotGO extends GameObject {
     }
     
     /**
-     * Gets the radius of the penalty spot
-     * 
+     * Gets the radius of the penalty spot.
+     *
      * @return Returns a double containing the radius of the penalty spot.
      */
     public double getRadius() {
@@ -114,7 +118,8 @@ public class PenaltySpotGO extends GameObject {
     /**
      * SetLocation method. This method sets the location of the model.
      * 
-     * @param location The {@link Vector3f} of the location of the penalty spot.
+     * @param location
+     *            The {@link Vector3f} of the location of the penalty spot.
      */
     public void setLocation(final Vector3f location) {
         
@@ -130,7 +135,8 @@ public class PenaltySpotGO extends GameObject {
     /**
      * SetRadius method. This method sets the radius of the model.
      * 
-     * @param radius The radius of the model as double.
+     * @param radius
+     *            The radius of the model as double.
      */
     public void setRadius(final double radius) {
         
