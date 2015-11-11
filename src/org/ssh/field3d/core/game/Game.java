@@ -170,11 +170,6 @@ public abstract class Game extends SubScene {
         // Calculate time difference
         timeDivNano = this.curTime - this.prevTime;
         
-        // Set 3d scene's width as this scene's width
-        this.scene3D.setWidth(this.getWidth());
-        // Set 3d scene's height as this scene's heights
-        this.scene3D.setHeight(this.getHeight());
-        
         // Update our game
         this.update(timeDivNano);
         // Update game objects
@@ -334,6 +329,10 @@ public abstract class Game extends SubScene {
         this.timeline = new Timeline();
         // Create 3D Scene
         this.scene3D = new SubScene(this.group3d, width, height, depthBuffer, antiAliasing);
+        
+        // Bind dimensions of the 3d scene
+        this.scene3D.heightProperty().bind(this.heightProperty());
+        this.scene3D.widthProperty().bind(this.widthProperty());
         
         // Setting default values
         this.curTime = this.prevTime = 0;
