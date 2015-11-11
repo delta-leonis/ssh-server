@@ -1,6 +1,7 @@
 package org.ssh.util;
 
 import java.util.logging.LogManager;
+import java.util.stream.Stream;
 
 /**
  * Expanded Logger with build in formatter
@@ -244,6 +245,6 @@ public class Logger extends java.util.logging.Logger {
     * @see java.util.Formatter
     */
    public void exception(final Exception exception) {
-       super.finest(exception.getStackTrace().toString());
+       super.finest(Stream.of(exception.getStackTrace()).reduce("", (result, curRule) -> String.format("%s%s%n", result, curRule.toString()), (left, right) -> left + right).toString());
    }
 }
