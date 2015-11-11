@@ -26,61 +26,109 @@ import javafx.scene.transform.Rotate;
 
 /**
  * FieldGO class. This class creates the field, the goals, lines and arcs.
- * 
+ *
+ * @author marklef2
  * @see GameObject.
  *      
- * @author marklef2
  */
 // TODO: Remove magic numbers
 // TODO: Change lines from box to FlatLine3D
 // TODO: Read public statics from model
 public class FieldGO extends GameObject {
     
+    /** The penalty spot distance form goal */
     public static final double     FIELD_PENALTY_SPOT        = 1000.0;
+    
+    /** The penalty spot size. */
     public static final double     FIELD_PENALTY_SPOT_SIZE   = 10.0;
                                                              
+    /** The west goal left arc starting angle. */
     public static final double     WEST_GOAL_ARC_LEFT_START  = 180.0;
+    
+    /** The west goal left arc ending angle. */
     public static final double     WEST_GOAL_ARC_LEFT_END    = 270.0;
+    
+    /** The west goal right arc starting angle. */
     public static final double     WEST_GOAL_ARC_RIGHT_START = 90.0;
+    
+    /** The west goal right arc ending angle. */
     public static final double     WEST_GOAL_ARC_RIGHT_END   = 180.0;
                                                              
+    /** The east goal right arc starting angle. */
     public static final double     EAST_GOAL_ARC_RIGHT_START = 270.0;
+    
+    /** The east goal right arc ending angle. */
     public static final double     EAST_GOAL_ARC_RIGHT_END   = 360.0;
+    
+    /** The east goal left arc starting angle. */
     public static final double     EAST_GOAL_ARC_LEFT_START  = 0.0;
+    
+    /** The east goal left arc ending angle. */
     public static final double     EAST_GOAL_ARC_LEFT_END    = 90.0;
                                                              
+    /** The goal arc radius. */
     public static final double     GOAL_ARC_RADIUS           = 1000.0;
+    
+    /** The goal arc thickness. */
     public static final double     GOAL_ARC_THICKNESS        = 10.0;
+    
+    /** The mid circle radius. */
     public static final double     MID_CIRCLE_RADIUS         = 1000.0;
+    
+    /** The mid circle thickness. */
     public static final double     MID_CIRCLE_THICKNESS      = 10.0;
                                                              
+    /** The logger. */
     private static final Logger    LOG                       = Logger.getLogger("FieldGO");
+    
+    /** The file path for the grass texture. */
     private static final String    GRASS_TEXTURE_FILE        = "./assets/textures/grass2.png";
                                                              
-    private static final int       LINE_Y_OFFSET             = 10;
+    /** The line offset. */
+    private static final double    LINE_Y_OFFSET             = 10.0;
+    
+    /** The number of divisions in the mid circle. */
     private static final int       MID_CIRCLE_NUM_DIVISIONS  = 1000;
+    
+    /** The number of divisions in the goal arcs. */
     private static final int       GOAL_ARC_NUM_DIVISIONS    = 100;
                                                              
+    /** The tiles of the field. */
     private final List<Box>        fieldBoxes;
+    
+    /** The lines of the field. */
     private final List<FlatLine3D> fieldLines;
                                    
+    /** The grass material. */
     private final PhongMaterial    grassMaterial;
+    
+    /** The context menu for the goals. */
     private final GoalContextMenu  goalContextMenu;
+    
+    /** The east penalty spot. */
     private final PenaltySpotGO    penaltySpotEast;
+    
+    /** The west penalty spot. */
     private final PenaltySpotGO    penaltySpotWest;
                                    
-    private final double           width, height;
-    private final double           tileWidth, tileHeight;
+    /** The width of the field. */
+    private final double           width;
+    
+    /** The depth of the field */
+    private final double           depth;
+    
+    /** The width of the tile. */
+    private final double           tileWidth;
+    
+    /** the depth of the tile. */
+    private final double           tileDepth;
                                    
     /**
-     * Constructor
-     * 
-     * @param game
-     *            The {@link GameObject}'s {@link Game}.
-     * @param width
-     *            The width as double.
-     * @param height
-     *            The height as double.
+     * Constructor.
+     *
+     * @param game            The {@link GameObject}'s {@link Game}.
+     * @param width            The width as double.
+     * @param height            The height as double.
      */
     public FieldGO(final Game game, final double width, final double height) {
         
@@ -108,10 +156,10 @@ public class FieldGO extends GameObject {
                 
         // Setting dimensions
         this.width = width;
-        this.height = height;
+        this.depth = height;
         
         // Setting tile dimensions
-        this.tileHeight = FieldGame.FIELD_TILE_DEPTH;
+        this.tileDepth = FieldGame.FIELD_TILE_DEPTH;
         this.tileWidth = FieldGame.FIELD_TILE_WIDTH;
         
         // Trying to load texture
@@ -138,7 +186,7 @@ public class FieldGO extends GameObject {
     }
     
     /**
-     * Initialize method. Generates tiles, lines, goals and arcs.
+     * {@inheritDoc}
      */
     @Override
     public void initialize() {
@@ -162,17 +210,14 @@ public class FieldGO extends GameObject {
     }
     
     /**
-     * Update method.
-     * 
-     * @param timeDivNano
-     *            Time difference in nanoseconds.
+     * {@inheritDoc}
      */
     @Override
     public void update(final long timeDivNano) {
     }
     
     /**
-     * Destroy method. Destroys tiles and lines
+     * {@inheritDoc}
      */
     @Override
     public void destroy() {
@@ -544,14 +589,14 @@ public class FieldGO extends GameObject {
         // Loop through x axis
         for (int i = 0; i < (this.width / this.tileWidth); i++) {
             // Loop through z axis
-            for (int j = 0; j < (this.height / this.tileHeight); j++) {
+            for (int j = 0; j < (this.depth / this.tileDepth); j++) {
                 
                 // Create new box
-                final Box tmpBox = new Box(this.tileWidth, FieldGame.FIELD_HEIGHT, this.tileHeight);
+                final Box tmpBox = new Box(this.tileWidth, FieldGame.FIELD_HEIGHT, this.tileDepth);
                 
                 // Translate tile into position
                 tmpBox.setTranslateX(-(this.width / 2.0) + ((i * this.tileWidth) + (this.tileWidth / 2.0)));
-                tmpBox.setTranslateZ(-(this.height / 2.0) + ((j * this.tileHeight) + (this.tileHeight / 2.0)));
+                tmpBox.setTranslateZ(-(this.depth / 2.0) + ((j * this.tileDepth) + (this.tileDepth / 2.0)));
                 
                 // Set box material
                 tmpBox.setMaterial(this.grassMaterial);
