@@ -12,21 +12,25 @@ import javafx.scene.Group;
 /**
  * CarGO class. This class represents the easter egg car. It shows when the right mouse button is
  * clicked.
- * 
+ *
  * @see GameObject
- *      
+ *     
  * @author Mark Lefering
  */
 public class CarGO extends GameObject {
     
+    /** The logger. */
     private static final Logger LOG            = Logger.getLogger("CarGO");
+                                               
+    /** The file name for the car model. */
     private static final String CAR_MODEL_FILE = "./assets/cars/Avent2.obj";
                                                
+    /** The model group. */
     private Group               modelGroup;
                                 
     /**
-     * Constructor
-     * 
+     * Constructor.
+     *
      * @param game
      *            The {@link Game} of the {@link GameObject}.
      */
