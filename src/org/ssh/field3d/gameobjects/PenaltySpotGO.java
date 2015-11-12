@@ -9,7 +9,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.transform.Rotate;
 
-// TODO: Auto-generated Javadoc
 /**
  * PenaltySpotGO class. This is the class for a penalty spot game object. It represents a penalty
  * spot on the 3d field.
