@@ -13,8 +13,10 @@ import org.ssh.util.Logger;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
@@ -27,10 +29,7 @@ import javafx.scene.shape.MeshView;
  *         
  * @see GameObject
  */
-
-// TODO: add robot id
-// TODO: add robot team
-// TODO: get robot texture from id & team
+// TODO: remove magic numbers
 public class RobotGO extends GameObject {
     
     /** The thickness of the selection circle. */
@@ -45,8 +44,8 @@ public class RobotGO extends GameObject {
     /** The file for the robot model. */
     private static final String ROBOT_MODEL_FILE                 = "./assets/models/robot_model.obj";
                                                                  
-    /** The file for the robot texture. */
-    private static final String ROBOT_TEXTURE_FILE               = "./assets/textures/robotTextureTest2.png";
+    /** The directory for the robot texture. */
+    private static final String ROBOT_TEXTURE_DIR                = "./assets/textures/robots/";
                                                                  
     /** The logger. */
     private static final Logger LOG                              = Logger.getLogger();
@@ -73,6 +72,7 @@ public class RobotGO extends GameObject {
                                 
     /** The selected state */
     private boolean             isSelected;
+    
                                 
     /**
      * 
@@ -117,6 +117,12 @@ public class RobotGO extends GameObject {
         // Setting selection circle material
         this.selectionArcMesh.setMaterial(this.selectionCircleMaterial);
         
+        
+        
+        // TODO: change filenames
+        byte num = (byte) ((visionRobotModel.getTeamColorIdentifier().charAt(0) == 'B') ? 1 : 0);
+        String textureFilename = ROBOT_TEXTURE_DIR + "robot_" + num + "_" + visionRobotModel.getRobotId() + ".png";
+        
         // Read model into model importer
         modelImporter.read(ROBOT_MODEL_FILE);
         
@@ -129,12 +135,12 @@ public class RobotGO extends GameObject {
             try {
                 
                 // Loading texture & setting diffuse map of the model material
-                this.material.setDiffuseMap(new Image(new FileInputStream(ROBOT_TEXTURE_FILE)));
+                this.material.setDiffuseMap(new Image(new FileInputStream(textureFilename)));
             }
             catch (final FileNotFoundException fileNotFoundException) {
                 
                 // Log error
-                LOG.warning("Could not load " + ROBOT_TEXTURE_FILE);
+                LOG.warning("Could not load " + textureFilename);
                 LOG.exception(fileNotFoundException);
                 return;
             }
@@ -148,6 +154,17 @@ public class RobotGO extends GameObject {
             LOG.info("Could not load " + ROBOT_MODEL_FILE);
             return;
         }
+        
+        this.model.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+                
+                // Setting selected state
+                setSelected(!isSelected);
+            } 
+            
+        });
         
         // Setting not selected
         this.isSelected = false;
@@ -193,7 +210,7 @@ public class RobotGO extends GameObject {
         
         // Translate selection circle to location
         this.selectionArcMesh.setTranslateX(this.location.x);
-        this.selectionArcMesh.setTranslateY(this.location.y - (model.getBoundsInLocal().getHeight() / 1.8));
+        this.selectionArcMesh.setTranslateY(this.location.y);
         this.selectionArcMesh.setTranslateZ(this.location.z);
     }
     
