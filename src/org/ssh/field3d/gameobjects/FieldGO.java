@@ -22,7 +22,6 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.MeshView;
-import javafx.scene.transform.Rotate;
 
 /**
  * FieldGO class. This class creates the field, the goals, lines and arcs.
@@ -102,9 +101,6 @@ public class FieldGO extends GameObject {
     /** The grass material. */
     private final PhongMaterial    grassMaterial;
     
-    /** The context menu for the goals. */
-    private final GoalContextMenu  goalContextMenu;
-    
     /** The east penalty spot. */
     private final PenaltySpotGO    penaltySpotEast;
     
@@ -144,8 +140,6 @@ public class FieldGO extends GameObject {
         // Creating grass material with lawn green diffuse color
         this.grassMaterial = new PhongMaterial(Color.LAWNGREEN);
         
-        // Creating new goal context menu
-        this.goalContextMenu = new GoalContextMenu(this.getGame(), 1000, 500);
         // Creating penalty spots
         this.penaltySpotEast = new PenaltySpotGO(this.getGame(),
                 new Vector3f((float) ((width / 2.0) - FieldGO.FIELD_PENALTY_SPOT), 20, 0),
@@ -204,7 +198,6 @@ public class FieldGO extends GameObject {
         this.generateArcs();
         
         // Adding game objects to the game
-        this.getGame().addGameObject(this.goalContextMenu);
         this.getGame().addGameObject(this.penaltySpotEast);
         this.getGame().addGameObject(this.penaltySpotWest);
     }
@@ -434,31 +427,11 @@ public class FieldGO extends GameObject {
                 (float) FieldGame.FIELD_GOAL_WIDTH);
                 
         // Add west left box
-        this.addBox(goalWestLeftPos, goalWestLeftDim).setOnMouseClicked(event -> {
-            
-            // Translate context menu
-            this.goalContextMenu.translate(goalWestLeftPos.x - 500, goalWestLeftPos.y, goalWestLeftPos.z - 500);
-            // Show context menu
-            this.goalContextMenu.show();
-        });
+        this.addBox(goalWestLeftPos, goalWestLeftDim);
         // Add west right box
-        this.addBox(goalWestRightPos, goalWestRightDim).setOnMouseClicked(event -> {
-            
-            // Translate context menu
-            this.goalContextMenu.translate(goalWestRightPos.x - 500, goalWestRightPos.y, goalWestRightPos.z + 500);
-            // Show context menu
-            this.goalContextMenu.show();
-        });
+        this.addBox(goalWestRightPos, goalWestRightDim);
         // Add west back box
-        this.addBox(goalWestBackPos, goalWestBackDim).setOnMouseClicked(event -> {
-            
-            // Translate context menu
-            this.goalContextMenu.translate(goalWestBackPos.x,
-                    goalWestBackPos.y + (goalWestBackDim.y / 2.0),
-                    goalWestBackPos.z);
-            // Show context menu
-            this.goalContextMenu.show();
-        });
+        this.addBox(goalWestBackPos, goalWestBackDim);
         
         // Calculating East goal left border
         final Vector3f goalEastLeftPos = new Vector3f(
@@ -488,31 +461,11 @@ public class FieldGO extends GameObject {
                 (float) FieldGame.FIELD_GOAL_WIDTH);
                 
         // Add east goal, left border to the field and add a mouse click listener
-        this.addBox(goalEastLeftPos, goalEastLeftDim).setOnMouseClicked(event -> {
-            
-            // Translate context menu
-            this.goalContextMenu.translate(goalEastLeftPos.x - 500, goalEastLeftPos.y, goalEastLeftPos.z - 500);
-            // Show context menu
-            this.goalContextMenu.show();
-        });
+        this.addBox(goalEastLeftPos, goalEastLeftDim);
         // Add east goal, right border to the field and add a mouse click listener
-        this.addBox(goalEastRightPos, goalEastRightDim).setOnMouseClicked(event -> {
-            
-            // Translate context menu
-            this.goalContextMenu.translate(goalEastRightPos.x - 500, goalEastRightPos.y, goalEastRightPos.z + 500);
-            // Show context menu
-            this.goalContextMenu.show();
-        });
+        this.addBox(goalEastRightPos, goalEastRightDim);
         // Add east goal, back border to the field and add a mouse click listener
-        this.addBox(goalEastBackPos, goalEastBackDim).setOnMouseClicked(event -> {
-            
-            // Translate context menu
-            this.goalContextMenu.translate(goalEastBackPos.x,
-                    goalEastBackPos.y + (goalEastBackDim.y / 2.0),
-                    goalEastBackPos.z);
-            // Show context menu
-            this.goalContextMenu.show();
-        });
+        this.addBox(goalEastBackPos, goalEastBackDim);
         
     }
     
