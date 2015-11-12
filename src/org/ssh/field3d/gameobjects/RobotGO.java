@@ -72,7 +72,6 @@ public class RobotGO extends GameObject {
                                 
     /** The selected state */
     private boolean             isSelected;
-    
                                 
     /**
      * 
@@ -117,12 +116,10 @@ public class RobotGO extends GameObject {
         // Setting selection circle material
         this.selectionArcMesh.setMaterial(this.selectionCircleMaterial);
         
-        
-        
-        // TODO: change filenames
-        byte num = (byte) ((visionRobotModel.getTeamColorIdentifier().charAt(0) == 'B') ? 1 : 0);
-        String textureFilename = ROBOT_TEXTURE_DIR + "robot_" + num + "_" + visionRobotModel.getRobotId() + ".png";
-        
+        // Generating texture filename
+        String textureFilename = ROBOT_TEXTURE_DIR + "robot" + visionRobotModel.getTeamColorIdentifier()
+                + visionRobotModel.getRobotId() + ".png";
+                
         // Read model into model importer
         modelImporter.read(ROBOT_MODEL_FILE);
         
@@ -156,13 +153,13 @@ public class RobotGO extends GameObject {
         }
         
         this.model.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
+            
             @Override
             public void handle(MouseEvent event) {
                 
                 // Setting selected state
                 setSelected(!isSelected);
-            } 
+            }
             
         });
         
