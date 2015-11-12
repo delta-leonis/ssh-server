@@ -24,12 +24,12 @@ import javafx.scene.shape.MeshView;
 /**
  * RobotGO class This class is for robot game objects. This class loads the 3d model, textures and
  * the selection arc.
- *
+ * 
+ * @see GameObject
+ *      
  * @author Mark Lefering
  *         
- * @see GameObject
  */
-// TODO: remove magic numbers
 public class RobotGO extends GameObject {
     
     /** The thickness of the selection circle. */
@@ -40,6 +40,12 @@ public class RobotGO extends GameObject {
                                                                  
     /** The number of segments in the selection circle */
     private static final int    ROBOT_SEL_CIRCLE_NUM_OF_SEGMENTS = 100;
+                                                                 
+    /** The angle in degrees for a full circle */
+    private static final double FULL_CIRCLE                      = 360.0;
+                                                                 
+    /** The specular power of the robot (shininess) */
+    private static final double SPECULAR_POWER                   = 20.0;
                                                                  
     /** The file for the robot model. */
     private static final String ROBOT_MODEL_FILE                 = "./assets/models/robot_model.obj";
@@ -93,9 +99,9 @@ public class RobotGO extends GameObject {
         
         // Creating selection circle
         this.selectionArc = new FlatArc3D(0.0,
-                360.0,
+                FULL_CIRCLE,
                 Robot.ROBOT_RADIUS,
-                RobotGO.ROBOT_SELECTION_CIRCLE_THICKNESS,
+                ROBOT_SELECTION_CIRCLE_THICKNESS,
                 ROBOT_SEL_CIRCLE_NUM_OF_SEGMENTS);
                 
         // Creating PhongMaterials
@@ -112,11 +118,11 @@ public class RobotGO extends GameObject {
         this.selectionCircleMaterial.setDiffuseColor(Color.BLUE);
         this.selectionCircleMaterial.setSpecularColor(Color.BLUE);
         // Setting specular power
-        this.selectionCircleMaterial.setSpecularPower(20.0);
+        this.selectionCircleMaterial.setSpecularPower(SPECULAR_POWER);
         // Setting selection circle material
         this.selectionArcMesh.setMaterial(this.selectionCircleMaterial);
         
-        // Generating texture filename
+        // Generating texture file name
         String textureFilename = ROBOT_TEXTURE_DIR + "robot" + visionRobotModel.getTeamColorIdentifier()
                 + visionRobotModel.getRobotId() + ".png";
                 
@@ -174,10 +180,10 @@ public class RobotGO extends GameObject {
     @Override
     public void initialize() {
         
-        // Create a org.ssh.models group
+        // Create a model group
         final Group modelGroup = new Group();
         
-        // Add our org.ssh.models to the org.ssh.models group
+        // Add models to model group
         modelGroup.getChildren().add(this.model);
         modelGroup.getChildren().add(this.selectionArcMesh);
         
