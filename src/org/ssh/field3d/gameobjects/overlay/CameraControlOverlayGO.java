@@ -112,7 +112,7 @@ public class CameraControlOverlayGO extends GameObject {
     public void initialize() {
         
         // Adding control group to 2d group
-        Platform.runLater(() -> this.getGame().get2DGroup().getChildren().add(this.controlsGroup));
+        this.getGame().get2DGroup().getChildren().add(this.controlsGroup);
         
         // Hook events
         this.button45DegView.setOnMouseClicked(new OnButton45DegViewClicked());
