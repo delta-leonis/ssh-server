@@ -16,12 +16,14 @@ import org.ssh.field3d.gameobjects.contextmenus.GoalContextMenu;
 import org.ssh.util.Logger;
 
 import javafx.application.Platform;
+import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.MeshView;
+import protobuf.Geometry.Vector2f;
 
 /**
  * FieldGO class. This class creates the field, the goals, lines and arcs.
@@ -253,13 +255,11 @@ public class FieldGO extends GameObject {
      *            The thickness of the line
      * @return The line created.
      */
-    private FlatLine3D addLine(final double startX,
-            final double startZ,
-            final double endX,
-            final double endZ,
+    private FlatLine3D addLine(final Vector2f start,
+            final Vector2f end,
             final double thickness) {
             
-        final FlatLine3D line = new FlatLine3D(startX, startZ, endX, endZ, thickness);
+        final FlatLine3D line = new FlatLine3D(start, end, thickness);
         final MeshView lineMesh = line.getMeshView();
         
         // Add to lines
