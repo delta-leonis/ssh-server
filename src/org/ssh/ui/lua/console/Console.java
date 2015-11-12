@@ -271,7 +271,7 @@ public class Console extends UIComponent {
             // TODO: Block input until here?
             this.printCursor();
             this.currentLine = this.consoleArea.getText().length();
-            this.consoleArea.setCurrentLine(this.currentLine);
+            this.consoleArea.setCurrentLine(this.currentLine -1 );
             return null;
         });
     }
@@ -332,7 +332,7 @@ public class Console extends UIComponent {
             final int i = this.consoleArea.getLength();
             this.consoleArea.replaceText(i, i, '\n' + Console.CURSOR);
             this.currentLine = this.consoleArea.getText().length();
-            consoleArea.setCurrentLine(currentLine);
+            consoleArea.setCurrentLine(currentLine -1);
         });
     }
     
