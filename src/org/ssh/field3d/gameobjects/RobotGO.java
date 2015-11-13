@@ -1,7 +1,5 @@
 package org.ssh.field3d.gameobjects;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import org.ssh.field3d.core.game.Game;
