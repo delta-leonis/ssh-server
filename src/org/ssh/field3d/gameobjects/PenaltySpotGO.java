@@ -67,7 +67,7 @@ public class PenaltySpotGO extends GameObject {
      * {@inheritDoc}
      */
     @Override
-    public void initialize() {
+    public void onInitialize() {
         
         // Add model to the world group
         Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(this.model));
@@ -77,14 +77,14 @@ public class PenaltySpotGO extends GameObject {
      * {@inheritDoc}
      */
     @Override
-    public void update(final long timeDivNano) {
+    public void onUpdate(final long timeDivNano) {
     }
     
     /**
      * {@inheritDoc}
      */
     @Override
-    public void destroy() {
+    public void onDestroy() {
         
         // Check if model in the world
         if (this.getGame().getWorldGroup().getChildren().contains(this.model)) {

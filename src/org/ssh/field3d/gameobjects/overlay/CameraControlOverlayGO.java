@@ -109,7 +109,7 @@ public class CameraControlOverlayGO extends GameObject {
      * {@inheritDoc}
      */
     @Override
-    public void initialize() {
+    public void onInitialize() {
         
         // Adding control group to 2d group
         this.getGame().get2DGroup().getChildren().add(this.controlsGroup);
@@ -132,7 +132,7 @@ public class CameraControlOverlayGO extends GameObject {
      * {@inheritDoc}
      */
     @Override
-    public void destroy() {
+    public void onDestroy() {
         
         // If 2d group contains the controls group
         if (this.getGame().get2DGroup().getChildren().contains(this.controlsGroup)) {
@@ -159,7 +159,7 @@ public class CameraControlOverlayGO extends GameObject {
      * {@inheritDoc}
      */
     @Override
-    public void update(final long timeDivNano) {
+    public void onUpdate(final long timeDivNano) {
     }
     
     /**

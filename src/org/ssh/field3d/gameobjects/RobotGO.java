@@ -176,7 +176,7 @@ public class RobotGO extends GameObject {
      * {@inheritDoc}
      */
     @Override
-    public void initialize() {
+    public void onInitialize() {
         
         // Create a model group
         final Group modelGroup = new Group();
@@ -193,7 +193,7 @@ public class RobotGO extends GameObject {
      * {@inheritDoc}
      */
     @Override
-    public void update(final long timeDivNano) {
+    public void onUpdate(final long timeDivNano) {
         
         // Checking if we have got valid data
         if (visionRobotModel != null && visionRobotModel.getPosition() != null) {
@@ -219,7 +219,7 @@ public class RobotGO extends GameObject {
      * {@inheritDoc}
      */
     @Override
-    public void destroy() {
+    public void onDestroy() {
     }
     
     /**

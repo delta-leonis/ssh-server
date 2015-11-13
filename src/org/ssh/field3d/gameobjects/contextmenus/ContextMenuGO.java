@@ -104,7 +104,7 @@ public class ContextMenuGO extends GameObject {
      * {@inheritDoc}
      */
     @Override
-    public void initialize() {
+    public void onInitialize() {
         
         // Add context menu to world
         Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(this.xform));
@@ -114,7 +114,7 @@ public class ContextMenuGO extends GameObject {
      * {@inheritDoc}
      */
     @Override
-    public void update(final long timeDivNano) {
+    public void onUpdate(final long timeDivNano) {
         
         // TODO: remove magic numbers
         // Calculate scale of the context menu
@@ -138,7 +138,7 @@ public class ContextMenuGO extends GameObject {
      * {@inheritDoc}
      */
     @Override
-    public void destroy() {
+    public void onDestroy() {
         
         // Check if we need to remove the context menu from the world group
         if (this.getGame().getWorldGroup().getChildren().contains(this.xform)) {

@@ -90,7 +90,7 @@ public class MouseInputHandler extends GameObject {
      * {@inheritDoc}
      */
     @Override
-    public void initialize() {
+    public void onInitialize() {
         
         // Hook events
         this.getGame().setOnMouseDragged(this.onMouseDragged);
@@ -104,7 +104,7 @@ public class MouseInputHandler extends GameObject {
      * {@inheritDoc}
      */
     @Override
-    public void update(final long timeDivNano) {
+    public void onUpdate(final long timeDivNano) {
         
         // Update previous location
         this.prevMouseX = this.curMouseX;
@@ -118,7 +118,7 @@ public class MouseInputHandler extends GameObject {
      * {@inheritDoc}
      */
     @Override
-    public void destroy() {
+    public void onDestroy() {
     }
     
     /**

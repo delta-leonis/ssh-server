@@ -29,12 +29,12 @@ public abstract class GameObject {
     /**
      * Abstract destroy method. This is called from {@link Game}.
      */
-    public abstract void destroy();
+    public abstract void onDestroy();
     
     /**
      * Abstract initialize method. This is called from {@link Game}.
      */
-    public abstract void initialize();
+    public abstract void onInitialize();
     
     /**
      * Abstract update method. This is called from {@link Game}.
@@ -42,7 +42,7 @@ public abstract class GameObject {
      * @param timeDivNano
      *            The time difference in nanoseconds.
      */
-    public abstract void update(long timeDivNano);
+    public abstract void onUpdate(long timeDivNano);
     
     /**
      * Gets the game of the {@link GameObject}.

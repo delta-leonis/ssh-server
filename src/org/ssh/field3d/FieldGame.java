@@ -9,6 +9,7 @@ import org.ssh.field3d.gameobjects.CarGO;
 import org.ssh.field3d.gameobjects.FieldGO;
 import org.ssh.field3d.gameobjects.RobotGO;
 import org.ssh.field3d.gameobjects.overlay.CameraControlOverlayGO;
+import org.ssh.field3d.gameobjects.overlay.contextmenus.ContextOverlayGO;
 import org.ssh.managers.Models;
 import org.ssh.managers.Services;
 import org.ssh.models.ModelController;
@@ -87,6 +88,9 @@ public class FieldGame extends Game {
                                          
     /** The camera control overlay game object. */
     private final CameraControlOverlayGO cameraControlOverlayGO;
+    
+    /** The context overlay game object. */
+    private final ContextOverlayGO       contextOverlayGO;
                                          
     /** The easter car game object */
     private final CarGO                  easterCarGO;
@@ -127,6 +131,8 @@ public class FieldGame extends Game {
         this.fieldGO = new FieldGO(this, FieldGame.FIELD_REAL_WIDTH, FieldGame.FIELD_REAL_DEPTH);
         // Creating camera control overlay GameObject
         this.cameraControlOverlayGO = new CameraControlOverlayGO(this);
+        // Creating context menu overlay GameObject
+        this.contextOverlayGO = new ContextOverlayGO(this);
         // Creating easter egg car GameObject
         this.easterCarGO = new CarGO(this);
         
@@ -172,6 +178,7 @@ public class FieldGame extends Game {
         // Adding game objects
         this.addGameObject(this.fieldGO);
         this.addGameObject(this.cameraControlOverlayGO);
+        this.addGameObject(this.contextOverlayGO);
         this.addGameObject(this.easterCarGO);
         
         // Create some robots
@@ -235,7 +242,4 @@ public class FieldGame extends Game {
             addGameObject(tmpRobot);
         }
     }
-    
-    
-  
 }

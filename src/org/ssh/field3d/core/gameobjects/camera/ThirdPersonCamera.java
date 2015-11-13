@@ -102,7 +102,7 @@ public class ThirdPersonCamera extends GameObject {
      * Initialize method. This method adds the camera to the camera group.
      */
     @Override
-    public void initialize() {
+    public void onInitialize() {
         
         // Add our camera Xform to the camera group
         Platform.runLater(() -> this.getGame().getCameraGroup().getChildren().add(this.xForm1));
@@ -112,7 +112,7 @@ public class ThirdPersonCamera extends GameObject {
      * Update method. This method updates the camera. Movement, rotation and zoom is handled here.
      */
     @Override
-    public void update(final long timeDivNano) {
+    public void onUpdate(final long timeDivNano) {
         
         // TODO: Remove magic numbers
         
@@ -198,7 +198,7 @@ public class ThirdPersonCamera extends GameObject {
      * Destroy method. This method removes the camera from the camera group.
      */
     @Override
-    public void destroy() {
+    public void onDestroy() {
         
         // Check if we need to remove the camera
         if (this.getGame().getCameraGroup().getChildren().contains(this.xForm1)) {

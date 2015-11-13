@@ -103,7 +103,7 @@ public class SkyboxGO extends GameObject {
      * {@inheritDoc}
      */
     @Override
-    public void initialize() {
+    public void onInitialize() {
         
         // Add models to world group
         Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(this.model));
@@ -113,14 +113,14 @@ public class SkyboxGO extends GameObject {
      * {@inheritDoc}
      */
     @Override
-    public void update(final long timeDivNano) {
+    public void onUpdate(final long timeDivNano) {
     }
     
     /**
      * {@inheritDoc}
      */
     @Override
-    public void destroy() {
+    public void onDestroy() {
         
         // Check if model is in the world group
         if (this.getGame().getWorldGroup().getChildren().contains(this.model)) {

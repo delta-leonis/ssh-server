@@ -68,7 +68,7 @@ public class CarGO extends GameObject {
      * Initialize method. This method adds the model group to the world.
      */
     @Override
-    public void initialize() {
+    public void onInitialize() {
         
         // Add model group to the world group
         Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(this.modelGroup));
@@ -81,7 +81,7 @@ public class CarGO extends GameObject {
      *            The time difference in nanoseconds.
      */
     @Override
-    public void update(final long timeDivNano) {
+    public void onUpdate(final long timeDivNano) {
         
         // Check if right mouse button is down
         if (this.getGame().getMouseInputHandler().isRightButtonDown()) {
@@ -101,7 +101,7 @@ public class CarGO extends GameObject {
      * Destroy method. This method removes the model group from the world group if needed.
      */
     @Override
-    public void destroy() {
+    public void onDestroy() {
         
         // Check if we need to remove model group from the world group
         if (this.getGame().getWorldGroup().getChildren().contains(modelGroup)) {

@@ -175,7 +175,7 @@ public class FieldGO extends GameObject {
      * {@inheritDoc}
      */
     @Override
-    public void initialize() {
+    public void onInitialize() {
         
         // Generate tiles
         this.generateTiles();
@@ -198,14 +198,14 @@ public class FieldGO extends GameObject {
      * {@inheritDoc}
      */
     @Override
-    public void update(final long timeDivNano) {
+    public void onUpdate(final long timeDivNano) {
     }
     
     /**
      * {@inheritDoc}
      */
     @Override
-    public void destroy() {
+    public void onDestroy() {
         
         // Check if we need to remove field boxes
         if ((this.fieldBoxes != null) && (this.fieldBoxes.size() > 0)) {

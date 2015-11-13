@@ -189,7 +189,7 @@ public abstract class Game extends SubScene {
         if ((this.gameObjects != null) && !this.gameObjects.contains(gameObject)) {
             
             // Initialize our game object
-            gameObject.initialize();
+            gameObject.onInitialize();
             // Add to game objects
             this.gameObjects.add(gameObject);
         }
@@ -208,7 +208,7 @@ public abstract class Game extends SubScene {
         if ((this.gameObjects != null) && this.gameObjects.contains(gameObject)) {
             
             // Notify the game object we are removing it from the game
-            gameObject.destroy();
+            gameObject.onDestroy();
             // Remove from game objects
             this.gameObjects.remove(gameObject);
         }
@@ -256,7 +256,7 @@ public abstract class Game extends SubScene {
                 // Check if we can update the current game object
                 if (gameObject != null)
                     // Update the game object
-                    gameObject.update(timeDivNano);
+                    gameObject.onUpdate(timeDivNano);
             }
         }
     }
@@ -277,7 +277,7 @@ public abstract class Game extends SubScene {
                 if (gameObject != null) {
                     
                     // Destroy the current game object
-                    gameObject.destroy();
+                    gameObject.onDestroy();
                     // Remove from array list
                     this.removeGameObject(gameObject);
                 }

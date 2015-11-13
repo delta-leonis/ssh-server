@@ -41,30 +41,30 @@ public class GoalContextMenu extends ContextMenuGO {
      * {@inheritDoc}
      */
     @Override
-    public void destroy() {
+    public void onDestroy() {
         
         // Execute super Destroy method
-        super.destroy();
+        super.onDestroy();
     }
     
     /**
      * {@inheritDoc}
      */
     @Override
-    public void initialize() {
+    public void onInitialize() {
         
         // Execute super Initialize method
-        super.initialize();
+        super.onInitialize();
     }
     
     /**
      * {@inheritDoc}
      */
     @Override
-    public void update(final long timeDivNano) {
+    public void onUpdate(final long timeDivNano) {
         
         // Execute super Update method
-        super.update(timeDivNano);
+        super.onUpdate(timeDivNano);
     }
     
 }

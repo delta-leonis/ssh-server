@@ -45,7 +45,7 @@ public class KeyInputHandler extends GameObject {
      * Initialize method. This method hooks the OnKeyPressed & OnKeyReleased events.
      */
     @Override
-    public void initialize() {
+    public void onInitialize() {
         
         // Hook keyboard events
         this.getGame().setOnKeyPressed(this.keyPressedHandler);
@@ -56,14 +56,14 @@ public class KeyInputHandler extends GameObject {
      * Update method.
      */
     @Override
-    public void update(final long timeDivNano) {
+    public void onUpdate(final long timeDivNano) {
     }
     
     /**
      * Destroy method. This method unhooks the keyboard events.
      */
     @Override
-    public void destroy() {
+    public void onDestroy() {
         
         // Unhook events
         this.getGame().setOnKeyPressed(null);
