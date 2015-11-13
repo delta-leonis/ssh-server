@@ -1,8 +1,6 @@
 package org.ssh.field3d.gameobjects;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,11 +10,9 @@ import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.field3d.core.math.Vector3f;
 import org.ssh.field3d.core.shapes.FlatArc3D;
 import org.ssh.field3d.core.shapes.FlatLine3D;
-import org.ssh.field3d.gameobjects.contextmenus.GoalContextMenu;
 import org.ssh.util.Logger;
 
 import javafx.application.Platform;
-import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -39,101 +35,102 @@ public class FieldGO extends GameObject {
     
     /** The penalty spot distance form goal */
     public static final double     FIELD_PENALTY_SPOT        = 1000.0;
-    
+                                                             
     /** The penalty spot size. */
     public static final double     FIELD_PENALTY_SPOT_SIZE   = 10.0;
                                                              
     /** The west goal left arc starting angle. */
     public static final double     WEST_GOAL_ARC_LEFT_START  = 180.0;
-    
+                                                             
     /** The west goal left arc ending angle. */
     public static final double     WEST_GOAL_ARC_LEFT_END    = 270.0;
-    
+                                                             
     /** The west goal right arc starting angle. */
     public static final double     WEST_GOAL_ARC_RIGHT_START = 90.0;
-    
+                                                             
     /** The west goal right arc ending angle. */
     public static final double     WEST_GOAL_ARC_RIGHT_END   = 180.0;
                                                              
     /** The east goal right arc starting angle. */
     public static final double     EAST_GOAL_ARC_RIGHT_START = 270.0;
-    
+                                                             
     /** The east goal right arc ending angle. */
     public static final double     EAST_GOAL_ARC_RIGHT_END   = 360.0;
-    
+                                                             
     /** The east goal left arc starting angle. */
     public static final double     EAST_GOAL_ARC_LEFT_START  = 0.0;
-    
+                                                             
     /** The east goal left arc ending angle. */
     public static final double     EAST_GOAL_ARC_LEFT_END    = 90.0;
                                                              
     /** The goal arc diameter. */
     public static final double     GOAL_ARC_DIAMETER         = 1000.0;
-    
+                                                             
     /** The goal arc thickness. */
     public static final double     GOAL_ARC_THICKNESS        = 10.0;
-    
+                                                             
     /** The mid circle radius. */
     public static final double     MID_CIRCLE_RADIUS         = 1000.0;
-    
+                                                             
     /** The mid circle thickness. */
     public static final double     MID_CIRCLE_THICKNESS      = 10.0;
                                                              
     /** The logger. */
     private static final Logger    LOG                       = Logger.getLogger("FieldGO");
-    
+                                                             
     /** The file path for the grass texture. */
-    private static final String    GRASS_TEXTURE_FILE        = "./assets/textures/grass2.png";
+    private static final String    GRASS_TEXTURE_FILE        = "/org/ssh/view/textures/field/grass.png";
                                                              
     /** The line offset. */
     private static final double    LINE_Y_OFFSET             = 10.0;
-    
+                                                             
     /** The number of divisions in the mid circle. */
     private static final int       MID_CIRCLE_NUM_DIVISIONS  = 1000;
-    
+                                                             
     /** The number of divisions in the goal arcs. */
     private static final int       GOAL_ARC_NUM_DIVISIONS    = 100;
                                                              
     /** The tiles of the field. */
     private final List<Box>        fieldBoxes;
-    
+                                   
     /** The lines of the field. */
     private final List<FlatLine3D> fieldLines;
                                    
     /** The grass material. */
     private final PhongMaterial    grassMaterial;
-    
+                                   
     /** The east penalty spot. */
     private final PenaltySpotGO    penaltySpotEast;
-    
+                                   
     /** The west penalty spot. */
     private final PenaltySpotGO    penaltySpotWest;
                                    
     /** The width of the field. */
     private final double           width;
-    
+                                   
     /** The depth of the field */
     private final double           depth;
-    
+                                   
     /** The width of the tile. */
     private final double           tileWidth;
-    
+                                   
     /** the depth of the tile. */
     private final double           tileDepth;
                                    
     /**
      * Constructor.
      *
-     * @param game            The {@link GameObject}'s {@link Game}.
-     * @param width            The width as double.
-     * @param height            The height as double.
+     * @param game
+     *            The {@link GameObject}'s {@link Game}.
+     * @param width
+     *            The width as double.
+     * @param height
+     *            The height as double.
      */
     public FieldGO(final Game game, final double width, final double height) {
         
         // Initialize super class
         super(game);
-        
-        FileInputStream fileInput = null;
         
         // Creating lists for the tiles and lines
         this.fieldBoxes = new ArrayList<Box>();
@@ -158,26 +155,19 @@ public class FieldGO extends GameObject {
         this.tileDepth = FieldGame.FIELD_TILE_DEPTH;
         this.tileWidth = FieldGame.FIELD_TILE_WIDTH;
         
-        // Trying to load texture
-        try {
-            // Opening file
-            fileInput = new FileInputStream(GRASS_TEXTURE_FILE);
-            // Setting grass material
-            this.grassMaterial.setDiffuseMap(new Image(fileInput));
-            // Closing file
-            fileInput.close();
+        // Getting resource
+        InputStream textureInputStream = this.getClass().getResourceAsStream(GRASS_TEXTURE_FILE);
+        
+        // Check if the texture file exists
+        if (textureInputStream != null) {
+            
+            // Setting diffuse map
+            this.grassMaterial.setDiffuseMap(new Image(textureInputStream));
         }
-        catch (final FileNotFoundException fileNotFoundException) {
+        else {
             
             // Log error
             LOG.info("Could not load " + GRASS_TEXTURE_FILE);
-            LOG.exception(fileNotFoundException);
-        }
-        catch (IOException ioException) {
-            
-            // Log error
-            LOG.finest(ioException.getStackTrace().toString());
-            LOG.exception(ioException);
         }
     }
     
@@ -255,10 +245,8 @@ public class FieldGO extends GameObject {
      *            The thickness of the line
      * @return The line created.
      */
-    private FlatLine3D addLine(final Vector2f start,
-            final Vector2f end,
-            final double thickness) {
-            
+    private FlatLine3D addLine(final Vector2f start, final Vector2f end, final double thickness) {
+        
         final FlatLine3D line = new FlatLine3D(start, end, thickness);
         final MeshView lineMesh = line.getMeshView();
         
@@ -353,11 +341,11 @@ public class FieldGO extends GameObject {
                 MID_CIRCLE_RADIUS,
                 MID_CIRCLE_THICKNESS,
                 MID_CIRCLE_NUM_DIVISIONS).MeshView();
-        
+                
         // Translate arcs into position
         goalWestArcRightMesh.setTranslateX((FieldGame.FIELD_WIDTH / 2.0));
         goalWestArcRightMesh.setTranslateY(LINE_Y_OFFSET);
-        goalWestArcRightMesh.setTranslateZ(GOAL_ARC_DIAMETER / 4.0);        
+        goalWestArcRightMesh.setTranslateZ(GOAL_ARC_DIAMETER / 4.0);
         
         goalWestArcLeftMesh.setTranslateX(FieldGame.FIELD_WIDTH / 2.0);
         goalWestArcLeftMesh.setTranslateY(LINE_Y_OFFSET);
