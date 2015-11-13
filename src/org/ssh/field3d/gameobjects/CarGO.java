@@ -23,7 +23,7 @@ public class CarGO extends GameObject {
     private static final Logger LOG            = Logger.getLogger("CarGO");
                                                
     /** The file name for the car model. */
-    private static final String CAR_MODEL_FILE = "./assets/cars/Avent2.obj";
+    private static final String CAR_MODEL_FILE = "/org/ssh/view/3dmodels/cars/Avent2.obj";
                                                
     /** The model group. */
     private Group               modelGroup;
@@ -45,7 +45,7 @@ public class CarGO extends GameObject {
         this.modelGroup = new Group();
         
         // Read model
-        modelImporter.read(CAR_MODEL_FILE);
+        modelImporter.read(this.getClass().getResource(CAR_MODEL_FILE));
         
         // Check if the model importer read something
         if (modelImporter.getImport().length > 0) {
