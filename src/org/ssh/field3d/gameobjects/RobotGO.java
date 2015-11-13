@@ -2,6 +2,7 @@ package org.ssh.field3d.gameobjects;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
@@ -48,10 +49,10 @@ public class RobotGO extends GameObject {
     private static final double SPECULAR_POWER                   = 20.0;
                                                                  
     /** The file for the robot model. */
-    private static final String ROBOT_MODEL_FILE                 = "./assets/models/robot_model.obj";
+    private static final String ROBOT_MODEL_FILE                 = "/org/ssh/view/3dmodels/robot_model.obj";
                                                                  
     /** The directory for the robot texture. */
-    private static final String ROBOT_TEXTURE_DIR                = "./assets/textures/robots/";
+    private static final String ROBOT_TEXTURE_DIR                = "/org/ssh/view/textures/robots/";
                                                                  
     /** The logger. */
     private static final Logger LOG                              = Logger.getLogger();
@@ -125,9 +126,9 @@ public class RobotGO extends GameObject {
         // Generating texture file name
         String textureFilename = ROBOT_TEXTURE_DIR + "robot" + visionRobotModel.getTeamColorIdentifier()
                 + visionRobotModel.getRobotId() + ".png";
-                
+        
         // Read model into model importer
-        modelImporter.read(ROBOT_MODEL_FILE);
+        modelImporter.read(this.getClass().getResource(ROBOT_MODEL_FILE));
         
         // Check if we have loaded something
         if (modelImporter.getImport().length > 0) {
@@ -135,17 +136,16 @@ public class RobotGO extends GameObject {
             // Getting model from the model importer
             this.model = modelImporter.getImport()[0];
             
-            try {
+            InputStream textureInputStream = this.getClass().getResourceAsStream(textureFilename);
+            
+            if (textureInputStream != null) {
                 
                 // Loading texture & setting diffuse map of the model material
-                this.material.setDiffuseMap(new Image(new FileInputStream(textureFilename)));
-            }
-            catch (final FileNotFoundException fileNotFoundException) {
+                this.material.setDiffuseMap(new Image(textureInputStream));
                 
-                // Log error
+            } else {
+                
                 LOG.warning("Could not load " + textureFilename);
-                LOG.exception(fileNotFoundException);
-                return;
             }
             
             // Setting model material
