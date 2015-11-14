@@ -4,11 +4,11 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.stream.Stream;
 
-import org.ssh.Models;
-import org.ssh.Services;
 import org.ssh.controllers.ControllerHandler;
 import org.ssh.controllers.ControllerLayout;
 import org.ssh.controllers.ControllerListener;
+import org.ssh.managers.Models;
+import org.ssh.managers.Services;
 import org.ssh.models.enums.ButtonFunction;
 import org.ssh.models.enums.SendMethod;
 import org.ssh.senders.DebugSender;

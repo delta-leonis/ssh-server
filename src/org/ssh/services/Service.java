@@ -2,7 +2,8 @@ package org.ssh.services;
 
 import java.lang.reflect.Type;
 
-import org.ssh.Services;
+import org.ssh.managers.Manageable;
+import org.ssh.managers.Services;
 import org.ssh.util.Logger;
 
 import com.google.common.reflect.TypeToken;
@@ -10,29 +11,26 @@ import com.google.common.reflect.TypeToken;
 /**
  * The Class Service.
  *
- * Service<T extends PipelinePacket> is an abstract class representing a component of the framework
+ * Service<P extends PipelinePacket> is an abstract class representing a component of the framework
  * that handles Pipeline data. It remembers its parameterized genericType through reflection.
  *
- * @author Rimon Oz
- * @param <T>
+ * @param <P>
  *            A PipelinePacket this Service can work with.
+ *
+ * @author Rimon Oz
  */
-public abstract class Service<T extends PipelinePacket> {
-                                              
-    /** Whether the service is enabled. */
-    private boolean                enabled = false;
-                                          
-    /** The name. */
-    private String                 name;
-                                  
-    /** The reflected TypeToken (o¬‿¬o ). */
-    /* This is how we defeat Generics */
-    @SuppressWarnings ("serial")
-    public TypeToken<T>           genericType    = new TypeToken<T>(this.getClass()) {};
+public abstract class Service<P extends PipelinePacket> extends Manageable {
     
-    // a LOG for good measure
-    protected static final Logger LOG     = Logger.getLogger();
-                                      
+    /** Whether the service is enabled. */
+    private boolean               enabled     = false;
+                                              
+    /** The reflected TypeToken (o¬‿¬o ). */
+    @SuppressWarnings ("serial")
+    public TypeToken<P>           genericType = new TypeToken<P>(this.getClass()) {};
+                                              
+    // a logger for good measure
+    protected static final Logger LOG         = Logger.getLogger();
+                                              
     /**
      * Instantiates a new Service.
      *
@@ -40,9 +38,9 @@ public abstract class Service<T extends PipelinePacket> {
      *            The name of the Service.
      */
     public Service(final String name) {
-        this.name = name;
+        super(name);
         this.enabled = false;
-        Service.LOG.info("New Service instantiated of genericType %s named %s", this.genericType.toString(), name);
+        Service.LOG.info("New Service instantiated of type %s named %s", this.genericType.toString(), name);
         Services.addService(this);
     }
     
@@ -51,38 +49,18 @@ public abstract class Service<T extends PipelinePacket> {
      *
      * @return The Service itself.
      */
-    public Service<T> getAsService() {
+    public Service<P> getAsService() {
         return this;
     }
     
     /**
-     * Gets the genericType of {@link org.ssh.services.PipelinePacket} on which this Service
+     * Gets the type of {@link PipelinePacket} on which this Service
      * operates.
      *
-     * @return The genericType of PipelinePacket on which this Service operates.
+     * @return The type of PipelinePacket on which this Service operates.
      */
     public Type getType() {
         return this.genericType.getType();
-    }
-    
-    /**
-     * Gets the name of the Service.
-     *
-     * @return The name of the Service.
-     */
-    public String getName() {
-        return this.name;
-    }
-    
-    /**
-     * Sets the name of the Service.
-     *
-     * @param name
-     *            The new name of the Service.
-     */
-    public void setName(final String name) {
-        Service.LOG.info("Service named %s has changed its name to %s", this.getName(), name);
-        this.name = name;
     }
     
     /**
@@ -100,16 +78,20 @@ public abstract class Service<T extends PipelinePacket> {
         Service.LOG.info("Service %s is stopping ...", this.getName());
         this.setEnabled(false);
     }
-
+    
     /**
-     * @return the enabled
+     * Checks if the Service is enabled.
+     *
+     * @return Whether or not the service is enabled
      */
     public boolean isEnabled() {
         return enabled;
     }
-
+    
     /**
-     * @param enabled the enabled to set
+     * Enables/disables the service.
+     *
+     * @param enabled true to enable, false to disable
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;

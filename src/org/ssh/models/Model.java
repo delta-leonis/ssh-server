@@ -10,7 +10,8 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.jooq.lambda.Unchecked;
-import org.ssh.Models;
+import org.ssh.managers.Models;
+import org.ssh.managers.controllers.ModelController;
 import org.ssh.util.Logger;
 import org.ssh.util.Reflect;
 

@@ -1,4 +1,4 @@
-package org.ssh.models;
+package org.ssh.managers.controllers;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +15,9 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.ssh.Models;
+import org.ssh.managers.Models;
+import org.ssh.models.Model;
+import org.ssh.models.Settings;
 import org.ssh.util.Logger;
 import org.ssh.util.Reflect;
 

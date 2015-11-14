@@ -1,7 +1,7 @@
 package examples;
 
-import org.ssh.Models;
-import org.ssh.Services;
+import org.ssh.managers.Models;
+import org.ssh.managers.Services;
 import org.ssh.services.pipeline.packets.RadioPacket;
 import org.ssh.services.pipeline.pipelines.RadioPipeline;
 

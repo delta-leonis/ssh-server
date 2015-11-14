@@ -1,23 +1,23 @@
-package org.ssh;
+package org.ssh.managers;
 
 import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Optional;
 
+import org.ssh.managers.controllers.ModelController;
 import org.ssh.models.Model;
-import org.ssh.models.ModelController;
 import org.ssh.models.Settings;
 import org.ssh.util.Logger;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class Models. Contains the manager for all {@link Model Models} that are in use.
  *
- * @TODO fuzzy searching for models
- *       
+ * @author Jeroen de Jong
  * @see #create(Class, Object...)
  * @see #get(String)
- * 
- * @author Jeroen de Jong
+ * @TODO fuzzy searching for models
+ *       
  */
 public final class Models {
     
@@ -29,18 +29,26 @@ public final class Models {
     /** The instance. */
     private static final Object    instance = new Object();
                                             
+    /** The Constant LOG. */
     // respective logger
     private static final Logger    LOG      = Logger.getLogger();
                                             
     /**
      * adds a org.ssh.models to this manager
-     * 
-     * @param org.ssh.models
+     *
+     * @param model the model
      */
     public static void add(final Model model) {
         Models.modelController.add(model);
     }
     
+    /**
+     * Creates the.
+     *
+     * @param clazz the clazz
+     * @param args the args
+     * @return the model
+     */
     public static Model create(final Class<?> clazz, final Object... args) {
         return ModelController.create(clazz, args);
     }
@@ -57,6 +65,8 @@ public final class Models {
     }
     
     /**
+     * Gets the all.
+     *
      * @return all Models currently in the modelcontroller
      */
     public static List<?> getAll() {
@@ -64,10 +74,9 @@ public final class Models {
     }
     
     /**
-     * This method finds all models matching the name and returns them as an List<Model>
-     * 
-     * @param modelName
-     *            The (fuzzy) name of the model you want to find.
+     * This method finds all models matching the name and returns them as an List<Model>.
+     *
+     * @param modelName            The (fuzzy) name of the model you want to find.
      * @return The requested models.
      */
     public static List<?> getAll(final String modelName) {
@@ -127,9 +136,8 @@ public final class Models {
     
     /**
      * Save the current state of the org.ssh.models in profiles path
-     * 
-     * @param org.ssh.models
-     *            org.ssh.models to save
+     *
+     * @param model the model
      * @return success value
      */
     public static boolean save(final Model model) {
@@ -138,8 +146,8 @@ public final class Models {
     
     /**
      * Save given org.ssh.models as default for this org.ssh.models type
-     * 
-     * @param org.ssh.models
+     *
+     * @param model the model
      * @return succes value
      */
     public static boolean saveAsDefault(final Model model) {

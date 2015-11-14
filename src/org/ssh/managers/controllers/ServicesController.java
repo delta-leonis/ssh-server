@@ -1,6 +1,5 @@
-package org.ssh.services;
+package org.ssh.managers.controllers;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +11,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.ssh.managers.ManagerController;
+import org.ssh.services.Pipeline;
+import org.ssh.services.PipelinePacket;
+import org.ssh.services.Service;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableScheduledFuture;
@@ -22,18 +26,15 @@ import com.google.common.util.concurrent.MoreExecutors;
 /**
  * The Class ServicesController.
  *
- * ServicesController is responsible for maintaining {@link org.ssh.Services}. It holds
+ * ServicesController is responsible for maintaining {@link org.ssh.managers.Services}. It holds
  * references to the Pipelines, Producers, Couplers, and Consumers.
  *
  * @author Rimon Oz
  */
-public class ServicesController {
+public class ServicesController extends ManagerController<Service<? extends PipelinePacket>>{
     
     /** The service org.ssh.services.pipeline list. */
-    private ImmutableList<Pipeline<?>>                                   pipelineList;
-                                                                         
-    /** The org.ssh.services list. */
-    private ImmutableList<Service<?>>                                    servicesList;
+    private ImmutableList<Pipeline<? extends PipelinePacket>>            pipelineList;
                                                                          
     /** The scheduler service. */
     private final ListeningScheduledExecutorService                      scheduler;
@@ -50,7 +51,7 @@ public class ServicesController {
     public ServicesController() {
         // set all the attributes
         this.pipelineList = ImmutableList.of();
-        this.servicesList = ImmutableList.of();
+        this.manageables = ImmutableList.of();
         this.scheduler = MoreExecutors.listeningDecorator(Executors.newScheduledThreadPool(1));
         this.taskService = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
         this.scheduledTasks = new HashMap<String, ScheduledFuture<? extends PipelinePacket>>();
@@ -63,7 +64,7 @@ public class ServicesController {
      *            The org.ssh.services.pipeline to be added.
      * @return true, if successful
      */
-    public boolean addPipeline(final Pipeline<?> pipeline) {
+    public <P extends PipelinePacket> boolean addPipeline(final Pipeline<P> pipeline) {
         this.pipelineList = ImmutableList.<Pipeline<?>> builder().addAll(this.pipelineList).add(pipeline).build();
         return true;
     }
@@ -75,75 +76,14 @@ public class ServicesController {
      *            The Pipelines to be added.
      * @return true, if successful
      */
-    public boolean addPipelines(final Pipeline<?>... pipelines) {
+    @SuppressWarnings ("unchecked")
+    public <P extends PipelinePacket> boolean addPipelines(final Pipeline<P>... pipelines) {
         return Stream.of(pipelines).map(pipeline -> this.addPipeline(pipeline))
                 // collect all success values and reduce to true if all senders
                 // succeeded; false otherwise
                 .reduce(true, (accumulator, success) -> accumulator && success);
     }
-    
-    /**
-     * Adds a {@link service.Service} to the Services store.
-     *
-     * @param service
-     *            The Service to be added.
-     * @return true, if successful
-     */
-    public boolean addService(final Service<?> service) {
-        this.servicesList = ImmutableList.<Service<?>> builder().addAll(this.servicesList).add(service).build();
-        return true;
-    }
-    
-    /**
-     * Adds a list of Services to the Services store.
-     *
-     * @param org.ssh.services
-     *            The Services to be added.
-     * @return true, if successful
-     */
-    public boolean addServices(final Service<?>... services) {
-        return Stream.of(services).map(service -> this.addService(service))
-                // collect all success values and reduce to true if all senders
-                // succeeded; false otherwise
-                .reduce(true, (accumulator, success) -> accumulator && success);
-    }
-    
-    /**
-     * Finds a service with the given name and returns it as a Service.
-     *
-     * @param name
-     *            The name of the requested Service.
-     * @return The requested service.
-     */
-    public Optional<? extends Service<? extends PipelinePacket>> get(final String name) {
-        return this.servicesList.stream().filter(service -> service.getName().equals(name))
-                .findFirst();
-    }
-    
-    /**
-     * Gets all the Services in the Services store.
-     *
-     * @return All the Services.
-     */
-    @SuppressWarnings ("unchecked")
-    public <T extends PipelinePacket> List<Service<T>> getAll() {
-        return this.servicesList.stream().map(service -> (Service<T>) service).collect(Collectors.toList());
-    }
-    
-    /**
-     * Finds all org.ssh.services matching the name and returns them as an ArrayList<Service>.
-     *
-     * @param name
-     *            The (fuzzy) name of the service you want to find.
-     * @return The requested service.
-     */
-    @SuppressWarnings ("unchecked")
-    public <T extends PipelinePacket> List<Service<T>> getAll(final String name) {
-        return this.servicesList.stream().filter(service -> service.getName().equals(name))
-                .map(service -> (Service<T>) service)
-                .collect(Collectors.toList());
-    }
-    
+     
     /**
      * Gets a {@link org.ssh.services.Pipeline} from the Services store with the given name.
      *
@@ -151,7 +91,7 @@ public class ServicesController {
      *            The name of the requested Pipeline.
      * @return The requested Pipeline.
      */
-    public Optional<? extends Pipeline<? extends PipelinePacket>> getPipeline(final String name) {
+    public Optional<Pipeline<? extends PipelinePacket>> getPipeline(final String name) {
         return this.pipelineList.stream().filter(pipeline -> pipeline.getName().equals(name))
                 .findFirst();
     }
@@ -162,9 +102,9 @@ public class ServicesController {
      * @return All the Pipelines in the Services store.
      */
     @SuppressWarnings ("unchecked")
-    public <T extends PipelinePacket> List<Pipeline<T>> getPipelines() {
+    public <P extends PipelinePacket> List<Pipeline<P>> getPipelines() {
         return this.pipelineList.stream()
-            .map(pipeline -> (Pipeline<T>) pipeline)
+            .map(pipeline -> (Pipeline<P>) pipeline)
             .collect(Collectors.toList());
     }
     
@@ -172,9 +112,6 @@ public class ServicesController {
      * Periodically schedules a Runnable to be called with the given delay between termination of
      * the previous execution and start of the next execution.
      *
-     * @param <T>
-     *            The generic type of {@link org.ssh.services.PipelinePacket} which the
-     *            Runnable produces.
      * @param taskName
      *            The name of the task
      * @param task
@@ -183,17 +120,32 @@ public class ServicesController {
      *            Time between termination of previous execution and start of next execution in ms.
      * @return A ScheduledFuture that can be used to cancel the periodic execution.
      */
-    public <T extends PipelinePacket> ListenableScheduledFuture<T> scheduleTask(final String taskName,
+    @SuppressWarnings ("unchecked")
+    public ListenableScheduledFuture<?> scheduleTask(final String taskName,
             final Runnable task,
             final long delay) {
-        @SuppressWarnings ("unchecked")
         // schedule the task
-        final ListenableScheduledFuture<T> scheduledFuture = (ListenableScheduledFuture<T>) this.scheduler
+        final ListenableScheduledFuture<?> scheduledFuture = this.scheduler
                 .scheduleWithFixedDelay(task, 0, delay, TimeUnit.MICROSECONDS);
         // save the ListenableFuture for future use
-        this.scheduledTasks.put(taskName, scheduledFuture);
+        this.scheduledTasks.put(taskName, (ScheduledFuture<? extends PipelinePacket>) scheduledFuture);
 
         return scheduledFuture;
+    }
+    
+    /**
+     * Submits a task to the threadpool which returns a PipelinePacket.
+     *
+     * @param <T>
+     *            The generic type of data generated by the task.
+     * @param taskName
+     *            The name of the task.
+     * @param task
+     *            The task as a Runnable.
+     * @return A ListenableFuture representing the result of the task.
+     */
+    public <P extends PipelinePacket> ListenableFuture<P> submitTask(final Callable<P> task) {
+        return this.taskService.submit(task);
     }
     
     /**
@@ -207,7 +159,8 @@ public class ServicesController {
      *            The task as a Runnable.
      * @return A ListenableFuture representing the result of the task.
      */
-    public <T extends PipelinePacket> ListenableFuture<T> submitTask(final Callable<T> task) {
+    public ListenableFuture<?> submitTask(final Runnable task) {
         return this.taskService.submit(task);
     }
+    
 }

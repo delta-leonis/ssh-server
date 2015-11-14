@@ -26,15 +26,15 @@ public abstract class PipelinePacket {
     /**
      * Applies a lambda to the packet.
      *
-     * @param <T>
+     * @param <P>
      *            A PipelinePacket this lambda can work with.
      * @param function
      *            The lambda to execute on the PipelinePacket.
      * @return The resulting PipelinePacket.
      */
     @SuppressWarnings ("unchecked")
-    public <T extends PipelinePacket> T apply(final Function<T, T> function) {
-        return function.apply((T) this);
+    public <P extends PipelinePacket> P apply(final Function<P, P> function) {
+        return function.apply((P) this);
     }
     
     /**
@@ -65,13 +65,13 @@ public abstract class PipelinePacket {
     /**
      * Save.
      *
-     * @param <T>
-     *            The genericType of the PipelinePacket
+     * @param <P>
+     *            The type of the PipelinePacket
      * @param data
      *            The data to be put inside the packet.
      * @return The packet itself.
      */
-    public abstract <T extends PipelinePacket> T save(MessageOrBuilder data);
+    public abstract <P extends PipelinePacket> P save(MessageOrBuilder data);
     
     /**
      * Sets the mutability of the packet.
@@ -84,14 +84,16 @@ public abstract class PipelinePacket {
     }
     
     /**
-     * Saves the data in the packet as a Map<String, O extends Object>
-     * @param clazz
-     * @return
+     * Saves the data in the packet as a Map<String, O extends Object>.
+     *
+     * @param <O> the generic type
+     * @param clazz the clazz
+     * @return the map
      */
     @SuppressWarnings ("unchecked")
     public <O extends Object> Map<String, O> toMap(final Class<?> clazz) {
         return Stream.of(clazz.getDeclaredFields())
                 .filter(field -> Reflect.containsField(field.getName(), this.getClass()))
-                .collect(Collectors.toMap(Field::getName, Unchecked.function(field -> (O)field.get(this))));
+                .collect(Collectors.toMap(Field::getName, Unchecked.function(field -> (O) field.get(this))));
     }
 }

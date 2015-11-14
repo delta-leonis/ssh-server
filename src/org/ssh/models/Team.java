@@ -3,7 +3,7 @@ package org.ssh.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ssh.Models;
+import org.ssh.managers.Models;
 import org.ssh.models.enums.Direction;
 
 import javafx.scene.paint.Color;

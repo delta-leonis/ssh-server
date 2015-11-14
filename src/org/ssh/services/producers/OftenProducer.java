@@ -4,6 +4,9 @@ import org.ssh.models.enums.ProducerType;
 import org.ssh.services.Producer;
 import org.ssh.services.Service;
 import org.ssh.services.pipeline.packets.GeometryPacket;
+import org.ssh.services.pipeline.packets.RadioPacket;
+
+import protobuf.Radio.RadioProtocolCommand;
 
 /**
  * The Class OftenProducer.
@@ -12,7 +15,7 @@ import org.ssh.services.pipeline.packets.GeometryPacket;
  *
  * @author Rimon Oz
  */
-public class OftenProducer extends Producer<GeometryPacket> {
+public class OftenProducer extends Producer<RadioPacket> {
     
     /**
      * Instantiates a new scheduled Producer
@@ -27,7 +30,8 @@ public class OftenProducer extends Producer<GeometryPacket> {
         this.setCallable(() -> {
             Service.LOG.info("Produced a GeometryPacket!");
             // create a new packet
-            return new GeometryPacket();
+            return new RadioPacket(RadioProtocolCommand.newBuilder().setRobotId(4).setVelocityR(0.2f).setVelocityX(4.0f)
+                    .setVelocityY(9293932.0f));
         });
     }
 }

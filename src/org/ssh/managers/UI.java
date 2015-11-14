@@ -1,4 +1,4 @@
-package org.ssh;
+package org.ssh.managers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,7 @@ import org.ssh.util.Logger;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class UI.
  *
@@ -35,6 +36,7 @@ public final class UI {
      */
     private static final Object               instance = new Object();
                                                        
+    /** The Constant LOG. */
     // a logger for good measure
     private static final Logger               LOG      = Logger.getLogger();
 
@@ -62,8 +64,8 @@ public final class UI {
     /**
      * Returns an Optional containing the window with the specified name.
      *
-     * @param name
-     *            The name of the requested window.
+     * @param <P> the generic type
+     * @param name            The name of the requested window.
      * @return An Optional containing the window.
      */
     @SuppressWarnings ("unchecked")

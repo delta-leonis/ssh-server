@@ -1,19 +1,19 @@
 package org.ssh.services;
 
-import org.ssh.Services;
+import org.ssh.managers.Services;
 import org.ssh.models.enums.PacketPriority;
 
 /**
  * The Class Coupler.
  *
- * A Coupler takes a {@link org.ssh.services.PipelinePacket} and returns a PipelinePacket
- * of the same genericType.
+ * A Coupler takes a {@link PipelinePacket} and returns a PipelinePacket of the
+ * same genericType.
  *
  * @author Rimon Oz
- * @param <T>
+ * @param <P>
  *            A PipelinePacket this Coupler can work with.
  */
-public abstract class Coupler<T extends PipelinePacket> extends Service<T> {
+public abstract class Coupler<P extends PipelinePacket> extends Service<P> {
     
     /**
      * Instantiates a new Coupler.
@@ -31,14 +31,12 @@ public abstract class Coupler<T extends PipelinePacket> extends Service<T> {
      * @return The Coupler itself.
      */
     @SuppressWarnings ("unchecked")
-    public Coupler<T> attachToCompatiblePipelines() {
-        // TODO: make sure the org.ssh.services.pipeline handles the genericType
-        // get a list of all the org.ssh.pipelines
+    public Coupler<P> attachToCompatiblePipelines() {
         Services.getPipelines(this.getType()).stream()
-                // map them to the correct genericType
-                .map(pipeline -> (Pipeline<T>) pipeline)
-                // register with the org.ssh.services.pipeline
-                .forEach(pipeline -> pipeline.registerCoupler(this));
+            // map them to the correct type
+            .map(pipeline -> (Pipeline<P>) pipeline)
+            // register with the pipeline
+            .forEach(pipeline -> pipeline.registerCoupler(this));
                 
         return this;
     }
@@ -51,14 +49,12 @@ public abstract class Coupler<T extends PipelinePacket> extends Service<T> {
      * @return The Coupler itself.
      */
     @SuppressWarnings ("unchecked")
-    public Coupler<T> attachToCompatiblePipelines(final PacketPriority couplerPriority) {
-        // TODO: make sure the org.ssh.services.pipeline handles the genericType
-        // get a list of all the org.ssh.pipelines
+    public Coupler<P> attachToCompatiblePipelines(final PacketPriority couplerPriority) {
         Services.getPipelines(this.getType()).stream()
-                // map them to the correct genericType
-                .map(pipeline -> (Pipeline<T>) pipeline)
-                // register with the org.ssh.services.pipeline
-                .forEach(pipeline -> pipeline.registerCoupler(couplerPriority, this));
+            // map them to the correct genericType
+            .map(pipeline -> (Pipeline<P>) pipeline)
+            // register with the org.ssh.services.pipeline
+            .forEach(pipeline -> pipeline.registerCoupler(couplerPriority, this));
                 
         return this;
     }

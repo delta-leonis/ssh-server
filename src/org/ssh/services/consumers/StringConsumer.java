@@ -33,6 +33,7 @@ public class StringConsumer extends Consumer<RadioPacket> {
     public boolean consume(final PipelinePacket radioPacket) {
         Service.LOG.info("The StringConsumer ate a packet that looked like: \n%s",
                 ((RadioPacket) radioPacket).getData().toString());
+//        Service.LOG.info("%d", ((RadioPacket) radioPacket).
         return true;
     }
     
