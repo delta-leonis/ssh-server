@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+
+<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" pickOnBounds="false" minWidth="0.0">
+
+    <columnConstraints>
+    	<ColumnConstraints percentWidth="97.0"></ColumnConstraints>
+    	<ColumnConstraints percentWidth="3.0"></ColumnConstraints>
+    </columnConstraints>
+
+	<children>
+	
+		<Pane GridPane.columnIndex="0" GridPane.rowIndex="0" minWidth="500.0" minHeight="20.0"></Pane>
+	
+		<Button id="buttonTopView" text="Top View" GridPane.columnIndex="1" GridPane.rowIndex="0"></Button>
+		<Button id="buttonSideView" text="Side View" GridPane.columnIndex="1" GridPane.rowIndex="1"></Button>
+      	<Button id="button45DegView" text="45 Degree View" GridPane.columnIndex="1" GridPane.rowIndex="2"></Button>
+      	
+      	<Pane GridPane.columnIndex="0" GridPane.rowIndex="3" minHeight="20.0"></Pane>
+      	
+      	<Button id="buttonRotateLeft" text="Rotate Left" GridPane.columnIndex="0" GridPane.rowIndex="4"></Button>
+		<Button id="buttonRotateRight" text="Rotate Right" GridPane.columnIndex="0" GridPane.rowIndex="5"></Button>
+      	<Button id="buttonRotateUp" text="Rotate Up" GridPane.columnIndex="0" GridPane.rowIndex="6"></Button>
+      	<Button id="buttonRotateDown" text="Rotate Down" GridPane.columnIndex="0" GridPane.rowIndex="7"></Button>
+      	
+      	<Pane GridPane.columnIndex="0" GridPane.rowIndex="8" minHeight="20.0"></Pane>
+      	
+		<Button id="buttonZoomIn" text="Zoom In" GridPane.columnIndex="0" GridPane.rowIndex="9"></Button>
+      	<Button id="buttonZoomOut" text="Zoom Out" GridPane.columnIndex="0" GridPane.rowIndex="10"></Button>
+      	
+   	</children>
+   	
+</GridPane>
