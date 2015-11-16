@@ -1,18 +1,14 @@
 package org.ssh.field3d;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.ssh.field3d.core.game.Game;
-import org.ssh.field3d.core.math.Vector3f;
 import org.ssh.field3d.gameobjects.CarGO;
 import org.ssh.field3d.gameobjects.FieldGO;
 import org.ssh.field3d.gameobjects.RobotGO;
 import org.ssh.field3d.gameobjects.overlay.CameraControlOverlayGO;
 import org.ssh.field3d.gameobjects.overlay.contextmenus.ContextOverlayGO;
 import org.ssh.managers.Models;
-import org.ssh.managers.Services;
-import org.ssh.models.ModelController;
 import org.ssh.models.Robot;
 
 import javafx.scene.AmbientLight;
@@ -20,7 +16,6 @@ import javafx.scene.Parent;
 import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.paint.Color;
-import net.java.games.input.ControllerEnvironment;
 
 // TODO: Auto-generated Javadoc
 /**
