@@ -4,7 +4,6 @@ import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.field3d.gameobjects.overlay.OverlayGO;
 
-import javafx.application.Platform;
 import javafx.scene.Group;
 
 /**
@@ -16,7 +15,7 @@ import javafx.scene.Group;
  */
 public class ContextOverlayGO extends OverlayGO {
     
-    /** The fxml file for the layout **/
+    /** The FXML file for the layout **/
     private static final String LAYOUT_FXML_FILE = "contextoverlay.fxml";
                                                  
     /** The group for the context menu */
@@ -36,7 +35,7 @@ public class ContextOverlayGO extends OverlayGO {
         // Creating new group for the context menu
         contextMenuGroup = new Group();
         
-        // Load fxml
+        // Load FXML
         this.loadFXML(LAYOUT_FXML_FILE, contextMenuGroup);
     }
     
@@ -65,8 +64,30 @@ public class ContextOverlayGO extends OverlayGO {
         
         // Check if the 2d group contains the context menu group
         if (this.getGame().get2DGroup().getChildren().contains(contextMenuGroup)) {
-            
+           
+           // Remove context menu group from the 2d group
            this.getGame().get2DGroup().getChildren().remove(contextMenuGroup);
         }
+    }
+    
+    /**
+     * Show method. This method shows the context menu.
+     */
+    public void show() {
+        this.contextMenuGroup.setVisible(true);
+    }
+    
+    /**
+     * Hide method. This method hides the context menu.
+     */
+    public void hide() {
+        this.contextMenuGroup.setVisible(false);
+    }
+    
+    /**
+     * Toggle visible method. This method toggles the visible state of the context menu.
+     */
+    public void toggleVisible() {
+        this.contextMenuGroup.setVisible(!this.contextMenuGroup.isVisible());
     }
 }

@@ -16,41 +16,43 @@ import javafx.scene.input.MouseEvent;
  *
  * @author Mark Lefering
  */
-// TODO: fxml
-public class CameraControlOverlayGO extends GameObject {
+public class CameraControlOverlayGO extends OverlayGO {
     
     /** The offset between buttons. */
     private static final int BUTTON_OFFSET = 35;
+    
+    /** The FXML file for the layout */
+    private static final String LAYOUT_FXML_FILE = "cameracontroloverlay.fxml";
                                            
     /** The controls group. */
     private final Group      controlsGroup;
                              
     /** The button for the top view preset. */
-    private final Button     buttonTopView;
+    //private final Button     buttonTopView;
                              
     /** The button for the side view preset. */
-    private final Button     buttonSideView;
+    //private final Button     buttonSideView;
                              
     /** The button for the 45 deg view preset. */
-    private final Button     button45DegView;
+    //private final Button     button45DegView;
                              
     /** The button for rotating left. */
-    private final Button     buttonRotateLeft;
+    //private final Button     buttonRotateLeft;
                              
     /** The button for rotating right. */
-    private final Button     buttonRotateRight;
+    //private final Button     buttonRotateRight;
                              
     /** The button for rotating up. */
-    private final Button     buttonRotateUp;
+    //private final Button     buttonRotateUp;
                              
     /** The button for rotating down. */
-    private final Button     buttonRotateDown;
+    //private final Button     buttonRotateDown;
                              
     /** The button for zooming in. */
-    private final Button     buttonZoomIn;
+    //private final Button     buttonZoomIn;
                              
     /** The button for zooming out. */
-    private final Button     buttonZoomOut;
+    //private final Button     buttonZoomOut;
                              
     /**
      * Constructor.
@@ -66,6 +68,9 @@ public class CameraControlOverlayGO extends GameObject {
         // Create group for the controls
         this.controlsGroup = new Group();
         
+        this.loadFXML(LAYOUT_FXML_FILE, this.controlsGroup);
+        
+        /*
         // Creating buttons
         this.buttonTopView = new Button("Top View");
         this.buttonSideView = new Button("Side View");
@@ -102,7 +107,7 @@ public class CameraControlOverlayGO extends GameObject {
         this.controlsGroup.getChildren().add(this.buttonRotateDown);
         
         this.controlsGroup.getChildren().add(this.buttonZoomIn);
-        this.controlsGroup.getChildren().add(this.buttonZoomOut);
+        this.controlsGroup.getChildren().add(this.buttonZoomOut);*/
     }
     
     /**
@@ -114,6 +119,7 @@ public class CameraControlOverlayGO extends GameObject {
         // Adding control group to 2d group
         this.getGame().get2DGroup().getChildren().add(this.controlsGroup);
         
+        /*
         // Hook events
         this.button45DegView.setOnMouseClicked(new OnButton45DegViewClicked());
         this.buttonSideView.setOnMouseClicked(new OnButtonSideViewClicked());
@@ -125,7 +131,7 @@ public class CameraControlOverlayGO extends GameObject {
         this.buttonRotateDown.setOnMouseClicked(new OnButtonRotateDownClicked());
         
         this.buttonZoomIn.setOnMouseClicked(new OnButtonZoomInClicked());
-        this.buttonZoomOut.setOnMouseClicked(new OnButtonZoomOutClicked());
+        this.buttonZoomOut.setOnMouseClicked(new OnButtonZoomOutClicked());*/
     }
     
     /**
@@ -141,6 +147,7 @@ public class CameraControlOverlayGO extends GameObject {
             Platform.runLater(() -> this.getGame().get2DGroup().getChildren().remove(this.controlsGroup));
         }
         
+        /*
         // Unhook events
         this.button45DegView.setOnMouseClicked(null);
         this.buttonSideView.setOnMouseClicked(null);
@@ -152,7 +159,7 @@ public class CameraControlOverlayGO extends GameObject {
         this.buttonRotateDown.setOnMouseClicked(null);
         
         this.buttonZoomIn.setOnMouseClicked(null);
-        this.buttonZoomOut.setOnMouseClicked(null);
+        this.buttonZoomOut.setOnMouseClicked(null);*/
     }
     
     /**
