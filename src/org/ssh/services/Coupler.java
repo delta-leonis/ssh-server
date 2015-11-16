@@ -6,11 +6,11 @@ import org.ssh.models.enums.PacketPriority;
 /**
  * The Class Coupler.
  *
- * A Coupler takes a {@link PipelinePacket} and returns a PipelinePacket of the
- * same genericType.
+ * A Coupler takes a {@link PipelinePacket} and returns a PipelinePacket of the same genericType.
  *
  * @author Rimon Oz
- * @param <P>
+ * @param
+ *            <P>
  *            A PipelinePacket this Coupler can work with.
  */
 public abstract class Coupler<P extends PipelinePacket> extends Service<P> {
@@ -33,10 +33,10 @@ public abstract class Coupler<P extends PipelinePacket> extends Service<P> {
     @SuppressWarnings ("unchecked")
     public Coupler<P> attachToCompatiblePipelines() {
         Services.getPipelines(this.getType()).stream()
-            // map them to the correct type
-            .map(pipeline -> (Pipeline<P>) pipeline)
-            // register with the pipeline
-            .forEach(pipeline -> pipeline.registerCoupler(this));
+                // map them to the correct type
+                .map(pipeline -> (Pipeline<P>) pipeline)
+                // register with the pipeline
+                .forEach(pipeline -> pipeline.registerCoupler(this));
                 
         return this;
     }
@@ -51,10 +51,10 @@ public abstract class Coupler<P extends PipelinePacket> extends Service<P> {
     @SuppressWarnings ("unchecked")
     public Coupler<P> attachToCompatiblePipelines(final PacketPriority couplerPriority) {
         Services.getPipelines(this.getType()).stream()
-            // map them to the correct genericType
-            .map(pipeline -> (Pipeline<P>) pipeline)
-            // register with the org.ssh.services.pipeline
-            .forEach(pipeline -> pipeline.registerCoupler(couplerPriority, this));
+                // map them to the correct genericType
+                .map(pipeline -> (Pipeline<P>) pipeline)
+                // register with the org.ssh.services.pipeline
+                .forEach(pipeline -> pipeline.registerCoupler(couplerPriority, this));
                 
         return this;
     }

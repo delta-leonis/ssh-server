@@ -83,7 +83,7 @@ public class FieldGame extends Game {
                                          
     /** The camera control overlay game object. */
     private final CameraControlOverlayGO cameraControlOverlayGO;
-    
+                                         
     /** The context overlay game object. */
     private final ContextOverlayGO       contextOverlayGO;
                                          
@@ -108,10 +108,10 @@ public class FieldGame extends Game {
         super(root, width, height, true, antiAliasing);
         
         // Create robots
-        Robot robot = (Robot)Models.create(Robot.class, 0, Color.BLUE);
-        Robot robot2 = (Robot)Models.create(Robot.class, 1, Color.BLUE);
-        Robot robot3 = (Robot)Models.create(Robot.class, 2, Color.BLUE);
-        Robot robot4 = (Robot)Models.create(Robot.class, 3, Color.BLUE);
+        Robot robot = (Robot) Models.create(Robot.class, 0, Color.BLUE);
+        Robot robot2 = (Robot) Models.create(Robot.class, 1, Color.BLUE);
+        Robot robot3 = (Robot) Models.create(Robot.class, 2, Color.BLUE);
+        Robot robot4 = (Robot) Models.create(Robot.class, 3, Color.BLUE);
         
         // Creating ambient light
         this.ambientLight = new AmbientLight(Color.DARKGRAY);
@@ -228,10 +228,9 @@ public class FieldGame extends Game {
         @SuppressWarnings ("unchecked")
         ArrayList<Robot> robotModels = (ArrayList<Robot>) Models.getAll("robot");
         
-        
         System.out.println("robots: " + robotModels.size());
         for (Robot robot : robotModels) {
-                       
+            
             RobotGO tmpRobot = new RobotGO(this, robot);
             
             addGameObject(tmpRobot);

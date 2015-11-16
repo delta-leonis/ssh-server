@@ -11,7 +11,7 @@ import com.google.protobuf.Message;
  * {@link Logger}
  *
  * @author Jeroen de Jong
- *        
+ *         
  */
 public class DebugSender implements SenderInterface {
     

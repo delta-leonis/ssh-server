@@ -84,7 +84,7 @@ public class Vector3f {
     public Vector3f negate() {
         return this.scale(-1f);
     }
-
+    
     public Vector3f normalize() {
         final float length = this.length();
         return this.divide(length);
@@ -100,7 +100,7 @@ public class Vector3f {
     public Vector3f subtract(final Vector3f other) {
         return this.add(other.negate());
     }
-
+    
     @Override
     public String toString() {
         

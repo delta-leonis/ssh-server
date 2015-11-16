@@ -8,12 +8,11 @@ import java.util.Set;
 /**
  * A one-to-one hashmap with a unique key and value
  * 
- * TODO
- * Replace with {@link com.google.common.collect.BiMap}
+ * TODO Replace with {@link com.google.common.collect.BiMap}
  *
  * @author http://stackoverflow.com/users/2219808/user2219808
  * @see http://stackoverflow.com/a/31636492
- *     
+ *      
  * @param <T1>
  *            unique key
  * @param <T2>
@@ -26,12 +25,12 @@ public class BiMap<T1, T2> implements Map<T1, T2> {
                                       
     public BiMap() {
     }
-
+    
     public BiMap(final Object object, final Object object2) {
         this.mapKeys = (HashMap<T1, T2>) object;
         this.mapValues = (HashMap<T2, T1>) object2;
     }
-
+    
     @Override
     public void clear() {
         this.mapKeys.clear();
@@ -147,12 +146,12 @@ public class BiMap<T1, T2> implements Map<T1, T2> {
     public int size() {
         return this.mapKeys.size();
     }
-
+    
     @Override
     public Collection<T2> values() {
         return this.mapKeys.values();
     }
-
+    
     public Set<T2> valueSet() {
         return this.mapValues.keySet();
     }

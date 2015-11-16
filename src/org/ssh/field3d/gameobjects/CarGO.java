@@ -14,7 +14,7 @@ import javafx.scene.Group;
  * clicked.
  *
  * @see GameObject
- *     
+ *      
  * @author Mark Lefering
  */
 public class CarGO extends GameObject {

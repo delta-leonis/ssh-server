@@ -8,7 +8,7 @@ import java.util.stream.Stream;
  *
  * @author Jeroen de Jong
  * @author Rimon Oz
- *        
+ *         
  */
 public class Logger extends java.util.logging.Logger {
     
@@ -65,7 +65,7 @@ public class Logger extends java.util.logging.Logger {
      * 
      * @param format
      *            A format string</a>
-     *           
+     *            
      * @param args
      *            Arguments referenced by the format specifiers in the format string. If there are
      *            more arguments than format specifiers, the extra arguments are ignored. The number
@@ -73,7 +73,7 @@ public class Logger extends java.util.logging.Logger {
      *            limited by the maximum dimension of a Java array as defined by <cite>The
      *            Java&trade; Virtual Machine Specification</cite>. The behaviour on a {@code null}
      *            argument depends on the conversion</a>.
-     *           
+     *            
      * @see java.util.Formatter
      */
     public void config(final String format, final Object... args) {
@@ -89,7 +89,7 @@ public class Logger extends java.util.logging.Logger {
      * 
      * @param format
      *            A format string</a>
-     *           
+     *            
      * @param args
      *            Arguments referenced by the format specifiers in the format string. If there are
      *            more arguments than format specifiers, the extra arguments are ignored. The number
@@ -97,7 +97,7 @@ public class Logger extends java.util.logging.Logger {
      *            limited by the maximum dimension of a Java array as defined by <cite>The
      *            Java&trade; Virtual Machine Specification</cite>. The behaviour on a {@code null}
      *            argument depends on the conversion</a>.
-     *           
+     *            
      * @see java.util.Formatter
      */
     public void fine(final String format, final Object... args) {
@@ -113,7 +113,7 @@ public class Logger extends java.util.logging.Logger {
      * 
      * @param format
      *            A format string</a>
-     *           
+     *            
      * @param args
      *            Arguments referenced by the format specifiers in the format string. If there are
      *            more arguments than format specifiers, the extra arguments are ignored. The number
@@ -121,7 +121,7 @@ public class Logger extends java.util.logging.Logger {
      *            limited by the maximum dimension of a Java array as defined by <cite>The
      *            Java&trade; Virtual Machine Specification</cite>. The behaviour on a {@code null}
      *            argument depends on the conversion</a>.
-     *           
+     *            
      * @see java.util.Formatter
      */
     public void finer(final String format, final Object... args) {
@@ -137,7 +137,7 @@ public class Logger extends java.util.logging.Logger {
      * 
      * @param format
      *            A format string</a>
-     *           
+     *            
      * @param args
      *            Arguments referenced by the format specifiers in the format string. If there are
      *            more arguments than format specifiers, the extra arguments are ignored. The number
@@ -145,7 +145,7 @@ public class Logger extends java.util.logging.Logger {
      *            limited by the maximum dimension of a Java array as defined by <cite>The
      *            Java&trade; Virtual Machine Specification</cite>. The behaviour on a {@code null}
      *            argument depends on the conversion</a>.
-     *           
+     *            
      * @see java.util.Formatter
      */
     public void finest(final String format, final Object... args) {
@@ -161,7 +161,7 @@ public class Logger extends java.util.logging.Logger {
      * 
      * @param format
      *            A format string</a>
-     *           
+     *            
      * @param args
      *            Arguments referenced by the format specifiers in the format string. If there are
      *            more arguments than format specifiers, the extra arguments are ignored. The number
@@ -169,7 +169,7 @@ public class Logger extends java.util.logging.Logger {
      *            limited by the maximum dimension of a Java array as defined by <cite>The
      *            Java&trade; Virtual Machine Specification</cite>. The behaviour on a {@code null}
      *            argument depends on the conversion</a>.
-     *           
+     *            
      * @see java.util.Formatter
      */
     public void info(final String format, final Object... args) {
@@ -185,7 +185,7 @@ public class Logger extends java.util.logging.Logger {
      * 
      * @param format
      *            A format string</a>
-     *           
+     *            
      * @param args
      *            Arguments referenced by the format specifiers in the format string. If there are
      *            more arguments than format specifiers, the extra arguments are ignored. The number
@@ -193,7 +193,7 @@ public class Logger extends java.util.logging.Logger {
      *            limited by the maximum dimension of a Java array as defined by <cite>The
      *            Java&trade; Virtual Machine Specification</cite>. The behaviour on a {@code null}
      *            argument depends on the conversion</a>.
-     *           
+     *            
      * @see java.util.Formatter
      */
     public void severe(final String format, final Object... args) {
@@ -209,7 +209,7 @@ public class Logger extends java.util.logging.Logger {
      * 
      * @param format
      *            A format string</a>
-     *           
+     *            
      * @param args
      *            Arguments referenced by the format specifiers in the format string. If there are
      *            more arguments than format specifiers, the extra arguments are ignored. The number
@@ -217,7 +217,7 @@ public class Logger extends java.util.logging.Logger {
      *            limited by the maximum dimension of a Java array as defined by <cite>The
      *            Java&trade; Virtual Machine Specification</cite>. The behaviour on a {@code null}
      *            argument depends on the conversion</a>.
-     *           
+     *            
      * @see java.util.Formatter
      */
     public void warning(final String format, final Object... args) {
@@ -225,26 +225,30 @@ public class Logger extends java.util.logging.Logger {
     }
     
     /**
-    *
-    * Logs an EXCEPTION.
-    *
-    * If the logger is currently enabled for the EXCEPTION message level then the given message is
-    * forwarded to log level FINEST
-    * 
-    * @param format
-    *            A format string</a>
-    *           
-    * @param args
-    *            Arguments referenced by the format specifiers in the format string. If there are
-    *            more arguments than format specifiers, the extra arguments are ignored. The number
-    *            of arguments is variable and may be zero. The maximum number of arguments is
-    *            limited by the maximum dimension of a Java array as defined by <cite>The
-    *            Java&trade; Virtual Machine Specification</cite>. The behaviour on a {@code null}
-    *            argument depends on the conversion</a>.
-    *           
-    * @see java.util.Formatter
-    */
-   public void exception(final Exception exception) {
-       super.finest(Stream.of(exception.getStackTrace()).reduce("", (result, curRule) -> String.format("%s%s%n", result, curRule.toString()), (left, right) -> left + right).toString());
-   }
+     *
+     * Logs an EXCEPTION.
+     *
+     * If the logger is currently enabled for the EXCEPTION message level then the given message is
+     * forwarded to log level FINEST
+     * 
+     * @param format
+     *            A format string</a>
+     *            
+     * @param args
+     *            Arguments referenced by the format specifiers in the format string. If there are
+     *            more arguments than format specifiers, the extra arguments are ignored. The number
+     *            of arguments is variable and may be zero. The maximum number of arguments is
+     *            limited by the maximum dimension of a Java array as defined by <cite>The
+     *            Java&trade; Virtual Machine Specification</cite>. The behaviour on a {@code null}
+     *            argument depends on the conversion</a>.
+     *            
+     * @see java.util.Formatter
+     */
+    public void exception(final Exception exception) {
+        super.finest(Stream.of(exception.getStackTrace())
+                .reduce("",
+                        (result, curRule) -> String.format("%s%s%n", result, curRule.toString()),
+                        (left, right) -> left + right)
+                .toString());
+    }
 }

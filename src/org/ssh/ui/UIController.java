@@ -49,15 +49,18 @@ public abstract class UIController<T extends Pane> {
     /** The components used in the window. */
     private final List<UIComponent> components;
                                     
-    /** The parameterized genericType of the window (<T extends Pane>).
-     *  @see {@link https://github.com/google/guava/wiki/ReflectionExplained} 
+    /**
+     * The parameterized genericType of the window (<T extends Pane>).
+     * 
+     * @see {@link https://github.com/google/guava/wiki/ReflectionExplained}
      */
     @SuppressWarnings ("serial")
-    public TypeToken<T>             genericType = new TypeToken<T>(this.getClass()) {};
-                                         
+    public TypeToken<T>             genericType = new TypeToken<T>(this.getClass()) {
+                                                };
+                                                
     // a logger for good measure
-    private static final Logger     LOG  = Logger.getLogger();
-                                         
+    private static final Logger     LOG         = Logger.getLogger();
+                                                
     /**
      * Instantiates a new window/UI controller.
      *
@@ -366,6 +369,7 @@ public abstract class UIController<T extends Pane> {
     
     /**
      * Returns the list of {@link UIComponent UIComponents} stored in this window.
+     * 
      * @return the components
      */
     public List<UIComponent> getComponents() {

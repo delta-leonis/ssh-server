@@ -1,6 +1,5 @@
 package org.ssh.field3d.core.shapes;
 
-import javafx.geometry.Point2D;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import protobuf.Geometry.Vector2f;
@@ -40,10 +39,8 @@ public class FlatLine3D {
      * @param thickness
      *            Thickness of the line.
      */
-    public FlatLine3D(final Vector2f startPoint,
-            final Vector2f endPoint,
-            final double thickness) {
-            
+    public FlatLine3D(final Vector2f startPoint, final Vector2f endPoint, final double thickness) {
+        
         // Create new mesh
         this.mesh = new TriangleMesh();
         

@@ -124,7 +124,7 @@ public class RobotGO extends GameObject {
         // Generating texture file name
         String textureFilename = ROBOT_TEXTURE_DIR + "robot" + visionRobotModel.getTeamColorIdentifier()
                 + visionRobotModel.getRobotId() + ".png";
-        
+                
         // Read model into model importer
         modelImporter.read(this.getClass().getResource(ROBOT_MODEL_FILE));
         
@@ -141,7 +141,8 @@ public class RobotGO extends GameObject {
                 // Loading texture & setting diffuse map of the model material
                 this.material.setDiffuseMap(new Image(textureInputStream));
                 
-            } else {
+            }
+            else {
                 
                 LOG.warning("Could not load " + textureFilename);
             }
@@ -200,7 +201,7 @@ public class RobotGO extends GameObject {
             
             // Setting location
             this.location.x = (float) visionRobotModel.getPosition().getX();
-            this.location.y = (float) (Robot.ROBOT_HEIGHT / 2.0f);
+            this.location.y = Robot.ROBOT_HEIGHT / 2.0f;
             this.location.z = (float) visionRobotModel.getPosition().getY();
         }
         

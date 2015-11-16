@@ -18,20 +18,17 @@ import org.ssh.util.Logger;
  * // ; These colors can be edited in the java-keywords.css
  *
  *
- * @author Thomas Hakkers 
- *  Most code originates from https://github.com/TomasMikula/RichTextFX
+ * @author Thomas Hakkers Most code originates from https://github.com/TomasMikula/RichTextFX
  */
 public class ColoredCodeArea extends CodeArea {
     
     // A logger for errorhandling
-    private static final Logger              LOG                 = Logger.getLogger();
-    
+    private static final Logger   LOG               = Logger.getLogger();
+                                                    
     /** Lua keyword variables */
-    private static final String[] KEYWORDS          = new String[] { 
-            "and", "break", "do", "else", "elseif", "end",
-            "false", "finally", "float", "for", "function",
-            "if", "in", "local", "nil", "not", "or", "repeat", 
-            "return", "then", "true", "until", "while" };
+    private static final String[] KEYWORDS          = new String[] { "and", "break", "do", "else", "elseif", "end",
+            "false", "finally", "float", "for", "function", "if", "in", "local", "nil", "not", "or", "repeat", "return",
+            "then", "true", "until", "while" };
             
     /** Joins all keywords together into a pattern */
     private static final String   KEYWORD_PATTERN   = "\\b(" + String.join("|", ColoredCodeArea.KEYWORDS) + ")\\b";
@@ -50,13 +47,12 @@ public class ColoredCodeArea extends CodeArea {
     private static final String   COMMENT_PATTERN   = "--\\[\\[" + "(.|\\R)*?" + "\\]\\]--" + "|" + "--[^\n]*";
     /** Default pattern. Works on anything */
     private static final String   DEFAULT           = ".";
-
+                                                    
     /** Names for the patterns */
-    private static final String[] PATTERNS = new String[]{
-            "KEYWORD", "OBJ", "FUNC", "PAREN", "BRACE",
-            "BRACKET", "SEMICOLON", "STRING", "COMMENT", "DEFAULT"};
-    private Pattern        pattern;
-    private String styleSheet;
+    private static final String[] PATTERNS          = new String[] { "KEYWORD", "OBJ", "FUNC", "PAREN", "BRACE",
+            "BRACKET", "SEMICOLON", "STRING", "COMMENT", "DEFAULT" };
+    private Pattern               pattern;
+    private String                styleSheet;
                                   
     /**
      * Method used to highlight the text
@@ -85,14 +81,15 @@ public class ColoredCodeArea extends CodeArea {
     
     /**
      * Returns the proper css based on what the matcher finds
-     * @param matcher The matcher used on the textarea
+     * 
+     * @param matcher
+     *            The matcher used on the textarea
      * @return the css belonging to the right group. Null if nothing found (Should never happen)
      */
-    private static String getCssBasedOnPattern(Matcher matcher){
+    private static String getCssBasedOnPattern(Matcher matcher) {
         // Switch what css block to use based on the group found by the matcher
-        for(String keyword : PATTERNS)
-            if(matcher.group(keyword) != null)
-                return keyword.toLowerCase();
+        for (String keyword : PATTERNS)
+            if (matcher.group(keyword) != null) return keyword.toLowerCase();
         return null;
     }
     
@@ -120,13 +117,12 @@ public class ColoredCodeArea extends CodeArea {
         // Turn on paragraph numbers
         this.setParagraphGraphicFactory(LineNumberFactory.get(this));
         // Make sure any changes in textcoloring are being notified to this text area
-        this.richChanges().subscribe(change -> 
-            this.setStyleSpans(0, computeHighlighting(this.getText())));
+        this.richChanges().subscribe(change -> this.setStyleSpans(0, computeHighlighting(this.getText())));
         // Add stylesheets to this text area
         this.getStylesheets().add(this.getCssSheet(this.styleSheet));
         this.getStyleClass().add("background");
     }
-
+    
     /**
      * Constructor for the ColorCodeArea.
      *
@@ -141,24 +137,20 @@ public class ColoredCodeArea extends CodeArea {
     public void setupColoredCodeArea(final String path,
             List<String> objectHighlights,
             List<String> functionHighlights) {
-        
-        String objPattern = "|(?<OBJ>" + "\\b(" + (objectHighlights == null
-                ? " " : String.join("|", objectHighlights)) + ")\\b" + ")";
-        String funcPattern = "|(?<FUNC>" + "\\b(" + (functionHighlights == null
-                ? " " : String.join("|", functionHighlights)) + ")\\b" + ")";
+            
+        String objPattern = "|(?<OBJ>" + "\\b(" + (objectHighlights == null ? " " : String.join("|", objectHighlights))
+                + ")\\b" + ")";
+        String funcPattern = "|(?<FUNC>" + "\\b("
+                + (functionHighlights == null ? " " : String.join("|", functionHighlights)) + ")\\b" + ")";
         // Creates a pattern for everything that needs to be highlighted
         pattern = Pattern.compile("(?<KEYWORD>" + ColoredCodeArea.KEYWORD_PATTERN + ")"
         // Add the Java Objects and Functions that need to be highlighted
-                + objPattern
-                + funcPattern
-                + "|(?<PAREN>" + ColoredCodeArea.PAREN_PATTERN + ")" 
-                + "|(?<BRACE>" + ColoredCodeArea.BRACE_PATTERN + ")" 
-                + "|(?<BRACKET>" + ColoredCodeArea.BRACKET_PATTERN + ")" 
-                + "|(?<SEMICOLON>" + ColoredCodeArea.SEMICOLON_PATTERN + ")"
-                + "|(?<STRING>" + ColoredCodeArea.STRING_PATTERN + ")" 
-                + "|(?<COMMENT>" + ColoredCodeArea.COMMENT_PATTERN + ")" 
+                + objPattern + funcPattern + "|(?<PAREN>" + ColoredCodeArea.PAREN_PATTERN + ")" + "|(?<BRACE>"
+                + ColoredCodeArea.BRACE_PATTERN + ")" + "|(?<BRACKET>" + ColoredCodeArea.BRACKET_PATTERN + ")"
+                + "|(?<SEMICOLON>" + ColoredCodeArea.SEMICOLON_PATTERN + ")" + "|(?<STRING>"
+                + ColoredCodeArea.STRING_PATTERN + ")" + "|(?<COMMENT>" + ColoredCodeArea.COMMENT_PATTERN + ")"
                 + "|(?<DEFAULT>" + ColoredCodeArea.DEFAULT + ")");
-        
+                
         this.styleSheet = path;
         this.setupColorCoding();
     }

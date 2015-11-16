@@ -29,7 +29,7 @@ import net.java.games.input.ControllerEnvironment;
  * @see ControllerHandler
  * @see ControllerLayout
  * @see ControllerListener
- *     
+ *      
  */
 public class ControllerExample {
     

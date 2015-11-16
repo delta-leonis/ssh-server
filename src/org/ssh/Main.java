@@ -68,13 +68,13 @@ public class Main extends Application {
         Services.addService(verboseCoupler);
         // // oh, and let's add some other things to the org.ssh.models store
         Services.addServices(dingService, changeService, stringService);
-
+        
         verboseCoupler.attachToCompatiblePipelines();
         changeService.attachToCompatiblePipelines(PacketPriority.LOWEST);
         stringService.attachToCompatiblePipelines();
         dingService.attachToCompatiblePipelines();
         intService.attachToCompatiblePipelines();
-
+        
         // dingService.start();
         dingService.start();
         

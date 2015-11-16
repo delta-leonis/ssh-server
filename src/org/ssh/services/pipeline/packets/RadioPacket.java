@@ -15,7 +15,7 @@ import protobuf.Radio.RadioProtocolWrapper.Builder;
  * @author Rimon Oz
  */
 public class RadioPacket extends PipelinePacket {
-
+    
     /** The data. */
     private MessageOrBuilder   data;
     private final SendMethod[] sendMethods;
@@ -42,7 +42,7 @@ public class RadioPacket extends PipelinePacket {
     public Builder getBuilder() {
         return this.isMutable() ? (Builder) this.getData() : ((RadioProtocolWrapper) this.getData()).toBuilder();
     }
-
+    
     /**
      * Gets the data.
      *

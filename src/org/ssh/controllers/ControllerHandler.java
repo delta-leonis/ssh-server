@@ -113,7 +113,7 @@ public class ControllerHandler extends Producer {
         this.layout.getController().poll();
         
         // Make a list with all buttons that changed values
-        final Map<ButtonFunction, Float> currentButtonState = (HashMap<ButtonFunction, Float>) this.layout.getBindings()
+        final Map<ButtonFunction, Float> currentButtonState = this.layout.getBindings()
                 .entrySet().stream()
                 // filter all buttons that don't describe a strength value
                 .filter(entry -> !entry.getValue().toString().contains("_STRENGTH"))
@@ -122,7 +122,7 @@ public class ControllerHandler extends Producer {
                 // and collect these to a map
                 .collect(Collectors.toMap(entry -> entry.getValue(), // buttonfunction
                         entry -> entry.getKey().getPollData())); // polldata from abstractbutton
-
+                        
         // create a stream with current buttons
         if (!currentButtonState.entrySet().stream()
                 // process each button

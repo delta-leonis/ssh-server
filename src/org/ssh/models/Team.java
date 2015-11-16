@@ -40,7 +40,7 @@ public class Team extends Model {
      * log with received cards and score, index is the count-value and Object is the timestamp.
      */
     private final List<Long> yellowCards = new ArrayList<Long>(),
-                                redCards = new ArrayList<Long>(), scores = new ArrayList<Long>();
+                                     redCards = new ArrayList<Long>(), scores = new ArrayList<Long>();
                                      
     /**
      * team properties as time left for timeouts, number of timeouts and the goalie ID.

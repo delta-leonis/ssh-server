@@ -48,8 +48,8 @@ import javafx.scene.input.KeyCombination;
 public class Console extends UIComponent {
     
     // A logger for errorhandling
-    private static final Logger LOG          = Logger.getLogger();
-    
+    private static final Logger  LOG         = Logger.getLogger();
+                                             
     /** The cursor used by the console */
     private static final String  CURSOR      = "> ";
     /** The title that shows when starting up the console */
@@ -78,7 +78,7 @@ public class Console extends UIComponent {
     private boolean              selecting   = false;
     /** Used to iterate through the recentCommands */
     private ListIterator<String> iterator;
-    
+                                 
     /**
      * The constructor of the {@link Console}. After that it looks for all classes for auto complete
      * and sets up the {@link ConsoleArea} And last of all, it starts a thread for reading out
@@ -122,8 +122,7 @@ public class Console extends UIComponent {
      */
     private void addCommand(final String command) {
         // Move existing commands up
-        if (this.recentCommands.contains(command))
-            this.recentCommands.remove(command);
+        if (this.recentCommands.contains(command)) this.recentCommands.remove(command);
         
         this.recentCommands.add(command);
         // We're not selecting anymore
@@ -241,8 +240,7 @@ public class Console extends UIComponent {
         // If we're busy scrolling through commands
         if (this.selecting) {
             // Scroll through the commands
-            if (!this.iterator.hasNext()) 
-                this.iterator = this.recentCommands.listIterator(0);
+            if (!this.iterator.hasNext()) this.iterator = this.recentCommands.listIterator(0);
             // Display the command
             this.consoleArea.replaceText(this.currentLine, this.consoleArea.getLength(), this.iterator.next());
         }
@@ -267,11 +265,11 @@ public class Console extends UIComponent {
                 Console.LOG.exception(exception);
                 this.println(exception.getClass().getSimpleName() + " in line: " + command);
             }
-
+            
             // TODO: Block input until here?
             this.printCursor();
             this.currentLine = this.consoleArea.getText().length();
-            this.consoleArea.setCurrentLine(this.currentLine -1 );
+            this.consoleArea.setCurrentLine(this.currentLine - 1);
             return null;
         });
     }
@@ -303,7 +301,7 @@ public class Console extends UIComponent {
         // currentline till our
         // cursor
         final String command = this.consoleArea.getText(this.currentLine, caretPos);
-
+        
         // Handle the tab using this unfinished command
         final String result = this.autocomplete(command);
         // If the handleTab function returns anything useful
@@ -318,10 +316,8 @@ public class Console extends UIComponent {
      * @param s
      *            String that you want to print
      */
-    public void print(final String s) {        
-        Platform.runLater(() -> 
-            this.consoleArea.insertText(this.consoleArea.getLength(), s)
-        );
+    public void print(final String s) {
+        Platform.runLater(() -> this.consoleArea.insertText(this.consoleArea.getLength(), s));
     }
     
     /**
@@ -332,7 +328,7 @@ public class Console extends UIComponent {
             final int i = this.consoleArea.getLength();
             this.consoleArea.replaceText(i, i, '\n' + Console.CURSOR);
             this.currentLine = this.consoleArea.getText().length();
-            consoleArea.setCurrentLine(currentLine -1);
+            consoleArea.setCurrentLine(currentLine - 1);
         });
     }
     
@@ -362,22 +358,21 @@ public class Console extends UIComponent {
             this.scriptEngine.getContext().setWriter(new OutputStreamWriter(this.out));
             
             // Add every @AvailableInLua class to the luaj
-            if (this.functionClasses != null)
-                for (final Object o : this.functionClasses)
-                    this.scriptEngine.put(LuaUtils.getSimpleName(o), o);
+            if (this.functionClasses != null) for (final Object o : this.functionClasses)
+                this.scriptEngine.put(LuaUtils.getSimpleName(o), o);
                 
             // Add a useful sleep script
             this.scriptEngine.eval(
                     "local clock = os.clock function sleep(n) local t0 = clock() * 1000 while clock() * 1000 - t0 <= n do end end");
-
+                    
             // Important piece of code that fixed all bugs. Do not decode to
             // check its contents.
             this.scriptEngine.eval(new String(Base64.getDecoder().decode(
                     "bG9jYWwgY293ID0gewpbWyAKICBcICAgICAgICAgICAsfi4KICAgIFwgICAgICwtJ19fIGAtLAogICAgICAgXCAgeywtJyAgYC4gfSAgICAgICAgICAgICAgLCcpCiAgICAgICAgICAsKCBhICkgICBgLS5fXyAgICAgICAgICwnLCcpfiwKICAgICAgICAgPD0uKSAoICAgICAgICAgYC0uX18sPT0nICcgJyAnfQogICAgICAgICAgICggICApICAgICAgICAgICAgICAgICAgICAgIC8pCiAgICAgICAgICAgIGAtJ1wgICAgLCAgICAgICAgICAgICAgICAgICAgKQoJICAgICAgIHwgIFwgICAgICAgICBgfi4gICAgICAgIC8KICAgICAgICAgICAgICAgXCAgICBgLl8gICAgICAgIFwgICAgICAgLwogICAgICAgICAgICAgICAgIFwgICAgICBgLl9fX19fLCcgICAgLCcKICAgICAgICAgICAgICAgICAgYC0uICAgICAgICAgICAgICwnCiAgICAgICAgICAgICAgICAgICAgIGAtLl8gICAgIF8sLScKICAgICAgICAgICAgICAgICAgICAgICAgIDc3amonCiAgICAgICAgICAgICAgICAgICAgICAgIC8vX3x8CiAgICAgICAgICAgICAgICAgICAgIF9fLy8tLScvYAoJICAgICAgICAgICAgLC0tJy9gICAnCl1dCn0KZnVuY3Rpb24gY2hpY2tlbnNheSh0ZXh0KQpsID0gdGV4dDpsZW4oKQphID0gbCAvIDEwCmZvciBpPTAsYSBkbwoJaW8ud3JpdGUoIlsiIC4uIHRleHQ6c3ViKGkqMTArMSwgKChpKzEpKjEwID4gbCkgYW5kIGwgb3IgKGkrMSkqMTAgKSAuLiAgIl1cbiIpCmVuZAoJcHJpbnQoY293WzFdKQplbmQK")));
-
+                    
             this.println(Console.TITLE);
             this.printCursor();
-
+            
             // Set the line from where we need to start reading commands.
             this.currentLine = this.consoleArea.getText().length();
             consoleArea.setCurrentLine(currentLine);

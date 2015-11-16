@@ -23,11 +23,11 @@ import javafx.util.Duration;
 /**
  * @author Thomas Hakkers
  * @author Joost Overeem
- * 
+ *         
  * @TODO replace intToTime() with DateTime
  * @TODO replace onAction() with FXML onAction="#"
  * @TODO javadoc all the things \o/
- *
+ *      
  */
 public class Timeslider extends UIComponent {
     
@@ -83,7 +83,7 @@ public class Timeslider extends UIComponent {
         this.goalCheckBox.setOnAction(e -> this.updateSlider());
         this.timeoutCheckBox.setOnAction(e -> this.updateSlider());
         this.widthProperty().addListener(o -> Platform.runLater(() -> this.updateSlider()));
-
+        
         this.setupTimer();
         this.setupButtonPane();
     }

@@ -15,7 +15,10 @@ import javafx.util.Duration;
 public class Enrollbox extends BorderPane {
     
     public static enum Direction {
-        UP, DOWN, LEFT, RIGHT
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT
     }
     
     private double       expandedSize;

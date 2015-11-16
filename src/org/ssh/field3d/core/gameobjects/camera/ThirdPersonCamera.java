@@ -120,11 +120,13 @@ public class ThirdPersonCamera extends GameObject {
         if (this.getGame().getMouseInputHandler().isMidButtonDown()) {
             
             // Rotate around y-axis
-            this.xForm1.rotationY.setAngle(this.xForm1.rotationY.getAngle() + (this.getGame().getMouseInputHandler().getMouseDeltaX()
-                    * ThirdPersonCamera.MOUSE_LOOK_SENSITIVITY));
+            this.xForm1.rotationY
+                    .setAngle(this.xForm1.rotationY.getAngle() + (this.getGame().getMouseInputHandler().getMouseDeltaX()
+                            * ThirdPersonCamera.MOUSE_LOOK_SENSITIVITY));
             // Rotate around x-axis
-            this.xForm1.rotationX.setAngle(this.xForm1.rotationX.getAngle() + (this.getGame().getMouseInputHandler().getMouseDeltaY()
-                    * ThirdPersonCamera.MOUSE_LOOK_SENSITIVITY));
+            this.xForm1.rotationX
+                    .setAngle(this.xForm1.rotationX.getAngle() + (this.getGame().getMouseInputHandler().getMouseDeltaY()
+                            * ThirdPersonCamera.MOUSE_LOOK_SENSITIVITY));
         }
         
         // Limit x-axis rotation

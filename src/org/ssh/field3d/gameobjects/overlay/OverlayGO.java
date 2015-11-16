@@ -21,14 +21,14 @@ public class OverlayGO extends GameObject {
     
     // TODO Move resources
     /** The FXML directory. */
-    private static final String FXML_DIR    = "/org/ssh/view/components/overlay";
-                                            
+    private static final String FXML_DIR = "/org/ssh/view/components/overlay";
+                                         
     /** The CSS directory. */
-    private static final String CSS_DIR     = "/org/ssh/view/css/";
-            
+    private static final String CSS_DIR  = "/org/ssh/view/css/";
+                                         
     /** The logger. */
-    private static final Logger LOG         = Logger.getLogger();
-                                            
+    private static final Logger LOG      = Logger.getLogger();
+                                         
     /** The container for the overlay. */
     private Group               container;
                                 

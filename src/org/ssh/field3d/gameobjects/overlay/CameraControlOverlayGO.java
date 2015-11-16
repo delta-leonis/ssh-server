@@ -6,7 +6,6 @@ import org.ssh.field3d.core.gameobjects.GameObject;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 
 /**
@@ -19,41 +18,41 @@ import javafx.scene.input.MouseEvent;
 public class CameraControlOverlayGO extends OverlayGO {
     
     /** The offset between buttons. */
-    private static final int BUTTON_OFFSET = 35;
-    
+    private static final int    BUTTON_OFFSET    = 35;
+                                                 
     /** The FXML file for the layout */
     private static final String LAYOUT_FXML_FILE = "cameracontroloverlay.fxml";
-                                           
+                                                 
     /** The controls group. */
-    private final Group      controlsGroup;
-                             
+    private final Group         controlsGroup;
+                                
     /** The button for the top view preset. */
-    //private final Button     buttonTopView;
-                             
+    // private final Button buttonTopView;
+    
     /** The button for the side view preset. */
-    //private final Button     buttonSideView;
-                             
+    // private final Button buttonSideView;
+    
     /** The button for the 45 deg view preset. */
-    //private final Button     button45DegView;
-                             
+    // private final Button button45DegView;
+    
     /** The button for rotating left. */
-    //private final Button     buttonRotateLeft;
-                             
+    // private final Button buttonRotateLeft;
+    
     /** The button for rotating right. */
-    //private final Button     buttonRotateRight;
-                             
+    // private final Button buttonRotateRight;
+    
     /** The button for rotating up. */
-    //private final Button     buttonRotateUp;
-                             
+    // private final Button buttonRotateUp;
+    
     /** The button for rotating down. */
-    //private final Button     buttonRotateDown;
-                             
+    // private final Button buttonRotateDown;
+    
     /** The button for zooming in. */
-    //private final Button     buttonZoomIn;
-                             
+    // private final Button buttonZoomIn;
+    
     /** The button for zooming out. */
-    //private final Button     buttonZoomOut;
-                             
+    // private final Button buttonZoomOut;
+    
     /**
      * Constructor.
      *
@@ -71,43 +70,40 @@ public class CameraControlOverlayGO extends OverlayGO {
         this.loadFXML(LAYOUT_FXML_FILE, this.controlsGroup);
         
         /*
-        // Creating buttons
-        this.buttonTopView = new Button("Top View");
-        this.buttonSideView = new Button("Side View");
-        this.button45DegView = new Button("45 Degree View");
-        
-        this.buttonRotateLeft = new Button("Rotate Left");
-        this.buttonRotateRight = new Button("Rotate Right");
-        this.buttonRotateUp = new Button("Rotate Up");
-        this.buttonRotateDown = new Button("Rotate Down");
-        
-        this.buttonZoomIn = new Button("+");
-        this.buttonZoomOut = new Button("-");
-        
-        // Setting translation
-        this.buttonSideView.setTranslateY(CameraControlOverlayGO.BUTTON_OFFSET);
-        this.button45DegView.setTranslateY((2 * CameraControlOverlayGO.BUTTON_OFFSET));
-        
-        this.buttonRotateLeft.setTranslateY(CameraControlOverlayGO.BUTTON_OFFSET * 4);
-        this.buttonRotateRight.setTranslateY(CameraControlOverlayGO.BUTTON_OFFSET * 5);
-        this.buttonRotateUp.setTranslateY(CameraControlOverlayGO.BUTTON_OFFSET * 6);
-        this.buttonRotateDown.setTranslateY(CameraControlOverlayGO.BUTTON_OFFSET * 7);
-        
-        this.buttonZoomIn.setTranslateY(CameraControlOverlayGO.BUTTON_OFFSET * 9);
-        this.buttonZoomOut.setTranslateY(CameraControlOverlayGO.BUTTON_OFFSET * 10);
-        
-        // Adding buttons to controls group
-        this.controlsGroup.getChildren().add(this.button45DegView);
-        this.controlsGroup.getChildren().add(this.buttonSideView);
-        this.controlsGroup.getChildren().add(this.buttonTopView);
-        
-        this.controlsGroup.getChildren().add(this.buttonRotateLeft);
-        this.controlsGroup.getChildren().add(this.buttonRotateRight);
-        this.controlsGroup.getChildren().add(this.buttonRotateUp);
-        this.controlsGroup.getChildren().add(this.buttonRotateDown);
-        
-        this.controlsGroup.getChildren().add(this.buttonZoomIn);
-        this.controlsGroup.getChildren().add(this.buttonZoomOut);*/
+         * // Creating buttons this.buttonTopView = new Button("Top View"); this.buttonSideView =
+         * new Button("Side View"); this.button45DegView = new Button("45 Degree View");
+         * 
+         * this.buttonRotateLeft = new Button("Rotate Left"); this.buttonRotateRight = new Button(
+         * "Rotate Right"); this.buttonRotateUp = new Button("Rotate Up"); this.buttonRotateDown =
+         * new Button("Rotate Down");
+         * 
+         * this.buttonZoomIn = new Button("+"); this.buttonZoomOut = new Button("-");
+         * 
+         * // Setting translation
+         * this.buttonSideView.setTranslateY(CameraControlOverlayGO.BUTTON_OFFSET);
+         * this.button45DegView.setTranslateY((2 * CameraControlOverlayGO.BUTTON_OFFSET));
+         * 
+         * this.buttonRotateLeft.setTranslateY(CameraControlOverlayGO.BUTTON_OFFSET * 4);
+         * this.buttonRotateRight.setTranslateY(CameraControlOverlayGO.BUTTON_OFFSET * 5);
+         * this.buttonRotateUp.setTranslateY(CameraControlOverlayGO.BUTTON_OFFSET * 6);
+         * this.buttonRotateDown.setTranslateY(CameraControlOverlayGO.BUTTON_OFFSET * 7);
+         * 
+         * this.buttonZoomIn.setTranslateY(CameraControlOverlayGO.BUTTON_OFFSET * 9);
+         * this.buttonZoomOut.setTranslateY(CameraControlOverlayGO.BUTTON_OFFSET * 10);
+         * 
+         * // Adding buttons to controls group
+         * this.controlsGroup.getChildren().add(this.button45DegView);
+         * this.controlsGroup.getChildren().add(this.buttonSideView);
+         * this.controlsGroup.getChildren().add(this.buttonTopView);
+         * 
+         * this.controlsGroup.getChildren().add(this.buttonRotateLeft);
+         * this.controlsGroup.getChildren().add(this.buttonRotateRight);
+         * this.controlsGroup.getChildren().add(this.buttonRotateUp);
+         * this.controlsGroup.getChildren().add(this.buttonRotateDown);
+         * 
+         * this.controlsGroup.getChildren().add(this.buttonZoomIn);
+         * this.controlsGroup.getChildren().add(this.buttonZoomOut);
+         */
     }
     
     /**
@@ -120,18 +116,18 @@ public class CameraControlOverlayGO extends OverlayGO {
         this.getGame().get2DGroup().getChildren().add(this.controlsGroup);
         
         /*
-        // Hook events
-        this.button45DegView.setOnMouseClicked(new OnButton45DegViewClicked());
-        this.buttonSideView.setOnMouseClicked(new OnButtonSideViewClicked());
-        this.buttonTopView.setOnMouseClicked(new OnButtonTopViewClicked());
-        
-        this.buttonRotateLeft.setOnMouseClicked(new OnButtonRotateLeftClicked());
-        this.buttonRotateRight.setOnMouseClicked(new OnButtonRotateRightClicked());
-        this.buttonRotateUp.setOnMouseClicked(new OnButtonRotateUpClicked());
-        this.buttonRotateDown.setOnMouseClicked(new OnButtonRotateDownClicked());
-        
-        this.buttonZoomIn.setOnMouseClicked(new OnButtonZoomInClicked());
-        this.buttonZoomOut.setOnMouseClicked(new OnButtonZoomOutClicked());*/
+         * // Hook events this.button45DegView.setOnMouseClicked(new OnButton45DegViewClicked());
+         * this.buttonSideView.setOnMouseClicked(new OnButtonSideViewClicked());
+         * this.buttonTopView.setOnMouseClicked(new OnButtonTopViewClicked());
+         * 
+         * this.buttonRotateLeft.setOnMouseClicked(new OnButtonRotateLeftClicked());
+         * this.buttonRotateRight.setOnMouseClicked(new OnButtonRotateRightClicked());
+         * this.buttonRotateUp.setOnMouseClicked(new OnButtonRotateUpClicked());
+         * this.buttonRotateDown.setOnMouseClicked(new OnButtonRotateDownClicked());
+         * 
+         * this.buttonZoomIn.setOnMouseClicked(new OnButtonZoomInClicked());
+         * this.buttonZoomOut.setOnMouseClicked(new OnButtonZoomOutClicked());
+         */
     }
     
     /**
@@ -148,18 +144,16 @@ public class CameraControlOverlayGO extends OverlayGO {
         }
         
         /*
-        // Unhook events
-        this.button45DegView.setOnMouseClicked(null);
-        this.buttonSideView.setOnMouseClicked(null);
-        this.buttonTopView.setOnMouseClicked(null);
-        
-        this.buttonRotateLeft.setOnMouseClicked(null);
-        this.buttonRotateRight.setOnMouseClicked(null);
-        this.buttonRotateUp.setOnMouseClicked(null);
-        this.buttonRotateDown.setOnMouseClicked(null);
-        
-        this.buttonZoomIn.setOnMouseClicked(null);
-        this.buttonZoomOut.setOnMouseClicked(null);*/
+         * // Unhook events this.button45DegView.setOnMouseClicked(null);
+         * this.buttonSideView.setOnMouseClicked(null); this.buttonTopView.setOnMouseClicked(null);
+         * 
+         * this.buttonRotateLeft.setOnMouseClicked(null);
+         * this.buttonRotateRight.setOnMouseClicked(null);
+         * this.buttonRotateUp.setOnMouseClicked(null);
+         * this.buttonRotateDown.setOnMouseClicked(null);
+         * 
+         * this.buttonZoomIn.setOnMouseClicked(null); this.buttonZoomOut.setOnMouseClicked(null);
+         */
     }
     
     /**

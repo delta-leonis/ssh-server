@@ -5,28 +5,29 @@ import org.ssh.util.Logger;
 /**
  * The Class Manageable.
  * 
- * A Manageable represents an Object that is managed by a {@link Manager}. Examples of
- * Manageable are {@link Model} and {@link Service}.
+ * A Manageable represents an Object that is managed by a {@link Manager}. Examples of Manageable
+ * are {@link Model} and {@link Service}.
  * 
  * @author Rimon Oz
  */
 public abstract class Manageable {
+    
     /** The name of the Manageable. */
-    private String                 name;
-    
+    private String                name;
+                                  
     // a logger for good measure
-    protected static final Logger LOG     = Logger.getLogger();
-    
-    
+    protected static final Logger LOG = Logger.getLogger();
+                                      
     /**
      * Instantiates a new manageable.
      *
-     * @param name the name
+     * @param name
+     *            the name
      */
     public Manageable(String name) {
         this.name = name;
     }
-
+    
     /**
      * Gets the name of the Manageable.
      *

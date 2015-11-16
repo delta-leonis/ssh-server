@@ -1,7 +1,8 @@
 package org.ssh.models.enums;
 
 /**
- * These are the "coarse" stages of the game. as used by SSL_refbox for use in {@link org.ssh.models.Referee Referee}.
+ * These are the "coarse" stages of the game. as used by SSL_refbox for use in
+ * {@link org.ssh.models.Referee Referee}.
  *
  * @author Jeroen de Jong
  * @see https://github.com/RoboCup-SSL/ssl-refbox

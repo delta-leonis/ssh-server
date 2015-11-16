@@ -12,7 +12,7 @@ import protobuf.RefereeOuterClass.RefereeOrBuilder;
  * @author Rimon Oz
  */
 public class RefereePacket extends PipelinePacket {
-
+    
     /** The data. */
     private RefereeOrBuilder data;
     

@@ -12,7 +12,7 @@ import protobuf.Detection.DetectionRobotOrBuilder;
  * @author Rimon Oz
  */
 public class DetectionPacket extends PipelinePacket {
-
+    
     /** The data. */
     private DetectionRobotOrBuilder data;
     

@@ -14,7 +14,7 @@ import javafx.stage.Stage;
  * Example that uses the {@link TimerPane} and {@link TimerSlider}
  *
  * @author Thomas Hakkers
- *        
+ *         
  */
 public class TimerSliderExample extends Application {
     
@@ -33,10 +33,10 @@ public class TimerSliderExample extends Application {
         stage.setTitle("Game Logs");
         stage.setWidth(600);
         stage.setHeight(430);
-
+        
         final TimerPane timerPane = new TimerPane();
         borderPane.setBottom(timerPane);
-
+        
         stackPane.getChildren().addAll(testLabel, borderPane);
         stage.setScene(scene);
         stage.show();

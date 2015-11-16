@@ -36,7 +36,8 @@ public final class Models {
     /**
      * adds a org.ssh.models to this manager
      *
-     * @param model the model
+     * @param model
+     *            the model
      */
     public static void add(final Model model) {
         Models.modelController.add(model);
@@ -45,8 +46,10 @@ public final class Models {
     /**
      * Creates the.
      *
-     * @param clazz the clazz
-     * @param args the args
+     * @param clazz
+     *            the clazz
+     * @param args
+     *            the args
      * @return the model
      */
     public static Model create(final Class<?> clazz, final Object... args) {
@@ -76,7 +79,8 @@ public final class Models {
     /**
      * This method finds all models matching the name and returns them as an List<Model>.
      *
-     * @param modelName            The (fuzzy) name of the model you want to find.
+     * @param modelName
+     *            The (fuzzy) name of the model you want to find.
      * @return The requested models.
      */
     public static List<?> getAll(final String modelName) {
@@ -137,7 +141,8 @@ public final class Models {
     /**
      * Save the current state of the org.ssh.models in profiles path
      *
-     * @param model the model
+     * @param model
+     *            the model
      * @return success value
      */
     public static boolean save(final Model model) {
@@ -147,7 +152,8 @@ public final class Models {
     /**
      * Save given org.ssh.models as default for this org.ssh.models type
      *
-     * @param model the model
+     * @param model
+     *            the model
      * @return succes value
      */
     public static boolean saveAsDefault(final Model model) {

@@ -6,7 +6,7 @@ import javafx.geometry.Point2D;
  * Describes an object on the {@link Field}. Such as a {@link Robot}, or a {@link Ball}
  *
  * @author Jeroen de Jong
- *        
+ *         
  */
 public class FieldObject extends Model {
     

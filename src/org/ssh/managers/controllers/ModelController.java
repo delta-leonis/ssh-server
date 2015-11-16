@@ -176,9 +176,7 @@ public class ModelController {
      * @return The requested models.
      */
     public List<?> getAll(final String name) {
-        return this.models.stream()
-                .filter(model -> model.getName().equals(name))
-                .collect(Collectors.toList());
+        return this.models.stream().filter(model -> model.getName().equals(name)).collect(Collectors.toList());
     }
     
     /**
@@ -314,7 +312,7 @@ public class ModelController {
             // open configfile
             final File configFile = new File(filePath);
             // make dirs recursively
-            if(!configFile.getParentFile().isDirectory())
+            if (!configFile.getParentFile().isDirectory())
                 if (!configFile.getParentFile().mkdirs()) throw new IOException();
             // create file if it doesn't already
             if (!configFile.exists()) configFile.createNewFile();

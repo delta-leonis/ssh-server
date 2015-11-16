@@ -12,7 +12,7 @@ import protobuf.Geometry.GeometryDataOrBuilder;
  * @author Rimon Oz
  */
 public class GeometryPacket extends PipelinePacket {
-
+    
     /** The data. */
     private GeometryDataOrBuilder data;
     

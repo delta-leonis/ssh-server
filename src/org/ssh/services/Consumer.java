@@ -8,7 +8,8 @@ import org.ssh.managers.Services;
  * A Consumer takes a PipelinePacket and consumes it.
  *
  * @author Rimon Oz
- * @param <P>
+ * @param
+ *            <P>
  *            A PipelinePacket this Consumer can work with.
  */
 public abstract class Consumer<P extends PipelinePacket> extends Service<P> {
@@ -31,10 +32,10 @@ public abstract class Consumer<P extends PipelinePacket> extends Service<P> {
     @SuppressWarnings ("unchecked")
     public Consumer<P> attachToCompatiblePipelines() {
         Services.getPipelines(this.getType()).stream()
-            // map them to the correct type
-            .map(pipeline -> (Pipeline<P>) pipeline)
-            // register with the pipeline
-            .forEach(pipeline -> pipeline.registerConsumer(this));
+                // map them to the correct type
+                .map(pipeline -> (Pipeline<P>) pipeline)
+                // register with the pipeline
+                .forEach(pipeline -> pipeline.registerConsumer(this));
                 
         return this;
     }

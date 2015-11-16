@@ -14,7 +14,7 @@ import javafx.scene.shape.Rectangle;
  * ContextMenuGO class. This class is the base class for a 3d context menu.
  *
  * @see GameObject
- *     
+ *      
  * @author Mark Lefering
  */
 public class ContextMenuGO extends GameObject {

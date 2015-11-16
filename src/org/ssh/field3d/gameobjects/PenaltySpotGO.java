@@ -14,8 +14,8 @@ import javafx.scene.transform.Rotate;
  * spot on the 3d field.
  * 
  * @see GameObject
- *
- * @author Mark Lefering   
+ *     
+ * @author Mark Lefering
  */
 public class PenaltySpotGO extends GameObject {
     

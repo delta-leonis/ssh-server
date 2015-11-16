@@ -30,7 +30,7 @@ import javafx.stage.Stage;
  *
  * @author Rimon Oz
  * @author Joost Overeem
- * 
+ *         
  * @TODO javadoc for attributes
  * @TODO solution for all the bind()s
  * @TODO fix naming convention (camelCasing)

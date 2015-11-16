@@ -17,17 +17,17 @@ import javafx.scene.layout.Region;
  * This class represents a component that is placed inside a window (see {@link UIController}).
  *
  * @author Rimon Oz
- * 
+ *         
  * @TODO add remove()
  */
 public abstract class UIComponent extends Region {
-                                 
+    
     /** The name of the component. */
     private String              name;
-
+                                
     // a logger for good measure
     private static final Logger LOG = Logger.getLogger();
-    
+                                    
     /**
      * Instantiates a new UI component.
      *

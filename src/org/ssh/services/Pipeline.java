@@ -18,10 +18,10 @@ import com.google.common.reflect.TypeToken;
 /**
  * The Class Pipeline.
  *
- * A Pipeline processes data using {@link Producer},
- * {@link Coupler}, and {@link Consumer}.
+ * A Pipeline processes data using {@link Producer}, {@link Coupler}, and {@link Consumer}.
  *
- * @param <P>
+ * @param
+ *            <P>
  *            A PipelinePacket this Pipeline can work with.
  *            
  * @author Rimon Oz
@@ -42,7 +42,8 @@ public abstract class Pipeline<P extends PipelinePacket> {
                                                               
     /** The reflected TypeToken (o¬‿¬o ). */
     @SuppressWarnings ("serial")
-    public TypeToken<P>                           genericType = new TypeToken<P>(this.getClass()) {};
+    public TypeToken<P>                           genericType = new TypeToken<P>(this.getClass()) {
+                                                              };
                                                               
     // a logger for good measure
     private static final Logger                   LOG         = Logger.getLogger();
@@ -73,8 +74,8 @@ public abstract class Pipeline<P extends PipelinePacket> {
         // add the packet
         this.queue.add(pipelinePacket);
         Pipeline.LOG.fine("Packet of genericType %s added to opipeline %s ...",
-            pipelinePacket.getClass().toString(),
-            this.getName());
+                pipelinePacket.getClass().toString(),
+                this.getName());
                 
         return this;
     }
@@ -116,112 +117,116 @@ public abstract class Pipeline<P extends PipelinePacket> {
         // process the packets by composing all couplers according to their priority
         // and feeding the packet as the argument
         final PipelinePacket resultPacket = Seq.foldLeft(
-            // get the couplers with their priorities
-            this.couplers.entrySet().stream()
-                // sort them by their priority
-                .sorted((leftMap, rightMap) -> 
-                    leftMap.getValue().ordinal() > rightMap.getValue().ordinal() ? -1 : 1)
-                // extract the couplers
-                .map(entryMap -> entryMap.getKey()),
-            // the argument to the composed function
-            pipelinePacket,
-            // the composition itself
-            (packet, coupler) -> coupler.process(packet));
+                // get the couplers with their priorities
+                this.couplers.entrySet().stream()
+                        // sort them by their priority
+                        .sorted((leftMap, rightMap) -> leftMap.getValue().ordinal() > rightMap.getValue().ordinal() ? -1
+                                : 1)
+                        // extract the couplers
+                        .map(entryMap -> entryMap.getKey()),
+                // the argument to the composed function
+                pipelinePacket,
+                // the composition itself
+                (packet, coupler) -> coupler.process(packet));
                 
-        Pipeline.LOG.fine(
-            "Packet pushed through all couplers, now mapping to consumers on pipeline %s",
-            this.getName());
+        Pipeline.LOG.fine("Packet pushed through all couplers, now mapping to consumers on pipeline %s",
+                this.getName());
                 
         return this.consumers.stream().map(consumer -> consumer.consume(resultPacket))
-            // collect all success values and reduce to true if all senders
-            // succeeded; false otherwise
-            .reduce(true, (accumulator, success) -> accumulator && success);
+                // collect all success values and reduce to true if all senders
+                // succeeded; false otherwise
+                .reduce(true, (accumulator, success) -> accumulator && success);
     }
     
     /**
      * Registers a {@link Consumer} with the Pipeline.
      *
-     * @param <C>      the generic type of Consumer
-     * @param consumer The Consumer to be registered with the Pipeline.
-     * @return         true, if successful
+     * @param <C>
+     *            the generic type of Consumer
+     * @param consumer
+     *            The Consumer to be registered with the Pipeline.
+     * @return true, if successful
      */
     public <C extends Consumer<P>> boolean registerConsumer(final C consumer) {
-        Pipeline.LOG.fine("Consumer named %s registered to pipeline %s.",
-            consumer.getName(),
-            this.getName());
+        Pipeline.LOG.fine("Consumer named %s registered to pipeline %s.", consumer.getName(), this.getName());
         return this.consumers.add(consumer);
     }
     
     /**
      * Register a list of {@link Consumer} registered with the Pipeline.
      *
-     * @param consumers the consumers
+     * @param consumers
+     *            the consumers
      * @return true, if successful
      */
     @SuppressWarnings ("unchecked")
     public boolean registerConsumers(final Consumer<P>... consumers) {
         return Stream.of(consumers).map(consumer -> this.registerConsumer(consumer))
-            // collect all success values and reduce to true if all senders
-            // succeeded; false otherwise
-            .reduce(true, (accumulator, success) -> accumulator && success);
+                // collect all success values and reduce to true if all senders
+                // succeeded; false otherwise
+                .reduce(true, (accumulator, success) -> accumulator && success);
     }
     
     /**
      * Registers a {@link Coupler} with the Pipeline.
      *
-     * @param <C> the generic type of Coupler
-     * @param coupler the coupler
+     * @param <C>
+     *            the generic type of Coupler
+     * @param coupler
+     *            the coupler
      * @return true, if successful
      */
     public <C extends Coupler<P>> boolean registerCoupler(final C coupler) {
-        Pipeline.LOG.fine("Coupler named %s registered to pipeline %s.",
-            coupler.getName(),
-            this.getName());
+        Pipeline.LOG.fine("Coupler named %s registered to pipeline %s.", coupler.getName(), this.getName());
         return this.couplers.put(coupler, PacketPriority.MEDIUM) != null;
     }
     
     /**
      * Registers a {@link Coupler} with the Pipeline with the given Priority.
      *
-     * @param packetPriority   The priority with which the Coupler is to be registered.
-     * @param coupler          The coupler
-     * @return                 true, if successful
+     * @param packetPriority
+     *            The priority with which the Coupler is to be registered.
+     * @param coupler
+     *            The coupler
+     * @return true, if successful
      */
     public boolean registerCoupler(final PacketPriority packetPriority, final Coupler<P> coupler) {
         Pipeline.LOG.fine("Consumer named %s registered to pipeline %s with priority %s.",
-            coupler.getName(),
-            this.getName(),
-            packetPriority.toString());
+                coupler.getName(),
+                this.getName(),
+                packetPriority.toString());
         return this.couplers.put(coupler, packetPriority) != null;
     }
     
     /**
      * Registers a list of {@link Coupler} with the Pipeline.
      *
-     * @param couplers the couplers
+     * @param couplers
+     *            the couplers
      * @return true, if successful
      */
     @SuppressWarnings ("unchecked")
     public boolean registerCouplers(final Coupler<P>... couplers) {
         return Stream.of(couplers).map(coupler -> this.registerCoupler(coupler))
-            // collect all success values and reduce to true if all senders
-            // succeeded; false otherwise
-            .reduce(true, (accumulator, success) -> accumulator && success);
+                // collect all success values and reduce to true if all senders
+                // succeeded; false otherwise
+                .reduce(true, (accumulator, success) -> accumulator && success);
     }
     
     /**
-     * Registers a list of {@link Coupler} with the Pipeline with the given
-     * Priority.
+     * Registers a list of {@link Coupler} with the Pipeline with the given Priority.
      *
-     * @param packetPriority    The priority with which the Couplers are to be registered.
-     * @param couplers          the couplers
-     * @return                  true, if successful
+     * @param packetPriority
+     *            The priority with which the Couplers are to be registered.
+     * @param couplers
+     *            the couplers
+     * @return true, if successful
      */
     @SuppressWarnings ("unchecked")
     public boolean registerCouplers(final PacketPriority packetPriority, final Coupler<P>... couplers) {
         return Stream.of(couplers).map(coupler -> this.registerCoupler(packetPriority, coupler))
-            // collect all success values and reduce to true if all senders
-            // succeeded; false otherwise
-            .reduce(true, (accumulator, success) -> accumulator && success);
+                // collect all success values and reduce to true if all senders
+                // succeeded; false otherwise
+                .reduce(true, (accumulator, success) -> accumulator && success);
     }
 }

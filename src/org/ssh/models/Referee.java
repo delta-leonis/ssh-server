@@ -113,7 +113,8 @@ public class Referee extends Model {
     /**
      * sets the number of commands
      * 
-     * @param {@link #commandCounter}
+     * @param {@link
+     *            #commandCounter}
      */
     public void setCommandCounter(final int commandCounter) {
         this.commandCounter = commandCounter;

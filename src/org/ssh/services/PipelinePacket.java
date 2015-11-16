@@ -26,7 +26,8 @@ public abstract class PipelinePacket {
     /**
      * Applies a lambda to the packet.
      *
-     * @param <P>
+     * @param
+     *            <P>
      *            A PipelinePacket this lambda can work with.
      * @param function
      *            The lambda to execute on the PipelinePacket.
@@ -65,7 +66,8 @@ public abstract class PipelinePacket {
     /**
      * Save.
      *
-     * @param <P>
+     * @param
+     *            <P>
      *            The type of the PipelinePacket
      * @param data
      *            The data to be put inside the packet.
@@ -86,8 +88,10 @@ public abstract class PipelinePacket {
     /**
      * Saves the data in the packet as a Map<String, O extends Object>.
      *
-     * @param <O> the generic type
-     * @param clazz the clazz
+     * @param <O>
+     *            the generic type
+     * @param clazz
+     *            the clazz
      * @return the map
      */
     @SuppressWarnings ("unchecked")

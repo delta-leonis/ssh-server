@@ -10,30 +10,29 @@ import org.ssh.util.Logger;
 
 import javafx.scene.paint.Color;
 
-
 /**
  * World contains generic models for a match-setup
  *
  * @TODO make it a lazy-singleton
- *
+ *      
  * @author Jeroen
  */
 public class World {
     
     // respective logger
-    private final Logger          logger = Logger.getLogger();
-                                         
+    private final Logger     logger = Logger.getLogger();
+                                    
     /**
      * All teams in the game
      */
     private final List<Team> teams  = new ArrayList<Team>();
-                                         
+                                    
     /**
      * @param id
      *            robot ID
      * @param teamColor
      *            teamColor of the Robot.
-     * @return a {@link Robot} object, specified by these parameters. 
+     * @return a {@link Robot} object, specified by these parameters.
      */
     public Robot getRobot(final int id, final Color teamColor) {
         return this.getRobots(teamColor).stream().filter(robot -> robot.getRobotId() == id).findFirst().get();

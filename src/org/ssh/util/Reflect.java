@@ -6,8 +6,9 @@ import com.google.common.reflect.Reflection;
 
 /**
  * TODO remove, and use {@link Reflection} library instead.
+ * 
  * @author Jeroen de Jong
- *
+ *        
  */
 public class Reflect {
     

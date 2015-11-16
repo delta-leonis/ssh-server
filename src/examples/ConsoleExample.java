@@ -26,29 +26,29 @@ import javafx.stage.Stage;
  * object:function() (not object.function())
  *
  * @author Thomas Hakkers
- *        
+ *         
  */
 public class ConsoleExample extends Application {
     
     private static final int    WIDTH  = 600;
     private static final int    HEIGHT = 400;
     private static final String TITLE  = "Lua Console";
-
+                                       
     public static void main(final String[] args) {
         Application.launch(args);
     }
-                                
+    
     @Override
     public void start(final Stage primaryStage) throws Exception {
         primaryStage.setTitle(ConsoleExample.TITLE);
         primaryStage.setOnCloseRequest(e -> System.exit(0));
-
+        
         // Create a new Console used to manipulate a ConsoleArea
         final Console console = new Console("bottom-console");
-
+        
         // Create base
         final Scene scene = new Scene(console, ConsoleExample.WIDTH, ConsoleExample.HEIGHT, Color.WHITE);
-
+        
         // Add TextArea
         primaryStage.setScene(scene);
         primaryStage.show();

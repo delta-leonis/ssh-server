@@ -7,9 +7,19 @@ import org.ssh.ui.lua.console.AvailableInLua;
  * not final.
  *
  * @author Jeroen
- *        
+ *         
  */
 @AvailableInLua
 public enum SendMethod {
-    UDP, USB, WIFI_DIRECT, SERIAL, TCP, BLUETOOTH, HOMING_PIGEON, POST_NL, INFRARED, GPIO, DEBUG
+    UDP,
+    USB,
+    WIFI_DIRECT,
+    SERIAL,
+    TCP,
+    BLUETOOTH,
+    HOMING_PIGEON,
+    POST_NL,
+    INFRARED,
+    GPIO,
+    DEBUG
 }

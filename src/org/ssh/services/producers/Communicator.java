@@ -29,9 +29,8 @@ import protobuf.Radio.RadioProtocolWrapper;
 @AvailableInLua
 public class Communicator extends Producer<RadioPacket> {
     
-    private final RadioPipeline commPipeline = (RadioPipeline) Services
-            .getPipeline("communication pipeline").get();
-            
+    private final RadioPipeline commPipeline = (RadioPipeline) Services.getPipeline("communication pipeline").get();
+    
     public Communicator() {
         super("communicator", ProducerType.SINGLE);
     }

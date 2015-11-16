@@ -9,21 +9,22 @@ import org.ssh.util.Logger;
 /**
  * The Class Manager.
  * 
- * A Manager is a DAO that handles a specific type of {@link Manageable}. Examples of Managers
- * are {@link Services}, {@link Models}, and {@link UI}.
+ * A Manager is a DAO that handles a specific type of {@link Manageable}. Examples of Managers are
+ * {@link Services}, {@link Models}, and {@link UI}.
  *
- * @param <M> the generic type of {@link Manageable} the Manager can handle.
- * 
+ * @param <M>
+ *            the generic type of {@link Manageable} the Manager can handle.
+ *            
  * @author Rimon Oz
  */
 abstract public class Manager<M extends Manageable> {
     
     /** The controller. */
     private ManagerController<M> controller;
-    
+                                 
     // a logger for good measure
-    private static final Logger       LOG                = Logger.getLogger();
-    
+    private static final Logger  LOG = Logger.getLogger();
+                                     
     /**
      * Finds a {@link Manageable} with the given name in the Manager.
      *
@@ -33,7 +34,7 @@ abstract public class Manager<M extends Manageable> {
      */
     public Optional<M> get(final String name) {
         Manager.LOG.fine("Getting a manageable named: %s", name);
-        return (Optional<M>) this.controller.get(name);
+        return this.controller.get(name);
     }
     
     /**
@@ -43,7 +44,7 @@ abstract public class Manager<M extends Manageable> {
      * @see org.ssh.managers.ManagerController#getAll()
      */
     public List<M> getAll() {
-        return (List<M>)this.controller.getAll();
+        return this.controller.getAll();
     }
     
     /**
@@ -55,13 +56,14 @@ abstract public class Manager<M extends Manageable> {
      * @see ManagerController#getAll(String)
      */
     public List<M> getAll(final String name) {
-        return (List<M>) this.controller.getAll(name);
+        return this.controller.getAll(name);
     }
     
     /**
      * Adds a {@link Manageable} to the Manager.
      *
-     * @param manageable            The service to be added.
+     * @param manageable
+     *            The service to be added.
      * @return true, if successful.
      * @see ManagerController#add(Manageable)
      */
@@ -73,13 +75,12 @@ abstract public class Manager<M extends Manageable> {
     /**
      * Wraps {@link #add}.
      *
-     * @param manageables the manageables to be added
+     * @param manageables
+     *            the manageables to be added
      */
     @SuppressWarnings ("unchecked")
     public void add(final M... manageables) {
-        Stream.of(manageables)
-            .parallel()
-            .forEach(service -> this.controller.add(service));
+        Stream.of(manageables).parallel().forEach(service -> this.controller.add(service));
     }
     
 }

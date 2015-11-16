@@ -25,8 +25,8 @@ public class USBSender implements SenderInterface {
     /**
      * Serialport that will be written to
      */
-    private SerialPort   serialPort;
-                         
+    private SerialPort          serialPort;
+                                
     /**
      * Instansiates USBSender and opens the serial connection to the COM-port
      * 

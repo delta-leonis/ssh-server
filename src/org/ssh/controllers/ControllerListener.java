@@ -20,9 +20,9 @@ import protobuf.Radio.RadioProtocolCommand;
  * robotId
  *
  * @TODO Rimon fixt deze shit nog naar pipeline
- *
+ *      
  * @author Jeroen de Jong
- *        
+ *         
  */
 public class ControllerListener extends Service {
     
@@ -40,9 +40,9 @@ public class ControllerListener extends Service {
     /**
      * A reference to the {@link Communicator} service
      */
-    private Communicator                              communicator;
+    private Communicator                      communicator;
     // respective logger
-    private final  static Logger                      LOG   = Logger.getLogger();
+    private final static Logger               LOG      = Logger.getLogger();
                                                        
     /**
      * Create a controllerlistener
@@ -179,7 +179,7 @@ public class ControllerListener extends Service {
     public boolean unregister(final int robotId) {
         // check if it is assigned at all
         if (!this.isAssigned(robotId)) {
-            this.LOG.warning("Could not unregister controllerHandler for robot %d.\n", robotId);
+            ControllerListener.LOG.warning("Could not unregister controllerHandler for robot %d.\n", robotId);
             return false;
         }
         

@@ -16,10 +16,10 @@ import javafx.scene.layout.Pane;
 /**
  * 
  * @author Joost Overeem
- *
+ *        
  * @TODO create public <P extends Pane> void enroll(P pane)
  * @TODO write javadoc
- *
+ *      
  */
 public class Toolbox extends UIComponent {
     

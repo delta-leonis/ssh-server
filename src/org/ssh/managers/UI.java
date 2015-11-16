@@ -20,7 +20,7 @@ import javafx.stage.Stage;
  * . This class holds references to all the windows and makes instantiating windows easier.
  *
  * @author Rimon Oz
- * 
+ *         
  * @TODO add removeWindow()
  * @TODO addWindow() needs to check for duplicate window names
  */
@@ -29,18 +29,17 @@ public final class UI {
     /**
      * The services store has a controller that runs the store.
      */
-    private static List<UIController<?>>      uiControllers;
-                                              
+    private static List<UIController<?>> uiControllers;
+                                         
     /**
      * The single instance of the class (lazy-loaded singleton).
      */
-    private static final Object               instance = new Object();
-                                                       
+    private static final Object          instance = new Object();
+                                                  
     /** The Constant LOG. */
     // a logger for good measure
-    private static final Logger               LOG      = Logger.getLogger();
-
-    
+    private static final Logger          LOG      = Logger.getLogger();
+                                                  
     /**
      * Private constructor to hide the implicit public one.
      */
@@ -64,8 +63,11 @@ public final class UI {
     /**
      * Returns an Optional containing the window with the specified name.
      *
-     * @param <P> the generic type
-     * @param name            The name of the requested window.
+     * @param
+     *            <P>
+     *            the generic type
+     * @param name
+     *            The name of the requested window.
      * @return An Optional containing the window.
      */
     @SuppressWarnings ("unchecked")
@@ -73,11 +75,10 @@ public final class UI {
         UI.LOG.fine("Getting a window named %s from the UI store", name);
         // get a stream of all the windows
         return UI.uiControllers.stream()
-            // filter out the window with the correct name
-            .filter(controller -> controller.getName().equals(name))
-            .map(controller -> (UIController<P>)controller)
-            // and return the first one in the list
-            .findFirst();
+                // filter out the window with the correct name
+                .filter(controller -> controller.getName().equals(name)).map(controller -> (UIController<P>) controller)
+                // and return the first one in the list
+                .findFirst();
     }
     
     /**

@@ -31,7 +31,7 @@ import com.google.common.util.concurrent.MoreExecutors;
  *
  * @author Rimon Oz
  */
-public class ServicesController extends ManagerController<Service<? extends PipelinePacket>>{
+public class ServicesController extends ManagerController<Service<? extends PipelinePacket>> {
     
     /** The service org.ssh.services.pipeline list. */
     private ImmutableList<Pipeline<? extends PipelinePacket>>            pipelineList;
@@ -83,7 +83,7 @@ public class ServicesController extends ManagerController<Service<? extends Pipe
                 // succeeded; false otherwise
                 .reduce(true, (accumulator, success) -> accumulator && success);
     }
-     
+    
     /**
      * Gets a {@link org.ssh.services.Pipeline} from the Services store with the given name.
      *
@@ -92,8 +92,7 @@ public class ServicesController extends ManagerController<Service<? extends Pipe
      * @return The requested Pipeline.
      */
     public Optional<Pipeline<? extends PipelinePacket>> getPipeline(final String name) {
-        return this.pipelineList.stream().filter(pipeline -> pipeline.getName().equals(name))
-                .findFirst();
+        return this.pipelineList.stream().filter(pipeline -> pipeline.getName().equals(name)).findFirst();
     }
     
     /**
@@ -103,9 +102,7 @@ public class ServicesController extends ManagerController<Service<? extends Pipe
      */
     @SuppressWarnings ("unchecked")
     public <P extends PipelinePacket> List<Pipeline<P>> getPipelines() {
-        return this.pipelineList.stream()
-            .map(pipeline -> (Pipeline<P>) pipeline)
-            .collect(Collectors.toList());
+        return this.pipelineList.stream().map(pipeline -> (Pipeline<P>) pipeline).collect(Collectors.toList());
     }
     
     /**
@@ -121,15 +118,15 @@ public class ServicesController extends ManagerController<Service<? extends Pipe
      * @return A ScheduledFuture that can be used to cancel the periodic execution.
      */
     @SuppressWarnings ("unchecked")
-    public ListenableScheduledFuture<?> scheduleTask(final String taskName,
-            final Runnable task,
-            final long delay) {
+    public ListenableScheduledFuture<?> scheduleTask(final String taskName, final Runnable task, final long delay) {
         // schedule the task
-        final ListenableScheduledFuture<?> scheduledFuture = this.scheduler
-                .scheduleWithFixedDelay(task, 0, delay, TimeUnit.MICROSECONDS);
+        final ListenableScheduledFuture<?> scheduledFuture = this.scheduler.scheduleWithFixedDelay(task,
+                0,
+                delay,
+                TimeUnit.MICROSECONDS);
         // save the ListenableFuture for future use
         this.scheduledTasks.put(taskName, (ScheduledFuture<? extends PipelinePacket>) scheduledFuture);
-
+        
         return scheduledFuture;
     }
     

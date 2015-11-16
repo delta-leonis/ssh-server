@@ -16,11 +16,12 @@ import com.google.common.util.concurrent.ListenableScheduledFuture;
 /**
  * The Class Producer.
  *
- * A Producer generates packets of the type (or subtype of) {@link PipelinePacket}. It does
- * this by running single or scheduled tasks.
+ * A Producer generates packets of the type (or subtype of) {@link PipelinePacket}. It does this by
+ * running single or scheduled tasks.
  *
  * @author Rimon Oz
- * @param <P>
+ * @param
+ *            <P>
  *            A PipelinePacket this Producer can work with.
  */
 public abstract class Producer<P extends PipelinePacket> extends Service<P> {
@@ -59,10 +60,10 @@ public abstract class Producer<P extends PipelinePacket> extends Service<P> {
     public void attachToCompatiblePipelines() {
         // find compatible org.ssh.pipelines
         Services.getPipelines(this.getType()).stream()
-            // .parallel()
-            .filter(pipeline -> pipeline.getType().equals(this.getType()))
-            .map(pipeline -> pipeline.getClass().cast(pipeline))
-            .forEach(pipeline -> this.registerPipeline(pipeline));
+                // .parallel()
+                .filter(pipeline -> pipeline.getType().equals(this.getType()))
+                .map(pipeline -> pipeline.getClass().cast(pipeline))
+                .forEach(pipeline -> this.registerPipeline(pipeline));
     }
     
     /**
@@ -137,7 +138,8 @@ public abstract class Producer<P extends PipelinePacket> extends Service<P> {
     /**
      * Registers a {@link Pipeline} with the Producer.
      *
-     * @param pipeline the pipeline
+     * @param pipeline
+     *            the pipeline
      * @return true, if successful.
      */
     public boolean registerPipeline(final Pipeline<P> pipeline) {

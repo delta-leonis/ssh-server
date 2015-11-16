@@ -26,7 +26,7 @@ import javafx.util.Duration;
  * FXML.
  *
  * @author Thomas Hakkers
- *        
+ *         
  */
 public class TimerSlider implements Initializable {
     
@@ -158,7 +158,7 @@ public class TimerSlider implements Initializable {
         
         // The render loop play the frames
         this.timeline = new Timeline(keyFrame);
-
+        
         this.timeline.setCycleCount(Animation.INDEFINITE);
     }
     

@@ -28,30 +28,30 @@ import javafx.stage.FileChooser.ExtensionFilter;
  *         
  */
 public class ScriptEditor extends UIComponent {
-
-    // A logger for errorhandling
-    private static final Logger              LOG                 = Logger.getLogger();
     
-    private ColoredCodeArea   codeArea;
-    private String            path;
-    private static final String      STYLESHEET = "/css/java-keywords.css";
-    private FileChooser fileChooser;
-    private VBox root;
-
+    // A logger for errorhandling
+    private static final Logger LOG        = Logger.getLogger();
+                                           
+    private ColoredCodeArea     codeArea;
+    private String              path;
+    private static final String STYLESHEET = "/css/java-keywords.css";
+    private FileChooser         fileChooser;
+    private VBox                root;
+                                
     /**
      * Empty constructor for the {@link ScriptEditor}
      */
-    public ScriptEditor(final String name){
+    public ScriptEditor(final String name) {
         super(name, "scripteditor.fxml");
         this.root = new VBox();
         root.minHeightProperty().bind(this.heightProperty());
         root.maxHeightProperty().bind(this.heightProperty());
         root.minWidthProperty().bind(this.widthProperty());
         root.maxWidthProperty().bind(this.widthProperty());
-
+        
         this.initializeMenu();
         this.initializeTextArea();
-
+        
         this.getChildren().add(root);
         // Create a FileChooser for future use
         this.fileChooser = new FileChooser();
@@ -71,21 +71,21 @@ public class ScriptEditor extends UIComponent {
      */
     private void initializeMenu() {
         final MenuBar menubar = new MenuBar();
-
+        
         final Menu fileMenu = new Menu("File");
-
+        
         final MenuItem saveItem = new MenuItem("Save\t\t\t");
         fileMenu.getItems().add(saveItem);
         saveItem.setOnAction(actionEvent -> this.saveFile());
-
+        
         final MenuItem saveAsItem = new MenuItem("Save as...\t\t\t");
         fileMenu.getItems().add(saveAsItem);
         saveAsItem.setOnAction(actionEvent -> this.saveAsFile());
-
+        
         final MenuItem openItem = new MenuItem("Open\t\t\t");
         fileMenu.getItems().add(openItem);
         openItem.setOnAction(actionEvent -> this.openFile());
-
+        
         menubar.getMenus().addAll(fileMenu);
         this.root.getChildren().add(menubar);
     }
@@ -96,12 +96,14 @@ public class ScriptEditor extends UIComponent {
     private void initializeTextArea() {
         // Set up colored code area
         this.codeArea = new ColoredCodeArea();
-        this.codeArea.setupColoredCodeArea(ScriptEditor.STYLESHEET, LuaUtils.getLuaClasses(), LuaUtils.getLuaFunctions());
+        this.codeArea.setupColoredCodeArea(ScriptEditor.STYLESHEET,
+                LuaUtils.getLuaClasses(),
+                LuaUtils.getLuaFunctions());
         this.codeArea.prefWidthProperty().bind(root.widthProperty());
         this.codeArea.prefHeightProperty().bind(root.heightProperty());
         this.root.getChildren().add(this.codeArea);
     }
-
+    
     /**
      * Saves the file, and then reloads the given object.
      * 
@@ -113,11 +115,11 @@ public class ScriptEditor extends UIComponent {
     public void saveFile() {
         try {
             // Automatically saveAs if the path was null
-            if(this.path == null){
+            if (this.path == null) {
                 saveAsFile();
             }
             // If the path wasn't null, save the file
-            else{
+            else {
                 final FileWriter writer = new FileWriter(this.path);
                 writer.write(this.codeArea.getText());
                 writer.close();
@@ -127,32 +129,32 @@ public class ScriptEditor extends UIComponent {
             LOG.exception(exception);
         }
     }
-
+    
     /**
      * Save the {@link File} at the location that can be chosen from the {@link DirectoryChooser}
+     * 
      * @see {@link #saveAsFile()}
      */
-    private void saveAsFile(){
+    private void saveAsFile() {
         // Select path
         File file = fileChooser.showSaveDialog(this.getScene().getWindow());
         // Only save file if path != null to avoid recursion
-        if(file != null){
+        if (file != null) {
             this.path = file.getAbsolutePath();
             saveFile();
         }
     }
-
+    
     /**
      * Opens the {@link File} found using the {@link FileChooser}
      */
-    public void openFile(){
+    public void openFile() {
         // Select path
         File file = fileChooser.showOpenDialog(this.getScene().getWindow());
         // Set the text of the textarea if a file has been found.
-        if(file != null)
-            setTextFromFile(file.getAbsolutePath());
+        if (file != null) setTextFromFile(file.getAbsolutePath());
     }
-
+    
     /**
      * Prerequisites: {@link #initializeTextArea(String)} has to be called at least once before this
      * function is called.
@@ -167,7 +169,7 @@ public class ScriptEditor extends UIComponent {
             in = new FileInputStream(path);
             int c;
             while ((c = in.read()) != -1) {
-                this.codeArea.insertText(this.codeArea.getLength(), "" + Character.toString((char)c));
+                this.codeArea.insertText(this.codeArea.getLength(), "" + Character.toString((char) c));
             }
             in.close();
         }

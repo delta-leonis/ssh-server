@@ -44,7 +44,7 @@ public class ContextOverlayGO extends OverlayGO {
      */
     @Override
     public void onInitialize() {
-             
+        
         // Adding context menu to the 2d group
         this.getGame().get2DGroup().getChildren().add(contextMenuGroup);
     }
@@ -53,7 +53,7 @@ public class ContextOverlayGO extends OverlayGO {
      * {@inheritDoc}
      */
     @Override
-    public void onUpdate(long timeDivNano) {        
+    public void onUpdate(long timeDivNano) {
     }
     
     /**
@@ -64,9 +64,9 @@ public class ContextOverlayGO extends OverlayGO {
         
         // Check if the 2d group contains the context menu group
         if (this.getGame().get2DGroup().getChildren().contains(contextMenuGroup)) {
-           
-           // Remove context menu group from the 2d group
-           this.getGame().get2DGroup().getChildren().remove(contextMenuGroup);
+            
+            // Remove context menu group from the 2d group
+            this.getGame().get2DGroup().getChildren().remove(contextMenuGroup);
         }
     }
     

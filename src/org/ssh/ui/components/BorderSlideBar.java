@@ -13,8 +13,9 @@ import javafx.util.Duration;
  *
  * Note: Works best in a {@link BorderPane}
  *
- * @author Thomas Hakkers 
- * Modified from: <a href="http://blog.physalix.com/javafx2-borderpane-which-slides-in-and-out-on-command/">Physalix </a>
+ * @author Thomas Hakkers Modified from: <a href=
+ *         "http://blog.physalix.com/javafx2-borderpane-which-slides-in-and-out-on-command/">
+ *         Physalix </a>
  *         
  */
 public class BorderSlideBar extends BorderPane {
@@ -96,14 +97,14 @@ public class BorderSlideBar extends BorderPane {
         this.setupForInternalButton();
         this.setupButton();
     }
-
+    
     /**
      * @return the size this BorderSlideBar has when it's fully extended
      */
     public double getExpandedSize() {
         return this.expandedSize;
     }
-
+    
     private void init(final double expandedSize, final Pos location, final Node node) {
         // setStyle(style);
         this.setExpandedSize(expandedSize);
@@ -118,7 +119,7 @@ public class BorderSlideBar extends BorderPane {
         this.setMinWidth(0);
         this.setMinHeight(0);
     }
-
+    
     /**
      * @param expandedSize
      *            the expandedSize to set
@@ -236,7 +237,7 @@ public class BorderSlideBar extends BorderPane {
                 break;
         }
     }
-
+    
     /**
      * Translate the VBox according to location Pos.
      *

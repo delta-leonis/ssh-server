@@ -14,9 +14,10 @@ import com.google.common.reflect.TypeToken;
  * Service<P extends PipelinePacket> is an abstract class representing a component of the framework
  * that handles Pipeline data. It remembers its parameterized genericType through reflection.
  *
- * @param <P>
+ * @param
+ *            <P>
  *            A PipelinePacket this Service can work with.
- *
+ *           
  * @author Rimon Oz
  */
 public abstract class Service<P extends PipelinePacket> extends Manageable {
@@ -26,7 +27,8 @@ public abstract class Service<P extends PipelinePacket> extends Manageable {
                                               
     /** The reflected TypeToken (o¬‿¬o ). */
     @SuppressWarnings ("serial")
-    public TypeToken<P>           genericType = new TypeToken<P>(this.getClass()) {};
+    public TypeToken<P>           genericType = new TypeToken<P>(this.getClass()) {
+                                              };
                                               
     // a logger for good measure
     protected static final Logger LOG         = Logger.getLogger();
@@ -54,8 +56,7 @@ public abstract class Service<P extends PipelinePacket> extends Manageable {
     }
     
     /**
-     * Gets the type of {@link PipelinePacket} on which this Service
-     * operates.
+     * Gets the type of {@link PipelinePacket} on which this Service operates.
      *
      * @return The type of PipelinePacket on which this Service operates.
      */
@@ -91,7 +92,8 @@ public abstract class Service<P extends PipelinePacket> extends Manageable {
     /**
      * Enables/disables the service.
      *
-     * @param enabled true to enable, false to disable
+     * @param enabled
+     *            true to enable, false to disable
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
