@@ -1,5 +1,6 @@
 package org.ssh.managers;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -62,8 +63,8 @@ public abstract class ManagerController<M extends Manageable> {
      * @return true, if successful
      */
     @SuppressWarnings ("unchecked")
-    public <N extends Manageable> boolean add(final N manageable) {
-        this.manageables = ImmutableList.<M> builder().addAll(this.manageables).add((M)manageable).build();
+    public <N extends Manageable> boolean add(final N... manageable) {
+        this.manageables = ImmutableList.<M> builder().addAll(this.manageables).addAll((List<M>)Arrays.asList(manageable)).build();
         return true;
     }
     

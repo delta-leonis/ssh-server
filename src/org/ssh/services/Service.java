@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 
 import org.ssh.managers.Manageable;
 import org.ssh.managers.Services;
+import org.ssh.pipelines.PipelinePacket;
 import org.ssh.util.Logger;
 
 import com.google.common.reflect.TypeToken;

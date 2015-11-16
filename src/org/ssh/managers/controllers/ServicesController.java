@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.ssh.managers.ManagerController;
-import org.ssh.services.Pipeline;
-import org.ssh.services.PipelinePacket;
+import org.ssh.pipelines.Pipeline;
+import org.ssh.pipelines.PipelinePacket;
 import org.ssh.services.Service;
 
 import com.google.common.collect.ImmutableList;
@@ -55,54 +55,6 @@ public class ServicesController extends ManagerController<Service<? extends Pipe
         this.scheduler = MoreExecutors.listeningDecorator(Executors.newScheduledThreadPool(1));
         this.taskService = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
         this.scheduledTasks = new HashMap<String, ScheduledFuture<? extends PipelinePacket>>();
-    }
-    
-    /**
-     * Adds a {@link org.ssh.services.Pipeline} to the list of Pipelines.
-     *
-     * @param org.ssh.services.pipeline
-     *            The org.ssh.services.pipeline to be added.
-     * @return true, if successful
-     */
-    public <P extends PipelinePacket> boolean addPipeline(final Pipeline<P> pipeline) {
-        this.pipelineList = ImmutableList.<Pipeline<?>> builder().addAll(this.pipelineList).add(pipeline).build();
-        return true;
-    }
-    
-    /**
-     * Adds a list of Pipelines to the Services store.
-     *
-     * @param org.ssh.pipelines
-     *            The Pipelines to be added.
-     * @return true, if successful
-     */
-    @SuppressWarnings ("unchecked")
-    public <P extends PipelinePacket> boolean addPipelines(final Pipeline<P>... pipelines) {
-        return Stream.of(pipelines).map(pipeline -> this.addPipeline(pipeline))
-                // collect all success values and reduce to true if all senders
-                // succeeded; false otherwise
-                .reduce(true, (accumulator, success) -> accumulator && success);
-    }
-    
-    /**
-     * Gets a {@link org.ssh.services.Pipeline} from the Services store with the given name.
-     *
-     * @param name
-     *            The name of the requested Pipeline.
-     * @return The requested Pipeline.
-     */
-    public Optional<Pipeline<? extends PipelinePacket>> getPipeline(final String name) {
-        return this.pipelineList.stream().filter(pipeline -> pipeline.getName().equals(name)).findFirst();
-    }
-    
-    /**
-     * Gets all the Pipelines in the Services store.
-     *
-     * @return All the Pipelines in the Services store.
-     */
-    @SuppressWarnings ("unchecked")
-    public <P extends PipelinePacket> List<Pipeline<P>> getPipelines() {
-        return this.pipelineList.stream().map(pipeline -> (Pipeline<P>) pipeline).collect(Collectors.toList());
     }
     
     /**

@@ -2,7 +2,7 @@ package examples;
 
 import org.ssh.managers.Models;
 import org.ssh.managers.Services;
-import org.ssh.services.pipeline.pipelines.RadioPipeline;
+import org.ssh.pipelines.pipeline.RadioPipeline;
 
 // import org.ssh.services.producers.UDPReceiver;
 

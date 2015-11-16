@@ -1,14 +1,15 @@
 package org.ssh;
 
 import org.ssh.managers.Models;
+import org.ssh.managers.Pipelines;
 import org.ssh.managers.Services;
 import org.ssh.managers.UI;
 import org.ssh.models.enums.PacketPriority;
+import org.ssh.pipelines.pipeline.GeometryPipeline;
+import org.ssh.pipelines.pipeline.RadioPipeline;
 import org.ssh.services.consumers.StringConsumer;
 import org.ssh.services.couplers.ChangeCoupler;
 import org.ssh.services.couplers.VerboseCoupler;
-import org.ssh.services.pipeline.pipelines.GeometryPipeline;
-import org.ssh.services.pipeline.pipelines.RadioPipeline;
 import org.ssh.services.producers.OftenProducer;
 import org.ssh.services.producers.OnceProducer;
 
@@ -61,13 +62,13 @@ public class Main extends Application {
         final VerboseCoupler verboseCoupler = new VerboseCoupler("speaker");
         
         // add a org.ssh.services.pipeline to the org.ssh.services store
-        Services.addPipeline(mainPipeline);
-        Services.addPipeline(radioPipeline);
+        Pipelines.add(mainPipeline);
+        Pipelines.add(radioPipeline);
         // // add the consumer to the org.ssh.services store
-        Services.addService(intService);
-        Services.addService(verboseCoupler);
+        Services.add(intService);
+        Services.add(verboseCoupler);
         // // oh, and let's add some other things to the org.ssh.models store
-        Services.addServices(dingService, changeService, stringService);
+        Services.add(dingService, changeService, stringService);
         
         verboseCoupler.attachToCompatiblePipelines();
         changeService.attachToCompatiblePipelines(PacketPriority.LOWEST);

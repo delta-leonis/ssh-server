@@ -1,29 +1,20 @@
-package org.ssh.services.pipeline.packets;
+package org.ssh.pipelines.packets;
 
-import org.ssh.services.PipelinePacket;
+import org.ssh.pipelines.PipelinePacket;
 
 import com.google.protobuf.MessageOrBuilder;
 
-import protobuf.Geometry.GeometryDataOrBuilder;
+import protobuf.Detection.DetectionRobotOrBuilder;
 
 /**
- * The GeometryPacket class.
+ * The DetectionPacket class.
  *
  * @author Rimon Oz
  */
-public class GeometryPacket extends PipelinePacket {
+public class DetectionPacket extends PipelinePacket {
     
     /** The data. */
-    private GeometryDataOrBuilder data;
-    
-    /**
-     * Gets the data.
-     *
-     * @return the data
-     */
-    public GeometryDataOrBuilder getData() {
-        return this.data;
-    }
+    private DetectionRobotOrBuilder data;
     
     /*
      * (non-Javadoc)
@@ -43,7 +34,8 @@ public class GeometryPacket extends PipelinePacket {
     @SuppressWarnings ("unchecked")
     @Override
     public <T extends PipelinePacket> T save(final MessageOrBuilder data) {
-        this.data = (GeometryDataOrBuilder) data;
+        this.data = (DetectionRobotOrBuilder) data;
         return (T) this;
     }
+    
 }

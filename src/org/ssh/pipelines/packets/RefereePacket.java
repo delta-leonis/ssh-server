@@ -1,20 +1,20 @@
-package org.ssh.services.pipeline.packets;
+package org.ssh.pipelines.packets;
 
-import org.ssh.services.PipelinePacket;
+import org.ssh.pipelines.PipelinePacket;
 
 import com.google.protobuf.MessageOrBuilder;
 
-import protobuf.Detection.DetectionRobotOrBuilder;
+import protobuf.RefereeOuterClass.RefereeOrBuilder;
 
 /**
- * The DetectionPacket class.
+ * The GeometryPacket class.
  *
  * @author Rimon Oz
  */
-public class DetectionPacket extends PipelinePacket {
+public class RefereePacket extends PipelinePacket {
     
     /** The data. */
-    private DetectionRobotOrBuilder data;
+    private RefereeOrBuilder data;
     
     /*
      * (non-Javadoc)
@@ -34,8 +34,7 @@ public class DetectionPacket extends PipelinePacket {
     @SuppressWarnings ("unchecked")
     @Override
     public <T extends PipelinePacket> T save(final MessageOrBuilder data) {
-        this.data = (DetectionRobotOrBuilder) data;
+        this.data = (RefereeOrBuilder) data;
         return (T) this;
     }
-    
 }

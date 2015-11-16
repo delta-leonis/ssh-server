@@ -1,9 +1,9 @@
 package org.ssh.services.couplers;
 
+import org.ssh.pipelines.PipelinePacket;
+import org.ssh.pipelines.packets.RadioPacket;
 import org.ssh.services.Coupler;
-import org.ssh.services.PipelinePacket;
 import org.ssh.services.Service;
-import org.ssh.services.pipeline.packets.RadioPacket;
 
 /**
  * The Class VerboseCoupler.

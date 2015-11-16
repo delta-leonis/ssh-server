@@ -8,10 +8,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.ssh.models.enums.SendMethod;
+import org.ssh.pipelines.PipelinePacket;
+import org.ssh.pipelines.packets.RadioPacket;
 import org.ssh.senders.SenderInterface;
 import org.ssh.services.Consumer;
-import org.ssh.services.PipelinePacket;
-import org.ssh.services.pipeline.packets.RadioPacket;
 import org.ssh.util.Logger;
 
 import com.google.protobuf.Message;

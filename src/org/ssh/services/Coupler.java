@@ -2,6 +2,8 @@ package org.ssh.services;
 
 import org.ssh.managers.Services;
 import org.ssh.models.enums.PacketPriority;
+import org.ssh.pipelines.Pipeline;
+import org.ssh.pipelines.PipelinePacket;
 
 /**
  * The Class Coupler.

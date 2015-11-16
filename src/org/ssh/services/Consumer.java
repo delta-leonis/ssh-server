@@ -1,6 +1,9 @@
 package org.ssh.services;
 
+import org.ssh.managers.Pipelines;
 import org.ssh.managers.Services;
+import org.ssh.pipelines.Pipeline;
+import org.ssh.pipelines.PipelinePacket;
 
 /**
  * The Class Consumer.
@@ -31,7 +34,7 @@ public abstract class Consumer<P extends PipelinePacket> extends Service<P> {
      */
     @SuppressWarnings ("unchecked")
     public Consumer<P> attachToCompatiblePipelines() {
-        Services.getPipelines(this.getType()).stream()
+        Pipelines.getOfType(Consumer.class).stream()
                 // map them to the correct type
                 .map(pipeline -> (Pipeline<P>) pipeline)
                 // register with the pipeline

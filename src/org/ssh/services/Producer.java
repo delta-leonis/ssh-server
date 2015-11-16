@@ -6,6 +6,8 @@ import java.util.concurrent.Callable;
 
 import org.ssh.managers.Services;
 import org.ssh.models.enums.ProducerType;
+import org.ssh.pipelines.Pipeline;
+import org.ssh.pipelines.PipelinePacket;
 import org.ssh.util.Logger;
 
 import com.google.common.util.concurrent.FutureCallback;

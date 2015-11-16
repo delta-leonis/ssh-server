@@ -1,4 +1,4 @@
-package org.ssh.services;
+package org.ssh.pipelines;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -10,7 +10,11 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Stream;
 
 import org.jooq.lambda.Seq;
+import org.ssh.managers.Manageable;
 import org.ssh.models.enums.PacketPriority;
+import org.ssh.services.Consumer;
+import org.ssh.services.Coupler;
+import org.ssh.services.Producer;
 import org.ssh.util.Logger;
 
 import com.google.common.reflect.TypeToken;
@@ -26,7 +30,7 @@ import com.google.common.reflect.TypeToken;
  *            
  * @author Rimon Oz
  */
-public abstract class Pipeline<P extends PipelinePacket> {
+public abstract class Pipeline<P extends PipelinePacket> extends Manageable {
     
     /** The name of the Pipeline. */
     private final String                          name;

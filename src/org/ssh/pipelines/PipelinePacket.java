@@ -1,4 +1,4 @@
-package org.ssh.services;
+package org.ssh.pipelines;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -14,7 +14,7 @@ import com.google.protobuf.MessageOrBuilder;
 /**
  * The Class PipelinePacket.
  *
- * A PipelinePacket holds data and is processed by a {@link org.ssh.services.Pipeline}.
+ * A PipelinePacket holds data and is processed by a {@link org.ssh.pipelines.Pipeline}.
  *
  * @author Rimon Oz
  */

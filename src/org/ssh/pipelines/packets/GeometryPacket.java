@@ -1,20 +1,29 @@
-package org.ssh.services.pipeline.packets;
+package org.ssh.pipelines.packets;
 
-import org.ssh.services.PipelinePacket;
+import org.ssh.pipelines.PipelinePacket;
 
 import com.google.protobuf.MessageOrBuilder;
 
-import protobuf.RefereeOuterClass.RefereeOrBuilder;
+import protobuf.Geometry.GeometryDataOrBuilder;
 
 /**
  * The GeometryPacket class.
  *
  * @author Rimon Oz
  */
-public class RefereePacket extends PipelinePacket {
+public class GeometryPacket extends PipelinePacket {
     
     /** The data. */
-    private RefereeOrBuilder data;
+    private GeometryDataOrBuilder data;
+    
+    /**
+     * Gets the data.
+     *
+     * @return the data
+     */
+    public GeometryDataOrBuilder getData() {
+        return this.data;
+    }
     
     /*
      * (non-Javadoc)
@@ -34,7 +43,7 @@ public class RefereePacket extends PipelinePacket {
     @SuppressWarnings ("unchecked")
     @Override
     public <T extends PipelinePacket> T save(final MessageOrBuilder data) {
-        this.data = (RefereeOrBuilder) data;
+        this.data = (GeometryDataOrBuilder) data;
         return (T) this;
     }
 }

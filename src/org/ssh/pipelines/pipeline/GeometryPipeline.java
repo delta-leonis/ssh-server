@@ -1,7 +1,7 @@
-package org.ssh.services.pipeline.pipelines;
+package org.ssh.pipelines.pipeline;
 
-import org.ssh.services.Pipeline;
-import org.ssh.services.pipeline.packets.GeometryPacket;
+import org.ssh.pipelines.Pipeline;
+import org.ssh.pipelines.packets.GeometryPacket;
 
 /**
  * The Class GeometryPipeline.
