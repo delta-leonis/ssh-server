@@ -20,7 +20,7 @@ import org.ssh.util.Logger;
 abstract public class Manager<M extends Manageable> {
     
     /** The controller. */
-    private ManagerController<M> controller;
+    private static ManagerController<?> controller;
                                  
     // a logger for good measure
     private static final Logger  LOG = Logger.getLogger();
@@ -32,9 +32,9 @@ abstract public class Manager<M extends Manageable> {
      *            The name of the wanted Manageable
      * @return The wanted Manageable.
      */
-    public Optional<M> get(final String name) {
+    public static Optional<?> get(final String name) {
         Manager.LOG.fine("Getting a manageable named: %s", name);
-        return this.controller.get(name);
+        return Manager.controller.get(name);
     }
     
     /**
@@ -43,8 +43,8 @@ abstract public class Manager<M extends Manageable> {
      * @return All the Manageables
      * @see org.ssh.managers.ManagerController#getAll()
      */
-    public List<M> getAll() {
-        return this.controller.getAll();
+    public static List<?> getAll() {
+        return Manager.controller.getAll();
     }
     
     /**
@@ -55,8 +55,8 @@ abstract public class Manager<M extends Manageable> {
      * @return The requested service.
      * @see ManagerController#getAll(String)
      */
-    public List<M> getAll(final String name) {
-        return this.controller.getAll(name);
+    public static List<?> getAll(final String name) {
+        return Manager.controller.getAll(name);
     }
     
     /**
@@ -67,9 +67,9 @@ abstract public class Manager<M extends Manageable> {
      * @return true, if successful.
      * @see ManagerController#add(Manageable)
      */
-    public boolean add(final M manageable) {
+    public static <N extends Manageable> boolean add(final N manageable) {
         Manager.LOG.info("Adding manageable: " + manageable.getClass().getName());
-        return this.controller.add(manageable);
+        return Manager.controller.add(manageable);
     }
     
     /**
@@ -79,8 +79,8 @@ abstract public class Manager<M extends Manageable> {
      *            the manageables to be added
      */
     @SuppressWarnings ("unchecked")
-    public void add(final M... manageables) {
-        Stream.of(manageables).parallel().forEach(service -> this.controller.add(service));
+    public static <N extends Manageable> void add(final N... manageables) {
+        Stream.of(manageables).parallel().forEach(service -> Manager.controller.add(service));
     }
     
 }
