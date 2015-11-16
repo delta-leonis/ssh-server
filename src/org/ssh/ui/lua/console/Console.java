@@ -17,9 +17,12 @@ import org.fxmisc.wellbehaved.event.EventHandlerHelper;
 import org.fxmisc.wellbehaved.event.EventPattern;
 import org.luaj.vm2.LuaError;
 import org.ssh.managers.manager.Services;
+import org.ssh.services.PipelinePacket;
 import org.ssh.ui.UIComponent;
 import org.ssh.util.Logger;
 import org.ssh.util.LuaUtils;
+
+import com.google.common.util.concurrent.ListenableFuture;
 
 import javafx.application.Platform;
 import javafx.scene.input.KeyCode;
@@ -78,7 +81,9 @@ public class Console extends UIComponent {
     private boolean              selecting   = false;
     /** Used to iterate through the recentCommands */
     private ListIterator<String> iterator;
-                                 
+    /** Get created whenever a command is executed. Can be cancelled by calling close() */
+    private ListenableFuture<PipelinePacket> currentFuture;
+    
     /**
      * The constructor of the {@link Console}. After that it looks for all classes for auto complete
      * and sets up the {@link ConsoleArea} And last of all, it starts a thread for reading out
@@ -253,7 +258,8 @@ public class Console extends UIComponent {
      *            The command to be executed.
      */
     private void executeCommand(final String command) {
-        Services.submitTask("luacommand", () -> {
+    	consoleArea.setDisable(true);
+    	currentFuture = Services.submitTask(this.getName(), () -> {
             try {
                 this.println("");
                 // Add command to the command history
@@ -272,6 +278,14 @@ public class Console extends UIComponent {
             this.consoleArea.setCurrentLine(this.currentLine - 1);
             return null;
         });
+    }
+    
+    /**
+     * Cancels the {@link ListenableFuture} obtained from {@link #executeCommand(String)}
+     */
+    public void cancel(){
+    	if(currentFuture != null)
+    		currentFuture.cancel(true);
     }
     
     /**
