@@ -33,7 +33,6 @@ public class ConsoleArea extends ColoredCodeArea {
      */
     public ConsoleArea(final List<String> objectHighlights, final List<String> functionHighlights) {
         super.setupColoredCodeArea(ConsoleArea.STYLESHEET, objectHighlights, functionHighlights);
-        // TODO: Disable drag text
         // On Backspace, use a custom handler
         EventHandlerHelper.install(this.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(BACK_SPACE)).act(event -> this.backspace()).create());
