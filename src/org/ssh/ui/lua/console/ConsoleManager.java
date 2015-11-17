@@ -15,41 +15,46 @@ import javafx.scene.input.KeyCombination;
  * 
  * @author Thomas Hakkers
  */
-public class ConsoleManager extends UIComponent{
-	/** The {@link TabPane} that holds all tabs */
-	@FXML
-	private TabPane tabPane;
-	
-	private int currentTab = 0;
-	
-	/**
-	 * Constructor that manages a bunch of {@link Console consoles}.
-	 * @param name The name of the {@link UIComponent}
-	 */
-	public ConsoleManager(String name){
-		super(name, "consolemanager.fxml");
-		// Open a new tab
-		this.openNewTab();
-		// Open a new tab when pressing CTRL + T
-		EventHandlerHelper.install(this.onKeyPressedProperty(),
+public class ConsoleManager extends UIComponent {
+    
+    /** The {@link TabPane} that holds all tabs */
+    @FXML
+    private TabPane tabPane;
+    
+    private int currentTab = 0;
+    
+    /**
+     * Constructor that manages a bunch of {@link Console consoles}.
+     * 
+     * @param name
+     *            The name of the {@link UIComponent}
+     */
+    public ConsoleManager(String name) {
+        super(name, "consolemanager.fxml");
+        // Open a new tab
+        this.openNewTab();
+        tabPane.getSelectionModel().selectedIndexProperty().addListener(event -> this.switchFocusToCurrentTab());
+        // Open a new tab when pressing CTRL + T
+        EventHandlerHelper.install(this.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.T, KeyCombination.CONTROL_DOWN))
                         .act(event -> this.openNewTab()).create());
-		// Open a new tab when pressing CTRL + T
-		EventHandlerHelper.install(this.onKeyPressedProperty(),
-		        EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.W, KeyCombination.CONTROL_DOWN))
-		                .act(event -> this.closeTab(tabPane.getSelectionModel().getSelectedItem())).create());
+        // Open a new tab when pressing CTRL + T
+        EventHandlerHelper.install(this.onKeyPressedProperty(),
+                EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.W, KeyCombination.CONTROL_DOWN))
+                        .act(event -> this.closeTab(tabPane.getSelectionModel().getSelectedItem())).create());
         // Keycombination to cancel a command
         EventHandlerHelper.install(this.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.C, KeyCombination.CONTROL_DOWN))
-                        .act(event -> this.cancelTab(tabPane.getSelectionModel().getSelectedItem())).create());
-	}
-	
-	/**
-	 * Opens a new tab and gives it a fitting name
-	 */
-	private void openNewTab(){
-		String tabName = "console" + currentTab++;
-		// Create a new tab, and make sure it has the correct size
+                        .act(event -> ConsoleManager.cancelTab(tabPane.getSelectionModel().getSelectedItem()))
+                        .create());
+    }
+    
+    /**
+     * Opens a new tab and gives it a fitting name
+     */
+    private void openNewTab() {
+        String tabName = "console" + currentTab++;
+        // Create a new tab, and make sure it has the correct size
         Tab tab = new Tab(tabName);
         tabPane.minHeightProperty().bind(this.heightProperty());
         tabPane.maxHeightProperty().bind(this.heightProperty());
@@ -63,23 +68,40 @@ public class ConsoleManager extends UIComponent{
         // Add the tab
         tabPane.getTabs().add(tab);
         // Change focus to the newly created tab
-		tabPane.getSelectionModel().select(tab);
-		console.requestFocus();
-	}
-	
-	/**
-	 * Close the given tab and stop any {@link Thread threads} still running in {@link Console}
-	 * @param selectedTab The {@link Tab} to close
-	 */
-	private void closeTab(Tab selectedTab){
-		((Console)selectedTab.getContent()).cancel();
-		// Remove the selected tab
-		tabPane.getTabs().remove(selectedTab);
-		// Change focus to the newly created tab
-//		tabPane.requestFocus();
-	}
-	
-	private static void cancelTab(Tab selectedTab){
-	    ((Console)selectedTab.getContent()).cancel();
-	}
+        tabPane.getSelectionModel().select(tab);
+        console.requestFocus();
+    }
+    
+    /**
+     * Close the given tab and stop any {@link Thread threads} still running in {@link Console}
+     * 
+     * @param selectedTab
+     *            The {@link Tab} to close
+     */
+    private void closeTab(Tab selectedTab) {
+        ((Console) selectedTab.getContent()).cancel();
+        // Remove the selected tab
+        tabPane.getTabs().remove(selectedTab);
+    }
+    
+    /**
+     * Cancels the command running in the given {@link Tab}
+     * 
+     * @param selectedTab
+     *            The {@link Tab} to cancel
+     */
+    private static void cancelTab(Tab selectedTab) {
+        ((Console) selectedTab.getContent()).cancel();
+    }
+    
+    /**
+     * Requests focus on the {@link ConsoleArea} contained by the {@link Tab}
+     * 
+     * @param selectedTab
+     *            The {@link Tab} to focus on
+     */
+    private void switchFocusToCurrentTab() {
+        Tab curTab = tabPane.getSelectionModel().getSelectedItem();
+        ((Console) curTab.getContent()).requestFocus();
+    }
 }
