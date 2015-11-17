@@ -295,7 +295,10 @@ public class Console extends UIComponent {
     	if(currentFuture != null)
     		currentFuture.cancel(true);
     	
+    	System.out.println(globals.running.state.status);
         customDebug.interrupt();
+//    	globals.yield(null);
+        consoleArea.requestFocus();
     }
     
     /**

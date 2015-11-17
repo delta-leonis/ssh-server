@@ -38,6 +38,10 @@ public class ConsoleManager extends UIComponent{
 		EventHandlerHelper.install(this.onKeyPressedProperty(),
 		        EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.W, KeyCombination.CONTROL_DOWN))
 		                .act(event -> this.closeTab(tabPane.getSelectionModel().getSelectedItem())).create());
+        // Keycombination to cancel a command
+        EventHandlerHelper.install(this.onKeyPressedProperty(),
+                EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.C, KeyCombination.CONTROL_DOWN))
+                        .act(event -> this.cancelTab(tabPane.getSelectionModel().getSelectedItem())).create());
 	}
 	
 	/**
@@ -72,6 +76,10 @@ public class ConsoleManager extends UIComponent{
 		// Remove the selected tab
 		tabPane.getTabs().remove(selectedTab);
 		// Change focus to the newly created tab
-		tabPane.requestFocus();
+//		tabPane.requestFocus();
+	}
+	
+	private static void cancelTab(Tab selectedTab){
+	    ((Console)selectedTab.getContent()).cancel();
 	}
 }
