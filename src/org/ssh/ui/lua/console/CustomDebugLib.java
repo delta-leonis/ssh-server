@@ -12,7 +12,14 @@ import org.luaj.vm2.lib.DebugLib;
  * Credits go to this guy: http://stackoverflow.com/questions/17496868/lua-java-luaj-handling-or-interrupting-infinite-loops-and-threads
  */
 public class CustomDebugLib extends DebugLib {
+    /**
+     * If true, the current function will be stopped.
+     */
     private boolean interrupted = false;
+    /**
+     * True when a function is running, false otherwise. Prevents functions from being cancelled
+     * before they've even started yet
+     */
     private boolean running = false;
 
     /**
@@ -45,7 +52,10 @@ public class CustomDebugLib extends DebugLib {
         super.onCall(f);
         this.running = true;
     }
-    
+    /**
+     * Overriding this to set running to false.
+     * {@see {@link CustomDebugLib#running}}
+     */
     @Override
     public void onReturn(){
         super.onReturn();
