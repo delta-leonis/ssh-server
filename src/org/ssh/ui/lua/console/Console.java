@@ -276,7 +276,7 @@ public class Console extends UIComponent {
             
             this.printCursor();
             this.currentLine = this.consoleArea.getText().length();
-            this.consoleArea.setCurrentLine(this.currentLine - 1);
+            this.consoleArea.setCurrentLine(this.currentLine);
             consoleArea.setDisable(false);
             return null;
         });
@@ -344,7 +344,7 @@ public class Console extends UIComponent {
             final int i = this.consoleArea.getLength();
             this.consoleArea.replaceText(i, i, '\n' + Console.CURSOR);
             this.currentLine = this.consoleArea.getText().length();
-            consoleArea.setCurrentLine(currentLine - 1);
+            consoleArea.setCurrentLine(currentLine);
         });
     }
     
