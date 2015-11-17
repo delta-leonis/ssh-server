@@ -68,7 +68,6 @@ public class ConsoleManager extends UIComponent{
 	 * @param selectedTab The {@link Tab} to close
 	 */
 	private void closeTab(Tab selectedTab){
-		System.out.println("Tab closed " + selectedTab.getText());
 		((Console)selectedTab.getContent()).cancel();
 		// Remove the selected tab
 		tabPane.getTabs().remove(selectedTab);

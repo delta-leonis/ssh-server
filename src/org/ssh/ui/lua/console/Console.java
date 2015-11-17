@@ -1,6 +1,8 @@
 package org.ssh.ui.lua.console;
 
 import java.io.OutputStreamWriter;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -15,6 +17,7 @@ import javax.script.ScriptException;
 
 import org.fxmisc.wellbehaved.event.EventHandlerHelper;
 import org.fxmisc.wellbehaved.event.EventPattern;
+import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
 import org.ssh.managers.manager.Services;
 import org.ssh.services.PipelinePacket;
@@ -70,8 +73,10 @@ public class Console extends UIComponent {
     private int                  currentLine = 0;
     /** All objects found with reflection that use the {@link AvailableInLua} */
     private final List<Object>   functionClasses;
-    /** ScriptEngine for handling scripts in lua */
-    private ScriptEngine         scriptEngine;
+//    /** ScriptEngine for handling scripts in lua */
+//    private ScriptEngine         scriptEngine;
+    private Globals globals;
+    private CustomDebugLib customDebug;
     /* Variables for handling command history */
     /** A list containing all previous commands */
     private final List<String>   recentCommands;
@@ -267,9 +272,10 @@ public class Console extends UIComponent {
                 // Add command to the command history
                 this.addCommand(command);
                 // Execute the command
-                this.scriptEngine.eval(command);
+//                this.scriptEngine.eval(command);
+                this.globals.load(/*"function f() " +*/ command /*+ " end   coroutine.create(f)"*/).call();
             }
-            catch (ScriptException | LuaError exception) {
+            catch (LuaError exception) {
                 Console.LOG.exception(exception);
                 this.println(exception.getClass().getSimpleName() + " in line: " + command);
             }
@@ -288,6 +294,8 @@ public class Console extends UIComponent {
     public void cancel(){
     	if(currentFuture != null)
     		currentFuture.cancel(true);
+    	
+        customDebug.interrupt();
     }
     
     /**
@@ -369,23 +377,28 @@ public class Console extends UIComponent {
     private void setupScriptEngine() {
         try {
             // Initialize ScriptEngine
-            final ScriptEngineManager sem = new ScriptEngineManager();
-            this.scriptEngine = sem.getEngineByName("luaj");
-            this.scriptEngine.getContext().setWriter(new OutputStreamWriter(this.out));
+//            final ScriptEngineManager sem = new ScriptEngineManager();
+//            this.scriptEngine = sem.getEngineByName("luaj");
+//            this.scriptEngine.getContext().setWriter(new OutputStreamWriter(this.out));
+            this.globals = JsePlatform.standardGlobals();
+            customDebug = new CustomDebugLib();
+            this.globals.load(customDebug);
+            this.globals.STDOUT = new PrintStream(this.out);
             
             // Add every @AvailableInLua class to the luaj
-            if (this.functionClasses != null) 
-                for (final Object o : this.functionClasses)
-                    this.scriptEngine.put(LuaUtils.getSimpleName(o), o);
+//            if (this.functionClasses != null) 
+//                for (final Object o : this.functionClasses)
+//                    this.scriptEngine.put(LuaUtils.getSimpleName(o), o);
                 
             // Add a useful sleep script
-            this.scriptEngine.eval(
-                    "local clock = os.clock function sleep(n) local t0 = clock() * 1000 while clock() * 1000 - t0 <= n do end end");
-                    
+//            this.scriptEngine.eval(
+//                    "local clock = os.clock function sleep(n) local t0 = clock() * 1000 while clock() * 1000 - t0 <= n do end end");
+            this.globals.load(
+                    "local clock = os.clock function sleep(n) local t0 = clock() * 1000 while clock() * 1000 - t0 <= n do end end").call();        
             // Important piece of code that fixed all bugs. Do not decode to
             // check its contents.
-            this.scriptEngine.eval(new String(Base64.getDecoder().decode(
-                    "bG9jYWwgY293ID0gewpbWyAKICBcICAgICAgICAgICAsfi4KICAgIFwgICAgICwtJ19fIGAtLAogICAgICAgXCAgeywtJyAgYC4gfSAgICAgICAgICAgICAgLCcpCiAgICAgICAgICAsKCBhICkgICBgLS5fXyAgICAgICAgICwnLCcpfiwKICAgICAgICAgPD0uKSAoICAgICAgICAgYC0uX18sPT0nICcgJyAnfQogICAgICAgICAgICggICApICAgICAgICAgICAgICAgICAgICAgIC8pCiAgICAgICAgICAgIGAtJ1wgICAgLCAgICAgICAgICAgICAgICAgICAgKQoJICAgICAgIHwgIFwgICAgICAgICBgfi4gICAgICAgIC8KICAgICAgICAgICAgICAgXCAgICBgLl8gICAgICAgIFwgICAgICAgLwogICAgICAgICAgICAgICAgIFwgICAgICBgLl9fX19fLCcgICAgLCcKICAgICAgICAgICAgICAgICAgYC0uICAgICAgICAgICAgICwnCiAgICAgICAgICAgICAgICAgICAgIGAtLl8gICAgIF8sLScKICAgICAgICAgICAgICAgICAgICAgICAgIDc3amonCiAgICAgICAgICAgICAgICAgICAgICAgIC8vX3x8CiAgICAgICAgICAgICAgICAgICAgIF9fLy8tLScvYAoJICAgICAgICAgICAgLC0tJy9gICAnCl1dCn0KZnVuY3Rpb24gY2hpY2tlbnNheSh0ZXh0KQpsID0gdGV4dDpsZW4oKQphID0gbCAvIDEwCmZvciBpPTAsYSBkbwoJaW8ud3JpdGUoIlsiIC4uIHRleHQ6c3ViKGkqMTArMSwgKChpKzEpKjEwID4gbCkgYW5kIGwgb3IgKGkrMSkqMTAgKSAuLiAgIl1cbiIpCmVuZAoJcHJpbnQoY293WzFdKQplbmQK")));
+            this.globals.load(new String(Base64.getDecoder().decode(
+                    "bG9jYWwgY293ID0gewpbWyAKICBcICAgICAgICAgICAsfi4KICAgIFwgICAgICwtJ19fIGAtLAogICAgICAgXCAgeywtJyAgYC4gfSAgICAgICAgICAgICAgLCcpCiAgICAgICAgICAsKCBhICkgICBgLS5fXyAgICAgICAgICwnLCcpfiwKICAgICAgICAgPD0uKSAoICAgICAgICAgYC0uX18sPT0nICcgJyAnfQogICAgICAgICAgICggICApICAgICAgICAgICAgICAgICAgICAgIC8pCiAgICAgICAgICAgIGAtJ1wgICAgLCAgICAgICAgICAgICAgICAgICAgKQoJICAgICAgIHwgIFwgICAgICAgICBgfi4gICAgICAgIC8KICAgICAgICAgICAgICAgXCAgICBgLl8gICAgICAgIFwgICAgICAgLwogICAgICAgICAgICAgICAgIFwgICAgICBgLl9fX19fLCcgICAgLCcKICAgICAgICAgICAgICAgICAgYC0uICAgICAgICAgICAgICwnCiAgICAgICAgICAgICAgICAgICAgIGAtLl8gICAgIF8sLScKICAgICAgICAgICAgICAgICAgICAgICAgIDc3amonCiAgICAgICAgICAgICAgICAgICAgICAgIC8vX3x8CiAgICAgICAgICAgICAgICAgICAgIF9fLy8tLScvYAoJICAgICAgICAgICAgLC0tJy9gICAnCl1dCn0KZnVuY3Rpb24gY2hpY2tlbnNheSh0ZXh0KQpsID0gdGV4dDpsZW4oKQphID0gbCAvIDEwCmZvciBpPTAsYSBkbwoJaW8ud3JpdGUoIlsiIC4uIHRleHQ6c3ViKGkqMTArMSwgKChpKzEpKjEwID4gbCkgYW5kIGwgb3IgKGkrMSkqMTAgKSAuLiAgIl1cbiIpCmVuZAoJcHJpbnQoY293WzFdKQplbmQK"))).call();
                     
             this.println(Console.TITLE);
             this.printCursor();
