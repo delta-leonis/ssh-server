@@ -1,18 +1,12 @@
 package org.ssh.managers;
 
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Callable;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.ssh.managers.controllers.ServicesController;
-import org.ssh.pipelines.Pipeline;
 import org.ssh.pipelines.PipelinePacket;
-import org.ssh.services.Consumer;
-import org.ssh.services.Coupler;
-import org.ssh.services.Producer;
 import org.ssh.services.Service;
 import org.ssh.util.Logger;
 
@@ -28,10 +22,10 @@ import com.google.common.util.concurrent.ListenableScheduledFuture;
  *
  * @author Rimon Oz
  */
-public final class Services extends Manager<Service<? extends PipelinePacket>> {
+public final class Services implements Manager<Service<? extends PipelinePacket>> {
     
     /**
-     * The Services store has a controller that runs the store.
+     * The Services manager has a controller that runs the place.
      */
     private static ServicesController controller = new ServicesController();
                                                  
@@ -72,7 +66,7 @@ public final class Services extends Manager<Service<? extends PipelinePacket>> {
     }
     
     /**
-     * Starts the Services store.
+     * Starts the Services manager.
      */
     public static void start() {
         Services.LOG.info("Starting Services...");
@@ -82,9 +76,8 @@ public final class Services extends Manager<Service<? extends PipelinePacket>> {
     /**
      * Submits a task to the threadpool.
      *
-     * @param
-     *            <P>
-     *            the generic type
+     * @param <P>
+     *            The generic type of PipelinePacket produced by this task.
      * @param taskName
      *            The name of the task.
      * @param task
@@ -112,10 +105,6 @@ public final class Services extends Manager<Service<? extends PipelinePacket>> {
         Services.LOG.info("Submitting task named %s ...", taskName);
         return Services.controller.submitTask(task);
     }
-    
-    
-    
-    
     
     /**
      * Finds a {@link Service} with the given name in the Services manager.
@@ -171,7 +160,7 @@ public final class Services extends Manager<Service<? extends PipelinePacket>> {
      *            The Services to be added
      * @return    true if all succeeded, false otherwise
      */
-    @SuppressWarnings ("unchecked")
+    @SafeVarargs
     public static <S extends Service<? extends PipelinePacket>> boolean add(final S... services) {
         return Stream.of(services).map(manageable -> Services.controller.add(manageable))
                 // collect all success values and reduce to true if all senders
@@ -191,9 +180,4 @@ public final class Services extends Manager<Service<? extends PipelinePacket>> {
     public static <S extends Service<? extends PipelinePacket>> List<S> getOfType(final Class<?> type) {
         return Services.controller.getOfType(type);
     }
-    
-    
-    
-    
-    
 }

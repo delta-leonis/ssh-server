@@ -1,10 +1,5 @@
 package org.ssh.managers;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.ssh.util.Logger;
 
@@ -19,9 +14,9 @@ import org.ssh.util.Logger;
  *            
  * @author Rimon Oz
  */
-abstract public class Manager<M extends Manageable> {
-                                 
+public interface Manager<M extends Manageable> {
+
     // a logger for good measure
-    private static final Logger  LOG = Logger.getLogger();
-  
+    static final Logger  LOG = Logger.getLogger();
+ 
 }

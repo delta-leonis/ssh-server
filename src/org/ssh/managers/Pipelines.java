@@ -15,8 +15,19 @@ import org.ssh.services.Producer;
 import org.ssh.util.Logger;
 import org.ssh.services.Service;
 
-public final class Pipelines extends Manager<Pipeline<? extends PipelinePacket>> {
-    
+/**
+ * The Class Pipelines
+ * 
+ * Pipelines is responsible for managing {@link Producer}, {@link Coupler}, and {@link Consumer}
+ * relationships. Most datastreams within the application should be abstracted as pipelines. 
+ * 
+ * @author Rimon Oz
+ */
+public final class Pipelines implements Manager<Pipeline<? extends PipelinePacket>> {
+   
+    /**
+     * The Pipelines manager has a controller that runs the place.
+     */
     private static PipelineController controller = new PipelineController();
                                                  
     /** The instance. */
@@ -45,8 +56,7 @@ public final class Pipelines extends Manager<Pipeline<? extends PipelinePacket>>
     /**
      * Gets a List of available {@link Consumer} compatible with the given {@link Pipeline}.
      *
-     * @param
-     *            <P>
+     * @param <P>
      *            The generic type of {@link PipelinePacket} handled by the Consumer.
      * @param <C>
      *            The generic type Consumer compatible with the Pipeline.
@@ -59,7 +69,7 @@ public final class Pipelines extends Manager<Pipeline<? extends PipelinePacket>>
         Pipelines.LOG.info("Getting compatible Consumer(s) for type: %s", pipeline.getType().toString());
         
         @SuppressWarnings ("unchecked")
-        // get the list of org.ssh.services
+        // get the list of services
         final List<C> collect = (List<C>) Services.getAll().stream()
                 // filter out the services compatible with this pipeline
                 .filter(service -> ((Service<?>) service).getType().equals(pipeline.getType()))
@@ -107,8 +117,7 @@ public final class Pipelines extends Manager<Pipeline<? extends PipelinePacket>>
     /**
      * Gets a List of available {@link Producer} compatible with the given {@link Pipeline}.
      *
-     * @param
-     *            <P>
+     * @param <P>
      *            The generic type of {@link PipelinePacket} handled by the Producer.
      * @param <C>
      *            The generic type Producer compatible with the Pipeline.
@@ -123,7 +132,7 @@ public final class Pipelines extends Manager<Pipeline<? extends PipelinePacket>>
         @SuppressWarnings ("unchecked")
         // get the list of services
         final List<C> collect = (List<C>) Services.getAll().stream()
-                // filter out the org.ssh.services compatible with this org.ssh.services.pipeline
+                // filter out the services compatible with this pipeline
                 .filter(service -> ((Service<?>) service).getType().equals(pipeline.getType()))
                 // map them to the correct parameterized type and collect them in a list
                 .map(service -> ((Service<?>) service).getType().getClass().cast(service)).collect(Collectors.toList());
@@ -139,11 +148,10 @@ public final class Pipelines extends Manager<Pipeline<? extends PipelinePacket>>
      * Gets a list of {@link Pipeline} that operates on the supplied Type of
      * {@link org.ssh.pipelines.PipelinePacket}.
      *
-     * @param
-     *            <P>
-     *            The generic type Consumer compatible with the Pipeline.
+     * @param <P>
+     *            The generic type of PipelinePacket the Pipeline can handle
      * @param <C>
-     *            the generic type
+     *            The generic type of Pipeline
      * @param packetType
      *            The Type with which the Pipelines need to be compatible.
      * @return The list of compatible Pipelines.
@@ -151,10 +159,10 @@ public final class Pipelines extends Manager<Pipeline<? extends PipelinePacket>>
     public static <P extends PipelinePacket, C extends Pipeline<P>> List<C> getOfDataType(final Type packetType) {
         Pipelines.LOG.info("Getting compatible pipelines for type: %s", packetType.getTypeName());
         
-        // get the list of org.ssh.pipelines
+        // get the list of pipelines
         @SuppressWarnings ("unchecked")
         final List<C> collect = (List<C>) Pipelines.getAll().stream()
-                // filter out the compatible ones by genericType
+                // filter out the compatible ones by type
                 .filter(pipeline -> ((Pipeline<?>) pipeline).getType().equals(packetType)).collect(Collectors.toList());
                 
         Pipelines.LOG.info("%d pipelines found to be compatible with type %s", collect.size(), packetType.toString());

@@ -25,8 +25,7 @@ import com.google.common.reflect.TypeToken;
  *
  * A Pipeline processes data using {@link Producer}, {@link Coupler}, and {@link Consumer}.
  *
- * @param
- *            <P>
+ * @param <P>
  *            A PipelinePacket this Pipeline can work with.
  *            
  * @author Rimon Oz
@@ -103,7 +102,7 @@ public abstract class Pipeline<P extends PipelinePacket> extends Manageable {
             return false;
         }
         
-        Pipeline.LOG.fine("Starting to process packet on org.ssh.services.pipeline %s", this.getName());
+        Pipeline.LOG.fine("Starting to process packet on pipeline %s", this.getName());
         
         // get the packet
         final PipelinePacket pipelinePacket = this.queue.poll();
