@@ -52,7 +52,7 @@ public class Console extends UIComponent {
     
     // A logger for errorhandling
     private static final Logger  LOG         = Logger.getLogger();
-                                             
+
     /** The cursor used by the console */
     private static final String  CURSOR      = "> ";
     /** The title that shows when starting up the console */
@@ -127,7 +127,8 @@ public class Console extends UIComponent {
      */
     private void addCommand(final String command) {
         // Move existing commands up
-        if (this.recentCommands.contains(command)) this.recentCommands.remove(command);
+        if (this.recentCommands.contains(command)) 
+            this.recentCommands.remove(command);
         
         this.recentCommands.add(command);
         // We're not selecting anymore
@@ -245,7 +246,8 @@ public class Console extends UIComponent {
         // If we're busy scrolling through commands
         if (this.selecting) {
             // Scroll through the commands
-            if (!this.iterator.hasNext()) this.iterator = this.recentCommands.listIterator(0);
+            if (!this.iterator.hasNext()) 
+                this.iterator = this.recentCommands.listIterator(0);
             // Display the command
             this.consoleArea.replaceText(this.currentLine, this.consoleArea.getLength(), this.iterator.next());
         }
@@ -272,10 +274,10 @@ public class Console extends UIComponent {
                 this.println(exception.getClass().getSimpleName() + " in line: " + command);
             }
             
-            // TODO: Block input until here?
             this.printCursor();
             this.currentLine = this.consoleArea.getText().length();
             this.consoleArea.setCurrentLine(this.currentLine - 1);
+            consoleArea.setDisable(false);
             return null;
         });
     }
@@ -372,8 +374,9 @@ public class Console extends UIComponent {
             this.scriptEngine.getContext().setWriter(new OutputStreamWriter(this.out));
             
             // Add every @AvailableInLua class to the luaj
-            if (this.functionClasses != null) for (final Object o : this.functionClasses)
-                this.scriptEngine.put(LuaUtils.getSimpleName(o), o);
+            if (this.functionClasses != null) 
+                for (final Object o : this.functionClasses)
+                    this.scriptEngine.put(LuaUtils.getSimpleName(o), o);
                 
             // Add a useful sleep script
             this.scriptEngine.eval(
