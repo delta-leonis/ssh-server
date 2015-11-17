@@ -27,7 +27,7 @@ public class OftenProducer extends Producer<RadioPacket> {
         super(name, ProducerType.SCHEDULED);
         // update the work function
         this.setCallable(() -> {
-            Service.LOG.info("Produced a GeometryPacket!");
+            Service.LOG.info("Produced a RadioPacket!");
             // create a new packet
             return new RadioPacket(RadioProtocolCommand.newBuilder().setRobotId(4).setVelocityR(0.2f).setVelocityX(4.0f)
                     .setVelocityY(9293932.0f));

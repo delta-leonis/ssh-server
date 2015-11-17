@@ -113,4 +113,87 @@ public final class Services extends Manager<Service<? extends PipelinePacket>> {
         return Services.controller.submitTask(task);
     }
     
+    
+    
+    
+    
+    /**
+     * Finds a {@link Service} with the given name in the Services manager.
+     *
+     * @param name
+     *            The name of the wanted Services
+     * @return The requested Service
+     */
+    public static Optional<? extends Service<? extends PipelinePacket>> get(final String name) {
+        Services.LOG.fine("Getting a Service named: %s", name);
+        return Services.controller.get(name);
+    }
+    
+    /**
+     * Gets all the Services in the Services manager.
+     *
+     * @return All the Services
+     * @see org.ssh.managers.ManagerController#getAll()
+     */
+    public static List<? extends Service<? extends PipelinePacket>> getAll() {
+        return Services.controller.getAll();
+    }
+    
+    /**
+     * Finds all Services matching the name and returns them as a List.
+     *
+     * @param name
+     *            The name of the Service you want to find.
+     * @return The requested Service.
+     * @see ManagerController#getAll(String)
+     */
+    public static List<? extends Service<? extends PipelinePacket>> getAll(final String name) {
+        return Services.controller.getAll(name);
+    }
+    
+    /**
+     * Adds a {@link Service} to the Services manager.
+     *
+     * @param service
+     *            The service to be added.
+     * @return true, if successful.
+     * @see ManagerController#add(Manageable)
+     */
+    public static <S extends Service<? extends PipelinePacket>> boolean add(final S service) {
+        Services.LOG.info("Adding Service: " + service.getClass().getName());
+        return Services.controller.add(service);
+    }
+    
+    /**
+     * Wraps {@link #add}.
+     *
+     * @param services
+     *            The Services to be added
+     * @return    true if all succeeded, false otherwise
+     */
+    @SuppressWarnings ("unchecked")
+    public static <S extends Service<? extends PipelinePacket>> boolean add(final S... services) {
+        return Stream.of(services).map(manageable -> Services.controller.add(manageable))
+                // collect all success values and reduce to true if all senders
+                // succeeded; false otherwise
+                .reduce(true, (accumulator, success) -> accumulator && success);
+    }
+    
+    /**
+     * Gets a list of Services of the given type.
+     *
+     * @param <S>
+     *            The generic type of Service
+     * @param type
+     *            The type of the requested Service
+     * @return The list of Services matching the supplied type
+     */
+    public static <S extends Service<? extends PipelinePacket>> List<S> getOfType(final Class<?> type) {
+        return Services.controller.getOfType(type);
+    }
+    
+    
+    
+    
+    
 }

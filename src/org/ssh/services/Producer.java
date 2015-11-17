@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import org.ssh.managers.Pipelines;
 import org.ssh.managers.Services;
 import org.ssh.models.enums.ProducerType;
 import org.ssh.pipelines.Pipeline;
@@ -61,9 +62,7 @@ public abstract class Producer<P extends PipelinePacket> extends Service<P> {
     @SuppressWarnings ("unchecked")
     public void attachToCompatiblePipelines() {
         // find compatible org.ssh.pipelines
-        Services.getPipelines(this.getType()).stream()
-                // .parallel()
-                .filter(pipeline -> pipeline.getType().equals(this.getType()))
+        Pipelines.getOfDataType(this.getType()).stream()
                 .map(pipeline -> pipeline.getClass().cast(pipeline))
                 .forEach(pipeline -> this.registerPipeline(pipeline));
     }

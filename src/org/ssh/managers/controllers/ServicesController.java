@@ -33,9 +33,6 @@ import com.google.common.util.concurrent.MoreExecutors;
  */
 public class ServicesController extends ManagerController<Service<? extends PipelinePacket>> {
     
-    /** The service org.ssh.services.pipeline list. */
-    private ImmutableList<Pipeline<? extends PipelinePacket>>            pipelineList;
-                                                                         
     /** The scheduler service. */
     private final ListeningScheduledExecutorService                      scheduler;
                                                                          
@@ -49,9 +46,6 @@ public class ServicesController extends ManagerController<Service<? extends Pipe
      * Instantiates a new org.ssh.services controller.
      */
     public ServicesController() {
-        // set all the attributes
-        this.pipelineList = ImmutableList.of();
-        this.manageables = ImmutableList.of();
         this.scheduler = MoreExecutors.listeningDecorator(Executors.newScheduledThreadPool(1));
         this.taskService = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
         this.scheduledTasks = new HashMap<String, ScheduledFuture<? extends PipelinePacket>>();

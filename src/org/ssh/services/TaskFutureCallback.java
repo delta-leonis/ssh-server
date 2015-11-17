@@ -1,5 +1,6 @@
 package org.ssh.services;
 
+import org.ssh.managers.Pipelines;
 import org.ssh.managers.Services;
 import org.ssh.pipelines.Pipeline;
 import org.ssh.pipelines.PipelinePacket;
@@ -60,7 +61,7 @@ public class TaskFutureCallback<P extends PipelinePacket> implements FutureCallb
     @Override
     public void onSuccess(final P successPacket) {
         TaskFutureCallback.LOG.fine("Task completed by %s", this.getName());
-        Services.getPipelines(successPacket.getClass()).stream()
+        Pipelines.getOfDataType(successPacket.getClass()).stream()
                 // start them up
                 .map(pipeline -> (Pipeline<P>) pipeline)
                 // process the packet

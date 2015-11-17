@@ -34,11 +34,9 @@ public abstract class Consumer<P extends PipelinePacket> extends Service<P> {
      */
     @SuppressWarnings ("unchecked")
     public Consumer<P> attachToCompatiblePipelines() {
-        Pipelines.getOfType(Consumer.class).stream()
-                // map them to the correct type
-                .map(pipeline -> (Pipeline<P>) pipeline)
+        Pipelines.getOfDataType(this.getType()).stream()
                 // register with the pipeline
-                .forEach(pipeline -> pipeline.registerConsumer(this));
+                .forEach(pipeline -> ((Pipeline<P>)pipeline).registerConsumer(this));
                 
         return this;
     }

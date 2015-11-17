@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 
 import org.jooq.lambda.Seq;
 import org.ssh.managers.Manageable;
+import org.ssh.managers.Pipelines;
 import org.ssh.models.enums.PacketPriority;
 import org.ssh.services.Consumer;
 import org.ssh.services.Coupler;
@@ -31,9 +32,6 @@ import com.google.common.reflect.TypeToken;
  * @author Rimon Oz
  */
 public abstract class Pipeline<P extends PipelinePacket> extends Manageable {
-    
-    /** The name of the Pipeline. */
-    private final String                          name;
                                                   
     /** The Couplers registered to this Pipeline. */
     private final Map<Coupler<P>, PacketPriority> couplers;
@@ -59,11 +57,12 @@ public abstract class Pipeline<P extends PipelinePacket> extends Manageable {
      *            The name of the new Pipeline.
      */
     public Pipeline(final String name) {
+        super(name);
         // set attributes
-        this.name = name;
         this.couplers = new HashMap<Coupler<P>, PacketPriority>();
         this.consumers = new ArrayList<Consumer<P>>();
         
+        Pipelines.add(this);
         Pipeline.LOG.info("New pipeline created with name %s", name);
     }
     
@@ -82,15 +81,6 @@ public abstract class Pipeline<P extends PipelinePacket> extends Manageable {
                 this.getName());
                 
         return this;
-    }
-    
-    /**
-     * Gets the name of the Pipeline.
-     *
-     * @return The name of this Pipeline.
-     */
-    public String getName() {
-        return this.name;
     }
     
     /**
@@ -151,9 +141,10 @@ public abstract class Pipeline<P extends PipelinePacket> extends Manageable {
      *            The Consumer to be registered with the Pipeline.
      * @return true, if successful
      */
-    public <C extends Consumer<P>> boolean registerConsumer(final C consumer) {
+    @SuppressWarnings ("unchecked")
+    public <C extends Consumer<?>> boolean registerConsumer(final C consumer) {
         Pipeline.LOG.fine("Consumer named %s registered to pipeline %s.", consumer.getName(), this.getName());
-        return this.consumers.add(consumer);
+        return this.consumers.add((Consumer<P>) consumer);
     }
     
     /**
@@ -163,8 +154,7 @@ public abstract class Pipeline<P extends PipelinePacket> extends Manageable {
      *            the consumers
      * @return true, if successful
      */
-    @SuppressWarnings ("unchecked")
-    public boolean registerConsumers(final Consumer<P>... consumers) {
+    public boolean registerConsumers(final Consumer<?>... consumers) {
         return Stream.of(consumers).map(consumer -> this.registerConsumer(consumer))
                 // collect all success values and reduce to true if all senders
                 // succeeded; false otherwise
@@ -180,9 +170,10 @@ public abstract class Pipeline<P extends PipelinePacket> extends Manageable {
      *            the coupler
      * @return true, if successful
      */
-    public <C extends Coupler<P>> boolean registerCoupler(final C coupler) {
+    @SuppressWarnings ("unchecked")
+    public <C extends Coupler<?>> boolean registerCoupler(final C coupler) {
         Pipeline.LOG.fine("Coupler named %s registered to pipeline %s.", coupler.getName(), this.getName());
-        return this.couplers.put(coupler, PacketPriority.MEDIUM) != null;
+        return this.couplers.put((Coupler<P>) coupler, PacketPriority.MEDIUM) != null;
     }
     
     /**
@@ -194,12 +185,13 @@ public abstract class Pipeline<P extends PipelinePacket> extends Manageable {
      *            The coupler
      * @return true, if successful
      */
-    public boolean registerCoupler(final PacketPriority packetPriority, final Coupler<P> coupler) {
+    @SuppressWarnings ("unchecked")
+    public boolean registerCoupler(final PacketPriority packetPriority, final Coupler<?> coupler) {
         Pipeline.LOG.fine("Consumer named %s registered to pipeline %s with priority %s.",
                 coupler.getName(),
                 this.getName(),
                 packetPriority.toString());
-        return this.couplers.put(coupler, packetPriority) != null;
+        return this.couplers.put((Coupler<P>) coupler, packetPriority) != null;
     }
     
     /**
@@ -209,8 +201,7 @@ public abstract class Pipeline<P extends PipelinePacket> extends Manageable {
      *            the couplers
      * @return true, if successful
      */
-    @SuppressWarnings ("unchecked")
-    public boolean registerCouplers(final Coupler<P>... couplers) {
+    public boolean registerCouplers(final Coupler<?>... couplers) {
         return Stream.of(couplers).map(coupler -> this.registerCoupler(coupler))
                 // collect all success values and reduce to true if all senders
                 // succeeded; false otherwise
@@ -226,8 +217,7 @@ public abstract class Pipeline<P extends PipelinePacket> extends Manageable {
      *            the couplers
      * @return true, if successful
      */
-    @SuppressWarnings ("unchecked")
-    public boolean registerCouplers(final PacketPriority packetPriority, final Coupler<P>... couplers) {
+    public boolean registerCouplers(final PacketPriority packetPriority, final Coupler<?>... couplers) {
         return Stream.of(couplers).map(coupler -> this.registerCoupler(packetPriority, coupler))
                 // collect all success values and reduce to true if all senders
                 // succeeded; false otherwise

@@ -1,6 +1,6 @@
 package org.ssh.services;
 
-import org.ssh.managers.Services;
+import org.ssh.managers.Pipelines;
 import org.ssh.models.enums.PacketPriority;
 import org.ssh.pipelines.Pipeline;
 import org.ssh.pipelines.PipelinePacket;
@@ -34,11 +34,9 @@ public abstract class Coupler<P extends PipelinePacket> extends Service<P> {
      */
     @SuppressWarnings ("unchecked")
     public Coupler<P> attachToCompatiblePipelines() {
-        Services.getPipelines(this.getType()).stream()
-                // map them to the correct type
-                .map(pipeline -> (Pipeline<P>) pipeline)
+        Pipelines.getOfDataType(this.getType()).stream()
                 // register with the pipeline
-                .forEach(pipeline -> pipeline.registerCoupler(this));
+                .forEach(pipeline -> ((Pipeline<P>)pipeline).registerCoupler(this));
                 
         return this;
     }
@@ -52,11 +50,9 @@ public abstract class Coupler<P extends PipelinePacket> extends Service<P> {
      */
     @SuppressWarnings ("unchecked")
     public Coupler<P> attachToCompatiblePipelines(final PacketPriority couplerPriority) {
-        Services.getPipelines(this.getType()).stream()
-                // map them to the correct genericType
-                .map(pipeline -> (Pipeline<P>) pipeline)
+        Pipelines.getOfDataType(this.getType()).stream()
                 // register with the org.ssh.services.pipeline
-                .forEach(pipeline -> pipeline.registerCoupler(couplerPriority, this));
+                .forEach(pipeline -> ((Pipeline<P>)pipeline).registerCoupler(couplerPriority, this));
                 
         return this;
     }

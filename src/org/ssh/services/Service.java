@@ -43,8 +43,8 @@ public abstract class Service<P extends PipelinePacket> extends Manageable {
     public Service(final String name) {
         super(name);
         this.enabled = false;
-        Service.LOG.info("New Service instantiated of type %s named %s", this.genericType.toString(), name);
-        Services.addService(this);
+        Service.LOG.info("New Service instantiated of type %s named %s", this.getType().toString(), name);
+        Services.add(this);
     }
     
     /**
