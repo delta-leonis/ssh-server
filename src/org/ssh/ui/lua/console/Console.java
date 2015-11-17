@@ -19,6 +19,8 @@ import org.fxmisc.wellbehaved.event.EventHandlerHelper;
 import org.fxmisc.wellbehaved.event.EventPattern;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
+import org.luaj.vm2.lib.jse.CoerceJavaToLua;
+import org.luaj.vm2.lib.jse.JsePlatform;
 import org.ssh.managers.manager.Services;
 import org.ssh.services.PipelinePacket;
 import org.ssh.ui.UIComponent;
@@ -73,9 +75,9 @@ public class Console extends UIComponent {
     private int                  currentLine = 0;
     /** All objects found with reflection that use the {@link AvailableInLua} */
     private final List<Object>   functionClasses;
-//    /** ScriptEngine for handling scripts in lua */
-//    private ScriptEngine         scriptEngine;
+    /** Lua globals used by this {@link Console} */
     private Globals globals;
+    /** Magic debuglibrary that is used to interrupt functions */
     private CustomDebugLib customDebug;
     /* Variables for handling command history */
     /** A list containing all previous commands */
@@ -272,12 +274,12 @@ public class Console extends UIComponent {
                 // Add command to the command history
                 this.addCommand(command);
                 // Execute the command
-//                this.scriptEngine.eval(command);
-                this.globals.load(/*"function f() " +*/ command /*+ " end   coroutine.create(f)"*/).call();
+                this.globals.load(command).call();
             }
             catch (LuaError exception) {
                 Console.LOG.exception(exception);
                 this.println(exception.getClass().getSimpleName() + " in line: " + command);
+                exception.printStackTrace();
             }
             
             this.printCursor();
@@ -297,7 +299,14 @@ public class Console extends UIComponent {
     	
     	System.out.println(globals.running.state.status);
         customDebug.interrupt();
-//    	globals.yield(null);
+        requestFocus();
+    }
+    
+    /**
+     * Requests focus for the underlying {@link ConsoleArea}
+     */
+    @Override
+    public void requestFocus(){
         consoleArea.requestFocus();
     }
     
@@ -379,20 +388,18 @@ public class Console extends UIComponent {
      */
     private void setupScriptEngine() {
         try {
-            // Initialize ScriptEngine
-//            final ScriptEngineManager sem = new ScriptEngineManager();
-//            this.scriptEngine = sem.getEngineByName("luaj");
-//            this.scriptEngine.getContext().setWriter(new OutputStreamWriter(this.out));
+            // Initialize Globals
             this.globals = JsePlatform.standardGlobals();
+            // Initialize the CustomDebugLib
             customDebug = new CustomDebugLib();
             this.globals.load(customDebug);
+            // Set outputstream so that it streams to the console
             this.globals.STDOUT = new PrintStream(this.out);
             
             // Add every @AvailableInLua class to the luaj
-//            if (this.functionClasses != null) 
-//                for (final Object o : this.functionClasses)
-//                    this.scriptEngine.put(LuaUtils.getSimpleName(o), o);
-                
+            if (this.functionClasses != null) 
+                for (final Object o : this.functionClasses)
+                    globals.set(LuaUtils.getSimpleName(o), CoerceJavaToLua.coerce(o));
             // Add a useful sleep script
 //            this.scriptEngine.eval(
 //                    "local clock = os.clock function sleep(n) local t0 = clock() * 1000 while clock() * 1000 - t0 <= n do end end");
