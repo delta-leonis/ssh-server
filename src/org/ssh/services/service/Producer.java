@@ -1,15 +1,17 @@
-package org.ssh.services;
+package org.ssh.services.service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import org.ssh.managers.Pipelines;
-import org.ssh.managers.Services;
+import org.ssh.managers.manager.Pipelines;
+import org.ssh.managers.manager.Services;
 import org.ssh.models.enums.ProducerType;
 import org.ssh.pipelines.Pipeline;
 import org.ssh.pipelines.PipelinePacket;
+import org.ssh.services.Service;
 import org.ssh.util.Logger;
+import org.ssh.util.TaskFutureCallback;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -22,20 +24,20 @@ import com.google.common.util.concurrent.ListenableScheduledFuture;
  * A Producer generates packets of the type (or subtype of) {@link PipelinePacket}. It does this by
  * running single or scheduled tasks.
  *
- * @author Rimon Oz
- * @param
- *            <P>
+ * @param <P>
  *            A PipelinePacket this Producer can work with.
+ *
+ * @author Rimon Oz
  */
 public abstract class Producer<P extends PipelinePacket> extends Service<P> {
     
     /** The work function which generates PipelinePackets. */
     private Callable<P>             workerLambda;
                                     
-    /** The genericType of the Producer. */
+    /** The type of packets made by the Producer. */
     private ProducerType            producerType;
                                     
-    /** The pipeline subscribed to this Producer . */
+    /** The pipelines subscribed to this Producer . */
     private final List<Pipeline<P>> registeredPipelines;
                                     
     // a logger for good measure
@@ -47,7 +49,7 @@ public abstract class Producer<P extends PipelinePacket> extends Service<P> {
      * @param name
      *            The name of the new Producer.
      * @param producerType
-     *            The genericType of the new Producer
+     *            The type of packets made by the Producer
      */
     public Producer(final String name, final ProducerType producerType) {
         super(name);
@@ -61,7 +63,7 @@ public abstract class Producer<P extends PipelinePacket> extends Service<P> {
      */
     @SuppressWarnings ("unchecked")
     public void attachToCompatiblePipelines() {
-        // find compatible org.ssh.pipelines
+        // find compatible pipelines
         Pipelines.getOfDataType(this.getType()).stream()
                 .map(pipeline -> pipeline.getClass().cast(pipeline))
                 .forEach(pipeline -> this.registerPipeline(pipeline));
@@ -159,10 +161,10 @@ public abstract class Producer<P extends PipelinePacket> extends Service<P> {
     }
     
     /**
-     * Sets the genericType of the Producer.
+     * Sets the The type of packets made by the Producer
      *
      * @param producerType
-     *            The new genericType of the producer.
+     *            The new type of packets made by the Producer
      */
     public void setType(final ProducerType producerType) {
         this.producerType = producerType;
@@ -184,7 +186,7 @@ public abstract class Producer<P extends PipelinePacket> extends Service<P> {
         }
         else if (this.producerType.equals(ProducerType.SCHEDULED)) {
             Producer.LOG.fine("Producer %s is starting scheduled production ...", this.getName());
-            // start a scheduled production with a default interval
+            // start a scheduled production with a default interval (of 1s)
             this.produceSchedule(this.getName(), 1000000);
         }
     }

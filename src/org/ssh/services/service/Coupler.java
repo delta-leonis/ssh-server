@@ -1,19 +1,20 @@
-package org.ssh.services;
+package org.ssh.services.service;
 
-import org.ssh.managers.Pipelines;
+import org.ssh.managers.manager.Pipelines;
 import org.ssh.models.enums.PacketPriority;
 import org.ssh.pipelines.Pipeline;
 import org.ssh.pipelines.PipelinePacket;
+import org.ssh.services.Service;
 
 /**
  * The Class Coupler.
  *
- * A Coupler takes a {@link PipelinePacket} and returns a PipelinePacket of the same genericType.
+ * A Coupler takes a {@link PipelinePacket} and returns a PipelinePacket of the same type.
+ *
+ * @param <P>
+ *            A PipelinePacket this Coupler can work with.
  *
  * @author Rimon Oz
- * @param
- *            <P>
- *            A PipelinePacket this Coupler can work with.
  */
 public abstract class Coupler<P extends PipelinePacket> extends Service<P> {
     
@@ -51,14 +52,14 @@ public abstract class Coupler<P extends PipelinePacket> extends Service<P> {
     @SuppressWarnings ("unchecked")
     public Coupler<P> attachToCompatiblePipelines(final PacketPriority couplerPriority) {
         Pipelines.getOfDataType(this.getType()).stream()
-                // register with the org.ssh.services.pipeline
+                // register with the pipelines
                 .forEach(pipeline -> ((Pipeline<P>)pipeline).registerCoupler(couplerPriority, this));
                 
         return this;
     }
     
     /**
-     * Process the PipelinePacket and return a PipelinePacket of the same genericType.
+     * Process the PipelinePacket and return a PipelinePacket of the same type.
      *
      * @param pipelinePacket
      *            The old PipelinePacket

@@ -16,7 +16,7 @@ import javax.script.ScriptException;
 import org.fxmisc.wellbehaved.event.EventHandlerHelper;
 import org.fxmisc.wellbehaved.event.EventPattern;
 import org.luaj.vm2.LuaError;
-import org.ssh.managers.Services;
+import org.ssh.managers.manager.Services;
 import org.ssh.ui.UIComponent;
 import org.ssh.util.Logger;
 import org.ssh.util.LuaUtils;

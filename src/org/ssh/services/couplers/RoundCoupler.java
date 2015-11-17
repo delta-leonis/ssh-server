@@ -2,7 +2,7 @@ package org.ssh.services.couplers;
 
 import org.ssh.pipelines.PipelinePacket;
 import org.ssh.pipelines.packets.RadioPacket;
-import org.ssh.services.Coupler;
+import org.ssh.services.service.Coupler;
 
 public class RoundCoupler extends Coupler<RadioPacket> {
     

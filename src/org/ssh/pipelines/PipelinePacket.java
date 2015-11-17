@@ -14,7 +14,7 @@ import com.google.protobuf.MessageOrBuilder;
 /**
  * The Class PipelinePacket.
  *
- * A PipelinePacket holds data and is processed by a {@link org.ssh.pipelines.Pipeline}.
+ * A PipelinePacket holds data and is processed by a {@link Pipeline}.
  *
  * @author Rimon Oz
  */
@@ -26,8 +26,7 @@ public abstract class PipelinePacket {
     /**
      * Applies a lambda to the packet.
      *
-     * @param
-     *            <P>
+     * @param <P>
      *            A PipelinePacket this lambda can work with.
      * @param function
      *            The lambda to execute on the PipelinePacket.
@@ -64,10 +63,9 @@ public abstract class PipelinePacket {
     public abstract Object read();
     
     /**
-     * Save.
+     * Saves the data to the packet.
      *
-     * @param
-     *            <P>
+     * @param <P>
      *            The type of the PipelinePacket
      * @param data
      *            The data to be put inside the packet.

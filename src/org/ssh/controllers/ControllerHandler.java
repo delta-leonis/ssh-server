@@ -6,13 +6,13 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.ssh.managers.Models;
-import org.ssh.managers.Services;
+import org.ssh.managers.manager.Models;
+import org.ssh.managers.manager.Services;
 import org.ssh.models.Model;
 import org.ssh.models.Robot;
 import org.ssh.models.enums.ButtonFunction;
 import org.ssh.models.enums.ProducerType;
-import org.ssh.services.Producer;
+import org.ssh.services.service.Producer;
 import org.ssh.util.Logger;
 
 import net.java.games.input.Controller;

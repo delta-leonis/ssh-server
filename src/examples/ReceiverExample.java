@@ -1,7 +1,8 @@
 package examples;
 
-import org.ssh.managers.Models;
-import org.ssh.managers.Services;
+import org.ssh.managers.manager.Pipelines;
+import org.ssh.managers.manager.Models;
+import org.ssh.managers.manager.Services;
 import org.ssh.pipelines.pipeline.RadioPipeline;
 
 // import org.ssh.services.producers.UDPReceiver;
@@ -14,7 +15,7 @@ public class ReceiverExample {
         // make services available
         Services.start();
         RadioPipeline pipa = new RadioPipeline("communication pipeline");
-        Services.addPipeline(pipa);
+        Pipelines.add(pipa);
         
         // UDPReceiver<RadioPacket> receiver = new UDPReceiver<RadioPacket>("host", 31337);
         // Services.addService(receiver);

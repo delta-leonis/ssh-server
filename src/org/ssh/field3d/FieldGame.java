@@ -8,7 +8,7 @@ import org.ssh.field3d.gameobjects.FieldGO;
 import org.ssh.field3d.gameobjects.RobotGO;
 import org.ssh.field3d.gameobjects.overlay.CameraControlOverlayGO;
 import org.ssh.field3d.gameobjects.overlay.contextmenus.ContextOverlayGO;
-import org.ssh.managers.Models;
+import org.ssh.managers.manager.Models;
 import org.ssh.models.Robot;
 
 import javafx.scene.AmbientLight;

@@ -11,7 +11,7 @@ import org.ssh.pipelines.packets.RadioPacket;
 public class RadioPipeline extends Pipeline<RadioPacket> {
     
     /**
-     * Instantiates a new radio org.ssh.services.pipeline.
+     * Instantiates a new radio pipeline.
      *
      * @param name
      *            the name

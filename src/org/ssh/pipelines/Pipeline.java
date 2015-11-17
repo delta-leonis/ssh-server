@@ -11,11 +11,11 @@ import java.util.stream.Stream;
 
 import org.jooq.lambda.Seq;
 import org.ssh.managers.Manageable;
-import org.ssh.managers.Pipelines;
+import org.ssh.managers.manager.Pipelines;
 import org.ssh.models.enums.PacketPriority;
-import org.ssh.services.Consumer;
-import org.ssh.services.Coupler;
-import org.ssh.services.Producer;
+import org.ssh.services.service.Consumer;
+import org.ssh.services.service.Coupler;
+import org.ssh.services.service.Producer;
 import org.ssh.util.Logger;
 
 import com.google.common.reflect.TypeToken;
@@ -25,13 +25,14 @@ import com.google.common.reflect.TypeToken;
  *
  * A Pipeline processes data using {@link Producer}, {@link Coupler}, and {@link Consumer}.
  *
- * @param <P>
+ * @param
+ *            <P>
  *            A PipelinePacket this Pipeline can work with.
  *            
  * @author Rimon Oz
  */
 public abstract class Pipeline<P extends PipelinePacket> extends Manageable {
-                                                  
+    
     /** The Couplers registered to this Pipeline. */
     private final Map<Coupler<P>, PacketPriority> couplers;
                                                   
@@ -75,7 +76,7 @@ public abstract class Pipeline<P extends PipelinePacket> extends Manageable {
     public Pipeline<P> addPacket(final P pipelinePacket) {
         // add the packet
         this.queue.add(pipelinePacket);
-        Pipeline.LOG.fine("Packet of genericType %s added to opipeline %s ...",
+        Pipeline.LOG.info("Packet of type %s added to pipeline %s ...",
                 pipelinePacket.getClass().toString(),
                 this.getName());
                 

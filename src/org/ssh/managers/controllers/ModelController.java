@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.ssh.managers.Models;
+import org.ssh.managers.manager.Models;
 import org.ssh.models.Model;
 import org.ssh.models.Settings;
 import org.ssh.util.Logger;

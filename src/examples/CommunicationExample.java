@@ -2,8 +2,9 @@ package examples;
 
 import java.util.logging.Level;
 
-import org.ssh.managers.Models;
-import org.ssh.managers.Services;
+import org.ssh.managers.manager.Models;
+import org.ssh.managers.manager.Pipelines;
+import org.ssh.managers.manager.Services;
 import org.ssh.models.enums.SendMethod;
 import org.ssh.pipelines.pipeline.RadioPipeline;
 import org.ssh.senders.DebugSender;
@@ -22,9 +23,9 @@ public class CommunicationExample {
         // make org.ssh.services available
         Services.start();
         // create a comminucation org.ssh.services.pipeline
-        Services.addPipeline(new RadioPipeline("communication org.ssh.services.pipeline"));
+        Pipelines.add(new RadioPipeline("communication org.ssh.services.pipeline"));
         // create communicator (producer for RadioPackets)
-        Services.addService(new Communicator());
+        Services.add(new Communicator());
         
         final RadioPacketConsumer radioConsumer = new RadioPacketConsumer();
         radioConsumer.register(SendMethod.UDP, new UDPSender("192.168.1.10", 1337));
@@ -32,9 +33,9 @@ public class CommunicationExample {
         radioConsumer.addDefault(SendMethod.DEBUG); // at this moment both UDP and DEBUG are default
         
         // add a consumer voor radiopackets
-        Services.getPipeline("communication org.ssh.services.pipeline").get().registerConsumer(radioConsumer);
+        Pipelines.get("communication org.ssh.services.pipeline").get().registerConsumer(radioConsumer);
         
-        Services.getPipeline("communication org.ssh.services.pipeline").get().registerCoupler(new RoundCoupler());
+        Pipelines.get("communication org.ssh.services.pipeline").get().registerCoupler(new RoundCoupler());
         
         // create an example packet that will be processed and send
         final RadioProtocolCommand.Builder packet = RadioProtocolCommand.newBuilder().setRobotId(4).setVelocityR(0.2f)

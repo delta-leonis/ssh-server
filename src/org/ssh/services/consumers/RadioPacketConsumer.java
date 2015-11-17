@@ -11,7 +11,7 @@ import org.ssh.models.enums.SendMethod;
 import org.ssh.pipelines.PipelinePacket;
 import org.ssh.pipelines.packets.RadioPacket;
 import org.ssh.senders.SenderInterface;
-import org.ssh.services.Consumer;
+import org.ssh.services.service.Consumer;
 import org.ssh.util.Logger;
 
 import com.google.protobuf.Message;

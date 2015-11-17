@@ -3,7 +3,7 @@ package org.ssh.services;
 import java.lang.reflect.Type;
 
 import org.ssh.managers.Manageable;
-import org.ssh.managers.Services;
+import org.ssh.managers.manager.Services;
 import org.ssh.pipelines.PipelinePacket;
 import org.ssh.util.Logger;
 
@@ -15,8 +15,7 @@ import com.google.common.reflect.TypeToken;
  * Service<P extends PipelinePacket> is an abstract class representing a component of the framework
  * that handles Pipeline data. It remembers its parameterized genericType through reflection.
  *
- * @param
- *            <P>
+ * @param <P>
  *            A PipelinePacket this Service can work with.
  *           
  * @author Rimon Oz
@@ -28,8 +27,7 @@ public abstract class Service<P extends PipelinePacket> extends Manageable {
                                               
     /** The reflected TypeToken (o¬‿¬o ). */
     @SuppressWarnings ("serial")
-    public TypeToken<P>           genericType = new TypeToken<P>(this.getClass()) {
-                                              };
+    public TypeToken<P>           genericType = new TypeToken<P>(this.getClass()) { };
                                               
     // a logger for good measure
     protected static final Logger LOG         = Logger.getLogger();

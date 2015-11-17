@@ -1,4 +1,4 @@
-package org.ssh.managers;
+package org.ssh.managers.manager;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -7,24 +7,27 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.ssh.managers.Manageable;
+import org.ssh.managers.Manager;
+import org.ssh.managers.ManagerController;
 import org.ssh.managers.controllers.PipelineController;
 import org.ssh.pipelines.Pipeline;
 import org.ssh.pipelines.PipelinePacket;
-import org.ssh.services.Coupler;
-import org.ssh.services.Producer;
 import org.ssh.util.Logger;
 import org.ssh.services.Service;
+import org.ssh.services.service.Coupler;
+import org.ssh.services.service.Producer;
 
 /**
  * The Class Pipelines
  * 
  * Pipelines is responsible for managing {@link Producer}, {@link Coupler}, and {@link Consumer}
- * relationships. Most datastreams within the application should be abstracted as pipelines. 
+ * relationships. Most datastreams within the application should be abstracted as pipelines.
  * 
  * @author Rimon Oz
  */
 public final class Pipelines implements Manager<Pipeline<? extends PipelinePacket>> {
-   
+    
     /**
      * The Pipelines manager has a controller that runs the place.
      */
@@ -56,7 +59,8 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
     /**
      * Gets a List of available {@link Consumer} compatible with the given {@link Pipeline}.
      *
-     * @param <P>
+     * @param
+     *            <P>
      *            The generic type of {@link PipelinePacket} handled by the Consumer.
      * @param <C>
      *            The generic type Consumer compatible with the Pipeline.
@@ -70,7 +74,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
         
         @SuppressWarnings ("unchecked")
         // get the list of services
-        final List<C> collect = (List<C>) Services.getAll().stream()
+        final List<C> collect = (List<C>) Services.getOfType(Consumer.class).stream()
                 // filter out the services compatible with this pipeline
                 .filter(service -> ((Service<?>) service).getType().equals(pipeline.getType()))
                 // map them to the correct parameterized type and collect them in a list
@@ -101,7 +105,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
         
         @SuppressWarnings ("unchecked")
         // get the list of services
-        final List<C> collect = (List<C>) Services.getAll().stream()
+        final List<C> collect = (List<C>) Services.getOfType(Coupler.class).stream()
                 // filter out the services compatible with this pipeline
                 .filter(service -> ((Service<?>) service).getType().equals(pipeline.getType()))
                 // map them to the correct parameterized type and collect them in a list
@@ -117,7 +121,8 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
     /**
      * Gets a List of available {@link Producer} compatible with the given {@link Pipeline}.
      *
-     * @param <P>
+     * @param
+     *            <P>
      *            The generic type of {@link PipelinePacket} handled by the Producer.
      * @param <C>
      *            The generic type Producer compatible with the Pipeline.
@@ -131,7 +136,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
         
         @SuppressWarnings ("unchecked")
         // get the list of services
-        final List<C> collect = (List<C>) Services.getAll().stream()
+        final List<C> collect = (List<C>) Services.getOfType(Producer.class).stream()
                 // filter out the services compatible with this pipeline
                 .filter(service -> ((Service<?>) service).getType().equals(pipeline.getType()))
                 // map them to the correct parameterized type and collect them in a list
@@ -148,7 +153,8 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      * Gets a list of {@link Pipeline} that operates on the supplied Type of
      * {@link org.ssh.pipelines.PipelinePacket}.
      *
-     * @param <P>
+     * @param
+     *            <P>
      *            The generic type of PipelinePacket the Pipeline can handle
      * @param <C>
      *            The generic type of Pipeline
@@ -163,7 +169,8 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
         @SuppressWarnings ("unchecked")
         final List<C> collect = (List<C>) Pipelines.getAll().stream()
                 // filter out the compatible ones by type
-                .filter(pipeline -> ((Pipeline<?>) pipeline).getType().equals(packetType)).collect(Collectors.toList());
+                .filter(pipeline -> ((Pipeline<?>) pipeline).getType().getTypeName().equals(packetType.getTypeName()))
+                .collect(Collectors.toList());
                 
         Pipelines.LOG.info("%d pipelines found to be compatible with type %s", collect.size(), packetType.toString());
         return collect;
@@ -211,7 +218,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      * @return true, if successful.
      * @see ManagerController#add(Manageable)
      */
-    public static <P extends Service<? extends PipelinePacket>> boolean add(final P service) {
+    public static <P extends Pipeline<? extends PipelinePacket>> boolean add(final P service) {
         Pipelines.LOG.info("Adding Pipeline: " + service.getClass().getName());
         return Pipelines.controller.add(service);
     }
@@ -224,7 +231,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      * @return true if all succeeded, false otherwise
      */
     @SuppressWarnings ("unchecked")
-    public static <P extends Pipeline<? extends PipelinePacket>> boolean add(final P... pipelines) {
+    public static <P extends Pipeline<? extends PipelinePacket>> boolean addAll(final P... pipelines) {
         return Stream.of(pipelines).map(manageable -> Pipelines.controller.add(manageable))
                 // collect all success values and reduce to true if all senders
                 // succeeded; false otherwise

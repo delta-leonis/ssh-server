@@ -7,8 +7,9 @@ import java.util.stream.Stream;
 import org.ssh.controllers.ControllerHandler;
 import org.ssh.controllers.ControllerLayout;
 import org.ssh.controllers.ControllerListener;
-import org.ssh.managers.Models;
-import org.ssh.managers.Services;
+import org.ssh.managers.manager.Models;
+import org.ssh.managers.manager.Pipelines;
+import org.ssh.managers.manager.Services;
 import org.ssh.models.enums.ButtonFunction;
 import org.ssh.models.enums.SendMethod;
 import org.ssh.pipelines.pipeline.RadioPipeline;
@@ -71,20 +72,20 @@ public class ControllerExample {
         // make org.ssh.services available
         Services.start();
         // create a comminucation org.ssh.services.pipeline
-        Services.addPipeline(new RadioPipeline("communication org.ssh.services.pipeline"));
+        Pipelines.add(new RadioPipeline("communication org.ssh.services.pipeline"));
         // create communicator (producer for RadioPackets)
-        Services.addService(new Communicator());
+        Services.add(new Communicator());
         
         final RadioPacketConsumer radioConsumer = new RadioPacketConsumer();
         radioConsumer.register(SendMethod.DEBUG, new DebugSender(Level.INFO));
         
         // add a consumer voor radiopackets
-        Services.getPipeline("communication org.ssh.services.pipeline").get().registerConsumer(radioConsumer);
+        Pipelines.get("communication org.ssh.services.pipeline").get().registerConsumer(radioConsumer);
         
         // create the service for the controller
         final ControllerListener listener = new ControllerListener(15); // 15 = no. robots
         // add it to the servicehandler
-        Services.addService(listener);
+        Services.add(listener);
         
         // create 3 controller handlers
         for (int i = 0; i < 3; i++) {

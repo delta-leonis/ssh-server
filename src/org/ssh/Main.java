@@ -1,9 +1,9 @@
 package org.ssh;
 
-import org.ssh.managers.Models;
-import org.ssh.managers.Pipelines;
-import org.ssh.managers.Services;
-import org.ssh.managers.UI;
+import org.ssh.managers.manager.Models;
+import org.ssh.managers.manager.Pipelines;
+import org.ssh.managers.manager.Services;
+import org.ssh.managers.manager.UI;
 import org.ssh.models.enums.PacketPriority;
 import org.ssh.pipelines.pipeline.GeometryPipeline;
 import org.ssh.pipelines.pipeline.RadioPipeline;
@@ -28,9 +28,10 @@ public class Main extends Application {
      *            Command line arguments
      */
     static public void main(final String[] arg) {
-        // start the org.ssh.managers modules
+        // start the managers
         Services.start();
         Models.start();
+        Pipelines.start();
         /** java fx start **/
         Application.launch(arg);
         
@@ -49,39 +50,36 @@ public class Main extends Application {
         /* Below is just for testing!!! */
         /********************************/
         
-        // make a org.ssh.services.pipeline for stuff
+        // make a pipeline
         final GeometryPipeline mainPipeline = new GeometryPipeline("fieldbuilder");
+        // make another pipeline
+        final RadioPipeline radioPipeline   = new RadioPipeline("controller");
         
-        // make another org.ssh.services.pipeline
-        final RadioPipeline radioPipeline = new RadioPipeline("controller");
-        // make some org.ssh.services
-        final OnceProducer intService = new OnceProducer("gratisintegers");
-        final OftenProducer dingService = new OftenProducer("dingetjes");
-        final ChangeCoupler changeService = new ChangeCoupler("meerdoubles");
-        final StringConsumer stringService = new StringConsumer("stringisbeter");
+        // make some services
+        final OnceProducer intService       = new OnceProducer("gratisintegers");
+        final OftenProducer dingService     = new OftenProducer("dingetjes");
+        final ChangeCoupler changeService   = new ChangeCoupler("meerdoubles");
+        final StringConsumer stringService  = new StringConsumer("stringisbeter");
         final VerboseCoupler verboseCoupler = new VerboseCoupler("speaker");
         
-        // add a org.ssh.services.pipeline to the org.ssh.services store
+        // add a few pipelines
         Pipelines.add(mainPipeline);
         Pipelines.add(radioPipeline);
-        // // add the consumer to the org.ssh.services store
+        // add a few services
         Services.add(intService);
         Services.add(verboseCoupler);
-        // // oh, and let's add some other things to the org.ssh.models store
-        Services.add(dingService, changeService, stringService);
+        // let's add some other things
+        Services.addAll(dingService, changeService, stringService);
         
+        // attach them to the pipelines
         verboseCoupler.attachToCompatiblePipelines();
         changeService.attachToCompatiblePipelines(PacketPriority.LOWEST);
         stringService.attachToCompatiblePipelines();
         dingService.attachToCompatiblePipelines();
         intService.attachToCompatiblePipelines();
         
-        // dingService.start();
+        // start production
         dingService.start();
-        
-        // let's find one of the models we added and get the data from it
-        // Models.get("dingenlijst").getData();
-        // and let's stop the consumer
-        // Services.get("stringisbeter").stop();
+        Services.getAll().forEach(System.out::println);
     }
 }

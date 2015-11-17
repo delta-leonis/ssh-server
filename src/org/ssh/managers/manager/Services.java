@@ -1,10 +1,13 @@
-package org.ssh.managers;
+package org.ssh.managers.manager;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.stream.Stream;
 
+import org.ssh.managers.Manageable;
+import org.ssh.managers.Manager;
+import org.ssh.managers.ManagerController;
 import org.ssh.managers.controllers.ServicesController;
 import org.ssh.pipelines.PipelinePacket;
 import org.ssh.services.Service;
@@ -34,8 +37,7 @@ public final class Services implements Manager<Service<? extends PipelinePacket>
                                                  
     // a logger for good measure
     private static final Logger       LOG        = Logger.getLogger();
-    
-    
+                                                 
     /**
      * Gets the Singleton instance of Services.
      *
@@ -76,7 +78,8 @@ public final class Services implements Manager<Service<? extends PipelinePacket>
     /**
      * Submits a task to the threadpool.
      *
-     * @param <P>
+     * @param
+     *            <P>
      *            The generic type of PipelinePacket produced by this task.
      * @param taskName
      *            The name of the task.
@@ -158,10 +161,10 @@ public final class Services implements Manager<Service<? extends PipelinePacket>
      *
      * @param services
      *            The Services to be added
-     * @return    true if all succeeded, false otherwise
+     * @return true if all succeeded, false otherwise
      */
     @SafeVarargs
-    public static <S extends Service<? extends PipelinePacket>> boolean add(final S... services) {
+    public static <S extends Service<? extends PipelinePacket>> boolean addAll(final S... services) {
         return Stream.of(services).map(manageable -> Services.controller.add(manageable))
                 // collect all success values and reduce to true if all senders
                 // succeeded; false otherwise

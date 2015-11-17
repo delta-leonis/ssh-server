@@ -1,4 +1,4 @@
-package org.ssh.managers;
+package org.ssh.managers.manager;
 
 import java.util.ArrayList;
 import java.util.List;

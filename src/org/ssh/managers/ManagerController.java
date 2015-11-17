@@ -1,10 +1,8 @@
 package org.ssh.managers;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.google.common.collect.ImmutableList;
 
@@ -22,7 +20,7 @@ import com.google.common.collect.ImmutableList;
 public abstract class ManagerController<M extends Manageable> {
     
     /** The manageables. */
-    protected ImmutableList<M> manageables;
+    private ImmutableList<M> manageables;
     
     public ManagerController() {
         this.manageables = ImmutableList.of();
@@ -69,10 +67,16 @@ public abstract class ManagerController<M extends Manageable> {
      */
     @SuppressWarnings ("unchecked")
     public <N extends Manageable> boolean add(final N manageable) {
-        this.manageables = ImmutableList.<M> builder().addAll(this.manageables).add((M) manageable).build();
-        return true;
+        if (this.manageables.contains(manageable)) {
+            return false;
+        }
+        else {
+            this.manageables = ImmutableList.<M> builder().addAll(this.manageables).add((M) manageable).build();
+            return true;
+        }
     }
-        /**
+    
+    /**
      * Gets a list of manageables of the given type.
      *
      * @param <N>
@@ -82,8 +86,6 @@ public abstract class ManagerController<M extends Manageable> {
      * @return The list of manageables
      */
     public <N extends Manageable> List<N> getOfType(final Class<?> type) {
-//        Manager.LOG.info("Getting compatible manageables for type: %s", type.getTypeName());
-        
         // get the list of manageables
         @SuppressWarnings ("unchecked")
         final List<N> collect = (List<N>) this.manageables.stream()
@@ -91,8 +93,6 @@ public abstract class ManagerController<M extends Manageable> {
                 .filter(manageable -> manageable.getClass().equals(type))
                 // and stick them in a list
                 .collect(Collectors.toList());
-                
-//        Manager.LOG.info("%d manageables found to be compatible with type %s.", collect.size(), type.toString());
         return collect;
     }
 }

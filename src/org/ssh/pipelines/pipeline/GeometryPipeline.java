@@ -9,14 +9,14 @@ import org.ssh.pipelines.packets.GeometryPacket;
 public class GeometryPipeline extends Pipeline<GeometryPacket> {
     
     /**
-     * Instantiates a new geometry org.ssh.services.pipeline.
+     * Instantiates a new geometry pipeline.
      *
      * @param name
      *            the name
      */
     public GeometryPipeline(final String name) {
         super(name);
-        // TODO: build all the org.ssh.services here
+        // TODO: build all the services here
     }
     
 }

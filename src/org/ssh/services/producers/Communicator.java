@@ -2,15 +2,15 @@ package org.ssh.services.producers;
 
 import java.util.ArrayList;
 
-import org.ssh.managers.Pipelines;
-import org.ssh.managers.Services;
+import org.ssh.managers.manager.Pipelines;
+import org.ssh.managers.manager.Services;
 import org.ssh.models.enums.ProducerType;
 import org.ssh.models.enums.SendMethod;
 import org.ssh.pipelines.Pipeline;
 import org.ssh.pipelines.packets.RadioPacket;
 import org.ssh.pipelines.pipeline.RadioPipeline;
 import org.ssh.senders.SenderInterface;
-import org.ssh.services.Producer;
+import org.ssh.services.service.Producer;
 import org.ssh.ui.lua.console.AvailableInLua;
 
 import protobuf.Radio;
