@@ -10,10 +10,14 @@ import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.field3d.core.math.Vector3f;
 import org.ssh.field3d.core.shapes.FlatArc3D;
 import org.ssh.field3d.core.shapes.FlatLine3D;
+import org.ssh.field3d.gameobjects.overlay.contextmenus.ContextOverlayGO;
 import org.ssh.util.Logger;
 
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -21,6 +25,7 @@ import javafx.scene.shape.CullFace;
 import javafx.scene.shape.MeshView;
 import protobuf.Geometry.Vector2f;
 
+// TODO: Auto-generated Javadoc
 /**
  * FieldGO class. This class creates the field, the goals, lines and arcs.
  *
@@ -33,7 +38,7 @@ import protobuf.Geometry.Vector2f;
 // TODO: Read public statics from model
 public class FieldGO extends GameObject {
     
-    /** The penalty spot distance form goal */
+    /** The penalty spot distance form goal. */
     public static final double     FIELD_PENALTY_SPOT        = 1000.0;
                                                              
     /** The penalty spot size. */
@@ -108,7 +113,7 @@ public class FieldGO extends GameObject {
     /** The width of the field. */
     private final double           width;
                                    
-    /** The depth of the field */
+    /** The depth of the field. */
     private final double           depth;
                                    
     /** The width of the tile. */
@@ -116,6 +121,9 @@ public class FieldGO extends GameObject {
                                    
     /** the depth of the tile. */
     private final double           tileDepth;
+                                   
+    /** The context overlay go. */
+    private ContextOverlayGO       contextOverlayGO;
                                    
     /**
      * Constructor.
@@ -147,6 +155,8 @@ public class FieldGO extends GameObject {
                 new Vector3f((float) (-(width / 2.0) + FieldGO.FIELD_PENALTY_SPOT), 20, 0),
                 FieldGO.FIELD_PENALTY_SPOT_SIZE);
                 
+        this.contextOverlayGO = new ContextOverlayGO(getGame());
+        
         // Setting dimensions
         this.width = width;
         this.depth = height;
@@ -192,6 +202,8 @@ public class FieldGO extends GameObject {
         // Adding game objects to the game
         this.getGame().addGameObject(this.penaltySpotEast);
         this.getGame().addGameObject(this.penaltySpotWest);
+        
+        this.getGame().addGameObject(this.contextOverlayGO);
     }
     
     /**
@@ -232,18 +244,14 @@ public class FieldGO extends GameObject {
     
     /**
      * addLine method. This method creates and adds flat lines to the world.
-     * 
-     * @param startX
-     *            The x-coordinate for the start of the line.
-     * @param startZ
-     *            The z-coordinate for the start of the line.
-     * @param endX
-     *            The x-coordinate for the end of the line.
-     * @param endZ
-     *            The z-coordinate for the end of the line.
+     *
+     * @param start
+     *            The {@link Vector2f starting point} of the line.
+     * @param end
+     *            The {@link Vector2f ending point} of the line.
      * @param thickness
-     *            The thickness of the line
-     * @return The line created.
+     *            The thickness of the line.
+     * @return The {@link FlatLine3D}.
      */
     private FlatLine3D addLine(final Vector2f start, final Vector2f end, final double thickness) {
         
@@ -267,10 +275,10 @@ public class FieldGO extends GameObject {
      * addBox method. This method creates and adds an box to the world.
      * 
      * @param position
-     *            The position of the box
+     *            The {@link Vector3f position} of the box.
      * @param dimension
-     *            The dimension of the box
-     * @return The box created.
+     *            The {@link Vector3f dimension} of the box.
+     * @return The {@link Box box} created.
      */
     private Box addBox(Vector3f position, Vector3f dimension) {
         
@@ -527,6 +535,20 @@ public class FieldGO extends GameObject {
                 
                 // Set box material
                 tmpBox.setMaterial(this.grassMaterial);
+                
+                tmpBox.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    
+                    @Override
+                    public void handle(MouseEvent mouseEvent) {
+                        // TODO Auto-generated method stub
+                        
+                        if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+                            
+                            // Show context menu
+                            contextOverlayGO.show();
+                        }
+                    }
+                });
                 
                 // Add box to field
                 this.addBox(tmpBox);
