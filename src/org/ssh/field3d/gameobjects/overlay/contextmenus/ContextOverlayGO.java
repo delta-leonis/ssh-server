@@ -13,7 +13,6 @@ import javafx.scene.shape.Rectangle;
 
 /**
  * ContextOverlayGO class. This class is responsible for the 2d context menu overlay.
- * 
  * @see GameObjects
  *      
  * @author marklef2
@@ -23,6 +22,10 @@ public class ContextOverlayGO extends OverlayGO {
     /** The FXML file for the layout. */
     private static final String LAYOUT_FXML_FILE = "contextoverlay.fxml";
                                                  
+    /** The menu label. */
+    @FXML
+    private Label               menuLabel;
+                                
     /** The container pane. */
     @FXML
     private Pane                containerPane;
@@ -40,7 +43,7 @@ public class ContextOverlayGO extends OverlayGO {
         
         // Initialize super class
         super(game, LAYOUT_FXML_FILE);
-        
+
     }
     
     /**
