@@ -20,7 +20,7 @@ import com.google.common.reflect.TypeToken;
  *           
  * @author Rimon Oz
  */
-public abstract class Service<P extends PipelinePacket> extends Manageable {
+public abstract class Service<P extends PipelinePacket<? extends Object>> extends Manageable {
     
     /** Whether the service is enabled. */
     private boolean               enabled     = false;

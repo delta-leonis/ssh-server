@@ -4,6 +4,7 @@ import org.ssh.pipelines.PipelinePacket;
 
 import com.google.protobuf.MessageOrBuilder;
 
+import protobuf.RefereeOuterClass;
 import protobuf.RefereeOuterClass.RefereeOrBuilder;
 
 /**
@@ -11,30 +12,9 @@ import protobuf.RefereeOuterClass.RefereeOrBuilder;
  *
  * @author Rimon Oz
  */
-public class RefereePacket extends PipelinePacket {
+public class RefereePacket extends PipelinePacket<RefereeOuterClass> {
     
     /** The data. */
     private RefereeOrBuilder data;
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.ssh.services.pipeline.PipelinePacket#read()
-     */
-    @Override
-    public MessageOrBuilder read() {
-        return this.data;
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.ssh.services.pipeline.PipelinePacket#save(com.google.protobuf.MessageOrBuilder)
-     */
-    @SuppressWarnings ("unchecked")
-    @Override
-    public <T extends PipelinePacket> T save(final MessageOrBuilder data) {
-        this.data = (RefereeOrBuilder) data;
-        return (T) this;
-    }
+
 }

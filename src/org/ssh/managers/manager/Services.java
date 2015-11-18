@@ -25,7 +25,7 @@ import com.google.common.util.concurrent.ListenableScheduledFuture;
  *
  * @author Rimon Oz
  */
-public final class Services implements Manager<Service<? extends PipelinePacket>> {
+public final class Services implements Manager<Service<? extends PipelinePacket<? extends Object>>> {
     
     /**
      * The Services manager has a controller that runs the place.
@@ -93,7 +93,7 @@ public final class Services implements Manager<Service<? extends PipelinePacket>
      * @return A ListenableFuture representing the result of the task.
      * @see org.ssh.managers.controllers.ServicesController#submitTask(Callable)
      */
-    public static <P extends PipelinePacket> ListenableFuture<P> submitTask(final String taskName,
+    public static <P extends PipelinePacket<? extends Object>> ListenableFuture<P> submitTask(final String taskName,
             final Callable<P> task) {
         Services.LOG.info("Submitting task named %s ...", taskName);
         return Services.controller.submitTask(task);
@@ -121,7 +121,7 @@ public final class Services implements Manager<Service<? extends PipelinePacket>
      *            The name of the wanted Services
      * @return The requested Service
      */
-    public static Optional<? extends Service<? extends PipelinePacket>> get(final String name) {
+    public static Optional<? extends Service<? extends PipelinePacket<? extends Object>>> get(final String name) {
         Services.LOG.fine("Getting a Service named: %s", name);
         return Services.controller.get(name);
     }
@@ -132,7 +132,7 @@ public final class Services implements Manager<Service<? extends PipelinePacket>
      * @return All the Services
      * @see org.ssh.managers.ManagerController#getAll()
      */
-    public static List<? extends Service<? extends PipelinePacket>> getAll() {
+    public static List<? extends Service<? extends PipelinePacket<? extends Object>>> getAll() {
         return Services.controller.getAll();
     }
     
@@ -144,7 +144,7 @@ public final class Services implements Manager<Service<? extends PipelinePacket>
      * @return The requested Service.
      * @see ManagerController#getAll(String)
      */
-    public static List<? extends Service<? extends PipelinePacket>> getAll(final String name) {
+    public static List<? extends Service<? extends PipelinePacket<? extends Object>>> getAll(final String name) {
         return Services.controller.getAll(name);
     }
     
@@ -156,7 +156,7 @@ public final class Services implements Manager<Service<? extends PipelinePacket>
      * @return true, if successful.
      * @see ManagerController#add(Manageable)
      */
-    public static <S extends Service<? extends PipelinePacket>> boolean add(final S service) {
+    public static <S extends Service<? extends PipelinePacket<? extends Object>>> boolean add(final S service) {
         Services.LOG.info("Adding Service: " + service.getClass().getName());
         return Services.controller.add(service);
     }
@@ -169,7 +169,7 @@ public final class Services implements Manager<Service<? extends PipelinePacket>
      * @return true if all succeeded, false otherwise
      */
     @SafeVarargs
-    public static <S extends Service<? extends PipelinePacket>> boolean addAll(final S... services) {
+    public static <S extends Service<? extends PipelinePacket<? extends Object>>> boolean addAll(final S... services) {
         return Stream.of(services).map(manageable -> Services.controller.add(manageable))
                 // collect all success values and reduce to true if all senders
                 // succeeded; false otherwise
@@ -185,7 +185,7 @@ public final class Services implements Manager<Service<? extends PipelinePacket>
      *            The type of the requested Service
      * @return The list of Services matching the supplied type
      */
-    public static <S extends Service<? extends PipelinePacket>> List<S> getOfType(final Class<?> type) {
+    public static <S extends Service<? extends PipelinePacket<? extends Object>>> List<S> getOfType(final Class<?> type) {
         return Services.controller.getOfType(type);
     }
 }

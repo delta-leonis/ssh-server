@@ -26,13 +26,13 @@ import com.google.common.util.concurrent.MoreExecutors;
  *
  * @author Rimon Oz
  */
-public class ServicesController extends ManagerController<Service<? extends PipelinePacket>> {
+public class ServicesController extends ManagerController<Service<? extends PipelinePacket<? extends Object>>> {
     
     /** The scheduler service. */
     private final ListeningScheduledExecutorService                      scheduler;
                                                                          
     /** The scheduled tasks. */
-    private final Map<String, ScheduledFuture<? extends PipelinePacket>> scheduledTasks;
+    private final Map<String, ScheduledFuture<? extends PipelinePacket<? extends Object>>> scheduledTasks;
                                                                          
     /** The completion service. */
     private final ListeningExecutorService                               taskService;
@@ -43,7 +43,7 @@ public class ServicesController extends ManagerController<Service<? extends Pipe
     public ServicesController() {
         this.scheduler = MoreExecutors.listeningDecorator(Executors.newScheduledThreadPool(1));
         this.taskService = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
-        this.scheduledTasks = new HashMap<String, ScheduledFuture<? extends PipelinePacket>>();
+        this.scheduledTasks = new HashMap<String, ScheduledFuture<? extends PipelinePacket<? extends Object>>>();
     }
     
     /**
@@ -66,7 +66,7 @@ public class ServicesController extends ManagerController<Service<? extends Pipe
                 delay,
                 TimeUnit.MICROSECONDS);
         // save the ListenableFuture for future use
-        this.scheduledTasks.put(taskName, (ScheduledFuture<? extends PipelinePacket>) scheduledFuture);
+        this.scheduledTasks.put(taskName, (ScheduledFuture<? extends PipelinePacket<? extends Object>>) scheduledFuture);
         
         return scheduledFuture;
     }
@@ -81,7 +81,7 @@ public class ServicesController extends ManagerController<Service<? extends Pipe
      *            The task as a Runnable.
      * @return A ListenableFuture representing the result of the task.
      */
-    public <P extends PipelinePacket> ListenableFuture<P> submitTask(final Callable<P> task) {
+    public <P extends PipelinePacket<? extends Object>> ListenableFuture<P> submitTask(final Callable<P> task) {
         return this.taskService.submit(task);
     }
     

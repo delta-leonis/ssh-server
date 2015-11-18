@@ -30,7 +30,7 @@ import com.google.common.reflect.TypeToken;
  *            
  * @author Rimon Oz
  */
-public abstract class Pipeline<P extends PipelinePacket> extends Manageable {
+public abstract class Pipeline<P extends PipelinePacket<? extends Object>> extends Manageable {
     
     /** The Couplers registered to this Pipeline. */
     private final Map<Coupler<P>, PacketPriority> couplers;
@@ -105,11 +105,11 @@ public abstract class Pipeline<P extends PipelinePacket> extends Manageable {
         Pipeline.LOG.fine("Starting to process packet on pipeline %s", this.getName());
         
         // get the packet
-        final PipelinePacket pipelinePacket = this.queue.poll();
+        final P pipelinePacket = this.queue.poll();
         
         // process the packets by composing all couplers according to their priority
         // and feeding the packet as the argument
-        final PipelinePacket resultPacket = Seq.foldLeft(
+        final P resultPacket = Seq.foldLeft(
                 // get the couplers with their priorities
                 this.couplers.entrySet().stream()
                         // sort them by their priority
@@ -120,7 +120,7 @@ public abstract class Pipeline<P extends PipelinePacket> extends Manageable {
                 // the argument to the composed function
                 pipelinePacket,
                 // the composition itself
-                (packet, coupler) -> coupler.process(packet));
+                (packet, coupler) -> coupler.process((P) packet));
                 
         Pipeline.LOG.fine("Packet pushed through all couplers, now mapping to consumers on pipeline %s",
                 this.getName());

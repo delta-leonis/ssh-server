@@ -1,6 +1,5 @@
 package org.ssh.services.couplers;
 
-import org.ssh.pipelines.PipelinePacket;
 import org.ssh.pipelines.packets.RadioPacket;
 import org.ssh.services.Service;
 import org.ssh.services.service.Coupler;
@@ -30,14 +29,14 @@ public class VerboseCoupler extends Coupler<RadioPacket> {
      * @see org.ssh.services.Coupler#process(org.ssh.services.pipeline.PipelinePacket)
      */
     @Override
-    public PipelinePacket process(final PipelinePacket radioPacket) {
+    public RadioPacket process(RadioPacket radioPacket) {
         // modify the packet and return it
-        return radioPacket.apply(content -> {
+        return new RadioPacket(radioPacket.apply(content -> {
             // print the data
             Service.LOG.info("The VerboseCoupler ate a packet that looked like: \n%s",
-                    ((RadioPacket) radioPacket).getData().toString());
+                    ((RadioPacket) radioPacket).read().toString());
             // and return it
             return content;
-        });
+        }));
     }
 }

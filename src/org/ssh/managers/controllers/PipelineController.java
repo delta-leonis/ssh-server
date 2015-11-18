@@ -13,7 +13,7 @@ import org.ssh.pipelines.PipelinePacket;
  *
  * @author Rimon Oz
  */
-public class PipelineController extends ManagerController<Pipeline<? extends PipelinePacket>> {
+public class PipelineController extends ManagerController<Pipeline<? extends PipelinePacket<? extends Object>>> {
 
     
 

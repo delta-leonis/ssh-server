@@ -66,7 +66,7 @@ public class RadioPacketConsumer extends Consumer<RadioPacket> {
     }
     
     @Override
-    public boolean consume(final PipelinePacket pipelinePacket) {
+    public boolean consume(final RadioPacket pipelinePacket) {
         // cast to the right packet-genericType
         final RadioPacket packet = (RadioPacket) pipelinePacket;
         // get default sendmethods
@@ -77,7 +77,7 @@ public class RadioPacketConsumer extends Consumer<RadioPacket> {
             
         RadioPacketConsumer.LOG.info("Trying to send a consumed packet");
         // send the packet
-        return this.send(packet.getMessage(), methods);
+        return this.send(packet.read(), methods);
     }
     
     /**

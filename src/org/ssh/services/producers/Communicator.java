@@ -61,7 +61,7 @@ public class Communicator extends Producer<RadioPacket> {
      */
     public boolean send(final protobuf.Radio.RadioProtocolWrapper.Builder genericBuilder,
             final SendMethod... sendMethods) {
-        return this.commPipeline.addPacket(new RadioPacket(genericBuilder, sendMethods)).processPacket();
+        return this.commPipeline.addPacket(new RadioPacket(genericBuilder.build(), sendMethods)).processPacket();
     }
     
     public boolean send(final RadioProtocolCommand.Builder command, final SendMethod... methods) {

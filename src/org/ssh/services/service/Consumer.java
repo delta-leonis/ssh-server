@@ -16,7 +16,7 @@ import org.ssh.services.Service;
  *            
  * @author Rimon Oz
  */
-public abstract class Consumer<P extends PipelinePacket> extends Service<P> {
+public abstract class Consumer<P extends PipelinePacket<? extends Object>> extends Service<P> {
     
     /**
      * Instantiates a new Consumer.
@@ -49,5 +49,5 @@ public abstract class Consumer<P extends PipelinePacket> extends Service<P> {
      *            The PipelinePacket to be consumed.
      * @return true, if successful
      */
-    public abstract boolean consume(PipelinePacket pipelinePacket);
+    public abstract boolean consume(P pipelinePacket);
 }

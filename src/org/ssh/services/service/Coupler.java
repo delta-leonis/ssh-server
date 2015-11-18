@@ -16,7 +16,7 @@ import org.ssh.services.Service;
  *
  * @author Rimon Oz
  */
-public abstract class Coupler<P extends PipelinePacket> extends Service<P> {
+public abstract class Coupler<P extends PipelinePacket<? extends Object>> extends Service<P> {
     
     /**
      * Instantiates a new Coupler.
@@ -65,6 +65,6 @@ public abstract class Coupler<P extends PipelinePacket> extends Service<P> {
      *            The old PipelinePacket
      * @return The new PipelinePacket
      */
-    public abstract PipelinePacket process(PipelinePacket pipelinePacket);
+    public abstract P process(P pipelinePacket);
     
 }

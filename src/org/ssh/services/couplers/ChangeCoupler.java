@@ -1,12 +1,9 @@
 package org.ssh.services.couplers;
 
-import org.ssh.pipelines.PipelinePacket;
 import org.ssh.pipelines.packets.RadioPacket;
 import org.ssh.services.Service;
 import org.ssh.services.service.Coupler;
 
-import protobuf.Radio.RadioProtocolCommand;
-import protobuf.Radio.RadioProtocolCommand.Builder;
 
 /**
  * The Class ChangeCoupler.
@@ -33,16 +30,14 @@ public class ChangeCoupler extends Coupler<RadioPacket> {
      * @see org.ssh.services.Coupler#process(org.ssh.services.pipeline.PipelinePacket)
      */
     @Override
-    public PipelinePacket process(final PipelinePacket pipelinePacket) {
+    public RadioPacket process(final RadioPacket pipelinePacket) {
         // modify the packet and return it
-        return pipelinePacket.apply(content -> {
+        return new RadioPacket(pipelinePacket.apply(content -> {
             Service.LOG.info("Change Coupler is updating some values ....");
             // get the data
-            final RadioProtocolCommand.Builder changeling = (Builder) ((RadioPacket) content).getData();
-            // update it
-            changeling.setVelocityY(300f);
-            // return it
-            return new RadioPacket(changeling);
-        });
+             return pipelinePacket.read().toBuilder()
+                     .setCommand(0, pipelinePacket.read().getCommand(0).toBuilder().setVelocityY(9000.3f))
+                     .build();
+        }));
     }
 }

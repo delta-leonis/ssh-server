@@ -7,9 +7,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.jooq.lambda.Unchecked;
+import org.ssh.util.Logger;
 import org.ssh.util.Reflect;
-
-import com.google.protobuf.MessageOrBuilder;
 
 /**
  * The Class PipelinePacket.
@@ -18,10 +17,19 @@ import com.google.protobuf.MessageOrBuilder;
  *
  * @author Rimon Oz
  */
-public abstract class PipelinePacket {
+public abstract class PipelinePacket<O extends Object> {
     
     /** The mutability setting. */
     private boolean isMutable;
+    
+    // a logger for good measure
+    public static final Logger                   LOG         = Logger.getLogger();
+    
+    
+    /**
+     * The data contained by this package.
+     */
+    private O data;
     
     /**
      * Applies a lambda to the packet.
@@ -32,9 +40,8 @@ public abstract class PipelinePacket {
      *            The lambda to execute on the PipelinePacket.
      * @return The resulting PipelinePacket.
      */
-    @SuppressWarnings ("unchecked")
-    public <P extends PipelinePacket> P apply(final Function<P, P> function) {
-        return function.apply((P) this);
+    public <P extends PipelinePacket<O>> O apply(final Function<O, O> function) {
+        return function.apply(this.read());
     }
     
     /**
@@ -60,7 +67,9 @@ public abstract class PipelinePacket {
      *
      * @return The data inside the packet.
      */
-    public abstract Object read();
+    public O read() {
+        return data;
+    }
     
     /**
      * Saves the data to the packet.
@@ -71,7 +80,11 @@ public abstract class PipelinePacket {
      *            The data to be put inside the packet.
      * @return The packet itself.
      */
-    public abstract <P extends PipelinePacket> P save(MessageOrBuilder data);
+    @SuppressWarnings ("unchecked")
+    public <I extends Object> PipelinePacket<O> save(I data) {
+        this.data = (O) data;
+        return this;
+    }
     
     /**
      * Sets the mutability of the packet.
@@ -86,16 +99,16 @@ public abstract class PipelinePacket {
     /**
      * Saves the data in the packet as a Map<String, O extends Object>.
      *
-     * @param <O>
-     *            the generic type
+     * @param <F>
+     *            The generic type of field contained by the data in the packet.
      * @param clazz
      *            the clazz
      * @return the map
      */
     @SuppressWarnings ("unchecked")
-    public <O extends Object> Map<String, O> toMap(final Class<?> clazz) {
+    public <F extends Object> Map<String, F> toMap(final Class<?> clazz) {
         return Stream.of(clazz.getDeclaredFields())
                 .filter(field -> Reflect.containsField(field.getName(), this.getClass()))
-                .collect(Collectors.toMap(Field::getName, Unchecked.function(field -> (O) field.get(this))));
+                .collect(Collectors.toMap(Field::getName, Unchecked.function(field -> (F) field.get(this))));
     }
 }

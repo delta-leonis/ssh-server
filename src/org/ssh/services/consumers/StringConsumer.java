@@ -30,10 +30,9 @@ public class StringConsumer extends Consumer<RadioPacket> {
      * @see org.ssh.services.Consumer#consume(org.ssh.services.pipeline.PipelinePacket)
      */
     @Override
-    public boolean consume(final PipelinePacket radioPacket) {
+    public boolean consume(final RadioPacket radioPacket) {
         Service.LOG.info("The StringConsumer ate a packet that looked like: \n%s",
-                ((RadioPacket) radioPacket).getData().toString());
-        // Service.LOG.info("%d", ((RadioPacket) radioPacket).
+                radioPacket.read().toString());
         return true;
     }
     

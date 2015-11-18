@@ -18,7 +18,7 @@ import com.google.common.util.concurrent.FutureCallback;
  *            
  * @author Rimon Oz
  */
-public class TaskFutureCallback<P extends PipelinePacket> implements FutureCallback<P> {
+public class TaskFutureCallback<P extends PipelinePacket<? extends Object>> implements FutureCallback<P> {
     
     /** The name of the task. */
     private String              name;

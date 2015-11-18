@@ -29,7 +29,7 @@ import com.google.common.util.concurrent.ListenableScheduledFuture;
  *
  * @author Rimon Oz
  */
-public abstract class Producer<P extends PipelinePacket> extends Service<P> {
+public abstract class Producer<P extends PipelinePacket<? extends Object>> extends Service<P> {
     
     /** The work function which generates PipelinePackets. */
     private Callable<P>             workerLambda;

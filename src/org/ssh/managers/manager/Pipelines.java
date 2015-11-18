@@ -26,7 +26,7 @@ import org.ssh.util.Logger;
  * 
  * @author Rimon Oz
  */
-public final class Pipelines implements Manager<Pipeline<? extends PipelinePacket>> {
+public final class Pipelines implements Manager<Pipeline<? extends PipelinePacket<? extends Object>>> {
     
     /**
      * The Pipelines manager has a controller that runs the place.
@@ -64,8 +64,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
     /**
      * Gets a List of available {@link Consumer} compatible with the given {@link Pipeline}.
      *
-     * @param
-     *            <P>
+     * @param <P>
      *            The generic type of {@link PipelinePacket} handled by the Consumer.
      * @param <C>
      *            The generic type Consumer compatible with the Pipeline.
@@ -73,7 +72,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      *            The given pipeline.
      * @return The compatible Consumers.
      */
-    public static <P extends PipelinePacket, C extends Consumer<P>> List<C> getCompatibleConsumers(
+    public static <P extends PipelinePacket<? extends Object>, C extends Consumer<P>> List<C> getCompatibleConsumers(
             final Pipeline<P> pipeline) {
         Pipelines.LOG.info("Getting compatible Consumer(s) for type: %s", pipeline.getType().toString());
         
@@ -95,8 +94,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
     /**
      * Gets a List of available {@link Coupler} compatible with the given {@link Pipeline}.
      *
-     * @param
-     *            <P>
+     * @param <P>
      *            The generic type of {@link PipelinePacket} handled by the Consumer.
      * @param <C>
      *            The generic type Coupler compatible with the Pipeline.
@@ -104,7 +102,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      *            The given pipeline.
      * @return The compatible Couplers.
      */
-    public static <P extends PipelinePacket, C extends Coupler<P>> List<C> getCompatibleCouplers(
+    public static <P extends PipelinePacket<? extends Object>, C extends Coupler<P>> List<C> getCompatibleCouplers(
             final Pipeline<P> pipeline) {
         Pipelines.LOG.info("Getting compatible Coupler(s) for type: %s", pipeline.getType().toString());
         
@@ -135,7 +133,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      *            The given pipeline.
      * @return The compatible Producers.
      */
-    public static <P extends PipelinePacket, C extends Producer<P>> List<C> getCompatibleProducers(
+    public static <P extends PipelinePacket<? extends Object>, C extends Producer<P>> List<C> getCompatibleProducers(
             final Pipeline<P> pipeline) {
         Pipelines.LOG.info("Getting compatible Producers for genericType: %s", pipeline.getType().toString());
         
@@ -167,7 +165,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      *            The Type with which the Pipelines need to be compatible.
      * @return The list of compatible Pipelines.
      */
-    public static <P extends PipelinePacket, C extends Pipeline<P>> List<C> getOfDataType(final Type packetType) {
+    public static <P extends PipelinePacket<? extends Object>, C extends Pipeline<P>> List<C> getOfDataType(final Type packetType) {
         Pipelines.LOG.info("Getting compatible pipelines for type: %s", packetType.getTypeName());
         
         // get the list of pipelines
@@ -188,7 +186,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      *            The name of the wanted Pipelines
      * @return The requested Pipeline
      */
-    public static Optional<? extends Pipeline<? extends PipelinePacket>> get(final String name) {
+    public static Optional<? extends Pipeline<? extends PipelinePacket<? extends Object>>> get(final String name) {
         Pipelines.LOG.fine("Getting a Pipeline named: %s", name);
         return Pipelines.controller.get(name);
     }
@@ -199,7 +197,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      * @return All the Pipelines
      * @see org.ssh.managers.ManagerController#getAll()
      */
-    public static List<? extends Pipeline<? extends PipelinePacket>> getAll() {
+    public static List<? extends Pipeline<? extends PipelinePacket<? extends Object>>> getAll() {
         return Pipelines.controller.getAll();
     }
     
@@ -211,7 +209,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      * @return The requested Pipeline.
      * @see ManagerController#getAll(String)
      */
-    public static List<? extends Pipeline<? extends PipelinePacket>> getAll(final String name) {
+    public static List<? extends Pipeline<? extends PipelinePacket<? extends Object>>> getAll(final String name) {
         return Pipelines.controller.getAll(name);
     }
     
@@ -223,7 +221,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      * @return true, if successful.
      * @see ManagerController#add(Manageable)
      */
-    public static <P extends Pipeline<? extends PipelinePacket>> boolean add(final P service) {
+    public static <P extends Pipeline<? extends PipelinePacket<? extends Object>>> boolean add(final P service) {
         Pipelines.LOG.info("Adding Pipeline: " + service.getClass().getName());
         return Pipelines.controller.add(service);
     }
@@ -236,7 +234,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      * @return true if all succeeded, false otherwise
      */
     @SuppressWarnings ("unchecked")
-    public static <P extends Pipeline<? extends PipelinePacket>> boolean addAll(final P... pipelines) {
+    public static <P extends Pipeline<? extends PipelinePacket<? extends Object>>> boolean addAll(final P... pipelines) {
         return Stream.of(pipelines).map(manageable -> Pipelines.controller.add(manageable))
                 // collect all success values and reduce to true if all senders
                 // succeeded; false otherwise
@@ -253,7 +251,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      *            The type of the requested Pipelines
      * @return The list of Pipelines matching the supplied type
      */
-    public static <P extends Pipeline<? extends PipelinePacket>> List<P> getOfType(final Class<?> type) {
+    public static <P extends Pipeline<? extends PipelinePacket<? extends Object>>> List<P> getOfType(final Class<?> type) {
         return Pipelines.controller.getOfType(type);
     }
     
