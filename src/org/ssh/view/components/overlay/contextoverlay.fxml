@@ -13,10 +13,9 @@
    <children>
       <Pane fx:id="containerPane" style="-fx-background-color: rgba(255, 255, 255, 0.75);"> 
       	<GridPane fx:id="menuRoot">
-      	  	
-      	  	<Label fx:id="menuLabel" text="Context Menu overlay" minWidth="0.0" GridPane.columnIndex="0" GridPane.rowIndex="0" ></Label>
-	    		  	
-        	<Button fx:id="moveHereButton" text="Move here" GridPane.columnIndex="0" GridPane.rowIndex="1" ></Button>
+      
+      	  <Button fx:id="moveHereButton" text="Move here" onAction="#onMoveHereButtonClick" GridPane.columnIndex="0" GridPane.rowIndex="0" ></Button>
+      	  <Button fx:id="changeSidesButton" text="Change sides" onAction="#onChangeSidesButtonClick" GridPane.columnIndex="0" GridPane.rowIndex="1"></Button>
       	</GridPane> 
       </Pane>
    </children>

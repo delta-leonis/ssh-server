@@ -15,6 +15,8 @@ import org.ssh.util.Logger;
 
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
+import javafx.geometry.Point3D;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -536,13 +538,24 @@ public class FieldGO extends GameObject {
                 // Set box material
                 tmpBox.setMaterial(this.grassMaterial);
                 
+                // Hook on mouse clicked event
                 tmpBox.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     
+                    /**
+                     * {@inheritDoc}
+                     */
                     @Override
                     public void handle(MouseEvent mouseEvent) {
-                        // TODO Auto-generated method stub
                         
+                        // If the mouse event was with the right mouse button
                         if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+                            
+                            // Getting location on field
+                            System.out.println();
+                            Point3D locOnField = mouseEvent.getPickResult().getIntersectedNode().localToParent(mouseEvent.getPickResult().getIntersectedPoint());
+                            
+                            // Set the location on the field of the context overlay
+                            contextOverlayGO.setFieldLoc(new Point2D(locOnField.getX(), locOnField.getZ()));
                             
                             // Show context menu
                             contextOverlayGO.show();

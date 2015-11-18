@@ -4,9 +4,9 @@ import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.field3d.gameobjects.overlay.OverlayGO;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 
 /**
@@ -18,16 +18,15 @@ import javafx.scene.layout.Pane;
  */
 public class ContextOverlayGO extends OverlayGO {
     
-    /** The FXML file for the layout *. */
+    /** The FXML file for the layout. */
     private static final String LAYOUT_FXML_FILE = "contextoverlay.fxml";
                                                  
-    /** The menu label. */
-    @FXML
-    private Label               menuLabel;
-                                
     /** The container pane. */
     @FXML
     private Pane                containerPane;
+                                
+    /** The field location. */
+    private Point2D             fieldLoc;
                                 
     /**
      * Constructor.
@@ -40,8 +39,7 @@ public class ContextOverlayGO extends OverlayGO {
         // Initialize super class
         super(game, LAYOUT_FXML_FILE);
         
-        // Hide
-        this.hide();
+        fieldLoc = new Point2D(0.0, 0.0);
     }
     
     /**
@@ -49,6 +47,9 @@ public class ContextOverlayGO extends OverlayGO {
      */
     @Override
     public void onInitialize() {
+        
+        // Hide
+        this.hide();
         
         // Call on initialize method of the super class
         super.onInitialize();
@@ -137,5 +138,50 @@ public class ContextOverlayGO extends OverlayGO {
                 .getY() > this.getContainer().getTranslateY() + this.containerPane.heightProperty().doubleValue();
                 
         return xCheck || yCheck;
+    }
+    
+    /**
+     * Sets the field location.
+     *
+     * @param fieldLoc
+     *            The new field location.
+     */
+    public void setFieldLoc(Point2D fieldLoc) {
+        
+        this.fieldLoc = fieldLoc;
+    }
+    
+    /**
+     * Gets the field location.
+     *
+     * @return The field location.
+     */
+    public Point2D getFieldLoc() {
+        
+        return this.fieldLoc;
+    }
+    
+    /**
+     * On move here button click event.
+     *
+     * @param actionEvent
+     *            The {@link ActionEvent action event}.
+     */
+    @FXML
+    protected void onMoveHereButtonClick(ActionEvent actionEvent) {
+        
+        // TODO: make robot move
+    }
+    
+    /**
+     * On change sides button click event.
+     *
+     * @param actionEvent
+     *            The {@link ActionEvent action event}.
+     */
+    @FXML
+    protected void onChangeSidesButtonClick(ActionEvent actionEvent) {
+        
+        // TODO: Change sides
     }
 }
