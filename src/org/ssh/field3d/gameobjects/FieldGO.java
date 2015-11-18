@@ -27,7 +27,6 @@ import javafx.scene.shape.CullFace;
 import javafx.scene.shape.MeshView;
 import protobuf.Geometry.Vector2f;
 
-// TODO: Auto-generated Javadoc
 /**
  * FieldGO class. This class creates the field, the goals, lines and arcs.
  *

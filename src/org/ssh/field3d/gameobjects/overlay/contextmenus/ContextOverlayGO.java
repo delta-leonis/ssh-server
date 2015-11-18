@@ -41,7 +41,6 @@ public class ContextOverlayGO extends OverlayGO {
         // Initialize super class
         super(game, LAYOUT_FXML_FILE);
         
-        fieldLoc = new Point2D(0.0, 0.0);
     }
     
     /**
