@@ -174,7 +174,7 @@ public class FieldGame extends Game {
         this.addGameObject(this.fieldGO);
         this.addGameObject(this.cameraControlOverlayGO);
         this.addGameObject(this.contextOverlayGO);
-        this.addGameObject(this.easterCarGO);
+        //this.addGameObject(this.easterCarGO);
         
         // Create some robots
         this.createRobots();
