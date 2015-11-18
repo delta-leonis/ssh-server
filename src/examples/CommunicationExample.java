@@ -20,10 +20,10 @@ public class CommunicationExample {
     public static void main(final String[] args) {
         // make models available
         Models.start();
-        // make org.ssh.services available
+        // make services available
         Services.start();
-        // create a comminucation org.ssh.services.pipeline
-        Pipelines.add(new RadioPipeline("communication org.ssh.services.pipeline"));
+        // create a comminucation pipeline
+        Pipelines.add(new RadioPipeline("communication pipeline"));
         // create communicator (producer for RadioPackets)
         Services.add(new Communicator());
         
@@ -33,15 +33,15 @@ public class CommunicationExample {
         radioConsumer.addDefault(SendMethod.DEBUG); // at this moment both UDP and DEBUG are default
         
         // add a consumer voor radiopackets
-        Pipelines.get("communication org.ssh.services.pipeline").get().registerConsumer(radioConsumer);
+        Pipelines.get("communication pipeline").get().registerConsumer(radioConsumer);
         
-        Pipelines.get("communication org.ssh.services.pipeline").get().registerCoupler(new RoundCoupler());
+        Pipelines.get("communication pipeline").get().registerCoupler(new RoundCoupler());
         
         // create an example packet that will be processed and send
         final RadioProtocolCommand.Builder packet = RadioProtocolCommand.newBuilder().setRobotId(4).setVelocityR(0.2f)
                 .setVelocityX(4.234f).setVelocityY(92.939320f);
                 
-        // retrieve the communicator from org.ssh.services
+        // retrieve the communicator from services
         final Communicator comm = (Communicator) Services.get("communicator").get();
         // send a packet with the default sendmethods
         comm.send(packet);

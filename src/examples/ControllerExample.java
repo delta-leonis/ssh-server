@@ -58,9 +58,9 @@ public class ControllerExample {
      */
     public static Optional<Controller> findAvailableController(final String contains) {
         return Stream.of(ControllerEnvironment.getDefaultEnvironment().getControllers())
-                // filter org.ssh.controllers that met the name conditions
+                // filter controllers that met the name conditions
                 .filter(controller -> controller.getName().contains(contains))
-                // filter org.ssh.controllers that are available
+                // filter controllers that are available
                 .filter(controller -> ControllerExample.availableController(controller))
                 // find the first in the list
                 .findFirst();
@@ -69,10 +69,10 @@ public class ControllerExample {
     public static void main(final String[] args) throws InterruptedException {
         // make models available
         Models.start();
-        // make org.ssh.services available
+        // make services available
         Services.start();
-        // create a comminucation org.ssh.services.pipeline
-        Pipelines.add(new RadioPipeline("communication org.ssh.services.pipeline"));
+        // create a comminucation pipeline
+        Pipelines.add(new RadioPipeline("communication pipeline"));
         // create communicator (producer for RadioPackets)
         Services.add(new Communicator());
         
@@ -80,7 +80,7 @@ public class ControllerExample {
         radioConsumer.register(SendMethod.DEBUG, new DebugSender(Level.INFO));
         
         // add a consumer voor radiopackets
-        Pipelines.get("communication org.ssh.services.pipeline").get().registerConsumer(radioConsumer);
+        Pipelines.get("communication pipeline").get().registerConsumer(radioConsumer);
         
         // create the service for the controller
         final ControllerListener listener = new ControllerListener(15); // 15 = no. robots

@@ -26,7 +26,7 @@ public class ModelExample {
         // with json
         Models.create(Robot.class, 12, TeamColor.YELLOW);
         
-        // Retrieve a org.ssh.models
+        // Retrieve a models
         final Optional<Model> oRobot = Models.get("robot Y3");
         
         // check if found

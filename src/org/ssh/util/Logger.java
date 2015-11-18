@@ -13,10 +13,10 @@ import java.util.stream.Stream;
 public class Logger extends java.util.logging.Logger {
     
     /**
-     * gets a org.ssh.util.logger that uses the classname of the class that called this method using
+     * gets a logger that uses the classname of the class that called this method using
      * the StackTrace
      * 
-     * @return a suitable org.ssh.util.logger
+     * @return a suitable logger
      */
     public static Logger getLogger() {
         // return getLogger(Thread.currentThread().getStackTrace()[1].getClassName());
@@ -29,7 +29,7 @@ public class Logger extends java.util.logging.Logger {
     }
     
     /**
-     * get a java.util.logging.logger and cast it to org.ssh.util.logger for String.format
+     * get a java.util.logging.logger and cast it to logger for String.format
      * functionality
      * 
      * @param name
@@ -61,7 +61,7 @@ public class Logger extends java.util.logging.Logger {
      * Logs a CONFIG formatted string using the specified format string and arguments.
      *
      * If the logger is currently enabled for the CONFIG message level then the given message is
-     * forwarded to all the registered org.ssh.senders Handler objects.
+     * forwarded to all the registered output Handler objects.
      * 
      * @param format
      *            A format string</a>
@@ -85,7 +85,7 @@ public class Logger extends java.util.logging.Logger {
      * Logs a FINE formatted string using the specified format string and arguments.
      *
      * If the logger is currently enabled for the FINE message level then the given message is
-     * forwarded to all the registered org.ssh.senders Handler objects.
+     * forwarded to all the registered output Handler objects.
      * 
      * @param format
      *            A format string</a>
@@ -109,7 +109,7 @@ public class Logger extends java.util.logging.Logger {
      * Logs a FINER formatted string using the specified format string and arguments.
      *
      * If the logger is currently enabled for the FINER message level then the given message is
-     * forwarded to all the registered org.ssh.senders Handler objects.
+     * forwarded to all the registered output Handler objects.
      * 
      * @param format
      *            A format string</a>
@@ -133,7 +133,7 @@ public class Logger extends java.util.logging.Logger {
      * Logs a FINEST formatted string using the specified format string and arguments.
      *
      * If the logger is currently enabled for the FINEST message level then the given message is
-     * forwarded to all the registered org.ssh.senders Handler objects.
+     * forwarded to all the registered output Handler objects.
      * 
      * @param format
      *            A format string</a>
@@ -157,7 +157,7 @@ public class Logger extends java.util.logging.Logger {
      * Logs a INFO formatted string using the specified format string and arguments.
      *
      * If the logger is currently enabled for the INFO message level then the given message is
-     * forwarded to all the registered org.ssh.senders Handler objects.
+     * forwarded to all the registered output Handler objects.
      * 
      * @param format
      *            A format string</a>
@@ -181,7 +181,7 @@ public class Logger extends java.util.logging.Logger {
      * Logs a SEVERE formatted string using the specified format string and arguments.
      *
      * If the logger is currently enabled for the SEVERE message level then the given message is
-     * forwarded to all the registered org.ssh.senders Handler objects.
+     * forwarded to all the registered output Handler objects.
      * 
      * @param format
      *            A format string</a>
@@ -205,7 +205,7 @@ public class Logger extends java.util.logging.Logger {
      * Logs a WARNING formatted string using the specified format string and arguments.
      *
      * If the logger is currently enabled for the WARNING message level then the given message is
-     * forwarded to all the registered org.ssh.senders Handler objects.
+     * forwarded to all the registered output Handler objects.
      * 
      * @param format
      *            A format string</a>

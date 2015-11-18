@@ -16,7 +16,7 @@ import net.java.games.input.Controller;
 import protobuf.Radio.RadioProtocolCommand;
 
 /**
- * A {@link Service} that manages all {@link ControllerHandler org.ssh.controllers} for every
+ * A {@link Service} that manages all {@link ControllerHandler controllers} for every
  * robotId
  *
  * @TODO Rimon fixt deze shit nog naar pipeline
@@ -105,7 +105,7 @@ public class ControllerListener extends Service {
         return this.handlers.entrySet().stream()
                 // Only check handlers that actually have a handler assigned to a id
                 .filter(entry -> entry.getValue() != null)
-                // filter org.ssh.controllers that equal to a assigned controller
+                // filter controllers that equal to a assigned controller
                 .filter(entry -> entry.getValue().getLayout().getController().equals(controller))
                 // found any? Then it is in use
                 .count() > 0;
