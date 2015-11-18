@@ -19,9 +19,8 @@ import javafx.scene.Group;
  */
 public class OverlayGO extends GameObject {
     
-    // TODO Move resources
     /** The FXML directory. */
-    private static final String FXML_DIR = "/org/ssh/view/components/overlay";
+    private static final String FXML_DIR = "/org/ssh/view/components/overlay/";
                                          
     /** The CSS directory. */
     private static final String CSS_DIR  = "/org/ssh/view/css/";
@@ -72,20 +71,53 @@ public class OverlayGO extends GameObject {
      */
     @Override
     public void onDestroy() {
+        
+        // Check if we need to remove the container from the 2d group
+        if (this.getGame().get2DGroup().getChildren().contains(container)) {
+            
+            // Remove container from the 2d group
+            this.getGame().get2DGroup().getChildren().remove(container);
+        }
     }
     
     /**
-     * {@inheritDoc}
+     * {@inheritDoc} When inheriting from this class, and overriding this method a super call to
+     * this method is needed.
      */
     @Override
     public void onInitialize() {
+        
+        // Add to 2d group
+        this.getGame().get2DGroup().getChildren().add(container);
     }
     
     /**
-     * {@inheritDoc}
+     * {@inheritDoc} When inheriting from this class, and overriding this method a super call to
+     * this method is needed.
      */
     @Override
     public void onUpdate(long timeDivNano) {
+    
+    }
+    
+    public void show() {
+        
+        this.container.setVisible(true);
+    }
+    
+    public void hide() {
+        
+        this.container.setVisible(false);
+    }
+    
+    public void toggleVisibility() {
+        
+        this.container.setVisible(!this.container.isVisible());
+    }
+    
+    public boolean isVisible() {
+        
+        return this.container.isVisible();
     }
     
     /**
