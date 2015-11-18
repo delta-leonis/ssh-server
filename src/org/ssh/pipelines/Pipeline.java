@@ -25,8 +25,7 @@ import com.google.common.reflect.TypeToken;
  *
  * A Pipeline processes data using {@link Producer}, {@link Coupler}, and {@link Consumer}.
  *
- * @param
- *            <P>
+ * @param <P>
  *            A PipelinePacket this Pipeline can work with.
  *            
  * @author Rimon Oz

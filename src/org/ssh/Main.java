@@ -80,6 +80,5 @@ public class Main extends Application {
         
         // start production
         dingService.start();
-        Services.getAll().forEach(System.out::println);
     }
 }

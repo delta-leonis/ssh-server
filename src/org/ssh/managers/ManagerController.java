@@ -62,7 +62,7 @@ public abstract class ManagerController<M extends Manageable> {
      * Adds a {@link Manageable} to the Manager.
      *
      * @param manageable
-     *            the Manageable to be a dded
+     *            the Manageable to be added
      * @return true, if successful
      */
     @SuppressWarnings ("unchecked")
