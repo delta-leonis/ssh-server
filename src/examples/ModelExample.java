@@ -5,13 +5,12 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.ssh.managers.manager.Models;
-import org.ssh.models.FieldObject;
 import org.ssh.models.Model;
 import org.ssh.models.Robot;
+import org.ssh.models.enums.TeamColor;
 import org.ssh.util.Logger;
 
 import javafx.geometry.Point2D;
-import javafx.scene.paint.Color;
 
 public class ModelExample {
     
@@ -20,22 +19,19 @@ public class ModelExample {
     public static void main(final String[] args) {
         // Start the Models controller
         Models.start();
-        
-        // create a couple of models
-        Models.create(FieldObject.class, "test", "object");
-        
+
         // without json
-        Models.create(Robot.class, 3, Color.YELLOW);
+        Models.create(Robot.class, 3, TeamColor.YELLOW);
         
         // with json
-        Models.create(Robot.class, 12, Color.YELLOW);
+        Models.create(Robot.class, 12, TeamColor.YELLOW);
         
         // Retrieve a org.ssh.models
         final Optional<Model> oRobot = Models.get("robot Y3");
         
         // check if found
         if (!oRobot.isPresent()) {
-            ModelExample.logger.severe("robot org.ssh.models Y3 not found");
+            ModelExample.logger.severe("robot model Y3 not found");
             return;
         }
         
@@ -47,7 +43,7 @@ public class ModelExample {
         // new robotid
         changes.put("robotId", Integer.valueOf(12));
         // new teamcolor
-        changes.put("teamColor", Color.BLUE);
+        changes.put("teamColor", TeamColor.BLUE);
         // change the position in FieldObject
         changes.put("position", new Point2D(Math.random() * 4000, Math.random() * 4000));
         
@@ -58,7 +54,7 @@ public class ModelExample {
         ModelExample.logger.info(robot.toString());
         
         // manually update fields
-        robot.update("position", new Point2D(23123, 33333), "teamColor", Color.PURPLE);
+        robot.update("position", new Point2D(23123, 33333), "teamColor", TeamColor.BLUE);
         
         ModelExample.logger.info("after update: ");
         ModelExample.logger.info(robot.toString());

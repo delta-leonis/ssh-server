@@ -37,7 +37,12 @@ public final class Services implements Manager<Service<? extends PipelinePacket>
                                                  
     // a logger for good measure
     private static final Logger       LOG        = Logger.getLogger();
-                                                 
+
+    /**
+     * Private constructor to hide the implicit public one.
+     */
+    private Services() { }
+                              
     /**
      * Gets the Singleton instance of Services.
      *

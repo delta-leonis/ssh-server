@@ -7,14 +7,14 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.ssh.managers.Manageable;
+import org.ssh.managers.ManagerController;
 import org.ssh.managers.manager.Models;
 import org.ssh.models.Model;
 import org.ssh.models.Settings;
@@ -33,15 +33,12 @@ import com.google.gson.reflect.TypeToken;
  * {@link #create(Class, Object...)}) to create instances for {@link Model Models} that will
  * register to the {@link ModelController}.
  *
- * @TODO implement fuzzy searching
  * @TODO replace {@link Reflect} with {@link Reflection} in {@link #readConfig(Path, Class)}
  *       
  * @author Jeroen de Jong
  */
-public class ModelController {
+public class ModelController extends ManagerController<Model> {
     
-    /** List with all Models */
-    private final List<Model>   models;
     /** Builder for reading and writing Objects to Json **/
     private final Gson          gson;
                                 
@@ -69,44 +66,56 @@ public class ModelController {
             final Class<?>[] cArgs = new Class[args.length];
             for (int i = 0; i < args.length; i++)
                 cArgs[i] = args[i].getClass();
-                
+            
             // call constructor and cast instance
+            LOG.info("creating ");
             final Model model = (Model) clazz.getDeclaredConstructor(cArgs).newInstance(args);
             
-            // add org.ssh.models to ModelController
+            // add  model to ModelController
             Models.add(model);
-            // initialize this org.ssh.models
+            // initialize this models
             Models.initialize(model);
             return model;
         }
         catch (final Exception exception) {
             ModelController.LOG.exception(exception);
-            // either clazz isn't a org.ssh.models, or the constructor doesn't exist
+            // either clazz isn't a models, or the constructor doesn't exist
             ModelController.LOG.warning("Could not create Model %s", clazz);
             return null;
         }
     }
     
+    
     /**
-     * Instantiates a new org.ssh.models controller.
+     * {@inheritDoc}
+     * 
+     * When a {@link Settings} model is added, it is being set as default
+     * settings for this controller
      */
-    public ModelController() {
-        gson = new GsonBuilder().setPrettyPrinting().create();
-        models = new ArrayList<Model>();
+    @Override
+    public <N extends Manageable> boolean add(final N manageable) {
+        if(manageable instanceof Settings)
+            this.settings = (Settings) manageable;
+
+        return super.add(manageable);
     }
     
     /**
-     * Add a models to this controller
+     * Find a model based on exact full name
      * 
-     * @param models
+     * @see #search()
+     * @param fullname     full name of a model
+     * @return model with given name
      */
-    public void add(final Model model) {
-        ModelController.LOG.info("Adding %s", model.getClass());
-        // whenever it is a settings models, overwrite our own settings
-        if (model instanceof Settings) this.settings = (Settings) model;
-        
-        // add it to the arraylist
-        this.models.add(model);
+    public Optional<Model> getByName(String fullname) {
+        return this.manageables.stream().filter(manageable -> manageable.getFullName().equals(fullname)).findFirst();
+    }
+    
+    /**
+     * Instantiates a new models controller.
+     */
+    public ModelController() {
+        gson = new GsonBuilder().setPrettyPrinting().create();
     }
     
     /**
@@ -119,8 +128,13 @@ public class ModelController {
      */
     private Optional<Path> findValidPath(final String filename) {
         ModelController.LOG.info("Searching for configfile %s", filename);
+
+        // check for a custom lastsession file
+        File config = new File(this.settings.getLastSessionPath() + filename);
+        if ((config.exists() && !config.isDirectory())) return Optional.of(config.toPath());
+        
         // check for a custom file
-        File config = new File(this.settings.getProfilePath() + filename);
+        config = new File(this.settings.getProfilePath() + filename);
         if ((config.exists() && !config.isDirectory())) return Optional.of(config.toPath());
         
         // check for a default one
@@ -147,45 +161,12 @@ public class ModelController {
     }
     
     /**
-     * This method finds a models with the given name and returns it as a Model.
-     * 
-     * @param modelName
-     *            The name of the models you want to find.
-     * @return The requested models.
-     */
-    public Optional<Model> get(final String name) {
-        return this.models.stream()
-                // trim the fullname, and compare it to the argument
-                .filter(model -> model.getFullName().trim().equals(name.trim()))
-                // find the first one
-                .findFirst();
-    }
-    
-    /**
-     * @return all Models currently in the modelcontroller
-     */
-    public List<?> getAll() {
-        return this.models;
-    }
-    
-    /**
-     * This method finds all models matching the name and returns them as an ArrayList<Model>
-     * 
-     * @param modelName
-     *            The (fuzzy) name of the models you want to find.
-     * @return The requested models.
-     */
-    public List<?> getAll(final String name) {
-        return this.models.stream().filter(model -> model.getName().equals(name)).collect(Collectors.toList());
-    }
-    
-    /**
      * Initialize all values in the configfile for each models
      * 
      * @return success value
      */
     public boolean initializeAll() {
-        return this.models.stream().map(model -> this.load(model)).reduce(true,
+        return this.manageables.stream().map(model -> this.load(model)).reduce(true,
                 (accumulator, succes) -> succes && accumulator);
     }
     
@@ -282,7 +263,7 @@ public class ModelController {
      * @return success value
      */
     public boolean reinitializeAll() {
-        return this.models.stream().map(model -> this.reinitialize(model)).reduce(true,
+        return this.manageables.stream().map(model -> this.reinitialize(model)).reduce(true,
                 (accumulator, succes) -> succes && accumulator);
     }
     

@@ -1,5 +1,6 @@
 package org.ssh.models;
 
+import java.io.File;
 import java.net.URI;
 
 /**
@@ -20,7 +21,6 @@ import java.net.URI;
  * @author Jeroen de Jong
  *        
  */
-@SuppressWarnings ("serial")
 public class Settings extends Model {
     
     /**
@@ -82,6 +82,11 @@ public class Settings extends Model {
      */
     public URI getLastSessionPath() {
         return URI.create(getProfilePath() + Settings.SEPARATOR + Settings.LASTSESSION_FOLDER + Settings.SEPARATOR);
+    }
+    
+    @Override
+    public String getSuffix(){
+        return "";
     }
     
 }

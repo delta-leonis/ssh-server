@@ -1,14 +1,13 @@
 package org.ssh.models;
 
-import javafx.scene.paint.Color;
+import org.ssh.models.enums.TeamColor;
 
 /**
  * Describes a Robot on the {@link Field} as a {@link FieldObject}
  *
- * @author Jeroen
+ * @author Jeroen de Jong
  *         
  */
-@SuppressWarnings ("serial")
 public class Robot extends FieldObject {
     
     /** The robot height. */
@@ -25,7 +24,7 @@ public class Robot extends FieldObject {
     /**
      * teamcolor that controls this robot
      */
-    private final Color       teamColor;
+    private final TeamColor       teamColor;
                               
     /**
      * current dribble speed (-1 is max backward, 1 is max forward)
@@ -40,25 +39,11 @@ public class Robot extends FieldObject {
      * @param teamColor
      *            color that controls this robot
      */
-    public Robot(final Integer robotId, final Color teamColor) {
-        super("robot", ""); // TODO refactor this call
+    public Robot(final Integer robotId, final TeamColor teamColor) {
+        super("robot");
         // assign teamcolor
         this.teamColor = teamColor;
         this.robotId = robotId;
-        // Set unique identifier for a class
-        this.setSuffix(this.getTeamColorIdentifier() + robotId);
-    }
-    
-    /**
-     * example: org.ssh.models.RobotB2.json is a robot with ID 2 (RobotB-2) and teamColor Blue
-     * (Robot-B-2)
-     * 
-     * @see {@link Robot#getTeamColor()}
-     * @return Config name for robot models.
-     */
-    @Override
-    public String getConfigName() {
-        return this.getClass().getName() + this.getTeamColorIdentifier() + this.robotId + ".json";
     }
     
     /**
@@ -78,7 +63,7 @@ public class Robot extends FieldObject {
     /**
      * @return color of team that controls this robot
      */
-    public Color getTeamColor() {
+    public TeamColor getTeamColor() {
         return this.teamColor;
     }
     
@@ -86,6 +71,11 @@ public class Robot extends FieldObject {
      * @return a char that identifies this robot as B(lue) or Y(ellow)
      */
     public String getTeamColorIdentifier() {
-        return this.teamColor.getBlue() > 0 ? "B" : "Y";
+        return this.teamColor.name().substring(0, 1);
+    }
+
+    @Override
+    public String getSuffix() {
+        return this.getTeamColorIdentifier() + robotId;
     }
 }

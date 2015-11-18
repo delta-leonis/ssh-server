@@ -8,7 +8,7 @@ import javafx.geometry.Point2D;
  * @author Jeroen de Jong
  *         
  */
-public class FieldObject extends Model {
+public abstract class FieldObject extends Model {
     
     /**
      * Position of this object on the {@link Field} in mm, according to the Cartesian system with
@@ -21,11 +21,9 @@ public class FieldObject extends Model {
      * 
      * @param name
      *            name of the object
-     * @param suffix
-     *            (unique) suffix for the object
      */
-    public FieldObject(final String name, final String suffix) {
-        super(name, suffix);
+    public FieldObject(final String name) {
+        super(name);
     }
     
     /**

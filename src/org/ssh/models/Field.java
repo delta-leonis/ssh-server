@@ -13,7 +13,6 @@ import protobuf.Geometry.GeometryFieldSize;
  * @author Jeroen de Jong
  *         
  */
-@SuppressWarnings ("serial")
 public class Field extends Model {
     
     /**
@@ -31,6 +30,11 @@ public class Field extends Model {
     public Field() {
         super("field");
         this.goals = new ArrayList<Goal>();
+    }
+    
+    @Override
+    public String getSuffix(){
+        return "";
     }
     
     /**

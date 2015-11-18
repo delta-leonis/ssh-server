@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableList;
 public abstract class ManagerController<M extends Manageable> {
     
     /** The manageables. */
-    private ImmutableList<M> manageables;
+    protected ImmutableList<M> manageables;
     
     public ManagerController() {
         this.manageables = ImmutableList.of();

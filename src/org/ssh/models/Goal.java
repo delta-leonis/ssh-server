@@ -26,7 +26,7 @@ public class Goal extends FieldObject {
      *            location of the goal
      */
     public Goal(final Direction fieldHalf) {
-        super("goal", fieldHalf.toString());
+        super("goal");
         this.fieldHalf = fieldHalf;
     }
     
@@ -49,5 +49,10 @@ public class Goal extends FieldObject {
      */
     public Direction getSide() {
         return this.fieldHalf;
+    }
+
+    @Override
+    public String getSuffix() {
+        return getSide().name();
     }
 }

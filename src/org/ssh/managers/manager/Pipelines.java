@@ -38,7 +38,12 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
                                                  
     // a logger for good measure
     private static final Logger       LOG        = Logger.getLogger();
-                                                 
+
+    /**
+     * Private constructor to hide the implicit public one.
+     */
+    private Pipelines() { }
+    
     /**
      * Gets the Singleton instance of Pipelines.
      *

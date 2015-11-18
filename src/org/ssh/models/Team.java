@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.ssh.managers.manager.Models;
 import org.ssh.models.enums.Direction;
+import org.ssh.models.enums.TeamColor;
 
-import javafx.scene.paint.Color;
 
 /**
  * Describes a team<br />
@@ -29,7 +29,7 @@ public class Team extends Model {
     /**
      * color that this team controls
      */
-    private Color            teamColor;
+    private TeamColor            teamColor;
                              
     /**
      * teamname given by {@link Referee}
@@ -55,10 +55,15 @@ public class Team extends Model {
      * @param teamcolor
      *            the color of the {@link Robot robots} that this team controls.
      */
-    public Team(final Direction direction, final Color teamColor) {
-        super("team", String.format("%s %s", direction.name(), teamColor.toString()));
+    public Team(final Direction direction, final TeamColor teamColor) {
+        super("team");
         this.direction = direction;
         this.teamColor = teamColor;
+    }
+    
+    @Override
+    public String getSuffix(){
+        return String.format("%s %s", direction.name(), teamColor.name());
     }
     
     /**
@@ -113,7 +118,7 @@ public class Team extends Model {
     /**
      * @return color that this team controls
      */
-    public Color getTeamColor() {
+    public TeamColor getTeamColor() {
         return this.teamColor;
     }
     
@@ -185,7 +190,7 @@ public class Team extends Model {
      * Inverts the teamcolor, so {@link Color.BLUE} becomes {@link Color.YELLOW} and vice versa.
      */
     public void swapColor() {
-        this.teamColor = this.teamColor == Color.BLUE ? Color.YELLOW : Color.BLUE;
+        this.teamColor = this.teamColor.swap();
     }
     
     /**

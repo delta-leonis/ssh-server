@@ -1,6 +1,5 @@
 package org.ssh.models;
 
-import java.io.Serializable;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -10,12 +9,11 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.jooq.lambda.Unchecked;
+import org.ssh.managers.Manageable;
 import org.ssh.managers.controllers.ModelController;
 import org.ssh.managers.manager.Models;
 import org.ssh.util.Logger;
 import org.ssh.util.Reflect;
-
-import com.google.common.reflect.Reflection;
 
 /**
  * The Class Model.<br />
@@ -27,22 +25,15 @@ import com.google.common.reflect.Reflection;
  * @see {@link #update(Map)}
  * @see {@link ModelFactory}
  * @see {@link ModelController}
- * @see {@link Reflection}
+ *      
  * @author Jeroen de Jong
  */
 
-// Serializable is only implemented to use transient modifiers,
-// but wont be serialized.
-@SuppressWarnings ("serial")
-public abstract class Model implements Serializable {
+public abstract class Model extends Manageable {
     
-    /** The name. */
-    private transient String              name;
-    /** unique suffix for this models **/
-    private transient String              suffix;
     // respective logger
     private transient static final Logger LOG = Logger.getLogger();
-                                              
+    
     /**
      * Instantiates a new models.
      *
@@ -50,54 +41,14 @@ public abstract class Model implements Serializable {
      *            the name
      */
     public Model(final String name) {
-        this(name, "");
-    }
-    
-    /**
-     * Instantiates a new models.
-     *
-     * @param name
-     *            the name
-     */
-    public Model(final String name, final String suffix) {
-        this.name = name;
-        this.suffix = suffix;
+        super(name);
     }
     
     /**
      * @return name used for config
      */
     public String getConfigName() {
-        return this.getClass().getName() + ".json";
-    }
-    
-    /**
-     * Gets the name including the suffix
-     * 
-     * @return name and suffix
-     */
-    public String getFullName() {
-        return String.format("%s %s", this.name, this.suffix);
-    }
-    
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    public String getName() {
-        return this.name;
-    }
-    
-    /**
-     * Gets suffix.<br>
-     * 
-     * Mostly used for defining specific models (robot A1, goal EAST etc.)
-     * 
-     * @return the suffix
-     */
-    public String getSuffix() {
-        return this.suffix;
+        return this.getFullName().replace(" ", "_") + ".json";
     }
     
     /**
@@ -152,28 +103,6 @@ public abstract class Model implements Serializable {
             Model.LOG.exception(exception);
             return false;
         }
-    }
-    
-    /**
-     * Sets the name.
-     *
-     * @param name
-     *            the new name
-     */
-    public void setName(final String name) {
-        this.name = name;
-    }
-    
-    /**
-     * Sets suffix. <br>
-     * 
-     * Mostly used for defining specific models (robot A1, goal EAST etc.).
-     * 
-     * @param suffix
-     *            the suffix
-     */
-    public void setSuffix(final String suffix) {
-        this.suffix = suffix;
     }
     
     /**

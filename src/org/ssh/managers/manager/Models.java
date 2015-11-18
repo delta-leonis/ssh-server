@@ -9,20 +9,18 @@ import org.ssh.models.Model;
 import org.ssh.models.Settings;
 import org.ssh.util.Logger;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Models. Contains the manager for all {@link Model Models} that are in use.
  *
  * @author Jeroen de Jong
  * @see #create(Class, Object...)
  * @see #get(String)
- * @TODO fuzzy searching for models
  *       
  */
 public final class Models {
     
     /**
-     * The org.ssh.models store has a controller that runs the store.
+     * The models store has a controller that runs the store.
      */
     private static ModelController modelController;
                                    
@@ -32,9 +30,14 @@ public final class Models {
     /** The Constant LOG. */
     // respective logger
     private static final Logger    LOG      = Logger.getLogger();
-                                            
+
     /**
-     * adds a org.ssh.models to this manager
+     * Private constructor to hide the implicit public one.
+     */
+    private Models() { }
+    
+    /**
+     * adds a models to this manager
      *
      * @param model
      *            the model
@@ -57,14 +60,14 @@ public final class Models {
     }
     
     /**
-     * This method finds a org.ssh.models and returns it as a Model.
+     * This method finds a models and returns it as a Model.
      * 
      * @param modelName
-     *            The name of the model you want to find.
+     *            The full name of the model you want to find.
      * @return The requested model.
      */
     public static Optional<Model> get(final String modelName) {
-        return Models.modelController.get(modelName);
+        return Models.modelController.getByName(modelName);
     }
     
     /**
@@ -97,7 +100,7 @@ public final class Models {
     }
     
     /**
-     * Initialize all values in the configfile for given org.ssh.models
+     * Initialize all values in the configfile for given models
      * 
      * @param model
      *            model to initialize
@@ -108,7 +111,7 @@ public final class Models {
     }
     
     /**
-     * Initialize all values in the configfile for each org.ssh.models
+     * Initialize all values in the configfile for each models
      * 
      * @return success value
      */
@@ -117,7 +120,7 @@ public final class Models {
     }
     
     /**
-     * Set all non-{@link Modifier#TRANSIENT transient} fields of given org.ssh.models to null, and
+     * Set all non-{@link Modifier#TRANSIENT transient} fields of given models to null, and
      * reload values from configfile
      * 
      * @param model
@@ -130,7 +133,7 @@ public final class Models {
     
     /**
      * Set all non-{@link Modifier#TRANSIENT transient} fields for all models to null, and reload
-     * values from configfile for every org.ssh.models
+     * values from configfile for every models
      * 
      * @return success value
      */
@@ -139,7 +142,7 @@ public final class Models {
     }
     
     /**
-     * Save the current state of the org.ssh.models in profiles path
+     * Save the current state of the models in profiles path
      *
      * @param model
      *            the model
@@ -150,7 +153,7 @@ public final class Models {
     }
     
     /**
-     * Save given org.ssh.models as default for this org.ssh.models type
+     * Save given models as default for this models type
      *
      * @param model
      *            the model

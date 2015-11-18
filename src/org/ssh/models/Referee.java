@@ -16,7 +16,6 @@ import protobuf.RefereeOuterClass;
  * @author Jeroen de Jong
  *         
  */
-@SuppressWarnings ("serial")
 public class Referee extends Model {
     
     // Respective logger
@@ -136,5 +135,10 @@ public class Referee extends Model {
      */
     public void setStageTimeLeft(final int stageTimeLeft) {
         this.stageTimeLeft = stageTimeLeft;
+    }
+
+    @Override
+    public String getSuffix() {
+        return "";
     }
 }
