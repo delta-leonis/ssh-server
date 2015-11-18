@@ -6,9 +6,18 @@
 <?import java.lang.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.layout.RowConstraints?>
 
 <Pane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" pickOnBounds="false" minWidth="0.0">
    <children>
-      <Label text="Context Menu overlay" minWidth="0.0"></Label>
+      <Pane fx:id="containerPane" style="-fx-background-color: rgba(255, 255, 255, 0.75);"> 
+      	<GridPane fx:id="menuRoot">
+      	  	
+      	  	<Label fx:id="menuLabel" text="Context Menu overlay" minWidth="0.0" GridPane.columnIndex="0" GridPane.rowIndex="0" ></Label>
+	    		  	
+        	<Button fx:id="moveHereButton" text="Move here" GridPane.columnIndex="0" GridPane.rowIndex="1" ></Button>
+      	</GridPane> 
+      </Pane>
    </children>
 </Pane>

@@ -4,7 +4,11 @@ import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.field3d.gameobjects.overlay.OverlayGO;
 
-import javafx.scene.Group;
+import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 
 /**
  * ContextOverlayGO class. This class is responsible for the 2d context menu overlay.
@@ -17,9 +21,12 @@ public class ContextOverlayGO extends OverlayGO {
     
     /** The FXML file for the layout **/
     private static final String LAYOUT_FXML_FILE = "contextoverlay.fxml";
-                                                 
-    /** The group for the context menu */
-    private Group               contextMenuGroup;
+                                                                                 
+    @FXML
+    private Label               menuLabel;
+    
+    @FXML
+    private Pane                containerPane;
                                 
     /**
      * Constructor
@@ -30,13 +37,10 @@ public class ContextOverlayGO extends OverlayGO {
     public ContextOverlayGO(Game game) {
         
         // Initialize super class
-        super(game);
+        super(game, LAYOUT_FXML_FILE);
         
-        // Creating new group for the context menu
-        contextMenuGroup = new Group();
-        
-        // Load FXML
-        this.loadFXML(LAYOUT_FXML_FILE, contextMenuGroup);
+        // Hide
+        this.hide();
     }
     
     /**
@@ -45,8 +49,8 @@ public class ContextOverlayGO extends OverlayGO {
     @Override
     public void onInitialize() {
         
-        // Adding context menu to the 2d group
-        this.getGame().get2DGroup().getChildren().add(contextMenuGroup);
+        // Call on initialize method of the super class
+        super.onInitialize();
     }
     
     /**
@@ -54,6 +58,49 @@ public class ContextOverlayGO extends OverlayGO {
      */
     @Override
     public void onUpdate(long timeDivNano) {
+        
+        if (this.getGame().getMouseInputHandler().isRightButtonPressing()) {
+            
+            Point2D sceneLoc = this.getGame().sceneToLocal(this.getGame().getMouseInputHandler().getMouseX(),
+                    this.getGame().getMouseInputHandler().getMouseY());
+                    
+            if (!this.isVisible()) {
+                
+                this.getContainer().setTranslateX(sceneLoc.getX());
+                this.getContainer().setTranslateY(sceneLoc.getY());
+            }
+            
+            // Show context menu
+            this.toggleVisibility();
+        }
+        
+        if (this.getGame().getMouseInputHandler().isLeftButtonPressing()) {
+            
+            Point2D locOnContext = this.getGame().sceneToLocal(
+                    this.getGame().getMouseInputHandler().getMouseX(),
+                    this.getGame().getMouseInputHandler().getMouseY());
+                    
+            if (locOnContext.getX() < this.getContainer().getTranslateX() || locOnContext.getX() > this.getContainer().getTranslateX() + this.containerPane.widthProperty().doubleValue()
+                    || locOnContext.getY() < this.getContainer().getTranslateY() || locOnContext.getY() > this.getContainer().getTranslateY() + this.containerPane.heightProperty().doubleValue()) {
+                
+                // Hide context menu if needed
+                if (this.isVisible()) this.hide();
+            }
+        }
+        
+        if (this.getGame().getMouseInputHandler().isMidButtonPressing()) {
+            
+            // Hide context menu if needed
+            if (this.isVisible()) this.hide();
+        }
+        
+        // Check if the any of the mouse wheel values has changed
+        if (this.getGame().getMouseInputHandler().isMouseWheelXChanged()
+                || this.getGame().getMouseInputHandler().isMouseWheelYChanged()) {
+                
+            // Hide context menu if needed
+            if (this.isVisible()) this.hide();
+        }
     }
     
     /**
@@ -62,32 +109,16 @@ public class ContextOverlayGO extends OverlayGO {
     @Override
     public void onDestroy() {
         
-        // Check if the 2d group contains the context menu group
-        if (this.getGame().get2DGroup().getChildren().contains(contextMenuGroup)) {
-            
-            // Remove context menu group from the 2d group
-            this.getGame().get2DGroup().getChildren().remove(contextMenuGroup);
-        }
+        // Call on destroy method of the super class
+        super.onDestroy();
     }
     
-    /**
-     * Show method. This method shows the context menu.
-     */
+    @Override
     public void show() {
-        this.contextMenuGroup.setVisible(true);
-    }
-    
-    /**
-     * Hide method. This method hides the context menu.
-     */
-    public void hide() {
-        this.contextMenuGroup.setVisible(false);
-    }
-    
-    /**
-     * Toggle visible method. This method toggles the visible state of the context menu.
-     */
-    public void toggleVisible() {
-        this.contextMenuGroup.setVisible(!this.contextMenuGroup.isVisible());
+        
+        this.getContainer().setTranslateX(this.getGame().getMouseInputHandler().getMouseX());
+        this.getContainer().setTranslateY(this.getGame().getMouseInputHandler().getMouseY());
+        
+        super.show();
     }
 }
