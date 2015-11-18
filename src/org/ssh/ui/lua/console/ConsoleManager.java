@@ -33,12 +33,11 @@ public class ConsoleManager extends UIComponent {
         super(name, "consolemanager.fxml");
         // Open a new tab
         this.openNewTab();
-        tabPane.getSelectionModel().selectedIndexProperty().addListener(event -> this.switchFocusToCurrentTab());
         // Open a new tab when pressing CTRL + T
         EventHandlerHelper.install(this.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.T, KeyCombination.CONTROL_DOWN))
                         .act(event -> this.openNewTab()).create());
-        // Open a new tab when pressing CTRL + T
+        // Close a tab when pressing CTRL + W
         EventHandlerHelper.install(this.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.W, KeyCombination.CONTROL_DOWN))
                         .act(event -> this.closeTab(tabPane.getSelectionModel().getSelectedItem())).create());
@@ -82,6 +81,7 @@ public class ConsoleManager extends UIComponent {
         ((Console) selectedTab.getContent()).cancel();
         // Remove the selected tab
         tabPane.getTabs().remove(selectedTab);
+        switchFocusToCurrentTab();
     }
     
     /**

@@ -1,8 +1,6 @@
 package org.ssh.ui.lua.console;
 
-import java.io.OutputStreamWriter;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -12,8 +10,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 
 import org.fxmisc.wellbehaved.event.EventHandlerHelper;
 import org.fxmisc.wellbehaved.event.EventPattern;
@@ -56,38 +52,38 @@ import javafx.scene.input.KeyCombination;
 public class Console extends UIComponent {
     
     // A logger for errorhandling
-    private static final Logger  LOG         = Logger.getLogger();
-
+    private static final Logger LOG = Logger.getLogger();
+    
     /** The cursor used by the console */
-    private static final String  CURSOR      = "> ";
+    private static final String              CURSOR      = "> ";
     /** The title that shows when starting up the console */
-    private static final String  TITLE       = "Lua Console";
+    private static final String              TITLE       = "Lua Console";
     /*
      * TODO: Add globals like "luajava.newInstance" to autocomplete
      */
     /** The actual area we type in */
-    private final ConsoleArea    consoleArea;
+    private final ConsoleArea                consoleArea;
     /** Custom outputstream */
-    private final ConsoleOutput  out;
+    private final ConsoleOutput              out;
     /**
      * The line we're currently typing on (Used to figure out which part of the text is the command)
      */
-    private int                  currentLine = 0;
+    private int                              currentLine = 0;
     /** All objects found with reflection that use the {@link AvailableInLua} */
-    private final List<Object>   functionClasses;
+    private final List<Object>               functionClasses;
     /** Lua globals used by this {@link Console} */
-    private Globals globals;
+    private Globals                          globals;
     /** Magic debuglibrary that is used to interrupt functions */
-    private CustomDebugLib customDebug;
+    private CustomDebugLib                   customDebug;
     /* Variables for handling command history */
     /** A list containing all previous commands */
-    private final List<String>   recentCommands;
+    private final List<String>               recentCommands;
     /**
      * selecting = true when the user is selecting commands using the up and down keys
      */
-    private boolean              selecting   = false;
+    private boolean                          selecting   = false;
     /** Used to iterate through the recentCommands */
-    private ListIterator<String> iterator;
+    private ListIterator<String>             iterator;
     /** Get created whenever a command is executed. Can be cancelled by calling close() */
     private ListenableFuture<PipelinePacket> currentFuture;
     
@@ -168,6 +164,11 @@ public class Console extends UIComponent {
         // Keypress TAB for autocomplete
         EventHandlerHelper.install(this.consoleArea.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.TAB)).act(event -> this.handleTab()).create());
+        // Keycombination Control + C for cancel command
+        EventHandlerHelper.install(this.consoleArea.onKeyPressedProperty(),
+                EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.C, KeyCombination.CONTROL_DOWN))
+                        .act(event -> this.cancel()).create());
+                        
     }
     
     /** ************************ */
@@ -267,8 +268,8 @@ public class Console extends UIComponent {
      *            The command to be executed.
      */
     private void executeCommand(final String command) {
-    	consoleArea.setDisable(true);
-    	currentFuture = Services.submitTask(this.getName(), () -> {
+        consoleArea.setDisable(true);
+        currentFuture = Services.submitTask(this.getName(), () -> {
             try {
                 this.println("");
                 // Add command to the command history
@@ -279,7 +280,6 @@ public class Console extends UIComponent {
             catch (LuaError exception) {
                 Console.LOG.exception(exception);
                 this.println(exception.getClass().getSimpleName() + " in line: " + command);
-                exception.printStackTrace();
             }
             
             this.printCursor();
@@ -293,11 +293,10 @@ public class Console extends UIComponent {
     /**
      * Cancels the {@link ListenableFuture} obtained from {@link #executeCommand(String)}
      */
-    public void cancel(){
-    	if(currentFuture != null)
-    		currentFuture.cancel(true);
-    	
-    	System.out.println(globals.running.state.status);
+    public void cancel() {
+        if (currentFuture != null) 
+            currentFuture.cancel(true);
+        
         customDebug.interrupt();
         requestFocus();
     }
@@ -306,8 +305,8 @@ public class Console extends UIComponent {
      * Requests focus for the underlying {@link ConsoleArea}
      */
     @Override
-    public void requestFocus(){
-        consoleArea.requestFocus();
+    public void requestFocus() {
+        Platform.runLater(() -> consoleArea.requestFocus());
     }
     
     /**
@@ -401,15 +400,15 @@ public class Console extends UIComponent {
                 for (final Object o : this.functionClasses)
                     globals.set(LuaUtils.getSimpleName(o), CoerceJavaToLua.coerce(o));
             // Add a useful sleep script
-//            this.scriptEngine.eval(
-//                    "local clock = os.clock function sleep(n) local t0 = clock() * 1000 while clock() * 1000 - t0 <= n do end end");
-            this.globals.load(
-                    "local clock = os.clock function sleep(n) local t0 = clock() * 1000 while clock() * 1000 - t0 <= n do end end").call();        
+            this.globals
+                    .load("local clock = os.clock function sleep(n) local t0 = clock() * 1000 while clock() * 1000 - t0 <= n do end end")
+                    .call();
             // Important piece of code that fixed all bugs. Do not decode to
             // check its contents.
-            this.globals.load(new String(Base64.getDecoder().decode(
-                    "bG9jYWwgY293ID0gewpbWyAKICBcICAgICAgICAgICAsfi4KICAgIFwgICAgICwtJ19fIGAtLAogICAgICAgXCAgeywtJyAgYC4gfSAgICAgICAgICAgICAgLCcpCiAgICAgICAgICAsKCBhICkgICBgLS5fXyAgICAgICAgICwnLCcpfiwKICAgICAgICAgPD0uKSAoICAgICAgICAgYC0uX18sPT0nICcgJyAnfQogICAgICAgICAgICggICApICAgICAgICAgICAgICAgICAgICAgIC8pCiAgICAgICAgICAgIGAtJ1wgICAgLCAgICAgICAgICAgICAgICAgICAgKQoJICAgICAgIHwgIFwgICAgICAgICBgfi4gICAgICAgIC8KICAgICAgICAgICAgICAgXCAgICBgLl8gICAgICAgIFwgICAgICAgLwogICAgICAgICAgICAgICAgIFwgICAgICBgLl9fX19fLCcgICAgLCcKICAgICAgICAgICAgICAgICAgYC0uICAgICAgICAgICAgICwnCiAgICAgICAgICAgICAgICAgICAgIGAtLl8gICAgIF8sLScKICAgICAgICAgICAgICAgICAgICAgICAgIDc3amonCiAgICAgICAgICAgICAgICAgICAgICAgIC8vX3x8CiAgICAgICAgICAgICAgICAgICAgIF9fLy8tLScvYAoJICAgICAgICAgICAgLC0tJy9gICAnCl1dCn0KZnVuY3Rpb24gY2hpY2tlbnNheSh0ZXh0KQpsID0gdGV4dDpsZW4oKQphID0gbCAvIDEwCmZvciBpPTAsYSBkbwoJaW8ud3JpdGUoIlsiIC4uIHRleHQ6c3ViKGkqMTArMSwgKChpKzEpKjEwID4gbCkgYW5kIGwgb3IgKGkrMSkqMTAgKSAuLiAgIl1cbiIpCmVuZAoJcHJpbnQoY293WzFdKQplbmQK"))).call();
-                    
+            this.globals
+                    .load(new String(Base64.getDecoder()
+                            .decode("bG9jYWwgY293ID0gewpbWyAKICBcICAgICAgICAgICAsfi4KICAgIFwgICAgICwtJ19fIGAtLAogICAgICAgXCAgeywtJyAgYC4gfSAgICAgICAgICAgICAgLCcpCiAgICAgICAgICAsKCBhICkgICBgLS5fXyAgICAgICAgICwnLCcpfiwKICAgICAgICAgPD0uKSAoICAgICAgICAgYC0uX18sPT0nICcgJyAnfQogICAgICAgICAgICggICApICAgICAgICAgICAgICAgICAgICAgIC8pCiAgICAgICAgICAgIGAtJ1wgICAgLCAgICAgICAgICAgICAgICAgICAgKQoJICAgICAgIHwgIFwgICAgICAgICBgfi4gICAgICAgIC8KICAgICAgICAgICAgICAgXCAgICBgLl8gICAgICAgIFwgICAgICAgLwogICAgICAgICAgICAgICAgIFwgICAgICBgLl9fX19fLCcgICAgLCcKICAgICAgICAgICAgICAgICAgYC0uICAgICAgICAgICAgICwnCiAgICAgICAgICAgICAgICAgICAgIGAtLl8gICAgIF8sLScKICAgICAgICAgICAgICAgICAgICAgICAgIDc3amonCiAgICAgICAgICAgICAgICAgICAgICAgIC8vX3x8CiAgICAgICAgICAgICAgICAgICAgIF9fLy8tLScvYAoJICAgICAgICAgICAgLC0tJy9gICAnCl1dCn0KZnVuY3Rpb24gY2hpY2tlbnNheSh0ZXh0KQpsID0gdGV4dDpsZW4oKQphID0gbCAvIDEwCmZvciBpPTAsYSBkbwoJaW8ud3JpdGUoIlsiIC4uIHRleHQ6c3ViKGkqMTArMSwgKChpKzEpKjEwID4gbCkgYW5kIGwgb3IgKGkrMSkqMTAgKSAuLiAgIl1cbiIpCmVuZAoJcHJpbnQoY293WzFdKQplbmQK")))
+                    .call();
             this.println(Console.TITLE);
             this.printCursor();
             

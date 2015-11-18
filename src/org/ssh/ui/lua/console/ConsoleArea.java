@@ -9,6 +9,9 @@ import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.wellbehaved.event.EventHandlerHelper;
 import org.fxmisc.wellbehaved.event.EventPattern;
 
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 
 /**
@@ -40,6 +43,22 @@ public class ConsoleArea extends ColoredCodeArea {
         EventHandlerHelper.install(this.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(Z, KeyCombination.CONTROL_DOWN))
                         .act(event -> ConsoleArea.doNothing()).create());
+        // Keycombination Control + shift + C for copy
+        EventHandlerHelper.install(this.onKeyPressedProperty(),
+                EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.C, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN))
+                        .act(event -> ConsoleArea.copy(this.getText(this.getSelection().getStart(), this.getSelection().getEnd()))).create());
+    }
+
+    /**
+     * Copies the given {@link String} to your clipboard
+     * @param stringToCopy The {@link String} to be copied
+     */
+    private static void copy(String stringToCopy){
+        // Make a ClipboarContent and put the string into it
+        ClipboardContent content = new ClipboardContent();
+        content.putString(stringToCopy);
+        // Save it to the SYSTEM clipboard
+        Clipboard.getSystemClipboard().setContent(content);
     }
     
     /**
