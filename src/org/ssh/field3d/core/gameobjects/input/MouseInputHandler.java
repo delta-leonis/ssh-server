@@ -1,5 +1,7 @@
 package org.ssh.field3d.core.gameobjects.input;
 
+import java.util.Arrays;
+
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
 
@@ -12,18 +14,26 @@ import javafx.scene.input.ScrollEvent;
  *
  * @author Mark Lefering
  * @see GameObject
- *      
  */
 public class MouseInputHandler extends GameObject {
     
-    /** The Constant NUM_BUTTONS. */
+    /** The number of mouse buttons. */
     public static final int           NUM_BUTTONS            = 3;
                                                              
-    /** The Constant MAX_SCROLL_WHEEL_VALUE. */
+    /** The default maximal scroll wheel value. */
     public static final long          MAX_SCROLL_WHEEL_VALUE = 100000000;
                                                              
-    /** The Constant MIN_SCROLL_WHEEL_VALUE. */
+    /** The default minimal scroll wheel value. */
     public static final long          MIN_SCROLL_WHEEL_VALUE = -MouseInputHandler.MAX_SCROLL_WHEEL_VALUE;
+                                                             
+    /** The index of the button state arrays for the left mouse button. */
+    public static final int           MOUSE_BUTTON_LEFT      = 0;
+                                                             
+    /** The index of the button state arrays for the middle mouse button. */
+    public static final int           MOUSE_BUTTON_MID       = 1;
+                                                             
+    /** The index of the button state arrays for the right mouse button. */
+    public static final int           MOUSE_BUTTON_RIGHT     = 2;
                                                              
     /** The on mouse wheel changed handler. */
     private final OnMouseWheelChanged onMouseWheelChanged;
@@ -40,8 +50,20 @@ public class MouseInputHandler extends GameObject {
     /** The on mouse dragged handler. */
     private final OnMouseDragged      onMouseDragged;
                                       
-    /** The button states. */
-    private final boolean             buttonStates[];
+    /** The current button states. */
+    private boolean                   curButtonStates[];
+                                      
+    /** The previous button states. */
+    private boolean                   prevButtonStates[];
+                                      
+    /** The mouse event button states. */
+    private boolean                   mouseEventBtnStates[];
+                                      
+    /** The state for checking if the mouse wheel x value has changed since the last frame. */
+    private boolean                   mouseWheelXChanged;
+                                      
+    /** The state for checking if the mouse wheel y value has changed since the last frame. */
+    private boolean                   mouseWheelYChanged;
                                       
     /** The mouse x-coordinate & y-coordinate. */
     private double                    mouseX, mouseY;
@@ -49,11 +71,17 @@ public class MouseInputHandler extends GameObject {
     /** The current mouse x-coordinate & y-coordinate. */
     private double                    curMouseX, curMouseY;
                                       
-    /** The previous mouse x-coordinate & y-coordinate */
+    /** The previous mouse x-coordinate & y-coordinate. */
     private double                    prevMouseX, prevMouseY;
                                       
     /** The scroll wheel x & y value. */
     private long                      scrollWheelXValue, scrollWheelYValue;
+                                      
+    /** The previous scroll wheel x & y value. */
+    private long                      prevScrollWheelXValue, prevScrollWheelYValue;
+                                      
+    /** The current scroll wheel x & y value. */
+    private long                      curScrollWheelXValue, curScrollWheelYValue;
                                       
     /** The min & max scroll wheel value. */
     private long                      maxScrollWheelValue, minScrollWheelValue;
@@ -76,8 +104,12 @@ public class MouseInputHandler extends GameObject {
         this.onMouseReleased = new OnMouseReleased();
         this.onMouseDragged = new OnMouseDragged();
         
-        // Creating array for the mouse button states
-        this.buttonStates = new boolean[MouseInputHandler.NUM_BUTTONS];
+        // Creating array for the current mouse button states
+        this.curButtonStates = new boolean[MouseInputHandler.NUM_BUTTONS];
+        // Creating array for the previous mouse button states
+        this.prevButtonStates = new boolean[MouseInputHandler.NUM_BUTTONS];
+        // Creating array for the mouse event button states
+        this.mouseEventBtnStates = new boolean[MouseInputHandler.NUM_BUTTONS];
         
         // Setting default values
         this.scrollWheelXValue = this.scrollWheelYValue = 0;
@@ -98,6 +130,7 @@ public class MouseInputHandler extends GameObject {
         this.getGame().setOnScroll(this.onMouseWheelChanged);
         this.getGame().setOnMousePressed(this.onMousePressed);
         this.getGame().setOnMouseReleased(this.onMouseReleased);
+        this.getGame().setOnMouseClicked(new OnMouseClicked());
     }
     
     /**
@@ -110,8 +143,34 @@ public class MouseInputHandler extends GameObject {
         this.prevMouseX = this.curMouseX;
         this.prevMouseY = this.curMouseY;
         
+        // Update current location
         this.curMouseX = this.mouseX;
         this.curMouseY = this.mouseY;
+        
+        // Update previous scroll wheel values
+        this.prevScrollWheelXValue = this.curScrollWheelXValue;
+        this.prevScrollWheelYValue = this.curScrollWheelYValue;
+        
+        // Update current scroll wheel values
+        this.curScrollWheelXValue = this.scrollWheelXValue;
+        this.curScrollWheelYValue = this.scrollWheelYValue;
+        
+        // Check if the mouse wheel x value has changed since the last frame
+        if (this.prevScrollWheelXValue != this.curScrollWheelXValue)
+            this.mouseWheelXChanged = true;
+        else
+            this.mouseWheelXChanged = false;
+            
+        // Check if the mouse wheel y value has changed since the last frame
+        if (this.prevScrollWheelYValue != this.curScrollWheelYValue)
+            this.mouseWheelYChanged = true;
+        else
+            this.mouseWheelYChanged = false;
+            
+        // Copy current button states to the previous button states
+        this.prevButtonStates = Arrays.copyOf(this.curButtonStates, this.curButtonStates.length);
+        // Copy mouse event button states to the current button states (update it)
+        this.curButtonStates = Arrays.copyOf(this.mouseEventBtnStates, this.mouseEventBtnStates.length);
     }
     
     /**
@@ -183,7 +242,7 @@ public class MouseInputHandler extends GameObject {
      * @return True, if is button down.
      */
     public boolean isButtonDown(final int buttonNumber) {
-        return this.buttonStates[buttonNumber];
+        return this.curButtonStates[buttonNumber];
     }
     
     /**
@@ -194,7 +253,7 @@ public class MouseInputHandler extends GameObject {
      * @return True, if the button is up.
      */
     public boolean isButtonUp(final int buttonNumber) {
-        return !this.buttonStates[buttonNumber];
+        return !this.curButtonStates[buttonNumber];
     }
     
     /**
@@ -203,7 +262,7 @@ public class MouseInputHandler extends GameObject {
      * @return True, if the left mouse button is down.
      */
     public boolean isLeftButtonDown() {
-        return this.buttonStates[0];
+        return this.curButtonStates[MOUSE_BUTTON_LEFT];
     }
     
     /**
@@ -212,7 +271,7 @@ public class MouseInputHandler extends GameObject {
      * @return True, if the left mouse button is up.
      */
     public boolean isLeftButtonUp() {
-        return !this.buttonStates[0];
+        return !this.curButtonStates[MOUSE_BUTTON_LEFT];
     }
     
     /**
@@ -221,7 +280,7 @@ public class MouseInputHandler extends GameObject {
      * @return True, if the middle mouse button is down.
      */
     public boolean isMidButtonDown() {
-        return this.buttonStates[1];
+        return this.curButtonStates[MOUSE_BUTTON_MID];
     }
     
     /**
@@ -230,7 +289,7 @@ public class MouseInputHandler extends GameObject {
      * @return True, if the middle mouse button is up.
      */
     public boolean isMidButtonUp() {
-        return !this.buttonStates[1];
+        return !this.curButtonStates[MOUSE_BUTTON_MID];
     }
     
     /**
@@ -239,7 +298,7 @@ public class MouseInputHandler extends GameObject {
      * @return True, if the right mouse button is down.
      */
     public boolean isRightButtonDown() {
-        return this.buttonStates[2];
+        return this.curButtonStates[MOUSE_BUTTON_RIGHT];
     }
     
     /**
@@ -248,7 +307,104 @@ public class MouseInputHandler extends GameObject {
      * @return True, if the right mouse button is up.
      */
     public boolean isRightButtonUp() {
-        return !this.buttonStates[2];
+        return !this.curButtonStates[MOUSE_BUTTON_RIGHT];
+    }
+    
+    /**
+     * Checks if the left mouse button is being pressed.
+     *
+     * @return True, if the left mouse button is being pressed.
+     */
+    public boolean isLeftButtonPressing() {
+        return isButtonPressing(MOUSE_BUTTON_LEFT);
+    }
+    
+    /**
+     * Checks if the left mouse button is being released.
+     *
+     * @return True, if the left mouse button is being released.
+     */
+    public boolean isLeftButtonReleasing() {
+        return isButtonReleasing(MOUSE_BUTTON_LEFT);
+        
+    }
+    
+    /**
+     * Checks if the middle mouse button is being pressed.
+     *
+     * @return True, if the middle mouse button is being pressed.
+     */
+    public boolean isMidButtonPressing() {
+        return isButtonPressing(MOUSE_BUTTON_MID);
+    }
+    
+    /**
+     * Checks if the middle mouse button is being released.
+     *
+     * @return True, if the middle mouse button is being released.
+     */
+    public boolean isMidButtonReleasing() {
+        return isButtonReleasing(MOUSE_BUTTON_MID);
+    }
+    
+    /**
+     * Checks if the right mouse button is being pressed.
+     *
+     * @return True, if the right mouse button is being pressed.
+     */
+    public boolean isRightButtonPressing() {
+        return isButtonPressing(MOUSE_BUTTON_RIGHT);
+    }
+    
+    /**
+     * Checks if the right mouse button is being released.
+     *
+     * @return True, if the right mouse button is being released.
+     */
+    public boolean isRightButtonReleasing() {
+        return isButtonReleasing(MOUSE_BUTTON_RIGHT);
+    }
+    
+    /**
+     * Checks if a mouse button is being pressed.
+     *
+     * @param index
+     *            The index of the mouse button.
+     * @return True, if the mouse button is being pressed.
+     */
+    public boolean isButtonPressing(int index) {
+        return !this.prevButtonStates[index] && this.curButtonStates[index];
+    }
+    
+    /**
+     * Checks if a mouse button is being released.
+     *
+     * @param index
+     *            The index of the mouse button.
+     * @return True, if the mouse button is being released.
+     */
+    public boolean isButtonReleasing(int index) {
+        return this.prevButtonStates[index] && !this.curButtonStates[index];
+    }
+    
+    /**
+     * Checks if the mouse wheel x value has changed since the last frame.
+     *
+     * @return True, if the mouse wheel x value has changed since the last frame.
+     */
+    public boolean isMouseWheelXChanged() {
+        
+        return this.mouseWheelXChanged;
+    }
+    
+    /**
+     * Checks if the mouse wheel y value has changed since the last frame.
+     *
+     * @return True, if the mouse wheel y value has changed since the last frame.
+     */
+    public boolean isMouseWheelYChanged() {
+        
+        return this.mouseWheelYChanged;
     }
     
     /**
@@ -304,6 +460,31 @@ public class MouseInputHandler extends GameObject {
     }
     
     /**
+     * Sets the mouse button states.
+     *
+     * @param mouseEvent
+     *            the new mouse button states
+     */
+    public synchronized void setMouseButtonStates(MouseEvent mouseEvent) {
+        
+        setMouseButtonState(MOUSE_BUTTON_LEFT, mouseEvent.isPrimaryButtonDown());
+        setMouseButtonState(MOUSE_BUTTON_MID, mouseEvent.isMiddleButtonDown());
+        setMouseButtonState(MOUSE_BUTTON_RIGHT, mouseEvent.isSecondaryButtonDown());
+    }
+    
+    /**
+     * Sets the mouse button state.
+     *
+     * @param index
+     *            the index
+     * @param value
+     *            the value
+     */
+    public synchronized void setMouseButtonState(final int index, boolean value) {
+        this.mouseEventBtnStates[index] = value;
+    }
+    
+    /**
      * The Class OnMouseMoved.
      */
     class OnMouseMoved implements EventHandler<MouseEvent> {
@@ -315,8 +496,8 @@ public class MouseInputHandler extends GameObject {
         public void handle(final MouseEvent mouseEvent) {
             
             // Update mouse x & y
-            MouseInputHandler.this.setMouseX(mouseEvent.getScreenX());
-            MouseInputHandler.this.setMouseY(mouseEvent.getScreenY());
+            MouseInputHandler.this.setMouseX(mouseEvent.getSceneX());
+            MouseInputHandler.this.setMouseY(mouseEvent.getSceneY());
         }
     }
     
@@ -331,30 +512,28 @@ public class MouseInputHandler extends GameObject {
         @Override
         public void handle(final MouseEvent mouseEvent) {
             
-            switch (mouseEvent.getButton()) {
-                
-                // Left mouse button
-                case PRIMARY: {
-                    MouseInputHandler.this.buttonStates[0] = true;
-                    break;
-                }
-                    
-                    // Middle mouse button
-                case MIDDLE: {
-                    MouseInputHandler.this.buttonStates[1] = true;
-                    break;
-                }
-                    
-                    // Right mouse button
-                case SECONDARY: {
-                    MouseInputHandler.this.buttonStates[2] = true;
-                    break;
-                }
-                    
-                    // Default case
-                default:
-                    break;
-            }
+            // Update mouse x & y
+            MouseInputHandler.this.setMouseX(mouseEvent.getSceneX());
+            MouseInputHandler.this.setMouseY(mouseEvent.getSceneY());
+            
+            setMouseButtonStates(mouseEvent);
+        }
+    }
+    
+    /**
+     * The Class OnMouseClicked.
+     */
+    class OnMouseClicked implements EventHandler<MouseEvent> {
+        
+        /*
+         * (non-Javadoc)
+         * 
+         * @see javafx.event.EventHandler#handle(javafx.event.Event)
+         */
+        @Override
+        public void handle(MouseEvent mouseEvent) {
+            
+            setMouseButtonStates(mouseEvent);
         }
     }
     
@@ -369,30 +548,11 @@ public class MouseInputHandler extends GameObject {
         @Override
         public void handle(final MouseEvent mouseEvent) {
             
-            switch (mouseEvent.getButton()) {
-                
-                // Left mouse button
-                case PRIMARY: {
-                    MouseInputHandler.this.buttonStates[0] = false;
-                    break;
-                }
-                    
-                    // Middle mouse button
-                case MIDDLE: {
-                    MouseInputHandler.this.buttonStates[1] = false;
-                    break;
-                }
-                    
-                    // Right mouse button
-                case SECONDARY: {
-                    MouseInputHandler.this.buttonStates[2] = false;
-                    break;
-                }
-                    
-                    // Default case
-                default:
-                    break;
-            }
+            // Update mouse x & y
+            MouseInputHandler.this.setMouseX(mouseEvent.getSceneX());
+            MouseInputHandler.this.setMouseY(mouseEvent.getSceneY());
+            
+            setMouseButtonStates(mouseEvent);
         }
     }
     
@@ -406,6 +566,11 @@ public class MouseInputHandler extends GameObject {
          */
         @Override
         public void handle(final ScrollEvent scrollEvent) {
+            
+            // Update mouse x & y
+            MouseInputHandler.this.setMouseX(scrollEvent.getSceneX());
+            MouseInputHandler.this.setMouseY(scrollEvent.getSceneY());
+            ;
             
             // Update scroll wheel value
             MouseInputHandler.this.scrollWheelXValue += scrollEvent.getDeltaX();
@@ -437,8 +602,10 @@ public class MouseInputHandler extends GameObject {
         public void handle(final MouseEvent mouseEvent) {
             
             // Update mouse x & y
-            MouseInputHandler.this.setMouseX(mouseEvent.getScreenX());
-            MouseInputHandler.this.setMouseY(mouseEvent.getScreenY());
+            MouseInputHandler.this.setMouseX(mouseEvent.getSceneX());
+            MouseInputHandler.this.setMouseY(mouseEvent.getSceneY());
+            
+            setMouseButtonStates(mouseEvent);
         }
     }
 }
