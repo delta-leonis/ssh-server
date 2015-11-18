@@ -3,12 +3,12 @@ package org.ssh.field3d;
 import java.util.ArrayList;
 
 import org.ssh.field3d.core.game.Game;
-import org.ssh.field3d.gameobjects.CarGO;
+//import org.ssh.field3d.gameobjects.CarGO;
 import org.ssh.field3d.gameobjects.FieldGO;
 import org.ssh.field3d.gameobjects.RobotGO;
 import org.ssh.field3d.gameobjects.overlay.CameraControlOverlayGO;
 import org.ssh.field3d.gameobjects.overlay.contextmenus.ContextOverlayGO;
-import org.ssh.managers.manager.Models;
+import org.ssh.managers.Models;
 import org.ssh.models.Robot;
 
 import javafx.scene.AmbientLight;
@@ -17,7 +17,7 @@ import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.paint.Color;
 
-// TODO: Auto-generated Javadoc
+// TODO: auto generated java doc
 /**
  *
  * FieldGame class This class is the main part of the 3d field, from here everything in the 3d world
@@ -88,7 +88,7 @@ public class FieldGame extends Game {
     private final ContextOverlayGO       contextOverlayGO;
                                          
     /** The easter car game object */
-    private final CarGO                  easterCarGO;
+    //private final CarGO                  easterCarGO;
                                          
     /**
      * Constructor.
@@ -129,7 +129,7 @@ public class FieldGame extends Game {
         // Creating context menu overlay GameObject
         this.contextOverlayGO = new ContextOverlayGO(this);
         // Creating easter egg car GameObject
-        this.easterCarGO = new CarGO(this);
+        //this.easterCarGO = new CarGO(this);
         
         // Setup lights
         this.pointLightWestSouth.setTranslateX(-(FieldGame.FIELD_WIDTH / 4.0));
@@ -227,12 +227,14 @@ public class FieldGame extends Game {
         
         @SuppressWarnings ("unchecked")
         ArrayList<Robot> robotModels = (ArrayList<Robot>) Models.getAll("robot");
-        
-        System.out.println("robots: " + robotModels.size());
+       
+        // Loop through robot models
         for (Robot robot : robotModels) {
             
+            // Creating new robot
             RobotGO tmpRobot = new RobotGO(this, robot);
             
+            // Add to game objects
             addGameObject(tmpRobot);
         }
     }
