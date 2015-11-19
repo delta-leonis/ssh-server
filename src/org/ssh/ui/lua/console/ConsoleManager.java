@@ -74,7 +74,7 @@ public class ConsoleManager extends UIComponent {
      *            The {@link Tab} to close
      */
     private void closeTab(Tab selectedTab) {
-        ((Console) selectedTab).cancel();
+        ((Console) selectedTab).cancelTask();
         // Remove the selected tab
         tabPane.getTabs().remove(selectedTab);
         switchFocusToCurrentTab();
@@ -87,7 +87,7 @@ public class ConsoleManager extends UIComponent {
      *            The {@link Tab} to cancel
      */
     private static void cancelTab(Tab selectedTab) {
-        ((Console) selectedTab).cancel();
+        ((Console) selectedTab).cancelTask();
     }
     
     /**

@@ -44,8 +44,8 @@ public class ConsoleArea extends ColoredCodeArea {
         // Keycombination Control + shift + C for copy
         EventHandlerHelper.install(this.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.C, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN))
-                        .act(event -> this.copy(/*this.getText(this.getSelection().getStart(), this.getSelection().getEnd())*/)).create());
-     // Keycombination Control + shift + V for paste
+                        .act(event -> this.copy()).create());
+        // Keycombination Control + shift + V for paste
         EventHandlerHelper.install(this.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.V, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN))
                         .act(event -> this.paste()).create());

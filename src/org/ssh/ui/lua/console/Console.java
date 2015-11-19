@@ -59,39 +59,42 @@ public class Console extends Tab {
     private static final Logger LOG = Logger.getLogger();
     
     /** The cursor used by the console */
-    private static final String              CURSOR      = "> ";
+    private static final String  CURSOR          = "> ";
+    /** Warning for the users */
+    private static final String  WARNING_MESSAGE = "--Change keyboard layout in Linux to something like English(US, with euro on 5)."
+            + "\n--Quotation marks don't work without it.";
     /** The title that shows when starting up the console */
-    private String              title       = "Lua Console: ";
+    private String               title           = "Lua Console: ";
     /*
      * TODO: Add globals like "luajava.newInstance" to autocomplete
      */
     /** The actual area we type in */
-    private final ConsoleArea                consoleArea;
+    private final ConsoleArea    consoleArea;
     /** Custom outputstream */
-    private final ConsoleOutput              out;
+    private final ConsoleOutput  out;
     /**
      * The line we're currently typing on (Used to figure out which part of the text is the command)
      */
-    private int                              currentLine = 0;
+    private int                  currentLine     = 0;
     /** All objects found with reflection that use the {@link AvailableInLua} */
-    private final List<Object>               functionClasses;
+    private final List<Object>   functionClasses;
     /** Lua globals used by this {@link Console} */
-    private Globals                          globals;
+    private Globals              globals;
     /** Magic debuglibrary that is used to interrupt functions */
-    private CustomDebugLib                   customDebug;
+    private CustomDebugLib       customDebug;
     /* Variables for handling command history */
     /** A list containing all previous commands */
-    private final List<String>               recentCommands;
+    private final List<String>   recentCommands;
     /**
      * selecting = true when the user is selecting commands using the up and down keys
      */
-    private boolean                          selecting   = false;
+    private boolean              selecting       = false;
     /** Used to iterate through the recentCommands */
-    private ListIterator<String>             iterator;
+    private ListIterator<String> iterator;
     /** Get created whenever a command is executed. Can be cancelled by calling close() */
-    private ListenableFuture<?> currentFuture;
+    private ListenableFuture<?>  currentFuture;
     /** Button that cancels the command */
-    private Button terminateButton;
+    private Button               terminateButton;
     
     /**
      * The constructor of the {@link Console}. After that it looks for all classes for auto complete
@@ -130,11 +133,12 @@ public class Console extends Tab {
     /**
      * Button that terminates the command run in this window.
      */
-    private void setupButton(){
+    private void setupButton() {
         this.terminateButton = new Button();
-        this.terminateButton.setGraphic(new ImageView(new Image(this.getClass().getResource("/org/ssh/view/icon/terminate16.gif").toExternalForm())));
+        this.terminateButton.setGraphic(new ImageView(
+                new Image(this.getClass().getResource("/org/ssh/view/icon/terminate16.gif").toExternalForm())));
         this.terminateButton.setVisible(false);
-        this.terminateButton.setOnAction(event -> this.cancel());
+        this.terminateButton.setOnAction(event -> this.cancelTask());
         this.setGraphic(terminateButton);
     }
     
@@ -184,7 +188,7 @@ public class Console extends Tab {
         // Keycombination Control + C for cancel command
         EventHandlerHelper.install(this.consoleArea.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.C, KeyCombination.CONTROL_DOWN))
-                        .act(event -> this.cancel()).create());
+                        .act(event -> this.cancelTask()).create());
                         
     }
     
@@ -289,14 +293,16 @@ public class Console extends Tab {
     }
     
     /**
-     * Executes a single command. 
-     * @param command The command to be executed
+     * Executes a single command.
+     * 
+     * @param command
+     *            The command to be executed
      */
-    public void executeCommand(final String command){
+    public void executeCommand(final String command) {
         try {
-            //Disable the textarea
+            // Disable the textarea
             this.consoleArea.setDisable(true);
-            // Make sure the button is visible for easy termination 
+            // Make sure the button is visible for easy termination
             this.terminateButton.setVisible(true);
             this.println("");
             // Add command to the command history
@@ -323,7 +329,7 @@ public class Console extends Tab {
     /**
      * Cancels the {@link ListenableFuture} obtained from {@link #executeCommandOnThread(String)}
      */
-    public void cancel() {
+    public void cancelTask() {
         if (currentFuture != null) 
             currentFuture.cancel(true);
         
@@ -440,6 +446,7 @@ public class Console extends Tab {
                             .decode("bG9jYWwgY293ID0gewpbWyAKICBcICAgICAgICAgICAsfi4KICAgIFwgICAgICwtJ19fIGAtLAogICAgICAgXCAgeywtJyAgYC4gfSAgICAgICAgICAgICAgLCcpCiAgICAgICAgICAsKCBhICkgICBgLS5fXyAgICAgICAgICwnLCcpfiwKICAgICAgICAgPD0uKSAoICAgICAgICAgYC0uX18sPT0nICcgJyAnfQogICAgICAgICAgICggICApICAgICAgICAgICAgICAgICAgICAgIC8pCiAgICAgICAgICAgIGAtJ1wgICAgLCAgICAgICAgICAgICAgICAgICAgKQoJICAgICAgIHwgIFwgICAgICAgICBgfi4gICAgICAgIC8KICAgICAgICAgICAgICAgXCAgICBgLl8gICAgICAgIFwgICAgICAgLwogICAgICAgICAgICAgICAgIFwgICAgICBgLl9fX19fLCcgICAgLCcKICAgICAgICAgICAgICAgICAgYC0uICAgICAgICAgICAgICwnCiAgICAgICAgICAgICAgICAgICAgIGAtLl8gICAgIF8sLScKICAgICAgICAgICAgICAgICAgICAgICAgIDc3amonCiAgICAgICAgICAgICAgICAgICAgICAgIC8vX3x8CiAgICAgICAgICAgICAgICAgICAgIF9fLy8tLScvYAoJICAgICAgICAgICAgLC0tJy9gICAnCl1dCn0KZnVuY3Rpb24gY2hpY2tlbnNheSh0ZXh0KQpsID0gdGV4dDpsZW4oKQphID0gbCAvIDEwCmZvciBpPTAsYSBkbwoJaW8ud3JpdGUoIlsiIC4uIHRleHQ6c3ViKGkqMTArMSwgKChpKzEpKjEwID4gbCkgYW5kIGwgb3IgKGkrMSkqMTAgKSAuLiAgIl1cbiIpCmVuZAoJcHJpbnQoY293WzFdKQplbmQK")))
                     .call();
             this.println(this.title);
+            this.println(Console.WARNING_MESSAGE);
             this.printCursor();
             
             // Set the line from where we need to start reading commands.
