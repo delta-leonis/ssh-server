@@ -1,6 +1,7 @@
 package org.ssh.view.components;
 
 import org.ssh.ui.UIComponent;
+import org.ssh.util.Logger;
 
 import javafx.animation.Animation;
 import javafx.animation.Transition;
@@ -27,6 +28,8 @@ import javafx.util.Duration;
  */
 public class Enroller extends BorderPane {
 
+	private static final Logger LOG = Logger.getLogger();
+	
 	/**
 	 * {@link BorderPane} that is to contain the real content.
 	 */
@@ -330,10 +333,11 @@ public class Enroller extends BorderPane {
 			// Initialize the onFinishedProperties of the Animations
 			initAnimations();
 
-			// Set the pickOnBounds false for mousetransparency
+			// Set the pickOnBounds false for mouse transparency
 			this.setPickOnBounds(false);
 		} else {
-			// TODO Logger.severe(shit);
+			// Log that shit went wrong because there is a null parameter
+			LOG.warning("Enroller not created because of nullpointer parameters in constructor");
 		}
 	}
 
@@ -442,7 +446,8 @@ public class Enroller extends BorderPane {
 			// Set the pickOnBounds false for mousetransparency
 			this.setPickOnBounds(false);
 		} else {
-			// TODO Logger.severe(shit);
+			// Log that shit went wrong because there is a null parameter
+			LOG.warning("Enroller not created because of nullpointer parameters in constructor");
 		}
 	}
 
