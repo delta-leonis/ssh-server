@@ -37,14 +37,7 @@ public abstract class Manageable {
         return this.name;
     }
     
-    /**
-     * Gets the name including the suffix
-     * 
-     * @return name and suffix
-     */
-    public String getFullName() {
-        return String.format("%s %s", getName(), getSuffix()).trim();
-    }
+
 
     /**
      * Sets the name of the Manageable.
@@ -57,8 +50,5 @@ public abstract class Manageable {
         this.name = name;
     }
     
-    /** 
-     * @return unique suffix describing the manageable.
-     */
-    public abstract String getSuffix();
+
 }

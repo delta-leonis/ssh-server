@@ -1,8 +1,11 @@
 package org.ssh.field3d.gameobjects.overlay.contextmenus;
 
+import java.util.List;
+
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.field3d.gameobjects.overlay.OverlayGO;
+import org.ssh.models.Robot;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,25 +16,24 @@ import javafx.scene.shape.Rectangle;
 
 /**
  * ContextOverlayGO class. This class is responsible for the 2d context menu overlay.
+ *
+ * @author marklef2
  * @see GameObjects
  *      
- * @author marklef2
  */
 public class ContextOverlayGO extends OverlayGO {
     
     /** The FXML file for the layout. */
     private static final String LAYOUT_FXML_FILE = "contextoverlay.fxml";
                                                  
-    /** The menu label. */
-    @FXML
-    private Label               menuLabel;
-                                
     /** The container pane. */
     @FXML
     private Pane                containerPane;
                                 
     /** The field location. */
     private Point2D             fieldLoc;
+    
+    private List<Robot>         robots;
                                 
     /**
      * Constructor.
@@ -39,11 +41,14 @@ public class ContextOverlayGO extends OverlayGO {
      * @param game
      *            The {@link Game} of the {@link GameObject}.
      */
-    public ContextOverlayGO(Game game) {
+    public ContextOverlayGO(Game game, List<Robot> robots) {
         
         // Initialize super class
         super(game, LAYOUT_FXML_FILE);
-
+        
+        fieldLoc = new Point2D(0.0, 0.0);
+        
+        this.robots = robots;
     }
     
     /**

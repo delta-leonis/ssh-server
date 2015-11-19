@@ -11,6 +11,7 @@ import org.ssh.field3d.core.math.Vector3f;
 import org.ssh.field3d.core.shapes.FlatArc3D;
 import org.ssh.field3d.core.shapes.FlatLine3D;
 import org.ssh.field3d.gameobjects.overlay.contextmenus.ContextOverlayGO;
+import org.ssh.models.Robot;
 import org.ssh.util.Logger;
 
 import javafx.application.Platform;
@@ -155,8 +156,15 @@ public class FieldGO extends GameObject {
         this.penaltySpotWest = new PenaltySpotGO(this.getGame(),
                 new Vector3f((float) (-(width / 2.0) + FieldGO.FIELD_PENALTY_SPOT), 20, 0),
                 FieldGO.FIELD_PENALTY_SPOT_SIZE);
+        
+        List<Robot> robots = null;
+        if (game instanceof FieldGame) {
+            
+            robots = ((FieldGame) game).getRobots();
+            
+        }
                 
-        this.contextOverlayGO = new ContextOverlayGO(getGame());
+        this.contextOverlayGO = new ContextOverlayGO(getGame(), robots);
         
         // Setting dimensions
         this.width = width;

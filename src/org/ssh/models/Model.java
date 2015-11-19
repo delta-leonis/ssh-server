@@ -211,4 +211,18 @@ public abstract class Model extends Manageable {
         return this.update(changeMap);
     }
     
+    /** 
+     * @return unique suffix describing the manageable.
+     */
+    public abstract String getSuffix();
+    
+    /**
+     * Gets the name including the suffix
+     * 
+     * @return name and suffix
+     */
+    public String getFullName() {
+        return String.format("%s %s", getName(), getSuffix());
+    }
+    
 }

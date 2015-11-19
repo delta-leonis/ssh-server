@@ -30,6 +30,9 @@ public class Robot extends FieldObject {
      * current dribble speed (-1 is max backward, 1 is max forward)
      */
     private Float             dribbleSpeed;
+    
+    /** The boolean for the selected state */
+    private Boolean           isSelected;
                               
     /**
      * Instantiates a new robot with specified properties
@@ -72,6 +75,13 @@ public class Robot extends FieldObject {
      */
     public String getTeamColorIdentifier() {
         return this.teamColor.name().substring(0, 1);
+    }
+    
+    /**
+     * @return True, if the robot is selected.
+     */
+    public boolean isSelected() {
+        return this.isSelected;
     }
 
     @Override

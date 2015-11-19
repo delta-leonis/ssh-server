@@ -1,6 +1,7 @@
 package org.ssh.field3d;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.ssh.field3d.core.game.Game;
 //import org.ssh.field3d.gameobjects.CarGO;
@@ -75,7 +76,8 @@ public class FieldGame extends Game {
                                          
     /** The west point lights */
     private final PointLight             pointLightWestSouth, pointLightWestNorth;
-    /** The east point lights */
+    
+	/** The east point lights */
     private final PointLight             pointLightEastSouth, pointLightEastNorth;
                                          
     /** The field game object */
@@ -83,10 +85,12 @@ public class FieldGame extends Game {
                                          
     /** The camera control overlay game object. */
     private final CameraControlOverlayGO cameraControlOverlayGO;
-                                         
+        
     /** The context overlay game object. */
     private final ContextOverlayGO       contextOverlayGO;
-                                         
+    
+    private List<Robot>                  robots;
+                                          
     /** The easter car game object */
     //private final CarGO                  easterCarGO;
                                          
@@ -113,6 +117,11 @@ public class FieldGame extends Game {
         Robot robot3 = (Robot) Models.create(Robot.class, 2, Color.BLUE);
         Robot robot4 = (Robot) Models.create(Robot.class, 3, Color.BLUE);
         
+        robot.update("isSelected", true);
+        robot2.update("isSelected", false);
+        robot3.update("isSelected", false);
+        robot4.update("isSelected", false);
+        
         // Creating ambient light
         this.ambientLight = new AmbientLight(Color.DARKGRAY);
         
@@ -121,6 +130,9 @@ public class FieldGame extends Game {
         this.pointLightWestNorth = new PointLight(Color.WHITE);
         this.pointLightEastSouth = new PointLight(Color.WHITE);
         this.pointLightEastNorth = new PointLight(Color.WHITE);
+        
+        // Create some robots
+        this.createRobots();
         
         // Creating field GameObject
         this.fieldGO = new FieldGO(this, FieldGame.FIELD_REAL_WIDTH, FieldGame.FIELD_REAL_DEPTH);
@@ -175,9 +187,7 @@ public class FieldGame extends Game {
         this.addGameObject(this.cameraControlOverlayGO);
         this.addGameObject(this.contextOverlayGO);
         //this.addGameObject(this.easterCarGO);
-        
-        // Create some robots
-        this.createRobots();
+
     }
     
     /**
@@ -220,16 +230,20 @@ public class FieldGame extends Game {
         this.removeGameObject(robot);
     }
     
+    public List<Robot> getRobots() {
+        return this.robots;
+    }
+    
     /**
      * createRobots method This method creates some robots.
      */
+    @SuppressWarnings ("unchecked")
     private void createRobots() {
         
-        @SuppressWarnings ("unchecked")
-        ArrayList<Robot> robotModels = (ArrayList<Robot>) Models.getAll("robot");
+        this.robots = (ArrayList<Robot>) Models.getAll("robot");
        
         // Loop through robot models
-        for (Robot robot : robotModels) {
+        for (Robot robot : this.robots) {
             
             // Creating new robot
             RobotGO tmpRobot = new RobotGO(this, robot);
