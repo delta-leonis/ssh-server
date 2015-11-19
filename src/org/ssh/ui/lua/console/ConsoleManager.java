@@ -31,6 +31,10 @@ public class ConsoleManager extends UIComponent {
      */
     public ConsoleManager(String name) {
         super(name, "consolemanager.fxml");
+        tabPane.minHeightProperty().bind(this.heightProperty());
+        tabPane.maxHeightProperty().bind(this.heightProperty());
+        tabPane.minWidthProperty().bind(this.widthProperty());
+        tabPane.maxWidthProperty().bind(this.widthProperty());
         // Open a new tab
         this.openNewTab();
         // Open a new tab when pressing CTRL + T
@@ -53,21 +57,13 @@ public class ConsoleManager extends UIComponent {
      */
     private void openNewTab() {
         String tabName = "console" + currentTab++;
-        // Create a new tab, and make sure it has the correct size
-        Tab tab = new Tab(tabName);
-        tabPane.minHeightProperty().bind(this.heightProperty());
-        tabPane.maxHeightProperty().bind(this.heightProperty());
-        tabPane.minWidthProperty().bind(this.widthProperty());
-        tabPane.maxWidthProperty().bind(this.widthProperty());
-        
+        // Create a new Console, which works as a Tab
         Console console = new Console(tabName);
-        // Assign a Console to the tab
-        tab.setContent(console);
-        tab.setOnClosed(event -> closeTab(tab));
+        console.setOnClosed(event -> closeTab(console));
         // Add the tab
-        tabPane.getTabs().add(tab);
+        tabPane.getTabs().add(console);
         // Change focus to the newly created tab
-        tabPane.getSelectionModel().select(tab);
+        tabPane.getSelectionModel().select(console);
         console.requestFocus();
     }
     
@@ -78,7 +74,7 @@ public class ConsoleManager extends UIComponent {
      *            The {@link Tab} to close
      */
     private void closeTab(Tab selectedTab) {
-        ((Console) selectedTab.getContent()).cancel();
+        ((Console) selectedTab).cancel();
         // Remove the selected tab
         tabPane.getTabs().remove(selectedTab);
         switchFocusToCurrentTab();
@@ -91,7 +87,7 @@ public class ConsoleManager extends UIComponent {
      *            The {@link Tab} to cancel
      */
     private static void cancelTab(Tab selectedTab) {
-        ((Console) selectedTab.getContent()).cancel();
+        ((Console) selectedTab).cancel();
     }
     
     /**
@@ -102,6 +98,6 @@ public class ConsoleManager extends UIComponent {
      */
     private void switchFocusToCurrentTab() {
         Tab curTab = tabPane.getSelectionModel().getSelectedItem();
-        ((Console) curTab.getContent()).requestFocus();
+        ((Console) curTab).requestFocus();
     }
 }

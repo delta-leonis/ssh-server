@@ -26,6 +26,10 @@ import org.ssh.util.LuaUtils;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import javafx.application.Platform;
+import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 
@@ -49,7 +53,7 @@ import javafx.scene.input.KeyCombination;
  * @author Thomas Hakkers
  * @see java-keyords.css for the stylesheet
  */
-public class Console extends UIComponent {
+public class Console extends Tab {
     
     // A logger for errorhandling
     private static final Logger LOG = Logger.getLogger();
@@ -57,7 +61,7 @@ public class Console extends UIComponent {
     /** The cursor used by the console */
     private static final String              CURSOR      = "> ";
     /** The title that shows when starting up the console */
-    private static final String              TITLE       = "Lua Console";
+    private String              title       = "Lua Console: ";
     /*
      * TODO: Add globals like "luajava.newInstance" to autocomplete
      */
@@ -85,7 +89,9 @@ public class Console extends UIComponent {
     /** Used to iterate through the recentCommands */
     private ListIterator<String>             iterator;
     /** Get created whenever a command is executed. Can be cancelled by calling close() */
-    private ListenableFuture<PipelinePacket> currentFuture;
+    private ListenableFuture<?> currentFuture;
+    /** Button that cancels the command */
+    private Button terminateButton;
     
     /**
      * The constructor of the {@link Console}. After that it looks for all classes for auto complete
@@ -93,7 +99,8 @@ public class Console extends UIComponent {
      * commands.
      */
     public Console(final String name) {
-        super(name, "console.fxml");
+        this.title += name;
+        this.setText(name);
         // Use reflection to obtain all classes annotated with AvailableInLua
         this.functionClasses = LuaUtils.getAllAvailableInLua();
         // Create an outputstream that use the Console to write in the
@@ -102,13 +109,12 @@ public class Console extends UIComponent {
         // Initialize the command history
         this.recentCommands = new ArrayList<String>();
         
+        this.setupButton();
+        
         // Create TextArea using the classes and functions found using
         // reflection
         this.consoleArea = new ConsoleArea(LuaUtils.getLuaClasses(), LuaUtils.getLuaFunctions());
-        consoleArea.minHeightProperty().bind(this.heightProperty());
-        consoleArea.maxHeightProperty().bind(this.heightProperty());
-        consoleArea.minWidthProperty().bind(this.widthProperty());
-        consoleArea.maxWidthProperty().bind(this.widthProperty());
+        this.setContent(this.consoleArea);
         
         // Make the area resizable
         this.consoleArea.setWrapText(true);
@@ -119,6 +125,17 @@ public class Console extends UIComponent {
         
         // Sets up the script engine
         this.setupScriptEngine();
+    }
+    
+    /**
+     * Button that terminates the command run in this window.
+     */
+    private void setupButton(){
+        this.terminateButton = new Button();
+        this.terminateButton.setGraphic(new ImageView(new Image(this.getClass().getResource("/org/ssh/view/icon/terminate16.gif").toExternalForm())));
+        this.terminateButton.setVisible(false);
+        this.terminateButton.setOnAction(event -> this.cancel());
+        this.setGraphic(terminateButton);
     }
     
     /**
@@ -262,36 +279,49 @@ public class Console extends UIComponent {
     }
     
     /**
-     * Executes the given command using the lua {@link ScriptEngine}
+     * Executes the given command from within {@link Services}
      * 
      * @param command
      *            The command to be executed.
      */
-    private void executeCommand(final String command) {
-        consoleArea.setDisable(true);
-        currentFuture = Services.submitTask(this.getName(), () -> {
-            try {
-                this.println("");
-                // Add command to the command history
-                this.addCommand(command);
-                // Execute the command
-                this.globals.load(command).call();
-            }
-            catch (LuaError exception) {
-                Console.LOG.exception(exception);
-                this.println(exception.getClass().getSimpleName() + " in line: " + command);
-            }
-            
-            this.printCursor();
-            this.currentLine = this.consoleArea.getText().length();
-            this.consoleArea.setCurrentLine(this.currentLine);
-            consoleArea.setDisable(false);
-            return null;
-        });
+    private void executeCommandOnThread(final String command) {
+        currentFuture = Services.submitTask(this.title, () -> this.executeCommand(command));
     }
     
     /**
-     * Cancels the {@link ListenableFuture} obtained from {@link #executeCommand(String)}
+     * Executes a single command. 
+     * @param command The command to be executed
+     */
+    public void executeCommand(final String command){
+        try {
+            //Disable the textarea
+            this.consoleArea.setDisable(true);
+            // Make sure the button is visible for easy termination 
+            this.terminateButton.setVisible(true);
+            this.println("");
+            // Add command to the command history
+            this.addCommand(command);
+            // Execute the command
+            this.globals.load(command).call();
+        }
+        catch (LuaError exception) {
+            Console.LOG.exception(exception);
+            this.println(exception.getClass().getSimpleName() + " in line: " + command);
+        }
+        
+        this.printCursor();
+        this.currentLine = this.consoleArea.getText().length();
+        // Make sure the consoleArea knows where we're at
+        this.consoleArea.setCurrentLine(this.currentLine);
+        // Enable the area again
+        consoleArea.setDisable(false);
+        this.terminateButton.setVisible(false);
+        // Put the focus back on the text area
+        requestFocus();
+    }
+    
+    /**
+     * Cancels the {@link ListenableFuture} obtained from {@link #executeCommandOnThread(String)}
      */
     public void cancel() {
         if (currentFuture != null) 
@@ -318,7 +348,7 @@ public class Console extends UIComponent {
      */
     private void handleEnter() {
         final String currentCommand = this.consoleArea.getText(this.currentLine, this.consoleArea.getText().length());
-        this.executeCommand(currentCommand);
+        this.executeCommandOnThread(currentCommand);
     }
     
     /**
@@ -409,7 +439,7 @@ public class Console extends UIComponent {
                     .load(new String(Base64.getDecoder()
                             .decode("bG9jYWwgY293ID0gewpbWyAKICBcICAgICAgICAgICAsfi4KICAgIFwgICAgICwtJ19fIGAtLAogICAgICAgXCAgeywtJyAgYC4gfSAgICAgICAgICAgICAgLCcpCiAgICAgICAgICAsKCBhICkgICBgLS5fXyAgICAgICAgICwnLCcpfiwKICAgICAgICAgPD0uKSAoICAgICAgICAgYC0uX18sPT0nICcgJyAnfQogICAgICAgICAgICggICApICAgICAgICAgICAgICAgICAgICAgIC8pCiAgICAgICAgICAgIGAtJ1wgICAgLCAgICAgICAgICAgICAgICAgICAgKQoJICAgICAgIHwgIFwgICAgICAgICBgfi4gICAgICAgIC8KICAgICAgICAgICAgICAgXCAgICBgLl8gICAgICAgIFwgICAgICAgLwogICAgICAgICAgICAgICAgIFwgICAgICBgLl9fX19fLCcgICAgLCcKICAgICAgICAgICAgICAgICAgYC0uICAgICAgICAgICAgICwnCiAgICAgICAgICAgICAgICAgICAgIGAtLl8gICAgIF8sLScKICAgICAgICAgICAgICAgICAgICAgICAgIDc3amonCiAgICAgICAgICAgICAgICAgICAgICAgIC8vX3x8CiAgICAgICAgICAgICAgICAgICAgIF9fLy8tLScvYAoJICAgICAgICAgICAgLC0tJy9gICAnCl1dCn0KZnVuY3Rpb24gY2hpY2tlbnNheSh0ZXh0KQpsID0gdGV4dDpsZW4oKQphID0gbCAvIDEwCmZvciBpPTAsYSBkbwoJaW8ud3JpdGUoIlsiIC4uIHRleHQ6c3ViKGkqMTArMSwgKChpKzEpKjEwID4gbCkgYW5kIGwgb3IgKGkrMSkqMTAgKSAuLiAgIl1cbiIpCmVuZAoJcHJpbnQoY293WzFdKQplbmQK")))
                     .call();
-            this.println(Console.TITLE);
+            this.println(this.title);
             this.printCursor();
             
             // Set the line from where we need to start reading commands.
