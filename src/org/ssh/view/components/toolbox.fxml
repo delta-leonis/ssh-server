@@ -10,8 +10,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 
-<GridPane id="test" fx:id="toolboxcontainer" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" pickOnBounds="false">
-	
+<GridPane id="toolbox" fx:id="toolboxcontainer" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" pickOnBounds="false">
 
 	<fx:define>
 		<Double fx:value="1.7976931348623157E308" fx:id="maxValue" />

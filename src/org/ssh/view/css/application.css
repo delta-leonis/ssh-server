@@ -63,3 +63,38 @@
 	-fx-fill: cadetblue;
 }
 /* *** ColoredCodeArea END *** */
+
+
+/* Check slider.css to see how icons can be applied to buttons */
+
+.toolboxEnroller {
+	-fx-opacity: 0.7;
+}
+
+.profilemenuEnroller {
+	-fx-opacity: 0.7;
+}
+
+.matchlogEnroller {
+	-fx-opacity: 0.7;
+}
+
+.loggingconsoleEnroller {
+	-fx-opacity: 0.7;
+}
+
+#toolbox {
+	-fx-background-color: #838383;
+}
+
+#profilemenu {
+	-fx-background-color: #838383;
+}
+
+#matchlogselector {
+	-fx-background-color: #838383;
+}
+
+#loggerconsole {
+	-fx-background-color: #838383;
+}

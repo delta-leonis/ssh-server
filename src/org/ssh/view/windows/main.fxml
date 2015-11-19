@@ -111,7 +111,7 @@
 								</ImageView>
 							</graphic>
 						</Button>
-						<Button id="minimizeButton" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#minimize">
+						<Button id="fullscreenButton" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#switchFullscreen">
 							<graphic>
 								<ImageView>
 									<image>
@@ -133,6 +133,27 @@
 					</GridPane>
 				</children>
 			</StackPane>
+			<GridPane fx:id="topElementswrapper" id="topElementswrapper" GridPane.columnIndex="0" GridPane.rowIndex="1">
+				<columnConstraints>
+					<ColumnConstraints percentWidth="25.0" />
+					<ColumnConstraints minWidth="30.0" maxWidth="30.0" prefWidth="30.0" />
+					<ColumnConstraints fillWidth="true" />
+				</columnConstraints>
+				<rowConstraints>
+					<RowConstraints percentHeight="100.0" />
+				</rowConstraints>
+				<children>
+				<Button id="enrollLogconsole" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#enrollLoggingconsole">
+					<graphic>
+						<ImageView fx:id="enrollLogconsoleImage">
+							<image>
+								<Image url="@../icon/enroll16.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+				</children>
+			</GridPane>
 			</children>
 		</GridPane>
 
@@ -142,7 +163,22 @@
 				<children>
 				<Group fx:id="fieldBase">
 				</Group>
-				<BorderPane fx:id="matchlog" pickOnBounds="false"></BorderPane>
+				<GridPane pickOnBounds="false">
+					<columnConstraints>
+						<ColumnConstraints percentWidth="20.0" />
+						<ColumnConstraints minWidth="30.0" maxWidth="30.0" prefWidth="30.0" />
+						<ColumnConstraints fillWidth="true" />
+					</columnConstraints>
+					<rowConstraints>
+						<RowConstraints percentHeight="8.0" />
+						<RowConstraints percentHeight="84.0" />
+						<RowConstraints percentHeight="8.0" />
+					</rowConstraints>
+					<children>
+					<Pane fx:id="matchlogWrapper" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="1" minWidth="0.0"></Pane>
+					<Pane fx:id="matchlogButtonSizer" pickOnBounds="false" GridPane.columnIndex="1" GridPane.rowIndex="1" minWidth="0.0"></Pane>
+					</children>
+				</GridPane>
 				<GridPane pickOnBounds="false">
 					<columnConstraints>
 						<ColumnConstraints percentWidth="100.0" />
@@ -152,8 +188,8 @@
 						<RowConstraints percentHeight="50.0" />
 					</rowConstraints>
 					<children>
-					<BorderPane fx:id="toolbox" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="1"></BorderPane>
-				</children>
+					<Pane fx:id="toolboxWrapper" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="1" minHeight="0.0"></Pane>
+					</children>
 				</GridPane>
 			</children>
 			</StackPane>
@@ -173,14 +209,14 @@
 				<children>
 				<Button id="enrollButton" maxHeight="${maxValue}" GridPane.columnIndex="0" GridPane.rowIndex="0" onAction="#enrollToolbox">
 					<graphic>
-						<ImageView id="enrollIcon">
+						<ImageView fx:id="enrollToolboxImage">
 							<image>
 								<Image url="@../icon/enrollup32.png" />
 							</image>
 						</ImageView>
 					</graphic>
 				</Button>
-				<Pane fx:id="timesliderContainer" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.hgrow="ALWAYS" GridPane.columnIndex="1" GridPane.rowIndex="0"></Pane>
+				<Pane fx:id="timesliderWrapper" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.hgrow="ALWAYS" GridPane.columnIndex="1" GridPane.rowIndex="0"></Pane>
 				<Button id="secondscreenButton" maxHeight="${maxValue}" GridPane.columnIndex="2" GridPane.rowIndex="0">
 					<graphic>
 						<ImageView>
@@ -206,7 +242,23 @@
 			<RowConstraints percentHeight="64.0" />
 		</rowConstraints>
 		<children>
-		<BorderPane fx:id="profilemenu" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="1" minHeight="0.0"></BorderPane>
+		<Pane fx:id="profilemenuWrapper" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="1"></Pane>
+		</children>
+	</GridPane>
+	
+	<GridPane id="overlayLogconsole" pickOnBounds="false">
+		<columnConstraints>
+			<ColumnConstraints percentWidth="25.0" />
+			<ColumnConstraints minWidth="30.0" maxWidth="30.0" prefWidth="30.0" />
+			<ColumnConstraints fillWidth="true" />
+		</columnConstraints>
+		<rowConstraints>
+			<RowConstraints percentHeight="6.0" />
+			<RowConstraints percentHeight="64.0" />
+			<RowConstraints percentHeight="30.0" />
+		</rowConstraints>
+		<children>
+		<Pane fx:id="loggingconsoleWrapper" pickOnBounds="false" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" GridPane.columnIndex="2" GridPane.rowIndex="1" />
 		</children>
 	</GridPane>
 	</children>
