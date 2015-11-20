@@ -13,10 +13,10 @@ import org.ssh.util.Logger;
 public abstract class Manageable {
     
     /** The name of the Manageable. */
-    private String                name;
+    private transient String                name;
                                   
     // a logger for good measure
-    protected static final Logger LOG = Logger.getLogger();
+    protected static final transient Logger LOG = Logger.getLogger();
                                       
     /**
      * Instantiates a new manageable.
@@ -43,7 +43,7 @@ public abstract class Manageable {
      * @return name and suffix
      */
     public String getFullName() {
-        return String.format("%s %s", getName(), getSuffix());
+        return String.format("%s %s", getName(), getSuffix()).trim();
     }
 
     /**
