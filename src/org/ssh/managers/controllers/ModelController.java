@@ -2,14 +2,15 @@ package org.ssh.managers.controllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,7 +27,7 @@ import com.google.common.reflect.Reflection;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 
 /**
  * The Class ModelController. manages all {@link Model Models}. Also contains the factory (
@@ -61,42 +62,48 @@ public class ModelController extends ManagerController<Model> {
      * @return a created Model
      */
     public static Model create(final Class<?> clazz, final Object... args) {
+        Class<?>[] cArgs = null;
         try {
             // get all Types for the arguments
-            final Class<?>[] cArgs = new Class[args.length];
+            cArgs = new Class[args.length];
             for (int i = 0; i < args.length; i++)
                 cArgs[i] = args[i].getClass();
-            
+                
             // call constructor and cast instance
-            LOG.info("creating ");
             final Model model = (Model) clazz.getDeclaredConstructor(cArgs).newInstance(args);
+            LOG.info("created %s", clazz);
             
-            // add  model to ModelController
+            // add model to ModelController
             Models.add(model);
             // initialize this models
             Models.initialize(model);
             return model;
         }
-        catch (final Exception exception) {
+        catch (java.lang.NoSuchMethodException exception) {
             ModelController.LOG.exception(exception);
             // either clazz isn't a models, or the constructor doesn't exist
-            ModelController.LOG.warning("Could not create Model %s", clazz);
-            return null;
+            ModelController.LOG.warning("Could not create Model %s%nDoes the constructor %s(%s) exist?",
+                    clazz,
+                    clazz.getSimpleName(),
+                    (cArgs.length > 0 ? Arrays.toString(cArgs).replace("class ", "") : ""));
         }
+        catch (Exception exception) {
+            ModelController.LOG.exception(exception);
+            ModelController.LOG.warning("Could not create Model %s", clazz);
+        }
+        return null;
     }
-    
     
     /**
      * {@inheritDoc}
      * 
-     * When a {@link Settings} model is added, it is being set as default
-     * settings for this controller
+     * When a {@link Settings} model is added, it is being set as default settings for this
+     * controller
      */
     @Override
     public <N extends Manageable> boolean add(final N manageable) {
-        if(manageable instanceof Settings)
-            this.settings = (Settings) manageable;
-
+        if (manageable instanceof Settings) this.settings = (Settings) manageable;
+        
         return super.add(manageable);
     }
     
@@ -104,11 +111,13 @@ public class ModelController extends ManagerController<Model> {
      * Find a model based on exact full name
      * 
      * @see #search()
-     * @param fullname     full name of a model
+     * @param fullname
+     *            full name of a model
      * @return model with given name
      */
     public Optional<Model> getByName(String fullname) {
-        return this.manageables.stream().filter(manageable -> manageable.getFullName().equals(fullname)).findFirst();
+        return this.manageables.stream().filter(manageable -> manageable.getFullName().equals(fullname.trim()))
+                .findFirst();
     }
     
     /**
@@ -128,9 +137,9 @@ public class ModelController extends ManagerController<Model> {
      */
     private Optional<Path> findValidPath(final String filename) {
         ModelController.LOG.info("Searching for configfile %s", filename);
-
-        // check for a custom lastsession file
-        File config = new File(this.settings.getLastSessionPath() + filename);
+        
+        // for the settings.json
+        File config = new File(this.settings.getUserProfilePath() + filename);
         if ((config.exists() && !config.isDirectory())) return Optional.of(config.toPath());
         
         // check for a custom file
@@ -187,61 +196,47 @@ public class ModelController extends ManagerController<Model> {
             return false;
         }
         
-        // try to read the values
-        final Optional<Map<String, Object>> map = this.readConfig(configFile.get(), model.getClass());
-        ModelController.LOG.info("Reading configfile %s", configFile.get());
-        
-        // reading failed?
-        if (!map.isPresent()) {
-            ModelController.LOG.info("Reading failed for %s", configFile);
-            return false;
-        }
-        
-        // everything should be pushed towards the models
-        return model.update(map.get());
+        return load(model, configFile.get());
     }
     
     /**
-     * Read a configfile, and parse the gson-objects to the corresponding object-types to fields in
-     * given class
+     * Loads a certain configfile to a model
      * 
+     * @param model
+     *            model to use
      * @param configFile
      *            configfile to read
-     * @param clazz
-     *            class for reference objecttypes
-     * @return Optional.empty() when reading failed, Map otherwise
+     * @return succes value
      */
-    private Optional<Map<String, Object>> readConfig(final Path configFile, final Class<?> clazz) {
+    public boolean load(final Model model, Path configFile) {
         try {
-            final Type type = new TypeToken<Map<String, Object>>() {
-            }.getType();
-            
-            // Typetoken ensures right type, so suppresWarnings is authorized
-            // here
-            @SuppressWarnings ("unchecked")
-            final Map<String, Object> map = ((Map<String, Object>)
-            // read everything and cast to a Entry<String, Object> in which
-            // String represents the fieldname
-            // and Object represents the Gson object, that represents the Object
-            // in the field
-            this.gson.fromJson(new String(java.nio.file.Files.readAllBytes(configFile)), type)).entrySet().stream()
-                    // filter everything that hasn't got a field
-                    .filter(entry -> Reflect.getField(entry.getKey(), clazz).isPresent()).collect(
-                            // key stays the same
-                            Collectors.toMap(entry -> entry.getKey(),
-                                    // Typecast 'gson'-Object to a Java-Object
-                                    // for use in Model
-                                    entry -> (Object) this.gson.fromJson(entry.getValue().toString(),
-                                            Reflect.getField(entry.getKey(), clazz).get().getType())));
-            return Optional.of(map);
-            
+            // read all JSON to a reader
+            JsonReader configReader = new JsonReader(
+                    new StringReader(new String(java.nio.file.Files.readAllBytes(configFile), StandardCharsets.UTF_8).trim()));
+            // chill out will ya ?
+            configReader.setLenient(true);
+            // load everything into a new model
+            Model newModel = this.gson.fromJson(configReader, model.getClass());
+            // create a updatemap from the newModel, and update the given model with alle these
+            // changes.
+            // !!! This way all transient fields will be untouches, as is preferable
+            return model.update(newModel.toMap());
         }
-        catch (JsonSyntaxException | IOException exception) {
+        catch (JsonSyntaxException exception) {
             ModelController.LOG.exception(exception);
-            ModelController.LOG.warning("Could not read '%s' for model '%s'.", configFile, clazz.getName());
-            return Optional.empty();
+            ModelController.LOG.warning(
+                    "Could not parse gson in '%s' for model '%s'.%nPlease check that no primitives fields are being used.",
+                    configFile,
+                    model.getName());
+            return false;
+        }
+        catch (IOException exception) {
+            ModelController.LOG.exception(exception);
+            ModelController.LOG.warning("Could not read '%s' for model '%s'.", configFile, model.getName());
+            return false;
         }
     }
+
     
     /**
      * Set all non-{@link Modifier#TRANSIENT transient} fields of given models to null, and reload
@@ -294,9 +289,10 @@ public class ModelController extends ManagerController<Model> {
             final File configFile = new File(filePath);
             // make dirs recursively
             if (!configFile.getParentFile().isDirectory())
-                if (!configFile.getParentFile().mkdirs()) throw new IOException();
+                if (!configFile.getParentFile().mkdirs()) throw new IOException("Could not create (parent) dirs.");
             // create file if it doesn't already
-            if (!configFile.exists()) configFile.createNewFile();
+            if (!configFile.exists())
+                if (!configFile.createNewFile()) throw new IOException("Could not create configfile.");
             // write gson-object of all data in models to configFile
             Files.write(this.gson.toJson(model), configFile, Charset.defaultCharset());
             return true;
@@ -304,7 +300,6 @@ public class ModelController extends ManagerController<Model> {
         catch (final IOException exception) {
             // either the creation of the dir(s) failed, or the writing
             // to a file failed.
-            ModelController.LOG.setLevel(Level.FINEST);
             ModelController.LOG.exception(exception);
             ModelController.LOG.warning("Could not save %s.", filePath);
             return false;

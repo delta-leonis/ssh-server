@@ -47,12 +47,12 @@ public final class Models {
     }
     
     /**
-     * Creates the.
+     * Creates a class with corresponding constructor.
      *
      * @param clazz
      *            the clazz
      * @param args
-     *            the args
+     *            the args for the right constructor
      * @return the model
      */
     public static Model create(final Class<?> clazz, final Object... args) {
@@ -71,8 +71,6 @@ public final class Models {
     }
     
     /**
-     * Gets the all.
-     *
      * @return all Models currently in the modelcontroller
      */
     public static List<?> getAll() {
