@@ -235,6 +235,24 @@ public class MouseInputHandler extends GameObject {
     }
     
     /**
+     * Gets the minimal scroll wheel value
+     * 
+     * @return The scroll wheel minimal value.
+     */
+    public long getScrollWheelMinValue() {
+        return this.minScrollWheelValue;
+    }
+    
+    /**
+     * Gets the maximal scroll wheel value
+     * 
+     * @return The scroll wheel max value.
+     */
+    public long getScrollWheelMaxValue() {
+        return this.maxScrollWheelValue;
+    }
+    
+    /**
      * Checks to see if a button is down.
      *
      * @param buttonNumber
@@ -440,6 +458,49 @@ public class MouseInputHandler extends GameObject {
     }
     
     /**
+     * Sets the mouse wheel x value.
+     *
+     * @param value
+     *            The new mouse wheel x value.
+     */
+    public void setMouseWheelXValue(final long value) {
+        
+        if (value >= this.minScrollWheelValue && value <= this.maxScrollWheelValue) {
+            
+            this.scrollWheelXValue = value;
+        }
+    }
+    
+    /**
+     * Sets the mouse wheel y value.
+     *
+     * @param value
+     *            The new mouse wheel y value.
+     */
+    public void setMouseWheelYValue(final long value) {
+        
+        // Check if value is within bounds
+        if (value >= this.minScrollWheelValue && value <= this.maxScrollWheelValue) {
+            
+            // Setting value
+            this.scrollWheelYValue = value;
+        }
+        else {
+            
+            if (value < minScrollWheelValue) {
+                
+                // Set minimal scroll wheel value
+                this.scrollWheelYValue = minScrollWheelValue;
+            }
+            else {
+                
+                // Set maximal scroll wheel value
+                this.scrollWheelYValue = maxScrollWheelValue;
+            }
+        }
+    }
+    
+    /**
      * Sets the mouse x-coordinate.
      *
      * @param value
@@ -467,6 +528,7 @@ public class MouseInputHandler extends GameObject {
      */
     public synchronized void setMouseButtonStates(MouseEvent mouseEvent) {
         
+        // Setting mouse button states
         setMouseButtonState(MOUSE_BUTTON_LEFT, mouseEvent.isPrimaryButtonDown());
         setMouseButtonState(MOUSE_BUTTON_MID, mouseEvent.isMiddleButtonDown());
         setMouseButtonState(MOUSE_BUTTON_RIGHT, mouseEvent.isSecondaryButtonDown());
@@ -525,10 +587,8 @@ public class MouseInputHandler extends GameObject {
      */
     class OnMouseClicked implements EventHandler<MouseEvent> {
         
-        /*
-         * (non-Javadoc)
-         * 
-         * @see javafx.event.EventHandler#handle(javafx.event.Event)
+        /**
+         * {@inheritDoc}
          */
         @Override
         public void handle(MouseEvent mouseEvent) {
@@ -570,7 +630,6 @@ public class MouseInputHandler extends GameObject {
             // Update mouse x & y
             MouseInputHandler.this.setMouseX(scrollEvent.getSceneX());
             MouseInputHandler.this.setMouseY(scrollEvent.getSceneY());
-            ;
             
             // Update scroll wheel value
             MouseInputHandler.this.scrollWheelXValue += scrollEvent.getDeltaX();
