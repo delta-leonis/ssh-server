@@ -17,9 +17,9 @@ import javafx.scene.shape.Rectangle;
 /**
  * ContextOverlayGO class. This class is responsible for the 2d context menu overlay.
  *
- * @author marklef2
  * @see GameObjects
  *      
+ * @author marklef2
  */
 public class ContextOverlayGO extends OverlayGO {
     
@@ -32,8 +32,8 @@ public class ContextOverlayGO extends OverlayGO {
                                 
     /** The field location. */
     private Point2D             fieldLoc;
-    
-    /** The list of robots */
+                                
+    /** The list of robots. */
     private List<Robot>         robots;
                                 
     /**
@@ -41,14 +41,18 @@ public class ContextOverlayGO extends OverlayGO {
      *
      * @param game
      *            The {@link Game} of the {@link GameObject}.
+     * @param robots
+     *            The {@link List} of robots active in the game.
      */
     public ContextOverlayGO(Game game, List<Robot> robots) {
         
         // Initialize super class
         super(game, LAYOUT_FXML_FILE);
         
+        // Creating new 2d point for the location clicked on the field
         fieldLoc = new Point2D(0.0, 0.0);
         
+        // Setting robots
         this.robots = robots;
     }
     
@@ -84,6 +88,7 @@ public class ContextOverlayGO extends OverlayGO {
                 // Hide context menu if needed
                 if (this.isVisible()) this.hide();
             }
+           
         }
         
         // If the middle mouse button is being pressed
@@ -147,6 +152,7 @@ public class ContextOverlayGO extends OverlayGO {
         boolean yCheck = mouseSceneLoc.getY() < this.getContainer().getTranslateY() || mouseSceneLoc
                 .getY() > this.getContainer().getTranslateY() + this.containerPane.heightProperty().doubleValue();
                 
+        // Or the individual checks to get the result
         return xCheck || yCheck;
     }
     
@@ -189,6 +195,8 @@ public class ContextOverlayGO extends OverlayGO {
                 // If the robot is selected, move
                 if (robot.isSelected()) {
                     
+                    // TODO: send pipeline packet to update the position of the robot
+                    
                     // Update robot position
                     robot.update("position", this.fieldLoc);
                     // No more work to do
@@ -196,6 +204,9 @@ public class ContextOverlayGO extends OverlayGO {
                 }
             }
         }
+        
+        // Hide
+        this.hide();
     }
     
     /**
@@ -207,14 +218,9 @@ public class ContextOverlayGO extends OverlayGO {
     @FXML
     protected void onChangeSidesButtonClick(ActionEvent actionEvent) {
         
-        // TODO: change sides
+        // TODO: send pipeline packet to update the sides
         
-        // Check if clicked on the west side of the field
-        if (this.fieldLoc.getX() < 0) {
-            
-        // Check if clicked on the east side of the field
-        } else if (this.fieldLoc.getX() > 0) {
-            
-        }
+        // Hide
+        this.hide();
     }
 }

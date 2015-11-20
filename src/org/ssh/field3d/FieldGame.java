@@ -8,8 +8,7 @@ import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.gameobjects.FieldGO;
 import org.ssh.field3d.gameobjects.RobotGO;
 import org.ssh.field3d.gameobjects.overlay.CameraControlOverlayGO;
-import org.ssh.field3d.gameobjects.overlay.contextmenus.ContextOverlayGO;
-import org.ssh.managers.Models;
+import org.ssh.managers.manager.Models;
 import org.ssh.models.Robot;
 import org.ssh.models.enums.TeamColor;
 
@@ -19,7 +18,7 @@ import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.paint.Color;
 
-// TODO: auto generated java doc
+// TODO: Auto-generated Javadoc
 /**
  *
  * FieldGame class This class is the main part of the 3d field, from here everything in the 3d world
@@ -75,26 +74,24 @@ public class FieldGame extends Game {
     /** The ambient light. */
     private final AmbientLight           ambientLight;
                                          
-    /** The west point lights */
+    /** The west point lights. */
     private final PointLight             pointLightWestSouth, pointLightWestNorth;
-    
-	/** The east point lights */
+                                         
+    /** The east point lights. */
     private final PointLight             pointLightEastSouth, pointLightEastNorth;
                                          
-    /** The field game object */
+    /** The field game object. */
     private final FieldGO                fieldGO;
                                          
     /** The camera control overlay game object. */
     private final CameraControlOverlayGO cameraControlOverlayGO;
-        
-    /** The context overlay game object. */
-    private final ContextOverlayGO       contextOverlayGO;
-    
+                                         
+    /** The robots. */
     private List<Robot>                  robots;
                                           
-    /** The easter car game object */
-    //private final CarGO                  easterCarGO;
-                                         
+    /** The easter car game object */   
+    // private final CarGO easterCarGO;
+    
     /**
      * Constructor.
      *
@@ -139,8 +136,6 @@ public class FieldGame extends Game {
         this.fieldGO = new FieldGO(this, FieldGame.FIELD_REAL_WIDTH, FieldGame.FIELD_REAL_DEPTH);
         // Creating camera control overlay GameObject
         this.cameraControlOverlayGO = new CameraControlOverlayGO(this);
-        // Creating context menu overlay GameObject
-        this.contextOverlayGO = new ContextOverlayGO(this, this.robots);
         // Creating easter egg car GameObject
         //this.easterCarGO = new CarGO(this);
         
@@ -186,7 +181,6 @@ public class FieldGame extends Game {
         // Adding game objects
         this.addGameObject(this.fieldGO);
         this.addGameObject(this.cameraControlOverlayGO);
-        this.addGameObject(this.contextOverlayGO);
         //this.addGameObject(this.easterCarGO);
 
     }
@@ -231,16 +225,22 @@ public class FieldGame extends Game {
         this.removeGameObject(robot);
     }
     
+    /**
+     * Gets the {@link List} of robots used in the game.
+     *
+     * @return The {@link List} of robots.
+     */
     public List<Robot> getRobots() {
         return this.robots;
     }
     
     /**
-     * createRobots method This method creates some robots.
+     * createRobots method. This method creates the robots on the field.
      */
     @SuppressWarnings ("unchecked")
     private void createRobots() {
         
+        // Getting list of robots from the vision model
         this.robots = (ArrayList<Robot>) Models.getAll("robot");
        
         // Loop through robot models
