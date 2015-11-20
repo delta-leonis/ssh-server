@@ -37,8 +37,6 @@ public abstract class Manageable {
         return this.name;
     }
     
-
-
     /**
      * Sets the name of the Manageable.
      *
@@ -49,6 +47,5 @@ public abstract class Manageable {
         Manageable.LOG.fine("Manageable named %s has changed its name to %s", this.getName(), name);
         this.name = name;
     }
-    
 
 }
