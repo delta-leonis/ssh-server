@@ -48,7 +48,8 @@ public class ControllerLayout extends Model {
      *            controller to link to
      */
     public ControllerLayout(final Controller controller) {
-        super("controller", controller.getType().toString());
+        //super("controller", controller.getType().toString());
+        super("controller");
         this.controller = controller;
     }
     
@@ -199,5 +200,10 @@ public class ControllerLayout extends Model {
      */
     public boolean isComplete() {
         return this.hasButtons("DIRECTION_") && this.hasButtons("ORIENTATION_");
+    }
+
+    @Override
+    public String getSuffix() {
+        return controller.getType().toString();
     }
 }

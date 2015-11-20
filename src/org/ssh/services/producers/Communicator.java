@@ -3,7 +3,6 @@ package org.ssh.services.producers;
 import java.util.ArrayList;
 
 import org.ssh.managers.manager.Pipelines;
-import org.ssh.managers.manager.Services;
 import org.ssh.models.enums.ProducerType;
 import org.ssh.models.enums.SendMethod;
 import org.ssh.pipelines.Pipeline;

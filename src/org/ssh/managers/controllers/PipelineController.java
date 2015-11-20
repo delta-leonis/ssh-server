@@ -1,6 +1,7 @@
 package org.ssh.managers.controllers;
 
 import org.ssh.managers.ManagerController;
+import org.ssh.managers.manager.Pipelines;
 import org.ssh.pipelines.Pipeline;
 import org.ssh.pipelines.PipelinePacket;
 

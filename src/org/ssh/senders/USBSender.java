@@ -1,9 +1,8 @@
 package org.ssh.senders;
 
-import org.ssh.util.Logger;
-
 import org.ssh.models.enums.BaudRate;
 import org.ssh.models.enums.SendMethod;
+import org.ssh.util.Logger;
 
 import com.google.protobuf.Message;
 

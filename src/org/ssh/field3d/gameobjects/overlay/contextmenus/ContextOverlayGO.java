@@ -10,9 +10,7 @@ import org.ssh.models.Robot;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Rectangle;
 
 /**
  * ContextOverlayGO class. This class is responsible for the 2d context menu overlay.

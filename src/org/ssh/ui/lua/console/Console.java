@@ -18,8 +18,6 @@ import org.luaj.vm2.LuaError;
 import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 import org.luaj.vm2.lib.jse.JsePlatform;
 import org.ssh.managers.manager.Services;
-import org.ssh.services.PipelinePacket;
-import org.ssh.ui.UIComponent;
 import org.ssh.util.Logger;
 import org.ssh.util.LuaUtils;
 
@@ -121,7 +119,6 @@ public class Console extends Tab {
         
         // Make the area resizable
         this.consoleArea.setWrapText(true);
-        this.add(this.consoleArea);
         
         // Make sure keypresses like tab and enter are handled
         this.addKeyListeners();
@@ -340,7 +337,6 @@ public class Console extends Tab {
     /**
      * Requests focus for the underlying {@link ConsoleArea}
      */
-    @Override
     public void requestFocus() {
         Platform.runLater(() -> consoleArea.requestFocus());
     }

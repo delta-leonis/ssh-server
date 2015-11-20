@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import org.ssh.util.Logger;
 
 import org.ssh.models.enums.SendMethod;
 import org.ssh.services.producers.Communicator;
+import org.ssh.util.Logger;
 
 import com.google.protobuf.Message;
 

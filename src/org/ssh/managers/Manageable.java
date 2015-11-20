@@ -1,5 +1,6 @@
 package org.ssh.managers;
 
+import org.ssh.models.Model;
 import org.ssh.util.Logger;
 
 /**

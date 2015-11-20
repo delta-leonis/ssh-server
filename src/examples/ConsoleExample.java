@@ -2,6 +2,7 @@ package examples;
 
 import org.ssh.ui.lua.console.AvailableInLua;
 import org.ssh.ui.lua.console.Console;
+import org.ssh.ui.lua.console.ConsoleManager;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -44,7 +45,7 @@ public class ConsoleExample extends Application {
         primaryStage.setOnCloseRequest(e -> System.exit(0));
         
         // Create a new Console used to manipulate a ConsoleArea
-        final Console console = new Console("bottom-console");
+        final ConsoleManager console = new ConsoleManager("bottom-console");
         
         // Create base
         final Scene scene = new Scene(console, ConsoleExample.WIDTH, ConsoleExample.HEIGHT, Color.WHITE);

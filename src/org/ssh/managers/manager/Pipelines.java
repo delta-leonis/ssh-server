@@ -13,10 +13,10 @@ import org.ssh.managers.ManagerController;
 import org.ssh.managers.controllers.PipelineController;
 import org.ssh.pipelines.Pipeline;
 import org.ssh.pipelines.PipelinePacket;
-import org.ssh.util.Logger;
 import org.ssh.services.Service;
 import org.ssh.services.service.Coupler;
 import org.ssh.services.service.Producer;
+import org.ssh.util.Logger;
 
 /**
  * The Class Pipelines

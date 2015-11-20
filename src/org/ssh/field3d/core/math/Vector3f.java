@@ -1,5 +1,7 @@
 package org.ssh.field3d.core.math;
 
+import org.ssh.field3d.core.gameobjects.GameObject;
+
 /**
  *
  * Vector3f This class is for our 3d vectors.

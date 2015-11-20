@@ -3,7 +3,6 @@ package org.ssh.ui.components;
 import java.util.Optional;
 
 import org.ssh.ui.UIComponent;
-import org.ssh.ui.lua.console.Console;
 import org.ssh.ui.lua.console.ConsoleManager;
 import org.ssh.ui.lua.editor.ScriptEditor;
 

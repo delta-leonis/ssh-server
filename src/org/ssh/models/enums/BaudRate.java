@@ -1,5 +1,7 @@
 package org.ssh.models.enums;
 
+import jssc.SerialPort;
+
 /**
  * Represents different available baud rates for use with {@link SerialPort}
  *
