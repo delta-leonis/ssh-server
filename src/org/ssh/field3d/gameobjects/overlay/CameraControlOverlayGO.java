@@ -2,12 +2,14 @@ package org.ssh.field3d.gameobjects.overlay;
 
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
+import org.ssh.field3d.core.math.Vector3f;
 
-import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
+import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
 
+// TODO: Auto-generated Javadoc
 /**
  * CameraPresetOverlay class
  * 
@@ -17,42 +19,33 @@ import javafx.scene.input.MouseEvent;
  */
 public class CameraControlOverlayGO extends OverlayGO {
     
-    /** The offset between buttons. */
-    private static final int    BUTTON_OFFSET    = 35;
-                                                 
-    /** The FXML file for the layout */
-    private static final String LAYOUT_FXML_FILE = "cameracontroloverlay.fxml";
-                                                 
-    /** The controls group. */
-    private final Group         controlsGroup;
+    /**  The FXML file for the layout. */
+    private static final String LAYOUT_FXML_FILE     = "cameracontroloverlay.fxml";
+                                                     
+    /** The rotation sensitivity for the button in degree per second. */
+    private static final float  ROTATION_SENSITIVITY = 40.0f;
+                                                     
+    /** The amount of nano seconds per second. */
+    private static final float  NANO_SEC_PER_SEC     = 1000000000.0f;
+                                                     
+    /** The button rotate left pressing. */
+    private boolean             buttonRotateLeftPressing;
+    
+    /** The button rotate right pressing. */
+    private boolean             buttonRotateRightPressing;
+    
+    /** The button rotate up pressing. */
+    private boolean             buttonRotateUpPressing;
+    
+    /** The button rotate down pressing. */
+    private boolean             buttonRotateDownPressing;
                                 
-    /** The button for the top view preset. */
-    // private final Button buttonTopView;
+    /** The button zoom in pressing. */
+    private boolean             buttonZoomInPressing;
     
-    /** The button for the side view preset. */
-    // private final Button buttonSideView;
-    
-    /** The button for the 45 deg view preset. */
-    // private final Button button45DegView;
-    
-    /** The button for rotating left. */
-    // private final Button buttonRotateLeft;
-    
-    /** The button for rotating right. */
-    // private final Button buttonRotateRight;
-    
-    /** The button for rotating up. */
-    // private final Button buttonRotateUp;
-    
-    /** The button for rotating down. */
-    // private final Button buttonRotateDown;
-    
-    /** The button for zooming in. */
-    // private final Button buttonZoomIn;
-    
-    /** The button for zooming out. */
-    // private final Button buttonZoomOut;
-    
+    /** The button zoom out pressing. */
+    private boolean             buttonZoomOutPressing;
+                                
     /**
      * Constructor.
      *
@@ -62,48 +55,11 @@ public class CameraControlOverlayGO extends OverlayGO {
     public CameraControlOverlayGO(final Game game) {
         
         // Initialize super class
-        super(game);
+        super(game, LAYOUT_FXML_FILE);
         
-        // Create group for the controls
-        this.controlsGroup = new Group();
-        
-        this.loadFXML(LAYOUT_FXML_FILE, this.controlsGroup);
-        
-        /*
-         * // Creating buttons this.buttonTopView = new Button("Top View"); this.buttonSideView =
-         * new Button("Side View"); this.button45DegView = new Button("45 Degree View");
-         * 
-         * this.buttonRotateLeft = new Button("Rotate Left"); this.buttonRotateRight = new Button(
-         * "Rotate Right"); this.buttonRotateUp = new Button("Rotate Up"); this.buttonRotateDown =
-         * new Button("Rotate Down");
-         * 
-         * this.buttonZoomIn = new Button("+"); this.buttonZoomOut = new Button("-");
-         * 
-         * // Setting translation
-         * this.buttonSideView.setTranslateY(CameraControlOverlayGO.BUTTON_OFFSET);
-         * this.button45DegView.setTranslateY((2 * CameraControlOverlayGO.BUTTON_OFFSET));
-         * 
-         * this.buttonRotateLeft.setTranslateY(CameraControlOverlayGO.BUTTON_OFFSET * 4);
-         * this.buttonRotateRight.setTranslateY(CameraControlOverlayGO.BUTTON_OFFSET * 5);
-         * this.buttonRotateUp.setTranslateY(CameraControlOverlayGO.BUTTON_OFFSET * 6);
-         * this.buttonRotateDown.setTranslateY(CameraControlOverlayGO.BUTTON_OFFSET * 7);
-         * 
-         * this.buttonZoomIn.setTranslateY(CameraControlOverlayGO.BUTTON_OFFSET * 9);
-         * this.buttonZoomOut.setTranslateY(CameraControlOverlayGO.BUTTON_OFFSET * 10);
-         * 
-         * // Adding buttons to controls group
-         * this.controlsGroup.getChildren().add(this.button45DegView);
-         * this.controlsGroup.getChildren().add(this.buttonSideView);
-         * this.controlsGroup.getChildren().add(this.buttonTopView);
-         * 
-         * this.controlsGroup.getChildren().add(this.buttonRotateLeft);
-         * this.controlsGroup.getChildren().add(this.buttonRotateRight);
-         * this.controlsGroup.getChildren().add(this.buttonRotateUp);
-         * this.controlsGroup.getChildren().add(this.buttonRotateDown);
-         * 
-         * this.controlsGroup.getChildren().add(this.buttonZoomIn);
-         * this.controlsGroup.getChildren().add(this.buttonZoomOut);
-         */
+        // Setting default values
+        buttonRotateDownPressing = buttonRotateLeftPressing = buttonRotateRightPressing = buttonRotateUpPressing = false;
+        buttonZoomInPressing = buttonZoomOutPressing = false;
     }
     
     /**
@@ -112,22 +68,7 @@ public class CameraControlOverlayGO extends OverlayGO {
     @Override
     public void onInitialize() {
         
-        // Adding control group to 2d group
-        this.getGame().get2DGroup().getChildren().add(this.controlsGroup);
-        
-        /*
-         * // Hook events this.button45DegView.setOnMouseClicked(new OnButton45DegViewClicked());
-         * this.buttonSideView.setOnMouseClicked(new OnButtonSideViewClicked());
-         * this.buttonTopView.setOnMouseClicked(new OnButtonTopViewClicked());
-         * 
-         * this.buttonRotateLeft.setOnMouseClicked(new OnButtonRotateLeftClicked());
-         * this.buttonRotateRight.setOnMouseClicked(new OnButtonRotateRightClicked());
-         * this.buttonRotateUp.setOnMouseClicked(new OnButtonRotateUpClicked());
-         * this.buttonRotateDown.setOnMouseClicked(new OnButtonRotateDownClicked());
-         * 
-         * this.buttonZoomIn.setOnMouseClicked(new OnButtonZoomInClicked());
-         * this.buttonZoomOut.setOnMouseClicked(new OnButtonZoomOutClicked());
-         */
+        super.onInitialize();
     }
     
     /**
@@ -136,24 +77,7 @@ public class CameraControlOverlayGO extends OverlayGO {
     @Override
     public void onDestroy() {
         
-        // If 2d group contains the controls group
-        if (this.getGame().get2DGroup().getChildren().contains(this.controlsGroup)) {
-            
-            // Remove from 2d group
-            Platform.runLater(() -> this.getGame().get2DGroup().getChildren().remove(this.controlsGroup));
-        }
-        
-        /*
-         * // Unhook events this.button45DegView.setOnMouseClicked(null);
-         * this.buttonSideView.setOnMouseClicked(null); this.buttonTopView.setOnMouseClicked(null);
-         * 
-         * this.buttonRotateLeft.setOnMouseClicked(null);
-         * this.buttonRotateRight.setOnMouseClicked(null);
-         * this.buttonRotateUp.setOnMouseClicked(null);
-         * this.buttonRotateDown.setOnMouseClicked(null);
-         * 
-         * this.buttonZoomIn.setOnMouseClicked(null); this.buttonZoomOut.setOnMouseClicked(null);
-         */
+        super.onDestroy();
     }
     
     /**
@@ -161,190 +85,246 @@ public class CameraControlOverlayGO extends OverlayGO {
      */
     @Override
     public void onUpdate(final long timeDivNano) {
-    }
-    
-    /**
-     * 
-     * Button rotate down click event.
-     * 
-     * @author Mark Lefering
-     */
-    class OnButtonRotateDownClicked implements EventHandler<MouseEvent> {
         
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void handle(final MouseEvent mouseEvent) {
+        double cameraRotationY = this.getGame().getThirdPersonCamera().getRotateY();
+        double cameraRotationX = this.getGame().getThirdPersonCamera().getRotateX();
+        
+        double rotationAmount = ROTATION_SENSITIVITY * (timeDivNano / NANO_SEC_PER_SEC);
+        
+        if (buttonRotateLeftPressing) {
             
-            // TODO: Smooth out rotation
-            CameraControlOverlayGO.this.getGame().getThirdPersonCamera()
-                    .setRotateX(CameraControlOverlayGO.this.getGame().getThirdPersonCamera().getRotateX() - 10);
+            // Rotate camera left
+            this.getGame().getThirdPersonCamera().setRotateY(cameraRotationY - rotationAmount);
+        }
+        else if (this.buttonRotateRightPressing) {
+        
+            // Rotate camera right
+            this.getGame().getThirdPersonCamera().setRotateY(cameraRotationY + rotationAmount);
+        }
+        else if (this.buttonRotateUpPressing) {
+            
+            // Rotate camera up
+            this.getGame().getThirdPersonCamera().setRotateX(cameraRotationX + rotationAmount);
+        }
+        else if (this.buttonRotateDownPressing) {
+            
+            // Rotate camera down
+            this.getGame().getThirdPersonCamera().setRotateX(cameraRotationX - rotationAmount);
+        }
+        else if (this.buttonZoomInPressing) {
+            
+            // TODO: zoom camera in
+        }
+        else if (this.buttonZoomOutPressing) {
+            
+            // TODO: zoom camera out
         }
         
+        super.onUpdate(timeDivNano);
     }
     
     /**
-     * 
-     * Button rotate left click event.
-     * 
-     * @author Mark Lefering
-     */
-    class OnButtonRotateLeftClicked implements EventHandler<MouseEvent> {
-        
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void handle(final MouseEvent mouseEvent) {
-            
-            // TODO: Smooth out rotation
-            CameraControlOverlayGO.this.getGame().getThirdPersonCamera()
-                    .setRotateY(CameraControlOverlayGO.this.getGame().getThirdPersonCamera().getRotateY() - 10);
-        }
-    }
-    
-    /**
-     * 
-     * Button rotate right click event.
-     * 
-     * @author Mark Lefering
-     */
-    class OnButtonRotateRightClicked implements EventHandler<MouseEvent> {
-        
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void handle(final MouseEvent mouseEvent) {
-            
-            // TODO: Smooth out rotation
-            CameraControlOverlayGO.this.getGame().getThirdPersonCamera()
-                    .setRotateY(CameraControlOverlayGO.this.getGame().getThirdPersonCamera().getRotateY() + 10);
-        }
-        
-    }
-    
-    /**
-     * 
-     * Button rotate up click event.
-     * 
-     * @author Mark Lefering
-     */
-    class OnButtonRotateUpClicked implements EventHandler<MouseEvent> {
-        
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void handle(final MouseEvent mouseEvent) {
-            
-            // TODO: Smooth out rotation
-            CameraControlOverlayGO.this.getGame().getThirdPersonCamera()
-                    .setRotateX(CameraControlOverlayGO.this.getGame().getThirdPersonCamera().getRotateX() + 10);
-        }
-        
-    }
-    
-    /**
-     * Button side view click event.
+     * On button top view action.
      *
-     * @author Mark Lefering
+     * @param actionEvent the action event
      */
-    class OnButtonSideViewClicked implements EventHandler<MouseEvent> {
+    @FXML
+    private void onButtonTopViewAction(ActionEvent actionEvent) {
         
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void handle(final MouseEvent mouseEvent) {
-            
-            // TODO: Set location to center
-            // TODO: Set zoom
-            CameraControlOverlayGO.this.getGame().getThirdPersonCamera().setRotateY(0);
-            CameraControlOverlayGO.this.getGame().getThirdPersonCamera().setRotateX(0);
-            
-        }
+        // TODO: Set zoom
+        // Getting camera pivot location
+        Vector3f cameraPivot = this.getGame().getThirdPersonCamera().getPivot();
         
+        // Setting pivot location to center
+        this.getGame().getThirdPersonCamera().setPivot(new Vector3f(0.0f, cameraPivot.y, 0.0f));
+        
+        // Setting rotations
+        this.getGame().getThirdPersonCamera().setRotateY(0);
+        this.getGame().getThirdPersonCamera().setRotateX(90);
     }
     
     /**
-     * Button 45 degree view click event.
+     * On button side view action.
      *
-     * @author Mark Lefering
+     * @param actionEvent the action event
      */
-    class OnButton45DegViewClicked implements EventHandler<MouseEvent> {
+    @FXML
+    private void onButtonSideViewAction(ActionEvent actionEvent) {
+    
+        // TODO: Set zoom
+        // Getting camera pivot location
+        Vector3f cameraPivot = this.getGame().getThirdPersonCamera().getPivot();
         
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void handle(final MouseEvent mouseEvent) {
-            
-            // TODO: Set location to center
-            // TODO: Set zoom
-            CameraControlOverlayGO.this.getGame().getThirdPersonCamera().setRotateY(0);
-            CameraControlOverlayGO.this.getGame().getThirdPersonCamera().setRotateX(45);
-        }
+        // Setting pivot location to center
+        this.getGame().getThirdPersonCamera().setPivot(new Vector3f(0.0f, cameraPivot.y, 0.0f));
+        
+        // Setting rotations
+        this.getGame().getThirdPersonCamera().setRotateY(0);
+        this.getGame().getThirdPersonCamera().setRotateX(0);
     }
     
     /**
-     * 
-     * Button view click event.
-     * 
-     * @author Mark Lefering
-     *         
+     * On button45 deg view action.
+     *
+     * @param actionEvent the action event
      */
-    class OnButtonTopViewClicked implements EventHandler<MouseEvent> {
+    @FXML
+    private void onButton45DegViewAction(ActionEvent actionEvent) {
+    
+        // TODO: Set zoom
+        // Getting camera pivot location
+        Vector3f cameraPivot = this.getGame().getThirdPersonCamera().getPivot();
         
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void handle(final MouseEvent event) {
-            
-            // TODO: Set location to center
-            // TODO: Set zoom
-            CameraControlOverlayGO.this.getGame().getThirdPersonCamera().setRotateY(0);
-            CameraControlOverlayGO.this.getGame().getThirdPersonCamera().setRotateX(90);
-        }
+        // Setting pivot location to center
+        this.getGame().getThirdPersonCamera().setPivot(new Vector3f(0.0f, cameraPivot.y, 0.0f));
         
+        // Setting rotations
+        this.getGame().getThirdPersonCamera().setRotateY(0);
+        this.getGame().getThirdPersonCamera().setRotateX(45);
     }
     
     /**
-     * 
-     * Button zoom in click event.
-     * 
-     * @author Mark Lefering
+     * On button rotate left pressed.
+     *
+     * @param mouseEvent the mouse event
      */
-    class OnButtonZoomInClicked implements EventHandler<MouseEvent> {
+    @FXML
+    private void onButtonRotateLeftPressed(MouseEvent mouseEvent) {
         
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void handle(final MouseEvent event) {
-            
-            // TODO: zoom in
-        }
+        // Setting rotating left state
+        buttonRotateLeftPressing = true;
     }
     
     /**
-     * 
-     * Button zoom out click event.
-     * 
-     * @author Mark Lefering
-     *         
+     * On button rotate left released.
+     *
+     * @param mouseEvent the mouse event
      */
-    class OnButtonZoomOutClicked implements EventHandler<MouseEvent> {
+    @FXML
+    private void onButtonRotateLeftReleased(MouseEvent mouseEvent) {
         
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void handle(final MouseEvent event) {
-            
-            // TODO: Zoom out
-        }
+        // Setting not rotating left state
+        buttonRotateLeftPressing = false;
+    }
+    
+    /**
+     * On button rotate right pressed.
+     *
+     * @param mouseEvent the mouse event
+     */
+    @FXML
+    private void onButtonRotateRightPressed(MouseEvent mouseEvent) {
+        
+        // Setting rotating right state
+        buttonRotateRightPressing = true;
+    }
+    
+    /**
+     * On button rotate right released.
+     *
+     * @param mouseEvent the mouse event
+     */
+    @FXML
+    private void onButtonRotateRightReleased(MouseEvent mouseEvent) {
+        
+        // Setting not rotating left state
+        buttonRotateRightPressing = false;
+    }
+    
+    /**
+     * On button rotate up pressed.
+     *
+     * @param mouseEvent the mouse event
+     */
+    @FXML
+    private void onButtonRotateUpPressed(MouseEvent mouseEvent) {
+        
+        // Setting rotating up state
+        buttonRotateUpPressing = true;
+    }
+    
+    /**
+     * On button rotate up released.
+     *
+     * @param mouseEvent the mouse event
+     */
+    @FXML
+    private void onButtonRotateUpReleased(MouseEvent mouseEvent) {
+        
+        // Setting not rotating up state
+        buttonRotateUpPressing = false;
+    }
+    
+    /**
+     * On button rotate down pressed.
+     *
+     * @param mouseEvent the mouse event
+     */
+    @FXML
+    private void onButtonRotateDownPressed(MouseEvent mouseEvent) {
+        
+        // Setting rotating down state
+        buttonRotateDownPressing = true;
+    }
+    
+    /**
+     * On button rotate down released.
+     *
+     * @param mouseEvent the mouse event
+     */
+    @FXML
+    private void onButtonRotateDownReleased(MouseEvent mouseEvent) {
+        
+        // Setting not rotating down state
+        buttonRotateDownPressing = false;
+    }
+    
+    /**
+     * On button zoom in pressed.
+     *
+     * @param mouseEvent the mouse event
+     */
+    // Zoom buttons
+    @FXML
+    private void onButtonZoomInPressed(MouseEvent mouseEvent) {
+        
+        // Setting zooming in state
+        buttonZoomInPressing = true;
+    }
+    
+    /**
+     * On button zoom in released.
+     *
+     * @param mouseEvent the mouse event
+     */
+    @FXML
+    private void onButtonZoomInReleased(MouseEvent mouseEvent) {
+        
+        // Setting not zooming in state
+        buttonZoomInPressing = false;
+    }
+    
+    /**
+     * On button zoom out pressed.
+     *
+     * @param mouseEvent the mouse event
+     */
+    @FXML
+    private void onButtonZoomOutPressed(MouseEvent mouseEvent) {
+        
+        // Setting zooming out state
+        buttonZoomOutPressing = true;
+    }
+    
+    /**
+     * On button zoom out released.
+     *
+     * @param mouseEvent the mouse event
+     */
+    @FXML
+    private void onButtonZoomOutReleased(MouseEvent mouseEvent) {
+        
+        // Setting not zooming out state
+        buttonZoomOutPressing = false;
     }
 }

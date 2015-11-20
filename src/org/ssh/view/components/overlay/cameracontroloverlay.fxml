@@ -7,33 +7,60 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.shape.Rectangle?>
 
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" pickOnBounds="false" minWidth="0.0">
 
-    <columnConstraints>
-    	<ColumnConstraints percentWidth="97.0"></ColumnConstraints>
-    	<ColumnConstraints percentWidth="3.0"></ColumnConstraints>
-    </columnConstraints>
-
 	<children>
 	
+		<!-- Spacing -->
 		<Pane GridPane.columnIndex="0" GridPane.rowIndex="0" minWidth="500.0" minHeight="20.0"></Pane>
 	
-		<Button id="buttonTopView" text="Top View" GridPane.columnIndex="1" GridPane.rowIndex="0"></Button>
-		<Button id="buttonSideView" text="Side View" GridPane.columnIndex="1" GridPane.rowIndex="1"></Button>
-      	<Button id="button45DegView" text="45 Degree View" GridPane.columnIndex="1" GridPane.rowIndex="2"></Button>
+		<!-- Top view preset button -->
+		<Button id="buttonTopView" text="Top View" onAction="#onButtonTopViewAction" GridPane.columnIndex="0" GridPane.rowIndex="0">
+		</Button>
+		<!-- Side view preset button -->
+		<Button id="buttonSideView" text="Side View" onAction="#onButtonSideViewAction" GridPane.columnIndex="0" GridPane.rowIndex="1">
+		</Button>
+		<!-- 45 degree preset button -->
+      	<Button id="button45DegView" text="45 Degree View" onAction="#onButton45DegViewAction" GridPane.columnIndex="0" GridPane.rowIndex="2">
+      	</Button>
       	
+  
+      	<!-- Spacing -->
       	<Pane GridPane.columnIndex="0" GridPane.rowIndex="3" minHeight="20.0"></Pane>
       	
-      	<Button id="buttonRotateLeft" text="Rotate Left" GridPane.columnIndex="0" GridPane.rowIndex="4"></Button>
-		<Button id="buttonRotateRight" text="Rotate Right" GridPane.columnIndex="0" GridPane.rowIndex="5"></Button>
-      	<Button id="buttonRotateUp" text="Rotate Up" GridPane.columnIndex="0" GridPane.rowIndex="6"></Button>
-      	<Button id="buttonRotateDown" text="Rotate Down" GridPane.columnIndex="0" GridPane.rowIndex="7"></Button>
       	
+      	<!-- Rotate left button -->
+      	<Button id="buttonRotateLeft" text="Rotate Left" onMousePressed="#onButtonRotateLeftPressed" 
+      			onMouseReleased="#onButtonRotateLeftReleased" GridPane.columnIndex="0" GridPane.rowIndex="4">
+      	</Button>
+      	<!-- Rotate right button -->
+		<Button id="buttonRotateRight" text="Rotate Right" onMousePressed="#onButtonRotateRightPressed" 
+      			onMouseReleased="#onButtonRotateRightReleased" GridPane.columnIndex="0" GridPane.rowIndex="5">
+      	</Button>
+      	<!-- Rotate up button -->
+      	<Button id="buttonRotateUp" text="Rotate Up" onMousePressed="#onButtonRotateUpPressed" 
+      			onMouseReleased="#onButtonRotateUpReleased" GridPane.columnIndex="0" GridPane.rowIndex="6">
+      	</Button>
+      	<!-- Rotate down button -->
+      	<Button id="buttonRotateDown" text="Rotate Down" onMousePressed="#onButtonRotateDownPressed" 
+      			onMouseReleased="#onButtonRotateDownReleased" GridPane.columnIndex="0" GridPane.rowIndex="7">
+      	</Button>
+      	
+      	
+      	<!-- Spacing -->
       	<Pane GridPane.columnIndex="0" GridPane.rowIndex="8" minHeight="20.0"></Pane>
       	
-		<Button id="buttonZoomIn" text="Zoom In" GridPane.columnIndex="0" GridPane.rowIndex="9"></Button>
-      	<Button id="buttonZoomOut" text="Zoom Out" GridPane.columnIndex="0" GridPane.rowIndex="10"></Button>
+      	
+      	<!-- Zoom in button -->
+		<Button id="buttonZoomIn" text="Zoom In" onMousePressed="#onButtonZoomInPressed" 
+      			onMouseReleased="#onButtonZoomInReleased" GridPane.columnIndex="0" GridPane.rowIndex="9">
+      	</Button>
+      	<!-- Zoom out button -->
+      	<Button id="buttonZoomOut" text="Zoom Out" onMousePressed="#onButtonZoomOutPressed" 
+      			onMouseReleased="#onButtonZoomOutReleased" GridPane.columnIndex="0" GridPane.rowIndex="10">
+      	</Button>
       	
    	</children>
    	
