@@ -11,6 +11,7 @@ import org.ssh.field3d.gameobjects.overlay.CameraControlOverlayGO;
 import org.ssh.field3d.gameobjects.overlay.contextmenus.ContextOverlayGO;
 import org.ssh.managers.Models;
 import org.ssh.models.Robot;
+import org.ssh.models.enums.TeamColor;
 
 import javafx.scene.AmbientLight;
 import javafx.scene.Parent;
@@ -112,10 +113,10 @@ public class FieldGame extends Game {
         super(root, width, height, true, antiAliasing);
         
         // Create robots
-        Robot robot = (Robot) Models.create(Robot.class, 0, Color.BLUE);
-        Robot robot2 = (Robot) Models.create(Robot.class, 1, Color.BLUE);
-        Robot robot3 = (Robot) Models.create(Robot.class, 2, Color.BLUE);
-        Robot robot4 = (Robot) Models.create(Robot.class, 3, Color.BLUE);
+        Robot robot = (Robot) Models.create(Robot.class, 0, TeamColor.BLUE);
+        Robot robot2 = (Robot) Models.create(Robot.class, 1, TeamColor.BLUE);
+        Robot robot3 = (Robot) Models.create(Robot.class, 2, TeamColor.BLUE);
+        Robot robot4 = (Robot) Models.create(Robot.class, 3, TeamColor.BLUE);
         
         robot.update("isSelected", true);
         robot2.update("isSelected", false);
@@ -139,7 +140,7 @@ public class FieldGame extends Game {
         // Creating camera control overlay GameObject
         this.cameraControlOverlayGO = new CameraControlOverlayGO(this);
         // Creating context menu overlay GameObject
-        this.contextOverlayGO = new ContextOverlayGO(this);
+        this.contextOverlayGO = new ContextOverlayGO(this, this.robots);
         // Creating easter egg car GameObject
         //this.easterCarGO = new CarGO(this);
         

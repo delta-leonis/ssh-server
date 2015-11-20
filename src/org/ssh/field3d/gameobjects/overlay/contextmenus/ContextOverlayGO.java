@@ -33,6 +33,7 @@ public class ContextOverlayGO extends OverlayGO {
     /** The field location. */
     private Point2D             fieldLoc;
     
+    /** The list of robots */
     private List<Robot>         robots;
                                 
     /**
@@ -179,7 +180,22 @@ public class ContextOverlayGO extends OverlayGO {
     @FXML
     protected void onMoveHereButtonClick(ActionEvent actionEvent) {
         
-        // TODO: make robot move
+        // Check if robot not null
+        if (this.robots != null) {
+            
+            // Loop through robot
+            for (Robot robot : this.robots) {
+                
+                // If the robot is selected, move
+                if (robot.isSelected()) {
+                    
+                    // Update robot position
+                    robot.update("position", this.fieldLoc);
+                    // No more work to do
+                    break;
+                }
+            }
+        }
     }
     
     /**
@@ -191,6 +207,14 @@ public class ContextOverlayGO extends OverlayGO {
     @FXML
     protected void onChangeSidesButtonClick(ActionEvent actionEvent) {
         
-        // TODO: Change sides
+        // TODO: change sides
+        
+        // Check if clicked on the west side of the field
+        if (this.fieldLoc.getX() < 0) {
+            
+        // Check if clicked on the east side of the field
+        } else if (this.fieldLoc.getX() > 0) {
+            
+        }
     }
 }
