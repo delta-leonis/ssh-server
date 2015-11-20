@@ -89,7 +89,7 @@ public class PenaltySpotGO extends GameObject {
         // Check if model in the world
         if (this.getGame().getWorldGroup().getChildren().contains(this.model)) {
             
-            // Remove org.ssh.models from world
+            // Remove models from world
             this.getGame().getWorldGroup().getChildren().remove(this.model);
         }
     }
