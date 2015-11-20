@@ -1,0 +1,15 @@
+{
+  "default_profile" : "Test aSDF ASD F"
+}
+
+gson.linkedlist
+     v
+"Test aSDF ASD F"
+
+     Object
+       v
+Test aSDF ASD F
+
+gson.parseFrom(Object, String.class)
+           v
+Test
