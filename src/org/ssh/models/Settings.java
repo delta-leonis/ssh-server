@@ -19,32 +19,34 @@ import java.net.URI;
  * @TODO define these constants while initializing this Model in main manager class
  *       
  * @author Jeroen de Jong
- *        
+ *         
  */
 public class Settings extends Model {
     
     /**
      * Base path for all config files
      */
-    private static final transient String BASE_PATH          = "config";
+    private static final transient String BASE_PATH       = "config";
     /**
      * Folder for the default config files
      */
-    private static final transient String DEFAULT_FOLDER     = "default";
+    private static final transient String DEFAULT_FOLDER  = "default";
+                                                          
+    private static final transient String TEMP_FOLDER     = "temp";
     /**
      * Folder for settings which override default settings
      */
-    private static final transient String PROFILE_FOLDER     = System.getProperty("user.name");
-    /**
-     * Folder for settings that should be set when the application closes, and overrides both
-     * default, and profile settings
-     */
-    private static final transient String LASTSESSION_FOLDER = "lastsession";
+    private static final transient String USER_PROFILES   = System.getProperty("user.name");
+                                                          
     /**
      * Separator for folders (should be {@link File.separator}, but URI can't play nice)
      */
-    private static final transient String SEPARATOR          = "/";
-                                                             
+    private static final transient String SEPARATOR       = "/";
+                                                          
+    private String                        default_profile = "";
+                                                          
+    private transient String              current_profile = "";
+                                                          
     /**
      * Create a settings model
      */
@@ -60,33 +62,42 @@ public class Settings extends Model {
     }
     
     /**
-     * if profilepath (and thus lastsession) are both empty, the default path should be used
+     * if profilepath (and thus lastsession) are both empty, the default path should be used.
      * 
-     * @return default path for settings and modeldumps
+     * @return default path for settings and modeldumps.
      */
     public URI getDefaultPath() {
         return URI.create(Settings.BASE_PATH + Settings.SEPARATOR + Settings.DEFAULT_FOLDER + Settings.SEPARATOR);
     }
     
     /**
-     * if lastSessionpath is empty, the profile path should be read
+     * note: Settings.json is also stored here.
+     * 
+     * @return Path to folder containing all profiles for a specific user.
+     */
+    public URI getUserProfilePath() {
+        return URI.create(Settings.BASE_PATH + Settings.SEPARATOR + Settings.USER_PROFILES + Settings.SEPARATOR);
+    }
+    
+    /**
+     * if lastSessionpath is empty, the profile path should be read.
      * 
      * @return profile specific path for settings and modeldumps
      */
     public URI getProfilePath() {
-        return URI.create(Settings.BASE_PATH + Settings.SEPARATOR + Settings.PROFILE_FOLDER + Settings.SEPARATOR);
+        return URI.create(getUserProfilePath() + getProfile() + Settings.SEPARATOR);
     }
     
     /**
-     * @return path for settings and modeldumps that were loaded since last shutdown
+     * @return Current (should be) loaded profile.
      */
-    public URI getLastSessionPath() {
-        return URI.create(getProfilePath() + Settings.SEPARATOR + Settings.LASTSESSION_FOLDER + Settings.SEPARATOR);
+    public String getProfile() {
+        return current_profile.isEmpty() ? default_profile.isEmpty() ? Settings.TEMP_FOLDER : default_profile
+                : current_profile;
     }
     
     @Override
-    public String getSuffix(){
+    public String getSuffix() {
         return "";
     }
-    
 }

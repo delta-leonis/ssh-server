@@ -33,15 +33,15 @@ public class Referee extends Model {
     /**
      * Timestamp in ms of the last parsed {@link RefereeOuterClass.Referee referee message}
      */
-    private long                       lastPacketTimestamp;
+    private Long                       lastPacketTimestamp;
     /**
      * Time until the current {@link Stage} is finished
      */
-    private int                        stageTimeLeft;
+    private Integer                        stageTimeLeft;
     /**
      * The amount of {@link RefereeCommand commands} we've currently received.
      */
-    private int                        commandCounter;
+    private Integer                        commandCounter;
                                        
     /**
      * Instantiates a new Referee

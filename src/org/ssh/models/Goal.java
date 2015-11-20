@@ -17,7 +17,7 @@ public class Goal extends FieldObject {
     /**
      * Dimensions of the goal
      */
-    private int             goalDepth, goalWidth;
+    private Integer             goalDepth, goalWidth;
                             
     /**
      * Creates a goal on a specified fieldhalf

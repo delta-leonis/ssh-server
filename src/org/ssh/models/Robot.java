@@ -11,10 +11,10 @@ import org.ssh.models.enums.TeamColor;
 public class Robot extends FieldObject {
     
     /** The robot height. */
-    public static final float ROBOT_HEIGHT = 200.0f;
+    public static final transient float ROBOT_HEIGHT = 200.0f;
                                            
     /** The robot radius */
-    public static final float ROBOT_RADIUS = 250.0f;
+    public static final transient float ROBOT_RADIUS = 250.0f;
                                            
     /**
      * Unique robot id [0-15]
@@ -29,7 +29,7 @@ public class Robot extends FieldObject {
     /**
      * current dribble speed (-1 is max backward, 1 is max forward)
      */
-    private float             dribbleSpeed;
+    private Float             dribbleSpeed;
                               
     /**
      * Instantiates a new robot with specified properties

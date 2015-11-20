@@ -45,7 +45,7 @@ public class Team extends Model {
     /**
      * team properties as time left for timeouts, number of timeouts and the goalie ID.
      */
-    private int              goalieId, timeoutLeft, timeouts;
+    private Integer              goalieId, timeoutLeft, timeouts;
                              
     /**
      * Instantiates a new team that plays on a specified field half.

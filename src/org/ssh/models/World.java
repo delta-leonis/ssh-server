@@ -6,9 +6,8 @@ import java.util.stream.Collectors;
 
 import org.ssh.managers.manager.Models;
 import org.ssh.models.enums.Direction;
+import org.ssh.models.enums.TeamColor;
 import org.ssh.util.Logger;
-
-import javafx.scene.paint.Color;
 
 /**
  * World contains generic models for a match-setup
@@ -34,7 +33,7 @@ public class World {
      *            teamColor of the Robot.
      * @return a {@link Robot} object, specified by these parameters.
      */
-    public Robot getRobot(final int id, final Color teamColor) {
+    public Robot getRobot(final int id, final TeamColor teamColor) {
         return this.getRobots(teamColor).stream().filter(robot -> robot.getRobotId() == id).findFirst().get();
     }
     
@@ -45,7 +44,7 @@ public class World {
      *            specific teamcolor to sort on
      * @return list with all robots of a specific color
      */
-    public List<Robot> getRobots(final Color teamColor) {
+    public List<Robot> getRobots(final TeamColor teamColor) {
         return Models.getAll("robot").stream().filter(robot -> ((Robot) robot).getTeamColor().equals(teamColor))
                 .map(model -> (Robot) model).collect(Collectors.toList());
     }

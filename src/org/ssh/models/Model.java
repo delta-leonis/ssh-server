@@ -32,7 +32,7 @@ import org.ssh.util.Reflect;
 public abstract class Model extends Manageable {
     
     // respective logger
-    private transient static final Logger LOG = Logger.getLogger();
+    private static final transient Logger LOG = Logger.getLogger();
     
     /**
      * Instantiates a new models.
@@ -86,6 +86,10 @@ public abstract class Model extends Manageable {
             if (oField.isPresent()) {
                 // get it and set it accessible
                 final Field field = oField.get();
+                if(Modifier.isFinal(field.getModifiers())
+                        || Modifier.isStatic(field.getModifiers())
+                        || !Modifier.isTransient(field.getModifiers()))
+                    Model.LOG.info("%s is not a modifiable field", field.getName());
                 if (!field.isAccessible()) field.setAccessible(true);
                 // try to cast this value, and set the field
                 field.set(this, (field.getType().cast(value)));
@@ -153,6 +157,25 @@ public abstract class Model extends Manageable {
                 .map(entry -> this.set(entry.getKey(), entry.getValue()))
                 // reduce succes value
                 .reduce(true, (accumulator, succes) -> accumulator && succes);
+    }
+    
+    public Map<String, Object> toMap(){
+        Class<?> clazz = this.getClass();
+        Map<String, Object> fieldMap = new HashMap<String, Object>();
+        while (clazz.getSuperclass() != null) {
+            Stream.of(clazz.getDeclaredFields())
+            .filter(field -> !Modifier.isTransient(field.getModifiers()))
+            .filter(field -> Modifier.isFinal(field.getModifiers()))
+            .filter(field -> !fieldMap.containsKey(field.getName()))
+            .forEach(Unchecked.consumer(field ->
+            {
+                if (!field.isAccessible()) field.setAccessible(true);
+                fieldMap.put(field.getName(), field.get(this));   
+            }));
+            
+            clazz = clazz.getSuperclass();
+        }
+        return fieldMap;
     }
     
     /**
