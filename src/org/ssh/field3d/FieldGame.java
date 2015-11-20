@@ -31,7 +31,7 @@ public class FieldGame extends Game {
     
     // TODO: move to config file, or get from the vision model
     /** The Constant FIELD_TILE_WIDTH. */
-    public static final double           FIELD_TILE_WIDTH      = 500.0;
+    public static final double           FIELD_TILE_WIDTH      = 500.0; 
                                                                
     /** The Constant FIELD_TILE_DEPTH. */
     public static final double           FIELD_TILE_DEPTH      = 500.0;
