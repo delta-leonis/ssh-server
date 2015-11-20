@@ -11,10 +11,10 @@ import org.ssh.models.enums.TeamColor;
 public class Robot extends FieldObject {
     
     /** The robot height. */
-    public static final transient float ROBOT_HEIGHT = 200.0f;
+    public static final transient float ROBOT_HEIGHT = 150.0f;
                                            
     /** The robot radius */
-    public static final transient float ROBOT_RADIUS = 250.0f;
+    public static final transient float ROBOT_RADIUS = 180.0f;
                                            
     /**
      * Unique robot id [0-15]

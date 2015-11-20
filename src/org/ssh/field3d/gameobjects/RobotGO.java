@@ -37,6 +37,9 @@ public class RobotGO extends GameObject {
     /** The starting y-coordinate for the robot model */
     private static final float  ROBOT_STARTING_Y                 = 10.0f;
                                                                  
+    /** The selection circle offset */
+    private static final float  SELECTION_CIRCLE_OFFSET          = 40.0f;
+                                                                 
     /** The number of segments in the selection circle */
     private static final int    ROBOT_SEL_CIRCLE_NUM_OF_SEGMENTS = 100;
                                                                  
@@ -99,7 +102,7 @@ public class RobotGO extends GameObject {
         // Creating selection circle
         this.selectionArc = new FlatArc3D(0.0,
                 FULL_CIRCLE,
-                Robot.ROBOT_RADIUS,
+                Robot.ROBOT_DIAMETER + ROBOT_SELECTION_CIRCLE_THICKNESS + SELECTION_CIRCLE_OFFSET,
                 ROBOT_SELECTION_CIRCLE_THICKNESS,
                 ROBOT_SEL_CIRCLE_NUM_OF_SEGMENTS);
                 
