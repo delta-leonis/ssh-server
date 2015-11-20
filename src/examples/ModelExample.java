@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.ssh.managers.manager.Models;
 import org.ssh.models.Model;
 import org.ssh.models.Robot;
+import org.ssh.models.Settings;
 import org.ssh.models.enums.TeamColor;
 import org.ssh.util.Logger;
 
@@ -20,11 +21,16 @@ public class ModelExample {
         // Start the Models controller
         Models.start();
 
+        Optional<Model> oSettings = Models.get("settings");
+        Settings settings = (Settings) oSettings.get();
+        System.out.println(settings.getProfilePath());
+        
+        
         // without json
         Models.create(Robot.class, 3, TeamColor.YELLOW);
         
         // with json
-        Models.create(Robot.class, 12, TeamColor.YELLOW);
+        Models.create(Robot.class, 12, "Foutief");
         
         // Retrieve a models
         final Optional<Model> oRobot = Models.get("robot Y3");
