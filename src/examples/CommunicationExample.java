@@ -22,7 +22,7 @@ public class CommunicationExample {
         Models.start();
         // make services available
         Services.start();
-        // create a comminucation pipeline
+        // create a communication pipeline
         Pipelines.add(new RadioPipeline("communication pipeline"));
         // create communicator (producer for RadioPackets)
         Services.add(new Communicator());

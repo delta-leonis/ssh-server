@@ -254,5 +254,4 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
     public static <P extends Pipeline<? extends PipelinePacket<? extends Object>>> List<P> getOfType(final Class<?> type) {
         return Pipelines.controller.getOfType(type);
     }
-    
 }

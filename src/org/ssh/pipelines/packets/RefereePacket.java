@@ -1,20 +1,23 @@
 package org.ssh.pipelines.packets;
 
-import org.ssh.pipelines.PipelinePacket;
+import java.io.ByteArrayInputStream;
 
-import com.google.protobuf.MessageOrBuilder;
-
-import protobuf.RefereeOuterClass;
-import protobuf.RefereeOuterClass.RefereeOrBuilder;
+import protobuf.RefereeOuterClass.Referee;
 
 /**
- * The GeometryPacket class.
+ * The Referee class.
  *
  * @author Rimon Oz
+ * @author Jeroen de Jong
+ * 
+ * @see {@link org.ssh.managers.manager.Pipelines Pipelines}
+ * @see {@link org.ssh.pipelines.PipelinePacket PipelinePackets}
+ * @see {@link org.ssh.pipelines.packets.ProtoPacket ProtoPacket}
  */
-public class RefereePacket extends PipelinePacket<RefereeOuterClass> {
+public class RefereePacket extends ProtoPacket<Referee> {
     
-    /** The data. */
-    private RefereeOrBuilder data;
-
+    public RefereePacket(ByteArrayInputStream byteStream) {
+        super(byteStream);
+    }
+    
 }

@@ -1,15 +1,20 @@
 package org.ssh.pipelines.packets;
 
-import org.ssh.pipelines.PipelinePacket;
-
-import protobuf.Detection;
+import protobuf.Detection.DetectionFrame;
 
 /**
- * The DetectionPacket class.
+ * Detection packet class.
+ * 
+ * @author Jeroen
+ * 
+ * @see {@link org.ssh.managers.manager.Pipelines Pipelines}
+ * @see {@link org.ssh.pipelines.PipelinePacket PipelinePackets}
+ * @see {@link org.ssh.pipelines.packets.ProtoPacket ProtoPacket}
  *
- * @author Rimon Oz
  */
-public class DetectionPacket extends PipelinePacket<Detection> {
-    
-    
+public class DetectionPacket extends ProtoPacket<DetectionFrame> {
+    public DetectionPacket(DetectionFrame detectionFrame) {
+        super(detectionFrame);
+    }
+
 }

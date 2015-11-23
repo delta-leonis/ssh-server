@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.ssh.models.enums.SendMethod;
-import org.ssh.pipelines.PipelinePacket;
 import org.ssh.pipelines.packets.RadioPacket;
 import org.ssh.senders.SenderInterface;
 import org.ssh.services.service.Consumer;
@@ -72,7 +71,7 @@ public class RadioPacketConsumer extends Consumer<RadioPacket> {
         // get default sendmethods
         SendMethod[] methods = packet.getSendMethods();
         // replace them by specified sendmethods if neccecary
-        if ((packet.getSendMethods() == null) || (packet.getSendMethods().length == 0))
+        if (packet.getSendMethods().length == 0)
             methods = this.sendMethods.toArray(methods);
             
         RadioPacketConsumer.LOG.info("Trying to send a consumed packet");

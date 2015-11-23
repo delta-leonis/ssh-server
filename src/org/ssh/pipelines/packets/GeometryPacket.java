@@ -1,26 +1,18 @@
 package org.ssh.pipelines.packets;
 
-import org.ssh.pipelines.PipelinePacket;
-
-import protobuf.Geometry;
-import protobuf.Geometry.GeometryDataOrBuilder;
+import protobuf.Geometry.GeometryData;
 
 /**
- * The GeometryPacket class.
- *
- * @author Rimon Oz
+ * Geometry packet class
+ * 
+ * @author Jeroen
+ * 
+ * @see {@link org.ssh.managers.manager.Pipelines Pipelines}
+ * @see {@link org.ssh.pipelines.PipelinePacket PipelinePackets}
+ * @see {@link org.ssh.pipelines.packets.ProtoPacket ProtoPacket}
  */
-public class GeometryPacket extends PipelinePacket<Geometry> {
-    
-    /** The data. */
-    private GeometryDataOrBuilder data;
-    
-    /**
-     * Gets the data.
-     *
-     * @return the data
-     */
-    public GeometryDataOrBuilder getData() {
-        return this.data;
+public class GeometryPacket extends ProtoPacket<GeometryData> {
+    public GeometryPacket(GeometryData geometryData) {
+        super(geometryData);
     }
 }

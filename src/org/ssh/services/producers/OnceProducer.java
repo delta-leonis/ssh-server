@@ -6,6 +6,7 @@ import org.ssh.services.Service;
 import org.ssh.services.service.Producer;
 
 import protobuf.Radio.RadioProtocolCommand;
+import protobuf.Radio.RadioProtocolWrapper;
 
 /**
  * The Class OnceProducer.
@@ -29,8 +30,10 @@ public class OnceProducer extends Producer<RadioPacket> {
         this.setCallable(() -> {
             Service.LOG.finer("Produced a RadioPacket!");
             // create a new RadioPacket
-            return new RadioPacket(RadioProtocolCommand.newBuilder().setRobotId(4).setVelocityR(0.2f).setVelocityX(4.0f)
-                    .setVelocityY(9293932.0f));
+            RadioProtocolCommand command = RadioProtocolCommand.newBuilder().setRobotId(4).setVelocityR(0.2f).setVelocityX(4.0f)
+            .setVelocityY(9293932.0f).build();
+            // create a new packet
+            return new RadioPacket(RadioProtocolWrapper.newBuilder().addCommand(command));
         });
     }
 }
