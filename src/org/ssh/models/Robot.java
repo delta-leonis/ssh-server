@@ -14,7 +14,7 @@ public class Robot extends FieldObject {
     public static final transient float ROBOT_HEIGHT = 150.0f;
                                            
     /** The robot radius */
-    public static final transient float ROBOT_RADIUS = 180.0f;
+    public static final transient float ROBOT_DIAMETER = 180.0f;
                                            
     /**
      * Unique robot id [0-15]
