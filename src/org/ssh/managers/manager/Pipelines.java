@@ -110,9 +110,9 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
         // get the list of services
         final List<C> collect = (List<C>) Services.getOfType(Coupler.class).stream()
                 // filter out the services compatible with this pipeline
-                .filter(service -> ((Service<?>) service).getType().equals(pipeline.getType()))
+                .filter(service -> service.getType().equals(pipeline.getType()))
                 // map them to the correct parameterized type and collect them in a list
-                .map(service -> ((Service<?>) service).getType().getClass().cast(service)).collect(Collectors.toList());
+                .map(service -> service.getType().getClass().cast(service)).collect(Collectors.toList());
                 
         Pipelines.LOG.info("%d Coupler(s) found to be compatible with type %s",
                 collect.size(),
@@ -141,9 +141,9 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
         // get the list of services
         final List<C> collect = (List<C>) Services.getOfType(Producer.class).stream()
                 // filter out the services compatible with this pipeline
-                .filter(service -> ((Service<?>) service).getType().equals(pipeline.getType()))
+                .filter(service -> service.getType().equals(pipeline.getType()))
                 // map them to the correct parameterized type and collect them in a list
-                .map(service -> ((Service<?>) service).getType().getClass().cast(service)).collect(Collectors.toList());
+                .map(service -> service.getType().getClass().cast(service)).collect(Collectors.toList());
                 
         Pipelines.LOG.info("%d Producers found to be compatible with genericType %s",
                 collect.size(),
@@ -172,7 +172,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
         @SuppressWarnings ("unchecked")
         final List<C> collect = (List<C>) Pipelines.getAll().stream()
                 // filter out the compatible ones by type
-                .filter(pipeline -> ((Pipeline<?>) pipeline).getType().getTypeName().equals(packetType.getTypeName()))
+                .filter(pipeline -> pipeline.getType().getTypeName().equals(packetType.getTypeName()))
                 .collect(Collectors.toList());
                 
         Pipelines.LOG.info("%d pipelines found to be compatible with type %s", collect.size(), packetType.toString());

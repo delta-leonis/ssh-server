@@ -71,7 +71,8 @@ public abstract class ManagerController<M extends Manageable> {
             return false;
         }
         else {
-            this.manageables = ImmutableList.<M> builder().addAll(this.manageables).add((M) manageable).build();
+            this.manageables = ImmutableList.<M>builder().addAll(this.manageables)
+                    .add((M)manageable).build();
             return true;
         }
     }

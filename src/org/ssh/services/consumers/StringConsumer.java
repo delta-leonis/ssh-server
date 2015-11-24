@@ -1,6 +1,5 @@
 package org.ssh.services.consumers;
 
-import org.ssh.pipelines.PipelinePacket;
 import org.ssh.pipelines.packets.RadioPacket;
 import org.ssh.services.Service;
 import org.ssh.services.service.Consumer;
