@@ -88,6 +88,14 @@ public class Field extends Model {
     }
     
     /**
+     * Gets the {@link List} of the goals on the field.
+     * @return The {@link List} of the goals on the field.
+     */
+    public List<Goal> getFieldGoals() {
+        return this.goals;
+    }
+    
+    /**
      * @return Width of the field.
      */
     public int getFieldWidth() {
