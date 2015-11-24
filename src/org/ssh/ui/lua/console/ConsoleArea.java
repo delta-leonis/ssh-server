@@ -9,6 +9,7 @@ import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.wellbehaved.event.EventHandlerHelper;
 import org.fxmisc.wellbehaved.event.EventPattern;
 
+import javafx.application.Platform;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 
@@ -49,6 +50,13 @@ public class ConsoleArea extends ColoredCodeArea {
         EventHandlerHelper.install(this.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.V, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN))
                         .act(event -> this.paste()).create());
+        // Keycombination ENTER + ALT for printlns
+        EventHandlerHelper.install(this.onKeyPressedProperty(),
+                EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.ENTER, KeyCombination.ALT_DOWN))
+                        .act(event ->
+                                Platform.runLater(() ->
+                                    this.insertText(this.getCaretPosition(), "\n"))
+                                ).create());
     }
     
     /**
