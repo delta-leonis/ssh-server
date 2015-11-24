@@ -1,7 +1,7 @@
 # ssh-server
 
 This is the RoboCup server software for team SSH (Small Size Holland) for running SSL-games. Runnable jar-files are to be found on the CI-server (URI TBA).
-
+ 
 ## Directory structure
 
     .

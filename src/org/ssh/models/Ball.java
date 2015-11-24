@@ -13,7 +13,7 @@ public class Ball extends FieldObject {
     /**
      * Height of the ball as provided by ssl-vision
      */
-    @Alias ("z")
+    @Alias("z")
     private Float zPosition;
     
     /**
@@ -24,14 +24,15 @@ public class Ball extends FieldObject {
     }
     
     @Override
-    public String getSuffix() {
+    public String getSuffix(){
         return "";
     }
+    
     
     /**
      * @return Height of the ball as provided by ssl-vision
      */
-    public Float getZPos() {
+    public Float getZPos(){
         return zPosition;
     }
     
