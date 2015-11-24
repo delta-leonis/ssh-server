@@ -89,7 +89,7 @@ public class FieldGO extends GameObject {
     private static final String    GRASS_TEXTURE_FILE        = "/org/ssh/view/textures/field/grass.png";
                                                              
     /** The line offset. */
-    private static final double    LINE_Y_OFFSET             = 10.0;
+    private static final double    LINE_Y_OFFSET             = 1.0;
                                                              
     /** The number of divisions in the mid circle. */
     private static final int       MID_CIRCLE_NUM_DIVISIONS  = 1000;

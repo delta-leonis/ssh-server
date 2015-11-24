@@ -22,10 +22,10 @@ public class ThirdPersonCamera extends GameObject {
     
     // TODO: Move to config
     /** The Constant DEFAULT_NEAR_PANE. */
-    public static final double      DEFAULT_NEAR_PANE          = 0.1;
+    public static final double      DEFAULT_NEAR_PANE          = 10;
                                                                
     /** The Constant DEFAULT_FAR_PANE. */
-    public static final double      DEFAULT_FAR_PANE           = 10000000.0;
+    public static final double      DEFAULT_FAR_PANE           = 30000.0;
                                                                
     /** The Constant INITIAL_CAMERA_DISTANCE. */
     public static final double      INITIAL_CAMERA_DISTANCE    = -10000.0;
