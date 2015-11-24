@@ -1,6 +1,5 @@
 package org.ssh.ui.lua.console;
 
-import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +10,6 @@ import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleSpans;
 import org.fxmisc.richtext.StyleSpansBuilder;
-import org.ssh.util.Logger;
 
 /**
  * Class used to color code the given keywords. It colors the following symbols: ( ) { } [ ] "text"
@@ -21,9 +19,6 @@ import org.ssh.util.Logger;
  * @author Thomas Hakkers Most code originates from https://github.com/TomasMikula/RichTextFX
  */
 public class ColoredCodeArea extends CodeArea {
-    
-    // A logger for errorhandling
-    private static final Logger   LOG               = Logger.getLogger();
                                                     
     /** Lua keyword variables */
     private static final String[] KEYWORDS          = new String[] { "and", "break", "do", "else", "elseif", "end",
@@ -89,24 +84,9 @@ public class ColoredCodeArea extends CodeArea {
     private static String getCssBasedOnPattern(Matcher matcher) {
         // Switch what css block to use based on the group found by the matcher
         for (String keyword : PATTERNS)
-            if (matcher.group(keyword) != null) return keyword.toLowerCase();
+            if (matcher.group(keyword) != null) 
+                return "codearea-" + keyword.toLowerCase();
         return null;
-    }
-    
-    /**
-     * Returns the url of the given path. Also prints an error on the {@link ColoredCodeArea} if the
-     * file couldn't be found
-     *
-     * @param path
-     *            Of the css file
-     * @return The path to the css file that works.
-     */
-    public String getCssSheet(final String path) {
-        final URL url = this.getClass().getResource(path);
-        if (url == null) {
-            LOG.warning("Resource " + path + " not found. Aborting.");
-        }
-        return url.toExternalForm();
     }
     
     /**
@@ -119,8 +99,8 @@ public class ColoredCodeArea extends CodeArea {
         // Make sure any changes in textcoloring are being notified to this text area
         this.richChanges().subscribe(change -> this.setStyleSpans(0, computeHighlighting(this.getText())));
         // Add stylesheets to this text area
-        this.getStylesheets().add(this.getCssSheet(this.styleSheet));
-        this.getStyleClass().add("background");
+        this.getStylesheets().add(this.styleSheet);
+        this.getStyleClass().add("codearea-background");
     }
     
     /**
@@ -143,13 +123,18 @@ public class ColoredCodeArea extends CodeArea {
         String funcPattern = "|(?<FUNC>" + "\\b("
                 + (functionHighlights == null ? " " : String.join("|", functionHighlights)) + ")\\b" + ")";
         // Creates a pattern for everything that needs to be highlighted
-        pattern = Pattern.compile("(?<KEYWORD>" + ColoredCodeArea.KEYWORD_PATTERN + ")"
-        // Add the Java Objects and Functions that need to be highlighted
-                + objPattern + funcPattern + "|(?<PAREN>" + ColoredCodeArea.PAREN_PATTERN + ")" + "|(?<BRACE>"
-                + ColoredCodeArea.BRACE_PATTERN + ")" + "|(?<BRACKET>" + ColoredCodeArea.BRACKET_PATTERN + ")"
-                + "|(?<SEMICOLON>" + ColoredCodeArea.SEMICOLON_PATTERN + ")" + "|(?<STRING>"
-                + ColoredCodeArea.STRING_PATTERN + ")" + "|(?<COMMENT>" + ColoredCodeArea.COMMENT_PATTERN + ")"
-                + "|(?<DEFAULT>" + ColoredCodeArea.DEFAULT + ")");
+        pattern = 
+                        Pattern.compile("(?<KEYWORD>" + ColoredCodeArea.KEYWORD_PATTERN + ")"
+                        // Add the Java Objects and Functions that need to be highlighted
+                        + objPattern 
+                        + funcPattern 
+                        + "|(?<PAREN>" + ColoredCodeArea.PAREN_PATTERN + ")" 
+                        + "|(?<BRACE>" + ColoredCodeArea.BRACE_PATTERN + ")" 
+                        + "|(?<BRACKET>" + ColoredCodeArea.BRACKET_PATTERN + ")"
+                        + "|(?<SEMICOLON>" + ColoredCodeArea.SEMICOLON_PATTERN + ")" 
+                        + "|(?<STRING>" + ColoredCodeArea.STRING_PATTERN + ")" 
+                        + "|(?<COMMENT>" + ColoredCodeArea.COMMENT_PATTERN + ")"
+                        + "|(?<DEFAULT>" + ColoredCodeArea.DEFAULT + ")");
                 
         this.styleSheet = path;
         this.setupColorCoding();

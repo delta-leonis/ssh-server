@@ -22,7 +22,7 @@ import javafx.scene.input.KeyCombination;
 public class ConsoleArea extends ColoredCodeArea {
     
     /** The path to the stylesheet */
-    private static final String STYLESHEET = "/css/java-keywords.css";
+    private static final String STYLESHEET = "org/ssh/view/css/application.css";
     /** The currentline of the console. Anything before this line can't be edited */
     private int                 currentLine;
                                 

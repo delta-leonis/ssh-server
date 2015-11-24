@@ -34,7 +34,7 @@ public class ScriptEditor extends UIComponent {
                                            
     private ColoredCodeArea     codeArea;
     private String              path;
-    private static final String STYLESHEET = "/css/java-keywords.css";
+    private static final String STYLESHEET = "org/ssh/view/css/application.css";
     private FileChooser         fileChooser;
     private VBox                root;
                                 

@@ -15,4 +15,45 @@
 	-fx-fill: orange;
 }
 
-/* Check slider.css to see how icons can be applied to buttons */
+/* *** ColoredCodeArea Style *** */
+.codearea-background{
+	-fx-background-color: #333333;
+	-fx-highlight-fill: white;
+	-fx-font-size: 12;
+}
+.codearea-default{
+	-fx-fill: lightgreen;
+}
+.codearea-keyword {
+    -fx-fill: pink;
+    -fx-font-weight: bold;
+}
+.codearea-obj{
+	-fx-fill: orange;
+}
+.codearea-func{
+    -fx-fill: lightblue;
+}
+.codearea-semicolon {
+    -fx-font-weight: bold;
+}
+.codearea-paren {
+    -fx-fill: Salmon;
+    -fx-font-weight: bold;
+}
+.codearea-bracket {
+    -fx-fill: gold;
+    -fx-font-weight: bold;
+}
+.codearea-brace {
+    -fx-fill: teal;
+    -fx-font-weight: bold;
+}
+.codearea-string {
+    -fx-fill: LightSkyBlue;
+}
+
+.codearea-comment {
+	-fx-fill: cadetblue;
+}
+/* *** ColoredCodeArea END *** */

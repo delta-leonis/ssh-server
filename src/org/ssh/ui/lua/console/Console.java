@@ -15,6 +15,7 @@ import org.fxmisc.wellbehaved.event.EventHandlerHelper;
 import org.fxmisc.wellbehaved.event.EventPattern;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
+import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 import org.luaj.vm2.lib.jse.JsePlatform;
 import org.ssh.managers.manager.Services;
@@ -52,9 +53,11 @@ import javafx.scene.input.KeyCombination;
  * @see java-keyords.css for the stylesheet
  */
 public class Console extends Tab {
-    
+
     // A logger for errorhandling
     private static final Logger LOG = Logger.getLogger();
+
+    private static final String INITIALISATION_SCRIPT = "./scripts/initialisation_script.lua";
     
     /** The cursor used by the console */
     private static final String  CURSOR          = "> ";
@@ -175,10 +178,6 @@ public class Console extends Tab {
         EventHandlerHelper.install(this.consoleArea.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.ENTER)).act(event -> this.handleEnter())
                         .create());
-        // Keycombination ENTER + ALT for printlns
-        EventHandlerHelper.install(this.consoleArea.onKeyPressedProperty(),
-                EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.ENTER, KeyCombination.ALT_DOWN))
-                        .act(event -> this.println("")).create());
         // Keypress TAB for autocomplete
         EventHandlerHelper.install(this.consoleArea.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.TAB)).act(event -> this.handleTab()).create());
@@ -309,7 +308,7 @@ public class Console extends Tab {
         }
         catch (LuaError exception) {
             Console.LOG.exception(exception);
-            this.println(exception.getClass().getSimpleName() + " in line: " + command);
+            this.println("\n\tERROR: " + exception.getMessage());
         }
         
         this.printCursor();
@@ -431,10 +430,9 @@ public class Console extends Tab {
             if (this.functionClasses != null) 
                 for (final Object o : this.functionClasses)
                     globals.set(LuaUtils.getSimpleName(o), CoerceJavaToLua.coerce(o));
-            // Add a useful sleep script
-            this.globals
-                    .load("local clock = os.clock function sleep(n) local t0 = clock() * 1000 while clock() * 1000 - t0 <= n do end end")
-                    .call();
+
+            this.globals.get("dofile").call(LuaValue.valueOf(INITIALISATION_SCRIPT));
+
             // Important piece of code that fixed all bugs. Do not decode to
             // check its contents.
             this.globals
@@ -451,7 +449,7 @@ public class Console extends Tab {
         }
         catch (final Exception exception) {
             LOG.exception(exception);
-            this.println("Exception occured whilst setting up console");
+            this.println("Exception occured whilst setting up console.\n" + exception.getMessage());
         }
     }
     
@@ -464,6 +462,9 @@ public class Console extends Tab {
         if (!this.recentCommands.isEmpty()) {
             // If we're not scrolling through commands yet
             if (!this.selecting) {
+                final String currentCommand = this.consoleArea.getText(this.currentLine, this.consoleArea.getText().length());
+                if(currentCommand != "")
+                    this.recentCommands.add(currentCommand);
                 // Start selecting
                 this.selecting = true;
                 // Make a new iterator starting at the last command
