@@ -1,7 +1,6 @@
 package org.ssh.models;
 
 import org.ssh.models.enums.TeamColor;
-import org.ssh.util.Alias;
 
 /**
  * Describes a Robot on the {@link Field} as a {@link FieldObject}
@@ -12,8 +11,8 @@ import org.ssh.util.Alias;
 public class Robot extends FieldObject {
     
     /** The robot height. */
-    public static final transient float ROBOT_HEIGHT   = 150.0f;
-                                                       
+    public static final transient float ROBOT_HEIGHT = 150.0f;
+                                           
     /** The robot radius */
     public static final transient float ROBOT_DIAMETER = 180.0f;
                                                        
