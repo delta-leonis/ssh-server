@@ -11,6 +11,7 @@ import org.ssh.managers.ManagerController;
 import org.ssh.managers.controllers.ServicesController;
 import org.ssh.pipelines.PipelinePacket;
 import org.ssh.services.Service;
+import org.ssh.ui.lua.console.AvailableInLua;
 import org.ssh.util.Logger;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -25,6 +26,7 @@ import com.google.common.util.concurrent.ListenableScheduledFuture;
  *
  * @author Rimon Oz
  */
+@AvailableInLua
 public final class Services implements Manager<Service<? extends PipelinePacket<? extends Object>>> {
     
     /**

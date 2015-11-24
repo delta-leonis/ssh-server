@@ -57,7 +57,7 @@ public class Console extends Tab {
     // A logger for errorhandling
     private static final Logger LOG = Logger.getLogger();
 
-    private static final String INITIALISATION_SCRIPT = "./scripts/initialisation_script.lua";
+    private static final String INITIALISATION_SCRIPT = "./scripts/init.lua";
     
     /** The cursor used by the console */
     private static final String  CURSOR          = "> ";
