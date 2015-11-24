@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.ssh.managers.controllers.ModelController;
 import org.ssh.models.Model;
 import org.ssh.models.Settings;
+import org.ssh.ui.lua.console.AvailableInLua;
 import org.ssh.util.Logger;
 
 /**
@@ -17,6 +18,7 @@ import org.ssh.util.Logger;
  * @see #get(String)
  *       
  */
+@AvailableInLua
 public final class Models {
     
     /**
