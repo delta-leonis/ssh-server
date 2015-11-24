@@ -10,23 +10,16 @@ import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.field3d.core.math.Vector3f;
 import org.ssh.field3d.core.shapes.FlatArc3D;
 import org.ssh.field3d.core.shapes.FlatLine3D;
-import org.ssh.field3d.gameobjects.overlay.contextmenus.ContextOverlayGO;
-import org.ssh.models.Robot;
 import org.ssh.util.Logger;
 
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
-import javafx.geometry.Point3D;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.MeshView;
-import protobuf.Geometry.Vector2f;
 
 /**
  * FieldGO class. This class creates the field, the goals, lines and arcs.
@@ -36,11 +29,10 @@ import protobuf.Geometry.Vector2f;
  *      
  */
 // TODO: Remove magic numbers
-// TODO: Change lines from box to FlatLine3D
 // TODO: Read public statics from model
 public class FieldGO extends GameObject {
     
-    /** The penalty spot distance form goal. */
+    /** The penalty spot distance form goal */
     public static final double     FIELD_PENALTY_SPOT        = 1000.0;
                                                              
     /** The penalty spot size. */
@@ -89,7 +81,7 @@ public class FieldGO extends GameObject {
     private static final String    GRASS_TEXTURE_FILE        = "/org/ssh/view/textures/field/grass.png";
                                                              
     /** The line offset. */
-    private static final double    LINE_Y_OFFSET             = 1.0;
+    private static final double    LINE_Y_OFFSET             = 10.0;
                                                              
     /** The number of divisions in the mid circle. */
     private static final int       MID_CIRCLE_NUM_DIVISIONS  = 1000;
@@ -115,7 +107,7 @@ public class FieldGO extends GameObject {
     /** The width of the field. */
     private final double           width;
                                    
-    /** The depth of the field. */
+    /** The depth of the field */
     private final double           depth;
                                    
     /** The width of the tile. */
@@ -123,9 +115,6 @@ public class FieldGO extends GameObject {
                                    
     /** the depth of the tile. */
     private final double           tileDepth;
-                                   
-    /** The context overlay go. */
-    private ContextOverlayGO       contextOverlayGO;
                                    
     /**
      * Constructor.
@@ -151,21 +140,12 @@ public class FieldGO extends GameObject {
         
         // Creating penalty spots
         this.penaltySpotEast = new PenaltySpotGO(this.getGame(),
-                new Vector3f((float) ((width / 2.0) - FieldGO.FIELD_PENALTY_SPOT), 20, 0),
+                new Vector3f((float) ((width / 2.0) - FieldGO.FIELD_PENALTY_SPOT), (float)FieldGO.LINE_Y_OFFSET, 0),
                 FieldGO.FIELD_PENALTY_SPOT_SIZE);
         this.penaltySpotWest = new PenaltySpotGO(this.getGame(),
-                new Vector3f((float) (-(width / 2.0) + FieldGO.FIELD_PENALTY_SPOT), 20, 0),
+                new Vector3f((float) (-(width / 2.0) + FieldGO.FIELD_PENALTY_SPOT), (float)FieldGO.LINE_Y_OFFSET, 0),
                 FieldGO.FIELD_PENALTY_SPOT_SIZE);
-        
-        List<Robot> robots = null;
-        if (game instanceof FieldGame) {
-            
-            robots = ((FieldGame) game).getRobots();
-            
-        }
                 
-        this.contextOverlayGO = new ContextOverlayGO(getGame(), robots);
-        
         // Setting dimensions
         this.width = width;
         this.depth = height;
@@ -211,8 +191,6 @@ public class FieldGO extends GameObject {
         // Adding game objects to the game
         this.getGame().addGameObject(this.penaltySpotEast);
         this.getGame().addGameObject(this.penaltySpotWest);
-        
-        this.getGame().addGameObject(this.contextOverlayGO);
     }
     
     /**
@@ -253,28 +231,32 @@ public class FieldGO extends GameObject {
     
     /**
      * addLine method. This method creates and adds flat lines to the world.
-     *
-     * @param start
-     *            The {@link Vector2f starting point} of the line.
-     * @param end
-     *            The {@link Vector2f ending point} of the line.
+     * 
+     * @param startX
+     *            The x-coordinate for the start of the line.
+     * @param startZ
+     *            The z-coordinate for the start of the line.
+     * @param endX
+     *            The x-coordinate for the end of the line.
+     * @param endZ
+     *            The z-coordinate for the end of the line.
      * @param thickness
-     *            The thickness of the line.
-     * @return The {@link FlatLine3D}.
+     *            The thickness of the line
+     * @return The line created.
      */
-    private FlatLine3D addLine(final Vector2f start, final Vector2f end, final double thickness) {
+    private FlatLine3D addLine(final Point2D start, final Point2D end, final double thickness) {
         
         final FlatLine3D line = new FlatLine3D(start, end, thickness);
-        final MeshView lineMesh = line.getMeshView();
+        MeshView lineMesh = line.getMeshView();
         
         // Add to lines
         this.fieldLines.add(line);
         
-        // Translate line up
-        lineMesh.setTranslateY(LINE_Y_OFFSET);
+        // Translate a bit upwards
+        lineMesh.setTranslateY(FieldGO.LINE_Y_OFFSET);
         
         // Add to world group
-        Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(line.getMeshView()));
+        this.getGame().getWorldGroup().getChildren().add(lineMesh);
         
         // Return the line
         return line;
@@ -284,10 +266,10 @@ public class FieldGO extends GameObject {
      * addBox method. This method creates and adds an box to the world.
      * 
      * @param position
-     *            The {@link Vector3f position} of the box.
+     *            The position of the box
      * @param dimension
-     *            The {@link Vector3f dimension} of the box.
-     * @return The {@link Box box} created.
+     *            The dimension of the box
+     * @return The box created.
      */
     private Box addBox(Vector3f position, Vector3f dimension) {
         
@@ -334,29 +316,29 @@ public class FieldGO extends GameObject {
         final MeshView goalWestArcLeftMesh = new FlatArc3D(WEST_GOAL_ARC_LEFT_START,
                 WEST_GOAL_ARC_LEFT_END,
                 GOAL_ARC_DIAMETER,
-                GOAL_ARC_THICKNESS,
+                FieldGame.FIELD_LINE_WIDTH,
                 GOAL_ARC_NUM_DIVISIONS).MeshView();
         final MeshView goalWestArcRightMesh = new FlatArc3D(WEST_GOAL_ARC_RIGHT_START,
                 WEST_GOAL_ARC_RIGHT_END,
                 GOAL_ARC_DIAMETER,
-                GOAL_ARC_THICKNESS,
+                FieldGame.FIELD_LINE_WIDTH,
                 GOAL_ARC_NUM_DIVISIONS).MeshView();
                 
         final MeshView goalEastArcLeftMesh = new FlatArc3D(EAST_GOAL_ARC_LEFT_START,
                 EAST_GOAL_ARC_LEFT_END,
                 GOAL_ARC_DIAMETER,
-                GOAL_ARC_THICKNESS,
+                FieldGame.FIELD_LINE_WIDTH,
                 GOAL_ARC_NUM_DIVISIONS).MeshView();
         final MeshView goalEastArcRightMesh = new FlatArc3D(EAST_GOAL_ARC_RIGHT_START,
                 EAST_GOAL_ARC_RIGHT_END,
                 GOAL_ARC_DIAMETER,
-                GOAL_ARC_THICKNESS,
+                FieldGame.FIELD_LINE_WIDTH,
                 GOAL_ARC_NUM_DIVISIONS).MeshView();
                 
         final MeshView midCircleMesh = new FlatArc3D(0.0,
                 360.0,
                 MID_CIRCLE_RADIUS,
-                MID_CIRCLE_THICKNESS,
+                FieldGame.FIELD_LINE_WIDTH,
                 MID_CIRCLE_NUM_DIVISIONS).MeshView();
                 
         // Translate arcs into position
@@ -479,50 +461,41 @@ public class FieldGO extends GameObject {
      */
     private void generateLines() {
         
-        // TODO: change lines to FlatLine3D
-        // TODO: remove magic numbers
+        // TODO: implement vision model
+        final Point2D midLineStart = new Point2D(0, 3000.0);
+        final Point2D midLineEnd = new Point2D(0, -3000.0);
         
-        // Calculate mid line
-        final Vector3f midLinePos = new Vector3f(0.0f, 10.0f, 0.0f);
-        final Vector3f midLineDim = new Vector3f(10.0f,
-                (float) FieldGame.FIELD_LINE_HEIGHT,
-                (float) FieldGame.FIELD_DEPTH);
-                
-        // Calculate south line
-        final Vector3f southSideLinePos = new Vector3f(0.0f, 10.0f, (float) (-FieldGame.FIELD_DEPTH / 2.0));
-        final Vector3f southSisdeLineDim = new Vector3f((float) FieldGame.FIELD_WIDTH,
-                (float) FieldGame.FIELD_LINE_HEIGHT,
-                10.0f);
-        // Calculate north line
-        final Vector3f northSideLinePos = new Vector3f(0.0f, 10.0f, (float) (FieldGame.FIELD_DEPTH / 2.0));
-        final Vector3f northSideLineDim = new Vector3f((float) FieldGame.FIELD_WIDTH,
-                (float) FieldGame.FIELD_LINE_HEIGHT,
-                10.0f);
-        // Calculate west line
-        final Vector3f westSideLinePos = new Vector3f((float) (FieldGame.FIELD_WIDTH / 2.0), 10.0f, 0.0f);
-        final Vector3f westSideLineDim = new Vector3f(10.0f,
-                (float) FieldGame.FIELD_LINE_HEIGHT,
-                (float) FieldGame.FIELD_DEPTH);
-        final Vector3f eastSideLinePos = new Vector3f((float) -(FieldGame.FIELD_WIDTH / 2.0), 10.0f, 0.0f);
-        final Vector3f eastSideLineDim = new Vector3f(10.0f,
-                (float) FieldGame.FIELD_LINE_HEIGHT,
-                (float) FieldGame.FIELD_DEPTH);
-                
-        // Calculate east defense line
-        final Vector3f goalEastDefencePos = new Vector3f((float) -(FieldGame.FIELD_WIDTH / 2.0) + 500.0f, 10.0f, 0.0f);
-        final Vector3f goalEastDefenceDim = new Vector3f((float) FieldGame.FIELD_LINE_WIDTH, 10.0f, 500.0f);
-        // Calculate west defense line
-        final Vector3f goalWestDefencePos = new Vector3f((float) ((FieldGame.FIELD_WIDTH / 2.0) - 500), 10.0f, 0.0f);
-        final Vector3f goalWestDefenceDim = new Vector3f((float) FieldGame.FIELD_LINE_WIDTH, 10.0f, 500.0f);
+        final Point2D northLineStart = new Point2D(-4500.0, 3000.0);
+        final Point2D northLineEnd = new Point2D(4500.0, 3000.0);
         
-        // Adding boxes to field
-        this.addBox(midLinePos, midLineDim);
-        this.addBox(southSideLinePos, southSisdeLineDim);
-        this.addBox(northSideLinePos, northSideLineDim);
-        this.addBox(westSideLinePos, westSideLineDim);
-        this.addBox(eastSideLinePos, eastSideLineDim);
-        this.addBox(goalEastDefencePos, goalEastDefenceDim);
-        this.addBox(goalWestDefencePos, goalWestDefenceDim);
+        final Point2D southLineStart = new Point2D(-4500.0, -3000.0);
+        final Point2D southLineEnd = new Point2D(4500.0, -3000.0);
+        
+        final Point2D westLineStart = new Point2D(-4500.0, -3000.0);
+        final Point2D westLineEnd = new Point2D(-4500.0, 3000.0);
+        
+        final Point2D eastLineStart = new Point2D(4500.0, -3000.0);
+        final Point2D eastLineEnd = new Point2D(4500.0, 3000.0);
+        
+        final Point2D eastDefenceLineStart = new Point2D(4000.0, 250.0);
+        final Point2D eastDefenceLineEnd = new Point2D(4000.0, -250.0);
+        
+        final Point2D westDefenceLineStart = new Point2D(-4000.0, 250.0);
+        final Point2D westDefenceLineEnd = new Point2D(-4000.0, -250.0);
+        
+        // Adding mid line
+        this.addLine(midLineStart, midLineEnd, FieldGame.FIELD_LINE_WIDTH);
+        
+        // Adding north & south lines
+        this.addLine(northLineStart, northLineEnd, FieldGame.FIELD_LINE_WIDTH);
+        this.addLine(southLineStart, southLineEnd, FieldGame.FIELD_LINE_WIDTH);
+        
+        // Adding east & west lines
+        this.addLine(eastLineEnd, eastLineStart, FieldGame.FIELD_LINE_WIDTH);
+        this.addLine(westLineEnd, westLineStart, FieldGame.FIELD_LINE_WIDTH);
+        
+        this.addLine(westDefenceLineStart, westDefenceLineEnd, FieldGame.FIELD_LINE_WIDTH);
+        this.addLine(eastDefenceLineStart, eastDefenceLineEnd, FieldGame.FIELD_LINE_WIDTH);
     }
     
     /**
@@ -544,31 +517,6 @@ public class FieldGO extends GameObject {
                 
                 // Set box material
                 tmpBox.setMaterial(this.grassMaterial);
-                
-                // Hook on mouse clicked event
-                tmpBox.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    
-                    /**
-                     * {@inheritDoc}
-                     */
-                    @Override
-                    public void handle(MouseEvent mouseEvent) {
-                        
-                        // If the mouse event was with the right mouse button
-                        if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-                            
-                            // Getting location on field
-                            System.out.println();
-                            Point3D locOnField = mouseEvent.getPickResult().getIntersectedNode().localToParent(mouseEvent.getPickResult().getIntersectedPoint());
-                            
-                            // Set the location on the field of the context overlay
-                            contextOverlayGO.setFieldLoc(new Point2D(locOnField.getX(), locOnField.getZ()));
-                            
-                            // Show context menu
-                            contextOverlayGO.show();
-                        }
-                    }
-                });
                 
                 // Add box to field
                 this.addBox(tmpBox);

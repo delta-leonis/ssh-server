@@ -1,8 +1,8 @@
 package org.ssh.field3d.core.shapes;
 
+import javafx.geometry.Point2D;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
-import protobuf.Geometry.Vector2f;
 
 /**
  * FlatLine3D class
@@ -39,13 +39,13 @@ public class FlatLine3D {
      * @param thickness
      *            Thickness of the line.
      */
-    public FlatLine3D(final Vector2f startPoint, final Vector2f endPoint, final double thickness) {
+    public FlatLine3D(final Point2D startPoint, final Point2D endPoint, final double thickness) {
         
         // Create new mesh
         this.mesh = new TriangleMesh();
         
         // Build the mesh
-        this.buildMesh(startPoint.getX(), startPoint.getY(), startPoint.getX(), startPoint.getY(), thickness);
+        this.buildMesh(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY(), thickness);
     }
     
     /**
@@ -78,8 +78,8 @@ public class FlatLine3D {
         final double rotation = (Math.atan2(directionZ, directionX) * FlatLine3D.HALF_CIRCLE_DEG) / Math.PI;
         // Calculate alpha, and cos & sin values
         final double alpha = (rotation / FlatLine3D.HALF_CIRCLE_DEG) * Math.PI;
-        final double calcCos = Math.cos(alpha) * thickness;
-        final double calcSin = Math.sin(alpha) * thickness;
+        final double calcCos = Math.cos(alpha) * (thickness / 2.0);
+        final double calcSin = Math.sin(alpha) * (thickness / 2.0);
         
         // Calculate points
         final float x1 = (float) (startX - calcSin);
