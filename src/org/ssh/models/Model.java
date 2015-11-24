@@ -3,6 +3,7 @@ package org.ssh.models;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -86,8 +87,7 @@ public abstract class Model extends Manageable {
             if (oField.isPresent()) {
                 // get it and set it accessible
                 final Field field = oField.get();
-                if(Modifier.isFinal(field.getModifiers())
-                        || Modifier.isStatic(field.getModifiers())
+                if (Modifier.isFinal(field.getModifiers()) || Modifier.isStatic(field.getModifiers())
                         || !Modifier.isTransient(field.getModifiers()))
                     Model.LOG.info("%s is not a modifiable field", field.getName());
                 if (!field.isAccessible()) field.setAccessible(true);
@@ -159,22 +159,38 @@ public abstract class Model extends Manageable {
                 .reduce(true, (accumulator, succes) -> accumulator && succes);
     }
     
-    public Map<String, Object> toMap(){
+    /**
+     * Serialize this Model to a Map, with each fieldname as a key, and each fieldvalue as value.
+     * 
+     * @return map containing fieldnames and their values
+     */
+    public Map<String, Object> toMap() {
+        // get Class<?> object
         Class<?> clazz = this.getClass();
+        // create map
         Map<String, Object> fieldMap = new HashMap<String, Object>();
+        
+        // loop all inhereted classes, starting with the highest one
         while (clazz.getSuperclass() != null) {
+            // get all fields
             Stream.of(clazz.getDeclaredFields())
-            .filter(field -> !Modifier.isTransient(field.getModifiers()))
-            .filter(field -> !Modifier.isFinal(field.getModifiers()))
-            .filter(field -> !fieldMap.containsKey(field.getName()))
-            .forEach(Unchecked.consumer(field ->
-            {
-                if (!field.isAccessible()) field.setAccessible(true);
-                fieldMap.put(field.getName(), field.get(this));   
-            }));
-            
+                    // if it isn't transient
+                    .filter(field -> !Modifier.isTransient(field.getModifiers()))
+                    // and not final
+                    .filter(field -> !Modifier.isFinal(field.getModifiers()))
+                    // and not yet set (inheritance)
+                    .filter(field -> !fieldMap.containsKey(field.getName()))
+                    // loop all left-over fields
+                    .forEach(Unchecked.consumer(field -> {
+                        // get the right acces rights
+                        if (!field.isAccessible()) field.setAccessible(true);
+                        // put k-v in the map
+                        fieldMap.put(field.getName(), field.get(this));
+                    }));
+            // get next superclass
             clazz = clazz.getSuperclass();
         }
+        // return the map
         return fieldMap;
     }
     
@@ -211,7 +227,7 @@ public abstract class Model extends Manageable {
         return this.update(changeMap);
     }
     
-    /** 
+    /**
      * @return unique suffix describing the manageable.
      */
     public abstract String getSuffix();

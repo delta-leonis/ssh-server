@@ -1,6 +1,7 @@
 package org.ssh.models;
 
 import org.ssh.models.enums.TeamColor;
+import org.ssh.util.Alias;
 
 /**
  * Describes a Robot on the {@link Field} as a {@link FieldObject}
@@ -19,6 +20,7 @@ public class Robot extends FieldObject {
     /**
      * Unique robot id [0-15]
      */
+    @Alias("robot_id")
     private transient Integer robotId;
                               
     /**
@@ -31,11 +33,14 @@ public class Robot extends FieldObject {
      */
     private Float             dribbleSpeed;
     
-    /** The orientation of the robot in radians */
-    private Float             robotOrientation;
-    
     /** The boolean for the selected state */
     private Boolean           isSelected;
+    
+    /** Orientation which the robot is facing, not driving */
+    private Float orientation;
+    
+    /**  height of this robot as provided by ssl-vision */
+    private Float height;
                               
     /**
      * Instantiates a new robot with specified properties
@@ -74,6 +79,13 @@ public class Robot extends FieldObject {
     }
     
     /**
+     * @return the Orientation which the robot is facing, not driving
+     */
+    public Float getOrientation(){
+        return this.orientation;
+    }
+    
+    /**
      * @return a char that identifies this robot as B(lue) or Y(ellow)
      */
     public String getTeamColorIdentifier() {
@@ -86,14 +98,14 @@ public class Robot extends FieldObject {
     public boolean isSelected() {
         return this.isSelected;
     }
-    
-    /**
-     * @return the orientation of the robot in radians. east = 0, north = pi/2, west = pi | -pi
-     */
-    public float getRobotOrientation(){
-        return this.robotOrientation;
-    }
 
+    /**
+     * @return presumed height of this robot as provided by ssl-vision
+     */
+    public Float getHeight(){
+        return height;
+    }
+    
     @Override
     public String getSuffix() {
         return this.getTeamColorIdentifier() + robotId;

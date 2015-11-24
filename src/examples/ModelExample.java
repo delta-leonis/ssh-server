@@ -23,8 +23,6 @@ public class ModelExample {
 
         Optional<Model> oSettings = Models.get("settings");
         Settings settings = (Settings) oSettings.get();
-        System.out.println(settings.getProfilePath());
-        
         
         // without json
         Models.create(Robot.class, 3, TeamColor.YELLOW);
@@ -44,6 +42,7 @@ public class ModelExample {
         // found it!
         final Robot robot = (Robot) oRobot.get();
         
+        
         // we want to change a number of fields
         final Map<String, Object> changes = new HashMap<String, Object>();
         // new robotid
@@ -61,7 +60,8 @@ public class ModelExample {
         
         // manually update fields
         robot.update("position", new Point2D(23123, 33333), "teamColor", TeamColor.BLUE);
-        
+
+        robot.update("robot_id", 8282382);
         ModelExample.logger.info("after update: ");
         ModelExample.logger.info(robot.toString());
         

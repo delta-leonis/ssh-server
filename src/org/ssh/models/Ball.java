@@ -1,5 +1,7 @@
 package org.ssh.models;
 
+import org.ssh.util.Alias;
+
 /**
  * Describes a ball {@link FieldObject object}.
  * 
@@ -7,6 +9,12 @@ package org.ssh.models;
  *         
  */
 public class Ball extends FieldObject {
+    
+    /**
+     * Height of the ball as provided by ssl-vision
+     */
+    @Alias("z")
+    private Float zPosition;
     
     /**
      * Instantiates a ball
@@ -18,6 +26,14 @@ public class Ball extends FieldObject {
     @Override
     public String getSuffix(){
         return "";
+    }
+    
+    
+    /**
+     * @return Height of the ball as provided by ssl-vision
+     */
+    public Float getZPos(){
+        return zPosition;
     }
     
 }

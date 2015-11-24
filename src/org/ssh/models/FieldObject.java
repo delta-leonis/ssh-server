@@ -1,5 +1,7 @@
 package org.ssh.models;
 
+import org.ssh.util.Alias;
+
 import javafx.geometry.Point2D;
 
 /**
@@ -10,11 +12,21 @@ import javafx.geometry.Point2D;
  */
 public abstract class FieldObject extends Model {
     
+    /** certainty of detection by ssl-vision */
+    private Float confidence;
+    
     /**
-     * Position of this object on the {@link Field} in mm, according to the Cartesian system with
+     * X Position of this object on the {@link Field} in mm, according to the Cartesian system with
      * the origin in the center.
      */
-    protected Point2D position;
+    @Alias("x")
+    protected float xPosition;
+    /**
+     * Y Position of this object on the {@link Field} in mm, according to the Cartesian system with
+     * the origin in the center.
+     */
+    @Alias("y")
+    protected float yPosition;
     
     /**
      * Create a fieldObject
@@ -32,6 +44,13 @@ public abstract class FieldObject extends Model {
      * @return position of this object in mm.
      */
     public Point2D getPosition() {
-        return this.position;
+        return new Point2D(xPosition, yPosition);
+    }
+    
+    /**
+     * @return certainty of detection by ssl-vision
+     */
+    public Float getConfidence(){
+        return this.confidence;
     }
 }
