@@ -1,5 +1,7 @@
 package org.ssh.pipelines.packets;
 
+import java.io.ByteArrayInputStream;
+
 import org.ssh.models.enums.SendMethod;
 
 import protobuf.Radio.RadioProtocolWrapper;
@@ -33,6 +35,12 @@ public class RadioPacket extends ProtoPacket<RadioProtocolWrapper> {
     public RadioPacket(final RadioProtocolWrapper message, final SendMethod... methods) {
         super(message);
         this.sendMethods = methods;
+    }
+    
+
+    public RadioPacket(ByteArrayInputStream byteStream) {
+        super(byteStream);
+        this.sendMethods = null;
     }
     
     /**

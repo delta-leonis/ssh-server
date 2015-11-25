@@ -3,37 +3,31 @@ package org.ssh.services.consumers;
 import java.lang.reflect.Type;
 
 import org.ssh.pipelines.PipelinePacket;
+import org.ssh.pipelines.packets.ProtoPacket;
 import org.ssh.pipelines.packets.RadioPacket;
 import org.ssh.services.Service;
 import org.ssh.services.service.Consumer;
 
+import com.google.common.reflect.TypeToken;
+import com.google.protobuf.GeneratedMessage;
+
 /**
- * The Class StringConsumer.
  *
- * This is an example implementation of a Consumer.
- *
- * @author Rimon Oz
  */
-public class StringConsumer<P extends PipelinePacket<? extends Object>> extends Consumer<P> {
-    private Type type;
-    
-    
+public class ProtoConsumer<P extends ProtoPacket<? extends GeneratedMessage>> extends Consumer<P> {
     /**
      * Instantiates a new Consumer that consumes RadioPackets
      *
      * @param name
      *            The name of the StringConsumer
      */
-    public StringConsumer(final String name, Type type) {
+    public ProtoConsumer(final String name, Type type) {
         super(name);
-        this.type = type;
+        // This way anonymous ProtoConsumers can be created,
+        // without creating a empty class defining the type
+        this.genericType = (TypeToken<P>) TypeToken.of(type);
     }
-    
-    @Override
-    public Type getType(){
-        return type;
-    }
-    
+
     /*
      * (non-Javadoc)
      *
@@ -41,7 +35,7 @@ public class StringConsumer<P extends PipelinePacket<? extends Object>> extends 
      */
     @Override
     public boolean consume(P pipelinePacket) {
-        Service.LOG.info("The StringConsumer ate a packet that looked like: \n%s",
+        Service.LOG.info("The ProtoConsumer ate a packet that looked like: \n%s",
                 pipelinePacket.read().toString());
         return true;
     }

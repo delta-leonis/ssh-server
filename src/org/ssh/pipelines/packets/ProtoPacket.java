@@ -1,6 +1,10 @@
 package org.ssh.pipelines.packets;
 
 import java.io.ByteArrayInputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
+import java.util.stream.Stream;
 
 import org.ssh.pipelines.PipelinePacket;
 
@@ -8,12 +12,14 @@ import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message.Builder;
 
+import protobuf.Radio.RadioProtocolWrapper;
+
 /**
  * PipelinePacket for protobuf packets, class implements some usefull methods for use with protobuf
  * messages.
  * 
  * @author Jeroen de Jong
- *        
+ *         
  * @param <M>
  *            type of protobuf message.
  *            
@@ -21,6 +27,8 @@ import com.google.protobuf.Message.Builder;
  * @see {@link org.ssh.pipelines.PipelinePacket PipelinePackets}
  */
 public class ProtoPacket<M extends GeneratedMessage> extends PipelinePacket<M> {
+    
+    private transient Class<M> type = (Class<M>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     
     /**
      * Parses a {@link ByteArrayInputStream bytestream} to parameterized type.
@@ -30,11 +38,14 @@ public class ProtoPacket<M extends GeneratedMessage> extends PipelinePacket<M> {
      */
     public ProtoPacket(ByteArrayInputStream byteStream) {
         try {
-            // get parser, and parse data
-            this.save(this.read().getParserForType().parseFrom(byteStream));
+            this.save(((M) Class.forName(type.getTypeName()).getMethod("getDefaultInstance").invoke(null))
+                    .getParserForType().parseFrom(byteStream));
         }
-        catch (InvalidProtocolBufferException exception) {
+        catch (InvalidProtocolBufferException | SecurityException | IllegalAccessException | ClassNotFoundException
+                | IllegalArgumentException | InvocationTargetException | NoSuchMethodException exception) {
             ProtoPacket.LOG.exception(exception);
+            exception.printStackTrace();
+            ProtoPacket.LOG.warning("Could not parse data for %s", this.getClass().getSimpleName());
         }
     }
     

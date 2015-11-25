@@ -125,7 +125,9 @@ public abstract class Pipeline<P extends PipelinePacket<? extends Object>> exten
                 // the composition itself
                 (packet, coupler) -> coupler.process(packet));
                 
-        Pipeline.LOG.fine("Packet pushed through all couplers, now mapping to consumers on pipeline %s",
+        Pipeline.LOG.info("Packet pushed through all %d couplers, now mapping to %d consumers on pipeline %s",
+                couplers.size(),
+                consumers.size(),
                 this.getName());
                 
         return this.consumers.stream().map(consumer -> consumer.consume(resultPacket))

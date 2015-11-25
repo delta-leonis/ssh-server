@@ -5,6 +5,7 @@ import org.ssh.managers.manager.Pipelines;
 import org.ssh.managers.manager.Services;
 import org.ssh.managers.manager.UI;
 import org.ssh.models.enums.PacketPriority;
+import org.ssh.pipelines.PipelinePacket;
 import org.ssh.pipelines.pipeline.GeometryPipeline;
 import org.ssh.pipelines.pipeline.RadioPipeline;
 import org.ssh.services.consumers.StringConsumer;
@@ -59,7 +60,7 @@ public class Main extends Application {
         final OnceProducer intService       = new OnceProducer("gratisintegers");
         final OftenProducer dingService     = new OftenProducer("dingetjes");
         final ChangeCoupler changeService   = new ChangeCoupler("meerdoubles");
-        final StringConsumer stringService  = new StringConsumer("stringisbeter");
+        final StringConsumer<PipelinePacket<?>> stringService  = new StringConsumer<PipelinePacket<?>>("stringisbeter", PipelinePacket.class);
         final VerboseCoupler verboseCoupler = new VerboseCoupler("speaker");
         
         // add a few pipelines

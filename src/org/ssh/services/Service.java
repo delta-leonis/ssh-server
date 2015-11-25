@@ -41,7 +41,7 @@ public abstract class Service<P extends PipelinePacket<? extends Object>> extend
     public Service(final String name) {
         super(name);
         this.enabled = false;
-        Service.LOG.info("New Service instantiated of type %s named %s", this.getType().toString(), name);
+        Service.LOG.info("New Service instantiated named %s",  name);
         Services.add(this);
     }
     
