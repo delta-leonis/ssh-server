@@ -43,3 +43,7 @@ if ball:isPresent() then
     ball = ball:get()
 end
 
+-- Communicator "alias"
+radioPacketConsumer = luajava.newInstance("org.ssh.services.consumers.RadioPacketConsumer")
+
+

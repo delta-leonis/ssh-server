@@ -4,10 +4,15 @@ import static javafx.scene.input.KeyCode.BACK_SPACE;
 import static javafx.scene.input.KeyCode.Z;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.wellbehaved.event.EventHandlerHelper;
 import org.fxmisc.wellbehaved.event.EventPattern;
+import org.ssh.managers.manager.Models;
+import org.ssh.models.Model;
+import org.ssh.models.Settings;
+import org.ssh.util.Logger;
 
 import javafx.application.Platform;
 import javafx.scene.input.KeyCode;
@@ -21,8 +26,9 @@ import javafx.scene.input.KeyCombination;
  */
 public class ConsoleArea extends ColoredCodeArea {
     
-    /** The path to the stylesheet */
-    private static final String STYLESHEET = "org/ssh/view/css/application.css";
+    // A logger for errorhandling
+    private static final Logger LOG = Logger.getLogger();
+    
     /** The currentline of the console. Anything before this line can't be edited */
     private int                 currentLine;
                                 
@@ -34,7 +40,7 @@ public class ConsoleArea extends ColoredCodeArea {
      *            The cursor used by this console (Usually something like "> " )
      */
     public ConsoleArea(final List<String> objectHighlights, final List<String> functionHighlights) {
-        super.setupColoredCodeArea(ConsoleArea.STYLESHEET, objectHighlights, functionHighlights);
+        super.setupColoredCodeArea(getStyleSheet(), objectHighlights, functionHighlights);
         // On Backspace, use a custom handler
         EventHandlerHelper.install(this.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(BACK_SPACE)).act(event -> this.backspace()).create());
@@ -57,6 +63,23 @@ public class ConsoleArea extends ColoredCodeArea {
                                 Platform.runLater(() ->
                                     this.insertText(this.getCaretPosition(), "\n"))
                                 ).create());
+    }
+    
+    /**
+     * Placeholder function until Settings patch
+     * @return
+     */
+    private static String getStyleSheet(){
+        // Find init script based on Settings and execute it
+        Optional<Model> oSettings = Models.get("settings");
+        if(oSettings.isPresent())
+        {
+            Settings settings = (Settings) oSettings.get();
+            if(settings.getLuaInitFolder() != null)
+                return settings.getApplicationCss();
+        }
+        ConsoleArea.LOG.warning("Could not find stylesheet.");
+        return "";
     }
     
     /**

@@ -1,5 +1,6 @@
 package examples;
 
+import org.ssh.managers.manager.Models;
 import org.ssh.ui.lua.console.AvailableInLua;
 import org.ssh.ui.lua.console.Console;
 import org.ssh.ui.lua.console.ConsoleManager;
@@ -36,6 +37,7 @@ public class ConsoleExample extends Application {
     private static final String TITLE  = "Lua Console";
                                        
     public static void main(final String[] args) {
+        Models.start();
         Application.launch(args);
     }
     

@@ -1,0 +1,5 @@
+{
+  "luaInitFolder" : "lua.d/",
+  "luaScriptFolder" : "./scripts/",
+  "applicationCss" : "./org/ssh/view/css/application.css"
+}

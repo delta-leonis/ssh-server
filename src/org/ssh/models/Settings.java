@@ -22,7 +22,7 @@ import java.net.URI;
  *         
  */
 public class Settings extends Model {
-    
+
     /**
      * Base path for all config files
      */
@@ -46,7 +46,13 @@ public class Settings extends Model {
     private String                        default_profile = "";
                                                           
     private transient String              current_profile = "";
-                                                          
+
+    private String luaInitFolder = "";
+
+    private String luaScriptFolder = "";
+
+    private String applicationCss = "";
+
     /**
      * Create a settings model
      */
@@ -99,5 +105,26 @@ public class Settings extends Model {
     @Override
     public String getSuffix() {
         return "";
+    }
+
+    /**
+     * @return The path to the folder containing all lua init scripts
+     */
+    public String getLuaInitFolder(){
+        return luaInitFolder;
+    }
+
+    /**
+     * @return The path to the folder containing all scripts
+     */
+    public String getScriptFolder(){
+        return luaScriptFolder;
+    }
+
+    /**
+     * @return The path to the css file of the application
+     */
+    public String getApplicationCss(){
+        return applicationCss;
     }
 }

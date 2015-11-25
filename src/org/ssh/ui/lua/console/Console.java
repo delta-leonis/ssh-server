@@ -1,6 +1,9 @@
 package org.ssh.ui.lua.console;
 
+import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -18,11 +21,14 @@ import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 import org.luaj.vm2.lib.jse.JsePlatform;
+import org.ssh.managers.manager.Models;
 import org.ssh.managers.manager.Services;
+import org.ssh.models.Model;
 import org.ssh.util.Logger;
 import org.ssh.util.LuaUtils;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import org.ssh.models.Settings;
 
 import javafx.application.Platform;
 import javafx.scene.control.Button;
@@ -56,19 +62,14 @@ public class Console extends Tab {
 
     // A logger for errorhandling
     private static final Logger LOG = Logger.getLogger();
-
-    private static final String INITIALISATION_SCRIPT = "./scripts/init.lua";
     
     /** The cursor used by the console */
     private static final String  CURSOR          = "> ";
     /** Warning for the users */
-    private static final String  WARNING_MESSAGE = "--Change keyboard layout in Linux to something like English(US, with euro on 5)."
-            + "\n--Quotation marks don't work without it.";
+    private static final String  WARNING_MESSAGE = "-- Change keyboard layout in Linux to something like English(US, with euro on 5)."
+            + "\n-- Quotation marks don't work without it.";
     /** The title that shows when starting up the console */
     private String               title           = "Lua Console: ";
-    /*
-     * TODO: Add globals like "luajava.newInstance" to autocomplete
-     */
     /** The actual area we type in */
     private final ConsoleArea    consoleArea;
     /** Custom outputstream */
@@ -432,12 +433,15 @@ public class Console extends Tab {
             // Set outputstream so that it streams to the console
             this.globals.STDOUT = new PrintStream(this.out);
             
+            this.println(this.title);
+            this.println(Console.WARNING_MESSAGE);
+
             // Add every @AvailableInLua class to the luaj
             if (this.functionClasses != null) 
                 for (final Object o : this.functionClasses)
                     globals.set(LuaUtils.getSimpleName(o), CoerceJavaToLua.coerce(o));
 
-            this.globals.get("dofile").call(LuaValue.valueOf(INITIALISATION_SCRIPT));
+            initialize();
 
             // Important piece of code that fixed all bugs. Do not decode to
             // check its contents.
@@ -445,10 +449,9 @@ public class Console extends Tab {
                     .load(new String(Base64.getDecoder()
                             .decode("bG9jYWwgY293ID0gewpbWyAKICBcICAgICAgICAgICAsfi4KICAgIFwgICAgICwtJ19fIGAtLAogICAgICAgXCAgeywtJyAgYC4gfSAgICAgICAgICAgICAgLCcpCiAgICAgICAgICAsKCBhICkgICBgLS5fXyAgICAgICAgICwnLCcpfiwKICAgICAgICAgPD0uKSAoICAgICAgICAgYC0uX18sPT0nICcgJyAnfQogICAgICAgICAgICggICApICAgICAgICAgICAgICAgICAgICAgIC8pCiAgICAgICAgICAgIGAtJ1wgICAgLCAgICAgICAgICAgICAgICAgICAgKQoJICAgICAgIHwgIFwgICAgICAgICBgfi4gICAgICAgIC8KICAgICAgICAgICAgICAgXCAgICBgLl8gICAgICAgIFwgICAgICAgLwogICAgICAgICAgICAgICAgIFwgICAgICBgLl9fX19fLCcgICAgLCcKICAgICAgICAgICAgICAgICAgYC0uICAgICAgICAgICAgICwnCiAgICAgICAgICAgICAgICAgICAgIGAtLl8gICAgIF8sLScKICAgICAgICAgICAgICAgICAgICAgICAgIDc3amonCiAgICAgICAgICAgICAgICAgICAgICAgIC8vX3x8CiAgICAgICAgICAgICAgICAgICAgIF9fLy8tLScvYAoJICAgICAgICAgICAgLC0tJy9gICAnCl1dCn0KZnVuY3Rpb24gY2hpY2tlbnNheSh0ZXh0KQpsID0gdGV4dDpsZW4oKQphID0gbCAvIDEwCmZvciBpPTAsYSBkbwoJaW8ud3JpdGUoIlsiIC4uIHRleHQ6c3ViKGkqMTArMSwgKChpKzEpKjEwID4gbCkgYW5kIGwgb3IgKGkrMSkqMTAgKSAuLiAgIl1cbiIpCmVuZAoJcHJpbnQoY293WzFdKQplbmQK")))
                     .call();
-            this.println(this.title);
-            this.println(Console.WARNING_MESSAGE);
+
             this.printCursor();
-            
+
             // Set the line from where we need to start reading commands.
             this.currentLine = this.consoleArea.getText().length();
             consoleArea.setCurrentLine(currentLine);
@@ -460,6 +463,43 @@ public class Console extends Tab {
     }
     
     /**
+     * Looks for all lua files in lua.d and calls them for initiliasation.
+     * These files contain useful shorthands for functions that are used often.
+     */
+    private void initialize(){
+        // Find init script based on Settings and execute it
+        Optional<Model> oSettings = Models.get("settings");
+        // If settings exists
+        if(oSettings.isPresent())
+        {
+            Settings settings = (Settings) oSettings.get();
+            // Check whether it has a variable pointing to the lua folder
+            if(settings.getLuaInitFolder() != null){
+                try {
+                    // For each file in folder
+                    Files.walk(Paths.get(settings.getLuaInitFolder()))
+                    // Check whether it's a valid file
+                    .filter(Files::isRegularFile)
+                    .filter(file -> file.toFile().getAbsolutePath().endsWith(".lua"))
+                    // Call the lua files one by one
+                    .forEach(lua -> {
+                        String path = lua.toAbsolutePath().toString();
+                            this.println("-- Loading: " + path);
+                            this.globals.get("dofile").call(LuaValue.valueOf(path));
+                            });
+                }
+                catch (IOException exception) {
+                    Console.LOG.exception(exception);
+                    this.println("-- IOException whilst looking for lua.d\n\t" + exception.getMessage());
+                }
+            }
+        }
+        else {
+            this.println("-- Couldn't find init.lua");
+        }
+    }
+
+    /**
      * Function that gets called when the up arrow is pressed Goes to the previous command in the
      * array
      */
@@ -469,8 +509,10 @@ public class Console extends Tab {
             // If we're not scrolling through commands yet
             if (!this.selecting) {
                 final String currentCommand = this.consoleArea.getText(this.currentLine, this.consoleArea.getText().length());
-                if(currentCommand != "")
+                // If we're still typing a command, save it
+                if(currentCommand.length() > 2)
                     this.recentCommands.add(currentCommand);
+
                 // Start selecting
                 this.selecting = true;
                 // Make a new iterator starting at the last command
