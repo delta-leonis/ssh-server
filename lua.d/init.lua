@@ -19,6 +19,8 @@ for i=0, 12 do
     robot = Models:get("robot B" .. tonumber(i))
     if robot:isPresent() then 
         robot = robot:get()
+	else
+		robot = nil
     end
 	robotB[i] = robot
 end
@@ -28,6 +30,8 @@ for i=0, 12 do
     robot = Models:get("robot Y" .. tonumber(i))
     if robot:isPresent() then 
         robot = robot:get()
+	else
+		robot = nil
     end
 	robotY[i] = robot
 end
@@ -37,8 +41,3 @@ ball = Models:get("ball")
 if ball:isPresent() then
     ball = ball:get()
 end
-
--- Communicator "alias"
-radioPacketConsumer = luajava.newInstance("org.ssh.services.consumers.RadioPacketConsumer")
-
-
