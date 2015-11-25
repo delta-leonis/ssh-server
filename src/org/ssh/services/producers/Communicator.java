@@ -1,6 +1,6 @@
 package org.ssh.services.producers;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.ssh.managers.manager.Pipelines;
 import org.ssh.models.enums.ProducerType;
@@ -43,7 +43,7 @@ public class Communicator extends Producer<RadioPacket> {
      *            Array with {@link RadioProtocolCommand} to send
      * @return success value
      */
-    public boolean send(final ArrayList<Radio.RadioProtocolCommand.Builder> commands) {
+    public boolean send(final List<Radio.RadioProtocolCommand.Builder> commands) {
         // create a wrapper-builder
         final RadioProtocolWrapper.Builder wrapperBuilder = Radio.RadioProtocolWrapper.newBuilder();
         // and add all commands to the wrapper-builder

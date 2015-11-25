@@ -165,7 +165,7 @@ public abstract class Model extends Manageable {
         while (clazz.getSuperclass() != null) {
             Stream.of(clazz.getDeclaredFields())
             .filter(field -> !Modifier.isTransient(field.getModifiers()))
-            .filter(field -> Modifier.isFinal(field.getModifiers()))
+            .filter(field -> !Modifier.isFinal(field.getModifiers()))
             .filter(field -> !fieldMap.containsKey(field.getName()))
             .forEach(Unchecked.consumer(field ->
             {
@@ -222,7 +222,7 @@ public abstract class Model extends Manageable {
      * @return name and suffix
      */
     public String getFullName() {
-        return String.format("%s %s", getName(), getSuffix());
+        return String.format("%s %s", getName(), getSuffix()).trim();
     }
     
 }
