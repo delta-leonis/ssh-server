@@ -98,12 +98,12 @@ public class Timeslider extends UIComponent {
      * @see slider.css
      */
     private void addMarker(final int x, final String cssMarker) {
-        final double pos = x > this.slider.getMax() ? this.slider.getMax()
-                : (x / this.slider.getMax()) * this.slider.getWidth();
+        double pos = x > this.gamelog.getTimeSeconds() ? this.slider.getWidth()
+                : ((double)x / (double)this.gamelog.getTimeSeconds()) * this.slider.getWidth();
+        pos = (int)(pos - sliderpadding.getRight() - sliderpadding.getLeft());
         // TODO: Figure out a way to change size in css
         final Rectangle sliderPoint = new Rectangle(pos - 2, this.progressBar.getHeight(), 4, 14);
         sliderPoint.getStyleClass().add(cssMarker);
-        sliderPoint.setLayoutX(pos - sliderPoint.getWidth());
         this.sliderPointsPane.getChildren().add(sliderPoint);
     }
     
@@ -129,7 +129,7 @@ public class Timeslider extends UIComponent {
      * Makes a dummy {@link GameLog}
      */
     private void init() {
-        this.gamelog = new GameLog("Wow", 100);
+        this.gamelog = new GameLog("Wow", 140);
     }
     
     /**
@@ -149,13 +149,13 @@ public class Timeslider extends UIComponent {
         this.playButton.getStyleClass().add("button-play");
         this.playButton.setOnAction(e -> this.start());
         this.selectFileButton.getStyleClass().add("button-select-file");
-        // pauseButton.getStyleClass().add("button-pause");
-        // pauseButton.setOnAction(e -> timeline.pause());
+        this.pauseButton.getStyleClass().add("button-pause");
+        this.pauseButton.setOnAction(e -> timeline.pause());
         this.recordButton.getStyleClass().add("button-record");
         this.leftButton.getStyleClass().add("button-left");
-        this.leftButton.setOnAction(e -> this.speedPerTick /= 2);
+        this.leftButton.setOnAction(e -> this.speedPerTick = this.speedPerTick / 2);
         this.rightButton.getStyleClass().add("button-right");
-        this.rightButton.setOnAction(e -> this.speedPerTick *= 2);
+        this.rightButton.setOnAction(e -> this.speedPerTick = this.speedPerTick * 2);
     }
     
     /**
@@ -202,7 +202,8 @@ public class Timeslider extends UIComponent {
      */
     private void updateSlider() {
         this.sliderPointsPane.getChildren().clear();
-        if (this.goalCheckBox.isSelected()) this.gamelog.getGoalTimes().forEach(i -> this.addMarker(i, "goal-marker"));
+        if (this.goalCheckBox.isSelected()) 
+            this.gamelog.getGoalTimes().forEach(i -> this.addMarker(i, "goal-marker"));
         if (this.timeoutCheckBox.isSelected())
             this.gamelog.getTimeouts().forEach(i -> this.addMarker(i, "timeout-marker"));
     }
