@@ -2,19 +2,19 @@ package org.ssh.services.consumers;
 
 import java.lang.reflect.Type;
 
+import org.ssh.pipelines.PipelinePacket;
 import org.ssh.pipelines.packets.ProtoPacket;
+import org.ssh.pipelines.packets.RadioPacket;
 import org.ssh.services.Service;
 import org.ssh.services.service.Consumer;
 
 import com.google.common.reflect.TypeToken;
+import com.google.protobuf.GeneratedMessage;
 
 /**
- * Verbose output for protopackets
- * 
- * @author Jeroen de Jong
+ *
  */
-public class ProtoConsumer extends Consumer<ProtoPacket<?>> {
-    
+public class ProtoConsumer<P extends ProtoPacket<? extends GeneratedMessage>> extends Consumer<P> {
     /**
      * Instantiates a new Consumer that consumes RadioPackets
      *
@@ -25,18 +25,17 @@ public class ProtoConsumer extends Consumer<ProtoPacket<?>> {
         super(name);
         // This way anonymous ProtoConsumers can be created,
         // without creating a empty class defining the type
-        this.genericType = (TypeToken<ProtoPacket<?>>) TypeToken.of(type);
+        this.genericType = (TypeToken<P>) TypeToken.of(type);
     }
-    
+
     /*
      * (non-Javadoc)
      *
      * @see org.ssh.services.Consumer#consume(org.ssh.services.pipeline.PipelinePacket)
      */
     @Override
-    public boolean consume(ProtoPacket<?> pipelinePacket) {
-        Service.LOG.info("The ProtoConsumer<%s> ate a packet that looked like: \n%s",
-                this.genericType,
+    public boolean consume(P pipelinePacket) {
+        Service.LOG.info("The ProtoConsumer ate a packet that looked like: \n%s",
                 pipelinePacket.read().toString());
         return true;
     }
