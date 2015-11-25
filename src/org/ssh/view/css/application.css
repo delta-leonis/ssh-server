@@ -9,10 +9,16 @@
 /* Markers used for the squares in the slider */
 .goal-marker {
     -fx-fill: yellow;
+    -fx-scale-x: 4;
+    -fx-scale-y: 14;
+    -fx-translate-y: 22;
 }
 
 .timeout-marker {
 	-fx-fill: orange;
+	-fx-scale-x: 4;
+    -fx-scale-y: 14;
+    -fx-translate-y: 22;
 }
 
 /* *** ColoredCodeArea Style *** */

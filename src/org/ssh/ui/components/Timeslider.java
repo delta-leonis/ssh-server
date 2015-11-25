@@ -101,9 +101,9 @@ public class Timeslider extends UIComponent {
         double pos = x > this.gamelog.getTimeSeconds() ? this.slider.getWidth()
                 : ((double)x / (double)this.gamelog.getTimeSeconds()) * this.slider.getWidth();
         pos = (int)(pos - sliderpadding.getRight() - sliderpadding.getLeft());
-        // TODO: Figure out a way to change size in css
-        final Rectangle sliderPoint = new Rectangle(pos - 2, this.progressBar.getHeight(), 4, 14);
+        final Rectangle sliderPoint = new Rectangle(0,0,1,1);
         sliderPoint.getStyleClass().add(cssMarker);
+        sliderPoint.setLayoutX(pos - sliderPoint.getWidth()/2);
         this.sliderPointsPane.getChildren().add(sliderPoint);
     }
     

@@ -24,11 +24,10 @@ public class GameLog {
         this.filename = filename;
         this.length = length;
         this.goalTimes = new ArrayList<Integer>();
-        this.goalTimes.add(2);
-        this.goalTimes.add(10);
-        this.goalTimes.add(4);
-        this.goalTimes.add(3);
-        this.goalTimes.add(18);
+        this.goalTimes.add(35);
+        this.goalTimes.add(70);
+        this.goalTimes.add(105);
+        this.goalTimes.add(140);
         this.timeouts = new ArrayList<Integer>();
         this.timeouts.add(130);
         this.timeouts.add(50);
