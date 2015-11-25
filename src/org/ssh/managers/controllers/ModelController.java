@@ -64,7 +64,7 @@ public class ModelController extends ManagerController<Model> {
      *            arguments that will be passed to the constructor (supply them in the right order).
      * @return a created Model
      */
-    public static Model create(final Class<?> clazz, final Object... args) {
+    public static <M extends Model> M create(final Class<M> clazz, final Object... args) {
         Class<?>[] cArgs = null;
         try {
             // get all Types for the arguments
@@ -73,7 +73,7 @@ public class ModelController extends ManagerController<Model> {
                 cArgs[i] = args[i].getClass();
                 
             // call constructor and cast instance
-            final Model model = (Model) clazz.getDeclaredConstructor(cArgs).newInstance(args);
+            final M model = clazz.getDeclaredConstructor(cArgs).newInstance(args);
             LOG.info("created %s", clazz);
             
             // add model to ModelController

@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.ssh.managers.manager.Models;
 import org.ssh.models.Model;
+import org.ssh.models.NetworkSettings;
 import org.ssh.models.Robot;
 import org.ssh.models.Settings;
 import org.ssh.models.enums.TeamColor;
@@ -13,7 +14,7 @@ import org.ssh.util.Logger;
 
 import javafx.geometry.Point2D;
 
-public class ModelExample {
+public class ModelExample  {
     
     private static Logger logger = Logger.getLogger();
     
@@ -21,6 +22,8 @@ public class ModelExample {
         // Start the Models controller
         Models.start();
 
+        Models.<Settings> getT("settings").ifPresent(set -> set.getUserProfilePath());
+        
         Optional<Model> oSettings = Models.get("settings");
         Settings settings = (Settings) oSettings.get();
         

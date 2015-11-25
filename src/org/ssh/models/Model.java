@@ -3,7 +3,6 @@ package org.ssh.models;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -87,9 +86,10 @@ public abstract class Model extends Manageable {
             if (oField.isPresent()) {
                 // get it and set it accessible
                 final Field field = oField.get();
-                if (Modifier.isFinal(field.getModifiers()) || Modifier.isStatic(field.getModifiers())
-                        || !Modifier.isTransient(field.getModifiers()))
-                    Model.LOG.info("%s is not a modifiable field", field.getName());
+                if (Modifier.isFinal(field.getModifiers()) || Modifier.isStatic(field.getModifiers())){
+                    Model.LOG.info("%s in is not a modifiable field", field.getName(), this.getClass().getSimpleName());
+                    return false;
+                }
                 if (!field.isAccessible()) field.setAccessible(true);
                 // try to cast this value, and set the field
                 field.set(this, (field.getType().cast(value)));

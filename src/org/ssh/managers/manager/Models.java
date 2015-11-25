@@ -4,7 +4,7 @@ import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Optional;
 
-import org.ssh.controllers.ControllerSettings;
+import org.ssh.managers.Manager;
 import org.ssh.managers.controllers.ModelController;
 import org.ssh.models.Model;
 import org.ssh.models.Settings;
@@ -20,8 +20,8 @@ import org.ssh.util.Logger;
  *       
  */
 @AvailableInLua
-public final class Models {
-    
+public final class Models implements Manager<Model>{
+
     /**
      * The models store has a controller that runs the store.
      */
@@ -58,7 +58,7 @@ public final class Models {
      *            the args for the right constructor
      * @return the model
      */
-    public static Model create(final Class<?> clazz, final Object... args) {
+    public static <M extends Model> M create(final Class<M> clazz, final Object... args) {
         return ModelController.create(clazz, args);
     }
     
@@ -163,7 +163,7 @@ public final class Models {
     public static boolean saveAsDefault(final Model model) {
         return Models.modelController.saveAsDefault(model);
     }
-    
+
     /**
      * This method instantiates a controller to run the store.
      */
@@ -174,6 +174,5 @@ public final class Models {
         Models.modelController = new ModelController();
         // create a settings models (will self-assign in the factory)
         Models.create(Settings.class);
-        Models.create(ControllerSettings.class);
     }
 }
