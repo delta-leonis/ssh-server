@@ -35,7 +35,7 @@ public class RobotGO extends GameObject {
     private static final double ROBOT_SELECTION_CIRCLE_THICKNESS = 50.0;
                                                                  
     /** The starting y-coordinate for the robot model */
-    private static final float  ROBOT_STARTING_Y                 = 10.0f;
+    private static final float  ROBOT_STARTING_Y                 = 30.0f;
                                                                  
     /** The selection circle offset */
     private static final float  SELECTION_CIRCLE_OFFSET          = 40.0f;
@@ -114,7 +114,7 @@ public class RobotGO extends GameObject {
         this.visionRobotModel = visionRobotModel;
         
         // Getting arc mesh
-        this.selectionArcMesh = this.selectionArc.MeshView();
+        this.selectionArcMesh = this.selectionArc.getMeshView();
         
         // Setting selection circle diffuse & specular color to Blue
         this.selectionCircleMaterial.setDiffuseColor(Color.BLUE);
@@ -204,8 +204,14 @@ public class RobotGO extends GameObject {
             
             // Setting location
             this.location.x = (float) visionRobotModel.getPosition().getX();
-            this.location.y = Robot.ROBOT_HEIGHT / 2.0f;
+            this.location.y = Robot.ROBOT_HEIGHT / 2.0f + ROBOT_STARTING_Y;
             this.location.z = (float) visionRobotModel.getPosition().getY();
+        }
+        else {
+            
+            this.location.x = 0;
+            this.location.y = Robot.ROBOT_HEIGHT / 2.0f + ROBOT_STARTING_Y;
+            this.location.z = 0;
         }
         
         // Translate to location

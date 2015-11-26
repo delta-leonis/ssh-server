@@ -480,7 +480,7 @@ public class MouseInputHandler extends GameObject {
     public void setMouseWheelYValue(final long value) {
         
         // Check if value is within bounds
-        if (value >= this.minScrollWheelValue && value <= this.maxScrollWheelValue) {
+        if (value > this.minScrollWheelValue && value < this.maxScrollWheelValue) {
             
             // Setting value
             this.scrollWheelYValue = value;
@@ -492,7 +492,7 @@ public class MouseInputHandler extends GameObject {
                 // Set minimal scroll wheel value
                 this.scrollWheelYValue = minScrollWheelValue;
             }
-            else {
+            else if (value > maxScrollWheelValue) {
                 
                 // Set maximal scroll wheel value
                 this.scrollWheelYValue = maxScrollWheelValue;

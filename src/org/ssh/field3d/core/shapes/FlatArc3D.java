@@ -16,7 +16,7 @@ public class FlatArc3D {
     /** The texture coordinates. */
     private static final float[] TEXTURE_COORDS    = { 1, 1, 1, 0, 0, 1, 0, 0 };
                                                    
-    /** The conversion to rad */
+    /** The conversion to radians */
     private static final double  CONVERT_TO_RAD    = Math.PI / 180.0;
                                                    
     /** The values per coordinate. */
@@ -27,6 +27,9 @@ public class FlatArc3D {
                                                    
     /** The triangle mesh. */
     private final TriangleMesh   triangleMesh;
+                                 
+    /** The mesh view. */
+    private final MeshView       meshView;
                                  
     /**
      * Instantiates a new flat arc 3d.
@@ -62,6 +65,9 @@ public class FlatArc3D {
         final int faces[] = this.calculateFaces(numDivisions);
         // Add faces to the mesh
         this.triangleMesh.getFaces().addAll(faces);
+        
+        // Setting mesh view
+        this.meshView = new MeshView(this.triangleMesh);
     }
     
     /**
@@ -153,15 +159,15 @@ public class FlatArc3D {
             final double thickness,
             int numDivisions) {
             
-        // Increase number of divisions to add the last edge.
-        numDivisions++;
-        
         // Calculating total angle of the arc
         final double totalAngle = endAngle - startAngle;
         // Calculating angle per step
         final double anglePerStep = totalAngle / numDivisions;
         // Setting current angle
         double curAngle = startAngle;
+        
+        // Increase number of divisions to add the last edge.
+        numDivisions++;
         
         // Calculating half of the thickness
         final double halfOfThickness = thickness / 2.0;
@@ -209,8 +215,8 @@ public class FlatArc3D {
      *
      * @return The {@link MeshView} of the arc.
      */
-    public MeshView MeshView() {
-        return new MeshView(this.triangleMesh);
+    public MeshView getMeshView() {
+        return this.meshView;
     }
     
     /**
@@ -218,7 +224,7 @@ public class FlatArc3D {
      *
      * @return The {@link TriangleMesh} of the arc.
      */
-    public TriangleMesh TriangleMesh() {
+    public TriangleMesh geTriangleMesh() {
         return this.triangleMesh;
     }
 }

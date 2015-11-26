@@ -25,6 +25,9 @@ public class FlatLine3D {
     /** The mesh. */
     private final TriangleMesh mesh;
                                
+    /** The mesh view. */
+    private final MeshView     meshView;
+                               
     /**
      * Constructor.
      *
@@ -46,6 +49,9 @@ public class FlatLine3D {
         
         // Build the mesh
         this.buildMesh(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY(), thickness);
+        
+        // Create mesh view
+        this.meshView = new MeshView(this.mesh);
     }
     
     /**
@@ -113,7 +119,7 @@ public class FlatLine3D {
      * @return The {@link MeshView} of the {@link TriangleMesh}.
      */
     public MeshView getMeshView() {
-        return new MeshView(this.mesh);
+        return this.meshView;
     }
     
     /**

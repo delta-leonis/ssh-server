@@ -1,6 +1,5 @@
 package org.ssh.field3d.core.gameobjects.camera;
 
-import org.ssh.field3d.FieldGame;
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.field3d.core.math.Vector3f;
@@ -15,8 +14,7 @@ import javafx.scene.PerspectiveCamera;
  * ThirdPersonCamera class. This class is used for the 3rd person camera.
  *
  * @author marklef2
- * @see GameObject
- *      
+ * @see GameObject  
  */
 public class ThirdPersonCamera extends GameObject {
     
@@ -50,19 +48,7 @@ public class ThirdPersonCamera extends GameObject {
                                                                
     /** The Constant CAMERA_ZOOM_MAX. */
     public static final double      CAMERA_ZOOM_MAX            = -200.0;
-                                                               
-    /** The Constant CAMERA_LOC_X_MIN. */
-    public static final double      CAMERA_LOC_X_MIN           = -(FieldGame.FIELD_WIDTH / 2.0) - 200.0;
-                                                               
-    /** The Constant CAMERA_LOC_X_MAX. */
-    public static final double      CAMERA_LOC_X_MAX           = (FieldGame.FIELD_WIDTH / 2.0) + 200.0;
-                                                               
-    /** The Constant CAMERA_LOC_Z_MIN. */
-    public static final double      CAMERA_LOC_Z_MIN           = -(FieldGame.FIELD_DEPTH / 2.0) - 200.0;
-                                                               
-    /** The Constant CAMERA_LOC_Z_MAX. */
-    public static final double      CAMERA_LOC_Z_MAX           = (FieldGame.FIELD_DEPTH / 2.0) + 200.0;
-                                                               
+    
     /** The pivot which the camera "follows". */
     private Vector3f                pivot;
                                     
@@ -111,10 +97,10 @@ public class ThirdPersonCamera extends GameObject {
         // Setting default minimal & maximal values
         this.zoomMax = this.getGame().getMouseInputHandler().getScrollWheelMaxValue();
         this.zoomMin = this.getGame().getMouseInputHandler().getScrollWheelMinValue();
-        this.locXMax = ThirdPersonCamera.CAMERA_LOC_X_MAX;
-        this.locXMin = ThirdPersonCamera.CAMERA_LOC_X_MIN;
-        this.locZMax = ThirdPersonCamera.CAMERA_LOC_Z_MAX;
-        this.locZMin = ThirdPersonCamera.CAMERA_LOC_Z_MIN;
+        this.locXMax = 0.0;
+        this.locXMin = 0.0;
+        this.locZMax = 0.0;
+        this.locZMin = 0.0;
         
         // Setup camera
         this.perspectiveCamera.setNearClip(this.nearClip);
@@ -341,7 +327,7 @@ public class ThirdPersonCamera extends GameObject {
      * @return The zoom value.
      */
     public double getZoom() {
-        return this.xForm2.getTranslateZ();
+        return this.getGame().getMouseInputHandler().getScrollWheelYValue();
     }
     
     /**
