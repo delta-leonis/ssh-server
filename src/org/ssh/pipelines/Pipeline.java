@@ -68,18 +68,21 @@ public abstract class Pipeline<P extends PipelinePacket<? extends Object>> exten
     /**
      * Adds a {@link PipelinePacket} to the Pipeline.
      *
+     * @param <S>
+     *            The generic type of Pipeline requested by the user.
      * @param pipelinePacket
      *            The packet to be added to the Pipeline.
-     * @return true, if successful
+     * @return The Pipeline itself.
      */
-    public Pipeline<P> addPacket(final P pipelinePacket) {
+    @SuppressWarnings ("unchecked")
+    public <S extends Pipeline<P>> S addPacket(final P pipelinePacket) {
         // add the packet
         this.queue.add(pipelinePacket);
         Pipeline.LOG.info("Packet of type %s added to pipeline %s ...",
                 pipelinePacket.getClass().toString(),
                 this.getName());
                 
-        return this;
+        return (S) this;
     }
     
     /**
@@ -120,7 +123,7 @@ public abstract class Pipeline<P extends PipelinePacket<? extends Object>> exten
                 // the argument to the composed function
                 pipelinePacket,
                 // the composition itself
-                (packet, coupler) -> coupler.process((P) packet));
+                (packet, coupler) -> coupler.process(packet));
                 
         Pipeline.LOG.fine("Packet pushed through all couplers, now mapping to consumers on pipeline %s",
                 this.getName());
@@ -135,91 +138,111 @@ public abstract class Pipeline<P extends PipelinePacket<? extends Object>> exten
      * Registers a {@link Consumer} with the Pipeline.
      *
      * @param <C>
-     *            the generic type of Consumer
+     *            The generic type of Consumer supplied by the user.
+     * @param <S>
+     *            The generic type of Pipeline requested by the user.
      * @param consumer
      *            The Consumer to be registered with the Pipeline.
-     * @return true, if successful
+     * @return The Pipeline itself.
      */
     @SuppressWarnings ("unchecked")
-    public <C extends Consumer<?>> boolean registerConsumer(final C consumer) {
+    public <C extends Consumer<?>, S extends Pipeline<P>> S registerConsumer(final C consumer) {
         Pipeline.LOG.fine("Consumer named %s registered to pipeline %s.", consumer.getName(), this.getName());
-        return this.consumers.add((Consumer<P>) consumer);
+        this.consumers.add((Consumer<P>) consumer);
+        return (S) this;
     }
     
     /**
      * Register a list of {@link Consumer} registered with the Pipeline.
      *
+     * @param <C>
+     *            The generic type of Consumer supplied by the user.
+     * @param <S>
+     *            The generic type of Pipeline requested by the user.
      * @param consumers
      *            the consumers
-     * @return true, if successful
+     * @return The Pipeline itself.
      */
-    public boolean registerConsumers(final Consumer<?>... consumers) {
-        return Stream.of(consumers).map(consumer -> this.registerConsumer(consumer))
-                // collect all success values and reduce to true if all senders
-                // succeeded; false otherwise
-                .reduce(true, (accumulator, success) -> accumulator && success);
+    @SuppressWarnings ("unchecked")
+    public <C extends Consumer<?>, S extends Pipeline<P>> S registerConsumers(final C... consumers) {
+        Stream.of(consumers).forEach(consumer -> this.registerConsumer(consumer));
+        return (S) this;
     }
     
     /**
      * Registers a {@link Coupler} with the Pipeline.
      *
      * @param <C>
-     *            the generic type of Coupler
+     *           The generic type of Coupler supplied by the user.
+     * @param <S>
+     *            The generic type of Pipeline requested by the user.
      * @param coupler
      *            the coupler
-     * @return true, if successful
+     * @return The Pipeline itself.
      */
     @SuppressWarnings ("unchecked")
-    public <C extends Coupler<?>> boolean registerCoupler(final C coupler) {
+    public <C extends Coupler<?>, S extends Pipeline<P>> S registerCoupler(final C coupler) {
         Pipeline.LOG.fine("Coupler named %s registered to pipeline %s.", coupler.getName(), this.getName());
-        return this.couplers.put((Coupler<P>) coupler, PacketPriority.MEDIUM) != null;
+        this.couplers.put((Coupler<P>) coupler, PacketPriority.MEDIUM);
+        return (S) this;
     }
     
     /**
      * Registers a {@link Coupler} with the Pipeline with the given Priority.
      *
+     * @param <C>
+     *            The generic type of Coupler supplied by the user.
+     * @param <S>
+     *            The generic type of Pipeline requested by the user.
      * @param packetPriority
      *            The priority with which the Coupler is to be registered.
      * @param coupler
      *            The coupler
-     * @return true, if successful
+     * @return The Pipeline itself.
      */
     @SuppressWarnings ("unchecked")
-    public boolean registerCoupler(final PacketPriority packetPriority, final Coupler<?> coupler) {
+    public <C extends Coupler<?>, S extends Pipeline<P>> S registerCoupler(final PacketPriority packetPriority, final C coupler) {
         Pipeline.LOG.fine("Consumer named %s registered to pipeline %s with priority %s.",
                 coupler.getName(),
                 this.getName(),
                 packetPriority.toString());
-        return this.couplers.put((Coupler<P>) coupler, packetPriority) != null;
+        this.couplers.put((Coupler<P>) coupler, packetPriority);
+        return (S) this;
     }
     
     /**
      * Registers a list of {@link Coupler} with the Pipeline.
      *
+     * @param <C>
+     *            The generic type of Coupler supplied by the user.
+     * @param <S>
+     *            The generic type of Pipeline requested by the user.
      * @param couplers
      *            the couplers
-     * @return true, if successful
+     * @return The Pipeline itself.
      */
-    public boolean registerCouplers(final Coupler<?>... couplers) {
-        return Stream.of(couplers).map(coupler -> this.registerCoupler(coupler))
-                // collect all success values and reduce to true if all senders
-                // succeeded; false otherwise
-                .reduce(true, (accumulator, success) -> accumulator && success);
+    @SuppressWarnings ("unchecked")
+    public <C extends Coupler<?>, S extends Pipeline<P>> S registerCouplers(final C... couplers) {
+        Stream.of(couplers).forEach(coupler -> this.registerCoupler(coupler));
+        return (S) this;
     }
     
     /**
      * Registers a list of {@link Coupler} with the Pipeline with the given Priority.
      *
+     * @param <C>
+     *            The generic type of Coupler supplied by the user.
+     * @param <S>
+     *            The generic type of Pipeline requested by the user.
      * @param packetPriority
      *            The priority with which the Couplers are to be registered.
      * @param couplers
      *            the couplers
-     * @return true, if successful
+     * @return The Pipeline itself.
      */
-    public boolean registerCouplers(final PacketPriority packetPriority, final Coupler<?>... couplers) {
-        return Stream.of(couplers).map(coupler -> this.registerCoupler(packetPriority, coupler))
-                // collect all success values and reduce to true if all senders
-                // succeeded; false otherwise
-                .reduce(true, (accumulator, success) -> accumulator && success);
+    @SuppressWarnings ("unchecked")
+    public <C extends Coupler<?>, S extends Pipeline<P>> S registerCouplers(final PacketPriority packetPriority, final C... couplers) {
+        Stream.of(couplers).map(coupler -> this.registerCoupler(packetPriority, coupler));
+        return (S) this;
     }
 }

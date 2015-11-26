@@ -124,8 +124,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
     /**
      * Gets a List of available {@link Producer} compatible with the given {@link Pipeline}.
      *
-     * @param
-     *            <P>
+     * @param <P>
      *            The generic type of {@link PipelinePacket} handled by the Producer.
      * @param <C>
      *            The generic type Producer compatible with the Pipeline.
@@ -156,21 +155,18 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      * Gets a list of {@link Pipeline} that operates on the supplied Type of
      * {@link org.ssh.pipelines.PipelinePacket}.
      *
-     * @param
-     *            <P>
-     *            The generic type of PipelinePacket the Pipeline can handle
-     * @param <C>
-     *            The generic type of Pipeline
+     * @param <P>
+     *            The generic type of Pipeline requested by the user
      * @param packetType
      *            The Type with which the Pipelines need to be compatible.
      * @return The list of compatible Pipelines.
      */
-    public static <P extends PipelinePacket<? extends Object>, C extends Pipeline<P>> List<C> getOfDataType(final Type packetType) {
+    public static <P extends Pipeline<PipelinePacket<? extends Object>>> List<P> getOfDataType(final Type packetType) {
         Pipelines.LOG.info("Getting compatible pipelines for type: %s", packetType.getTypeName());
         
         // get the list of pipelines
         @SuppressWarnings ("unchecked")
-        final List<C> collect = (List<C>) Pipelines.getAll().stream()
+        final List<P> collect = (List<P>) Pipelines.getAll().stream()
                 // filter out the compatible ones by type
                 .filter(pipeline -> pipeline.getType().getTypeName().equals(packetType.getTypeName()))
                 .collect(Collectors.toList());
@@ -216,6 +212,8 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
     /**
      * Adds a {@link Pipeline} to the Pipelines manager.
      *
+     * @param <P>
+     *            The generic type of Pipeline requested by the user
      * @param service
      *            The Pipeline to be added.
      * @return true, if successful.
@@ -229,6 +227,8 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
     /**
      * Wraps {@link #add}.
      *
+     * @param <P>
+     *            The generic type of Pipeline requested by the user
      * @param pipelines
      *            The Services to be added
      * @return true if all succeeded, false otherwise
@@ -244,9 +244,8 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
     /**
      * Gets a list of Pipelines of the given type.
      *
-     * @param
-     *            <P>
-     *            The generic type of Pipeline
+     * @param <P>
+     *            The generic type of Pipeline requested by the user
      * @param type
      *            The type of the requested Pipelines
      * @return The list of Pipelines matching the supplied type

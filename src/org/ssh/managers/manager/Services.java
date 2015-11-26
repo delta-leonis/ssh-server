@@ -85,8 +85,7 @@ public final class Services implements Manager<Service<? extends PipelinePacket<
     /**
      * Submits a task to the threadpool.
      *
-     * @param
-     *            <P>
+     * @param <P>
      *            The generic type of PipelinePacket produced by this task.
      * @param taskName
      *            The name of the task.
@@ -153,6 +152,8 @@ public final class Services implements Manager<Service<? extends PipelinePacket<
     /**
      * Adds a {@link Service} to the Services manager.
      *
+     * @param <S>
+     *            The generic type of Service requested by the user.
      * @param service
      *            The service to be added.
      * @return true, if successful.
@@ -166,6 +167,8 @@ public final class Services implements Manager<Service<? extends PipelinePacket<
     /**
      * Wraps {@link #add}.
      *
+     * @param <S>
+     *            The generic type of Service requested by the user.
      * @param services
      *            The Services to be added
      * @return true if all succeeded, false otherwise

@@ -1,7 +1,6 @@
 package org.ssh.services.service;
 
 import org.ssh.managers.manager.Pipelines;
-import org.ssh.pipelines.Pipeline;
 import org.ssh.pipelines.PipelinePacket;
 import org.ssh.services.Service;
 
@@ -10,8 +9,7 @@ import org.ssh.services.Service;
  *
  * A Consumer takes a PipelinePacket and consumes it.
  *
- * @param
- *            <P>
+ * @param <P>
  *            A PipelinePacket this Consumer can work with.
  *            
  * @author Rimon Oz
@@ -31,15 +29,16 @@ public abstract class Consumer<P extends PipelinePacket<? extends Object>> exten
     /**
      * Attachs to all compatible Pipelines.
      *
-     * @return The consumer itself.
+     * @param <C>
+     *            The generic type of Consumer requested by the user.
+     * @return The Consumer itself.
      */
-    @SuppressWarnings ("unchecked")
-    public Consumer<P> attachToCompatiblePipelines() {
+    public <C extends Consumer<P>> C attachToCompatiblePipelines() {
         Pipelines.getOfDataType(this.getType()).stream()
                 // register with the pipeline
-                .forEach(pipeline -> ((Pipeline<P>) pipeline).registerConsumer(this));
+                .forEach(pipeline -> pipeline.registerConsumer(this));
                 
-        return this;
+        return this.<C>getAsService();
     }
     
     /**

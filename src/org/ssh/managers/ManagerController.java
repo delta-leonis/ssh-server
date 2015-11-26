@@ -19,10 +19,14 @@ import com.google.common.collect.ImmutableList;
  */
 public abstract class ManagerController<M extends Manageable> {
     
-    /** The manageables. */
+    /** The manageables which are being managed by this controller. */
     protected ImmutableList<M> manageables;
     
+    /**
+     * Sets up the controller.
+     */
     public ManagerController() {
+        // set attributes
         this.manageables = ImmutableList.of();
     }
     
@@ -61,6 +65,8 @@ public abstract class ManagerController<M extends Manageable> {
     /**
      * Adds a {@link Manageable} to the Manager.
      *
+     * @param <N>
+     *            The return type of the Manageable.
      * @param manageable
      *            the Manageable to be added
      * @return true, if successful

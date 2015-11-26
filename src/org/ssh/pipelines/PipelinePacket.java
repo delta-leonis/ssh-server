@@ -25,7 +25,6 @@ public abstract class PipelinePacket<O extends Object> {
     // a logger for good measure
     public static final Logger                   LOG         = Logger.getLogger();
     
-    
     /**
      * The data contained by this package.
      */
@@ -74,11 +73,11 @@ public abstract class PipelinePacket<O extends Object> {
     /**
      * Saves the data to the packet.
      *
-     * @param <P>
-     *            The type of the PipelinePacket
+     * @param <I>
+     *            The type of data in the PipelinePacket
      * @param data
      *            The data to be put inside the packet.
-     * @return The packet itself.
+     * @return The PipelinePacket itself.
      */
     @SuppressWarnings ("unchecked")
     public <I extends Object> PipelinePacket<O> save(I data) {
@@ -102,8 +101,8 @@ public abstract class PipelinePacket<O extends Object> {
      * @param <F>
      *            The generic type of field contained by the data in the packet.
      * @param clazz
-     *            the clazz
-     * @return the map
+     *            The class from which to extract the fields.
+     * @return The data in the packet as a Map.
      */
     @SuppressWarnings ("unchecked")
     public <F extends Object> Map<String, F> toMap(final Class<?> clazz) {

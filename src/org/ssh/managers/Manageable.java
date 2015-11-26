@@ -23,7 +23,7 @@ public abstract class Manageable {
      * Instantiates a new manageable.
      *
      * @param name
-     *            the name
+     *            The name of the manageable.
      */
     public Manageable(String name) {
         this.name = name;
@@ -41,12 +41,17 @@ public abstract class Manageable {
     /**
      * Sets the name of the Manageable.
      *
+     * @param <M>
+     *            The return type of the Manageable.
      * @param name
      *            The new name of the Manageable.
+     * @return The current Manageable.
      */
-    public void setName(final String name) {
+    @SuppressWarnings ("unchecked")
+    public <M extends Manageable> M setName(final String name) {
         Manageable.LOG.fine("Manageable named %s has changed its name to %s", this.getName(), name);
         this.name = name;
+        return (M) this;
     }
 
 }

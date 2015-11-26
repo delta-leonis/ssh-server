@@ -60,13 +60,17 @@ public abstract class Producer<P extends PipelinePacket<? extends Object>> exten
     
     /**
      * Attach to compatible pipelines.
+     * 
+     * @param <S>
+     *            The generic type of Producer requested by the user.
+     * @return The Producer itself.
      */
-    @SuppressWarnings ("unchecked")
-    public void attachToCompatiblePipelines() {
-        // find compatible pipelines
+    public <S extends Producer<P>> S attachToCompatiblePipelines() {
+        // find compatible pipelines and attach
         Pipelines.getOfDataType(this.getType()).stream()
-                .map(pipeline -> pipeline.getClass().cast(pipeline))
-                .forEach(pipeline -> this.registerPipeline(pipeline));
+            .forEach(pipeline -> this.registerPipeline(pipeline));
+        
+        return this.<S>getAsService();
     }
     
     /**
@@ -141,33 +145,47 @@ public abstract class Producer<P extends PipelinePacket<? extends Object>> exten
     /**
      * Registers a {@link Pipeline} with the Producer.
      *
+     * @param <C>
+     *            The generic type of Producer supplied by the user.
+     * @param <S>
+     *            The generic type of Pipeline requested by the user.
      * @param pipeline
      *            the pipeline
-     * @return true, if successful.
+     * @return The Producer itself.
      */
-    public boolean registerPipeline(final Pipeline<P> pipeline) {
+    @SuppressWarnings ("unchecked")
+    public <C extends Producer<P>, S extends Pipeline<?>> C registerPipeline(final S pipeline) {
         Producer.LOG.info("Producer %s registered to Pipeline %s", this.getName(), pipeline.getName());
-        return this.registeredPipelines.add(pipeline);
+        this.registeredPipelines.add((Pipeline<P>) pipeline);
+        return this.<C>getAsService();
     }
     
     /**
      * Sets the work function.
      *
+     * @param <S>
+     *            The generic type of Producer requested by the user.
      * @param workFunction
      *            The new work function.
+     * @return The Producer itself.
      */
-    public void setCallable(final Callable<P> workFunction) {
+    public <S extends Producer<P>> S setCallable(final Callable<P> workFunction) {
         this.workerLambda = workFunction;
+        return this.<S>getAsService();
     }
     
     /**
-     * Sets the The type of packets made by the Producer
+     * Sets the The type of packets made by the Producer.
      *
+     * @param <S>
+     *            The generic type of Producer requested by the user.
      * @param producerType
      *            The new type of packets made by the Producer
+     * @return The Producer itself.
      */
-    public void setType(final ProducerType producerType) {
+    public <S extends Producer<P>> S setType(final ProducerType producerType) {
         this.producerType = producerType;
+        return this.<S>getAsService();
     }
     
     /*
@@ -176,7 +194,7 @@ public abstract class Producer<P extends PipelinePacket<? extends Object>> exten
      * @see org.ssh.services.Service#start()
      */
     @Override
-    public void start() {
+    public <S extends Service<P>> S start() {
         super.start();
         // check the type of the Producer and start the correct production
         if (this.producerType.equals(ProducerType.SINGLE)) {
@@ -189,5 +207,6 @@ public abstract class Producer<P extends PipelinePacket<? extends Object>> exten
             // start a scheduled production with a default interval (of 1s)
             this.produceSchedule(this.getName(), 1000000);
         }
+        return this.<S>getAsService();
     }
 }
