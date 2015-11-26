@@ -1,4 +1,4 @@
-package org.ssh.view.components;
+package org.ssh.ui.components;
 
 import org.ssh.ui.UIComponent;
 import org.ssh.util.Logger;

@@ -1,5 +1,6 @@
 package org.ssh.util;
 
+import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.stream.Stream;
 
@@ -43,6 +44,7 @@ public class Logger extends java.util.logging.Logger {
         Object l = m.getLogger(name);
         if (l == null) m.addLogger(new Logger(name, null));
         l = m.getLogger(name);
+        ((Logger) l).setLevel(Level.ALL);
         return (Logger) l;
     }
     

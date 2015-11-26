@@ -16,13 +16,13 @@ import javafx.stage.Stage;
 
 import org.ssh.field3d.FieldGame;
 import org.ssh.ui.UIController;
+import org.ssh.ui.components.Enroller;
 import org.ssh.ui.components.LoggerConsole;
 import org.ssh.ui.components.MatchlogSelector;
 import org.ssh.ui.components.Profilemenu;
 import org.ssh.ui.components.Timeslider;
 import org.ssh.ui.components.Toolbox;
-import org.ssh.view.components.Enroller;
-import org.ssh.view.components.Enroller.ExtendDirection;
+import org.ssh.ui.components.Enroller.ExtendDirection;
 
 /**
  * The Class MainWindow.

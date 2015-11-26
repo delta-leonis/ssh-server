@@ -9,6 +9,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+<?import javafx.scene.control.TabPane?>
 
 <GridPane id="loggerconsole" fx:id="rootPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" pickOnBounds="false">
 
@@ -17,14 +18,14 @@
 	</fx:define>
 
 	<columnConstraints>
-		<ColumnConstraints minWidth="20.0" maxWidth="20.0" prefWidth="20.0" />
-		<ColumnConstraints fillWidth="true" />
+		<ColumnConstraints percentWidth="100.0" />
 	</columnConstraints>
 	<rowConstraints>
-		<RowConstraints percentHeight="21.875" />
-		<RowConstraints percentHeight="78.125" />
+		<RowConstraints percentHeight="100.0" />
 	</rowConstraints>
 	<children>
-	
+	<TabPane fx:id="tabPane" maxHeight="${maxValue}" maxWidth="${maxValue}"
+		GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0"
+		GridPane.vgrow="ALWAYS" />
 	</children>
 </GridPane>
