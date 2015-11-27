@@ -120,6 +120,19 @@ public class SkyboxGO extends GameObject {
      * {@inheritDoc}
      */
     @Override
+    public void onUpdateGeometry() {
+    }
+    
+    @Override
+    public void onUpdateDetection() {
+       
+        
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void onDestroy() {
         
         // Check if model is in the world group
@@ -129,5 +142,7 @@ public class SkyboxGO extends GameObject {
             this.getGame().getWorldGroup().getChildren().remove(this.model);
         }
     }
+
+   
     
 }

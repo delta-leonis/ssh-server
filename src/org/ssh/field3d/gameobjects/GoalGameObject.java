@@ -9,6 +9,7 @@ import org.ssh.models.Goal;
 import org.ssh.models.Team;
 import org.ssh.models.enums.TeamColor;
 
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -108,12 +109,14 @@ public class GoalGameObject extends GameObject {
     @Override
     public void onDestroy() {
         
-        // Check if we need to remove the goal group
-        if (this.getGame().getWorldGroup().getChildren().contains(goalGroup)) {
-            
-            // Remove the goal group from the world
-            this.getGame().getWorldGroup().getChildren().remove(goalGroup);
-        }
+        Platform.runLater(() -> {
+            // Check if we need to remove the goal group
+            if (this.getGame().getWorldGroup().getChildren().contains(goalGroup)) {
+                
+                // Remove the goal group from the world
+                this.getGame().getWorldGroup().getChildren().remove(goalGroup);
+            }
+        });
     }
     
     /**
@@ -126,7 +129,7 @@ public class GoalGameObject extends GameObject {
         updateTeamColor();
         
         // Add goal group to the world group
-        this.getGame().getWorldGroup().getChildren().add(this.goalGroup);
+        Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(this.goalGroup));
     }
     
     /**
@@ -137,6 +140,22 @@ public class GoalGameObject extends GameObject {
         
         // Update team color
         updateTeamColor();
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onUpdateGeometry() {
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onUpdateDetection() {
+        // TODO Auto-generated method stub
+        
     }
     
     /**

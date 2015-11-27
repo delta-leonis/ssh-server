@@ -70,7 +70,12 @@ public class PenaltySpotGO extends GameObject {
     public void onInitialize() {
         
         // Add model to the world group
-        Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(this.model));
+        Platform.runLater(() -> {
+            if (!this.getGame().getWorldGroup().getChildren().contains(this.model)) {
+                this.getGame().getWorldGroup().getChildren().add(this.model);
+            }
+        });
+         
     }
     
     /**
@@ -85,13 +90,30 @@ public class PenaltySpotGO extends GameObject {
      */
     @Override
     public void onDestroy() {
-        
-        // Check if model in the world
-        if (this.getGame().getWorldGroup().getChildren().contains(this.model)) {
+
+        // Remove models from world
+        Platform.runLater(() -> {
             
-            // Remove models from world
-            this.getGame().getWorldGroup().getChildren().remove(this.model);
-        }
+            if (this.getGame().getWorldGroup().getChildren().contains(this.model)) {
+                this.getGame().getWorldGroup().getChildren().remove(this.model);
+            }
+        });
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onUpdateGeometry() {
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onUpdateDetection() {
+        // TODO Auto-generated method stub
+        
     }
     
     /**

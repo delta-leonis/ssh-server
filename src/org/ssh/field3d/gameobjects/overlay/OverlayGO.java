@@ -17,14 +17,14 @@ import javafx.scene.Group;
  *      
  * @author Mark Lefering
  */
-public class OverlayGO extends GameObject {
+public abstract class OverlayGO extends GameObject {
     
     /** The FXML directory. */
     private static final String FXML_DIR = "/org/ssh/view/components/overlay/";
                                          
     /** The CSS directory. */
-    private static final String CSS_DIR  = "/org/ssh/view/css/";
-                                         
+    // private static final String CSS_DIR = "/org/ssh/view/css/";
+    
     /** The logger. */
     private static final Logger LOG      = Logger.getLogger();
                                          
@@ -99,6 +99,12 @@ public class OverlayGO extends GameObject {
     public void onUpdate(long timeDivNano) {
     
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract void onUpdateGeometry();
     
     public void show() {
         

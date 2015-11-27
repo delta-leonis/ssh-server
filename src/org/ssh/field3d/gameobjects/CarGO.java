@@ -65,7 +65,7 @@ public class CarGO extends GameObject {
     }
     
     /**
-     * Initialize method. This method adds the model group to the world.
+     * {@inheritDoc}
      */
     @Override
     public void onInitialize() {
@@ -75,10 +75,7 @@ public class CarGO extends GameObject {
     }
     
     /**
-     * Update method. This method check if the car should be displayed or not.
-     * 
-     * @param timeDivNano
-     *            The time difference in nanoseconds.
+     * {@inheritDoc}
      */
     @Override
     public void onUpdate(final long timeDivNano) {
@@ -98,7 +95,7 @@ public class CarGO extends GameObject {
     }
     
     /**
-     * Destroy method. This method removes the model group from the world group if needed.
+     * {@inheritDoc}
      */
     @Override
     public void onDestroy() {
@@ -109,5 +106,21 @@ public class CarGO extends GameObject {
             // Remove model group from the world group
             Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().remove(modelGroup));
         }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onUpdateGeometry() {
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onUpdateDetection() {
+        // TODO Auto-generated method stub
+        
     }
 }

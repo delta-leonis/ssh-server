@@ -1,8 +1,9 @@
 package org.ssh.field3d.gameobjects;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
@@ -13,9 +14,10 @@ import org.ssh.field3d.gameobjects.overlay.contextmenus.ContextOverlayGO;
 import org.ssh.managers.manager.Models;
 import org.ssh.models.Field;
 import org.ssh.models.Goal;
-import org.ssh.models.Robot;
+import org.ssh.models.Model;
 import org.ssh.util.Logger;
 
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
@@ -39,102 +41,89 @@ import protobuf.Geometry.Vector2f;
 public class FieldGO extends GameObject {
     
     /** The height of the field. */
-    public static final double     FIELD_HEIGHT            = 1.0;
-                                                           
+    public static final double                          FIELD_HEIGHT            = 1.0;
+                                                                                
     /** The penalty spot distance form goal */
-    public static final double     FIELD_PENALTY_SPOT      = 1000.0;
-                                                           
+    public static final double                          FIELD_PENALTY_SPOT      = 1000.0;
+                                                                                
     /** The penalty spot size. */
-    public static final double     FIELD_PENALTY_SPOT_SIZE = 10.0;
-                                                           
+    public static final double                          FIELD_PENALTY_SPOT_SIZE = 10.0;
+                                                                                
     /** The width of a tile. */
-    public static final double     FIELD_TILE_WIDTH        = 500.0;
-                                                           
+    public static final double                          FIELD_TILE_WIDTH        = 500.0;
+                                                                                
     /** The height of a tile. */
-    public static final double     FIELD_TILE_DEPTH        = 500.0;
-                                                           
+    public static final double                          FIELD_TILE_DEPTH        = 500.0;
+                                                                                
     /** The logger. */
-    private static final Logger    LOG                     = Logger.getLogger("FieldGO");
-                                                           
+    private static final Logger                         LOG                     = Logger.getLogger("FieldGO");
+                                                                                
     /** The file path for the grass texture. */
-    private static final String    GRASS_TEXTURE_FILE      = "/org/ssh/view/textures/field/grass.png";
-                                                           
+    private static final String                         GRASS_TEXTURE_FILE      = "/org/ssh/view/textures/field/grass.png";
+                                                                                
     /** The line offset. */
-    private static final double    LINE_Y_OFFSET           = 10.0;
-                                                           
+    private static final double                         LINE_Y_OFFSET           = 10.0;
+                                                                                
     /** The number of divisions in the mid circle. */
-    private static final int       ARC_NUM_DIVISIONS       = 1000;
-                                                           
+    private static final int                            ARC_NUM_DIVISIONS       = 1000;
+                                                                                
     /** The tiles of the field. */
-    private final List<Box>        fieldBoxes;
-                                   
+    private final ConcurrentLinkedQueue<Box>            fieldBoxes;
+                                                        
     /** The lines of the field. */
-    private final List<FlatLine3D> fieldLines;
-                                   
+    private final ConcurrentLinkedQueue<FlatLine3D>     fieldLines;
+                                                        
     /** The arcs of the field. */
-    private final List<FlatArc3D>  fieldArcs;
-                                   
+    private final ConcurrentLinkedQueue<FlatArc3D>      fieldArcs;
+                                                        
+    /** The goal game objects. */
+    private final ConcurrentLinkedQueue<GoalGameObject> goalGameObjects;
+                                                        
     /** The grass material. */
-    private final PhongMaterial    grassMaterial;
-                                   
-    /** The east penalty spot. */
-    private final PenaltySpotGO    penaltySpotEast;
-                                   
-    /** The west penalty spot. */
-    private final PenaltySpotGO    penaltySpotWest;
-                                   
+    private final PhongMaterial                         grassMaterial;
+                                                        
     /** The width of the tile. */
-    private final double           tileWidth;
-                                   
+    private final double                                tileWidth;
+                                                        
     /** the depth of the tile. */
-    private final double           tileDepth;
-                                   
+    private final double                                tileDepth;
+                                                        
     /** The field vision model. */
-    private final Field            fieldVisionModel;
-                                   
+    private Field                                       fieldVisionModel;
+                                                        
     /** The context menu overlay game object */
-    private final ContextOverlayGO contextOverlayGO;
-                                   
+    private final ContextOverlayGO                      contextOverlayGO;
+                                                        
+    /** The east penalty spot. */
+    private PenaltySpotGO                               penaltySpotEast;
+                                                        
+    /** The west penalty spot. */
+    private PenaltySpotGO                               penaltySpotWest;
+                                                        
     /**
      * 
      * @param game
      * @param fieldVisionModel
      */
-    public FieldGO(final Game game, final Field fieldVisionModel) {
+    public FieldGO(final Game game) {
         
         // Initialize super class
         super(game);
         
-        @SuppressWarnings ("unchecked")
-        List<Robot> robots = (List<Robot>) Models.getAll("robot");
-        
         // Creating lists for the tiles and lines
-        this.fieldBoxes = new ArrayList<Box>();
-        this.fieldLines = new ArrayList<FlatLine3D>();
-        this.fieldArcs = new ArrayList<FlatArc3D>();
+        this.fieldBoxes = new ConcurrentLinkedQueue<Box>();
+        this.fieldLines = new ConcurrentLinkedQueue<FlatLine3D>();
+        this.fieldArcs = new ConcurrentLinkedQueue<FlatArc3D>();
+        this.goalGameObjects = new ConcurrentLinkedQueue<GoalGameObject>();
         
-        this.contextOverlayGO = new ContextOverlayGO(game, robots);
+        this.contextOverlayGO = new ContextOverlayGO(game);
         
         // Creating grass material with lawn green diffuse color
         this.grassMaterial = new PhongMaterial(Color.LAWNGREEN);
         
-        // Creating penalty spots
-        this.penaltySpotEast = new PenaltySpotGO(this.getGame(),
-                new Vector3f((float) ((fieldVisionModel.getFieldLength() / 2.0) - FieldGO.FIELD_PENALTY_SPOT),
-                        (float) FieldGO.LINE_Y_OFFSET,
-                        0),
-                FieldGO.FIELD_PENALTY_SPOT_SIZE);
-        this.penaltySpotWest = new PenaltySpotGO(this.getGame(),
-                new Vector3f((float) (-(fieldVisionModel.getFieldLength() / 2.0) + FieldGO.FIELD_PENALTY_SPOT),
-                        (float) FieldGO.LINE_Y_OFFSET,
-                        0),
-                FieldGO.FIELD_PENALTY_SPOT_SIZE);
-                
         // Setting tile dimensions
         this.tileDepth = FIELD_TILE_DEPTH;
         this.tileWidth = FIELD_TILE_WIDTH;
-        
-        this.fieldVisionModel = fieldVisionModel;
         
         // Getting resource
         InputStream textureInputStream = this.getClass().getResourceAsStream(GRASS_TEXTURE_FILE);
@@ -158,21 +147,18 @@ public class FieldGO extends GameObject {
     @Override
     public void onInitialize() {
         
-        // Generate tiles
-        this.generateTiles();
-        
-        // Generate lines
-        this.generateLines();
-        
-        // Generate lines
-        this.generateGoals();
-        
-        // Generate arcs
-        this.generateArcs();
-        
-        // Adding game objects to the game
-        this.getGame().addGameObject(this.penaltySpotEast);
-        this.getGame().addGameObject(this.penaltySpotWest);
+        /*
+         * // Generate tiles this.generateTiles();
+         * 
+         * // Generate lines this.generateLines();
+         * 
+         * // Generate lines this.generateGoals();
+         * 
+         * // Generate arcs this.generateArcs();
+         * 
+         * // Adding game objects to the game this.getGame().addGameObject(this.penaltySpotEast);
+         * this.getGame().addGameObject(this.penaltySpotWest);
+         */
         this.getGame().addGameObject(this.contextOverlayGO);
     }
     
@@ -213,6 +199,67 @@ public class FieldGO extends GameObject {
     }
     
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onUpdateGeometry() {
+        
+        Optional<Model> optionalModel = Models.get("field");
+        
+        if (optionalModel.isPresent()) {
+            
+            this.fieldVisionModel = (Field) optionalModel.get();
+            
+            // Clear arcs
+            this.clearArcs();
+            // Clear lines
+            this.clearLines();
+            // Clear boxes
+            this.clearBoxes();
+            // Clear goals
+            this.clearGoals();
+            
+            // Remove penalty spots
+            this.getGame().removeGameObject(penaltySpotEast);
+            this.getGame().removeGameObject(penaltySpotWest);
+            
+            // Generate tiles
+            this.generateTiles();
+            // Generate arcs
+            this.generateArcs();
+            // Generate goals
+            this.generateGoals();
+            // Generate lines
+            this.generateLines();
+            
+            // Creating penalty spots
+            this.penaltySpotEast = new PenaltySpotGO(this.getGame(),
+                    new Vector3f((float) ((fieldVisionModel.getFieldLength() / 2.0) - FieldGO.FIELD_PENALTY_SPOT),
+                            (float) FieldGO.LINE_Y_OFFSET,
+                            0),
+                    FieldGO.FIELD_PENALTY_SPOT_SIZE);
+            this.penaltySpotWest = new PenaltySpotGO(this.getGame(),
+                    new Vector3f((float) (-(fieldVisionModel.getFieldLength() / 2.0) + FieldGO.FIELD_PENALTY_SPOT),
+                            (float) FieldGO.LINE_Y_OFFSET,
+                            0),
+                    FieldGO.FIELD_PENALTY_SPOT_SIZE);
+                    
+            // Adding new penalty spots
+            this.getGame().addGameObject(penaltySpotEast);
+            this.getGame().addGameObject(penaltySpotWest);
+        }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onUpdateDetection() {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    /**
      * addLine method. This method creates and adds flat lines to the world.
      * 
      * @param startX
@@ -239,10 +286,44 @@ public class FieldGO extends GameObject {
         line.getMeshView().setTranslateY(FieldGO.LINE_Y_OFFSET);
         
         // Add to world group
-        this.getGame().getWorldGroup().getChildren().add(line.getMeshView());
+        Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(line.getMeshView()));
         
         // Return the line
         return line;
+    }
+    
+    /**
+     * Remove line method. This method removes a {@line FlatLine3D line} from the field.
+     * 
+     * @param line
+     *            The line to remove from the field.
+     */
+    private void removeLine(FlatLine3D line) {
+        
+        Platform.runLater(() -> {
+            // Check if we need to remove a line from the field
+            if (this.fieldLines != null && this.fieldLines.contains(line)) {
+                
+                // Remove line from world
+                this.getGame().getWorldGroup().getChildren().remove(line.getMeshView());
+                
+                // Remove line from line list
+                this.fieldLines.remove(line);
+            }
+        });
+    }
+    
+    /**
+     * Clear lines method. This method clears the lines of the field.
+     */
+    private void clearLines() {
+        
+        // Loop through lines
+        for (FlatLine3D line : this.fieldLines) {
+            
+            // Remove the line
+            this.removeLine(line);
+        }
     }
     
     /**
@@ -275,13 +356,51 @@ public class FieldGO extends GameObject {
         tmpArc.getMeshView().setTranslateZ(center.getY());
         
         // Add arc to the world
-        this.getGame().getWorldGroup().getChildren().add(tmpArc.getMeshView());
+        Platform.runLater(() -> {
+            if (!this.getGame().getWorldGroup().getChildren().contains(tmpArc.getMeshView())) {
+                this.getGame().getWorldGroup().getChildren().add(tmpArc.getMeshView());
+            }
+        });
         
         // Add to the arc list
         this.fieldArcs.add(tmpArc);
         
         // Return the arc
         return tmpArc;
+    }
+    
+    /**
+     * Remove arc method. This method removes a {@FlatArc3D arc} from the field.
+     * 
+     * @param arc
+     *            The {@link FlatArc3D} to remove from the field.
+     */
+    private void removeArc(FlatArc3D arc) {
+        
+        // Check if we can remove the arc from the field
+        Platform.runLater(() -> {
+            
+            if (this.fieldArcs != null && this.fieldArcs.contains(arc)) {
+                
+                // Remove arc from the world
+                this.getGame().getWorldGroup().getChildren().remove(arc.getMeshView());
+                // Remove the arc from the list of arcs
+                this.fieldArcs.remove(arc);
+            }
+        });
+    }
+    
+    /**
+     * Clear arcs method. This method clears the arcs of the field.
+     */
+    private void clearArcs() {
+        
+        // Loop through arcs
+        for (FlatArc3D arc : this.fieldArcs) {
+            
+            // Remove the arc
+            this.removeArc(arc);
+        }
     }
     
     /**
@@ -296,7 +415,7 @@ public class FieldGO extends GameObject {
         this.fieldBoxes.add(box);
         
         // Add box to the world group
-        this.getGame().getWorldGroup().getChildren().add(box);
+        Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(box));
         
         box.setOnMouseClicked(new EventHandler<MouseEvent>() {
             
@@ -319,6 +438,40 @@ public class FieldGO extends GameObject {
             }
             
         });
+    }
+    
+    /**
+     * Remove box method. This method removes a {@link Box} from the field.
+     * 
+     * @param box
+     *            The {@link Box} to remove.
+     */
+    private void removeBox(Box box) {
+        
+        Platform.runLater(() -> {
+            // Check if we need to remove a box from the field
+            if (this.fieldBoxes != null && this.fieldBoxes.contains(box)) {
+                
+                // Remove from the world group
+                this.getGame().getWorldGroup().getChildren().remove(box);
+                
+                // Remove from box list
+                this.fieldBoxes.remove(box);
+            }
+        });
+    }
+    
+    /**
+     * Clear boxes method. This method clears the boxes of the field.
+     */
+    private void clearBoxes() {
+        
+        // Loop through 'tiles'
+        for (Box box : this.fieldBoxes) {
+            
+            // Remove tile
+            this.removeBox(box);
+        }
     }
     
     /**
@@ -365,9 +518,24 @@ public class FieldGO extends GameObject {
                 // Create a game object for the goal
                 GoalGameObject goal3d = new GoalGameObject(this.getGame(), goal);
                 
+                // Add goal to goal game objects
+                this.goalGameObjects.add(goal3d);
+                
                 // Add goal game object to the list of game objects
                 this.getGame().addGameObject(goal3d);
             }
+        }
+    }
+    
+    /**
+     * Clear goals method. This method clears the goals of the field.
+     */
+    private void clearGoals() {
+        
+        // Loop through goal game objects
+        for (GoalGameObject goalGameObject : this.goalGameObjects) {
+            
+            this.getGame().removeGameObject(goalGameObject);
         }
     }
     

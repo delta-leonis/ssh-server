@@ -1,6 +1,6 @@
 package org.ssh.field3d.core.game;
 
-import java.util.ArrayList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.field3d.core.gameobjects.camera.ThirdPersonCamera;
@@ -24,25 +24,27 @@ import javafx.util.Duration;
  */
 public abstract class Game extends SubScene {
     
-    private static final int      FPS           = 60;
-    private static final int      FRAME_TIME_MS = (1 / Game.FPS) * 1000;
-                                                
-    private Timeline              timeline;
-    private AnimationTimerHandler animationTimerHandler;
-    private SubScene              scene3D;
-                                  
-    private ArrayList<GameObject> gameObjects;
-                                  
-    private MouseInputHandler     mouseInputHandler;
-    private ThirdPersonCamera     thirdPersonCamera;
-                                  
-    private Group                 worldGroup;
-    private Group                 cameraGroup;
-    private Group                 group2d;
-    private Group                 group3d;
-                                  
-    private long                  curTime, prevTime;
-                                  
+    private static final int                  FPS           = 60;
+    private static final int                  FRAME_TIME_MS = (1 / Game.FPS) * 1000;
+                                                            
+    private Timeline                          timeline;
+    private AnimationTimerHandler             animationTimerHandler;
+    private SubScene                          scene3D;
+                                              
+    private ConcurrentLinkedQueue<GameObject> gameObjects;
+                                              
+    private MouseInputHandler                 mouseInputHandler;
+    private ThirdPersonCamera                 thirdPersonCamera;
+                                              
+    private Group                             worldGroup;
+    private Group                             cameraGroup;
+    private Group                             group2d;
+    private Group                             group3d;
+                                              
+    private long                              curTime, prevTime;
+                                              
+    private static boolean                    isFirstFrame  = true;
+                                                            
     /**
      *
      * Constructor
@@ -123,9 +125,6 @@ public abstract class Game extends SubScene {
      */
     public void internalInitialize() {
         
-        // Initialize game
-        this.initialize();
-        
         // Setting time
         this.curTime = this.prevTime = System.nanoTime();
         
@@ -170,10 +169,11 @@ public abstract class Game extends SubScene {
         // Calculate time difference
         timeDivNano = this.curTime - this.prevTime;
         
-        // Update our game
-        this.update(timeDivNano);
         // Update game objects
         this.updateGameObjects(timeDivNano);
+        
+        // Update our game
+        this.update(timeDivNano);
     }
     
     /**
@@ -186,12 +186,13 @@ public abstract class Game extends SubScene {
     public void addGameObject(final GameObject gameObject) {
         
         // Check if we need to add our game object
-        if ((this.gameObjects != null) && !this.gameObjects.contains(gameObject)) {
+        if ((this.gameObjects != null) && !this.gameObjects.contains(gameObject) && gameObject != null) {
             
             // Initialize our game object
             gameObject.onInitialize();
             // Add to game objects
             this.gameObjects.add(gameObject);
+            
         }
     }
     
@@ -214,26 +215,92 @@ public abstract class Game extends SubScene {
         }
     }
     
+    /**
+     * Update geometry method. This method should be called when there are new geometry model
+     * objects available.
+     */
+    public synchronized void updateGeometry() {
+        
+        // Check if the game objects list is
+        if (this.gameObjects != null) {
+            
+            // Loop through game objects
+            for (GameObject gameObject : this.gameObjects) {
+                
+                // Update vision data
+                gameObject.onUpdateGeometry();
+            }
+        }
+    }
+    
+    /**
+     * Update detection method. This method should be called when there are new model objects
+     * available.
+     */
+    public synchronized void updateDetection() {
+        
+        // Check if the game objects list is
+        if (this.gameObjects != null) {
+            
+            // Loop through game objects
+            for (GameObject gameObject : this.gameObjects) {
+                
+                // Update vision data
+                gameObject.onUpdateDetection();
+            }
+        }
+    }
+    
+    /**
+     * Gets the 2d {@link Group} of the game.
+     * 
+     * @return The 2d {@link Group} of the game.
+     */
     public Group get2DGroup() {
         return this.group2d;
     }
     
+    /**
+     * Gets the 3d {@link Group} of the game.
+     *
+     * @return The 3d {@link Group} of the game.
+     */
     public Group get3DGroup() {
         return this.group3d;
     }
     
+    /**
+     * Gets the camera {@link Group} of the game.
+     * 
+     * @return The 3d {@link Group} of the game.
+     */
     public Group getCameraGroup() {
         return this.cameraGroup;
     }
     
+    /**
+     * Gets the {@link MouseInputHandler} of the game.
+     * 
+     * @return The {@link MouseInputHandler} of the game.
+     */
     public MouseInputHandler getMouseInputHandler() {
         return this.mouseInputHandler;
     }
     
+    /**
+     * Gets the {@link ThirdPersonCamera} of the game.
+     * 
+     * @return The {@link ThirdPersonCamera} of the game.
+     */
     public ThirdPersonCamera getThirdPersonCamera() {
         return this.thirdPersonCamera;
     }
     
+    /**
+     * Gets the world {@link Group} of the game.
+     * 
+     * @return The world {@link Group} of the game.
+     */
     public Group getWorldGroup() {
         return this.worldGroup;
     }
@@ -318,7 +385,8 @@ public abstract class Game extends SubScene {
         this.group3d = new Group();
         
         // Creating new array list for the game objects
-        this.gameObjects = new ArrayList<GameObject>();
+        this.gameObjects = new ConcurrentLinkedQueue<GameObject>();
+        
         // Creating new keyboard input handler
         this.mouseInputHandler = new MouseInputHandler(this);
         // Creating third-person camera
@@ -353,6 +421,11 @@ public abstract class Game extends SubScene {
         this.scene3D.setCamera(this.thirdPersonCamera.getPerspectiveCamera());
     }
     
+    public boolean isFirstFrame() {
+        
+        return Game.isFirstFrame;
+    }
+    
     /**
      *
      * AnimationTimerHandler class This class handles the animation timer and updates the game.
@@ -362,11 +435,26 @@ public abstract class Game extends SubScene {
      */
     class AnimationTimerHandler extends AnimationTimer {
         
+        long prevTime;
+        long curTime;
+             
         @Override
         public void handle(final long timeDivNano) {
             
+            if (Game.isFirstFrame) {
+                
+                Game.isFirstFrame = false;
+                Game.this.initialize();
+                
+                return;
+            }
+            
+            prevTime = curTime;
+            curTime = System.currentTimeMillis();
+            
             // Update game
             Game.this.internalUpdate();
+            
         }
         
     }

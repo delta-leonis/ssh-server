@@ -94,6 +94,22 @@ public class CameraControlOverlayGO extends OverlayGO {
      * {@inheritDoc}
      */
     @Override
+    public void onUpdateGeometry() {
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onUpdateDetection() {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void onUpdate(final long timeDivNano) {
         
         double cameraRotationY = this.getGame().getThirdPersonCamera().getRotateY();

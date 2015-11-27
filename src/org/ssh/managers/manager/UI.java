@@ -71,12 +71,12 @@ public final class UI {
      * @return An Optional containing the window.
      */
     @SuppressWarnings ("unchecked")
-    public static <P extends Pane> Optional<UIController<P>> get(final String name) {
+    public static <P extends Pane, U extends UIController<P>> Optional<U> get(final String name) {
         UI.LOG.fine("Getting a window named %s from the UI store", name);
         // get a stream of all the windows
         return UI.uiControllers.stream()
                 // filter out the window with the correct name
-                .filter(controller -> controller.getName().equals(name)).map(controller -> (UIController<P>) controller)
+                .filter(controller -> controller.getName().equals(name)).map(controller -> (U) controller)
                 // and return the first one in the list
                 .findFirst();
     }

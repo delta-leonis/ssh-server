@@ -167,6 +167,8 @@ public class RobotGO extends GameObject {
                 
                 // Setting selected state
                 setSelected(!isSelected);
+                
+                System.out.println("ID: " + visionRobotModel.getRobotId());
             }
             
         });
@@ -230,6 +232,33 @@ public class RobotGO extends GameObject {
      */
     @Override
     public void onDestroy() {
+        
+        Platform.runLater(() -> {
+            if (this.getGame().getWorldGroup().getChildren().contains(this.model)) {
+                
+                this.getGame().getWorldGroup().getChildren().remove(this.model);
+            }
+            
+            if (this.getGame().getWorldGroup().getChildren().contains(this.selectionArcMesh)) {
+                this.getGame().getWorldGroup().getChildren().remove(this.selectionArcMesh);
+            }
+        });
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onUpdateGeometry() {
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onUpdateDetection() {
+        // TODO Auto-generated method stub
+        
     }
     
     /**

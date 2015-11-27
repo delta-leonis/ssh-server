@@ -231,6 +231,22 @@ public class ThirdPersonCamera extends GameObject {
     }
     
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onUpdateGeometry() {        
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onUpdateDetection() {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    /**
      * Gets the camera location.
      *
      * @return The camera {@link Vector3f location}.

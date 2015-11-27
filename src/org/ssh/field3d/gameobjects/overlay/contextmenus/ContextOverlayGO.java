@@ -42,16 +42,13 @@ public class ContextOverlayGO extends OverlayGO {
      * @param robots
      *            The {@link List} of robots active in the game.
      */
-    public ContextOverlayGO(Game game, List<Robot> robots) {
+    public ContextOverlayGO(Game game) {
         
         // Initialize super class
         super(game, LAYOUT_FXML_FILE);
         
         // Creating new 2d point for the location clicked on the field
         fieldLoc = new Point2D(0.0, 0.0);
-        
-        // Setting robots
-        this.robots = robots;
     }
     
     /**
@@ -131,6 +128,22 @@ public class ContextOverlayGO extends OverlayGO {
         
         // Call show method of the super class
         super.show();
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onUpdateGeometry() {
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onUpdateDetection() {
+        // TODO Auto-generated method stub
+        
     }
     
     /**

@@ -70,6 +70,13 @@ public class KeyInputHandler extends GameObject {
         this.getGame().setOnKeyReleased(null);
     }
     
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onUpdateGeometry() {
+    }
+    
     public boolean isKeyDown(final KeyCode keyCode) {
         
         // Check if the map contains the key code
@@ -147,5 +154,11 @@ public class KeyInputHandler extends GameObject {
             // Setting released state
             KeyInputHandler.this.setState(event.getCode(), false);
         }
+    }
+
+    @Override
+    public void onUpdateDetection() {
+        // TODO Auto-generated method stub
+        
     }
 }

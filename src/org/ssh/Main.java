@@ -16,7 +16,6 @@ import org.ssh.senders.DebugSender;
 import org.ssh.services.consumers.DetectionModelConsumer;
 import org.ssh.services.consumers.GeometryModelConsumer;
 import org.ssh.services.consumers.WrapperConsumer;
-import org.ssh.services.producers.UDPReceiver;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -58,10 +57,12 @@ public class Main extends Application {
         /* Below is just for testing!!! */
         /********************************/
         
-        // make a pipelines
-        new WrapperPipeline("wrapper pipeline");
-        new DetectionPipeline("detection pipeline");
-        new GeometryPipeline("geometry pipeline");
+        // make a pipeline
+        final GeometryPipeline mainPipeline = new GeometryPipeline("fieldbuilder");
+        // make another pipeline
+        final RadioPipeline radioPipeline   = new RadioPipeline("controller");
+        // Make a detection pipeline
+        final Field3DDetectionPipeline detectionPipeline = new Field3DDetectionPipeline("detection");
         
         // make splitter from wrapper -> geometry / detection
         new WrapperConsumer().attachToCompatiblePipelines();
