@@ -23,20 +23,13 @@ import protobuf.Radio.RadioProtocolCommand;
  * This class is used to process a {@link ControllerLayout Controller} {@link Model} and generate a
  * protobuf message accordingly
  *
- * @TODO read max_speed and solandoid_speed from a config file
- * @TODO calc speed vectors
  * @TODO stop_all_robots
- * @TODO calc rad/s
  *       
- * @author Jeroen de Jong
+ * @author Jeroen de Jong, Thomas Hakkers
  *         
  */
 @SuppressWarnings ("rawtypes")
 public class ControllerHandler extends Producer {
-    
-    // TODO should be read from a config of some sorts
-    float                                    MAX_SPEED           = 4f,
-                                                     MAX_STRENGTH = 1f;
                                                      
     /**
      * Map with previous buttonstates and respective values
@@ -48,6 +41,8 @@ public class ControllerHandler extends Producer {
     private final ControllerLayout           layout;
     // respective logger
     private static final Logger              LOG                 = Logger.getLogger();
+    
+    private static ControllerSettings settings;
                                                                      
     /**
      * Instantiates a handler assigned to a specific layout
@@ -58,6 +53,10 @@ public class ControllerHandler extends Producer {
         super("ControllerHandler " + layout.getController().getName(), ProducerType.SCHEDULED);
         
         this.layout = layout;
+        
+        Optional<Model> model = Models.get("controllersettings");
+        if(model.isPresent())
+            settings = (ControllerSettings)model.get();
 
         // fill previousButtonState array
         resetPreviousState();
@@ -182,27 +181,19 @@ public class ControllerHandler extends Producer {
                 return ControllerHandler.dribbleSpeed(packet, buttonValue);
                 
             case DIRECTION_POV:
-                return this.directionPOV(packet, buttonValue);
+                return ControllerHandler.directionPOV(packet, buttonValue);
                 
             case DIRECTION_FORWARD:
-                if (ControllerHandler.isPressed(buttonValue)) 
-                    packet.setVelocityY(this.MAX_SPEED);
-                return true;
+                return ControllerHandler.velocityY(buttonValue, packet);
                 
             case DIRECTION_BACKWARD:
-                if (ControllerHandler.isPressed(buttonValue)) 
-                    packet.setVelocityY(-1 * this.MAX_SPEED);
-                return true;
+                return ControllerHandler.velocityY(-buttonValue, packet);
                 
             case DIRECTION_LEFT:
-                if (ControllerHandler.isPressed(buttonValue)) 
-                    packet.setVelocityX(-1 * this.MAX_SPEED);
-                return true;
+                return ControllerHandler.velocityX(-buttonValue, packet);
                 
             case DIRECTION_RIGHT:
-                if (ControllerHandler.isPressed(buttonValue)) 
-                    packet.setVelocityX(this.MAX_SPEED);
-                return true;
+                return ControllerHandler.velocityX(buttonValue, packet);
                 
             case DIRECTION_X:
                 return ControllerHandler.directionX(packet, buttonValue);
@@ -249,19 +240,52 @@ public class ControllerHandler extends Producer {
     }
     
     /**
-     * Sets the dribbleSpin for the packet.
-     * This value is "persistent" meaning that it will always read what the button says
-     * @param packet The packet this value needs to be added to
-     * @param buttonValue The speed, which is always 1.0f since it's a digital button TODO
-     * @return true if success (always)
+     * Calculates the X velocity and adds it to the packet like buttonValue * settings.getMaxVelocity
+     * @param buttonValue The value of the button that got pressed (range: -1 : 1)
+     * @param packet The packet the velocity will be added to
+     * @return true if successful (always)
      */
-    private static final boolean dribblePersistent(final RadioProtocolCommand.Builder packet, final float buttonValue){
-        packet.setDribblerSpin(buttonValue);
+    private static final boolean velocityX(final Float buttonValue, final RadioProtocolCommand.Builder packet){
+        if (ControllerHandler.isPressed(buttonValue) && settings != null)
+            packet.setVelocityX(buttonValue * settings.getMaxVelocity());
+        else
+            ControllerHandler.LOG.warning("Settings in velocityX is null");
         return true;
     }
     
     /**
-     * TODO normalize triggervalue * something. (DEFINE something)
+     * Calculates the Y velocity and adds it to the packet like buttonValue * settings.getMaxVelocity
+     * @param buttonValue The value of the button that got pressed (range: -1 : 1)
+     * @param packet The packet the velocity will be added to
+     * @return true if successful (always)
+     */
+    private static final boolean velocityY(final Float buttonValue, final RadioProtocolCommand.Builder packet){
+        if (ControllerHandler.isPressed(buttonValue) && settings != null)
+            packet.setVelocityY(buttonValue * settings.getMaxVelocity());
+        else
+            ControllerHandler.LOG.warning("Settings in velocityX is null");
+        return true;
+    }
+    
+    /**
+     * Sets the dribbleSpin for the packet.
+     * This value is "persistent" meaning that it will always read what the button says
+     * @param packet The packet this value needs to be added to
+     * @param buttonValue The speed, which is always 1.0f since it's a digital button
+     * @return true if success (always)
+     */
+    private static final boolean dribblePersistent(final RadioProtocolCommand.Builder packet, final float buttonValue){
+        float dribbleSpeed = buttonValue;
+        if(settings != null)
+            dribbleSpeed *= settings.getMaxDribbleSpeed();
+        else
+            LOG.warning("ControllerSettings not initialized. Could not read MaxFlatKickSpeed");
+
+        packet.setDribblerSpin(dribbleSpeed);
+        return true;
+    }
+    
+    /**
      * Sets the FlatKick for the given packet.
      * @param packet The packet FlatKick needs to be added to
      * @param buttonValue The value of the button that triggered the event (not the actual power it'll chip at)
@@ -274,8 +298,13 @@ public class ControllerHandler extends Producer {
         
         if (ControllerHandler.isPressed(buttonValue)) {
             // Kickstrength is the value of the assigned trigger. If it doesn't exist, use MAX_STRENGTH
-            final float kickStrength = this.layout.containsBinding(ButtonFunction.KICK_STRENGTH)
-                    ? currentButtonState.get(ButtonFunction.KICK_STRENGTH) : this.MAX_STRENGTH;
+            float kickStrength = this.layout.containsBinding(ButtonFunction.KICK_STRENGTH)
+                    ? currentButtonState.get(ButtonFunction.KICK_STRENGTH) : 1;
+                    
+            if(settings != null)
+                kickStrength *= settings.getMaxFlatKickSpeed();
+            else
+                LOG.warning("ControllerSettings not initialized. Could not read MaxFlatKickSpeed");
             // Make sure it's never below 0
             packet.setFlatKick(Math.abs(kickStrength));
         }
@@ -283,7 +312,6 @@ public class ControllerHandler extends Producer {
     }
     
     /**
-     * TODO normalize triggervalue * something. (DEFINE something)
      * Sets the ChipKick for the given packet.
      * @param packet The packet ChipKick needs to be added to
      * @param buttonValue The value of the button that triggered the event (not the actual power it'll chip at)
@@ -293,11 +321,16 @@ public class ControllerHandler extends Producer {
     private final boolean chip(final RadioProtocolCommand.Builder packet,
             final float buttonValue,
             final Map<ButtonFunction, Float> currentButtonState) {
-        
+            
         if (ControllerHandler.isPressed(buttonValue)) {
             // Kickstrength is the value of the assigned trigger. If it doesn't exist, use MAX_STRENGTH
-            final float chipStrength = this.layout.containsBinding(ButtonFunction.CHIP_STRENGTH)
-                    ? currentButtonState.get(ButtonFunction.CHIP_STRENGTH) : this.MAX_STRENGTH;
+            float chipStrength = this.layout.containsBinding(ButtonFunction.CHIP_STRENGTH)
+                    ? currentButtonState.get(ButtonFunction.CHIP_STRENGTH) : 1;
+                    
+            if (settings != null)
+                chipStrength *= settings.getMaxChipKickSpeed();
+            else
+                LOG.warning("ControllerSettings not initialized. Could not read MaxChipKickSpeed");
             // Make sure it's never below 0
             packet.setChipKick(Math.abs(chipStrength));
         }
@@ -305,26 +338,32 @@ public class ControllerHandler extends Producer {
     }
     
     /**
-     * TODO Normalize velocity
      * Calculates the Velocity on the Y axis and puts it into the packet
      * @param packet The packet that the velocityY gets added to
      * @param buttonValue The value the controller registered
      * @return True if success (always)
      */
     private static final boolean directionY(final RadioProtocolCommand.Builder packet, final float buttonValue){
-        packet.setVelocityY(buttonValue);
+        float velocity = buttonValue;
+        if(settings != null)
+            velocity *= settings.getMaxVelocity();
+        
+        packet.setVelocityY(velocity);
         return true;
     }
     
     /**
-     * TODO Normalize velocity
      * Calculates the Velocity on the X axis and puts it into the packet
      * @param packet The packet that the velocityX gets added to
      * @param buttonValue The value the controller registered
      * @return True if success (always)
      */
     private static final boolean directionX(final RadioProtocolCommand.Builder packet, final float buttonValue){
-        packet.setVelocityX(buttonValue);
+        float velocity = buttonValue;
+        if(settings != null)
+            velocity *= settings.getMaxVelocity();
+        
+        packet.setVelocityX(velocity);
         return true;
     }
     
@@ -350,15 +389,18 @@ public class ControllerHandler extends Producer {
     }
     
     /**
-     * TODO Normalize
      * Makes sure the dribbler goes with a certain speed and adds it to the packet
-     * @param packet
-     * @param buttonValue
-     * @return
+     * @param packet The packet the value will be added to
+     * @param buttonValue The float value representing the speed (-1 : 1)
+     * @return true if successful (always)
      * @see #dribbleToggle(protobuf.Radio.RadioProtocolCommand.Builder, float)
      */
     private static final boolean dribbleSpeed(final RadioProtocolCommand.Builder packet, final float buttonValue){
-        packet.setDribblerSpin(buttonValue);
+        float dribbleSpin = buttonValue;
+        if(settings != null)
+            dribbleSpin *= settings.getMaxDribbleSpeed();
+        
+        packet.setDribblerSpin(dribbleSpin);
         return true;
     }
     
@@ -389,7 +431,8 @@ public class ControllerHandler extends Producer {
      * @param packet The packet this'll be added to
      * @return True if successful (always)
      */
-    private final boolean getOrientation(float goalAngle, final RadioProtocolCommand.Builder packet){
+    private static final boolean getOrientation(final float goalAngle, final RadioProtocolCommand.Builder packet){
+        float rotationSpeed = goalAngle;
         // TODO Get robot of the right team
         final Optional<Model> oRobot = Models.get("robot B" + packet.getRobotId());
         // If the robot isn't present
@@ -400,10 +443,12 @@ public class ControllerHandler extends Producer {
         // If it is present, however
         else {
             // Goal angle - currentAngle = angle we still have to turn
-            goalAngle = goalAngle - ((Robot) oRobot.get()).getRobotOrientation();
+            rotationSpeed = rotationSpeed - ((Robot) oRobot.get()).getRobotOrientation();
         }
-        // TODO fix time divesion (read it from a config or something)
-        final float rotationSpeed = goalAngle / 10;
+
+        if(settings != null)
+            rotationSpeed *= settings.getMaxRotationSpeed();
+        
         packet.setVelocityR(rotationSpeed);
         return true;
     }
@@ -415,10 +460,10 @@ public class ControllerHandler extends Producer {
      * @param buttonValue The POV value that'll be used
      * @return true if success (always)
      */
-    private final boolean directionPOV(final RadioProtocolCommand.Builder packet, final float buttonValue){
-        if (ControllerHandler.isPressed(buttonValue)) {
-            packet.setVelocityY((float) Math.sin(buttonValue * 2 * Math.PI) * this.MAX_SPEED);
-            packet.setVelocityX((float) Math.cos(buttonValue * 2 * Math.PI) * -this.MAX_SPEED);
+    private static final boolean directionPOV(final RadioProtocolCommand.Builder packet, final float buttonValue){
+        if (ControllerHandler.isPressed(buttonValue) && settings != null) {
+            packet.setVelocityY((float) Math.sin(buttonValue * 2 * Math.PI) * settings.getMaxVelocity());
+            packet.setVelocityX((float) Math.cos(buttonValue * 2 * Math.PI) * -settings.getMaxVelocity());
         }
         return true;
     }

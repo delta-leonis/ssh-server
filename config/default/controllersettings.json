@@ -1,0 +1,7 @@
+{
+  "maxFlatKickSpeed": 100.0,
+  "maxChipKickSpeed": 100.0,
+  "maxRotationSpeed": 500.0,
+  "maxVelocity": 3000.0,
+  "maxDribbleSpeed": 100
+}

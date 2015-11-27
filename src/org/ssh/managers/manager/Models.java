@@ -4,6 +4,7 @@ import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Optional;
 
+import org.ssh.controllers.ControllerSettings;
 import org.ssh.managers.controllers.ModelController;
 import org.ssh.models.Model;
 import org.ssh.models.Settings;
@@ -173,5 +174,6 @@ public final class Models {
         Models.modelController = new ModelController();
         // create a settings models (will self-assign in the factory)
         Models.create(Settings.class);
+        Models.create(ControllerSettings.class);
     }
 }
