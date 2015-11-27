@@ -106,6 +106,11 @@ public class LoggerConsole extends UIComponent {
     protected class LoggingTab extends UIComponent {
         
         /**
+         * The {@link org.ssh.util.Logger} of this class.
+         */
+        private final org.ssh.util.Logger LOG = org.ssh.util.Logger.getLogger();
+        
+        /**
          * The root in the fxml file. {@link LogRule}s can be displayed in here.
          */
         @FXML
@@ -183,32 +188,18 @@ public class LoggerConsole extends UIComponent {
                     dateFormat(record.getMillis()),
                     // the message as description
                     record.getMessage());
-            root.getItems().add(rule);
-            Platform.runLater(() -> root.sort());
-            
-//            // Get the list of displayed LogRules copied to a new ArrayList to prevent concurrency issues
-//            ArrayList<LogRule> data = (ArrayList<LogRule>) new ArrayList(Arrays.asList(root.getItems().toArray()));
-//            // Add a new LogRule to the list
-//            data.add(new LogRule(
-//                    // with sequence number as id
-//                    (int) record.getSequenceNumber(),
-//                    // name of the log level
-//                    record.getLevel().getName(),
-//                    // name of the source class (not the whole path of course)
-//                    record.getSourceClassName(),
-//                    // the time in a legible format in stead of epoch
-//                    dateFormat(record.getMillis()),
-//                    // the message as description
-//                    record.getMessage()));
-//            // Resort the list (will take few time because only one element has to be placed at the
-//            // right place). The sorting should be done because the elements will be added at the
-//            // end, but on what property is sorted is custom.
-//            if (data.size() > 0)
-//                //Platform.runLater(() -> root.sort());
-//                Platform.runLater(() -> {
-//                    root.setItems(FXCollections.observableArrayList(data));
-//                    root.sort();
-//                });
+            try {
+                root.getItems().add(rule);
+            }
+            catch (Exception exception) {
+                LOG.exception(exception);
+            }
+            try {
+                Platform.runLater(() -> root.sort());
+            }
+            catch (Exception exception) {
+                LOG.exception(exception);
+            }
         }
         
         /**
