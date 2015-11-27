@@ -65,22 +65,9 @@ public class ControllerLayout extends Model {
      */
     public boolean attach(final Component component, final ButtonFunction function) {
         // check if it will be overriden
-//        if (this.bindings.containsKey(component)) {
-//            ControllerLayout.LOG.fine("Button already bound %s (to %s).",
-//                    component.toString(),
-//                    this.bindings.get(component));
-//            this.bindings.remove(component);
-//        }
-        
-//        if (this.bindings.containsValue(function)) {
-//            ControllerLayout.LOG.fine("Function '%s' already bound, and will be overwriten.\n", function);
-//            this.bindings.inverse().remove(function);
-//        }
         
         this.bindings.put(component, function);
-        
-        System.out.println(bindings);
-        
+                
         return true;
     }
     
@@ -90,11 +77,7 @@ public class ControllerLayout extends Model {
      * @return true if it's already bound, false otherwise
      */
     public boolean containsBinding(final ButtonFunction function) {
-        // TODO too hackisch
-//        if ((function.equals(ButtonFunction.CHIP_STRENGTH) || function.equals(ButtonFunction.KICK_STRENGTH))
-//                && this.containsBinding(ButtonFunction.CHIPKICK_STRENGTH))
-//            return true;
-            
+        
         return this.bindings.entries().stream().filter(entry -> entry.getValue().equals(function)).count() > 0;
     }
     
@@ -105,7 +88,7 @@ public class ControllerLayout extends Model {
      *            buttonFunction to detach
      */
     public void detach(final ButtonFunction function) {
-//        this.bindings.inverse().remove(function);
+        this.bindings.removeAll(function);
     }
     
     /**
@@ -134,11 +117,7 @@ public class ControllerLayout extends Model {
      * @return value for specific function
      */
     public float get(final ButtonFunction function) {
-        // TODO dirty hackish
-        if ((function.equals(ButtonFunction.CHIP_STRENGTH) || function.equals(ButtonFunction.KICK_STRENGTH))
-                && this.containsBinding(ButtonFunction.CHIPKICK_STRENGTH))
-            return this.get(ButtonFunction.CHIPKICK_STRENGTH);
-            
+        
         if (!this.containsBinding(function)) {
             ControllerLayout.LOG.info("Could not get data for %s, no binding found.\n", function);
             return 0f;

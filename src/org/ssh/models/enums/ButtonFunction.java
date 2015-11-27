@@ -21,8 +21,6 @@ public enum ButtonFunction {
             false),
     CHIP_STRENGTH(ButtonType.ANALOG,
             true),
-    CHIPKICK_STRENGTH(ButtonType.ANALOG,
-            true),
     DRIBBLE_PERSISTENT(ButtonType.DIGITAL,
             true),
     DRIBBLE_TOGGLE(ButtonType.DIGITAL,
