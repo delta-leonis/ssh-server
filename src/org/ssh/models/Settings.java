@@ -47,10 +47,11 @@ public class Settings extends Model {
                                                           
     private transient String              current_profile = "";
 
+    /** The folder containing all init files that are run whenever the {@link Console} is initialized */
     private String luaInitFolder = "";
-
+    /** Folder containing all other lua scripts */
     private String luaScriptFolder = "";
-
+    /** The path to application.css */
     private String applicationCss = "";
 
     /**
