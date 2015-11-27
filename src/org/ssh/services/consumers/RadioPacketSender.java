@@ -15,7 +15,7 @@ import org.ssh.util.Logger;
 
 import com.google.protobuf.Message;
 
-public class RadioPacketConsumer extends Consumer<RadioPacket> {
+public class RadioPacketSender extends Consumer<RadioPacket> {
     
     /**
      * Maps a {@link SenderInterface} to a {@link SendMethod} for easy management
@@ -29,8 +29,9 @@ public class RadioPacketConsumer extends Consumer<RadioPacket> {
     // respective logger
     private static final Logger                    LOG         = Logger.getLogger();
                                                                
-    public RadioPacketConsumer() {
-        super("RadioPacketConsumer");
+    public RadioPacketSender() {
+        super("RadioPacketSender");
+        attachToCompatiblePipelines();
     }
     
     /**
@@ -49,18 +50,18 @@ public class RadioPacketConsumer extends Consumer<RadioPacket> {
     public boolean addDefault(final SendMethod method) {
         // making sure sendMethod has a registered handler
         if (!this.senders.containsKey(method)) {
-            RadioPacketConsumer.LOG.warning("SendMethod (%s) has no registered handler.\n", method);
+            RadioPacketSender.LOG.warning("SendMethod (%s) has no registered handler.\n", method);
             return false;
         }
         
         //
         if (this.sendMethods.contains(method)) {
-            RadioPacketConsumer.LOG.info("%s allready is a default sendMethod");
+            RadioPacketSender.LOG.info("%s allready is a default sendMethod");
             return false;
         }
         
         this.sendMethods.add(method);
-        RadioPacketConsumer.LOG.info("SendMethod %s has been set as a default sendmethod.\n", method);
+        RadioPacketSender.LOG.info("SendMethod %s has been set as a default sendmethod.\n", method);
         return true;
     }
     
@@ -72,7 +73,7 @@ public class RadioPacketConsumer extends Consumer<RadioPacket> {
         if (pipelinePacket.getSendMethods().length == 0)
             methods = this.sendMethods.toArray(methods);
             
-        RadioPacketConsumer.LOG.info("Trying to send a consumed packet");
+        RadioPacketSender.LOG.info("Trying to send a consumed packet");
         // send the packet
         return this.send(pipelinePacket.read(), methods);
     }
@@ -90,14 +91,14 @@ public class RadioPacketConsumer extends Consumer<RadioPacket> {
     public void register(final SendMethod key, final SenderInterface communicator) {
         // give a notification that existing keys will be overriden
         if (this.senders.containsKey(key)) {
-            RadioPacketConsumer.LOG.info("Sendmethod %s has a communicator, and will be overwritten.\n", key);
+            RadioPacketSender.LOG.info("Sendmethod %s has a communicator, and will be overwritten.\n", key);
             
             // try to unregister the key
             this.unregister(key);
         }
         
         this.senders.put(key, communicator);
-        RadioPacketConsumer.LOG.info("registered hook for %s.", key);
+        RadioPacketSender.LOG.info("registered hook for %s.", key);
         
         // set a default communicator when we have communicators, but no send method
         if ((this.senders.size() == 1) && this.sendMethods.isEmpty()) this.addDefault(key);
@@ -105,7 +106,7 @@ public class RadioPacketConsumer extends Consumer<RadioPacket> {
     
     public boolean removeDefault(final SendMethod method) {
         if (!this.sendMethods.contains(method)) {
-            RadioPacketConsumer.LOG.info("%s isn't a default sendMethod");
+            RadioPacketSender.LOG.info("%s isn't a default sendMethod");
             return false;
         }
         
@@ -115,7 +116,7 @@ public class RadioPacketConsumer extends Consumer<RadioPacket> {
     private boolean send(final Message genericMessage, final SendMethod... sendMethods) {
         // check if sendMethod is set
         if ((sendMethods == null) || (sendMethods.length == 0)) {
-            RadioPacketConsumer.LOG.severe("Sendmethod has not been set.");
+            RadioPacketSender.LOG.severe("Sendmethod has not been set.");
             return false;
         }
         
@@ -126,7 +127,7 @@ public class RadioPacketConsumer extends Consumer<RadioPacket> {
                 
         // print a warning for each sendMethod that was specified but had no implemented send method
         filteredMethods.get(false)
-                .forEach(sendmethod -> RadioPacketConsumer.LOG.warning("Sendmethod (%s) has no registered handler.\n", sendmethod));
+                .forEach(sendmethod -> RadioPacketSender.LOG.warning("Sendmethod (%s) has no registered handler.\n", sendmethod));
                 
         // return success value
         return filteredMethods.get(true).stream()
@@ -149,18 +150,18 @@ public class RadioPacketConsumer extends Consumer<RadioPacket> {
     public boolean unregister(final SendMethod sendmethod) {
         // check if the key exists
         if (!this.senders.containsKey(sendmethod)) {
-            RadioPacketConsumer.LOG.warning("Could not unregister %s, as it has no hook", sendmethod);
+            RadioPacketSender.LOG.warning("Could not unregister %s, as it has no hook", sendmethod);
             return false;
         }
         
         // remove sender from list and call unregister
         if (!this.senders.remove(sendmethod).unregister()) {
-            RadioPacketConsumer.LOG.warning("Could not unregister %s.", sendmethod);
+            RadioPacketSender.LOG.warning("Could not unregister %s.", sendmethod);
             return false;
         }
         
         // unhooking and unregistering were a success!
-        RadioPacketConsumer.LOG.info("Unregistered %s.", sendmethod);
+        RadioPacketSender.LOG.info("Unregistered %s.", sendmethod);
         return true;
     }
     

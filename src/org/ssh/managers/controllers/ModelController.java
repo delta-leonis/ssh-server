@@ -79,7 +79,8 @@ public class ModelController extends ManagerController<Model> {
             // add model to ModelController
             Models.add(model);
             // initialize this models
-            Models.initialize(model);
+            if(!Models.initialize(model))
+                ModelController.LOG.info("Could not initialize %s.", clazz.getSimpleName());
             return model;
         }
         catch (java.lang.NoSuchMethodException exception) {
@@ -118,8 +119,8 @@ public class ModelController extends ManagerController<Model> {
      *            full name of a model
      * @return model with given name
      */
-    public Optional<Model> getByName(String fullname) {
-        return this.manageables.stream().filter(manageable -> manageable.getFullName().equals(fullname.trim()))
+    public<M extends Model> Optional<M> getByName(String fullname) {
+        return (Optional<M>) this.manageables.stream().filter(manageable -> manageable.getFullName().equals(fullname.trim()))
                 .findFirst();
     }
     
@@ -202,7 +203,7 @@ public class ModelController extends ManagerController<Model> {
             ModelController.LOG.info("No configfile found for %s", model.getConfigName());
             return false;
         }
-        
+
         return load(model, configFile.get());
     }
     
@@ -224,9 +225,9 @@ public class ModelController extends ManagerController<Model> {
             configReader.setLenient(true);
             // load everything into a new model
             Model newModel = this.gson.fromJson(configReader, model.getClass());
-            // create a updatemap from the newModel, and update the given model with alle these
+            // create a updatemap from the newModel, and update the given model with all these
             // changes.
-            // !!! This way all transient fields will be untouches, as is preferable
+            // !!! This way all transient fields will be untouched, as is preferable
             return model.update(newModel.toMap());
         }
         catch (JsonSyntaxException exception) {

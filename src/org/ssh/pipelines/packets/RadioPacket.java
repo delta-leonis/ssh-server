@@ -37,12 +37,6 @@ public class RadioPacket extends ProtoPacket<RadioProtocolWrapper> {
         this.sendMethods = methods;
     }
     
-
-    public RadioPacket(ByteArrayInputStream byteStream) {
-        super(byteStream);
-        this.sendMethods = null;
-    }
-    
     /**
      * Instantiates a new radio packet.
      * 

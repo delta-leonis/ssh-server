@@ -20,7 +20,7 @@ public class WrapperConsumer extends Consumer<WrapperPacket> {
      */
     public WrapperConsumer() {
         super("Wrapper consumer");
-        
+
         attachToCompatiblePipelines();
     }
     

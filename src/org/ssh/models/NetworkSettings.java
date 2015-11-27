@@ -6,6 +6,7 @@ public class NetworkSettings extends Model {
     private String IP;
     private Integer port;
     private Integer bufferSize;
+    private transient Boolean closed;
 
     private transient Class<? extends ProtoPacket<?>> packetType;
     
@@ -13,6 +14,11 @@ public class NetworkSettings extends Model {
     public NetworkSettings(Class<? extends ProtoPacket<?>> type) {
         super("NetworkSettings");
         this.packetType = type;
+        this.closed = Boolean.FALSE;
+    }
+    
+    public boolean isClosed(){
+        return closed;
     }
     
     @Override

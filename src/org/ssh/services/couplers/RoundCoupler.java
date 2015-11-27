@@ -7,6 +7,7 @@ public class RoundCoupler extends Coupler<RadioPacket> {
     
     public RoundCoupler() {
         super("roundcoupler");
+        this.attachToCompatiblePipelines();
     }
     
     @Override

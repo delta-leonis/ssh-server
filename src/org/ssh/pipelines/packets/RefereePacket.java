@@ -1,7 +1,5 @@
 package org.ssh.pipelines.packets;
 
-import java.io.ByteArrayInputStream;
-
 import protobuf.RefereeOuterClass.Referee;
 
 /**
@@ -15,9 +13,9 @@ import protobuf.RefereeOuterClass.Referee;
  * @see {@link org.ssh.pipelines.packets.ProtoPacket ProtoPacket}
  */
 public class RefereePacket extends ProtoPacket<Referee> {
-    
-    public RefereePacket(ByteArrayInputStream byteStream) {
-        super(byteStream);
+
+    public RefereePacket(Referee data) {
+        super(data);
     }
     
 }

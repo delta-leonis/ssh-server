@@ -1,6 +1,7 @@
 package org.ssh.pipelines;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -9,6 +10,8 @@ import java.util.stream.Stream;
 import org.jooq.lambda.Unchecked;
 import org.ssh.util.Logger;
 import org.ssh.util.Reflect;
+
+import com.google.common.reflect.TypeToken;
 
 /**
  * The Class PipelinePacket.
@@ -21,6 +24,20 @@ public abstract class PipelinePacket<O extends Object> {
     
     /** The mutability setting. */
     private boolean isMutable;
+    
+    /** The reflected TypeToken (o¬‿¬o ). */
+    @SuppressWarnings ("serial")
+    public TypeToken<O>           genericType = new TypeToken<O>(this.getClass()) { };
+    
+    /**
+     * Gets the type of {@link PipelinePacket} on which this Service operates.
+     *
+     * @return The type of PipelinePacket on which this Service operates.
+     */
+    public Type getType() {
+        return this.genericType.getType();
+    }
+    
     
     // a logger for good measure
     public static final Logger                   LOG         = Logger.getLogger();

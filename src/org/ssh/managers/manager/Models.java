@@ -69,8 +69,8 @@ public final class Models implements Manager<Model>{
      *            The full name of the model you want to find.
      * @return The requested model.
      */
-    public static Optional<Model> get(final String modelName) {
-        return Models.modelController.getByName(modelName);
+    public static<M extends Model> Optional<M> get(final String modelName) {
+        return Models.modelController.<M> getByName(modelName);
     }
     
     /**

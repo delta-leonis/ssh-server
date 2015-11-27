@@ -73,7 +73,7 @@ public abstract class Service<P extends PipelinePacket<? extends Object>> extend
      *            The generic type of Service requested by the user.
      * @return The Service itself.
      */
-    public <S extends Service<P>> S start() {
+    public <S extends Service<?>> S start() {
         Service.LOG.info("Service %s is starting ...", this.getName());
         this.setEnabled(true);
         return this.<S>getAsService();
@@ -86,7 +86,7 @@ public abstract class Service<P extends PipelinePacket<? extends Object>> extend
      *            The generic type of Service requested by the user.
      * @return The Service itself.
      */
-    public <S extends Service<P>> S stop() {
+    public <S extends Service<?>> S stop() {
         Service.LOG.info("Service %s is stopping ...", this.getName());
         this.setEnabled(false);
         return this.<S>getAsService();

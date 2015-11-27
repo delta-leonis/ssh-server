@@ -1,9 +1,5 @@
 package org.ssh.pipelines.packets;
 
-import java.io.ByteArrayInputStream;
-
-import org.ssh.pipelines.packets.ProtoPacket;
-
 /**
  * Pipelinepacket for {@link protobuf.Wrapper.Wrapperpacket wrapperpackets}, it baiscly wraps the
  * {@link #hasDetection()} and {@link #hasGeometry()} methods as provided in the generated protobuf
@@ -14,13 +10,10 @@ import org.ssh.pipelines.packets.ProtoPacket;
  */
 public class WrapperPacket extends ProtoPacket<protobuf.Wrapper.WrapperPacket> {
     
-    /**
-     * {@inheritDoc}
-     */
-    public WrapperPacket(ByteArrayInputStream data) {
+    public WrapperPacket(protobuf.Wrapper.WrapperPacket data) {
         super(data);
     }
-    
+
     /**
      * @return true if packet contains {@link protobuf.Detection.DetectionFrame DetectionFrame}
      */

@@ -1,18 +1,20 @@
 package org.ssh;
 
+import java.util.logging.Level;
+
 import org.ssh.managers.manager.Models;
+import org.ssh.managers.manager.Network;
 import org.ssh.managers.manager.Pipelines;
 import org.ssh.managers.manager.Services;
 import org.ssh.managers.manager.UI;
-import org.ssh.models.enums.PacketPriority;
-import org.ssh.pipelines.PipelinePacket;
+import org.ssh.models.enums.SendMethod;
+import org.ssh.pipelines.packets.WrapperPacket;
+import org.ssh.pipelines.pipeline.DetectionPipeline;
 import org.ssh.pipelines.pipeline.GeometryPipeline;
-import org.ssh.pipelines.pipeline.RadioPipeline;
-import org.ssh.services.consumers.StringConsumer;
-import org.ssh.services.couplers.ChangeCoupler;
-import org.ssh.services.couplers.VerboseCoupler;
-import org.ssh.services.producers.OftenProducer;
-import org.ssh.services.producers.OnceProducer;
+import org.ssh.pipelines.pipeline.WrapperPipeline;
+import org.ssh.senders.DebugSender;
+import org.ssh.services.consumers.WrapperConsumer;
+import org.ssh.services.producers.UDPReceiver;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -33,9 +35,12 @@ public class Main extends Application {
         Services.start();
         Models.start();
         Pipelines.start();
+        Network.start();
+        Network.register(SendMethod.DEBUG, new DebugSender(Level.INFO));
+        
         /** java fx start **/
         Application.launch(arg);
-        
+
     }
     
     /*
@@ -51,35 +56,17 @@ public class Main extends Application {
         /* Below is just for testing!!! */
         /********************************/
         
-        // make a pipeline
-        final GeometryPipeline mainPipeline = new GeometryPipeline("fieldbuilder");
-        // make another pipeline
-        final RadioPipeline radioPipeline   = new RadioPipeline("controller");
+        // make a pipelines
+        new WrapperPipeline("wrapper pipeline");
+        new DetectionPipeline("detection pipeline");
+        new GeometryPipeline("geometry pipeline");
         
-        // make some services
-        final OnceProducer intService       = new OnceProducer("gratisintegers");
-        final OftenProducer dingService     = new OftenProducer("dingetjes");
-        final ChangeCoupler changeService   = new ChangeCoupler("meerdoubles");
-        final StringConsumer<PipelinePacket<?>> stringService  = new StringConsumer<PipelinePacket<?>>("stringisbeter", PipelinePacket.class);
-        final VerboseCoupler verboseCoupler = new VerboseCoupler("speaker");
+        // make splitter from wrapper -> geometry / detection
+        new WrapperConsumer().attachToCompatiblePipelines();
+
+        Network.listenFor(WrapperPacket.class);
         
-        // add a few pipelines
-        Pipelines.add(mainPipeline);
-        Pipelines.add(radioPipeline);
-        // add a few services
-        Services.add(intService);
-        Services.add(verboseCoupler);
-        // let's add some other things
-        Services.addAll(dingService, changeService, stringService);
-        
-        // attach them to the pipelines
-        verboseCoupler.attachToCompatiblePipelines();
-        changeService.attachToCompatiblePipelines(PacketPriority.LOWEST);
-        stringService.attachToCompatiblePipelines();
-        dingService.attachToCompatiblePipelines();
-        intService.attachToCompatiblePipelines();
-        
-        // start production
-        dingService.start();
+        // read wrapperpackets
+        new UDPReceiver(WrapperPacket.class);
     }
 }

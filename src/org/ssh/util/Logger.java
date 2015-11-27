@@ -20,11 +20,11 @@ public class Logger extends java.util.logging.Logger {
      * @return a suitable logger
      */
     public static Logger getLogger() {
-        // return getLogger(Thread.currentThread().getStackTrace()[1].getClassName());
+        //return getLogger(Thread.currentThread().getStackTrace()[2].getClassName());
         // is this more better?
         return Logger.getLogger(new SecurityManager() {
             
-            String className = this.getClassContext()[2].getName();
+            String className = this.getClassContext()[1].getName();
         }.className);
         
     }
@@ -247,7 +247,7 @@ public class Logger extends java.util.logging.Logger {
      * @see java.util.Formatter
      */
     public void exception(final Exception exception) {
-        super.finest(Stream.of(exception.getStackTrace())
+        super.warning(Stream.of(exception.getStackTrace())
                 .reduce("",
                         (result, curRule) -> String.format("%s%s%n", result, curRule.toString()),
                         (left, right) -> left + right)

@@ -2,70 +2,85 @@ package org.ssh.services.producers;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
 
-import org.ssh.managers.Manageable;
 import org.ssh.managers.manager.Models;
 import org.ssh.managers.manager.Pipelines;
 import org.ssh.managers.manager.Services;
 import org.ssh.models.NetworkSettings;
-import org.ssh.pipelines.Pipeline;
-import org.ssh.pipelines.PipelinePacket;
 import org.ssh.pipelines.packets.ProtoPacket;
+import org.ssh.services.Service;
 
-public class UDPReceiver extends Manageable {
+import com.google.protobuf.GeneratedMessage;
+import com.google.protobuf.Parser;
+
+public class UDPReceiver extends Service<ProtoPacket<?>> {
     
-    private NetworkSettings           networkSettings;
-    private transient MulticastSocket multicastSocket;
-    private InetAddress multicastGroup;
-                                      
-    public UDPReceiver(Class<? extends ProtoPacket<?>> packetType) {
+    private InetAddress                 multicastGroup;
+    private NetworkSettings             networkSettings;
+    private MulticastSocket             multicastSocket;
+    private Type                        packetType, messageType;
+    private Parser<?>                   parser;
+    private Constructor<ProtoPacket<?>> packetConstructor;
+                                        
+    public <M extends GeneratedMessage, P extends ProtoPacket<M>> UDPReceiver(Class<P> packetType) {
         super("UDPReceiver");
+        this.packetType = packetType;
+        this.messageType = ((ParameterizedType) packetType.getGenericSuperclass()).getActualTypeArguments()[0];
         this.networkSettings = Models.create(NetworkSettings.class, packetType);
-        UDPReceiver.LOG.info("Created UDPReceiver for %s.", packetType.getSimpleName());
-
-        Services.submitTask(this.getName(), () -> {
-            // wait around while no settings are present
-            while (!networkSettings.isComplete())
-                try {
-                    UDPReceiver.LOG.fine("Settings for %s not yet complete.", packetType.getSimpleName());
-                    Thread.sleep(3000);
-                }
-                catch (InterruptedException ignored) {
-                }
-
+        UDPReceiver.LOG.info("Created UDPReceiver for %s<%s>.", packetType.getSimpleName(), messageType.getTypeName());
+        try {
+            packetConstructor = (Constructor<ProtoPacket<?>>) packetType
+                    .getDeclaredConstructor(Class.forName(messageType.getTypeName()));
+        }
+        catch (ClassCastException | NoSuchMethodException | SecurityException | ClassNotFoundException  exception) {
+            UDPReceiver.LOG.exception(exception);
+            exception.printStackTrace();
+            UDPReceiver.LOG.warning(
+                    "Wrong type as parameter, Type should extend ProtoPacket<P> and must inherit `ProtoPacket<P>(P data)` constructor.");
+        }
+    }
+    
+    @Override
+    public Service<ProtoPacket<?>> start() {
+        if (!networkSettings.isComplete()) {
+            UDPReceiver.LOG.warning("Settings for UDPReceiver(%s) not yet complete.", packetType.getTypeName());
+            return this;
+        }
+        
+        Services.submitTask(packetType.getTypeName(), () -> {
             // try to connect
-            if (this.connect())
-                UDPReceiver.LOG.info("Connection to %s:%s (%s) succesful.", networkSettings.getIP(), networkSettings.getPort(), packetType.getSimpleName());
-            else{
-                UDPReceiver.LOG.warning("Connection to %s:%s (%s) FAILED.", networkSettings.getIP(), networkSettings.getPort(), packetType.getSimpleName());
-                return;
-            }
-
+            if (!this.connect()) UDPReceiver.LOG.warning("Connection to %s:%s (%s) FAILED.",
+                    networkSettings.getIP(),
+                    networkSettings.getPort(),
+                    packetType.getTypeName());
+                    
             ByteArrayInputStream input = null;
-            //while (multicastSocket.isConnected()) {
-            while(true){
+            
+            UDPReceiver.LOG.info("Started listening on %s:%d", networkSettings.getIP(), networkSettings.getPort());
+            while (!networkSettings.isClosed()) {
                 try {
                     input = this.receive();
-
-                    if(input != null){
-                        UDPReceiver.LOG.fine("Received %s.",packetType.getSimpleName());
-                        //Create a packet based on packetType
-                        ProtoPacket<?> packet = packetType.getDeclaredConstructor(input.getClass()).newInstance(input);
-                        // get all pipelines
-                        for(Pipeline<PipelinePacket<? extends Object>> pipe : Pipelines.getOfDataType(packetType))
-                            //put it in the pipa :D
-                            pipe.addPacket(packet).processPacket();
+                    
+                    if (input != null) {
+                        UDPReceiver.LOG.fine("Received %s.", packetType.getTypeName());
+                        // Create a packet based on packetType
+                        ProtoPacket<?> packet = packetConstructor.newInstance(parser.parseFrom(input));
+                        // put it in the pipa :D
+                        Pipelines.getOfDataType(messageType).forEach(pipe -> pipe.addPacket(packet).processPacket());
                     }
                 }
-                catch( NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException exception){
+                catch (ReflectiveOperationException exception) {
                     UDPReceiver.LOG.exception(exception);
                     exception.printStackTrace();
-                    UDPReceiver.LOG.info("Could not parse data, does '%s(ByteArrayInputStream)' exist?", packetType.getSimpleName());
+                    UDPReceiver.LOG.info("Could not parse data, does '%s(ByteArrayInputStream)' exist?",
+                            packetType.getTypeName());
                 }
                 catch (IOException exception) {
                     UDPReceiver.LOG.exception(exception);
@@ -73,11 +88,12 @@ public class UDPReceiver extends Manageable {
                     UDPReceiver.LOG.warning("Could not maintain connection with %s (ip: %s). closing connection.",
                             networkSettings.getSuffix(),
                             networkSettings.getIP());
-                    this.disconnect();
-                    return;
+                    networkSettings.update("closed", Boolean.TRUE);
                 }
             }
+            this.disconnect();
         });
+        return this;
     }
     
     private ByteArrayInputStream receive() throws IOException {
@@ -93,21 +109,20 @@ public class UDPReceiver extends Manageable {
             multicastGroup = InetAddress.getByName(networkSettings.getIP());
             multicastSocket = new MulticastSocket(networkSettings.getPort());
             multicastSocket.joinGroup(multicastGroup);
-             return true;
+            return true;
         }
-        catch (UnknownHostException exception){
+        catch (UnknownHostException exception) {
             UDPReceiver.LOG.exception(exception);
-            UDPReceiver.LOG.info("Could not resolve host %s.",
-                    networkSettings.getIP());
+            UDPReceiver.LOG.info("Could not resolve host %s.", networkSettings.getIP());
         }
-        catch(SecurityException exception){
+        catch (SecurityException exception) {
             UDPReceiver.LOG.exception(exception);
-            UDPReceiver.LOG.info("Could not join multicastgroup on %s:%s for %s.", 
-                    networkSettings.getIP(), 
+            UDPReceiver.LOG.info("Could not join multicastgroup on %s:%s for %s.",
+                    networkSettings.getIP(),
                     networkSettings.getPort(),
                     networkSettings.getSuffix());
         }
-        catch (IOException exception){
+        catch (IOException exception) {
             UDPReceiver.LOG.exception(exception);
             UDPReceiver.LOG.info("Could not open connection to %s:%s for %s",
                     networkSettings.getIP(),
@@ -117,15 +132,16 @@ public class UDPReceiver extends Manageable {
         return false;
     }
     
-    public boolean disconnect(){
-        try { 
-            if(multicastSocket != null){
+    public boolean disconnect() {
+        try {
+            if (multicastSocket != null) {
                 multicastSocket.leaveGroup(multicastGroup);
                 multicastSocket.close();
             }
             return true;
-        } catch (Exception exception){
-            UDPReceiver.LOG.warning("Could not close connection gracefully (ip: %s).", networkSettings.getIP()); 
+        }
+        catch (Exception exception) {
+            UDPReceiver.LOG.warning("Could not close connection gracefully (ip: %s).", networkSettings.getIP());
         }
         return false;
     }

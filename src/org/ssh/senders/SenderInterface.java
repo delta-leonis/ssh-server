@@ -1,7 +1,6 @@
 package org.ssh.senders;
 
 import org.ssh.models.enums.SendMethod;
-import org.ssh.services.producers.Communicator;
 
 import com.google.protobuf.Message;
 

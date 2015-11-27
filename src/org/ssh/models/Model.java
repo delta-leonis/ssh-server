@@ -149,6 +149,7 @@ public abstract class Model extends Manageable {
      * @return success value
      */
     public boolean update(final Map<String, ?> changes) {
+        Model.LOG.info("Updating model %s", getClass());
         // loop all changes
         return changes.entrySet().stream()
                 // check whether this field exists
