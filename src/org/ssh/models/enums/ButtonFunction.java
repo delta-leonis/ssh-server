@@ -23,7 +23,7 @@ public enum ButtonFunction {
             true),
     CHIPKICK_STRENGTH(ButtonType.ANALOG,
             true),
-    DRIBBLE(ButtonType.DIGITAL,
+    DRIBBLE_PERSISTENT(ButtonType.DIGITAL,
             true),
     DRIBBLE_TOGGLE(ButtonType.DIGITAL,
             false),
@@ -79,19 +79,19 @@ public enum ButtonFunction {
     /**
      * Whether this function should be read and updated every time the controller gets polled.
      */
-    private final boolean    persistant;
+    private final boolean    persistent;
                              
     /**
      * Constructs a buttonfunction
      * 
      * @param type
      *            type of button (analog, digital, whatever).
-     * @param persistant
-     *            whether this buttonfunction should be {@link #persistant}.
+     * @param persistent
+     *            whether this buttonfunction should be {@link #persistent}.
      */
-    ButtonFunction(final ButtonType type, final boolean persistant) {
+    ButtonFunction(final ButtonType type, final boolean persistent) {
         this.buttonType = type;
-        this.persistant = persistant;
+        this.persistent = persistent;
     }
     
     /**
@@ -103,9 +103,9 @@ public enum ButtonFunction {
     
     /**
      * @return true if this button should be updated regardless of it's previous state, see
-     *         {@link #persistant}.
+     *         {@link #persistent}.
      */
     public boolean isPersistant() {
-        return this.persistant;
+        return this.persistent;
     }
 }

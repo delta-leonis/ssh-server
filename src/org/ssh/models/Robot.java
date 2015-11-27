@@ -31,6 +31,9 @@ public class Robot extends FieldObject {
      */
     private Float             dribbleSpeed;
     
+    /** The orientation of the robot in radians */
+    private Float             robotOrientation;
+    
     /** The boolean for the selected state */
     private Boolean           isSelected;
                               
@@ -82,6 +85,13 @@ public class Robot extends FieldObject {
      */
     public boolean isSelected() {
         return this.isSelected;
+    }
+    
+    /**
+     * @return the orientation of the robot in radians. east = 0, north = pi/2, west = pi | -pi
+     */
+    public float getRobotOrientation(){
+        return this.robotOrientation;
     }
 
     @Override

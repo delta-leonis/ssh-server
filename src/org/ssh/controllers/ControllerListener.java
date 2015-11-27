@@ -9,8 +9,10 @@ import java.util.stream.IntStream;
 import org.ssh.managers.manager.Services;
 import org.ssh.services.Service;
 import org.ssh.services.producers.Communicator;
-import org.ssh.util.BiMap;
 import org.ssh.util.Logger;
+
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
 import net.java.games.input.Controller;
 import protobuf.Radio.RadioProtocolCommand;
@@ -31,7 +33,7 @@ public class ControllerListener extends Service {
      * - Integer describes robotId<br/>
      * - ControllerHandler is the associated handler for that id, null if not bound<br/>
      */
-    private BiMap<Integer, ControllerHandler> handlers = new BiMap<Integer, ControllerHandler>();
+    private BiMap<Integer, ControllerHandler> handlers = HashBiMap.create();
     /**
      * List to temporarily store any changes in the handlers list. Is processed every
      * {@link #processControllers()} call. Whenever handlers should be updated, tmpHandlers != null.
@@ -53,7 +55,7 @@ public class ControllerListener extends Service {
     public ControllerListener(final int noRobots) {
         super("ControllerListener");
         // TODO remove noRobots, read it from Models or something
-        IntStream.range(0, noRobots).forEach(index -> this.handlers.put(index, null));
+//        IntStream.range(0, noRobots).forEach(index -> this.handlers.put(index, null));
         this.communicator = (Communicator) Services.get("communicator").get();
     }
     
@@ -65,8 +67,8 @@ public class ControllerListener extends Service {
      *            give next available id on true, give previous on false
      */
     public void changeRobotId(final ControllerHandler handler, final boolean forward) {
-        final int currentIndex = this.handlers.getbyValue(handler);
-        this.tmpHandlers = this.handlers.clone();
+        final int currentIndex = this.handlers.inverse().get(handler);
+        this.tmpHandlers = HashBiMap.create(handlers);
         
         // free the id
         this.tmpHandlers.put(currentIndex, null);
@@ -131,11 +133,11 @@ public class ControllerListener extends Service {
         // check if the list should change
         this.handlers = this.tmpHandlers == null ? this.handlers : this.tmpHandlers;
         this.tmpHandlers = null;
-        
+                
         return this.communicator.send((ArrayList<RadioProtocolCommand.Builder>)
         // get all handlers
         this.handlers.entrySet().stream()
-                // only proces handlers with a ControllerHandler assigned
+                // only process handlers with a ControllerHandler assigned
                 .filter(entry -> this.isAssigned(entry.getKey()))
                 // process every ControllerHandler
                 .map(entry -> entry.getValue().process(entry.getKey()))

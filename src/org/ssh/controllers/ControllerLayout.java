@@ -1,13 +1,14 @@
 package org.ssh.controllers;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.ssh.models.Model;
 import org.ssh.models.enums.ButtonFunction;
-import org.ssh.util.BiMap;
 import org.ssh.util.Logger;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 
 import net.java.games.input.AbstractComponent;
 import net.java.games.input.Component;
@@ -26,7 +27,6 @@ import net.java.games.input.Controller;
  * @author Jeroen de Jong
  *         
  */
-@SuppressWarnings ("serial")
 public class ControllerLayout extends Model {
     
     /**
@@ -37,7 +37,8 @@ public class ControllerLayout extends Model {
      * Map containing all {@link Component} as found on the {@link controller} and the bound
      * {@link ButtonFunction functions}
      */
-    private final BiMap<Component, ButtonFunction> bindings = new BiMap<Component, ButtonFunction>();
+    private final Multimap<Component, ButtonFunction> bindings =  ArrayListMultimap.create();
+
     // respective logger
     private transient final static Logger          LOG      = Logger.getLogger();
                                                             
@@ -48,7 +49,6 @@ public class ControllerLayout extends Model {
      *            controller to link to
      */
     public ControllerLayout(final Controller controller) {
-        //super("controller", controller.getType().toString());
         super("controller");
         this.controller = controller;
     }
@@ -65,30 +65,37 @@ public class ControllerLayout extends Model {
      */
     public boolean attach(final Component component, final ButtonFunction function) {
         // check if it will be overriden
-        if (this.bindings.containsKey(component)) {
-            ControllerLayout.LOG.fine("Button already bound %s (to %s).",
-                    component.toString(),
-                    this.bindings.get(component));
-            this.bindings.remove(component);
-        }
+//        if (this.bindings.containsKey(component)) {
+//            ControllerLayout.LOG.fine("Button already bound %s (to %s).",
+//                    component.toString(),
+//                    this.bindings.get(component));
+//            this.bindings.remove(component);
+//        }
         
-        if (this.bindings.containsValue(function)) {
-            ControllerLayout.LOG.fine("Function '%s' already bound, and will be overwriten.\n", function);
-            this.bindings.removeByValue(function);
-        }
+//        if (this.bindings.containsValue(function)) {
+//            ControllerLayout.LOG.fine("Function '%s' already bound, and will be overwriten.\n", function);
+//            this.bindings.inverse().remove(function);
+//        }
         
         this.bindings.put(component, function);
+        
+        System.out.println(bindings);
         
         return true;
     }
     
+    /**
+     * Checks whether the given {@link ButtonFunction} is already bound to a {@link Component}
+     * @param function The {@link ButtonFunction} to check for
+     * @return true if it's already bound, false otherwise
+     */
     public boolean containsBinding(final ButtonFunction function) {
         // TODO too hackisch
-        if ((function.equals(ButtonFunction.CHIP_STRENGTH) || function.equals(ButtonFunction.KICK_STRENGTH))
-                && this.containsBinding(ButtonFunction.CHIPKICK_STRENGTH))
-            return true;
+//        if ((function.equals(ButtonFunction.CHIP_STRENGTH) || function.equals(ButtonFunction.KICK_STRENGTH))
+//                && this.containsBinding(ButtonFunction.CHIPKICK_STRENGTH))
+//            return true;
             
-        return this.bindings.entrySet().stream().filter(entry -> entry.getValue().equals(function)).count() > 0;
+        return this.bindings.entries().stream().filter(entry -> entry.getValue().equals(function)).count() > 0;
     }
     
     /**
@@ -98,7 +105,7 @@ public class ControllerLayout extends Model {
      *            buttonFunction to detach
      */
     public void detach(final ButtonFunction function) {
-        this.bindings.removeByValue(function);
+//        this.bindings.inverse().remove(function);
     }
     
     /**
@@ -109,7 +116,7 @@ public class ControllerLayout extends Model {
      * @return succes value
      */
     public boolean detach(final Component button) {
-        this.bindings.remove(button);
+        this.bindings.removeAll(button);
         return !this.bindings.containsKey(button);
     }
     
@@ -137,14 +144,14 @@ public class ControllerLayout extends Model {
             return 0f;
         }
         
-        return this.bindings.entrySet().stream().filter(entry -> entry.getValue().equals(function))
+        return this.bindings.entries().stream().filter(entry -> entry.getValue().equals(function))
                 .map(entry -> entry.getKey().getPollData()).findFirst().get();
     }
     
     /**
      * @return Map with all the bindings for this layout
      */
-    public Map<Component, ButtonFunction> getBindings() {
+    public Multimap<Component, ButtonFunction> getBindings() {
         return this.bindings;
     }
     
@@ -171,7 +178,7 @@ public class ControllerLayout extends Model {
      */
     @Override
     public String getConfigName() {
-        return Controller.class.getName() + this.controller.getName() + ".json";
+        return String.format("%s %s", Controller.class.getName(), this.controller.getName()).replace(" ", "_") + ".json";
     }
     
     /**
@@ -189,7 +196,7 @@ public class ControllerLayout extends Model {
      * @return succes value
      */
     public boolean hasButtons(String pattern) {
-        return this.bindings.entrySetByValue().stream().filter(entry -> entry.getKey().toString().contains(pattern))
+        return this.bindings.values().stream().filter(entry -> entry.toString().contains(pattern))
                 .count() > 0;
     }
     
