@@ -4,6 +4,7 @@ import org.ssh.pipelines.PipelinePacket;
 
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.Message.Builder;
+import com.google.protobuf.Parser;
 
 /**
  * PipelinePacket for protobuf packets, class implements some usefull methods for use with protobuf

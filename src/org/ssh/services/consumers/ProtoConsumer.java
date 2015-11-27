@@ -14,7 +14,7 @@ import com.google.protobuf.GeneratedMessage;
 /**
  *
  */
-public class ProtoConsumer<P extends ProtoPacket<? extends GeneratedMessage>> extends Consumer<P> {
+public class ProtoConsumer extends Consumer<ProtoPacket<?>> {
     /**
      * Instantiates a new Consumer that consumes RadioPackets
      *
@@ -25,7 +25,7 @@ public class ProtoConsumer<P extends ProtoPacket<? extends GeneratedMessage>> ex
         super(name);
         // This way anonymous ProtoConsumers can be created,
         // without creating a empty class defining the type
-        this.genericType = (TypeToken<P>) TypeToken.of(type);
+        this.genericType = (TypeToken<ProtoPacket<?>>) TypeToken.of(type);
     }
 
     /*
@@ -34,7 +34,7 @@ public class ProtoConsumer<P extends ProtoPacket<? extends GeneratedMessage>> ex
      * @see org.ssh.services.Consumer#consume(org.ssh.services.pipeline.PipelinePacket)
      */
     @Override
-    public boolean consume(P pipelinePacket) {
+    public boolean consume(ProtoPacket<?> pipelinePacket) {
         Service.LOG.info("The ProtoConsumer ate a packet that looked like: \n%s",
                 pipelinePacket.read().toString());
         return true;

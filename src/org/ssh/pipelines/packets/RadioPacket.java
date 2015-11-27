@@ -48,12 +48,6 @@ public class RadioPacket extends ProtoPacket<RadioProtocolWrapper> {
         this.sendMethods = methods;
     }
     
-
-    public RadioPacket(ByteArrayInputStream byteStream) {
-        super(byteStream);
-        this.sendMethods = null;
-    }
-    
     /**
      * @return sendmethods that should be used instead of default sendmethod, empty when default
      *         sendmehtods are preferred.

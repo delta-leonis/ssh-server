@@ -163,7 +163,7 @@ public final class Models implements Manager<Model>{
     public static boolean saveAsDefault(final Model model) {
         return Models.modelController.saveAsDefault(model);
     }
-    
+
     /**
      * This method instantiates a controller to run the store.
      */
