@@ -98,13 +98,6 @@ public class Robot extends FieldObject {
     }
     
     /**
-     * @return the Orientation which the robot is facing, not driving
-     */
-    public Float getOrientation(){
-        return this.orientation;
-    }
-    
-    /**
      * @return a char that identifies this robot as B(lue) or Y(ellow)
      */
     public String getTeamColorIdentifier() {

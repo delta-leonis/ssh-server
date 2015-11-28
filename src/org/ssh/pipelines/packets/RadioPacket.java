@@ -1,7 +1,5 @@
 package org.ssh.pipelines.packets;
 
-import java.io.ByteArrayInputStream;
-
 import org.ssh.models.enums.SendMethod;
 
 import protobuf.Radio.RadioProtocolWrapper;

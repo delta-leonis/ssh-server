@@ -40,8 +40,7 @@ public class ProtoPacket<M extends GeneratedMessage> extends PipelinePacket<M> {
     /**
      * Save new data for this packet
      * 
-     * @param data
-     *            new data
+     * @param data new data
      * @return the new packet
      */
     public ProtoPacket<M> save(Builder data) {

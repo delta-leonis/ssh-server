@@ -42,35 +42,6 @@ public class NetworkController extends ManagerController<Service<? extends Proto
     }
     
     /**
-     * Define the SendMethod to send messages, as used in {@link #send(Message)}<br />
-     * A handler for the {@link SendMethod} should be {@link #register(SendMethod, SenderInterface)
-     * registered} before setting new send method
-     * 
-     * @param newSendMethod
-     * @return succes value
-     */
-    public boolean addDefault(final SendMethod... newSendMethods) {
-        if (hasSender()) return sender.addDefault(newSendMethods);
-        return false;
-    }
-    
-    /**
-     * @return Pipeline if found
-     */
-    private boolean hasPipeline() {
-        if (pipeline == null) pipeline = (RadioPipeline) Pipelines.get("communication").orElse(null);
-        return pipeline != null;
-    }
-    
-    /**
-     * @return Sender if found
-     */
-    private boolean hasSender() {
-        if (sender == null) sender = (RadioPacketSender) Services.get("RadioPacketConsumer").orElse(null);
-        return sender != null;
-    }
-    
-    /**
      * Listen for a specific {@link ProtoPacket<?> ProtoPacket}. Note that all networksettings are
      * dynamcly loaded by the {@link UDPReceiver} upon initialisation based on the parameter type.
      * 
@@ -79,33 +50,6 @@ public class NetworkController extends ManagerController<Service<? extends Proto
      */
     public <M extends GeneratedMessage, P extends ProtoPacket<M>> void listenFor(Class<P> type) {
         this.add(new UDPReceiver(type).start());
-    }
-    
-    /**
-     * Register a new handler for a given SendMethod. Note that only one {@link SenderInterface} per
-     * {@link SendMethod} is allowed. New handlers will overwrite older ones.<br />
-     * The first registered {@link SendMethod} will be set as default sendmethod.
-     * 
-     * @param key
-     *            sendMethod to use
-     * @param communicator
-     *            communicator that implements given sendmethod
-     */
-    public boolean register(final SendMethod key, final SenderInterface communicator) {
-        if (hasSender()) sender.register(key, communicator);
-        return false;
-    }
-    
-    /**
-     * Remove this sendmethod from defaults
-     * 
-     * @param method
-     *            sendmethod to remove
-     * @return succes value
-     */
-    public boolean removeDefault(final SendMethod method) {
-        if (hasSender()) return sender.removeDefault(method);
-        return false;
     }
     
     /**
@@ -134,6 +78,46 @@ public class NetworkController extends ManagerController<Service<? extends Proto
     }
     
     /**
+     * Define the SendMethod to send messages, as used in {@link #send(Message)}<br />
+     * A handler for the {@link SendMethod} should be {@link #register(SendMethod, SenderInterface)
+     * registered} before setting new send method
+     * 
+     * @param newSendMethod
+     * @return succes value
+     */
+    public boolean addDefault(final SendMethod... newSendMethods) {
+        if (hasSender()) return sender.addDefault(newSendMethods);
+        return false;
+    }
+    
+    /**
+     * Remove this sendmethod from defaults
+     * 
+     * @param method
+     *            sendmethod to remove
+     * @return succes value
+     */
+    public boolean removeDefault(final SendMethod method) {
+        if (hasSender()) return sender.removeDefault(method);
+        return false;
+    }
+    
+    /**
+     * Register a new handler for a given SendMethod. Note that only one {@link SenderInterface} per
+     * {@link SendMethod} is allowed. New handlers will overwrite older ones.<br />
+     * The first registered {@link SendMethod} will be set as default sendmethod.
+     * 
+     * @param key
+     *            sendMethod to use
+     * @param communicator
+     *            communicator that implements given sendmethod
+     */
+    public boolean register(final SendMethod key, final SenderInterface communicator) {
+        if (hasSender()) sender.register(key, communicator);
+        return false;
+    }
+    
+    /**
      * Unregisters a hook to a {@link SendMethod}
      * 
      * @param sendmethod
@@ -143,6 +127,22 @@ public class NetworkController extends ManagerController<Service<? extends Proto
     public boolean unregister(final SendMethod sendmethod) {
         if (hasSender()) sender.unregister(sendmethod);
         return false;
+    }
+    
+    /**
+     * @return Pipeline if found
+     */
+    private boolean hasPipeline() {
+        if (pipeline == null) pipeline = (RadioPipeline) Pipelines.get("communication").orElse(null);
+        return pipeline != null;
+    }
+    
+    /**
+     * @return Sender if found
+     */
+    private boolean hasSender() {
+        if (sender == null) sender = (RadioPacketSender) Services.get("RadioPacketConsumer").orElse(null);
+        return sender != null;
     }
     
 }
