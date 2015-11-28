@@ -37,11 +37,11 @@ public class Referee extends Model {
     /**
      * Time until the current {@link Stage} is finished
      */
-    private Integer                        stageTimeLeft;
+    private Integer                    stageTimeLeft;
     /**
      * The amount of {@link RefereeCommand commands} we've currently received.
      */
-    private Integer                        commandCounter;
+    private Integer                    commandCounter;
                                        
     /**
      * Instantiates a new Referee
@@ -136,7 +136,7 @@ public class Referee extends Model {
     public void setStageTimeLeft(final int stageTimeLeft) {
         this.stageTimeLeft = stageTimeLeft;
     }
-
+    
     @Override
     public String getSuffix() {
         return "";

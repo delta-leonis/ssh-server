@@ -13,21 +13,21 @@ import javafx.geometry.Point2D;
 public abstract class FieldObject extends Model {
     
     /** certainty of detection by ssl-vision */
-    private Float confidence;
-    
+    private Float   confidence;
+                    
     /**
      * X Position of this object on the {@link Field} in mm, according to the Cartesian system with
      * the origin in the center.
      */
-    @Alias("x")
+    @Alias ("x")
     protected float xPosition;
     /**
      * Y Position of this object on the {@link Field} in mm, according to the Cartesian system with
      * the origin in the center.
      */
-    @Alias("y")
+    @Alias ("y")
     protected float yPosition;
-    
+                    
     /**
      * Create a fieldObject
      * 
@@ -50,7 +50,7 @@ public abstract class FieldObject extends Model {
     /**
      * @return certainty of detection by ssl-vision
      */
-    public Float getConfidence(){
+    public Float getConfidence() {
         return this.confidence;
     }
 }

@@ -4,7 +4,10 @@ import org.ssh.pipelines.Pipeline;
 import org.ssh.pipelines.packets.GeometryPacket;
 
 /**
- * The Class GeometryPipeline.
+ * Pipeline for {@link GeometryPacket GeometryPackets}
+ * 
+ * @author Jeroen de Jong
+ *        
  */
 public class GeometryPipeline extends Pipeline<GeometryPacket> {
     

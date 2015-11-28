@@ -15,7 +15,6 @@ import com.google.protobuf.Message;
  * IPaddress and port
  *
  * @author Jeroen de Jong
- * @see {@link Communicator}
  *      
  */
 public class UDPSender implements SenderInterface {

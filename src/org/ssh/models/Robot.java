@@ -12,36 +12,36 @@ import org.ssh.util.Alias;
 public class Robot extends FieldObject {
     
     /** The robot height. */
-    public static final transient float ROBOT_HEIGHT = 150.0f;
-                                           
+    public static final transient float ROBOT_HEIGHT   = 150.0f;
+                                                       
     /** The robot radius */
     public static final transient float ROBOT_DIAMETER = 180.0f;
-                                           
+                                                       
     /**
      * Unique robot id [0-15]
      */
-    @Alias("robot_id")
-    private transient Integer robotId;
-                              
+    @Alias ("robot_id")
+    private transient Integer           robotId;
+                                        
     /**
      * teamcolor that controls this robot
      */
-    private final TeamColor       teamColor;
-                              
+    private final TeamColor             teamColor;
+                                        
     /**
      * current dribble speed (-1 is max backward, 1 is max forward)
      */
-    private Float             dribbleSpeed;
-    
+    private Float                       dribbleSpeed;
+                                        
     /** The boolean for the selected state */
-    private Boolean           isSelected;
-    
+    private Boolean                     isSelected;
+                                        
     /** Orientation which the robot is facing, not driving */
-    private Float orientation;
-    
-    /**  height of this robot as provided by ssl-vision */
-    private Float height;
-                              
+    private Float                       orientation;
+                                        
+    /** height of this robot as provided by ssl-vision */
+    private Float                       height;
+                                        
     /**
      * Instantiates a new robot with specified properties
      * 
@@ -81,7 +81,7 @@ public class Robot extends FieldObject {
     /**
      * @return the Orientation which the robot is facing, not driving
      */
-    public Float getOrientation(){
+    public Float getOrientation() {
         return this.orientation;
     }
     
@@ -98,11 +98,11 @@ public class Robot extends FieldObject {
     public boolean isSelected() {
         return this.isSelected;
     }
-
+    
     /**
      * @return presumed height of this robot as provided by ssl-vision
      */
-    public Float getHeight(){
+    public Float getHeight() {
         return height;
     }
     

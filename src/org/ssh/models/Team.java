@@ -7,7 +7,6 @@ import org.ssh.managers.manager.Models;
 import org.ssh.models.enums.Direction;
 import org.ssh.models.enums.TeamColor;
 
-
 /**
  * Describes a team<br />
  * NOTE: teams don't contain a list with all robots, since the robots which a team controls can
@@ -29,7 +28,7 @@ public class Team extends Model {
     /**
      * color that this team controls
      */
-    private TeamColor            teamColor;
+    private TeamColor        teamColor;
                              
     /**
      * teamname given by {@link Referee}
@@ -45,7 +44,7 @@ public class Team extends Model {
     /**
      * team properties as time left for timeouts, number of timeouts and the goalie ID.
      */
-    private Integer              goalieId, timeoutLeft, timeouts;
+    private Integer          goalieId, timeoutLeft, timeouts;
                              
     /**
      * Instantiates a new team that plays on a specified field half.
@@ -62,7 +61,7 @@ public class Team extends Model {
     }
     
     @Override
-    public String getSuffix(){
+    public String getSuffix() {
         return String.format("%s %s", direction.name(), teamColor.name());
     }
     

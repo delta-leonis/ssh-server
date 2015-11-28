@@ -67,7 +67,7 @@ public class RadioPacketSender extends Consumer<RadioPacket> {
     
     @Override
     public boolean consume(final RadioPacket pipelinePacket) {
-        // get default sendmethods
+        // get default sendmethodss
         SendMethod[] methods = pipelinePacket.getSendMethods();
         // replace them by specified sendmethods if neccecary
         if (pipelinePacket.getSendMethods().length == 0)

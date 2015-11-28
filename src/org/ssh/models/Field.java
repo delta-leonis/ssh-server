@@ -33,7 +33,7 @@ public class Field extends Model {
     }
     
     @Override
-    public String getSuffix(){
+    public String getSuffix() {
         return "";
     }
     

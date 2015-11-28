@@ -13,7 +13,6 @@ import com.google.protobuf.Message;
  *
  * @author Jeroen de Jong
  * @see SendMethod
- * @see Communicator
  *      
  */
 public interface SenderInterface {

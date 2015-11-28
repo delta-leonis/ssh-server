@@ -86,7 +86,7 @@ public abstract class Model extends Manageable {
             if (oField.isPresent()) {
                 // get it and set it accessible
                 final Field field = oField.get();
-                if (Modifier.isFinal(field.getModifiers()) || Modifier.isStatic(field.getModifiers())){
+                if (Modifier.isFinal(field.getModifiers()) || Modifier.isStatic(field.getModifiers())) {
                     Model.LOG.info("%s in is not a modifiable field", field.getName(), this.getClass().getSimpleName());
                     return false;
                 }

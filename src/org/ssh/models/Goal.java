@@ -17,7 +17,7 @@ public class Goal extends FieldObject {
     /**
      * Dimensions of the goal
      */
-    private Integer             goalDepth, goalWidth;
+    private Integer         goalDepth, goalWidth;
                             
     /**
      * Creates a goal on a specified fieldhalf
@@ -50,7 +50,7 @@ public class Goal extends FieldObject {
     public Direction getSide() {
         return this.fieldHalf;
     }
-
+    
     @Override
     public String getSuffix() {
         return getSide().name();

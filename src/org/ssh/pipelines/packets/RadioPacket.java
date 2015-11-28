@@ -1,7 +1,5 @@
 package org.ssh.pipelines.packets;
 
-import java.io.ByteArrayInputStream;
-
 import org.ssh.models.enums.SendMethod;
 
 import protobuf.Radio.RadioProtocolWrapper;
@@ -12,7 +10,7 @@ import protobuf.Radio.RadioProtocolWrapper.Builder;
  *
  * @author Rimon Oz
  * @author Jeroen de Jong
- * 
+ *         
  * @see {@link org.ssh.managers.manager.Pipelines Pipelines}
  * @see {@link org.ssh.pipelines.PipelinePacket PipelinePackets}
  * @see {@link org.ssh.pipelines.packets.ProtoPacket ProtoPacket}
@@ -53,7 +51,7 @@ public class RadioPacket extends ProtoPacket<RadioProtocolWrapper> {
      *         sendmehtods are preferred.
      */
     public SendMethod[] getSendMethods() {
-        return (SendMethod[]) sendMethods.clone();
+        return sendMethods.clone();
     }
     
 }

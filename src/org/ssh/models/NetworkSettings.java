@@ -2,48 +2,77 @@ package org.ssh.models;
 
 import org.ssh.pipelines.packets.ProtoPacket;
 
+/**
+ * Class that contains all settings for a certain network connection based on a {@link ProtoPacket ProtoPacket<?>}.
+ * 
+ * @author Jeroen de Jong
+ *
+ */
 public class NetworkSettings extends Model {
-    private String IP;
-    private Integer port;
-    private Integer bufferSize;
-    private transient Boolean closed;
-
+    
+    /** IP to connect to */
+    private String                                    IP;
+    /** Port to connect to */
+    private Integer                                   port;
+    /** Preferred size of the buffer */
+    private Integer                                   bufferSize;
+    /** Whether this connection should be closed or not  */
+    private transient Boolean                         closed;
+                
+    /** Type of {@link ProtoPacket ProtoPacket<?>} which these settings are for */
     private transient Class<? extends ProtoPacket<?>> packetType;
-    
-    
+                            
+    /**
+     * Create a new isntance of settings
+     * 
+     * @param type {@link ProtoPacket ProtoPacket<?>} which these settings are for 
+     */
     public NetworkSettings(Class<? extends ProtoPacket<?>> type) {
         super("NetworkSettings");
         this.packetType = type;
+        // standard this sockets should be open
         this.closed = Boolean.FALSE;
     }
     
-    public boolean isClosed(){
+    /**
+     * @return Whether this connection should be closed or not
+     */
+    public boolean isClosed() {
         return closed;
     }
     
     @Override
-    public String getSuffix(){
+    public String getSuffix() {
         return packetType.getSimpleName();
     }
     
-    public Class<? extends ProtoPacket<?>> getPacketType(){
+    /**
+     * @return Type of {@link ProtoPacket ProtoPacket<?>} which these settings are for
+     */
+    public Class<? extends ProtoPacket<?>> getPacketType() {
         return packetType;
     }
     
-    public Integer getPort(){
+    /**  Port to connect to  */
+    public Integer getPort() {
         return this.port;
     }
     
-    public String getIP(){
+    /** IP to connect to */
+    public String getIP() {
         return this.IP;
     }
-
+    
+    /** Preferred size of the buffer */
     public Integer getBufferSize() {
         return this.bufferSize;
     }
-
+    
+    /**
+     * @return Whether these settings are complete, and ready for use
+     */
     public boolean isComplete() {
         return getIP() != null && getPort() != null && this.getBufferSize() != null;
     }
-
+    
 }

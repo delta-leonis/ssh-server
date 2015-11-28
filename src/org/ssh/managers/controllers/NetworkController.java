@@ -1,13 +1,10 @@
 package org.ssh.managers.controllers;
 
-import java.util.Optional;
-
 import org.ssh.managers.ManagerController;
 import org.ssh.managers.manager.Pipelines;
 import org.ssh.managers.manager.Services;
 import org.ssh.models.enums.SendMethod;
 import org.ssh.pipelines.Pipeline;
-import org.ssh.pipelines.PipelinePacket;
 import org.ssh.pipelines.packets.ProtoPacket;
 import org.ssh.pipelines.packets.RadioPacket;
 import org.ssh.pipelines.pipeline.RadioPipeline;
@@ -19,21 +16,49 @@ import org.ssh.services.producers.UDPReceiver;
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.Message;
 
+/**
+ * Manages all networkconnections. Controlls all {@link UDPReceivers}. This class also acts as a
+ * interface for a {@link RadioPacketSender}.
+ * 
+ * @author Jeroen de Jong
+ *         
+ */
 public class NetworkController extends ManagerController<Service<? extends ProtoPacket<? extends GeneratedMessage>>> {
-    private RadioPipeline pipeline;
-    private RadioPacketSender sender;
     
-    public NetworkController () { 
+    /** Pipeline for communication */
+    private RadioPipeline     pipeline;
+    /** Consumer for pipelinepackets */
+    private RadioPacketSender sender;
+                              
+    /**
+     * Create a new controller, tries to get the pipeline and the sender
+     */
+    public NetworkController() {
         super();
+        // get pipa
         pipeline = (RadioPipeline) Pipelines.get("communication").orElse(null);
+        // get radioPacket consumer
         sender = (RadioPacketSender) Services.get("RadioPacketSender").orElse(null);
     }
-
+    
+    /**
+     * Listen for a specific {@link ProtoPacket<?> ProtoPacket}. Note that all networksettings are
+     * dynamcly loaded by the {@link UDPReceiver} upon initialisation based on the parameter type.
+     * 
+     * @param type
+     *            type to listen for
+     */
     public <M extends GeneratedMessage, P extends ProtoPacket<M>> void listenFor(Class<P> type) {
         this.add(new UDPReceiver(type).start());
     }
     
-    public <M extends GeneratedMessage, P extends ProtoPacket<M>> void stopListening(Class<P> type){
+    /**
+     * Kills the {@link UDPReceiver} for given type
+     * 
+     * @param type
+     *            type to stop listening for
+     */
+    public <M extends GeneratedMessage, P extends ProtoPacket<M>> void stopListening(Class<P> type) {
         this.get(type.getName()).ifPresent(service -> service.stop());
     }
     
@@ -47,20 +72,9 @@ public class NetworkController extends ManagerController<Service<? extends Proto
      */
     public boolean transmit(final protobuf.Radio.RadioProtocolWrapper.Builder genericBuilder,
             final SendMethod... sendMethods) {
-        if(hasPipeline())
+        if (hasPipeline())
             return pipeline.addPacket(new RadioPacket(genericBuilder.build(), sendMethods)).processPacket();
         return false;
-    }
-    
-    private boolean hasPipeline(){
-        if(pipeline == null)
-            pipeline = (RadioPipeline)Pipelines.get("communication").orElse(null);
-         return pipeline != null;
-    }    
-    private boolean hasSender(){
-        if(sender == null)
-            sender = (RadioPacketSender)Services.get("RadioPacketConsumer").orElse(null);
-         return sender != null;
     }
     
     /**
@@ -72,14 +86,19 @@ public class NetworkController extends ManagerController<Service<? extends Proto
      * @return succes value
      */
     public boolean addDefault(final SendMethod... newSendMethods) {
-        if(hasSender())
-            return sender.addDefault(newSendMethods);
+        if (hasSender()) return sender.addDefault(newSendMethods);
         return false;
     }
     
+    /**
+     * Remove this sendmethod from defaults
+     * 
+     * @param method
+     *            sendmethod to remove
+     * @return succes value
+     */
     public boolean removeDefault(final SendMethod method) {
-        if(hasSender())
-            return sender.removeDefault(method);
+        if (hasSender()) return sender.removeDefault(method);
         return false;
     }
     
@@ -94,8 +113,7 @@ public class NetworkController extends ManagerController<Service<? extends Proto
      *            communicator that implements given sendmethod
      */
     public boolean register(final SendMethod key, final SenderInterface communicator) {
-        if(hasSender())
-            sender.register(key, communicator);
+        if (hasSender()) sender.register(key, communicator);
         return false;
     }
     
@@ -107,8 +125,24 @@ public class NetworkController extends ManagerController<Service<? extends Proto
      * @return succes value
      */
     public boolean unregister(final SendMethod sendmethod) {
-        if(hasSender())
-            sender.unregister(sendmethod);
+        if (hasSender()) sender.unregister(sendmethod);
         return false;
     }
+    
+    /**
+     * @return Pipeline if found
+     */
+    private boolean hasPipeline() {
+        if (pipeline == null) pipeline = (RadioPipeline) Pipelines.get("communication").orElse(null);
+        return pipeline != null;
+    }
+    
+    /**
+     * @return Sender if found
+     */
+    private boolean hasSender() {
+        if (sender == null) sender = (RadioPacketSender) Services.get("RadioPacketConsumer").orElse(null);
+        return sender != null;
+    }
+    
 }
