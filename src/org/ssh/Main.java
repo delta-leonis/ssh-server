@@ -13,6 +13,7 @@ import org.ssh.pipelines.pipeline.DetectionPipeline;
 import org.ssh.pipelines.pipeline.GeometryPipeline;
 import org.ssh.pipelines.pipeline.WrapperPipeline;
 import org.ssh.senders.DebugSender;
+import org.ssh.services.consumers.GeometryConsumer;
 import org.ssh.services.consumers.WrapperConsumer;
 import org.ssh.services.producers.UDPReceiver;
 
@@ -40,7 +41,7 @@ public class Main extends Application {
         
         /** java fx start **/
         Application.launch(arg);
-
+        
     }
     
     /*
@@ -63,10 +64,7 @@ public class Main extends Application {
         
         // make splitter from wrapper -> geometry / detection
         new WrapperConsumer().attachToCompatiblePipelines();
-
+        new GeometryConsumer("oome geo").attachToCompatiblePipelines();
         Network.listenFor(WrapperPacket.class);
-        
-        // read wrapperpackets
-        new UDPReceiver(WrapperPacket.class);
     }
 }

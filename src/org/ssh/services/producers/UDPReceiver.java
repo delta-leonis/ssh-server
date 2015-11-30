@@ -221,7 +221,6 @@ public class UDPReceiver extends Service<ProtoPacket<?>> {
                 }
                 catch (ReflectiveOperationException exception) {
                     Service.LOG.exception(exception);
-                    exception.printStackTrace();
                     Service.LOG.info("Could not parse data, does '%s(ByteArrayInputStream)' exist?",
                             packetType.getTypeName());
                 }catch (InvalidProtocolBufferException exception){
@@ -229,7 +228,6 @@ public class UDPReceiver extends Service<ProtoPacket<?>> {
                     Service.LOG.info("Truncated message that caused an InvalidProtocolBufferException.");
                 } catch (IOException exception) {
                     Service.LOG.exception(exception);
-                    exception.printStackTrace();
                     Service.LOG.warning("Could not maintain connection with %s (ip: %s). closing connection.",
                             networkSettings.getSuffix(),
                             networkSettings.getIP());
