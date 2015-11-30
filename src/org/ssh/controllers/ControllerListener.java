@@ -161,12 +161,6 @@ public class ControllerListener extends Service {
             this.unregister(robotId);
         }
         
-        // check if all essential buttons are bound for this controller
-        if (!controller.isComplete()) {
-            ControllerListener.LOG.warning("Could not register controller, essential buttons are not bound.");
-            return false;
-        }
-        
         this.handlers.put(robotId, new ControllerHandler(controller));
         return true;
     }
