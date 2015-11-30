@@ -53,10 +53,8 @@ public class ControllerListener extends Service {
      * @param noRobots
      *            total number of robots
      */
-    public ControllerListener(final int noRobots) {
+    public ControllerListener() {
         super("ControllerListener");
-        // TODO remove noRobots, read it from Models or something
-//        IntStream.range(0, noRobots).forEach(index -> this.handlers.put(index, null));
         this.communicator = (Communicator) Services.get("communicator").get();
     }
     

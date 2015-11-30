@@ -134,7 +134,7 @@ public class ControllerExample extends Application{
 //        Pipelines.get("communication pipeline").get().registerConsumer(radioConsumer);
         
         // create the service for the controller
-        final ControllerListener listener = new ControllerListener(15); // 15 = number of robots
+        final ControllerListener listener = new ControllerListener(); 
         // add it to the servicehandler
         Services.add(listener);
         
