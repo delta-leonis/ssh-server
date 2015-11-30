@@ -35,7 +35,9 @@ public class ProtoConsumer extends Consumer<ProtoPacket<?>> {
      */
     @Override
     public boolean consume(ProtoPacket<?> pipelinePacket) {
-        Service.LOG.info("The ProtoConsumer ate a packet that looked like: \n%s", pipelinePacket.read().toString());
+        Service.LOG.info("The ProtoConsumer<%s> ate a packet that looked like: \n%s",
+                this.genericType,
+                pipelinePacket.read().toString());
         return true;
     }
     
