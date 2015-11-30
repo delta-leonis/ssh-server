@@ -23,6 +23,7 @@ import protobuf.Radio.RadioProtocolCommand;
  * @TODO Rimon fixt deze shit nog naar pipeline
  *      
  * @author Jeroen de Jong
+ * @author Thomas Hakkers
  *         
  */
 @SuppressWarnings ("rawtypes")
