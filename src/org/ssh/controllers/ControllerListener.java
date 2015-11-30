@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import org.ssh.managers.manager.Services;
 import org.ssh.services.Service;
@@ -26,6 +25,7 @@ import protobuf.Radio.RadioProtocolCommand;
  * @author Jeroen de Jong
  *         
  */
+@SuppressWarnings ("rawtypes")
 public class ControllerListener extends Service {
     
     /**
