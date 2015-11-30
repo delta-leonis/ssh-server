@@ -57,6 +57,15 @@ All SSH repositories are currently maintained on [Gitlab](http://www.gitlab.com/
 
 In order to compile you will need [Eclipse Mars](https://projects.eclipse.org/releases/mars), either [OpenJDK 8](http://openjdk.java.net/projects/jdk8/) or [Oracle JDK8](http://www.oracle.com/technetwork/java/javase/downloads/index.html), and [e(fx)clipse](http://www.eclipse.org/efxclipse/index.html). Open the project in Eclipse Mars and find `build.fxbuild`. Make sure that *Application class* is set to the right class, otherwise the program won't run. Next, click on *Generate ant build.xml and run*. The program should now be compiled and you can find the jar-file in `./build/dist/`.
 
+Another option is to build the project with maven. In order to do so, you will need to add the `jimObjModelImporter` and `protobuf` jar-files:
+
+```
+  mvn install:install-file -Dfile=lib/jimObjModelImporterJFX.jar -DgroupId=com.interactivemesh.javafx -DartifactId=objmodelimporter -Dversion=0.8 -Dpackaging=jar
+  mvn install:install-file -Dfile=lib/protobuf-2311e52a.jar -DgroupId=org.ssh.protobuf -DartifactId=protobuf -Dversion=0.1 -Dpackaging=jar
+```
+
+Maven can build the project using a simple `mvn package`
+
 ## Tests
 
 The project currently doesn't have any testing facilities.
