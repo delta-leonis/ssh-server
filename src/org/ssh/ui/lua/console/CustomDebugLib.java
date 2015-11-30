@@ -29,6 +29,7 @@ public class CustomDebugLib extends DebugLib {
     public void onInstruction(int pc, Varargs v, int top) {
         if (interrupted) {
             interrupted = false;
+            running = false;
             throw new ScriptInterruptException();
         }
         super.onInstruction(pc, v, top);
@@ -65,9 +66,11 @@ public class CustomDebugLib extends DebugLib {
     /**
      * Interrupts the current thread
      */
-    public void interrupt(){
-        if(running)
+    public void setInterrupt(boolean interrupt){
+        if(running && interrupt)
             interrupted = true;
+        else
+            interrupted = false;
     }
 
     /**

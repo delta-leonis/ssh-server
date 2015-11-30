@@ -86,7 +86,7 @@ public class ControllerHandler extends Producer {
      * @return succes value
      */
     private static boolean isPressed(final Float buttonValue) {
-        return Float.compare(buttonValue, 0f) != 0;
+        return buttonValue != 0f || buttonValue != -0f;
     }
     
     /**

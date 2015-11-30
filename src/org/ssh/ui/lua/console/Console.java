@@ -310,12 +310,13 @@ public class Console extends Tab {
         catch (LuaError exception) {
             Console.LOG.exception(exception);
             // If the command is cancelled (Yes, this is slightly botchy)
-            if(exception.getMessage().contains("CustomDebugLib$ScriptInterruptException"))
+            if(exception.getMessage().contains("InterruptedException") || exception.getMessage().contains("InterruptException"))
                 // Print that the command is cancelled
                 this.println("\n\t--[[CANCELLED COMMAND SUCCESSFULLY]]--");
             else
                 // Give a description of the error
                 this.println("\n\tERROR: " + exception.getMessage());
+            customDebug.setInterrupt(false);
         }
 
         this.printCursor();
@@ -336,7 +337,7 @@ public class Console extends Tab {
         if (currentFuture != null) 
             currentFuture.cancel(true);
         
-        customDebug.interrupt();
+        customDebug.setInterrupt(true);
         requestFocus();
     }
     
