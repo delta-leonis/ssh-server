@@ -14,6 +14,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.ssh.controllers.ControllerLayout;
+import org.ssh.controllers.ControllerLayoutDeserializer;
+import org.ssh.controllers.ControllerLayoutSerializer;
 import org.ssh.managers.Manageable;
 import org.ssh.managers.ManagerController;
 import org.ssh.managers.manager.Models;
@@ -124,7 +127,11 @@ public class ModelController extends ManagerController<Model> {
      * Instantiates a new models controller.
      */
     public ModelController() {
-        gson = new GsonBuilder().setPrettyPrinting().create();
+        gson = new GsonBuilder()
+                .registerTypeAdapter(ControllerLayout.class, new ControllerLayoutSerializer())
+                .registerTypeAdapter(ControllerLayout.class, new ControllerLayoutDeserializer())
+                .setPrettyPrinting()
+                .create();
     }
     
     /**
@@ -289,10 +296,12 @@ public class ModelController extends ManagerController<Model> {
             final File configFile = new File(filePath);
             // make dirs recursively
             if (!configFile.getParentFile().isDirectory())
-                if (!configFile.getParentFile().mkdirs()) throw new IOException("Could not create (parent) dirs.");
+                if (!configFile.getParentFile().mkdirs()) 
+                    throw new IOException("Could not create (parent) dirs.");
             // create file if it doesn't already
             if (!configFile.exists())
-                if (!configFile.createNewFile()) throw new IOException("Could not create configfile.");
+                if (!configFile.createNewFile()) 
+                    throw new IOException("Could not create configfile.");
             // write gson-object of all data in models to configFile
             Files.write(this.gson.toJson(model), configFile, Charset.defaultCharset());
             return true;
