@@ -18,6 +18,7 @@ import org.ssh.pipelines.packets.ProtoPacket;
 import org.ssh.services.Service;
 
 import com.google.protobuf.GeneratedMessage;
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Parser;
 
 import javafx.concurrent.Task;
@@ -223,8 +224,10 @@ public class UDPReceiver extends Service<ProtoPacket<?>> {
                     exception.printStackTrace();
                     Service.LOG.info("Could not parse data, does '%s(ByteArrayInputStream)' exist?",
                             packetType.getTypeName());
-                }
-                catch (IOException exception) {
+                }catch (InvalidProtocolBufferException exception){
+                    Service.LOG.exception(exception);
+                    Service.LOG.info("Truncated message that caused an InvalidProtocolBufferException.");
+                } catch (IOException exception) {
                     Service.LOG.exception(exception);
                     exception.printStackTrace();
                     Service.LOG.warning("Could not maintain connection with %s (ip: %s). closing connection.",
