@@ -25,7 +25,8 @@ import protobuf.Radio.RadioProtocolCommand;
  *
  * @TODO stop_all_robots
  *       
- * @author Jeroen de Jong, Thomas Hakkers
+ * @author Jeroen de Jong
+ * @author Thomas Hakkers
  *         
  */
 @SuppressWarnings ("rawtypes")
@@ -85,7 +86,7 @@ public class ControllerHandler extends Producer {
      * @return succes value
      */
     private static boolean isPressed(final Float buttonValue) {
-        return buttonValue > 0f;
+        return Float.compare(buttonValue, 0f) != 0;
     }
     
     /**
@@ -108,8 +109,7 @@ public class ControllerHandler extends Producer {
         // Make a list with all buttons that changed values
         this.layout.getBindings()
                 .entries().stream()
-                // filter all buttons that don't describe a strength value
-//                .filter(entry -> !entry.getValue().toString().contains("_STRENGTH"))
+                // filter all buttons that are persistent
                 .filter(entry -> entry.getValue().isPersistant()
                         || (entry.getKey().getPollData() != this.previousButtonState.get(entry.getValue())))
                 .forEach(entry -> {
@@ -134,7 +134,7 @@ public class ControllerHandler extends Producer {
             this.previousButtonState.put(entry.getKey(),
                     // Check whether the value has changed
                     this.previousButtonState.get(entry.getKey()).compareTo(entry.getValue()) == 0
-                        // 
+                        // If it has changed, add it, else, don't change
                         ? this.previousButtonState.get(entry.getKey()) 
                         : entry.getValue());
         
@@ -246,11 +246,13 @@ public class ControllerHandler extends Producer {
      * @return true if successful (always)
      */
     private static final boolean velocityX(final Float buttonValue, final RadioProtocolCommand.Builder packet){
-        if (ControllerHandler.isPressed(buttonValue) && settings != null)
+        if (ControllerHandler.isPressed(buttonValue) && settings != null){
             packet.setVelocityX(buttonValue * settings.getMaxVelocity());
-        else
+            return true;
+        }else{
             ControllerHandler.LOG.warning("Settings in velocityX is null");
-        return true;
+            return false;
+        }
     }
     
     /**
@@ -260,11 +262,13 @@ public class ControllerHandler extends Producer {
      * @return true if successful (always)
      */
     private static final boolean velocityY(final Float buttonValue, final RadioProtocolCommand.Builder packet){
-        if (ControllerHandler.isPressed(buttonValue) && settings != null)
+        if (ControllerHandler.isPressed(buttonValue) && settings != null){
             packet.setVelocityY(buttonValue * settings.getMaxVelocity());
-        else
-            ControllerHandler.LOG.warning("Settings in velocityX is null");
-        return true;
+            return true;
+        }else{
+            ControllerHandler.LOG.warning("Settings in velocityY is null");
+            return false;
+        }
     }
     
     /**
@@ -338,13 +342,14 @@ public class ControllerHandler extends Producer {
     }
     
     /**
+     * WARNING: The inverse of buttonValue is used, since that's what the XBox controller uses
      * Calculates the Velocity on the Y axis and puts it into the packet
      * @param packet The packet that the velocityY gets added to
      * @param buttonValue The value the controller registered
      * @return True if success (always)
      */
     private static final boolean directionY(final RadioProtocolCommand.Builder packet, final float buttonValue){
-        float velocity = buttonValue;
+        float velocity = -buttonValue;
         if(settings != null)
             velocity *= settings.getMaxVelocity();
         
