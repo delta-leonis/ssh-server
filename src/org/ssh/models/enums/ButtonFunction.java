@@ -103,7 +103,7 @@ public enum ButtonFunction {
      * @return true if this button should be updated regardless of it's previous state, see
      *         {@link #persistent}.
      */
-    public boolean isPersistant() {
+    public boolean isPersistent() {
         return this.persistent;
     }
 }

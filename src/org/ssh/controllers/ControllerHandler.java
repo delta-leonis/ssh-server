@@ -110,7 +110,7 @@ public class ControllerHandler extends Producer {
         this.layout.getBindings()
                 .entries().stream()
                 // filter all buttons that are persistent
-                .filter(entry -> entry.getValue().isPersistant()
+                .filter(entry -> entry.getValue().isPersistent()
                         || (entry.getKey().getPollData() != this.previousButtonState.get(entry.getValue())))
                 .forEach(entry -> {
                     // Try to add it to duplicates. If it returns false, it already exists
