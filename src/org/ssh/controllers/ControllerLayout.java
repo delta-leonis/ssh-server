@@ -32,12 +32,12 @@ public class ControllerLayout extends Model {
     /**
      * JInput Model representing physical {@link Controller}
      */
-    private final Controller                       controller;
+    private transient final Controller                       controller;
     /**
      * Map containing all {@link Component} as found on the {@link controller} and the bound
      * {@link ButtonFunction functions}
      */
-    private final Multimap<Component, ButtonFunction> bindings =  ArrayListMultimap.create();
+    public Multimap<Component, ButtonFunction> bindings =  ArrayListMultimap.create();
 
     // respective logger
     private transient final static Logger          LOG      = Logger.getLogger();
@@ -77,7 +77,6 @@ public class ControllerLayout extends Model {
      * @return true if it's already bound, false otherwise
      */
     public boolean containsBinding(final ButtonFunction function) {
-        
         return this.bindings.entries().stream().filter(entry -> entry.getValue().equals(function)).count() > 0;
     }
     
@@ -157,7 +156,7 @@ public class ControllerLayout extends Model {
      */
     @Override
     public String getConfigName() {
-        return String.format("%s %s", Controller.class.getName(), this.controller.getName()).replace(" ", "_") + ".json";
+        return String.format("%s %s", Controller.class.getSimpleName(), this.controller.getName()).replace(" ", "_") + ".json";
     }
     
     /**

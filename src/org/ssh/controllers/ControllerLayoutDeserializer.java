@@ -54,7 +54,7 @@ public class ControllerLayoutDeserializer implements JsonDeserializer<Controller
             // For each entry in the json layout
             for (Map.Entry<String, JsonElement> entry : ((JsonObject) json.getAsJsonObject().get("bindings")).entrySet()){
                 // Check whether the key exists
-                Optional<Component> component = layout.getComponentBasedOnLocalName(entry.getKey());
+                Optional<Component> component = layout.getComponent(entry.getKey());
                 // If it does, add it to the bindings
                 if(component.isPresent())               
                     entry.getValue().getAsJsonArray().forEach(jsonValue -> bindings.put(component.get(), ButtonFunction.valueOf(jsonValue.getAsString())));
