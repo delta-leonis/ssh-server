@@ -24,6 +24,17 @@ public class RadioPacket extends ProtoPacket<RadioProtocolWrapper> {
     
     /**
      * Instantiates a new radio packet.
+     * 
+     * @param packetBuilder
+     *            initial data.
+     */
+    public RadioPacket(Builder packetBuilder) {
+        super(packetBuilder.build());
+        this.sendMethods = new SendMethod[0];
+    }
+    
+    /**
+     * Instantiates a new radio packet.
      *
      * @param builder
      *            the message.
@@ -33,17 +44,6 @@ public class RadioPacket extends ProtoPacket<RadioProtocolWrapper> {
     public RadioPacket(final RadioProtocolWrapper message, final SendMethod... methods) {
         super(message);
         this.sendMethods = methods;
-    }
-    
-    /**
-     * Instantiates a new radio packet.
-     * 
-     * @param packetBuilder
-     *            initial data.
-     */
-    public RadioPacket(Builder packetBuilder) {
-        super(packetBuilder.build());
-        this.sendMethods = new SendMethod[0];
     }
     
     /**

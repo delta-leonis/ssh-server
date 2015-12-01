@@ -3,7 +3,8 @@ package org.ssh.models;
 import org.ssh.pipelines.packets.ProtoPacket;
 
 /**
- * Class that contains all settings for a certain network connection based on a {@link ProtoPacket ProtoPacket<?>}.
+ * Class that contains all settings for a certain network connection based on a {@link ProtoPacket
+ * ProtoPacket<?>}.
  * 
  * @author Jeroen de Jong
  *
@@ -25,7 +26,8 @@ public class NetworkSettings extends Model {
     /**
      * Create a new isntance of settings
      * 
-     * @param type {@link ProtoPacket ProtoPacket<?>} which these settings are for 
+     * @param type
+     *            {@link ProtoPacket ProtoPacket<?>} which these settings are for
      */
     public NetworkSettings(Class<? extends ProtoPacket<?>> type) {
         super("NetworkSettings");

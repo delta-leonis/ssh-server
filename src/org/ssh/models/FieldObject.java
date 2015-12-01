@@ -39,18 +39,18 @@ public abstract class FieldObject extends Model {
     }
     
     /**
+     * @return certainty of detection by ssl-vision
+     */
+    public Float getConfidence() {
+        return this.confidence;
+    }
+    
+    /**
      * position of this object according to the Cartesian system with the origin in the center.
      * 
      * @return position of this object in mm.
      */
     public Point2D getPosition() {
         return new Point2D(xPosition, yPosition);
-    }
-    
-    /**
-     * @return certainty of detection by ssl-vision
-     */
-    public Float getConfidence() {
-        return this.confidence;
     }
 }

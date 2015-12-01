@@ -65,17 +65,10 @@ public class Robot extends FieldObject {
     }
     
     /**
-     * @return robot ID [0-15]
+     * @return presumed height of this robot as provided by ssl-vision
      */
-    public Integer getRobotId() {
-        return this.robotId;
-    }
-    
-    /**
-     * @return color of team that controls this robot
-     */
-    public TeamColor getTeamColor() {
-        return this.teamColor;
+    public Float getHeight() {
+        return height;
     }
     
     /**
@@ -83,6 +76,25 @@ public class Robot extends FieldObject {
      */
     public Float getOrientation() {
         return this.orientation;
+    }
+    
+    /**
+     * @return robot ID [0-15]
+     */
+    public Integer getRobotId() {
+        return this.robotId;
+    }
+    
+    @Override
+    public String getSuffix() {
+        return this.getTeamColorIdentifier() + robotId;
+    }
+    
+    /**
+     * @return color of team that controls this robot
+     */
+    public TeamColor getTeamColor() {
+        return this.teamColor;
     }
     
     /**
@@ -97,17 +109,5 @@ public class Robot extends FieldObject {
      */
     public boolean isSelected() {
         return this.isSelected;
-    }
-    
-    /**
-     * @return presumed height of this robot as provided by ssl-vision
-     */
-    public Float getHeight() {
-        return height;
-    }
-    
-    @Override
-    public String getSuffix() {
-        return this.getTeamColorIdentifier() + robotId;
     }
 }

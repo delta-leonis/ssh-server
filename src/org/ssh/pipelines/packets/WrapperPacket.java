@@ -13,7 +13,7 @@ public class WrapperPacket extends ProtoPacket<protobuf.Wrapper.WrapperPacket> {
     public WrapperPacket(protobuf.Wrapper.WrapperPacket data) {
         super(data);
     }
-
+    
     /**
      * @return true if packet contains {@link protobuf.Detection.DetectionFrame DetectionFrame}
      */

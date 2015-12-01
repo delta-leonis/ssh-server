@@ -7,7 +7,8 @@ import org.ssh.pipelines.packets.GeometryPacket;
  * Pipeline for {@link GeometryPacket GeometryPackets}
  * 
  * @author Jeroen de Jong
- *        
+ * @author Rimon Oz
+ *         
  */
 public class GeometryPipeline extends Pipeline<GeometryPacket> {
     

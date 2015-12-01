@@ -13,6 +13,7 @@ import com.google.common.reflect.Reflection;
  *         
  */
 public class Reflect {
+    
     private static Logger LOG = Logger.getLogger();
     
     public static boolean containsField(final String fieldName, final Class<?> clazz) {
@@ -28,11 +29,10 @@ public class Reflect {
             catch (final NoSuchFieldException exception) {
                 Optional<Field> oField = Stream.of(clazzI.getDeclaredFields()).filter(field -> {
                     Alias annotation = field.getAnnotation(Alias.class);
-                    if (annotation != null)
-                        return annotation.value().equals(fieldName);
+                    if (annotation != null) return annotation.value().equals(fieldName);
                     return false;
                 }).findFirst();
-                if(oField.isPresent()){
+                if (oField.isPresent()) {
                     Reflect.LOG.fine("Found %s as annotation in %s", fieldName, clazzI);
                     return oField;
                 }

@@ -58,8 +58,8 @@ public final class Models implements Manager<Model>{
      *            the args for the right constructor
      * @return the model
      */
-    public static <M extends Model> M create(final Class<M> clazz, final Object... args) {
-        return ModelController.create(clazz, args);
+    public static <M extends Model> M create(final Class<?> clazz, final Object... args) {
+        return ModelController.<M> create(clazz, args);
     }
     
     /**
@@ -69,7 +69,7 @@ public final class Models implements Manager<Model>{
      *            The full name of the model you want to find.
      * @return The requested model.
      */
-    public static<M extends Model> Optional<M> get(final String modelName) {
+    public static <M extends Model> Optional<M> get(final String modelName) {
         return Models.modelController.<M> getByName(modelName);
     }
     
@@ -163,7 +163,7 @@ public final class Models implements Manager<Model>{
     public static boolean saveAsDefault(final Model model) {
         return Models.modelController.saveAsDefault(model);
     }
-
+    
     /**
      * This method instantiates a controller to run the store.
      */
