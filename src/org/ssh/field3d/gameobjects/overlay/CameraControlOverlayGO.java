@@ -101,9 +101,7 @@ public class CameraControlOverlayGO extends OverlayGO {
      * {@inheritDoc}
      */
     @Override
-    public void onUpdateDetection() {
-        // TODO Auto-generated method stub
-        
+    public void onUpdateDetection() {        
     }
     
     /**

@@ -77,6 +77,20 @@ public class KeyInputHandler extends GameObject {
     public void onUpdateGeometry() {
     }
     
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onUpdateDetection() {
+    }
+    
+    /**
+     * Checks if the key is down.
+     * 
+     * @param keyCode
+     *            The {@link KeyCode key}.
+     * @return True, if the {@link KeyCode key} is down.
+     */
     public boolean isKeyDown(final KeyCode keyCode) {
         
         // Check if the map contains the key code
@@ -90,6 +104,13 @@ public class KeyInputHandler extends GameObject {
         return false;
     }
     
+    /**
+     * Checks if the key is up.
+     * 
+     * @param keyCode
+     *            The {@link KeyCode key}.
+     * @return True, if the {@link KeyCode key} is up.
+     */
     public boolean isKeyUp(final KeyCode keyCode) {
         
         // Check if the map contains the key code
@@ -154,11 +175,5 @@ public class KeyInputHandler extends GameObject {
             // Setting released state
             KeyInputHandler.this.setState(event.getCode(), false);
         }
-    }
-
-    @Override
-    public void onUpdateDetection() {
-        // TODO Auto-generated method stub
-        
     }
 }

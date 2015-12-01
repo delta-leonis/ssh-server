@@ -27,7 +27,6 @@ import javafx.scene.shape.MeshView;
  * @see GameObject
  *      
  * @author Mark Lefering
- *         
  */
 public class RobotGO extends GameObject {
     
@@ -137,8 +136,10 @@ public class RobotGO extends GameObject {
             // Getting model from the model importer
             this.model = modelImporter.getImport()[0];
             
+            // Getting texture as input stream
             InputStream textureInputStream = this.getClass().getResourceAsStream(textureFilename);
             
+            // If the texture input stream is not null
             if (textureInputStream != null) {
                 
                 // Loading texture & setting diffuse map of the model material
@@ -147,6 +148,7 @@ public class RobotGO extends GameObject {
             }
             else {
                 
+                // Log error
                 LOG.warning("Could not load " + textureFilename);
             }
             
@@ -157,9 +159,12 @@ public class RobotGO extends GameObject {
             
             // Log error
             LOG.info("Could not load " + ROBOT_MODEL_FILE);
+            
+            // Break out of constructor
             return;
         }
         
+        // Add mouse clicked event
         this.model.setOnMouseClicked(new EventHandler<MouseEvent>() {
             
             @Override
@@ -167,15 +172,8 @@ public class RobotGO extends GameObject {
                 
                 // Setting selected state
                 setSelected(!isSelected);
-                
-                System.out.println("ID: " + visionRobotModel.getRobotId());
             }
-            
         });
-        
-        // Setting not selected
-        this.isSelected = false;
-        this.setSelected(this.isSelected);
     }
     
     /**
@@ -190,6 +188,9 @@ public class RobotGO extends GameObject {
         // Add models to model group
         modelGroup.getChildren().add(this.model);
         modelGroup.getChildren().add(this.selectionArcMesh);
+        
+        // Setting selected state
+        this.setSelected(this.visionRobotModel.isSelected());
         
         // Add model group to the world group
         Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().addAll(modelGroup));
@@ -209,6 +210,7 @@ public class RobotGO extends GameObject {
             this.location.y = Robot.ROBOT_HEIGHT / 2.0f + ROBOT_STARTING_Y;
             this.location.z = (float) visionRobotModel.getPosition().getY();
         }
+        // No valid data
         else {
             
             this.location.x = 0;
@@ -234,12 +236,18 @@ public class RobotGO extends GameObject {
     public void onDestroy() {
         
         Platform.runLater(() -> {
+            
+            // Check if world group contains the 3d model of the robot
             if (this.getGame().getWorldGroup().getChildren().contains(this.model)) {
                 
+                // Remove 3d model from the world group
                 this.getGame().getWorldGroup().getChildren().remove(this.model);
             }
             
+            // Check if world group contains the 3d model of the selection arc
             if (this.getGame().getWorldGroup().getChildren().contains(this.selectionArcMesh)) {
+                
+                // Remove the selection arc from the world group
                 this.getGame().getWorldGroup().getChildren().remove(this.selectionArcMesh);
             }
         });
@@ -257,8 +265,6 @@ public class RobotGO extends GameObject {
      */
     @Override
     public void onUpdateDetection() {
-        // TODO Auto-generated method stub
-        
     }
     
     /**

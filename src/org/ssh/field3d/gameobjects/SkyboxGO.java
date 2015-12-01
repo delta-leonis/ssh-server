@@ -125,8 +125,7 @@ public class SkyboxGO extends GameObject {
     
     @Override
     public void onUpdateDetection() {
-       
-        
+    
     }
     
     /**
@@ -142,7 +141,5 @@ public class SkyboxGO extends GameObject {
             this.getGame().getWorldGroup().getChildren().remove(this.model);
         }
     }
-
-   
     
 }

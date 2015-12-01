@@ -192,8 +192,6 @@ public class MouseInputHandler extends GameObject {
      */
     @Override
     public void onUpdateDetection() {
-        // TODO Auto-generated method stub
-        
     }
     
     /**

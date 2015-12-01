@@ -10,7 +10,7 @@ import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.field3d.core.math.Vector3f;
 import org.ssh.field3d.core.shapes.FlatArc3D;
 import org.ssh.field3d.core.shapes.FlatLine3D;
-import org.ssh.field3d.gameobjects.overlay.contextmenus.ContextOverlayGO;
+import org.ssh.field3d.gameobjects.overlay.ContextOverlayGO;
 import org.ssh.managers.manager.Models;
 import org.ssh.models.Field;
 import org.ssh.models.Goal;
@@ -147,18 +147,7 @@ public class FieldGO extends GameObject {
     @Override
     public void onInitialize() {
         
-        /*
-         * // Generate tiles this.generateTiles();
-         * 
-         * // Generate lines this.generateLines();
-         * 
-         * // Generate lines this.generateGoals();
-         * 
-         * // Generate arcs this.generateArcs();
-         * 
-         * // Adding game objects to the game this.getGame().addGameObject(this.penaltySpotEast);
-         * this.getGame().addGameObject(this.penaltySpotWest);
-         */
+        // Add context menu to the game objects of the game
         this.getGame().addGameObject(this.contextOverlayGO);
     }
     
@@ -204,10 +193,13 @@ public class FieldGO extends GameObject {
     @Override
     public void onUpdateGeometry() {
         
+        // Trying to get Field model
         Optional<Model> optionalModel = Models.get("field");
         
+        // If there is a model present
         if (optionalModel.isPresent()) {
             
+            // Setting vision model
             this.fieldVisionModel = (Field) optionalModel.get();
             
             // Clear arcs
@@ -255,8 +247,6 @@ public class FieldGO extends GameObject {
      */
     @Override
     public void onUpdateDetection() {
-        // TODO Auto-generated method stub
-        
     }
     
     /**
@@ -417,6 +407,7 @@ public class FieldGO extends GameObject {
         // Add box to the world group
         Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(box));
         
+        // Hook on mouse clicked event
         box.setOnMouseClicked(new EventHandler<MouseEvent>() {
             
             @Override
@@ -428,7 +419,9 @@ public class FieldGO extends GameObject {
                     // Getting the intersected point
                     Point3D intersectedPoint = event.getPickResult().getIntersectedPoint();
                     
+                    // Transform the click location on the tile to world space
                     intersectedPoint = box.localToParent(intersectedPoint);
+                    
                     // Setting field location
                     contextOverlayGO.setFieldLoc(new Point2D(intersectedPoint.getX(), intersectedPoint.getZ()));
                     
@@ -449,6 +442,7 @@ public class FieldGO extends GameObject {
     private void removeBox(Box box) {
         
         Platform.runLater(() -> {
+            
             // Check if we need to remove a box from the field
             if (this.fieldBoxes != null && this.fieldBoxes.contains(box)) {
                 

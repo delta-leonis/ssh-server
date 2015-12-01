@@ -1,10 +1,9 @@
-package org.ssh.field3d.gameobjects.overlay.contextmenus;
+package org.ssh.field3d.gameobjects.overlay;
 
 import java.util.List;
 
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
-import org.ssh.field3d.gameobjects.overlay.OverlayGO;
 import org.ssh.models.Robot;
 
 import javafx.event.ActionEvent;
@@ -141,9 +140,7 @@ public class ContextOverlayGO extends OverlayGO {
      * {@inheritDoc}
      */
     @Override
-    public void onUpdateDetection() {
-        // TODO Auto-generated method stub
-        
+    public void onUpdateDetection() {        
     }
     
     /**

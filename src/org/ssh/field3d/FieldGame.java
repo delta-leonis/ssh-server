@@ -75,9 +75,6 @@ public class FieldGame extends Game {
         // Initialize super class
         super(root, width, height, true, antiAliasing);
         
-        // Create the models needed
-        // this.createModels();
-        
         // Creating ambient light
         this.ambientLight = new AmbientLight(Color.DARKGRAY);
         
@@ -109,9 +106,6 @@ public class FieldGame extends Game {
         this.addGameObject(this.fieldGO);
         this.addGameObject(this.cameraControlOverlayGO);
         // this.addGameObject(this.easterCarGO);
-        
-        // Update vison data
-        // this.updateVisionData();
     }
     
     /**
@@ -142,13 +136,19 @@ public class FieldGame extends Game {
     public void destroy() {
     }
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateGeometry() {
         
+        // Trying to get field vision model
         Optional<Model> tmpOptionalField = Models.get("field");
         
+        // If a model is present
         if (tmpOptionalField.isPresent()) {
             
+            // Set field vision model
             this.fieldVisionModel = (Field) tmpOptionalField.get();
             
             // Setting bounds for the location of the camera
@@ -188,7 +188,8 @@ public class FieldGame extends Game {
     
     @Override
     public void updateDetection() {
-             
+        
+        // Call super updateDetection method
         super.updateDetection();
         
         // Clear robots
@@ -259,23 +260,19 @@ public class FieldGame extends Game {
         }
     }
     
-    
     /*
-    private void createModels() {
-        
-        // Create robots
-        Robot robot = (Robot) Models.create(Robot.class, 0, TeamColor.BLUE);
-        Robot robot2 = (Robot) Models.create(Robot.class, 1, TeamColor.BLUE);
-        Robot robot3 = (Robot) Models.create(Robot.class, 2, TeamColor.BLUE);
-        Robot robot4 = (Robot) Models.create(Robot.class, 3, TeamColor.BLUE);
-        
-        robot.update("isSelected", true);
-        robot2.update("isSelected", false);
-        robot3.update("isSelected", false);
-        robot4.update("isSelected", false);
-        
-        robot.update("position", new Point3D(0.0, 0.0, 0.0));
-    }*/
+     * private void createModels() {
+     * 
+     * // Create robots Robot robot = (Robot) Models.create(Robot.class, 0, TeamColor.BLUE); Robot
+     * robot2 = (Robot) Models.create(Robot.class, 1, TeamColor.BLUE); Robot robot3 = (Robot)
+     * Models.create(Robot.class, 2, TeamColor.BLUE); Robot robot4 = (Robot)
+     * Models.create(Robot.class, 3, TeamColor.BLUE);
+     * 
+     * robot.update("isSelected", true); robot2.update("isSelected", false);
+     * robot3.update("isSelected", false); robot4.update("isSelected", false);
+     * 
+     * robot.update("position", new Point3D(0.0, 0.0, 0.0)); }
+     */
     
     private void clearRobots() {
         

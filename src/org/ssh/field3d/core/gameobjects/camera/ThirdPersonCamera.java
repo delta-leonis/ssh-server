@@ -14,7 +14,7 @@ import javafx.scene.PerspectiveCamera;
  * ThirdPersonCamera class. This class is used for the 3rd person camera.
  *
  * @author marklef2
- * @see GameObject  
+ * @see GameObject
  */
 public class ThirdPersonCamera extends GameObject {
     
@@ -48,7 +48,7 @@ public class ThirdPersonCamera extends GameObject {
                                                                
     /** The Constant CAMERA_ZOOM_MAX. */
     public static final double      CAMERA_ZOOM_MAX            = -200.0;
-    
+                                                               
     /** The pivot which the camera "follows". */
     private Vector3f                pivot;
                                     
@@ -234,7 +234,7 @@ public class ThirdPersonCamera extends GameObject {
      * {@inheritDoc}
      */
     @Override
-    public void onUpdateGeometry() {        
+    public void onUpdateGeometry() {
     }
     
     /**
@@ -242,8 +242,6 @@ public class ThirdPersonCamera extends GameObject {
      */
     @Override
     public void onUpdateDetection() {
-        // TODO Auto-generated method stub
-        
     }
     
     /**

@@ -22,9 +22,6 @@ public abstract class OverlayGO extends GameObject {
     /** The FXML directory. */
     private static final String FXML_DIR = "/org/ssh/view/components/overlay/";
                                          
-    /** The CSS directory. */
-    // private static final String CSS_DIR = "/org/ssh/view/css/";
-    
     /** The logger. */
     private static final Logger LOG      = Logger.getLogger();
                                          
@@ -97,7 +94,6 @@ public abstract class OverlayGO extends GameObject {
      */
     @Override
     public void onUpdate(long timeDivNano) {
-    
     }
     
     /**
@@ -106,23 +102,41 @@ public abstract class OverlayGO extends GameObject {
     @Override
     public abstract void onUpdateGeometry();
     
+    /**
+     * Show method. This method makes the container visible.
+     */
     public void show() {
         
+        // Setting container to visible
         this.container.setVisible(true);
     }
     
+    /**
+     * Hide method. This method makes the container hidden.
+     */
     public void hide() {
         
+        // Hide container
         this.container.setVisible(false);
     }
     
+    /**
+     * Toggle visibility method. This method toggles the visibility of the container.
+     */
     public void toggleVisibility() {
         
+        // Toggle visibility
         this.container.setVisible(!this.container.isVisible());
     }
     
+    /**
+     * Checks if the container is visible.
+     * 
+     * @return True, if the container is visible.
+     */
     public boolean isVisible() {
         
+        // Returns the visible state of the container
         return this.container.isVisible();
     }
     
@@ -133,6 +147,7 @@ public abstract class OverlayGO extends GameObject {
      */
     protected Group getContainer() {
         
+        // Returns the container
         return this.container;
     }
     
@@ -143,20 +158,23 @@ public abstract class OverlayGO extends GameObject {
      *            The filename.
      * @param container
      *            The container to put the nodes into.
-     * @return true, if successful
+     * @return True, if the FXML was loaded successfully.
      */
     protected boolean loadFXML(String fileName, Group container) {
         
+        // Creating URL
         URL url = this.getClass().getResource(FXML_DIR + fileName);
         
+        // Creating FXML loader
         final FXMLLoader fxmlLoader = new FXMLLoader(url);
         
-        // Check if url not null
+        // Check if URL not null
         if (url == null) {
             
             // Log error
             LOG.warning("Couldn't load, url == null: " + FXML_DIR + fileName);
             
+            // Not loaded successfully
             return false;
         }
         
@@ -175,9 +193,11 @@ public abstract class OverlayGO extends GameObject {
             // Log exception
             LOG.exception(ioException);
             
+            // Not loaded successfully
             return false;
         }
         
+        // Loaded successfully
         return true;
     }
 }

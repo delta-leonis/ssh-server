@@ -24,6 +24,7 @@ import javafx.stage.Stage;
  * The Class Main.
  */
 public class Main extends Application {
+
     
     /**
      * The main method.
@@ -51,7 +52,17 @@ public class Main extends Application {
      */
     @Override
     public void start(final Stage primaryStage) throws Exception {
+        
         UI.start(primaryStage);
+        
+     	// @TODO create teams ofzeu
+        // Allies (yellow) on the west side of the field
+        @SuppressWarnings ("unused")
+        Team teamAllies = (Team) Models.create(Team.class, Direction.WEST, TeamColor.YELLOW);
+        // Opponents (blue) on the east side of the field
+        @SuppressWarnings ("unused")
+        Team teamOpponents = (Team) Models.create(Team.class, Direction.EAST, TeamColor.BLUE);
+     
         
         /********************************/
         /* Below is just for testing!!! */

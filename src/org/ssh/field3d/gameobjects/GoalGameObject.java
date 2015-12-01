@@ -16,6 +16,12 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 
+/**
+ * Goal game object class. This class represents a 3D goal on the 3D field.
+ * 
+ * @author marklef2
+ * @see GameObject
+ */
 public class GoalGameObject extends GameObject {
     
     /** The thickness of the wood of the goal. */
@@ -32,12 +38,14 @@ public class GoalGameObject extends GameObject {
                               
     /** The list of teams. */
     private List<Team>        teams;
-        
+                              
     /**
      * Constructor of the GoalGameObject. This creates a new instance of GoalGameObject.
      * 
-     * @param game The game of the {@link GameObject}.
-     * @param goalVisionModel The vision {@ink Goal model} of the goal.
+     * @param game
+     *            The game of the {@link GameObject}.
+     * @param goalVisionModel
+     *            The vision {@ink Goal model} of the goal.
      */
     public GoalGameObject(Game game, Goal goalVisionModel) {
         
@@ -70,7 +78,7 @@ public class GoalGameObject extends GameObject {
                 this.goalGroup.setRotate(270.0);
                 break;
             }
-            
+                
                 // The goal is on the south side
             case SOUTH: {
                 
@@ -94,7 +102,7 @@ public class GoalGameObject extends GameObject {
                 this.goalGroup.setRotate(0.0);
                 break;
             }
-                
+            
         }
         
         // Translate into position
@@ -154,8 +162,6 @@ public class GoalGameObject extends GameObject {
      */
     @Override
     public void onUpdateDetection() {
-        // TODO Auto-generated method stub
-        
     }
     
     /**
@@ -186,7 +192,7 @@ public class GoalGameObject extends GameObject {
         Box backBox = new Box();
         Box rightBox = new Box();
         
-        // Clear goup
+        // Clear group
         this.goalGroup.getChildren().clear();
         
         // Setting left border box dimensions
@@ -228,7 +234,8 @@ public class GoalGameObject extends GameObject {
     }
     
     /**
-     * updateTeamColor() method. This method updates the team color of the goal. 
+     * Update team color method. This method updates the team color of the goal (according to the
+     * vision model).
      */
     @SuppressWarnings ("unchecked")
     private void updateTeamColor() {
@@ -254,8 +261,8 @@ public class GoalGameObject extends GameObject {
                     // Setting yellow color
                     goalMaterial.setDiffuseColor(Color.YELLOW);
                     
-                    // No team color found
                 }
+                // No team color found
                 else {
                     
                     // Setting white color

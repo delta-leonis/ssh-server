@@ -18,14 +18,16 @@ import protobuf.Detection.DetectionFrame;
 import protobuf.Detection.DetectionRobot;
 
 /**
- * The detection
+ * The detection consumer.
+ * 
  * @author marklef2
- *
+ * @see Consumer
  */
 public class Field3DDetectionConsumer extends Consumer<DetectionPacket> {
     
+    /** The {@link FieldGame}. This is used to call the updateDetection method. */
     private final FieldGame fieldGame;
-                            
+    
     /**
      * Constructor.
      * 
@@ -37,8 +39,9 @@ public class Field3DDetectionConsumer extends Consumer<DetectionPacket> {
         // Initialize super class
         super("field3ddetectionconsumer");
         
+        // Getting reference to the main window
         MainWindow mainWindow = (MainWindow) ((UIController<?>) UI.get("main").get());
-
+        
         // Setting the field game
         this.fieldGame = mainWindow.field;
     }
@@ -49,22 +52,25 @@ public class Field3DDetectionConsumer extends Consumer<DetectionPacket> {
     @Override
     public boolean consume(DetectionPacket pipelinePacket) {
         
+        // Create changed boolean
         boolean changed = false;
         
         // Read detection frame
         DetectionFrame detectionFrame = pipelinePacket.read();
-             
+        
         // Loop through blue robot list
         for (DetectionRobot tmpDetectionRobot : detectionFrame.getRobotsBlueList()) {
             
+            // Trying to get the robot
             Optional<Model> optionalModel = Models.get("robot B" + tmpDetectionRobot.getRobotId());
             
+            // If there is a model present
             if (optionalModel.isPresent()) {
                 
                 // Update model
-                ((Robot)optionalModel.get()).update("position",
+                ((Robot) optionalModel.get()).update("position",
                         new Point2D((float) tmpDetectionRobot.getX(), (float) tmpDetectionRobot.getY()));
-
+                        
             }
             else {
                 
@@ -74,7 +80,7 @@ public class Field3DDetectionConsumer extends Consumer<DetectionPacket> {
                 // Update model
                 tmpRobot.update("position",
                         new Point2D((float) tmpDetectionRobot.getX(), (float) tmpDetectionRobot.getY()));
-            
+                        
                 // Changed
                 changed = true;
             }
@@ -88,19 +94,19 @@ public class Field3DDetectionConsumer extends Consumer<DetectionPacket> {
             if (optionalModel.isPresent()) {
                 
                 // Update model
-                ((Robot)(optionalModel.get())).update("position",
+                ((Robot) (optionalModel.get())).update("position",
                         new Point2D((float) tmpDetectionRobot.getX(), (float) tmpDetectionRobot.getY()));
                         
             }
             else {
                 
                 // Create model
-                Robot tmpRobot = (Robot)Models.create(Robot.class, tmpDetectionRobot.getRobotId(), TeamColor.YELLOW);
-            
+                Robot tmpRobot = (Robot) Models.create(Robot.class, tmpDetectionRobot.getRobotId(), TeamColor.YELLOW);
+                
                 // Update model
                 tmpRobot.update("position",
                         new Point2D((float) tmpDetectionRobot.getX(), (float) tmpDetectionRobot.getY()));
-                
+                        
                 // Changed
                 changed = true;
             }
@@ -110,9 +116,9 @@ public class Field3DDetectionConsumer extends Consumer<DetectionPacket> {
         if (changed) {
             
             // Update detection data
-            this.fieldGame.updateDetection();           
+            this.fieldGame.updateDetection();
         }
-   
+        
         return true;
     }
     

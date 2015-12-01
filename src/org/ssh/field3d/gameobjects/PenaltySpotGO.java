@@ -14,7 +14,7 @@ import javafx.scene.transform.Rotate;
  * spot on the 3d field.
  * 
  * @see GameObject
- *     
+ *      
  * @author Mark Lefering
  */
 public class PenaltySpotGO extends GameObject {
@@ -71,11 +71,15 @@ public class PenaltySpotGO extends GameObject {
         
         // Add model to the world group
         Platform.runLater(() -> {
+            
+            // If the world group does not contain the 3D model
             if (!this.getGame().getWorldGroup().getChildren().contains(this.model)) {
+                
+                // Add 3d model to the world group
                 this.getGame().getWorldGroup().getChildren().add(this.model);
             }
         });
-         
+        
     }
     
     /**
@@ -90,11 +94,14 @@ public class PenaltySpotGO extends GameObject {
      */
     @Override
     public void onDestroy() {
-
+        
         // Remove models from world
         Platform.runLater(() -> {
             
+            // Check if the world group contains the 3d model
             if (this.getGame().getWorldGroup().getChildren().contains(this.model)) {
+                
+                // Remover 3d model from the world group
                 this.getGame().getWorldGroup().getChildren().remove(this.model);
             }
         });
@@ -112,8 +119,6 @@ public class PenaltySpotGO extends GameObject {
      */
     @Override
     public void onUpdateDetection() {
-        // TODO Auto-generated method stub
-        
     }
     
     /**
@@ -122,7 +127,6 @@ public class PenaltySpotGO extends GameObject {
      * @return Returns a {@link Vector3f} containing the location of the penalty spot.
      */
     public Vector3f getLocation() {
-        
         return this.location;
     }
     
@@ -132,7 +136,6 @@ public class PenaltySpotGO extends GameObject {
      * @return Returns a double containing the radius of the penalty spot.
      */
     public double getRadius() {
-        
         return this.radius;
     }
     

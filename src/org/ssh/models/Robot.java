@@ -54,6 +54,7 @@ public class Robot extends FieldObject {
         // assign teamcolor
         this.teamColor = teamColor;
         this.robotId = robotId;
+        this.isSelected = false;
     }
     
     /**

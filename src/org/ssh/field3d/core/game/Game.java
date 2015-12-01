@@ -43,10 +43,9 @@ public abstract class Game extends SubScene {
                                               
     private long                              curTime, prevTime;
                                               
-    private static boolean                    isFirstFrame  = true;
+    private boolean                           isFirstFrame;
                                                             
     /**
-     *
      * Constructor
      *
      * @param root
@@ -404,6 +403,8 @@ public abstract class Game extends SubScene {
         
         // Setting default values
         this.curTime = this.prevTime = 0;
+        // Setting the first frame state
+        this.isFirstFrame = true;
         // Get 2d group (root of this SubScene);
         this.group2d = (Group) this.getRoot();
         
@@ -421,9 +422,23 @@ public abstract class Game extends SubScene {
         this.scene3D.setCamera(this.thirdPersonCamera.getPerspectiveCamera());
     }
     
-    public boolean isFirstFrame() {
+    /**
+     * Checks if it is the first frame of the game.
+     * 
+     * @return True, if it is the first frame of the game.
+     */
+    private boolean isFirstFrame() {
         
-        return Game.isFirstFrame;
+        return this.isFirstFrame;
+    }
+    
+    /**
+     * 
+     */
+    private void setIsFirstFrame(boolean isFirstFrame) {
+        
+        // Setting first frame
+        this.isFirstFrame = isFirstFrame;
     }
     
     /**
@@ -435,27 +450,27 @@ public abstract class Game extends SubScene {
      */
     class AnimationTimerHandler extends AnimationTimer {
         
-        long prevTime;
-        long curTime;
-             
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void handle(final long timeDivNano) {
             
-            if (Game.isFirstFrame) {
+            // Check if it is the first frame of the game
+            if (Game.this.isFirstFrame()) {
                 
-                Game.isFirstFrame = false;
+                // Initialize game
                 Game.this.initialize();
                 
+                // Not the first state anymore
+                Game.this.setIsFirstFrame(false);
+                
+                // Break..
                 return;
             }
             
-            prevTime = curTime;
-            curTime = System.currentTimeMillis();
-            
             // Update game
             Game.this.internalUpdate();
-            
         }
-        
     }
 }
