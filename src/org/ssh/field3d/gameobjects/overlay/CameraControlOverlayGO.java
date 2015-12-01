@@ -7,6 +7,7 @@ import org.ssh.field3d.core.math.Vector3f;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 
 /**
  * CameraPresetOverlay class
@@ -55,7 +56,9 @@ public class CameraControlOverlayGO extends OverlayGO {
                                 
     /** The button zoom out pressing. */
     private boolean             buttonZoomOutPressing;
-                                
+                              
+    @FXML
+    private GridPane rootPane;
     /**
      * Constructor.
      *
@@ -66,6 +69,10 @@ public class CameraControlOverlayGO extends OverlayGO {
         
         // Initialize super class
         super(game, LAYOUT_FXML_FILE);
+        rootPane.maxHeightProperty().bind(game.heightProperty());
+        rootPane.minHeightProperty().bind(game.heightProperty());
+        rootPane.maxWidthProperty().bind(game.widthProperty());
+        rootPane.minWidthProperty().bind(game.widthProperty());
         
         // Setting default values
         buttonRotateDownPressing = buttonRotateLeftPressing = buttonRotateRightPressing = buttonRotateUpPressing = false;

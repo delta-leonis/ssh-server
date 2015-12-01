@@ -8,60 +8,222 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.layout.Pane?>
 
-<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" pickOnBounds="false" minWidth="0.0">
+<GridPane fx:id="rootPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+	pickOnBounds="false">
+
+	<fx:define>
+		<Double fx:value="1.7976931348623157E308" fx:id="maxValue" />
+	</fx:define>
+
+	<columnConstraints>
+		<ColumnConstraints fillWidth="true" />
+		<ColumnConstraints prefWidth="24.0" minWidth="24.0"
+			maxWidth="24.0" />
+		<ColumnConstraints prefWidth="32.0" minWidth="32.0"
+			maxWidth="32.0" />
+		<ColumnConstraints prefWidth="64.0" minWidth="64.0"
+			maxWidth="64.0" />
+		<ColumnConstraints prefWidth="32.0" minWidth="32.0"
+			maxWidth="32.0" />
+		<ColumnConstraints prefWidth="24.0" minWidth="24.0"
+			maxWidth="24.0" />
+		<ColumnConstraints prefWidth="20.0" minWidth="20.0"
+			maxWidth="20.0" />
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints prefHeight="20.0" minHeight="20.0"
+			maxHeight="20.0" />
+		<RowConstraints prefHeight="24.0" minHeight="24.0"
+			maxHeight="24.0" />
+		<RowConstraints prefHeight="64.0" minHeight="64.0"
+			maxHeight="64.0" />
+		<RowConstraints prefHeight="24.0" minHeight="24.0"
+			maxHeight="24.0" />
+		<RowConstraints prefHeight="35.0" minHeight="35.0"
+			maxHeight="35.0" />
+		<RowConstraints prefHeight="50.0" minHeight="50.0"
+			maxHeight="50.0" />
+		<RowConstraints fillHeight="true" />
+	</rowConstraints>
 
 	<children>
-	
-		<!-- Spacing -->
-		<Pane GridPane.columnIndex="0" GridPane.rowIndex="0" minWidth="500.0" minHeight="20.0"></Pane>
-	
-		<!-- Top view preset button -->
-		<Button id="buttonTopView" text="Top View" onAction="#onButtonTopViewAction" GridPane.columnIndex="0" GridPane.rowIndex="0">
+		<Pane id="topButtonsSpacer" maxHeight="${maxValue}" pickOnBounds="false" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
+		</Pane>
+		<Button id="cameraup" GridPane.columnIndex="3"
+			GridPane.rowIndex="1" maxHeight="${maxValue}" maxWidth="${maxValue}"
+			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onMousePressed="#onButtonRotateUpPressed"
+			onMouseReleased="#onButtonRotateUpReleased">
+			<graphic>
+				<ImageView rotate="270.0">
+					<image>
+						<Image url="@../../icon/navigationarrowleft.png" />
+					</image>
+				</ImageView>
+			</graphic>
+			<padding>
+        	<Insets bottom="0.0" left="0.0" right ="0.0" top="0.0"/>
+     		</padding>
 		</Button>
-		<!-- Side view preset button -->
-		<Button id="buttonSideView" text="Side View" onAction="#onButtonSideViewAction" GridPane.columnIndex="0" GridPane.rowIndex="1">
+
+		<Button id="cameradown" GridPane.columnIndex="3"
+			GridPane.rowIndex="3" maxHeight="${maxValue}" maxWidth="${maxValue}"
+			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onMousePressed="#onButtonRotateDownPressed"
+			onMouseReleased="#onButtonRotateDownReleased">
+			<graphic>
+				<ImageView rotate="90">
+					<image>
+						<Image url="@../../icon/navigationarrowleft.png" />
+					</image>
+				</ImageView>
+			</graphic>
+			<padding>
+        	<Insets bottom="0.0" left="0.0" right ="0.0" top="0.0"/>
+     		</padding>
 		</Button>
-		<!-- 45 degree preset button -->
-      	<Button id="button45DegView" text="45 Degree View" onAction="#onButton45DegViewAction" GridPane.columnIndex="0" GridPane.rowIndex="2">
-      	</Button>
-      	
-  
-      	<!-- Spacing -->
-      	<Pane GridPane.columnIndex="0" GridPane.rowIndex="3" minHeight="20.0"></Pane>
-      	
-      	
-      	<!-- Rotate left button -->
-      	<Button id="buttonRotateLeft" text="Rotate Left" onMousePressed="#onButtonRotateLeftPressed" 
-      			onMouseReleased="#onButtonRotateLeftReleased" GridPane.columnIndex="0" GridPane.rowIndex="4">
-      	</Button>
-      	<!-- Rotate right button -->
-		<Button id="buttonRotateRight" text="Rotate Right" onMousePressed="#onButtonRotateRightPressed" 
-      			onMouseReleased="#onButtonRotateRightReleased" GridPane.columnIndex="0" GridPane.rowIndex="5">
-      	</Button>
-      	<!-- Rotate up button -->
-      	<Button id="buttonRotateUp" text="Rotate Up" onMousePressed="#onButtonRotateUpPressed" 
-      			onMouseReleased="#onButtonRotateUpReleased" GridPane.columnIndex="0" GridPane.rowIndex="6">
-      	</Button>
-      	<!-- Rotate down button -->
-      	<Button id="buttonRotateDown" text="Rotate Down" onMousePressed="#onButtonRotateDownPressed" 
-      			onMouseReleased="#onButtonRotateDownReleased" GridPane.columnIndex="0" GridPane.rowIndex="7">
-      	</Button>
-      	
-      	
-      	<!-- Spacing -->
-      	<Pane GridPane.columnIndex="0" GridPane.rowIndex="8" minHeight="20.0"></Pane>
-      	
-      	
-      	<!-- Zoom in button -->
-		<Button id="buttonZoomIn" text="Zoom In" onMousePressed="#onButtonZoomInPressed" 
-      			onMouseReleased="#onButtonZoomInReleased" GridPane.columnIndex="0" GridPane.rowIndex="9">
-      	</Button>
-      	<!-- Zoom out button -->
-      	<Button id="buttonZoomOut" text="Zoom Out" onMousePressed="#onButtonZoomOutPressed" 
-      			onMouseReleased="#onButtonZoomOutReleased" GridPane.columnIndex="0" GridPane.rowIndex="10">
-      	</Button>
-      	
-   	</children>
-   	
+
+		<Button id="cameraleft" GridPane.columnIndex="2"
+			GridPane.rowIndex="2" maxHeight="${maxValue}" maxWidth="${maxValue}"
+			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onMousePressed="#onButtonRotateLeftPressed"
+			onMouseReleased="#onButtonRotateLeftReleased">
+			<graphic>
+				<ImageView rotate="180">
+					<image>
+						<Image url="@../../icon/navigationarrowleft.png" />
+					</image>
+				</ImageView>
+			</graphic>
+			<padding>
+        	<Insets bottom="0.0" left="0.0" right ="0.0" top="0.0"/>
+     		</padding>
+		</Button>
+
+		<Button id="cameraright" GridPane.columnIndex="4"
+			GridPane.rowIndex="2" maxHeight="${maxValue}" maxWidth="${maxValue}"
+			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onMousePressed="#onButtonRotateRightPressed"
+			onMouseReleased="#onButtonRotateRightReleased">
+			<graphic>
+				<ImageView>
+					<image>
+						<Image url="@../../icon/navigationarrowleft.png" />
+					</image>
+				</ImageView>
+			</graphic>
+			<padding>
+        	<Insets bottom="0.0" left="0.0" right ="0.0" top="0.0"/>
+     		</padding>
+		</Button>
+
+		<Button id="camerahopleft" GridPane.columnIndex="1"
+			GridPane.rowIndex="2" maxHeight="${maxValue}" maxWidth="${maxValue}"
+			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+			<graphic>
+				<ImageView rotate="180">
+					<image>
+						<Image url="@../../icon/nextleft.png" />
+					</image>
+				</ImageView>
+			</graphic>
+			<padding>
+        	<Insets bottom="0.0" left="0.0" right ="0.0" top="0.0"/>
+     		</padding>
+		</Button>
+
+		<Button id="camerahopright" GridPane.columnIndex="5"
+			GridPane.rowIndex="2" maxHeight="${maxValue}" maxWidth="${maxValue}"
+			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+			<graphic>
+				<ImageView>
+					<image>
+						<Image url="@../../icon/nextleft.png" />
+					</image>
+				</ImageView>
+			</graphic>
+			<padding>
+        	<Insets bottom="0.0" left="0.0" right ="0.0" top="0.0"/>
+     		</padding>
+		</Button>
+
+		<Button id="sideview" GridPane.columnIndex="3"
+			GridPane.rowIndex="4" maxHeight="${maxValue}" maxWidth="${maxValue}"
+			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onAction="#onButton45DegViewAction">
+			<graphic>
+				<ImageView>
+					<image>
+						<Image url="@../../icon/sideview64.png" />
+					</image>
+				</ImageView>
+			</graphic>
+			<padding>
+        	<Insets bottom="0.0" left="0.0" right ="0.0" top="0.0"/>
+     		</padding>
+		</Button>
+
+		<Button id="topview" GridPane.columnIndex="3"
+			GridPane.rowIndex="5" maxHeight="${maxValue}" maxWidth="${maxValue}"
+			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onAction="#onButtonTopViewAction">
+			<graphic>
+				<ImageView>
+					<image>
+						<Image url="@../../icon/topview64.png" />
+					</image>
+				</ImageView>
+			</graphic>
+			<padding>
+        	<Insets bottom="0.0" left="0.0" right ="0.0" top="0.0"/>
+     		</padding>
+		</Button>
+
+		<GridPane id="world" GridPane.columnIndex="3"
+			GridPane.rowIndex="2">
+			<columnConstraints>
+				<ColumnConstraints prefWidth="64.0" minWidth="64.0"
+					maxWidth="64.0" />
+			</columnConstraints>
+			<rowConstraints>
+				<RowConstraints prefHeight="32.0" minHeight="32.0"
+					maxHeight="32.0" />
+				<RowConstraints prefHeight="32.0" minHeight="32.0"
+					maxHeight="32.0" />
+			</rowConstraints>
+			<children>
+				<Button id="zoomin" GridPane.columnIndex="0"
+					GridPane.rowIndex="0" maxHeight="${maxValue}" maxWidth="${maxValue}"
+					GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onMousePressed="#onButtonZoomInPressed"
+					onMouseReleased="#onButtonZoomInReleased">
+					<graphic>
+						<ImageView>
+							<image>
+								<Image url="@../../icon/worldupper64.png" />
+							</image>
+						</ImageView>
+					</graphic>
+					<padding>
+        			<Insets bottom="0.0" left="0.0" right ="0.0" top="0.0"/>
+     				</padding>
+				</Button>
+				<Button id="zoomout" GridPane.columnIndex="0"
+					GridPane.rowIndex="1" maxHeight="${maxValue}" maxWidth="${maxValue}"
+					GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onMousePressed="#onButtonZoomOutPressed"
+					onMouseReleased="#onButtonZoomOutReleased">
+					<graphic>
+						<ImageView>
+							<image>
+								<Image url="@../../icon/worldbottom64.png" />
+							</image>
+						</ImageView>
+					</graphic>
+					<padding>
+        			<Insets bottom="0.0" left="0.0" right ="0.0" top="0.0"/>
+     				</padding>
+				</Button>
+			</children>
+		</GridPane>
+		
+	</children>
 </GridPane>
