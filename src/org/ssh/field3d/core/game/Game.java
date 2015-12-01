@@ -1,5 +1,6 @@
 package org.ssh.field3d.core.game;
 
+import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.ssh.field3d.core.gameobjects.GameObject;
@@ -24,27 +25,27 @@ import javafx.util.Duration;
  */
 public abstract class Game extends SubScene {
     
-    private static final int                  FPS           = 60;
-    private static final int                  FRAME_TIME_MS = (1 / Game.FPS) * 1000;
-                                                            
-    private Timeline                          timeline;
-    private AnimationTimerHandler             animationTimerHandler;
-    private SubScene                          scene3D;
-                                              
-    private ConcurrentLinkedQueue<GameObject> gameObjects;
-                                              
-    private MouseInputHandler                 mouseInputHandler;
-    private ThirdPersonCamera                 thirdPersonCamera;
-                                              
-    private Group                             worldGroup;
-    private Group                             cameraGroup;
-    private Group                             group2d;
-    private Group                             group3d;
-                                              
-    private long                              curTime, prevTime;
-                                              
-    private boolean                           isFirstFrame;
-                                                            
+    private static final int      FPS           = 60;
+    private static final int      FRAME_TIME_MS = (1 / Game.FPS) * 1000;
+                                                
+    private Timeline              timeline;
+    private AnimationTimerHandler animationTimerHandler;
+    private SubScene              scene3D;
+                                  
+    private Queue<GameObject>     gameObjects;
+                                  
+    private MouseInputHandler     mouseInputHandler;
+    private ThirdPersonCamera     thirdPersonCamera;
+                                  
+    private Group                 worldGroup;
+    private Group                 cameraGroup;
+    private Group                 group2d;
+    private Group                 group3d;
+                                  
+    private long                  curTime, prevTime;
+                                  
+    private boolean               isFirstFrame;
+                                  
     /**
      * Constructor
      *

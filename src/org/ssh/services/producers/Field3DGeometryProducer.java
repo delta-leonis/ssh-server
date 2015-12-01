@@ -1,9 +1,18 @@
 package org.ssh.services.producers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.ssh.managers.manager.Models;
+import org.ssh.models.Field;
+import org.ssh.models.Goal;
+import org.ssh.models.enums.Direction;
 import org.ssh.models.enums.ProducerType;
 
 import org.ssh.pipelines.packets.GeometryPacket;
 import org.ssh.services.service.Producer;
+
+import com.sun.javafx.geom.Point2D;
 
 import protobuf.Geometry.FieldCicularArc;
 import protobuf.Geometry.FieldLineSegment;
@@ -11,6 +20,12 @@ import protobuf.Geometry.GeometryData;
 import protobuf.Geometry.GeometryFieldSize;
 import protobuf.Geometry.Vector2f;
 
+/**
+ * 3D field geometry producer. This class is responsible for creating test geometry data
+ * 
+ * @author marklef2
+ *
+ */
 public class Field3DGeometryProducer extends Producer<GeometryPacket> {
     
     /**
@@ -34,6 +49,40 @@ public class Field3DGeometryProducer extends Producer<GeometryPacket> {
             // Return the packets
             return packet;
         });
+    }
+    
+    /**
+     * This method is used to create the test data. 
+     */
+    @SuppressWarnings ("unused")
+    private void createTestData() {
+        
+        // Creating field model
+        Field fieldVisionModel = (Field) Models.create(Field.class);
+        
+        List<Goal> goals = new ArrayList<Goal>();
+        Goal goalEast = (Goal) Models.create(Goal.class, Direction.EAST);
+        Goal goalWest = (Goal) Models.create(Goal.class, Direction.WEST);
+        
+        goalEast.update("goalWidth", new Integer(1000));
+        goalEast.update("goalHeight", new Integer(160));
+        goalEast.update("goalDepth", new Integer(180));
+        goalEast.update("position", new Point2D(4500.0f + 90.0f, 0.0f));
+        
+        goalWest.update("goalWidth", new Integer(1000));
+        goalWest.update("goalHeight", new Integer(160));
+        goalWest.update("goalDepth", new Integer(180));
+        goalWest.update("position", new Point2D(-4500.0f - 90.0f, 0.0f));
+        
+        goals.add(goalWest);
+        goals.add(goalEast);
+        
+        // Update field, create field geometry field size
+        fieldVisionModel.update("field", createGeometryFieldSize());
+        fieldVisionModel.update("goals", goals);
+        
+        fieldVisionModel.save();
+        fieldVisionModel.saveAsDefault();
     }
     
     /**

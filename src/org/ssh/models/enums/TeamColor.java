@@ -1,6 +1,6 @@
 package org.ssh.models.enums;
 
-import java.awt.Color;
+import javafx.scene.paint.Color;
 
 /**
  * Describes the color of a team, either blue or yellow
@@ -15,10 +15,11 @@ public enum TeamColor {
      * @return Convert {@link TeamColor} a {@link Color}
      */
     public Color toColor() {
-        if (this.equals(TeamColor.BLUE)) return Color.blue;
-        return Color.yellow;
+        if (this.equals(TeamColor.BLUE))
+            return Color.BLUE;
+        return Color.YELLOW;
     }
-    
+
     public TeamColor swap() {
         return (this.equals(TeamColor.BLUE) ? TeamColor.YELLOW : TeamColor.BLUE);
     }

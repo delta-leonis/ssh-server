@@ -3,6 +3,7 @@ package org.ssh.field3d.gameobjects;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.ssh.field3d.core.game.Game;
@@ -41,65 +42,65 @@ import protobuf.Geometry.Vector2f;
 public class FieldGO extends GameObject {
     
     /** The height of the field. */
-    public static final double                          FIELD_HEIGHT            = 1.0;
-                                                                                
+    public static final double          FIELD_HEIGHT            = 1.0;
+                                                                
     /** The penalty spot distance form goal */
-    public static final double                          FIELD_PENALTY_SPOT      = 1000.0;
-                                                                                
+    public static final double          FIELD_PENALTY_SPOT      = 1000.0;
+                                                                
     /** The penalty spot size. */
-    public static final double                          FIELD_PENALTY_SPOT_SIZE = 10.0;
-                                                                                
+    public static final double          FIELD_PENALTY_SPOT_SIZE = 10.0;
+                                                                
     /** The width of a tile. */
-    public static final double                          FIELD_TILE_WIDTH        = 500.0;
-                                                                                
+    public static final double          FIELD_TILE_WIDTH        = 500.0;
+                                                                
     /** The height of a tile. */
-    public static final double                          FIELD_TILE_DEPTH        = 500.0;
-                                                                                
+    public static final double          FIELD_TILE_DEPTH        = 500.0;
+                                                                
     /** The logger. */
-    private static final Logger                         LOG                     = Logger.getLogger("FieldGO");
-                                                                                
+    private static final Logger         LOG                     = Logger.getLogger();
+                                                                
     /** The file path for the grass texture. */
-    private static final String                         GRASS_TEXTURE_FILE      = "/org/ssh/view/textures/field/grass.png";
-                                                                                
+    private static final String         GRASS_TEXTURE_FILE      = "/org/ssh/view/textures/field/grass.png";
+                                                                
     /** The line offset. */
-    private static final double                         LINE_Y_OFFSET           = 10.0;
-                                                                                
+    private static final double         LINE_Y_OFFSET           = 10.0;
+                                                                
     /** The number of divisions in the mid circle. */
-    private static final int                            ARC_NUM_DIVISIONS       = 1000;
-                                                                                
+    private static final int            ARC_NUM_DIVISIONS       = 1000;
+                                                                
     /** The tiles of the field. */
-    private final ConcurrentLinkedQueue<Box>            fieldBoxes;
-                                                        
+    private final Queue<Box>            fieldBoxes;
+                                        
     /** The lines of the field. */
-    private final ConcurrentLinkedQueue<FlatLine3D>     fieldLines;
-                                                        
+    private final Queue<FlatLine3D>     fieldLines;
+                                        
     /** The arcs of the field. */
-    private final ConcurrentLinkedQueue<FlatArc3D>      fieldArcs;
-                                                        
+    private final Queue<FlatArc3D>      fieldArcs;
+                                        
     /** The goal game objects. */
-    private final ConcurrentLinkedQueue<GoalGameObject> goalGameObjects;
-                                                        
+    private final Queue<GoalGameObject> goalGameObjects;
+                                        
     /** The grass material. */
-    private final PhongMaterial                         grassMaterial;
-                                                        
+    private final PhongMaterial         grassMaterial;
+                                        
     /** The width of the tile. */
-    private final double                                tileWidth;
-                                                        
+    private final double                tileWidth;
+                                        
     /** the depth of the tile. */
-    private final double                                tileDepth;
-                                                        
+    private final double                tileDepth;
+                                        
     /** The field vision model. */
-    private Field                                       fieldVisionModel;
-                                                        
+    private Field                       fieldVisionModel;
+                                        
     /** The context menu overlay game object */
-    private final ContextOverlayGO                      contextOverlayGO;
-                                                        
+    private final ContextOverlayGO      contextOverlayGO;
+                                        
     /** The east penalty spot. */
-    private PenaltySpotGO                               penaltySpotEast;
-                                                        
+    private PenaltySpotGO               penaltySpotEast;
+                                        
     /** The west penalty spot. */
-    private PenaltySpotGO                               penaltySpotWest;
-                                                        
+    private PenaltySpotGO               penaltySpotWest;
+                                        
     /**
      * 
      * @param game

@@ -7,11 +7,9 @@ import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.managers.manager.Models;
 import org.ssh.models.Goal;
 import org.ssh.models.Team;
-import org.ssh.models.enums.TeamColor;
 
 import javafx.application.Platform;
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
@@ -249,26 +247,9 @@ public class GoalGameObject extends GameObject {
             // Check if the direction of the team matches the side of the goal vision model
             if (team.getDirection() == goalVisionModel.getSide()) {
                 
-                // Creating material according to team color
-                if (team.getTeamColor() == TeamColor.BLUE) {
-                    
-                    // Setting blue color
-                    goalMaterial.setDiffuseColor(Color.BLUE);
-                    
-                }
-                else if (team.getTeamColor() == TeamColor.YELLOW) {
-                    
-                    // Setting yellow color
-                    goalMaterial.setDiffuseColor(Color.YELLOW);
-                    
-                }
-                // No team color found
-                else {
-                    
-                    // Setting white color
-                    goalMaterial.setDiffuseColor(Color.WHITE);
-                }
-                
+                // Setting color
+                goalMaterial.setDiffuseColor(team.getTeamColor().toColor());
+
                 // Break out of loop
                 break;
             }

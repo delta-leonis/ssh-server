@@ -3,6 +3,7 @@ package org.ssh.field3d;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.ssh.field3d.core.game.Game;
@@ -32,29 +33,29 @@ import javafx.scene.paint.Color;
 public class FieldGame extends Game {
     
     /** The ambient light. */
-    private final AmbientLight             ambientLight;
-                                           
+    private final AmbientLight           ambientLight;
+                                         
     /** The west point lights. */
-    private final PointLight               pointLightWestSouth, pointLightWestNorth;
-                                           
+    private final PointLight             pointLightWestSouth, pointLightWestNorth;
+                                         
     /** The east point lights. */
-    private final PointLight               pointLightEastSouth, pointLightEastNorth;
-                                           
+    private final PointLight             pointLightEastSouth, pointLightEastNorth;
+                                         
     /** The field game object. */
-    private final FieldGO                  fieldGO;
-                                           
+    private final FieldGO                fieldGO;
+                                         
     /** The camera control overlay game object. */
-    private final CameraControlOverlayGO   cameraControlOverlayGO;
-                                           
+    private final CameraControlOverlayGO cameraControlOverlayGO;
+                                         
     /** The robots. */
-    private List<Robot>                    robotsVisionModel;
-                                           
+    private List<Robot>                  robotsVisionModel;
+                                         
     /** The robot game objects. */
-    private ConcurrentLinkedQueue<RobotGO> robotGameObjects;
-                                           
+    private Queue<RobotGO>               robotGameObjects;
+                                         
     /** The field vision model. */
-    private Field                          fieldVisionModel;
-                                           
+    private Field                        fieldVisionModel;
+                                         
     /** The easter car game object */
     // private final CarGO easterCarGO;
     
@@ -186,6 +187,9 @@ public class FieldGame extends Game {
         super.updateGeometry();
     }
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateDetection() {
         
@@ -260,20 +264,9 @@ public class FieldGame extends Game {
         }
     }
     
-    /*
-     * private void createModels() {
-     * 
-     * // Create robots Robot robot = (Robot) Models.create(Robot.class, 0, TeamColor.BLUE); Robot
-     * robot2 = (Robot) Models.create(Robot.class, 1, TeamColor.BLUE); Robot robot3 = (Robot)
-     * Models.create(Robot.class, 2, TeamColor.BLUE); Robot robot4 = (Robot)
-     * Models.create(Robot.class, 3, TeamColor.BLUE);
-     * 
-     * robot.update("isSelected", true); robot2.update("isSelected", false);
-     * robot3.update("isSelected", false); robot4.update("isSelected", false);
-     * 
-     * robot.update("position", new Point3D(0.0, 0.0, 0.0)); }
+    /**
+     * Clear robots method. This method clears the robots on the field.
      */
-    
     private void clearRobots() {
         
         // Loop through robot game objects
