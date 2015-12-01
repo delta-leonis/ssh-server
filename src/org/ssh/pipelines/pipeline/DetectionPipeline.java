@@ -7,7 +7,7 @@ import org.ssh.pipelines.packets.DetectionPacket;
  * Pipeline for {@link DetectionPacket DetectionPackets}
  * 
  * @author Jeroen de Jong
- *
+ *        
  */
 public class DetectionPipeline extends Pipeline<DetectionPacket> {
     

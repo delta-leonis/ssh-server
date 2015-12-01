@@ -10,7 +10,7 @@ import protobuf.Radio.RadioProtocolWrapper.Builder;
  *
  * @author Rimon Oz
  * @author Jeroen de Jong
- *         
+ * 
  * @see {@link org.ssh.managers.manager.Pipelines Pipelines}
  * @see {@link org.ssh.pipelines.PipelinePacket PipelinePackets}
  * @see {@link org.ssh.pipelines.packets.ProtoPacket ProtoPacket}

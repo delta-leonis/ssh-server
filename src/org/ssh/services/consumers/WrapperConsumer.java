@@ -11,7 +11,7 @@ import org.ssh.services.service.Consumer;
  * {@link GeometryPacket}, and puts them in their respective pipelines.
  * 
  * @author Jeroen de Jong
- *         
+ *        
  */
 public class WrapperConsumer extends Consumer<WrapperPacket> {
     

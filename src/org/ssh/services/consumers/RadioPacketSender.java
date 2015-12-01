@@ -17,17 +17,17 @@ import com.google.protobuf.Message;
 
 public class RadioPacketSender extends Consumer<RadioPacket> {
     
+    // respective logger
+    private static final Logger                    LOG         = Logger.getLogger();
     /**
      * Maps a {@link SenderInterface} to a {@link SendMethod} for easy management
      */
     private final Map<SendMethod, SenderInterface> senders     = new HashMap<SendMethod, SenderInterface>();
+                                                               
     /**
      * Current selected sendMethods. First to register will be automaticaly added
      */
     private final List<SendMethod>                 sendMethods = new ArrayList<SendMethod>();
-                                                               
-    // respective logger
-    private static final Logger                    LOG         = Logger.getLogger();
                                                                
     public RadioPacketSender() {
         super("RadioPacketSender");

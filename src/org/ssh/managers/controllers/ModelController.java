@@ -119,7 +119,7 @@ public class ModelController extends ManagerController<Model> {
      *            full name of a model
      * @return model with given name
      */
-    public<M extends Model> Optional<M> getByName(String fullname) {
+    public <M extends Model> Optional<M> getByName(String fullname) {
         return (Optional<M>) this.manageables.stream().filter(manageable -> manageable.getFullName().equals(fullname.trim()))
                 .findFirst();
     }

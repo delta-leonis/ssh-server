@@ -24,13 +24,17 @@ import com.google.common.util.concurrent.ListenableScheduledFuture;
  * A Producer generates packets of the type (or subtype of) {@link PipelinePacket}. It does this by
  * running single or scheduled tasks.
  *
- * @param <P>
+ * @param
+ *            <P>
  *            A PipelinePacket this Producer can work with.
  *
  * @author Rimon Oz
  */
 public abstract class Producer<P extends PipelinePacket<? extends Object>> extends Service<P> {
     
+    // a logger for good measure
+    private static final Logger     LOG = Logger.getLogger();
+                                        
     /** The work function which generates PipelinePackets. */
     private Callable<P>             workerLambda;
                                     
@@ -39,9 +43,6 @@ public abstract class Producer<P extends PipelinePacket<? extends Object>> exten
                                     
     /** The pipelines subscribed to this Producer . */
     private final List<Pipeline<P>> registeredPipelines;
-                                    
-    // a logger for good measure
-    private static final Logger     LOG = Logger.getLogger();
                                         
     /**
      * Instantiates a new Producer.

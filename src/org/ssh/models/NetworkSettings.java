@@ -7,22 +7,21 @@ import org.ssh.pipelines.packets.ProtoPacket;
  * ProtoPacket<?>}.
  * 
  * @author Jeroen de Jong
- *
+ *        
  */
 public class NetworkSettings extends Model {
-    
     /** IP to connect to */
     private String                                    IP;
     /** Port to connect to */
     private Integer                                   port;
     /** Preferred size of the buffer */
     private Integer                                   bufferSize;
-    /** Whether this connection should be closed or not  */
+    /** Whether this connection should be closed or not */
     private transient Boolean                         closed;
-                
+                                                      
     /** Type of {@link ProtoPacket ProtoPacket<?>} which these settings are for */
     private transient Class<? extends ProtoPacket<?>> packetType;
-                            
+                                                      
     /**
      * Create a new isntance of settings
      * 
@@ -36,16 +35,14 @@ public class NetworkSettings extends Model {
         this.closed = Boolean.FALSE;
     }
     
-    /**
-     * @return Whether this connection should be closed or not
-     */
-    public boolean isClosed() {
-        return closed;
+    /** Preferred size of the buffer */
+    public Integer getBufferSize() {
+        return this.bufferSize;
     }
     
-    @Override
-    public String getSuffix() {
-        return packetType.getSimpleName();
+    /** IP to connect to */
+    public String getIP() {
+        return this.IP;
     }
     
     /**
@@ -55,19 +52,21 @@ public class NetworkSettings extends Model {
         return packetType;
     }
     
-    /**  Port to connect to  */
+    /** Port to connect to */
     public Integer getPort() {
         return this.port;
     }
     
-    /** IP to connect to */
-    public String getIP() {
-        return this.IP;
+    @Override
+    public String getSuffix() {
+        return packetType.getSimpleName();
     }
     
-    /** Preferred size of the buffer */
-    public Integer getBufferSize() {
-        return this.bufferSize;
+    /**
+     * @return Whether this connection should be closed or not
+     */
+    public boolean isClosed() {
+        return closed;
     }
     
     /**
