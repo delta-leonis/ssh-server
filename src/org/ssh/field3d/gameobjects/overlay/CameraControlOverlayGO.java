@@ -239,7 +239,7 @@ public class CameraControlOverlayGO extends OverlayGO {
     private void hopCameraPositionQuarterRight() {
         // Set the x rotation of the camera 90 degrees higher
         this.getGame().getThirdPersonCamera()
-                .setRotateY((this.getGame().getThirdPersonCamera().getRotateY() + 90) % 360);
+                .setRotateY((this.getGame().getThirdPersonCamera().getRotateY() + 270) % 360);
     }
     
     /**
@@ -250,7 +250,7 @@ public class CameraControlOverlayGO extends OverlayGO {
     private void hopCameraPositionQuarterLeft() {
         // Set the x rotation of the camera 90 degrees lower
         this.getGame().getThirdPersonCamera()
-                .setRotateY((this.getGame().getThirdPersonCamera().getRotateY() + 270) % 360);
+                .setRotateY((this.getGame().getThirdPersonCamera().getRotateY() + 90) % 360);
     }
     
     /**

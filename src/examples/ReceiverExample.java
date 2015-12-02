@@ -9,7 +9,7 @@ import org.ssh.pipelines.packets.WrapperPacket;
 import org.ssh.pipelines.pipeline.DetectionPipeline;
 import org.ssh.pipelines.pipeline.GeometryPipeline;
 import org.ssh.pipelines.pipeline.WrapperPipeline;
-import org.ssh.services.consumers.GeometryConsumer;
+import org.ssh.services.consumers.GeometryModelConsumer;
 import org.ssh.services.consumers.ProtoConsumer;
 import org.ssh.services.consumers.WrapperConsumer;
 
@@ -31,7 +31,7 @@ public class ReceiverExample {
         // create splitter (from wrapper to (detection|geometry) )
         new WrapperConsumer();
         // create consumer to update Field model
-        new GeometryConsumer("consumer geometry").attachToCompatiblePipelines();
+        new GeometryModelConsumer("consumer geometry").attachToCompatiblePipelines();
 
         // verbose print both packets
         new ProtoConsumer("spuger", GeometryPacket.class).attachToCompatiblePipelines();
