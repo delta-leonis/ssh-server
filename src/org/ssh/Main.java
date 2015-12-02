@@ -54,12 +54,12 @@ public class Main extends Application {
     
     private void build(){
         // Allies (yellow) on the west side of the field
-        Models.create(Team.class, TeamColor.YELLOW).saveAsDefault();
+        Models.create(Team.class, TeamColor.YELLOW);
         // Opponents (blue) on the east side of the field
-        Models.create(Team.class, TeamColor.BLUE).saveAsDefault();
-        Models.create(Field.class);
+        Models.create(Team.class, TeamColor.BLUE);
         Models.create(Goal.class, Direction.EAST);
         Models.create(Goal.class, Direction.WEST);
+        Models.create(Field.class);
         
         new WrapperPipeline("Wrappahrs");
         // make a pipeline
@@ -73,6 +73,7 @@ public class Main extends Application {
         new WrapperConsumer().attachToCompatiblePipelines();
         new GeometryModelConsumer("oome geo").attachToCompatiblePipelines();
         new DetectionModelConsumer("oome decto").attachToCompatiblePipelines();
+
         Network.listenFor(WrapperPacket.class);
     }
     
@@ -85,9 +86,7 @@ public class Main extends Application {
     public void start(final Stage primaryStage) throws Exception {
 
         UI.start(primaryStage);
-        //Field3DGeometryProducer.createTestData();
-        
-    
+
         build();
         // Disable logger
         //LogManager.getLogManager().reset();

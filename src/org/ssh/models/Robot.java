@@ -1,6 +1,7 @@
 package org.ssh.models;
 
 import org.ssh.models.enums.TeamColor;
+import org.ssh.util.Alias;
 
 /**
  * Describes a Robot on the {@link Field} as a {@link FieldObject}

@@ -130,7 +130,10 @@ public class MainWindow extends UIController<StackPane> {
 	 * {@link Enroller} for the toolbox
 	 */
 	private Enroller toolboxEnroller;
-
+	
+	public FieldGame 
+    field = new FieldGame(new Group(), 500, 500, SceneAntialiasing.BALANCED);
+	
 	/**
 	 * Instantiates the main window.
 	 *
@@ -141,10 +144,11 @@ public class MainWindow extends UIController<StackPane> {
 	 */
 	public MainWindow(final String name, final Stage primaryStage) {
 		super(name, "main.fxml", primaryStage);
+
 		// If your screen has a lower resolution than this, you are too inferior
 		// to use the software
 		this.setMinimumDimensions(800, 730);
-
+		
 		// When one screen is connected the stage should be displayed
 		// on fullscreen, otherwise it should be maximized and set op top (when not
 		// set on top, the stage disappears on undesirable moments when using
@@ -156,9 +160,6 @@ public class MainWindow extends UIController<StackPane> {
 			primaryStage.setMaximized(true);
 		}
 
-
-		// Add the field
-		FieldGame field = new FieldGame(new Group(), 500, 500, SceneAntialiasing.BALANCED);
 		// Call the big initialise function that provides the complete field
 		field.internalInitialize();
 		// Add the field SubScene to the Group defined in the fxml
@@ -245,6 +246,10 @@ public class MainWindow extends UIController<StackPane> {
 			Platform.exit();
 			// Shut down program
 			System.exit(0);
+		});
+		Platform.runLater(() -> {
+		field.updateGeometry();
+		field.updateDetection();
 		});
 	}
 

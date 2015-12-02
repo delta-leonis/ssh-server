@@ -1,5 +1,7 @@
 package org.ssh.models;
 
+import org.ssh.util.Alias;
+
 import javafx.geometry.Point2D;
 
 /**
@@ -18,13 +20,13 @@ public abstract class FieldObject extends Model {
      * the origin in the center.
      */
     @Alias ("x")
-    protected float xPosition;
+    protected Float xPosition;
     /**
      * Y Position of this object on the {@link Field} in mm, according to the Cartesian system with
      * the origin in the center.
      */
     @Alias ("y")
-    protected float yPosition;
+    protected Float yPosition;
                     
     /**
      * Create a fieldObject

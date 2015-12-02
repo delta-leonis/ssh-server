@@ -53,7 +53,7 @@ public abstract class Service<P extends PipelinePacket<? extends Object>> extend
      * @return The Service itself.
      */
     @SuppressWarnings ("unchecked")
-    public <S extends Service<P>> S getAsService() {
+    public <S extends Service<?>> S getAsService() {
         return (S) this;
     }
     

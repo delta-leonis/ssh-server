@@ -71,7 +71,7 @@ public final class UI {
      * @return An Optional containing the window.
      */
     @SuppressWarnings ("unchecked")
-    public static <P extends Pane, U extends UIController<P>> Optional<U> get(final String name) {
+    public static <U extends UIController<? extends Pane>> Optional<U> get(final String name) {
         UI.LOG.fine("Getting a window named %s from the UI store", name);
         // get a stream of all the windows
         return UI.uiControllers.stream()

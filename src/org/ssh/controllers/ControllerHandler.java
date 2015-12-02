@@ -439,7 +439,7 @@ public class ControllerHandler extends Producer {
     private static final boolean getOrientation(final float goalAngle, final RadioProtocolCommand.Builder packet){
         float rotationSpeed = goalAngle;
         // TODO Get robot of the right team
-        final Optional<Model> oRobot = Models.get("robot B" + packet.getRobotId());
+        final Optional<Robot> oRobot = Models.<Robot>get("robot B" + packet.getRobotId());
         // If the robot isn't present
         if (!oRobot.isPresent()){
             // Give a warning (It'll get send anyway)
@@ -448,7 +448,7 @@ public class ControllerHandler extends Producer {
         // If it is present, however
         else {
             // Goal angle - currentAngle = angle we still have to turn
-            rotationSpeed = rotationSpeed - ((Robot) oRobot.get()).getRobotOrientation();
+            rotationSpeed = rotationSpeed - oRobot.get().getOrientation();
         }
 
         if(settings != null)

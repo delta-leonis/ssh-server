@@ -22,7 +22,7 @@ public class ModelExample  {
         // Start the Models controller
         Models.start();
 
-        Models.<Settings> getT("settings").ifPresent(set -> set.getUserProfilePath());
+        Models.<Settings> get("settings").ifPresent(set -> set.getUserProfilePath());
         
         Optional<Model> oSettings = Models.get("settings");
         Settings settings = (Settings) oSettings.get();

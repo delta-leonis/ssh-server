@@ -195,7 +195,7 @@ public abstract class Producer<P extends PipelinePacket<? extends Object>> exten
      * @see org.ssh.services.Service#start()
      */
     @Override
-    public <S extends Service<P>> S start() {
+    public <S extends Service<?>> S start() {
         super.start();
         // check the type of the Producer and start the correct production
         if (this.producerType.equals(ProducerType.SINGLE)) {

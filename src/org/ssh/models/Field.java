@@ -98,4 +98,11 @@ public class Field extends Model {
     public int getFieldWidth() {
         return this.field.getFieldWidth();
     }
+    
+    /**
+     * @return Protobuf object containing latest information about field/goals.
+     */
+    public GeometryFieldSize getField(){
+        return field;
+    }
 }

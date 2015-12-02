@@ -1,24 +1,76 @@
 package org.ssh.services.consumers;
 
+import org.ssh.field3d.FieldGame;
 import org.ssh.managers.manager.Models;
+import org.ssh.managers.manager.UI;
 import org.ssh.models.Field;
+import org.ssh.models.Goal;
+import org.ssh.models.enums.Direction;
 import org.ssh.pipelines.packets.GeometryPacket;
 import org.ssh.services.service.Consumer;
+import org.ssh.ui.windows.MainWindow;
 
+import protobuf.Geometry.GeometryFieldSize;
 
+/**
+ * Class that consumes the parsed {@link GeometryPacket}s and updates the {@link Field} and all
+ * {@link Goal}s. Also calls {@link FieldGame#updateGeometry()}
+ * 
+ * @author Jeroen de Jong
+ *        
+ */
 public class GeometryModelConsumer extends Consumer<GeometryPacket> {
-
+    
+    /** Reference to FieldGame in GUI, used for updating */
+    private FieldGame fieldGame;
+    
+    /**
+     * creates a new modelconsumer for {@link GeometryPacket}s.
+     * 
+     * @param name
+     *            name of this consumer
+     */
     public GeometryModelConsumer(String name) {
+        
         super(name);
+        
+        // Getting reference to the main window
+        MainWindow mainWindow = UI.<MainWindow> get("main").get();
+        
+        // Setting the field game
+        this.fieldGame = mainWindow.field;
     }
-
+    
     @Override
     public boolean consume(GeometryPacket pipelinePacket) {
+        
         Models.<Field> get("field").ifPresent(field -> {
-            field.update("field", pipelinePacket.read().getField());
-            Consumer.LOG.info("Updated field with geometrydata.");
-            });
+            // read received data
+            GeometryFieldSize fieldData = pipelinePacket.read().getField();
+            
+            // Check if there is new data
+            if (!field.getField().equals(fieldData)) {
+                // Update field
+                field.update("field", fieldData);
+                
+                field.getFieldGoals().forEach(goal -> {
+                    // get position modifier (+1 or -1 according to field position
+                    int modifier = goal.getSide().equals(Direction.EAST) ? 1 : -1;
+                    
+                    // update goal
+                    goal.update("x",
+                            Float.valueOf((field.getFieldLength() + fieldData.getGoalDepth()) / 2 * modifier),
+                            "goalDepth",
+                            fieldData.getGoalDepth(),
+                            "goalWidth",
+                            fieldData.getGoalWidth());
+                });
+                
+                // Update geometry
+                fieldGame.updateGeometry();
+            }
+        });
         return true;
     }
-
+    
 }

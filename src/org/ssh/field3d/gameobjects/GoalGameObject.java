@@ -52,17 +52,22 @@ public class GoalGameObject extends GameObject {
         
         // Creating group for the goal elements
         this.goalGroup = new Group();
+        
+        if (goalVisionModel == null)
+            return;
+        
         // Creating a PhongMaterial for the goal
         this.goalMaterial = new PhongMaterial();
-        
+
         // Setting goal vision model
         this.goalVisionModel = goalVisionModel;
+        
         // Setting rotation axis
         this.goalGroup.setRotationAxis(Rotate.Y_AXIS);
         
         // Create goal
         createGoal(this.goalVisionModel.getGoalWidth(),
-                this.goalVisionModel.getGoalHeight(),
+                Goal.GOAL_HEIGHT,
                 this.goalVisionModel.getGoalDepth(),
                 this.goalMaterial);
                 
@@ -142,10 +147,7 @@ public class GoalGameObject extends GameObject {
      * {@inheritDoc}
      */
     @Override
-    public void onUpdate(long timeDivNano) {
-        
-        // Update team color
-        updateTeamColor();
+    public void onUpdate(long timeDivNano) {      
     }
     
     /**
@@ -153,6 +155,12 @@ public class GoalGameObject extends GameObject {
      */
     @Override
     public void onUpdateGeometry() {
+        // Update team color 
+        updateTeamColor();
+
+        // Translate goal
+        this.goalGroup.setTranslateX(this.goalVisionModel.getPosition().getX());
+        this.goalGroup.setTranslateZ(this.goalVisionModel.getPosition().getY());
     }
     
     /**
@@ -190,6 +198,7 @@ public class GoalGameObject extends GameObject {
         Box backBox = new Box();
         Box rightBox = new Box();
         
+    
         // Clear group
         this.goalGroup.getChildren().clear();
         
@@ -223,7 +232,7 @@ public class GoalGameObject extends GameObject {
         // Setting material of the boxes
         leftBox.setMaterial(material);
         rightBox.setMaterial(material);
-        backBox.setMaterial(material);
+        backBox.setMaterial(material); 
         
         // Adding boxes to the group of the goal
         this.goalGroup.getChildren().add(leftBox);
@@ -245,7 +254,6 @@ public class GoalGameObject extends GameObject {
             
             // Check if the direction of the team matches the side of the goal vision model
             if (team.getDirection() == goalVisionModel.getSide()) {
-                
                 // Setting color
                 goalMaterial.setDiffuseColor(team.getTeamColor().toColor());
 
