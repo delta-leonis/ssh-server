@@ -23,46 +23,46 @@
 
 	<columnConstraints>
 		<ColumnConstraints fillWidth="true" />
-		<ColumnConstraints prefWidth="24.0" minWidth="24.0"
-			maxWidth="24.0" />
-		<ColumnConstraints prefWidth="32.0" minWidth="32.0"
-			maxWidth="32.0" />
-		<ColumnConstraints prefWidth="64.0" minWidth="64.0"
-			maxWidth="64.0" />
-		<ColumnConstraints prefWidth="32.0" minWidth="32.0"
-			maxWidth="32.0" />
-		<ColumnConstraints prefWidth="24.0" minWidth="24.0"
-			maxWidth="24.0" />
+		<ColumnConstraints prefWidth="28.0" minWidth="28.0"
+			maxWidth="28.0" />
+		<ColumnConstraints prefWidth="36.0" minWidth="36.0"
+			maxWidth="36.0" />
+		<ColumnConstraints prefWidth="68.0" minWidth="68.0"
+			maxWidth="68.0" />
+		<ColumnConstraints prefWidth="36.0" minWidth="36.0"
+			maxWidth="36.0" />
+		<ColumnConstraints prefWidth="28.0" minWidth="28.0"
+			maxWidth="28.0" />
 		<ColumnConstraints prefWidth="20.0" minWidth="20.0"
 			maxWidth="20.0" />
 	</columnConstraints>
 	<rowConstraints>
 		<RowConstraints prefHeight="20.0" minHeight="20.0"
 			maxHeight="20.0" />
-		<RowConstraints prefHeight="24.0" minHeight="24.0"
-			maxHeight="24.0" />
-		<RowConstraints prefHeight="64.0" minHeight="64.0"
-			maxHeight="64.0" />
-		<RowConstraints prefHeight="24.0" minHeight="24.0"
-			maxHeight="24.0" />
-		<RowConstraints prefHeight="35.0" minHeight="35.0"
-			maxHeight="35.0" />
-		<RowConstraints prefHeight="50.0" minHeight="50.0"
-			maxHeight="50.0" />
+		<RowConstraints prefHeight="28.0" minHeight="28.0"
+			maxHeight="28.0" />
+		<RowConstraints prefHeight="68.0" minHeight="68.0"
+			maxHeight="68.0" />
+		<RowConstraints prefHeight="28.0" minHeight="28.0"
+			maxHeight="28.0" />
+		<RowConstraints prefHeight="39.0" minHeight="39.0"
+			maxHeight="39.0" />
+		<RowConstraints prefHeight="54.0" minHeight="54.0"
+			maxHeight="54.0" />
 		<RowConstraints fillHeight="true" />
 	</rowConstraints>
 
 	<children>
 		<Pane id="topButtonsSpacer" maxHeight="${maxValue}" pickOnBounds="false" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
 		</Pane>
-		<Button id="cameraup" GridPane.columnIndex="3"
+		<Button id="navigationbutton" GridPane.columnIndex="3"
 			GridPane.rowIndex="1" maxHeight="${maxValue}" maxWidth="${maxValue}"
 			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onMousePressed="#onButtonRotateUpPressed"
 			onMouseReleased="#onButtonRotateUpReleased">
 			<graphic>
-				<ImageView rotate="270.0">
+				<ImageView>
 					<image>
-						<Image url="@../../icon/navigationarrowleft.png" />
+						<Image url="@../../icon/navigationarrowtop.png" />
 					</image>
 				</ImageView>
 			</graphic>
@@ -71,14 +71,14 @@
      		</padding>
 		</Button>
 
-		<Button id="cameradown" GridPane.columnIndex="3"
+		<Button id="navigationbutton" GridPane.columnIndex="3"
 			GridPane.rowIndex="3" maxHeight="${maxValue}" maxWidth="${maxValue}"
 			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onMousePressed="#onButtonRotateDownPressed"
 			onMouseReleased="#onButtonRotateDownReleased">
 			<graphic>
-				<ImageView rotate="90">
+				<ImageView rotate="180">
 					<image>
-						<Image url="@../../icon/navigationarrowleft.png" />
+						<Image url="@../../icon/navigationarrowtop.png" />
 					</image>
 				</ImageView>
 			</graphic>
@@ -87,7 +87,7 @@
      		</padding>
 		</Button>
 
-		<Button id="cameraleft" GridPane.columnIndex="2"
+		<Button id="navigationbutton" GridPane.columnIndex="2"
 			GridPane.rowIndex="2" maxHeight="${maxValue}" maxWidth="${maxValue}"
 			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onMousePressed="#onButtonRotateLeftPressed"
 			onMouseReleased="#onButtonRotateLeftReleased">
@@ -103,7 +103,7 @@
      		</padding>
 		</Button>
 
-		<Button id="cameraright" GridPane.columnIndex="4"
+		<Button id="navigationbutton" GridPane.columnIndex="4"
 			GridPane.rowIndex="2" maxHeight="${maxValue}" maxWidth="${maxValue}"
 			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onMousePressed="#onButtonRotateRightPressed"
 			onMouseReleased="#onButtonRotateRightReleased">
@@ -119,9 +119,10 @@
      		</padding>
 		</Button>
 
-		<Button id="camerahopleft" GridPane.columnIndex="1"
+		<Button id="navigationbutton" GridPane.columnIndex="1"
 			GridPane.rowIndex="2" maxHeight="${maxValue}" maxWidth="${maxValue}"
-			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
+			onAction="#hopCameraPositionQuarterRight">
 			<graphic>
 				<ImageView rotate="180">
 					<image>
@@ -134,9 +135,10 @@
      		</padding>
 		</Button>
 
-		<Button id="camerahopright" GridPane.columnIndex="5"
+		<Button id="navigationbutton" GridPane.columnIndex="5"
 			GridPane.rowIndex="2" maxHeight="${maxValue}" maxWidth="${maxValue}"
-			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
+			onAction="#hopCameraPositionQuarterLeft">>
 			<graphic>
 				<ImageView>
 					<image>
@@ -149,7 +151,7 @@
      		</padding>
 		</Button>
 
-		<Button id="sideview" GridPane.columnIndex="3"
+		<Button id="navigationbutton" GridPane.columnIndex="3"
 			GridPane.rowIndex="4" maxHeight="${maxValue}" maxWidth="${maxValue}"
 			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onAction="#onButton45DegViewAction">
 			<graphic>
@@ -164,7 +166,7 @@
      		</padding>
 		</Button>
 
-		<Button id="topview" GridPane.columnIndex="3"
+		<Button id="navigationbutton" GridPane.columnIndex="3"
 			GridPane.rowIndex="5" maxHeight="${maxValue}" maxWidth="${maxValue}"
 			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onAction="#onButtonTopViewAction">
 			<graphic>
@@ -182,17 +184,17 @@
 		<GridPane id="world" GridPane.columnIndex="3"
 			GridPane.rowIndex="2">
 			<columnConstraints>
-				<ColumnConstraints prefWidth="64.0" minWidth="64.0"
-					maxWidth="64.0" />
+				<ColumnConstraints prefWidth="68.0" minWidth="68.0"
+					maxWidth="68.0" />
 			</columnConstraints>
 			<rowConstraints>
-				<RowConstraints prefHeight="32.0" minHeight="32.0"
-					maxHeight="32.0" />
-				<RowConstraints prefHeight="32.0" minHeight="32.0"
-					maxHeight="32.0" />
+				<RowConstraints prefHeight="34.0" minHeight="34.0"
+					maxHeight="34.0" />
+				<RowConstraints prefHeight="32.0" minHeight="34.0"
+					maxHeight="34.0" />
 			</rowConstraints>
 			<children>
-				<Button id="zoomin" GridPane.columnIndex="0"
+				<Button id="navigationbutton" GridPane.columnIndex="0"
 					GridPane.rowIndex="0" maxHeight="${maxValue}" maxWidth="${maxValue}"
 					GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onMousePressed="#onButtonZoomInPressed"
 					onMouseReleased="#onButtonZoomInReleased">
@@ -207,7 +209,7 @@
         			<Insets bottom="0.0" left="0.0" right ="0.0" top="0.0"/>
      				</padding>
 				</Button>
-				<Button id="zoomout" GridPane.columnIndex="0"
+				<Button id="navigationbutton" GridPane.columnIndex="0"
 					GridPane.rowIndex="1" maxHeight="${maxValue}" maxWidth="${maxValue}"
 					GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onMousePressed="#onButtonZoomOutPressed"
 					onMouseReleased="#onButtonZoomOutReleased">

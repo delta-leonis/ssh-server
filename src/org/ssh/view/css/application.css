@@ -98,3 +98,7 @@
 #loggerconsole {
 	-fx-background-color: #838383;
 }
+
+#navigationbutton {
+	-fx-background-color: rgba(0, 0, 0, 0.0);
+}

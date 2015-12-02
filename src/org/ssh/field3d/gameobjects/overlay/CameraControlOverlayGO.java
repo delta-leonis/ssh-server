@@ -56,9 +56,10 @@ public class CameraControlOverlayGO extends OverlayGO {
                                 
     /** The button zoom out pressing. */
     private boolean             buttonZoomOutPressing;
-                              
+                                
     @FXML
-    private GridPane rootPane;
+    private GridPane            rootPane;
+                                
     /**
      * Constructor.
      *
@@ -228,6 +229,28 @@ public class CameraControlOverlayGO extends OverlayGO {
         // Setting rotations
         this.getGame().getThirdPersonCamera().setRotateY(0);
         this.getGame().getThirdPersonCamera().setRotateX(45);
+    }
+    
+    /**
+     * Changes the sight a quarter (90 degrees) to the right.
+     * 
+     */
+    @FXML
+    private void hopCameraPositionQuarterRight() {
+        // Set the x rotation of the camera 90 degrees higher
+        this.getGame().getThirdPersonCamera()
+                .setRotateY((this.getGame().getThirdPersonCamera().getRotateY() + 90) % 360);
+    }
+    
+    /**
+     * Changes the sight a quarter (90 degrees) to the left.
+     * 
+     */
+    @FXML
+    private void hopCameraPositionQuarterLeft() {
+        // Set the x rotation of the camera 90 degrees lower
+        this.getGame().getThirdPersonCamera()
+                .setRotateY((this.getGame().getThirdPersonCamera().getRotateY() + 270) % 360);
     }
     
     /**
