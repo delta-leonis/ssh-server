@@ -247,11 +247,10 @@ public class FieldGame extends Game {
     /**
      * createRobots method. This method creates the robots on the field.
      */
-    @SuppressWarnings ("unchecked")
     private void createRobots() {
         
         // Getting list of robots from the vision model
-        this.robotsVisionModel = (ArrayList<Robot>) Models.getAll("robot");
+        this.robotsVisionModel = Models.<Robot>getAll("robot");
         
         // Loop through robot models
         for (Robot robot : this.robotsVisionModel) {

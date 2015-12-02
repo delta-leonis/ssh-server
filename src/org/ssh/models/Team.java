@@ -53,15 +53,19 @@ public class Team extends Model {
      * @param teamcolor
      *            the color of the {@link Robot robots} that this team controls.
      */
-    public Team(final Direction direction, final TeamColor teamColor) {
+    public Team(final TeamColor teamColor) {
         super("team");
-        this.direction = direction;
         this.teamColor = teamColor;
     }
     
     @Override
     public String getSuffix() {
         return String.format("%s %s", direction.name(), teamColor.name());
+    }
+    
+    @Override
+    public String getConfigName(){
+        return String.format("%s %s.json", this.getClass().getSimpleName(), teamColor.name()).replace(" ", "_");
     }
     
     /**
@@ -146,42 +150,6 @@ public class Team extends Model {
      */
     public List<Long> getYellowCards() {
         return this.yellowCards;
-    }
-    
-    /**
-     * sets a goalie id for this team
-     * 
-     * @param goalieId
-     */
-    public void setGoalieId(final int goalieId) {
-        this.goalieId = goalieId;
-    }
-    
-    /**
-     * sets a new teamname as provided by the refbox
-     * 
-     * @param teamName
-     */
-    public void setTeamName(final String teamName) {
-        this.teamName = teamName;
-    }
-    
-    /**
-     * sets time left for timeouts for this team
-     * 
-     * @param timeoutLeft
-     */
-    public void setTimeoutLeft(final int timeoutLeft) {
-        this.timeoutLeft = timeoutLeft;
-    }
-    
-    /**
-     * sets number of timeouts
-     * 
-     * @param timeouts
-     */
-    public void setTimeouts(final int timeouts) {
-        this.timeouts = timeouts;
     }
     
     /**

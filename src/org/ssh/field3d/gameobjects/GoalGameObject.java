@@ -235,11 +235,10 @@ public class GoalGameObject extends GameObject {
      * Update team color method. This method updates the team color of the goal (according to the
      * vision model).
      */
-    @SuppressWarnings ("unchecked")
     private void updateTeamColor() {
         
         // Getting list of teams
-        this.teams = (List<Team>) Models.getAll("team");
+        this.teams = Models.<Team>getAll("team");
         
         // Loop through teams
         for (Team team : teams) {

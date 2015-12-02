@@ -1,12 +1,6 @@
 package org.ssh;
 
-import java.io.IOException;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 import org.ssh.managers.manager.Models;
 import org.ssh.managers.manager.Network;
@@ -21,7 +15,6 @@ import org.ssh.models.enums.SendMethod;
 import org.ssh.models.enums.TeamColor;
 import org.ssh.pipelines.packets.WrapperPacket;
 import org.ssh.pipelines.pipeline.DetectionPipeline;
-import org.ssh.pipelines.pipeline.Field3DDetectionPipeline;
 import org.ssh.pipelines.pipeline.GeometryPipeline;
 import org.ssh.pipelines.pipeline.RadioPipeline;
 import org.ssh.pipelines.pipeline.WrapperPipeline;
@@ -29,7 +22,6 @@ import org.ssh.senders.DebugSender;
 import org.ssh.services.consumers.DetectionModelConsumer;
 import org.ssh.services.consumers.GeometryModelConsumer;
 import org.ssh.services.consumers.WrapperConsumer;
-import org.ssh.services.producers.Field3DGeometryProducer;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -61,11 +53,10 @@ public class Main extends Application {
     }
     
     private void build(){
-        // @TODO create teams ofzeu
         // Allies (yellow) on the west side of the field
-        Models.create(Team.class, Direction.WEST, TeamColor.YELLOW);
+        Models.create(Team.class, TeamColor.YELLOW).saveAsDefault();
         // Opponents (blue) on the east side of the field
-        Models.create(Team.class, Direction.EAST, TeamColor.BLUE);
+        Models.create(Team.class, TeamColor.BLUE).saveAsDefault();
         Models.create(Field.class);
         Models.create(Goal.class, Direction.EAST);
         Models.create(Goal.class, Direction.WEST);
