@@ -1,21 +1,35 @@
 package org.ssh;
 
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import org.ssh.managers.manager.Models;
 import org.ssh.managers.manager.Network;
 import org.ssh.managers.manager.Pipelines;
 import org.ssh.managers.manager.Services;
 import org.ssh.managers.manager.UI;
+import org.ssh.models.Field;
+import org.ssh.models.Goal;
+import org.ssh.models.Team;
+import org.ssh.models.enums.Direction;
 import org.ssh.models.enums.SendMethod;
+import org.ssh.models.enums.TeamColor;
 import org.ssh.pipelines.packets.WrapperPacket;
 import org.ssh.pipelines.pipeline.DetectionPipeline;
+import org.ssh.pipelines.pipeline.Field3DDetectionPipeline;
 import org.ssh.pipelines.pipeline.GeometryPipeline;
+import org.ssh.pipelines.pipeline.RadioPipeline;
 import org.ssh.pipelines.pipeline.WrapperPipeline;
 import org.ssh.senders.DebugSender;
 import org.ssh.services.consumers.DetectionModelConsumer;
 import org.ssh.services.consumers.GeometryModelConsumer;
 import org.ssh.services.consumers.WrapperConsumer;
+import org.ssh.services.producers.Field3DGeometryProducer;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -33,6 +47,7 @@ public class Main extends Application {
      *            Command line arguments
      */
     static public void main(final String[] arg) {
+        
         // start the managers
         Services.start();
         Models.start();
@@ -42,7 +57,32 @@ public class Main extends Application {
         
         /** java fx start **/
         Application.launch(arg);
+
+    }
+    
+    private void build(){
+        // @TODO create teams ofzeu
+        // Allies (yellow) on the west side of the field
+        Models.create(Team.class, Direction.WEST, TeamColor.YELLOW);
+        // Opponents (blue) on the east side of the field
+        Models.create(Team.class, Direction.EAST, TeamColor.BLUE);
+        Models.create(Field.class);
+        Models.create(Goal.class, Direction.EAST);
+        Models.create(Goal.class, Direction.WEST);
         
+        new WrapperPipeline("Wrappahrs");
+        // make a pipeline
+        new GeometryPipeline("fieldbuilder");
+        // Create new detection pipeline
+        new DetectionPipeline("detection");
+        // make another pipeline
+        new RadioPipeline("controller");
+        
+        // make splitter from wrapper -> geometry / detection
+        new WrapperConsumer().attachToCompatiblePipelines();
+        new GeometryModelConsumer("oome geo").attachToCompatiblePipelines();
+        new DetectionModelConsumer("oome decto").attachToCompatiblePipelines();
+        Network.listenFor(WrapperPacket.class);
     }
     
     /*
@@ -52,33 +92,17 @@ public class Main extends Application {
      */
     @Override
     public void start(final Stage primaryStage) throws Exception {
-        
+
         UI.start(primaryStage);
+        //Field3DGeometryProducer.createTestData();
         
-     	// @TODO create teams ofzeu
-        // Allies (yellow) on the west side of the field
-        @SuppressWarnings ("unused")
-        Team teamAllies = (Team) Models.create(Team.class, Direction.WEST, TeamColor.YELLOW);
-        // Opponents (blue) on the east side of the field
-        @SuppressWarnings ("unused")
-        Team teamOpponents = (Team) Models.create(Team.class, Direction.EAST, TeamColor.BLUE);
-     
+    
+        build();
+        // Disable logger
+        //LogManager.getLogManager().reset();
         
         /********************************/
         /* Below is just for testing!!! */
         /********************************/
-        
-        // make a pipeline
-        final GeometryPipeline mainPipeline = new GeometryPipeline("fieldbuilder");
-        // make another pipeline
-        final RadioPipeline radioPipeline   = new RadioPipeline("controller");
-        // Make a detection pipeline
-        final Field3DDetectionPipeline detectionPipeline = new Field3DDetectionPipeline("detection");
-        
-        // make splitter from wrapper -> geometry / detection
-        new WrapperConsumer().attachToCompatiblePipelines();
-        new GeometryModelConsumer("oome geo").attachToCompatiblePipelines();
-        new DetectionModelConsumer("oome decto").attachToCompatiblePipelines();
-        Network.listenFor(WrapperPacket.class);
     }
 }

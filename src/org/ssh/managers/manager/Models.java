@@ -87,8 +87,8 @@ public final class Models implements Manager<Model>{
      *            The (fuzzy) name of the model you want to find.
      * @return The requested models.
      */
-    public static List<?> getAll(final String modelName) {
-        return Models.modelController.getAll(modelName);
+    public static <M extends Model> List<M> getAll(final String modelName) {
+        return (List<M>) Models.modelController.getAll(modelName);
     }
     
     /**

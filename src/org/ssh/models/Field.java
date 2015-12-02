@@ -3,6 +3,8 @@ package org.ssh.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ssh.managers.manager.Models;
+
 import protobuf.Geometry.FieldCicularArc;
 import protobuf.Geometry.FieldLineSegment;
 import protobuf.Geometry.GeometryFieldSize;
@@ -19,17 +21,12 @@ public class Field extends Model {
      * Field object from protobuf packet
      */
     private GeometryFieldSize field;
-    /**
-     * All the goals on this field
-     */
-    private List<Goal>        goals;
                               
     /**
      * Instantiates a field.
      */
     public Field() {
         super("field");
-        this.goals = new ArrayList<Goal>();
     }
     
     @Override
@@ -92,7 +89,7 @@ public class Field extends Model {
      * @return The {@link List} of the goals on the field.
      */
     public List<Goal> getFieldGoals() {
-        return this.goals;
+        return Models.<Goal> getAll("goal");
     }
     
     /**

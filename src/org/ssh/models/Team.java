@@ -18,7 +18,6 @@ import org.ssh.models.enums.TeamColor;
  * @see World
  *      
  */
-@SuppressWarnings ("serial")
 public class Team extends Model {
     
     /**
