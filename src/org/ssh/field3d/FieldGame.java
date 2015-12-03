@@ -121,6 +121,9 @@ public class FieldGame extends Game {
         this.getWorldGroup().getChildren().add(this.pointLightWestNorth);
         this.getWorldGroup().getChildren().add(this.pointLightEastSouth);
         this.getWorldGroup().getChildren().add(this.pointLightEastNorth);
+        
+        updateGeometry();
+        updateDetection();
     }
     
     /**

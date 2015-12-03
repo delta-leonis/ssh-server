@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.ssh.controllers.ControllerLayout;
-import org.ssh.controllers.ControllerLayoutDeserializer;
 import org.ssh.controllers.ControllerLayoutSerializer;
 import org.ssh.managers.Manageable;
 import org.ssh.managers.ManagerController;
@@ -37,6 +36,7 @@ import com.google.gson.stream.JsonReader;
  * {@link #create(Class, Object...)}) to create instances for {@link Model Models} that will
  * register to the {@link ModelController}.
  *
+import org.ssh.controllers.ControllerLayoutDeserializer;
  * @TODO replace {@link Reflect} with {@link Reflection} in {@link #readConfig(Path, Class)}
  *       
  * @author Jeroen de Jong
@@ -71,7 +71,7 @@ public class ModelController extends ManagerController<Model> {
             cArgs = new Class[args.length];
             for (int i = 0; i < args.length; i++)
                 cArgs[i] = args[i].getClass();
-                
+            
             // call constructor and cast instance
             M model = (M) clazz.getDeclaredConstructor(cArgs).newInstance(args);
             LOG.info("created %s", clazz);
@@ -130,7 +130,7 @@ public class ModelController extends ManagerController<Model> {
     public ModelController() {
         gson = new GsonBuilder()
                 .registerTypeAdapter(ControllerLayout.class, new ControllerLayoutSerializer())
-                .registerTypeAdapter(ControllerLayout.class, new ControllerLayoutDeserializer())
+
                 .setPrettyPrinting()
                 .create();
     }

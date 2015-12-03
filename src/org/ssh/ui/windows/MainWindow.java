@@ -247,10 +247,6 @@ public class MainWindow extends UIController<StackPane> {
 			// Shut down program
 			System.exit(0);
 		});
-		Platform.runLater(() -> {
-		field.updateGeometry();
-		field.updateDetection();
-		});
 	}
 
 	/**

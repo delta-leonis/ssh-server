@@ -17,7 +17,7 @@ public class FlatArc3D {
     private static final float[] TEXTURE_COORDS    = { 1, 1, 1, 0, 0, 1, 0, 0 };
                                                    
     /** The conversion to radians */
-    private static final double  CONVERT_TO_RAD    = Math.PI / 180.0;
+    //private static final double  CONVERT_TO_RAD    = Math.PI / 180.0;
                                                    
     /** The values per coordinate. */
     private static final int     VALUES_PER_COORD  = 3;
@@ -141,10 +141,10 @@ public class FlatArc3D {
     /**
      * Calculate vertices.
      *
-     * @param startAngle
-     *            The starting angle of the arc.
-     * @param endAngle
-     *            The ending angle of the arc.
+     * @param startRad
+     *            The starting angle of the arc in radians.
+     * @param endRad
+     *            The ending angle of the arc in radians.
      * @param diameter
      *            The diameter of the arc.
      * @param thickness
@@ -153,18 +153,18 @@ public class FlatArc3D {
      *            The number of divisions in the arc.
      * @return Returns an array with the vertices.
      */
-    private float[] calculateVertices(final double startAngle,
-            final double endAngle,
+    private float[] calculateVertices(final double startRad,
+            final double endRad,
             final double diameter,
             final double thickness,
             int numDivisions) {
             
         // Calculating total angle of the arc
-        final double totalAngle = endAngle - startAngle;
+        final double totalAngleRad = endRad - startRad;
         // Calculating angle per step
-        final double anglePerStep = totalAngle / numDivisions;
+        final double anglePerStepRad = totalAngleRad / numDivisions;
         // Setting current angle
-        double curAngle = startAngle;
+        double curAngleRad = startRad;
         
         // Increase number of divisions to add the last edge.
         numDivisions++;
@@ -173,11 +173,7 @@ public class FlatArc3D {
         final double halfOfThickness = thickness / 2.0;
         // Calculating radius
         final double radius = diameter / 2.0;
-        
-        // Calculating angle per step in RAD
-        final double anglePerStepRad = anglePerStep * CONVERT_TO_RAD;
-        // Calculating current angle in RAD
-        double curAngleRad = curAngle * CONVERT_TO_RAD;
+       
         
         // Calculating amount of vertices to generate
         final int amountOfVertices = numDivisions * VERTICES_PER_EDGE;

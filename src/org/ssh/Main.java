@@ -46,13 +46,15 @@ public class Main extends Application {
         Pipelines.start();
         Network.start();
         Network.register(SendMethod.DEBUG, new DebugSender(Level.INFO));
+
+        build();
         
         /** java fx start **/
         Application.launch(arg);
 
     }
     
-    private void build(){
+    private static void build(){
         // Allies (yellow) on the west side of the field
         Models.create(Team.class, TeamColor.YELLOW);
         // Opponents (blue) on the east side of the field
@@ -87,7 +89,6 @@ public class Main extends Application {
 
         UI.start(primaryStage);
 
-        build();
         // Disable logger
         //LogManager.getLogManager().reset();
         

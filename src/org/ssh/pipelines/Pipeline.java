@@ -78,7 +78,7 @@ public abstract class Pipeline<P extends PipelinePacket<? extends Object>> exten
     public <S extends Pipeline<P>> S addPacket(final P pipelinePacket) {
         // add the packet
         this.queue.add(pipelinePacket);
-        Pipeline.LOG.info("Packet of type %s added to pipeline %s ...",
+        Pipeline.LOG.fine("Packet of type %s added to pipeline %s ...",
                 pipelinePacket.getClass().toString(),
                 this.getName());
                 
@@ -125,7 +125,7 @@ public abstract class Pipeline<P extends PipelinePacket<? extends Object>> exten
                 // the composition itself
                 (packet, coupler) -> coupler.process(packet));
                 
-        Pipeline.LOG.info("Packet pushed through all %d couplers, now mapping to %d consumers on pipeline %s",
+        Pipeline.LOG.fine("Packet pushed through all %d couplers, now mapping to %d consumers on pipeline %s",
                 couplers.size(),
                 consumers.size(),
                 this.getName());
@@ -142,7 +142,7 @@ public abstract class Pipeline<P extends PipelinePacket<? extends Object>> exten
      * @param <C>
      *            The generic type of Consumer supplied by the user.
      * @param <S>
-     *            The generic type of Pipeline requested by the user.
+     *            The generic tyinfope of Pipeline requested by the user.
      * @param consumer
      *            The Consumer to be registered with the Pipeline.
      * @return The Pipeline itself.

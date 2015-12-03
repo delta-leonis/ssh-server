@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -81,6 +83,13 @@ public abstract class ManagerController<M extends Manageable> {
                     .add((M)manageable).build();
             return true;
         }
+    }
+    
+    public <N extends Manageable> N remove(final N manageable){
+        if(!this.manageables.contains(manageable))
+            return null;
+        manageables = ImmutableList.copyOf(Collections2.filter(manageables, Predicates.not(Predicates.equalTo(manageable))));
+        return manageable;
     }
     
     /**

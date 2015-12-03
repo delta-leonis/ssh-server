@@ -1,6 +1,5 @@
 package org.ssh.services.consumers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -11,7 +10,6 @@ import org.ssh.models.Robot;
 import org.ssh.models.enums.TeamColor;
 import org.ssh.pipelines.packets.DetectionPacket;
 import org.ssh.services.service.Consumer;
-import org.ssh.ui.UIController;
 import org.ssh.ui.windows.MainWindow;
 
 import protobuf.Detection.DetectionFrame;
@@ -27,8 +25,8 @@ public class DetectionModelConsumer extends Consumer<DetectionPacket> {
     
     /** Reference to FieldGame in GUI, used for updating */
     private FieldGame     fieldGame;
-    /** List of all ID's that were updated last time */
-    private List<Integer> lastRobotIDs;
+    /** whether the robot-list has changed, and the 3Dfield should be updated */
+    private boolean shouldUpdate;
                           
     /**
      * Create a new consumer for {@link DetectionPacket}s.
@@ -38,49 +36,60 @@ public class DetectionModelConsumer extends Consumer<DetectionPacket> {
      */
     public DetectionModelConsumer(String name) {
         super(name);
-        
-        // Getting reference to the main window
-        MainWindow mainWindow = UI.<MainWindow>get("main").get();
-        
-        // Setting the field game
-        this.fieldGame = mainWindow.field;
-        
-        // Instantiate the arraylist
-        lastRobotIDs = new ArrayList<Integer>();
     }
     
     @Override
     public boolean consume(DetectionPacket pipelinePacket) {
+        if(fieldGame == null)
+            // Getting reference to the main window
+            UI.<MainWindow> get("main").ifPresent(main -> 
+                fieldGame = main.field);
+        
         // read the packet
         DetectionFrame frame = pipelinePacket.read();
         // create a reference for the yellow team
         List<DetectionRobot> yellowTeam = frame.getRobotsYellowList();
-        
-        // new list for capturing robot id's that have been created
-        List<Integer> newRobotIDs = new ArrayList<Integer>();
-        
+        // tmp store all robots that exist currently
+        List<Robot> curRobots = Models.<Robot> getAll("robot");
+
         boolean returnVal =
         // merge both list
         Stream.concat(yellowTeam.stream(), frame.getRobotsBlueList().stream()).map(robot -> {
-            // add this robot id
-            newRobotIDs.add(robot.getRobotId());
             //return the updated robot model
-            return Models.<Robot> get(getModelName(robot, yellowTeam))
+            Robot robotModel = Models.<Robot> get(getModelName(robot, yellowTeam))
                     // try to get the existing model, if that doesnt work (orElse) create a new one
-                    .orElse(Models.<Robot> create(Robot.class, robot.getRobotId(), getTeamColor(robot, yellowTeam)))
-                    //update the model that is retreived or created.
-                    .update("x", robot.getX(), "y", robot.getY(), "height", robot.getHeight());
+                    .orElseGet(() -> {
+                        //update 3dfield
+                        shouldUpdate = true;
+                        //create robotclass
+                        return Models.<Robot> create(Robot.class, robot.getRobotId(), getTeamColor(robot, yellowTeam));
+                    });
+
+            // this robot has been processed, so it can be removed from this list
+            curRobots.remove(robotModel);
+            //update the model that is retreived or created.
+            return robotModel.update("x", robot.getX(), "y", robot.getY(), "height", robot.getHeight());
             //reduce to a single succes value
         }).reduce(true, (accumulator, succes) -> succes && accumulator);
-        
+
+        /*  TODO ENABLE WHEN KALLMAN IS ENABLED
+
+        // loop all robots that haven't been processed
+        curRobots.forEach(robot -> {
+            // remove models that aren't on the field
+            Models.remove(robot);
+            // update the 3d field
+            shouldUpdate = true;
+        }); */
+
         //if any new robots are created,
         //or any robots are removed
-        if (!lastRobotIDs.containsAll(newRobotIDs) || !newRobotIDs.containsAll(lastRobotIDs)) {
+        if (shouldUpdate && fieldGame != null) {
             //update all robots in fieldGame
             fieldGame.updateDetection();
-            lastRobotIDs = newRobotIDs;
+            shouldUpdate = false;
         }
-        
+
         return returnVal;
     }
     

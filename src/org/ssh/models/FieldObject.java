@@ -36,6 +36,8 @@ public abstract class FieldObject extends Model {
      */
     public FieldObject(final String name) {
         super(name);
+        xPosition = 0f;
+        yPosition = 0f;
     }
     
     /**

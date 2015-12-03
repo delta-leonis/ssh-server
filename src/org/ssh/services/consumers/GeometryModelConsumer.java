@@ -1,5 +1,7 @@
 package org.ssh.services.consumers;
 
+import java.util.Optional;
+
 import org.ssh.field3d.FieldGame;
 import org.ssh.managers.manager.Models;
 import org.ssh.managers.manager.UI;
@@ -31,19 +33,19 @@ public class GeometryModelConsumer extends Consumer<GeometryPacket> {
      *            name of this consumer
      */
     public GeometryModelConsumer(String name) {
-        
         super(name);
-        
-        // Getting reference to the main window
-        MainWindow mainWindow = UI.<MainWindow> get("main").get();
-        
-        // Setting the field game
-        this.fieldGame = mainWindow.field;
     }
     
     @Override
     public boolean consume(GeometryPacket pipelinePacket) {
+        if(fieldGame == null)
+            // Getting reference to the main window
+            UI.<MainWindow> get("main").ifPresent(main -> 
+                fieldGame = main.field);
         
+        if(fieldGame == null)
+            return false;
+
         Models.<Field> get("field").ifPresent(field -> {
             // read received data
             GeometryFieldSize fieldData = pipelinePacket.read().getField();

@@ -162,7 +162,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      * @return The list of compatible Pipelines.
      */
     public static <P extends Pipeline<PipelinePacket<? extends Object>>> List<P> getOfDataType(final Type packetType) {
-        Pipelines.LOG.info("Getting compatible pipelines for type: %s", packetType.getTypeName());
+        Pipelines.LOG.fine("Getting compatible pipelines for type: %s", packetType.getTypeName());
         
         // get the list of pipelines
         @SuppressWarnings ("unchecked")
@@ -171,7 +171,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
                 .filter(pipeline -> pipeline.getType().getTypeName().equals(packetType.getTypeName()))
                 .collect(Collectors.toList());
                 
-        Pipelines.LOG.info("%d pipelines found to be compatible with type %s", collect.size(), packetType.toString());
+        Pipelines.LOG.fine("%d pipelines found to be compatible with type %s", collect.size(), packetType.toString());
         return collect;
     }
     

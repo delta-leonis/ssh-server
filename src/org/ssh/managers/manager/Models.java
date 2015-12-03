@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.ssh.managers.Manager;
 import org.ssh.managers.controllers.ModelController;
 import org.ssh.models.Model;
+import org.ssh.models.Robot;
 import org.ssh.models.Settings;
 import org.ssh.ui.lua.console.AvailableInLua;
 import org.ssh.util.Logger;
@@ -162,6 +163,16 @@ public final class Models implements Manager<Model>{
      */
     public static boolean saveAsDefault(final Model model) {
         return Models.modelController.saveAsDefault(model);
+    }
+    
+    /**
+     * Remove a certain model from the face of this earth.
+     * 
+     * @param model model to remove
+     * @return model if it exists (otherwise null)
+     */
+    public static Model remove(final Model model){
+        return Models.modelController.remove(model);
     }
 
     /**

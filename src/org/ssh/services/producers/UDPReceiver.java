@@ -212,7 +212,7 @@ public class UDPReceiver extends Service<ProtoPacket<?>> {
                     input = this.receive();
                     
                     if (input != null) {
-                        Service.LOG.info("Received %s.", packetType.getTypeName());
+                        Service.LOG.fine("Received %s.", packetType.getTypeName());
                         // Create a packet based on packetType
                         ProtoPacket<?> packet = packetConstructor.newInstance(parser.parseFrom(input));
                         // put it in the pipa :D
