@@ -37,7 +37,7 @@ import net.java.games.input.ControllerEnvironment;
  * @see ControllerListener
  *      
  */
-public class ControllerExample extends Application{
+public class ControllerExample extends Application {
     
     // respective logger
     private static final Logger LOG = Logger.getLogger();
