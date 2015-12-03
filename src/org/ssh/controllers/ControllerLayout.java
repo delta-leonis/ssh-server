@@ -20,11 +20,9 @@ import net.java.games.input.Controller;
  * {@link ButtonFunction}.<br>
  * note: {@link ButtonFunctions} and {@link AbstractComponent} cannot be mounted more than one at a
  * time.
- *
- * @TODO finish javadoc
- * @TODO test Model implementation
  *       
  * @author Jeroen de Jong
+ * @author Thomas Hakkers
  *         
  */
 public class ControllerLayout extends Model {
@@ -143,7 +141,7 @@ public class ControllerLayout extends Model {
     }
     
     /**
-     * @param identifier
+     * @param identifier The identifier of the component, can be retrieved with {@link Component#getIdentifier()}
      * @return maybe a component of with a specific identifier
      */
     public Optional<Component> getComponent(final String identifier) {
@@ -173,9 +171,8 @@ public class ControllerLayout extends Model {
      *            piece of String to match
      * @return succes value
      */
-    public boolean hasButtons(String pattern) {
-        return this.bindings.values().stream().filter(entry -> entry.toString().contains(pattern))
-                .count() > 0;
+    public boolean hasButtons(final String pattern) {
+        return this.bindings.values().stream().anyMatch(entry -> entry.toString().contains(pattern));
     }
     
     /**
