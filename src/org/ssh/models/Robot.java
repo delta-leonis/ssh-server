@@ -12,8 +12,8 @@ import org.ssh.util.Alias;
 public class Robot extends FieldObject {
     
     /** The robot height. */
-    public static final transient float ROBOT_HEIGHT = 150.0f;
-                                           
+    public static final transient float ROBOT_HEIGHT   = 150.0f;
+                                                       
     /** The robot radius */
     public static final transient float ROBOT_DIAMETER = 180.0f;
                                                        
@@ -22,6 +22,9 @@ public class Robot extends FieldObject {
      */
     @Alias ("robot_id")
     private transient Integer           robotId;
+                                        
+    /** timestamp of last update for this model */
+    private transient Double            lastUpdated;
                                         
     /**
      * teamcolor that controls this robot
@@ -96,6 +99,13 @@ public class Robot extends FieldObject {
      */
     public TeamColor getTeamColor() {
         return this.teamColor;
+    }
+    
+    /**
+     * @return timestamp of last update for this model
+     */
+    public Double lastUpdated(){
+        return lastUpdated;
     }
     
     /**

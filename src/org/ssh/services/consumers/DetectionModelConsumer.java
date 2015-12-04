@@ -49,38 +49,32 @@ public class DetectionModelConsumer extends Consumer<DetectionPacket> {
         DetectionFrame frame = pipelinePacket.read();
         // create a reference for the yellow team
         List<DetectionRobot> yellowTeam = frame.getRobotsYellowList();
-        // tmp store all robots that exist currently
-        List<Robot> curRobots = Models.<Robot> getAll("robot");
 
         boolean returnVal =
         // merge both list
-        Stream.concat(yellowTeam.stream(), frame.getRobotsBlueList().stream()).map(robot -> {
+        Stream.concat(yellowTeam.stream(), frame.getRobotsBlueList().stream()).map(robot -> 
             //return the updated robot model
-            Robot robotModel = Models.<Robot> get(getModelName(robot, yellowTeam))
+             Models.<Robot> get(getModelName(robot, yellowTeam))
                     // try to get the existing model, if that doesnt work (orElse) create a new one
                     .orElseGet(() -> {
                         //update 3dfield
                         shouldUpdate = true;
                         //create robotclass
                         return Models.<Robot> create(Robot.class, robot.getRobotId(), getTeamColor(robot, yellowTeam));
-                    });
-
-            // this robot has been processed, so it can be removed from this list
-            curRobots.remove(robotModel);
-            //update the model that is retreived or created.
-            return robotModel.update("x", robot.getX(), "y", robot.getY(), "height", robot.getHeight());
+                    }).update("x", robot.getX(), "y", robot.getY(), "height", robot.getHeight(), "lastUpdated", frame.getTSent())
             //reduce to a single succes value
-        }).reduce(true, (accumulator, succes) -> succes && accumulator);
-
-        /*  TODO ENABLE WHEN KALLMAN IS ENABLED
+        ).reduce(true, (accumulator, succes) -> succes && accumulator);
 
         // loop all robots that haven't been processed
-        curRobots.forEach(robot -> {
-            // remove models that aren't on the field
-            Models.remove(robot);
-            // update the 3d field
-            shouldUpdate = true;
-        }); */
+        Models.<Robot> getAll("robot").forEach(robot -> {
+            System.out.println(frame.getTSent() + " - " + robot.lastUpdated() + " = " + (frame.getTSent() - robot.lastUpdated()));
+            if(frame.getTSent() - robot.lastUpdated() > 0.5){
+                // remove models that aren't on the field
+                Models.remove(robot);
+                // update the 3d field
+                shouldUpdate = true;
+            }
+        });
 
         //if any new robots are created,
         //or any robots are removed
