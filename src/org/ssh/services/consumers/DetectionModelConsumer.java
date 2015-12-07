@@ -30,8 +30,6 @@ public class DetectionModelConsumer extends Consumer<DetectionPacket> {
     
     /** Reference to FieldGame in GUI, used for updating */
     private FieldGame     fieldGame;
-    /** whether the robot-list has changed, and the 3Dfield should be updated */
-    private boolean shouldUpdate;
 
     /** helperclass containing information about the game */
     private Game game;
@@ -65,8 +63,7 @@ public class DetectionModelConsumer extends Consumer<DetectionPacket> {
              Models.<Robot> get(getModelName(robot, yellowTeam))
                     // try to get the existing model, if that doesnt work (orElse) create a new one
                     .orElseGet(() -> {
-                        //update 3dfield
-                        shouldUpdate = true;
+
                         //create robotclass
                         return Models.<Robot> create(Robot.class, robot.getRobotId(), getAllegiance(robot, yellowTeam));
                     }).update(robot)
@@ -78,18 +75,11 @@ public class DetectionModelConsumer extends Consumer<DetectionPacket> {
             if(frame.getTSent() - robot.lastUpdated() > 0.5){
                 // remove models that aren't on the field
                 Models.remove(robot);
-                // update the 3d field
-                shouldUpdate = true;
             }
         });
 
-        //if any new robots are created,
-        //or any robots are removed
-        if (shouldUpdate && fieldGame != null) {
-            //update all robots in fieldGame
-            fieldGame.updateDetection();
-            shouldUpdate = false;
-        }
+
+		fieldGame.updateDetection();
 
         return returnVal;
     }
