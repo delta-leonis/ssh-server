@@ -199,8 +199,11 @@ public class RobotGO extends DetectionGameObject {
                 
                 Platform.runLater(() -> {
                     
-                    // Set the orientation of the robot
-                    this.model.setRotate(this.visionRobotModel.getOrientation() * RAD_TO_DEG);
+                    if (this.visionRobotModel.getOrientation() != null) {
+                        
+                        // Set the orientation of the robot
+                        this.model.setRotate(this.visionRobotModel.getOrientation() * RAD_TO_DEG);
+                    }
                     
                     // Translate to location
                     this.model.setTranslateX(this.visionRobotModel.getPosition().getX());
