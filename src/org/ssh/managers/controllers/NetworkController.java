@@ -115,7 +115,7 @@ public class NetworkController extends ManagerController<Service<? extends Proto
      *            type to stop listening for
      */
     public <M extends GeneratedMessage, P extends ProtoPacket<M>> void stopListening(Class<P> type) {
-        this.get(type.getName()).ifPresent(service -> service.stop());
+        this.<UDPReceiver>get(type.getName()).ifPresent(Service::stop);
     }
     
     /**

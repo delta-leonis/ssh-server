@@ -133,7 +133,7 @@ public final class Services implements Manager<Service<? extends PipelinePacket<
      * @return All the Services
      * @see org.ssh.managers.ManagerController#getAll()
      */
-    public static <S extends Service<? extends PipelinePacket<? extends Object>> List<S> getAll() {
+    public static <S extends Service<? extends PipelinePacket<? extends Object>>> List<S> getAll() {
         return Services.controller.getAll();
     }
     

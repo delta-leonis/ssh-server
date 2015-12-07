@@ -89,7 +89,7 @@ public final class Models implements Manager<Model>{
      * @return The requested models.
      */
     public static <M extends Model> List<M> getAll(final String modelName) {
-        return (List<M>) Models.modelController.getAll(modelName);
+        return Models.modelController.<M>getAll(modelName);
     }
     
     /**

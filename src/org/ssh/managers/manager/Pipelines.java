@@ -166,9 +166,10 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
         
         // get the list of pipelines
         @SuppressWarnings ("unchecked")
-        final List<P> collect = (List<P>) Pipelines.getAll().stream()
+        final List<P> collect = Pipelines.getAll().stream()
                 // filter out the compatible ones by type
                 .filter(pipeline -> pipeline.getType().getTypeName().equals(packetType.getTypeName()))
+                .map(pipeline -> (P) pipeline)
                 .collect(Collectors.toList());
                 
         Pipelines.LOG.fine("%d pipelines found to be compatible with type %s", collect.size(), packetType.toString());
