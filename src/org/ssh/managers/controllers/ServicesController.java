@@ -59,7 +59,7 @@ public class ServicesController extends ManagerController<Service<? extends Pipe
      * @return A ScheduledFuture that can be used to cancel the periodic execution.
      */
     @SuppressWarnings ("unchecked")
-    public ListenableScheduledFuture<?> scheduleTask(final String taskName, final Runnable task, final long delay) {
+    public <L> ListenableScheduledFuture<L> scheduleTask(final String taskName, final Runnable task, final long delay) {
         // schedule the task
         final ListenableScheduledFuture<?> scheduledFuture = this.scheduler.scheduleWithFixedDelay(task,
                 0,
@@ -68,7 +68,7 @@ public class ServicesController extends ManagerController<Service<? extends Pipe
         // save the ListenableFuture for future use
         this.scheduledTasks.put(taskName, (ScheduledFuture<? extends PipelinePacket<? extends Object>>) scheduledFuture);
         
-        return scheduledFuture;
+        return (ListenableScheduledFuture<L>) scheduledFuture;
     }
     
     /**
@@ -92,8 +92,8 @@ public class ServicesController extends ManagerController<Service<? extends Pipe
      *            The task as a Runnable.
      * @return A ListenableFuture representing the result of the task.
      */
-    public ListenableFuture<?> submitTask(final Runnable task) {
-        return this.taskService.submit(task);
+    public <L> ListenableFuture<L> submitTask(final Runnable task) {
+        return (ListenableFuture<L>) this.taskService.submit(task);
     }
     
 }

@@ -110,9 +110,9 @@ public final class Services implements Manager<Service<? extends PipelinePacket<
      * @return A ListenableFuture representing the result of the task.
      * @see org.ssh.managers.controllers.ServicesController#submitTask(Callable)
      */
-    public static ListenableFuture<?> submitTask(final String taskName, final Runnable task) {
+    public static <L> ListenableFuture<L> submitTask(final String taskName, final Runnable task) {
         Services.LOG.info("Submitting task named %s ...", taskName);
-        return Services.controller.submitTask(task);
+        return (ListenableFuture<L>) Services.controller.submitTask(task);
     }
     
     /**
@@ -122,7 +122,7 @@ public final class Services implements Manager<Service<? extends PipelinePacket<
      *            The name of the wanted Services
      * @return The requested Service
      */
-    public static Optional<? extends Service<? extends PipelinePacket<? extends Object>>> get(final String name) {
+    public static <S extends Service<? extends PipelinePacket<? extends Object>>> Optional<S> get(final String name) {
         Services.LOG.fine("Getting a Service named: %s", name);
         return Services.controller.get(name);
     }
@@ -133,7 +133,7 @@ public final class Services implements Manager<Service<? extends PipelinePacket<
      * @return All the Services
      * @see org.ssh.managers.ManagerController#getAll()
      */
-    public static List<? extends Service<? extends PipelinePacket<? extends Object>>> getAll() {
+    public static <S extends Service<? extends PipelinePacket<? extends Object>> List<S> getAll() {
         return Services.controller.getAll();
     }
     
@@ -145,7 +145,7 @@ public final class Services implements Manager<Service<? extends PipelinePacket<
      * @return The requested Service.
      * @see ManagerController#getAll(String)
      */
-    public static List<? extends Service<? extends PipelinePacket<? extends Object>>> getAll(final String name) {
+    public static <S extends Service<? extends PipelinePacket<? extends Object>>> List<S> getAll(final String name) {
         return Services.controller.getAll(name);
     }
     

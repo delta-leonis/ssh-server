@@ -39,8 +39,8 @@ public abstract class ManagerController<M extends Manageable> {
      *            the name of the manageable
      * @return An Optional representing the Manageable.
      */
-    public Optional<M> get(String name) {
-        return this.manageables.stream().filter(manageable -> manageable.getName().equals(name)).findFirst();
+    public <N> Optional<N> get(String name) {
+        return (Optional<N>) this.manageables.stream().filter(manageable -> manageable.getName().equals(name)).findFirst();
     }
     
     /**
@@ -48,8 +48,8 @@ public abstract class ManagerController<M extends Manageable> {
      *
      * @return The List of Manageables
      */
-    public List<M> getAll() {
-        return this.manageables.stream().collect(Collectors.toList());
+    public <N> List<N> getAll() {
+        return (List<N>) this.manageables.stream().collect(Collectors.toList());
     }
     
     /**
@@ -59,8 +59,8 @@ public abstract class ManagerController<M extends Manageable> {
      *            The name of the Manageables
      * @return All the Manageables with the specified name
      */
-    public List<M> getAll(String name) {
-        return this.manageables.stream().filter(manageable -> manageable.getName().equals(name))
+    public <N> List<N> getAll(String name) {
+        return (List<N>) this.manageables.stream().filter(manageable -> manageable.getName().equals(name))
                 .collect(Collectors.toList());
     }
     

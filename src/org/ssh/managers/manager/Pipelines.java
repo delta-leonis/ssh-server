@@ -78,11 +78,11 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
         
         @SuppressWarnings ("unchecked")
         // get the list of services
-        final List<C> collect = (List<C>) Services.getOfType(Consumer.class).stream()
+        final List<C> collect = Services.getOfType(Consumer.class).stream()
                 // filter out the services compatible with this pipeline
-                .filter(service -> ((Service<?>) service).getType().equals(pipeline.getType()))
+                .filter(service -> service.getType().equals(pipeline.getType()))
                 // map them to the correct parameterized type and collect them in a list
-                .map(service -> ((Service<?>) service).getType().getClass().cast(service)).collect(Collectors.toList());
+                .map(service -> (C) service.getType().getClass().cast(service)).collect(Collectors.toList());
                 
         Pipelines.LOG.info("%d Consumer(s) found to be compatible with type %s",
                 collect.size(),
@@ -108,11 +108,11 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
         
         @SuppressWarnings ("unchecked")
         // get the list of services
-        final List<C> collect = (List<C>) Services.getOfType(Coupler.class).stream()
+        final List<C> collect = Services.getOfType(Coupler.class).stream()
                 // filter out the services compatible with this pipeline
                 .filter(service -> service.getType().equals(pipeline.getType()))
                 // map them to the correct parameterized type and collect them in a list
-                .map(service -> service.getType().getClass().cast(service)).collect(Collectors.toList());
+                .map(service -> (C)service.getType().getClass().cast(service)).collect(Collectors.toList());
                 
         Pipelines.LOG.info("%d Coupler(s) found to be compatible with type %s",
                 collect.size(),
@@ -138,12 +138,12 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
         
         @SuppressWarnings ("unchecked")
         // get the list of services
-        final List<C> collect = (List<C>) Services.getOfType(Producer.class).stream()
+        final List<C> collect = Services.getOfType(Producer.class).stream()
                 // filter out the services compatible with this pipeline
                 .filter(service -> service.getType().equals(pipeline.getType()))
                 // map them to the correct parameterized type and collect them in a list
-                .map(service -> service.getType().getClass().cast(service)).collect(Collectors.toList());
-                
+                .map(service -> (C) service.getType().getClass().cast(service)).collect(Collectors.toList());
+
         Pipelines.LOG.info("%d Producers found to be compatible with genericType %s",
                 collect.size(),
                 pipeline.getType().toString());
@@ -182,7 +182,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      *            The name of the wanted Pipelines
      * @return The requested Pipeline
      */
-    public static Optional<? extends Pipeline<? extends PipelinePacket<? extends Object>>> get(final String name) {
+    public static <P extends Pipeline<? extends PipelinePacket<? extends Object>>> Optional<P> get(final String name) {
         Pipelines.LOG.fine("Getting a Pipeline named: %s", name);
         return Pipelines.controller.get(name);
     }
@@ -193,7 +193,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      * @return All the Pipelines
      * @see org.ssh.managers.ManagerController#getAll()
      */
-    public static List<? extends Pipeline<? extends PipelinePacket<? extends Object>>> getAll() {
+    public static <P extends Pipeline<? extends PipelinePacket<? extends Object>>> List<P> getAll() {
         return Pipelines.controller.getAll();
     }
     
@@ -205,7 +205,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      * @return The requested Pipeline.
      * @see ManagerController#getAll(String)
      */
-    public static List<? extends Pipeline<? extends PipelinePacket<? extends Object>>> getAll(final String name) {
+    public static <P extends Pipeline<? extends PipelinePacket<? extends Object>>> List<P> getAll(final String name) {
         return Pipelines.controller.getAll(name);
     }
     
