@@ -92,9 +92,6 @@ public class ConsoleManager extends UIComponent {
     
     /**
      * Requests focus on the {@link ConsoleArea} contained by the {@link Tab}
-     * 
-     * @param selectedTab
-     *            The {@link Tab} to focus on
      */
     private void switchFocusToCurrentTab() {
         Tab curTab = tabPane.getSelectionModel().getSelectedItem();
