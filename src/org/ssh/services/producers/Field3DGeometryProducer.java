@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ssh.managers.manager.Models;
+import org.ssh.managers.manager.Pipelines;
 import org.ssh.models.Field;
 import org.ssh.models.Goal;
 import org.ssh.models.enums.Direction;
 import org.ssh.models.enums.ProducerType;
-
 import org.ssh.pipelines.packets.GeometryPacket;
 import org.ssh.services.service.Producer;
 
@@ -36,20 +36,28 @@ public class Field3DGeometryProducer extends Producer<GeometryPacket> {
         // Initialize super class
         super("geometryproducer", ProducerType.SINGLE);
         
+        this.createTestData();
+        
         // Setting callable
         this.setCallable(() -> {
             
-            // Creating geometry field size
-            GeometryFieldSize geometryFieldSize = createGeometryFieldSize();
-            // Creating geometry data
-            GeometryData geometryData = GeometryData.newBuilder().setField(geometryFieldSize).build();
-            // Creating geometry packet
-            GeometryPacket packet = new GeometryPacket(geometryData);
-            
-            System.out.println("geometryProducer");
-            
+            while (true) {
+                
+                // Creating geometry field size
+                GeometryFieldSize geometryFieldSize = createGeometryFieldSize();
+                // Creating geometry data
+                GeometryData geometryData = GeometryData.newBuilder().setField(geometryFieldSize).build();
+                // Creating geometry packet
+                GeometryPacket packet = new GeometryPacket(geometryData);
+                
+                // Put data on the pipeline
+                Pipelines.getOfDataType(GeometryPacket.class).forEach((pipe -> pipe.addPacket(packet).processPacket()));
+                
+                // Sleep for 3 seconds
+                Thread.sleep(3000);
+            }
             // Return the packets
-            return packet;
+            //return packet;
         });
     }
     
@@ -83,6 +91,8 @@ public class Field3DGeometryProducer extends Producer<GeometryPacket> {
         fieldVisionModel.update("field", createGeometryFieldSize());
         fieldVisionModel.update("goals", goals);
         
+        goalWest.save();
+        goalEast.save();
         fieldVisionModel.save();
         fieldVisionModel.saveAsDefault();
     }
