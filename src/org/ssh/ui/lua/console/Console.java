@@ -145,7 +145,7 @@ public class Console extends Tab {
 
         // Create TextArea using the classes and functions found using
         // reflection
-        this.consoleArea = new ConsoleArea(LuaUtils.getLuaClasses(), LuaUtils.getLuaFunctions());
+        this.consoleArea = new ConsoleArea();
         this.setContent(this.consoleArea);
 
         // Make the area resizable

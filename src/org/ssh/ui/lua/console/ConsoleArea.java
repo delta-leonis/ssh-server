@@ -17,6 +17,7 @@ import org.ssh.util.Logger;
 import javafx.application.Platform;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
+import org.ssh.util.LuaUtils;
 
 /**
  * Class that extends the RTF {@link CodeArea} Used to block certain inputs.
@@ -36,11 +37,9 @@ public class ConsoleArea extends ColoredCodeArea {
      * Constructor of the ConsoleArea. Disabled ctrl+Z and changes the behaviour of Backspace so
      * that it can't be used to wipe out the cursor.
      *
-     * @param objectHighlights A List with Strings representing all Java-Objects that need to be highlighted
-     * @param functionHighlights A List with String representing all Java-Functions that need to be highlighted
      */
-    public ConsoleArea(final List<String> objectHighlights, final List<String> functionHighlights) {
-        super.setupColoredCodeArea(objectHighlights, functionHighlights);
+    public ConsoleArea() {
+        super.setupColoredCodeArea(LuaUtils.getLuaClasses(), LuaUtils.getLuaFunctions());
         // On Backspace, use a custom handler
         EventHandlerHelper.install(this.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(BACK_SPACE)).act(event -> this.backspace()).create());

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 
 import javax.swing.JTextArea;
 
@@ -32,7 +34,7 @@ public class ScriptEditor extends UIComponent {
     // A logger for errorhandling
     private static final Logger LOG        = Logger.getLogger();
                                            
-    private ColoredCodeArea     codeArea;
+    private ScriptArea          codeArea;
     private String              path;
     private FileChooser         fileChooser;
     private VBox                root;
@@ -57,6 +59,7 @@ public class ScriptEditor extends UIComponent {
         this.fileChooser = new FileChooser();
         this.fileChooser.setTitle("File Chooser");
         this.fileChooser.getExtensionFilters().add(new ExtensionFilter("All Files", "*.*"));
+        this.fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
     }
     
     /**
@@ -75,17 +78,18 @@ public class ScriptEditor extends UIComponent {
         final Menu fileMenu = new Menu("File");
         
         final MenuItem saveItem = new MenuItem("Save\t\t\t");
-        fileMenu.getItems().add(saveItem);
         saveItem.setOnAction(actionEvent -> this.saveFile());
         
         final MenuItem saveAsItem = new MenuItem("Save as...\t\t\t");
-        fileMenu.getItems().add(saveAsItem);
         saveAsItem.setOnAction(actionEvent -> this.saveAsFile());
         
         final MenuItem openItem = new MenuItem("Open\t\t\t");
-        fileMenu.getItems().add(openItem);
         openItem.setOnAction(actionEvent -> this.openFile());
-        
+
+        final MenuItem runItem = new MenuItem("Run\t\t\t");
+        saveItem.setOnAction(actionEvent -> this.codeArea.runScript(this.codeArea.getText()));
+
+        fileMenu.getItems().addAll(runItem, saveItem, saveAsItem, openItem);
         menubar.getMenus().addAll(fileMenu);
         this.root.getChildren().add(menubar);
     }
@@ -95,7 +99,7 @@ public class ScriptEditor extends UIComponent {
      */
     private void initializeTextArea() {
         // Set up colored code area
-        this.codeArea = new ColoredCodeArea();
+        this.codeArea = new ScriptArea();
         this.codeArea.setupColoredCodeArea(LuaUtils.getLuaClasses(),
                 LuaUtils.getLuaFunctions());
         this.codeArea.prefWidthProperty().bind(root.widthProperty());
@@ -152,22 +156,17 @@ public class ScriptEditor extends UIComponent {
     }
     
     /**
-     * Prerequisites: {@link #initializeTextArea(String)} has to be called at least once before this
-     * function is called.
+     * Puts the text from a certain file into the {@link ScriptEditor text area}
      * 
      * @param path
      *            The path to the file that needs to be copied into the {@link ColoredCodeArea}
      */
     public void setTextFromFile(final String path) {
         this.path = path;
-        FileInputStream in;
+        this.codeArea.clear();
         try {
-            in = new FileInputStream(path);
-            int c;
-            while ((c = in.read()) != -1) {
-                this.codeArea.insertText(this.codeArea.getLength(), "" + Character.toString((char) c));
-            }
-            in.close();
+            Files.lines(FileSystems.getDefault().getPath(path)).forEach(line ->
+                    this.codeArea.insertText(this.codeArea.getLength(), line + '\n'));
         }
         catch (final IOException exception) {
             LOG.exception(exception);

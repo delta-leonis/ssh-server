@@ -3,6 +3,8 @@ package org.ssh.util;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,9 +15,13 @@ import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 import org.luaj.vm2.lib.jse.JsePlatform;
+import org.ssh.managers.manager.Models;
+import org.ssh.models.Model;
+import org.ssh.models.Settings;
 import org.ssh.ui.lua.console.AvailableInLua;
 
 import com.google.common.reflect.ClassPath;
+import org.ssh.ui.lua.console.Console;
 
 /**
  * Class that has all sorts of utility functions for the luaj library
@@ -30,7 +36,7 @@ public class LuaUtils {
     private static final Globals      GLOBALS          = JsePlatform.standardGlobals();
                                                        
     private static final List<Object> AVAILABLE_IN_LUA = LuaUtils.getAllAvailableInLua();
-                                                       
+
     /**
      * Private constructor
      */
@@ -291,8 +297,18 @@ public class LuaUtils {
      * @param path
      *            The path that leads to the lua script.
      */
-    public static void runScript(final String path) {
+    public static void runScriptPath(final String path) {
         LuaUtils.GLOBALS.loadfile(path).call();
+    }
+
+    /**
+     * Runs a lua script
+     *
+     * @param command
+     *            The script to run
+     */
+    public static void runScript(final String command) {
+        LuaUtils.GLOBALS.load(command).call();
     }
     
     /**
@@ -317,4 +333,5 @@ public class LuaUtils {
         // Call the function using a LuaValue
         func.call(luaobj);
     }
+
 }
