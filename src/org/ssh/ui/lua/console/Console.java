@@ -1,21 +1,14 @@
 package org.ssh.ui.lua.console;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.lang.reflect.Method;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.script.ScriptEngine;
-
+import com.google.common.util.concurrent.ListenableFuture;
 import examples.CommunicationExample;
+import javafx.application.Platform;
+import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
 import org.fxmisc.wellbehaved.event.EventHandlerHelper;
 import org.fxmisc.wellbehaved.event.EventPattern;
 import org.luaj.vm2.Globals;
@@ -25,20 +18,18 @@ import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 import org.luaj.vm2.lib.jse.JsePlatform;
 import org.ssh.managers.manager.Models;
 import org.ssh.managers.manager.Services;
-import org.ssh.models.Model;
+import org.ssh.models.Settings;
 import org.ssh.util.Logger;
 import org.ssh.util.LuaUtils;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import org.ssh.models.Settings;
-
-import javafx.application.Platform;
-import javafx.scene.control.Button;
-import javafx.scene.control.Tab;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCombination;
+import javax.script.ScriptEngine;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Simple LuaJava console. The {@link Console} has access to every class that uses the
@@ -135,11 +126,10 @@ public class Console extends Tab {
         this.setText(name);
         // Use reflection to obtain all classes annotated with AvailableInLua
         this.functionClasses = LuaUtils.getAllAvailableInLua();
-        // Create an outputstream that use the Console to write in the
-        // ConsoleArea
+        // Create an outputstream that use the Console to write in the ConsoleArea
         this.out = new ConsoleOutput(this);
         // Initialize the command history
-        this.recentCommands = new ArrayList<String>();
+        this.recentCommands = new ArrayList<>();
 
         this.setupButton();
 
@@ -326,15 +316,16 @@ public class Console extends Tab {
             this.globals.load(command).call();
         }
         catch (LuaError exception) {
-            Console.LOG.exception(exception);
-            // If the command is cancelled (Yes, this is slightly botchy)
+            // If the command is cancelled (Yes, this is slightly skeer)
             if (exception.getMessage().contains("InterruptedException") || exception.getMessage()
                     .contains("InterruptException"))
                 // Print that the command is cancelled
                 this.println("\n\t--[[CANCELLED COMMAND SUCCESSFULLY]]--");
-            else
+            else {
+                Console.LOG.exception(exception);
                 // Give a description of the error
                 this.println("\n\tERROR: " + exception.getMessage());
+            }
             customDebug.setInterrupt(false);
         }
 
@@ -351,13 +342,14 @@ public class Console extends Tab {
 
     /**
      * Cancels the {@link ListenableFuture} obtained from {@link #executeCommandOnThread(String)}
+     *
+     * @return true on success
      */
-    public void cancelTask() {
-        if (currentFuture != null)
-            currentFuture.cancel(true);
-
+    public boolean cancelTask() {
         customDebug.setInterrupt(true);
         requestFocus();
+
+        return currentFuture != null && currentFuture.cancel(true);
     }
 
     /**
@@ -383,8 +375,7 @@ public class Console extends Tab {
         // Where the cursor is located (caret)
         final int caretPos = this.consoleArea.getCaretPosition();
         // The command we're currently auto completing is a substring of the
-        // currentline till our
-        // cursor
+        // currentline till our cursor
         final String command = this.consoleArea.getText(this.currentLine, caretPos);
 
         // Handle the tab using this unfinished command
@@ -415,10 +406,6 @@ public class Console extends Tab {
             consoleArea.setCurrentLine(currentLine);
         });
     }
-
-    /** *************************************** **/
-    /// Functions that handle command history ///
-    /** *************************************** **/
 
     /**
      * Same as {@link #print(String)}, only with an added '\n'
@@ -467,24 +454,20 @@ public class Console extends Tab {
         }
         catch (final Exception exception) {
             LOG.exception(exception);
-            this.println("Exception occured whilst setting up console.\n" + exception.getMessage());
+            this.println("Exception occurred whilst setting up console.\n" + exception.getMessage());
         }
     }
 
     /**
-     * Looks for all lua files in lua.d and calls them for initiliasation.
+     * Looks for all lua files in lua.d and calls them for initialisation.
      * These files contain useful shorthands for functions that are used often.
      */
     private void initialize() {
         // Find init script based on Settings and execute it
-        Optional<Model> oSettings = Models.get("settings");
-        // If settings exists
-        if (oSettings.isPresent()) {
-            Settings settings = (Settings) oSettings.get();
+        Models.<Settings>get("settings").ifPresent(settings -> {
             // Check whether it has a variable pointing to the lua folder
             if (settings.getLuaInitFolder() != null) {
-                try {
-                    // For each file in folder
+                try {// For each file in folder
                     Files.walk(Paths.get(settings.getLuaInitFolder()))
                             // Check whether it's a valid file
                             .filter(Files::isRegularFile)
@@ -501,10 +484,9 @@ public class Console extends Tab {
                     this.println("-- IOException whilst looking for lua.d\n\t" + exception.getMessage());
                 }
             }
-        }
-        else {
-            this.println("-- Couldn't find init.lua");
-        }
+            return;
+        });
+        this.println("-- could not find init.lua");
     }
 
     /**

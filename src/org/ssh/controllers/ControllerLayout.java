@@ -1,19 +1,17 @@
 package org.ssh.controllers;
 
-import java.util.Optional;
-import java.util.stream.Stream;
-
-import org.ssh.models.Model;
-import org.ssh.models.enums.ButtonFunction;
-import org.ssh.util.Logger;
-
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-
 import net.java.games.input.AbstractComponent;
 import net.java.games.input.Component;
 import net.java.games.input.Component.Identifier;
 import net.java.games.input.Controller;
+import org.ssh.models.Model;
+import org.ssh.models.enums.ButtonFunction;
+import org.ssh.util.Logger;
+
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Used for binding {@link AbstractComponent Components} as found in a {@link Controller} to a

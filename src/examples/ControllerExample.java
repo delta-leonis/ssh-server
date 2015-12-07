@@ -58,15 +58,13 @@ public class ControllerExample extends Application{
     
     /**
      * Find a controller that is not used in any ControllerHandler
-     * 
-     * @param contains
-     *            part of the controllername
+     *
      * @return maybe a controller
      */
     public static Optional<Controller> findAvailableController() {
         return Stream.of(ControllerEnvironment.getDefaultEnvironment().getControllers())
                 // filter controllers that are available
-                .filter(controller -> ControllerExample.availableController(controller))
+                .filter(ControllerExample::availableController)
                 // find the first in the list
                 .findFirst();
     }
@@ -120,7 +118,7 @@ public class ControllerExample extends Application{
     public void start(Stage primaryStage) throws Exception {
         // make models available
         Models.start();
-        // Create the settings for the Controller. TODO: Make sure these get loaded automatically.
+        // Create the settings for the Controller.
         Models.create(ControllerSettings.class);
         // Make the Network available
         Network.start();
@@ -128,19 +126,19 @@ public class ControllerExample extends Application{
         Services.start();
         // create a comminucation pipeline
         Pipelines.add(new RadioPipeline("communication pipeline"));
-        
+
         Network.register(SendMethod.UDP, new LegacyUDPSender(ADDRESS, 1337));
-        
+
         // create the service for the controller
-        final ControllerListener listener = new ControllerListener(); 
+        final ControllerListener listener = new ControllerListener();
         // add it to the servicehandler
         Services.add(listener);
-        
+
         // create 3 controller handlers
         for (int i = 0; i < 5; i++) {
             // maybe find a controller that is available
             final Optional<Controller> controller = ControllerExample.findAvailableController();
-            
+
             // check if we found one
             if (!controller.isPresent()) {
                 ControllerExample.LOG.warning("No controller #%d present", i);
@@ -148,29 +146,27 @@ public class ControllerExample extends Application{
             }
             // create a layout for this specific controller
             final ControllerLayout layout = new ControllerLayout(controller.get());
-            if(!Models.initialize(layout)){
+            if (!Models.initialize(layout)) {
                 ControllerExample.createDefaultLayout(layout);
             }
-                        
+
             listener.register(i, layout); // i = robotid
-//            listener.unregister(0); // 0 = robotid
+            //            listener.unregister(0); // 0 = robotid
         }
-        
+
         // Create a scene so that we can actually use the keyboard
         primaryStage.setScene(new Scene(new BorderPane(), 450, 450));
         primaryStage.show();
-        
-        new Thread(() -> {
+
+        Services.submitTask("ControllerExample poller", () -> {
             // process every controller
             while (true) {
                 listener.processControllers();
                 try {
                     Thread.sleep(100);
-                }
-                catch (Exception exception) {
-                    ControllerExample.LOG.exception(exception);
+                } catch (InterruptedException ignored) {
                 }
             }
-        }).start();
+        });
     }
 }

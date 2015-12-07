@@ -1,18 +1,16 @@
 package org.ssh.controllers;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import net.java.games.input.Controller;
+import org.ssh.managers.manager.Network;
+import org.ssh.services.Service;
+import protobuf.Radio.RadioProtocolCommand;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.stream.Collectors;
-
-import org.ssh.managers.manager.Network;
-import org.ssh.services.Service;
-
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-
-import net.java.games.input.Controller;
-import protobuf.Radio.RadioProtocolCommand;
 
 /**
  * A {@link Service} that manages all {@link ControllerHandler controllers} for every
@@ -39,9 +37,6 @@ public class ControllerListener extends Service {
                                                        
     /**
      * Create a controllerlistener
-     * 
-     * @param noRobots
-     *            total number of robots
      */
     public ControllerListener() {
         super("ControllerListener");
@@ -50,7 +45,6 @@ public class ControllerListener extends Service {
     /**
      * give the next or previous available robotid
      * 
-     * @param currentIndex
      * @param forward
      *            give next available id on true, give previous on false
      */

@@ -20,7 +20,7 @@ public class ConsoleManager extends UIComponent {
     /** The {@link TabPane} that holds all tabs */
     @FXML
     private TabPane tabPane;
-    
+    /* number of latest created tab (current tabIndex) */
     private int currentTab = 0;
     
     /**
@@ -44,11 +44,11 @@ public class ConsoleManager extends UIComponent {
         // Close a tab when pressing CTRL + W
         EventHandlerHelper.install(this.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.W, KeyCombination.CONTROL_DOWN))
-                        .act(event -> this.closeTab(tabPane.getSelectionModel().getSelectedItem())).create());
+                        .act(event -> this.closeTab((Console) tabPane.getSelectionModel().getSelectedItem())).create());
         // Keycombination to cancel a command
         EventHandlerHelper.install(this.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.C, KeyCombination.CONTROL_DOWN))
-                        .act(event -> ConsoleManager.cancelTab(tabPane.getSelectionModel().getSelectedItem()))
+                        .act(event -> ConsoleManager.cancelTab((Console) tabPane.getSelectionModel().getSelectedItem()))
                         .create());
     }
     
@@ -73,11 +73,11 @@ public class ConsoleManager extends UIComponent {
      * @param selectedTab
      *            The {@link Tab} to close
      */
-    private void closeTab(Tab selectedTab) {
-        ((Console) selectedTab).cancelTask();
+    private void closeTab(Console selectedTab) {
+         selectedTab.cancelTask();
         // Remove the selected tab
-        tabPane.getTabs().remove(selectedTab);
-        switchFocusToCurrentTab();
+        this.tabPane.getTabs().remove(selectedTab);
+        this.switchFocusToCurrentTab();
     }
     
     /**
@@ -85,16 +85,17 @@ public class ConsoleManager extends UIComponent {
      * 
      * @param selectedTab
      *            The {@link Tab} to cancel
+     * @return true on success
      */
-    private static void cancelTab(Tab selectedTab) {
-        ((Console) selectedTab).cancelTask();
+    private static boolean cancelTab(Console selectedTab) {
+        return selectedTab.cancelTask();
     }
     
     /**
      * Requests focus on the {@link ConsoleArea} contained by the {@link Tab}
      */
     private void switchFocusToCurrentTab() {
-        Tab curTab = tabPane.getSelectionModel().getSelectedItem();
-        ((Console) curTab).requestFocus();
+        Console curTab = (Console) tabPane.getSelectionModel().getSelectedItem();
+        curTab.requestFocus();
     }
 }
