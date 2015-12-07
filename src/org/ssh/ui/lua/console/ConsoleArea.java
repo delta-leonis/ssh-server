@@ -38,7 +38,7 @@ public class ConsoleArea extends ColoredCodeArea {
      * 
      */
     public ConsoleArea(final List<String> objectHighlights, final List<String> functionHighlights) {
-        super.setupColoredCodeArea(getStyleSheet(), objectHighlights, functionHighlights);
+        super.setupColoredCodeArea(objectHighlights, functionHighlights);
         // On Backspace, use a custom handler
         EventHandlerHelper.install(this.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(BACK_SPACE)).act(event -> this.backspace()).create());
@@ -61,23 +61,6 @@ public class ConsoleArea extends ColoredCodeArea {
                                 Platform.runLater(() ->
                                     this.insertText(this.getCaretPosition(), "\n"))
                                 ).create());
-    }
-
-    /**
-     * Placeholder function until Settings patch
-     * @return
-     */
-    private static String getStyleSheet(){
-        // Find init script based on Settings and execute it
-        Optional<Model> oSettings = Models.get("settings");
-        if(oSettings.isPresent())
-        {
-            Settings settings = (Settings) oSettings.get();
-            if(settings.getLuaInitFolder() != null)
-                return settings.getApplicationCss();
-        }
-        ConsoleArea.LOG.warning("Could not find stylesheet.");
-        return "";
     }
 
     /**

@@ -10,6 +10,8 @@ import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleSpans;
 import org.fxmisc.richtext.StyleSpansBuilder;
+import org.ssh.managers.manager.Models;
+import org.ssh.models.Settings;
 
 /**
  * Class used to color code the given keywords. It colors the following symbols: ( ) { } [ ] "text"
@@ -105,18 +107,11 @@ public class ColoredCodeArea extends CodeArea {
     
     /**
      * Constructor for the ColorCodeArea.
-     *
-     * @param path
-     *            The ccs to be used by this class. Leaving this empty will result in black text on
-     *            a white background, without color coding
      * @param objectHighlights
      *            The Java Objects that need to be highlighted
      * @param functionHighlights
-     *            The Java Functions that need to be highlighted
      */
-    public void setupColoredCodeArea(final String path,
-            List<String> objectHighlights,
-            List<String> functionHighlights) {
+    public void setupColoredCodeArea(List<String> objectHighlights, List<String> functionHighlights) {
             
         String objPattern = "|(?<OBJ>" + "\\b(" + (objectHighlights == null ? " " : String.join("|", objectHighlights))
                 + ")\\b" + ")";
@@ -135,8 +130,8 @@ public class ColoredCodeArea extends CodeArea {
                         + "|(?<STRING>" + ColoredCodeArea.STRING_PATTERN + ")" 
                         + "|(?<COMMENT>" + ColoredCodeArea.COMMENT_PATTERN + ")"
                         + "|(?<DEFAULT>" + ColoredCodeArea.DEFAULT + ")");
-                
-        this.styleSheet = path;
+
+        Models.<Settings>get("settings").ifPresent(settings -> styleSheet = settings.getApplicationCss());
         this.setupColorCoding();
     }
 }

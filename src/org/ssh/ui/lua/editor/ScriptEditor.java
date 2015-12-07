@@ -96,8 +96,7 @@ public class ScriptEditor extends UIComponent {
     private void initializeTextArea() {
         // Set up colored code area
         this.codeArea = new ColoredCodeArea();
-        this.codeArea.setupColoredCodeArea(ScriptEditor.STYLESHEET,
-                LuaUtils.getLuaClasses(),
+        this.codeArea.setupColoredCodeArea(LuaUtils.getLuaClasses(),
                 LuaUtils.getLuaFunctions());
         this.codeArea.prefWidthProperty().bind(root.widthProperty());
         this.codeArea.prefHeightProperty().bind(root.heightProperty());
