@@ -22,6 +22,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
+import javafx.scene.transform.Rotate;
 
 /**
  * RobotGO class This class is for robot game objects. This class loads the 3d model, textures and
@@ -32,6 +33,9 @@ import javafx.scene.shape.MeshView;
  * @author Mark Lefering
  */
 public class RobotGO extends DetectionGameObject {
+    
+    /** The conversion from radians to degrees */
+    private static final double RAD_TO_DEG = (2.0 * Math.PI) / 180.0;
     
     /** The thickness of the selection circle. */
     private static final double ROBOT_SELECTION_CIRCLE_THICKNESS = 50.0;
@@ -195,6 +199,9 @@ public class RobotGO extends DetectionGameObject {
                 
                 Platform.runLater(() -> {
                     
+                    // Set the orientation of the robot
+                    this.model.setRotate(this.visionRobotModel.getOrientation() * RAD_TO_DEG);
+                    
                     // Translate to location
                     this.model.setTranslateX(this.visionRobotModel.getPosition().getX());
                     this.model.setTranslateY(this.robotYOffset);
@@ -323,6 +330,9 @@ public class RobotGO extends DetectionGameObject {
             
             // Getting model from the model importer
             this.model = modelImporter.getImport()[0];
+            
+            // Setting rotation axis
+            this.model.setRotationAxis(Rotate.Y_AXIS);
             
             // Add model to model group
             this.modelGroup.getChildren().add(this.model);
