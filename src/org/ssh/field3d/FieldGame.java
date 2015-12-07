@@ -15,6 +15,7 @@ import org.ssh.field3d.gameobjects.detection.RobotGO;
 import org.ssh.field3d.gameobjects.geometry.FieldGO;
 import org.ssh.field3d.gameobjects.overlay.CameraControlOverlayGO;
 import org.ssh.managers.manager.Models;
+import org.ssh.models.Ball;
 import org.ssh.models.Field;
 import org.ssh.models.enums.TeamColor;
 
@@ -55,18 +56,20 @@ public class FieldGame extends Game {
     /** The detection game objects. */
     private final Queue<DetectionGameObject> detectionGameObjects;
     
-    private final List<DetectionGameObject> blueRobots;
-    
+    private final List<DetectionGameObject> blueRobots;    
     private final List<DetectionGameObject> yellowRobots;
+    private final List<DetectionGameObject> balls;
                                              
     /** The geometry game objects. */
     private final Queue<GeometryGameObject>  geometryGameObjects;
                                              
     /** The field vision model. */
     private Field                            fieldVisionModel;
+    
+    private boolean isInitialized;
                                              
     /** The easter car game object */
-    private final CarGO easterCarGO;
+    //private final CarGO easterCarGO;
     
     /**
      * Constructor.
@@ -99,13 +102,16 @@ public class FieldGame extends Game {
         
         this.blueRobots = new ArrayList<DetectionGameObject>();
         this.yellowRobots = new ArrayList<DetectionGameObject>();
+        this.balls = new ArrayList<DetectionGameObject>();
         
         // Creating field GameObject
         this.fieldGO = new FieldGO(this);
         // Creating camera control overlay GameObject
         this.cameraControlOverlayGO = new CameraControlOverlayGO(this);
         // Creating easter egg car GameObject
-        this.easterCarGO = new CarGO(this);
+        //this.easterCarGO = new CarGO(this);
+        
+        this.isInitialized = false;
         
         // Set minimal mouse wheel value
         this.getMouseInputHandler().setMinMouseWheelValue(-1000);
@@ -115,12 +121,13 @@ public class FieldGame extends Game {
         // Set black fill color
         this.setFill(Color.BLACK);
         
+        // Create robots
         this.createRobots();
         
         // Adding game objects
         this.addGeometryGameObject(this.fieldGO);
         this.addGameObject(this.cameraControlOverlayGO);
-        this.addGameObject(this.easterCarGO);
+        ///this.addGameObject(this.easterCarGO);
     }
     
     /**
@@ -151,6 +158,8 @@ public class FieldGame extends Game {
             if (!this.getWorldGroup().getChildren().contains(this.pointLightEastNorth)) {
                 this.getWorldGroup().getChildren().add(this.pointLightEastNorth);
             }
+            
+            this.isInitialized = true;
         });
     }
     
@@ -172,43 +181,44 @@ public class FieldGame extends Game {
      * {@inheritDoc}
      */
     public void updateGeometry() {
-        
-        // Trying to get field vision model
-        Optional<Field> tmpOptionalField = Models.get("field");
-        
-        // If a model is present
-        if (tmpOptionalField.isPresent()) {
+        if (this.isInitialized) {
+            // Trying to get field vision model
+            Optional<Field> tmpOptionalField = Models.get("field");
             
-            // Set field vision model
-            this.fieldVisionModel = (Field) tmpOptionalField.get();
+            // If a model is present
+            if (tmpOptionalField.isPresent()) {
+                
+                // Set field vision model
+                this.fieldVisionModel = (Field) tmpOptionalField.get();
+                               
+                // Setting bounds for the location of the camera
+                this.getThirdPersonCamera().setMaxLocX(this.fieldVisionModel.getFieldLength() / 2.0);
+                this.getThirdPersonCamera().setMinLocX(-(this.fieldVisionModel.getFieldLength() / 2.0));
+                this.getThirdPersonCamera().setMaxLocZ(this.fieldVisionModel.getFieldWidth() / 2.0);
+                this.getThirdPersonCamera().setMinLocZ(-(this.fieldVisionModel.getFieldWidth() / 2.0));
+                
+                // Setup lights
+                this.pointLightWestSouth.setTranslateX(-(this.fieldVisionModel.getFieldLength() / 4.0));
+                this.pointLightWestSouth.setTranslateY(2000.0);
+                this.pointLightWestSouth.setTranslateZ(-(this.fieldVisionModel.getFieldWidth() / 4.0));
+                
+                this.pointLightWestNorth.setTranslateX(-(this.fieldVisionModel.getFieldLength() / 4.0));
+                this.pointLightWestNorth.setTranslateY(2000.0);
+                this.pointLightWestNorth.setTranslateZ(this.fieldVisionModel.getFieldWidth() / 4.0);
+                
+                this.pointLightEastSouth.setTranslateX(this.fieldVisionModel.getFieldLength() / 4.0);
+                this.pointLightEastSouth.setTranslateY(2000.0);
+                this.pointLightEastSouth.setTranslateZ(-(this.fieldVisionModel.getFieldWidth() / 4.0));
+                
+                this.pointLightEastNorth.setTranslateX(this.fieldVisionModel.getFieldLength() / 4.0);
+                this.pointLightEastNorth.setTranslateY(2000.0);
+                this.pointLightEastNorth.setTranslateZ(this.fieldVisionModel.getFieldWidth() / 4.0);
+            }
             
-            // Setting bounds for the location of the camera
-            this.getThirdPersonCamera().setMaxLocX(this.fieldVisionModel.getFieldLength() / 2.0);
-            this.getThirdPersonCamera().setMinLocX(-(this.fieldVisionModel.getFieldLength() / 2.0));
-            this.getThirdPersonCamera().setMaxLocZ(this.fieldVisionModel.getFieldWidth() / 2.0);
-            this.getThirdPersonCamera().setMinLocZ(-(this.fieldVisionModel.getFieldWidth() / 2.0));
-            
-            // Setup lights
-            this.pointLightWestSouth.setTranslateX(-(this.fieldVisionModel.getFieldLength() / 4.0));
-            this.pointLightWestSouth.setTranslateY(2000.0);
-            this.pointLightWestSouth.setTranslateZ(-(this.fieldVisionModel.getFieldWidth() / 4.0));
-            
-            this.pointLightWestNorth.setTranslateX(-(this.fieldVisionModel.getFieldLength() / 4.0));
-            this.pointLightWestNorth.setTranslateY(2000.0);
-            this.pointLightWestNorth.setTranslateZ(this.fieldVisionModel.getFieldWidth() / 4.0);
-            
-            this.pointLightEastSouth.setTranslateX(this.fieldVisionModel.getFieldLength() / 4.0);
-            this.pointLightEastSouth.setTranslateY(2000.0);
-            this.pointLightEastSouth.setTranslateZ(-(this.fieldVisionModel.getFieldWidth() / 4.0));
-            
-            this.pointLightEastNorth.setTranslateX(this.fieldVisionModel.getFieldLength() / 4.0);
-            this.pointLightEastNorth.setTranslateY(2000.0);
-            this.pointLightEastNorth.setTranslateZ(this.fieldVisionModel.getFieldWidth() / 4.0);
-        }
-        
-        for (GeometryGameObject geometryGameObject : this.geometryGameObjects) {
-            
-            geometryGameObject.onUpdateGeometry();
+            for (GeometryGameObject geometryGameObject : this.geometryGameObjects) {
+                
+                geometryGameObject.onUpdateGeometry();
+            }
         }
     }
     
@@ -216,24 +226,43 @@ public class FieldGame extends Game {
      * {@inheritDoc}
      */
     public void updateDetection() {
-                       
-        for (DetectionGameObject detectionGameObject : this.detectionGameObjects) {
-           
-            if (detectionGameObject instanceof RobotGO) {
+        
+        List<Ball> tmpBalls = Models.<Ball>getAll("ball");
+        
+        System.out.println("ball list size: " + tmpBalls.size());
+        
+        if (this.isInitialized) {
+
+            if (balls.size() != tmpBalls.size()) {
                 
-                RobotGO tmpRobot = (RobotGO)detectionGameObject;
+                this.clearBalls();
                 
-                if (this.blueRobots.contains(tmpRobot)) {
+                for (int i = 0; i < tmpBalls.size(); i++) {
                     
-                    tmpRobot.setRobotVisionModel(this.blueRobots.indexOf(tmpRobot), TeamColor.BLUE);
+                    BallGameObject ballGameObject = new BallGameObject(this, tmpBalls.get(i));
                     
-                } else if (this.yellowRobots.contains(tmpRobot)) {
-                    
-                    tmpRobot.setRobotVisionModel(this.yellowRobots.indexOf(tmpRobot), TeamColor.YELLOW);
+                    this.addBall(ballGameObject);
                 }
             }
-                
-            detectionGameObject.onUpdateDetection();
+            
+            for (DetectionGameObject detectionGameObject : this.detectionGameObjects) {
+               
+                if (detectionGameObject instanceof RobotGO) {
+                    
+                    RobotGO tmpRobot = (RobotGO)detectionGameObject;
+                    
+                    if (this.blueRobots.contains(tmpRobot)) {
+                        
+                        tmpRobot.setRobotVisionModel(this.blueRobots.indexOf(tmpRobot), TeamColor.BLUE);
+                        
+                    } else if (this.yellowRobots.contains(tmpRobot)) {
+                        
+                        tmpRobot.setRobotVisionModel(this.yellowRobots.indexOf(tmpRobot), TeamColor.YELLOW);
+                    }
+                }
+                    
+                detectionGameObject.onUpdateDetection();
+            }
         }
     }
     
@@ -342,8 +371,11 @@ public class FieldGame extends Game {
         // Check if we need to add ball game object
         if (!this.detectionGameObjects.contains(ballGameObject)) {
                         
-            // Add ball to game objects
+            // Add ball to detection game objects
             this.addDetectionGameObject(ballGameObject);
+            
+            // Add to list of balls
+            this.balls.add(ballGameObject);
         }
     }
     
@@ -352,6 +384,10 @@ public class FieldGame extends Game {
         // Check if we need to remove the ball from the game
         if (this.detectionGameObjects.contains(ballGameObject)) {
             
+            // Remove ball game object form the balls list
+            this.balls.remove(ballGameObject);
+            
+            // Remove from detection game objects
             this.removeDetectionGameObject(ballGameObject);
         }
     }
