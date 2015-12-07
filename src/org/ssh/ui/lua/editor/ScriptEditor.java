@@ -34,12 +34,12 @@ public class ScriptEditor extends UIComponent {
                                            
     private ColoredCodeArea     codeArea;
     private String              path;
-    private static final String STYLESHEET = "org/ssh/view/css/application.css";
     private FileChooser         fileChooser;
     private VBox                root;
                                 
     /**
-     * Empty constructor for the {@link ScriptEditor}
+     * Constructor for the {@link ScriptEditor}
+     * @param name Name of the {@link ScriptEditor}
      */
     public ScriptEditor(final String name) {
         super(name, "scripteditor.fxml");
@@ -105,10 +105,7 @@ public class ScriptEditor extends UIComponent {
     
     /**
      * Saves the file, and then reloads the given object.
-     * 
-     * @param path
-     *            Path to the file to be displayed and edited by the {@link JTextArea} (Relative and
-     *            absolute both work)
+     *
      * @see {@link #saveAsFile()}
      */
     public void saveFile() {

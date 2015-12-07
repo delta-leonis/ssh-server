@@ -193,7 +193,8 @@ public class Console extends Tab {
      * If alt-enter is pressed, a new line will be printed <br/>
      * If tab is pressed, the word you're currently typing will autocomplete. <br/>
      * If Up is pressed, the last command will show. Also used to scroll through commands <br/>
-     * If Down is pressed, you can scroll through the commands.
+     * If Down is pressed, you can scroll through the commands. <br/>
+     * If Ctrl + C is pressed, the command that is currently being executed will get canceled.
      */
     private void addKeyListeners() {
         // Keypress UP for command history
@@ -397,10 +398,10 @@ public class Console extends Tab {
     /**
      * Appends the given String to the consoleArea Don't use this function for debugging
      *
-     * @param s String that you want to print
+     * @param message String that you want to print
      */
-    public void print(final String s) {
-        Platform.runLater(() -> this.consoleArea.insertText(this.consoleArea.getLength(), s));
+    public void print(final String message) {
+        Platform.runLater(() -> this.consoleArea.insertText(this.consoleArea.getLength(), message));
     }
 
     /**
@@ -422,10 +423,10 @@ public class Console extends Tab {
     /**
      * Same as {@link #print(String)}, only with an added '\n'
      *
-     * @param s String that you want to print.
+     * @param message String that you want to print.
      */
-    public void println(final String s) {
-        this.print(s + "\n");
+    public void println(final String message) {
+        this.print(message + "\n");
     }
 
     /**

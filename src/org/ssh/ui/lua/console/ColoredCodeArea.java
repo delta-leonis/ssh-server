@@ -15,7 +15,7 @@ import org.ssh.models.Settings;
 
 /**
  * Class used to color code the given keywords. It colors the following symbols: ( ) { } [ ] "text"
- * // ; These colors can be edited in the java-keywords.css
+ * These colors can be edited in the java-keywords.css
  *
  *
  * @author Thomas Hakkers Most code originates from https://github.com/TomasMikula/RichTextFX
@@ -110,6 +110,7 @@ public class ColoredCodeArea extends CodeArea {
      * @param objectHighlights
      *            The Java Objects that need to be highlighted
      * @param functionHighlights
+     *            The Java Functions that need to be highlighted
      */
     public void setupColoredCodeArea(List<String> objectHighlights, List<String> functionHighlights) {
             
