@@ -5,24 +5,25 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.stream.Collectors;
 
 import org.ssh.field3d.core.game.Game;
-// import org.ssh.field3d.gameobjects.CarGO;
-import org.ssh.field3d.gameobjects.FieldGO;
-import org.ssh.field3d.gameobjects.RobotGO;
+import org.ssh.field3d.gameobjects.CarGO;
+import org.ssh.field3d.gameobjects.DetectionGameObject;
+import org.ssh.field3d.gameobjects.GeometryGameObject;
+import org.ssh.field3d.gameobjects.detection.BallGameObject;
+import org.ssh.field3d.gameobjects.detection.RobotGO;
+import org.ssh.field3d.gameobjects.geometry.FieldGO;
 import org.ssh.field3d.gameobjects.overlay.CameraControlOverlayGO;
 import org.ssh.managers.manager.Models;
 import org.ssh.models.Field;
-import org.ssh.models.Model;
-import org.ssh.models.Robot;
+import org.ssh.models.enums.TeamColor;
 
+import javafx.application.Platform;
 import javafx.scene.AmbientLight;
 import javafx.scene.Parent;
 import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.paint.Color;
-import org.ssh.models.enums.TeamColor;
 
 /**
  *
@@ -34,32 +35,38 @@ import org.ssh.models.enums.TeamColor;
  */
 public class FieldGame extends Game {
     
+    private static final int ROBOTS_PER_TEAM = 11;
+    
     /** The ambient light. */
-    private final AmbientLight           ambientLight;
-                                         
+    private final AmbientLight               ambientLight;
+                                             
     /** The west point lights. */
-    private final PointLight             pointLightWestSouth, pointLightWestNorth;
-                                         
+    private final PointLight                 pointLightWestSouth, pointLightWestNorth;
+                                             
     /** The east point lights. */
-    private final PointLight             pointLightEastSouth, pointLightEastNorth;
-                                         
+    private final PointLight                 pointLightEastSouth, pointLightEastNorth;
+                                             
     /** The field game object. */
-    private final FieldGO                fieldGO;
-                                         
+    private final FieldGO                    fieldGO;
+                                             
     /** The camera control overlay game object. */
-    private final CameraControlOverlayGO cameraControlOverlayGO;
-                                         
-    /** The robots. */
-    private List<Robot>                  robotsVisionModel;
-                                         
-    /** The robot game objects. */
-    private Queue<RobotGO>               robotGameObjects;
-                                         
+    private final CameraControlOverlayGO     cameraControlOverlayGO;
+                                             
+    /** The detection game objects. */
+    private final Queue<DetectionGameObject> detectionGameObjects;
+    
+    private final List<DetectionGameObject> blueRobots;
+    
+    private final List<DetectionGameObject> yellowRobots;
+                                             
+    /** The geometry game objects. */
+    private final Queue<GeometryGameObject>  geometryGameObjects;
+                                             
     /** The field vision model. */
-    private Field                        fieldVisionModel;
-                                         
+    private Field                            fieldVisionModel;
+                                             
     /** The easter car game object */
-    // private final CarGO easterCarGO;
+    private final CarGO easterCarGO;
     
     /**
      * Constructor.
@@ -77,7 +84,7 @@ public class FieldGame extends Game {
         
         // Initialize super class
         super(root, width, height, true, antiAliasing);
-
+        
         // Creating ambient light
         this.ambientLight = new AmbientLight(Color.DARKGRAY);
         
@@ -87,15 +94,18 @@ public class FieldGame extends Game {
         this.pointLightEastSouth = new PointLight(Color.WHITE);
         this.pointLightEastNorth = new PointLight(Color.WHITE);
         
-        // Creating list for the robot game objects
-        this.robotGameObjects = new ConcurrentLinkedQueue<RobotGO>();
+        this.detectionGameObjects = new ConcurrentLinkedQueue<DetectionGameObject>();
+        this.geometryGameObjects = new ConcurrentLinkedQueue<GeometryGameObject>();
+        
+        this.blueRobots = new ArrayList<DetectionGameObject>();
+        this.yellowRobots = new ArrayList<DetectionGameObject>();
         
         // Creating field GameObject
         this.fieldGO = new FieldGO(this);
         // Creating camera control overlay GameObject
         this.cameraControlOverlayGO = new CameraControlOverlayGO(this);
         // Creating easter egg car GameObject
-        // this.easterCarGO = new CarGO(this);
+        this.easterCarGO = new CarGO(this);
         
         // Set minimal mouse wheel value
         this.getMouseInputHandler().setMinMouseWheelValue(-1000);
@@ -105,10 +115,12 @@ public class FieldGame extends Game {
         // Set black fill color
         this.setFill(Color.BLACK);
         
+        this.createRobots();
+        
         // Adding game objects
-        this.addGameObject(this.fieldGO);
+        this.addGeometryGameObject(this.fieldGO);
         this.addGameObject(this.cameraControlOverlayGO);
-        // this.addGameObject(this.easterCarGO);
+        this.addGameObject(this.easterCarGO);
     }
     
     /**
@@ -118,14 +130,28 @@ public class FieldGame extends Game {
     public void initialize() {
         
         // Add lights to the world
-        this.getWorldGroup().getChildren().add(this.ambientLight);
-        this.getWorldGroup().getChildren().add(this.pointLightWestSouth);
-        this.getWorldGroup().getChildren().add(this.pointLightWestNorth);
-        this.getWorldGroup().getChildren().add(this.pointLightEastSouth);
-        this.getWorldGroup().getChildren().add(this.pointLightEastNorth);
-        
-        updateGeometry();
-        updateDetection();
+        Platform.runLater(() -> {
+            
+            if (!this.getWorldGroup().getChildren().contains(ambientLight)) {
+                this.getWorldGroup().getChildren().add(this.ambientLight);
+            }
+            
+            if (!this.getWorldGroup().getChildren().contains(this.pointLightWestSouth)) {
+                this.getWorldGroup().getChildren().add(this.pointLightWestSouth);
+            }
+            
+            if (!this.getWorldGroup().getChildren().contains(this.pointLightWestNorth)) {
+                this.getWorldGroup().getChildren().add(this.pointLightWestNorth);
+            }
+            
+            if (!this.getWorldGroup().getChildren().contains(this.pointLightEastSouth)) {
+                this.getWorldGroup().getChildren().add(this.pointLightEastSouth);
+            }
+            
+            if (!this.getWorldGroup().getChildren().contains(this.pointLightEastNorth)) {
+                this.getWorldGroup().getChildren().add(this.pointLightEastNorth);
+            }
+        });
     }
     
     /**
@@ -145,17 +171,16 @@ public class FieldGame extends Game {
     /**
      * {@inheritDoc}
      */
-    @Override
     public void updateGeometry() {
         
         // Trying to get field vision model
-        Optional<Field> tmpOptionalField = Models.<Field>get("field");
+        Optional<Field> tmpOptionalField = Models.get("field");
         
         // If a model is present
         if (tmpOptionalField.isPresent()) {
             
             // Set field vision model
-            this.fieldVisionModel = tmpOptionalField.get();
+            this.fieldVisionModel = (Field) tmpOptionalField.get();
             
             // Setting bounds for the location of the camera
             this.getThirdPersonCamera().setMaxLocX(this.fieldVisionModel.getFieldLength() / 2.0);
@@ -180,32 +205,76 @@ public class FieldGame extends Game {
             this.pointLightEastNorth.setTranslateY(2000.0);
             this.pointLightEastNorth.setTranslateZ(this.fieldVisionModel.getFieldWidth() / 4.0);
         }
-
-        // Clear robots
-        this.clearRobots();
-
-        // There has been new data, re-create robots
-        this.createRobots();
         
-        // Call the updateVisionData method from the super class.
-        // By doing this, the game objects also get a call that the vision model was updated
-        super.updateGeometry();
+        for (GeometryGameObject geometryGameObject : this.geometryGameObjects) {
+            
+            geometryGameObject.onUpdateGeometry();
+        }
     }
     
     /**
      * {@inheritDoc}
      */
-    @Override
     public void updateDetection() {
+                       
+        for (DetectionGameObject detectionGameObject : this.detectionGameObjects) {
+           
+            if (detectionGameObject instanceof RobotGO) {
+                
+                RobotGO tmpRobot = (RobotGO)detectionGameObject;
+                
+                if (this.blueRobots.contains(tmpRobot)) {
+                    
+                    tmpRobot.setRobotVisionModel(this.blueRobots.indexOf(tmpRobot), TeamColor.BLUE);
+                    
+                } else if (this.yellowRobots.contains(tmpRobot)) {
+                    
+                    tmpRobot.setRobotVisionModel(this.yellowRobots.indexOf(tmpRobot), TeamColor.YELLOW);
+                }
+            }
+                
+            detectionGameObject.onUpdateDetection();
+        }
+    }
+    
+    public void addGeometryGameObject(final GeometryGameObject geometryGameObject) {
         
-        // Call super updateDetection method
-        super.updateDetection();
+        if (!this.geometryGameObjects.contains(geometryGameObject)) {
         
-        // Clear robots
-        this.clearRobots();
+            this.geometryGameObjects.add(geometryGameObject);
+            
+            geometryGameObject.onInitialize();
+        }
+    }
+    
+    public void addDetectionGameObject(final DetectionGameObject detectionGameObject) {
         
-        // There has been new data, re-create robots
-        this.createRobots();
+        if (!this.detectionGameObjects.contains(detectionGameObject)) {
+            
+            this.detectionGameObjects.add(detectionGameObject);
+            
+            detectionGameObject.onInitialize();
+        }
+    }
+    
+    public void removeGeometryGameObject(final GeometryGameObject geometryGameObject) {
+        
+        if (this.geometryGameObjects.contains(geometryGameObject)) {
+        
+            this.geometryGameObjects.remove(geometryGameObject);
+            
+            geometryGameObject.onDestroy();
+        }
+    }
+    
+    public void removeDetectionGameObject(final DetectionGameObject detectionGameObject) {
+        
+        if (this.detectionGameObjects.contains(detectionGameObject)) {
+            
+            this.detectionGameObjects.remove(detectionGameObject);
+            
+            detectionGameObject.onDestroy();
+        }
     }
     
     /**
@@ -218,10 +287,7 @@ public class FieldGame extends Game {
     public void addRobot(final RobotGO robot) {
         
         // Add robot to game
-        this.addGameObject(robot);
-        
-        // Add to the list of robot game objects
-        this.robotGameObjects.add(robot);
+        this.addDetectionGameObject(robot);
     }
     
     /**
@@ -234,19 +300,7 @@ public class FieldGame extends Game {
     public void removeRobot(final RobotGO robot) {
         
         // Remove robot from game
-        this.removeGameObject(robot);
-        
-        // Remove from the list of robot game objects
-        this.robotGameObjects.remove(robot);
-    }
-    
-    /**
-     * Gets the {@link List} of robots used in the game.
-     *
-     * @return The {@link List} of robots.
-     */
-    public List<Robot> getRobots() {
-        return this.robotsVisionModel;
+        this.removeDetectionGameObject(robot);
     }
     
     /**
@@ -254,17 +308,16 @@ public class FieldGame extends Game {
      */
     private void createRobots() {
         
-        // Getting list of robots from the vision model
-        this.robotsVisionModel = Models.<Robot>getAll("robot");
-        
-        // Loop through robot models
-        for (Robot robot : this.robotsVisionModel) {
+        for (int i = 0; i < ROBOTS_PER_TEAM; i++) {
             
-            // Creating new robot
-            RobotGO tmpRobot = new RobotGO(this, robot);
+            RobotGO blueRobot = new RobotGO(this, null);
+            RobotGO yellowRobot = new RobotGO(this, null);
             
-            // Add to game objects
-            addGameObject(tmpRobot);
+            this.addDetectionGameObject(blueRobot);
+            this.addDetectionGameObject(yellowRobot);
+            
+            this.blueRobots.add(blueRobot);
+            this.yellowRobots.add(yellowRobot);
         }
     }
     
@@ -274,10 +327,45 @@ public class FieldGame extends Game {
     private void clearRobots() {
         
         // Loop through robot game objects
-        for (RobotGO robotGameObject : this.robotGameObjects) {
+        for (DetectionGameObject robotGameObject : this.detectionGameObjects) {
             
-            // Remove game object
-            this.removeRobot(robotGameObject);
+            if (robotGameObject instanceof RobotGO) {
+                
+                // Remove game object
+                this.removeRobot((RobotGO)robotGameObject);
+            }
+        }
+    }
+    
+    public void addBall(final BallGameObject ballGameObject) {
+        
+        // Check if we need to add ball game object
+        if (!this.detectionGameObjects.contains(ballGameObject)) {
+                        
+            // Add ball to game objects
+            this.addDetectionGameObject(ballGameObject);
+        }
+    }
+    
+    public void removeBall(final BallGameObject ballGameObject) {
+        
+        // Check if we need to remove the ball from the game
+        if (this.detectionGameObjects.contains(ballGameObject)) {
+            
+            this.removeDetectionGameObject(ballGameObject);
+        }
+    }
+    
+    public void clearBalls() {
+
+        // Loop through ball game objects
+        for (DetectionGameObject detectionGameObject : this.detectionGameObjects) {
+            
+            if (detectionGameObject instanceof BallGameObject) {
+                
+                // Remove ball
+                this.removeBall((BallGameObject)detectionGameObject);
+            }
         }
     }
 }

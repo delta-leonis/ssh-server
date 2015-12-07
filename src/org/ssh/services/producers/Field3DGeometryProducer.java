@@ -46,6 +46,8 @@ public class Field3DGeometryProducer extends Producer<GeometryPacket> {
             // Creating geometry packet
             GeometryPacket packet = new GeometryPacket(geometryData);
             
+            System.out.println("geometryProducer");
+            
             // Return the packets
             return packet;
         });

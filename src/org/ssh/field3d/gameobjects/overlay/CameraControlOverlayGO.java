@@ -2,10 +2,10 @@ package org.ssh.field3d.gameobjects.overlay;
 
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
-import org.ssh.field3d.core.math.Vector3f;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Point3D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
@@ -172,10 +172,10 @@ public class CameraControlOverlayGO extends OverlayGO {
     private void onButtonTopViewAction(ActionEvent actionEvent) {
         
         // Getting camera pivot location
-        Vector3f cameraPivot = this.getGame().getThirdPersonCamera().getPivot();
+        Point3D cameraPivot = this.getGame().getThirdPersonCamera().getPivot();
         
         // Setting pivot location to center
-        this.getGame().getThirdPersonCamera().setPivot(new Vector3f(0.0f, cameraPivot.y, 0.0f));
+        this.getGame().getThirdPersonCamera().setPivot(new Point3D(0.0f, cameraPivot.getY(), 0.0f));
         
         // Setting zoom
         this.getGame().getThirdPersonCamera().setZoom(ZOOM_TOP_VIEW);
@@ -195,10 +195,10 @@ public class CameraControlOverlayGO extends OverlayGO {
     private void onButtonSideViewAction(ActionEvent actionEvent) {
         
         // Getting camera pivot location
-        Vector3f cameraPivot = this.getGame().getThirdPersonCamera().getPivot();
+        Point3D cameraPivot = this.getGame().getThirdPersonCamera().getPivot();
         
         // Setting pivot location to center
-        this.getGame().getThirdPersonCamera().setPivot(new Vector3f(0.0f, cameraPivot.y, 0.0f));
+        this.getGame().getThirdPersonCamera().setPivot(new Point3D(0.0f, cameraPivot.getY(), 0.0f));
         
         // Setting zoom
         this.getGame().getThirdPersonCamera().setZoom(ZOOM_SIDE_VIEW);
@@ -218,10 +218,10 @@ public class CameraControlOverlayGO extends OverlayGO {
     private void onButton45DegViewAction(ActionEvent actionEvent) {
         
         // Getting camera pivot location
-        Vector3f cameraPivot = this.getGame().getThirdPersonCamera().getPivot();
+        Point3D cameraPivot = this.getGame().getThirdPersonCamera().getPivot();
         
         // Setting pivot location to center
-        this.getGame().getThirdPersonCamera().setPivot(new Vector3f(0.0f, cameraPivot.y, 0.0f));
+        this.getGame().getThirdPersonCamera().setPivot(new Point3D(0.0f, cameraPivot.getY(), 0.0f));
         
         // Setting zoom
         this.getGame().getThirdPersonCamera().setZoom(ZOOM_45_DEG_VIEW);

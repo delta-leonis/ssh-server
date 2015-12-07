@@ -1,10 +1,10 @@
-# Blender MTL File: 'robot.blend'
+# Blender MTL File: 'None'
 # Material Count: 1
 
-newmtl Material.001
-Ns 90.196078
+newmtl Material.002
+Ns 78.431373
 Ka 0.000000 0.000000 0.000000
-Kd 0.100205 0.000000 0.409600
+Kd 0.041044 0.000000 0.167772
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000

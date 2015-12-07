@@ -1,4 +1,4 @@
-package org.ssh.field3d.gameobjects;
+package org.ssh.field3d.gameobjects.geometry;
 
 import java.io.InputStream;
 import java.util.List;
@@ -6,11 +6,12 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.ssh.field3d.FieldGame;
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
-import org.ssh.field3d.core.math.Vector3f;
 import org.ssh.field3d.core.shapes.FlatArc3D;
 import org.ssh.field3d.core.shapes.FlatLine3D;
+import org.ssh.field3d.gameobjects.GeometryGameObject;
 import org.ssh.field3d.gameobjects.overlay.ContextOverlayGO;
 import org.ssh.managers.manager.Models;
 import org.ssh.models.Field;
@@ -22,12 +23,14 @@ import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
+import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.transform.Rotate;
 import protobuf.Geometry.FieldCicularArc;
 import protobuf.Geometry.FieldLineSegment;
 import protobuf.Geometry.Vector2f;
@@ -39,7 +42,7 @@ import protobuf.Geometry.Vector2f;
  * @see GameObject
  */
 // TODO: Read location of penalty spot + penalty spot size from model
-public class FieldGO extends GameObject {
+public class FieldGO extends GeometryGameObject {
     
     /** The height of the field. */
     public static final double          FIELD_HEIGHT            = 1.0;
@@ -101,9 +104,12 @@ public class FieldGO extends GameObject {
     /** The west penalty spot. */
     private PenaltySpotGO               penaltySpotWest;
                                         
+    private final Group                 fieldGroup;
+                                        
     /**
      * 
      * @param game
+     * @param fieldVisionModel
      */
     public FieldGO(final Game game) {
         
@@ -117,6 +123,8 @@ public class FieldGO extends GameObject {
         this.goalGameObjects = new ConcurrentLinkedQueue<GoalGameObject>();
         
         this.contextOverlayGO = new ContextOverlayGO(game);
+        
+        this.fieldGroup = new Group();
         
         // Creating grass material with lawn green diffuse color
         this.grassMaterial = new PhongMaterial(Color.LAWNGREEN);
@@ -149,13 +157,15 @@ public class FieldGO extends GameObject {
         
         // Add context menu to the game objects of the game
         this.getGame().addGameObject(this.contextOverlayGO);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onUpdate(final long timeDivNano) {
+        
+        Platform.runLater(() -> {
+            
+            if (!this.getGame().getWorldGroup().getChildren().contains(this.fieldGroup)) {
+                
+                this.getGame().getWorldGroup().getChildren().add(this.fieldGroup);
+            }
+            
+        });
     }
     
     /**
@@ -163,6 +173,11 @@ public class FieldGO extends GameObject {
      */
     @Override
     public void onDestroy() {
+        
+        if (this.getGame().getWorldGroup().getChildren().contains(this.fieldGroup)) {
+            
+            this.getGame().getWorldGroup().getChildren().remove(this.fieldGroup);
+        }
         
         // Check if we need to remove field boxes
         if ((this.fieldBoxes != null) && (this.fieldBoxes.size() > 0)) {
@@ -194,13 +209,13 @@ public class FieldGO extends GameObject {
     public void onUpdateGeometry() {
         
         // Trying to get Field model
-        Optional<Field> optionalModel = Models.<Field>get("field");
+        Optional<Model> optionalModel = Models.get("field");
         
         // If there is a model present
         if (optionalModel.isPresent()) {
             
             // Setting vision model
-            this.fieldVisionModel = optionalModel.get();
+            this.fieldVisionModel = (Field) optionalModel.get();
             
             // Clear arcs
             this.clearArcs();
@@ -212,8 +227,8 @@ public class FieldGO extends GameObject {
             this.clearGoals();
             
             // Remove penalty spots
-            this.getGame().removeGameObject(penaltySpotEast);
-            this.getGame().removeGameObject(penaltySpotWest);
+            ((FieldGame)this.getGame()).removeGeometryGameObject(penaltySpotEast);
+            ((FieldGame)this.getGame()).removeGeometryGameObject(penaltySpotWest);
             
             // Generate tiles
             this.generateTiles();
@@ -226,27 +241,26 @@ public class FieldGO extends GameObject {
             
             // Creating penalty spots
             this.penaltySpotEast = new PenaltySpotGO(this.getGame(),
-                    new Vector3f((float) ((fieldVisionModel.getFieldLength() / 2.0) - FieldGO.FIELD_PENALTY_SPOT),
-                            (float) FieldGO.LINE_Y_OFFSET,
-                            0),
-                    FieldGO.FIELD_PENALTY_SPOT_SIZE);
+                    new Point3D(((fieldVisionModel.getFieldLength() / 2.0) - FieldGO.FIELD_PENALTY_SPOT),
+                            FieldGO.LINE_Y_OFFSET,
+                            0.0),
+                    FieldGO.FIELD_PENALTY_SPOT_SIZE,
+                    this.fieldGroup);
+            
             this.penaltySpotWest = new PenaltySpotGO(this.getGame(),
-                    new Vector3f((float) (-(fieldVisionModel.getFieldLength() / 2.0) + FieldGO.FIELD_PENALTY_SPOT),
-                            (float) FieldGO.LINE_Y_OFFSET,
-                            0),
-                    FieldGO.FIELD_PENALTY_SPOT_SIZE);
+                    new Point3D((-(fieldVisionModel.getFieldLength() / 2.0) + FieldGO.FIELD_PENALTY_SPOT),
+                            FieldGO.LINE_Y_OFFSET,
+                            0.0),
+                    FieldGO.FIELD_PENALTY_SPOT_SIZE,
+                    this.fieldGroup);
                     
             // Adding new penalty spots
-            this.getGame().addGameObject(penaltySpotEast);
-            this.getGame().addGameObject(penaltySpotWest);
+            ((FieldGame)this.getGame()).addGeometryGameObject(penaltySpotEast);
+            ((FieldGame)this.getGame()).addGeometryGameObject(penaltySpotWest);
+            
+            this.fieldGroup.setRotationAxis(Rotate.Y_AXIS);
+            this.fieldGroup.setRotate(180);
         }
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onUpdateDetection() {
     }
     
     /**
@@ -276,7 +290,7 @@ public class FieldGO extends GameObject {
         line.getMeshView().setTranslateY(FieldGO.LINE_Y_OFFSET);
         
         // Add to world group
-        Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(line.getMeshView()));
+        Platform.runLater(() -> this.fieldGroup.getChildren().add(line.getMeshView()));
         
         // Return the line
         return line;
@@ -347,8 +361,8 @@ public class FieldGO extends GameObject {
         
         // Add arc to the world
         Platform.runLater(() -> {
-            if (!this.getGame().getWorldGroup().getChildren().contains(tmpArc.getMeshView())) {
-                this.getGame().getWorldGroup().getChildren().add(tmpArc.getMeshView());
+            if (!this.fieldGroup.getChildren().contains(tmpArc.getMeshView())) {
+                this.fieldGroup.getChildren().add(tmpArc.getMeshView());
             }
         });
         
@@ -372,8 +386,8 @@ public class FieldGO extends GameObject {
             
             if (this.fieldArcs != null && this.fieldArcs.contains(arc)) {
                 
-                // Remove arc from the world
-                this.getGame().getWorldGroup().getChildren().remove(arc.getMeshView());
+                // Remove arc from the field group
+                this.fieldGroup.getChildren().remove(arc.getMeshView());
                 // Remove the arc from the list of arcs
                 this.fieldArcs.remove(arc);
             }
@@ -405,7 +419,7 @@ public class FieldGO extends GameObject {
         this.fieldBoxes.add(box);
         
         // Add box to the world group
-        Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(box));
+        Platform.runLater(() -> this.fieldGroup.getChildren().add(box));
         
         // Hook on mouse clicked event
         box.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -446,8 +460,8 @@ public class FieldGO extends GameObject {
             // Check if we need to remove a box from the field
             if (this.fieldBoxes != null && this.fieldBoxes.contains(box)) {
                 
-                // Remove from the world group
-                this.getGame().getWorldGroup().getChildren().remove(box);
+                // Remove from the field group
+                this.fieldGroup.getChildren().remove(box);
                 
                 // Remove from box list
                 this.fieldBoxes.remove(box);
@@ -501,19 +515,23 @@ public class FieldGO extends GameObject {
     private void generateGoals() {
         
         // Getting list of goals
-        List<Goal> goals = Models.<Goal>getAll("goal");
-
-        // Loop through goals
-        for (Goal goal : goals) {
-
-            // Create a game object for the goal
-            GoalGameObject goal3d = new GoalGameObject(this.getGame(), goal);
-
-            // Add goal to goal game objects
-            this.goalGameObjects.add(goal3d);
-
-            // Add goal game object to the list of game objects
-            this.getGame().addGameObject(goal3d);
+        List<Goal> goals = this.fieldVisionModel.getFieldGoals();
+        
+        // Check if goal
+        if (goals != null) {
+            
+            // Loop through goals
+            for (Goal goal : goals) {
+                
+                // Create a game object for the goal
+                GoalGameObject goal3d = new GoalGameObject(this.getGame(), goal, this.fieldGroup);
+                
+                // Add goal to goal game objects
+                this.goalGameObjects.add(goal3d);
+                
+                // Add goal game object to the list of game objects
+                ((FieldGame)this.getGame()).addGeometryGameObject(goal3d);
+            }
         }
     }
     
@@ -525,7 +543,7 @@ public class FieldGO extends GameObject {
         // Loop through goal game objects
         for (GoalGameObject goalGameObject : this.goalGameObjects) {
             
-            this.getGame().removeGameObject(goalGameObject);
+            ((FieldGame)this.getGame()).removeGeometryGameObject(goalGameObject);
         }
     }
     

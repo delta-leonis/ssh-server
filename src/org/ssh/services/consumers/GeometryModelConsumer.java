@@ -1,7 +1,5 @@
 package org.ssh.services.consumers;
 
-import java.util.Optional;
-
 import org.ssh.field3d.FieldGame;
 import org.ssh.managers.manager.Models;
 import org.ssh.managers.manager.UI;
@@ -78,11 +76,11 @@ public class GeometryModelConsumer extends Consumer<GeometryPacket> {
                             "goalWidth",
                             fieldData.getGoalWidth());
                 });
-                
-                // Update geometry
-                fieldGame.updateGeometry();
             }
         });
+        
+        // Update geometry
+        fieldGame.updateGeometry();
         return true;
     }
     

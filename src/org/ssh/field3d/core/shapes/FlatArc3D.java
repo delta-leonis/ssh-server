@@ -1,7 +1,6 @@
 package org.ssh.field3d.core.shapes;
 
-import org.ssh.field3d.core.math.Vector3f;
-
+import javafx.geometry.Point3D;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.VertexFormat;
 import javafx.scene.shape.TriangleMesh;
@@ -15,9 +14,6 @@ public class FlatArc3D {
     
     /** The texture coordinates. */
     private static final float[] TEXTURE_COORDS    = { 1, 1, 1, 0, 0, 1, 0, 0 };
-                                                   
-    /** The conversion to radians */
-    //private static final double  CONVERT_TO_RAD    = Math.PI / 180.0;
                                                    
     /** The values per coordinate. */
     private static final int     VALUES_PER_COORD  = 3;
@@ -190,13 +186,19 @@ public class FlatArc3D {
             final double b11x = Math.cos(curAngleRad) * (radius + halfOfThickness);
             final double b11z = Math.sin(curAngleRad) * (radius + halfOfThickness);
             
-            // Creating vectors for the points
-            final Vector3f vectorB1 = new Vector3f((float) b1x, 0.0f, (float) b1z);
-            final Vector3f vectorB11 = new Vector3f((float) b11x, 0.0f, (float) b11z);
+            // Creating vectors for the points (B' & B'')
+            final Point3D pointB1 = new Point3D(b1x, 0.0f, b1z);
+            final Point3D pointB11 = new Point3D(b11x, 0.0f, b11z);
             
-            // Copy vectors as array into vertices
-            System.arraycopy(vectorB1.getFloatArray(), 0, vertices, i * 6, 3);
-            System.arraycopy(vectorB11.getFloatArray(), 0, vertices, (i * 6) + 3, 3);
+            // Adding B' to vertices 
+            vertices[i * 6] = (float)pointB1.getX();
+            vertices[i * 6 + 1] = (float)pointB1.getY();
+            vertices[i * 6 + 2] = (float)pointB1.getZ();
+            
+            // Adding B'' to vertices
+            vertices[i * 6 + 3] = (float)pointB11.getX();
+            vertices[i * 6 + 4] = (float)pointB11.getY();
+            vertices[i * 6 + 5] = (float)pointB11.getZ();
             
             // Increase angle in RAD
             curAngleRad += anglePerStepRad;

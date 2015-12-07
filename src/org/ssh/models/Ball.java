@@ -10,6 +10,9 @@ import org.ssh.util.Alias;
  */
 public class Ball extends FieldObject {
     
+    /** The diameter of the ball */
+    public static final int BALL_DIAMETER = 43;
+    
     /**
      * Height of the ball as provided by ssl-vision
      */

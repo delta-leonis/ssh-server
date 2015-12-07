@@ -216,39 +216,12 @@ public abstract class Game extends SubScene {
     }
     
     /**
-     * Update geometry method. This method should be called when there are new geometry model
-     * objects available.
+     * On exit method. This method should be called when the game closes.
      */
-    public synchronized void updateGeometry() {
+    public void onExit() {
         
-        // Check if the game objects list is
-        if (this.gameObjects != null) {
-            
-            // Loop through game objects
-            for (GameObject gameObject : this.gameObjects) {
-                
-                // Update vision data
-                gameObject.onUpdateGeometry();
-            }
-        }
-    }
-    
-    /**
-     * Update detection method. This method should be called when there are new model objects
-     * available.
-     */
-    public synchronized void updateDetection() {
-        
-        // Check if the game objects list is
-        if (this.gameObjects != null) {
-            
-            // Loop through game objects
-            for (GameObject gameObject : this.gameObjects) {
-                
-                // Update vision data
-                gameObject.onUpdateDetection();
-            }
-        }
+        // Call destroy method
+        this.internalDestroy();
     }
     
     /**

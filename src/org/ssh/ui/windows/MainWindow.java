@@ -271,6 +271,10 @@ public class MainWindow extends UIController<StackPane> {
 
 		// this handler makes sure the stage shuts down when the main window closes
 		primaryStage.setOnCloseRequest(windowEvent -> {
+		    
+		    // Destroy field
+		    this.field.internalDestroy();
+		    
 			// Shut down javafx platform
 			Platform.exit();
 			// Shut down program
@@ -344,6 +348,10 @@ public class MainWindow extends UIController<StackPane> {
 	 */
 	@FXML
 	private void exit() {
+	    
+	    // Destroy field
+	    this.field.internalDestroy();
+	    
 		// Shut down javafx platform
 		Platform.exit();
 		// Shut down program

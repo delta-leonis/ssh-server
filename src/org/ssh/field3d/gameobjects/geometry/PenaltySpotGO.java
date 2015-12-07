@@ -1,10 +1,12 @@
-package org.ssh.field3d.gameobjects;
+package org.ssh.field3d.gameobjects.geometry;
 
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
-import org.ssh.field3d.core.math.Vector3f;
+import org.ssh.field3d.gameobjects.GeometryGameObject;
 
 import javafx.application.Platform;
+import javafx.geometry.Point3D;
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.transform.Rotate;
@@ -17,13 +19,16 @@ import javafx.scene.transform.Rotate;
  *      
  * @author Mark Lefering
  */
-public class PenaltySpotGO extends GameObject {
+public class PenaltySpotGO extends GeometryGameObject {
     
     /** The location of the penalty spot. */
-    private Vector3f     location;
+    private Point3D     location;
                          
     /** The model (a circle). */
     private final Circle model;
+    
+    /** The group for the field */
+    private final Group fieldGroup;
                          
     /** The radius of the penalty spot. */
     private double       radius;
@@ -34,11 +39,11 @@ public class PenaltySpotGO extends GameObject {
      * @param game
      *            The {@link Game} of the {@link GameObject}.
      * @param location
-     *            The location of the penalty spot as {@link Vector3f}.
+     *            The {@link Point3D location} of the penalty spot.
      * @param radius
      *            The radius of the penalty spot.
      */
-    public PenaltySpotGO(final Game game, final Vector3f location, final double radius) {
+    public PenaltySpotGO(final Game game, final Point3D location, final double radius, Group fieldGroup) {
         
         // Initialize super class
         super(game);
@@ -49,6 +54,7 @@ public class PenaltySpotGO extends GameObject {
         // Setting values
         this.location = location;
         this.radius = radius;
+        this.fieldGroup = fieldGroup;
         
         // Rotate 90 deg around x-axis so it is flat on the ground
         this.model.setRotationAxis(Rotate.X_AXIS);
@@ -58,9 +64,9 @@ public class PenaltySpotGO extends GameObject {
         this.model.setFill(Color.WHITE);
         
         // Translate to location
-        this.model.setTranslateX(location.x);
-        this.model.setTranslateY(location.y);
-        this.model.setTranslateZ(location.z);
+        this.model.setTranslateX(location.getX());
+        this.model.setTranslateY(location.getY());
+        this.model.setTranslateZ(location.getZ());
     }
     
     /**
@@ -73,20 +79,13 @@ public class PenaltySpotGO extends GameObject {
         Platform.runLater(() -> {
             
             // If the world group does not contain the 3D model
-            if (!this.getGame().getWorldGroup().getChildren().contains(this.model)) {
+            if (!this.fieldGroup.getChildren().contains(this.model)) {
                 
                 // Add 3d model to the world group
-                this.getGame().getWorldGroup().getChildren().add(this.model);
+                this.fieldGroup.getChildren().add(this.model);
             }
         });
         
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onUpdate(final long timeDivNano) {
     }
     
     /**
@@ -99,10 +98,10 @@ public class PenaltySpotGO extends GameObject {
         Platform.runLater(() -> {
             
             // Check if the world group contains the 3d model
-            if (this.getGame().getWorldGroup().getChildren().contains(this.model)) {
+            if (this.fieldGroup.getChildren().contains(this.model)) {
                 
                 // Remover 3d model from the world group
-                this.getGame().getWorldGroup().getChildren().remove(this.model);
+                this.fieldGroup.getChildren().remove(this.model);
             }
         });
     }
@@ -115,18 +114,11 @@ public class PenaltySpotGO extends GameObject {
     }
     
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onUpdateDetection() {
-    }
-    
-    /**
      * Gets the location of the penalty spot.
      *
-     * @return Returns a {@link Vector3f} containing the location of the penalty spot.
+     * @return Returns a {@link Point3D} containing the location of the penalty spot.
      */
-    public Vector3f getLocation() {
+    public Point3D getLocation() {
         return this.location;
     }
     
@@ -143,17 +135,17 @@ public class PenaltySpotGO extends GameObject {
      * SetLocation method. This method sets the location of the model.
      * 
      * @param location
-     *            The {@link Vector3f} of the location of the penalty spot.
+     *            The {@link Point3D} of the location of the penalty spot.
      */
-    public void setLocation(final Vector3f location) {
+    public void setLocation(final Point3D location) {
         
         // Setting location
         this.location = location;
         
         // Translate model to location
-        this.model.setTranslateX(this.location.x);
-        this.model.setTranslateY(this.location.y);
-        this.model.setTranslateZ(this.location.z);
+        this.model.setTranslateX(this.location.getX());
+        this.model.setTranslateY(this.location.getY());
+        this.model.setTranslateZ(this.location.getZ());
     }
     
     /**

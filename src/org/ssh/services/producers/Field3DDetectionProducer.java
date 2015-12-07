@@ -23,7 +23,7 @@ import protobuf.Detection.DetectionRobot;
 public class Field3DDetectionProducer extends Producer<DetectionPacket> {
     
     /** The number of robots per team. */
-    private static int NUM_ROBOTS_PER_TEAM = 8;
+    private static int NUM_ROBOTS_PER_TEAM = 11;
     
     /** The number of frames per second. */
     private static float FPS = 60.0f;

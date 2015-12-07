@@ -1,9 +1,8 @@
-package org.ssh.field3d.gameobjects;
-
-import java.util.List;
+package org.ssh.field3d.gameobjects.geometry;
 
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
+import org.ssh.field3d.gameobjects.GeometryGameObject;
 import org.ssh.managers.manager.Models;
 import org.ssh.models.Goal;
 import org.ssh.models.Team;
@@ -20,7 +19,7 @@ import javafx.scene.transform.Rotate;
  * @author marklef2
  * @see GameObject
  */
-public class GoalGameObject extends GameObject {
+public class GoalGameObject extends GeometryGameObject {
     
     /** The thickness of the wood of the goal. */
     public static final float GOAL_BORDER_THICKNESS = 20.0f;
@@ -30,6 +29,9 @@ public class GoalGameObject extends GameObject {
                               
     /** The {@link Group} for the goal. */
     private Group             goalGroup;
+                              
+    /** The field group. */
+    private final Group       fieldGroup;
                               
     /** The {@link PhongMaterial} for the goal. */
     private PhongMaterial     goalMaterial;
@@ -46,11 +48,11 @@ public class GoalGameObject extends GameObject {
      * @param goalVisionModel
      *            The vision {@ink Goal model} of the goal.
      */
-    public GoalGameObject(Game game, Goal goalVisionModel) {
+    public GoalGameObject(Game game, Goal goalVisionModel, final Group fieldGroup) {
         
         // Initialize super class
         super(game);
-
+        
         // Creating group for the goal elements
         this.goalGroup = new Group();
 
@@ -67,9 +69,11 @@ public class GoalGameObject extends GameObject {
         
         // Creating a PhongMaterial for the goal
         this.goalMaterial = new PhongMaterial();
-
+        
         // Setting goal vision model
         this.goalVisionModel = goalVisionModel;
+        
+        this.fieldGroup = fieldGroup;
         
         // Setting rotation axis
         this.goalGroup.setRotationAxis(Rotate.Y_AXIS);
@@ -79,7 +83,7 @@ public class GoalGameObject extends GameObject {
                 Goal.GOAL_HEIGHT,
                 this.goalVisionModel.getGoalDepth(),
                 this.goalMaterial);
-
+                
         // Check which side the goal belongs to
         switch (this.game.getSide(goalVisionModel.getAllegiance())) {
             
@@ -93,7 +97,7 @@ public class GoalGameObject extends GameObject {
                 
                 // The goal is on the south side
             case SOUTH: {
-
+                
                 // Rotate a half
                 this.goalGroup.setRotate(180.0);
                 break;
@@ -131,10 +135,10 @@ public class GoalGameObject extends GameObject {
         
         Platform.runLater(() -> {
             // Check if we need to remove the goal group
-            if (this.getGame().getWorldGroup().getChildren().contains(goalGroup)) {
+            if (this.fieldGroup.getChildren().contains(goalGroup)) {
                 
                 // Remove the goal group from the world
-                this.getGame().getWorldGroup().getChildren().remove(goalGroup);
+                this.fieldGroup.getChildren().remove(goalGroup);
             }
         });
     }
@@ -149,14 +153,7 @@ public class GoalGameObject extends GameObject {
         updateTeamColor();
         
         // Add goal group to the world group
-        Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(this.goalGroup));
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onUpdate(long timeDivNano) {      
+        Platform.runLater(() -> this.fieldGroup.getChildren().add(this.goalGroup));
     }
     
     /**
@@ -164,19 +161,13 @@ public class GoalGameObject extends GameObject {
      */
     @Override
     public void onUpdateGeometry() {
-        // Update team color 
+        
+        // Update team color
         updateTeamColor();
 
-        // Translate goal
+// Translate goal
         this.goalGroup.setTranslateX(this.goalVisionModel.getPosition().getX());
         this.goalGroup.setTranslateZ(this.goalVisionModel.getPosition().getY());
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onUpdateDetection() {
     }
     
     /**
@@ -207,7 +198,6 @@ public class GoalGameObject extends GameObject {
         Box backBox = new Box();
         Box rightBox = new Box();
         
-    
         // Clear group
         this.goalGroup.getChildren().clear();
         
@@ -241,7 +231,7 @@ public class GoalGameObject extends GameObject {
         // Setting material of the boxes
         leftBox.setMaterial(material);
         rightBox.setMaterial(material);
-        backBox.setMaterial(material); 
+        backBox.setMaterial(material);
         
         // Adding boxes to the group of the goal
         this.goalGroup.getChildren().add(leftBox);
