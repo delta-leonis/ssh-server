@@ -1,35 +1,23 @@
 package org.ssh.ui.lua.console;
 
-import static javafx.scene.input.KeyCode.BACK_SPACE;
-import static javafx.scene.input.KeyCode.Z;
-
-import java.util.List;
-import java.util.Optional;
-
-import org.fxmisc.richtext.CodeArea;
-import org.fxmisc.wellbehaved.event.EventHandlerHelper;
-import org.fxmisc.wellbehaved.event.EventPattern;
-import org.ssh.managers.manager.Models;
-import org.ssh.models.Model;
-import org.ssh.models.Settings;
-import org.ssh.util.Logger;
-
 import javafx.application.Platform;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.wellbehaved.event.EventHandlerHelper;
+import org.fxmisc.wellbehaved.event.EventPattern;
+
 import org.ssh.util.LuaUtils;
+
 
 /**
  * Class that extends the RTF {@link CodeArea} Used to block certain inputs.
  *
  * @author Thomas Hakkers
- *         
+ *
  */
 public class ConsoleArea extends ColoredCodeArea {
-    
-    // A logger for errorhandling
-    private static final Logger LOG = Logger.getLogger();
-    
+
     /** The currentline of the console. Anything before this line can't be edited */
     private int                 currentLine;
 
@@ -42,10 +30,10 @@ public class ConsoleArea extends ColoredCodeArea {
         super.setupColoredCodeArea(LuaUtils.getLuaClasses(), LuaUtils.getLuaFunctions());
         // On Backspace, use a custom handler
         EventHandlerHelper.install(this.onKeyPressedProperty(),
-                EventHandlerHelper.on(EventPattern.keyPressed(BACK_SPACE)).act(event -> this.backspace()).create());
+                EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.BACK_SPACE)).act(event -> this.backspace()).create());
         // On ctrl + Z, do nothing to avoid bugs
         EventHandlerHelper.install(this.onKeyPressedProperty(),
-                EventHandlerHelper.on(EventPattern.keyPressed(Z, KeyCombination.CONTROL_DOWN))
+                EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.Z, KeyCombination.CONTROL_DOWN))
                         .act(event -> {}).create());
         // Keycombination Control + shift + C for copy
         EventHandlerHelper.install(this.onKeyPressedProperty(),
@@ -75,20 +63,18 @@ public class ConsoleArea extends ColoredCodeArea {
             this.replaceText(this.getSelection().getStart(), this.getSelection().getEnd(), "");
         }
     }
-    
+
     /**
      * Checks whether the current position is a valid place to use backspace.
      */
     private boolean isValid() {
-        if (this.currentLine >= this.getCaretPosition()) 
-            return false;
-        
-        return true;
+        return this.currentLine < this.getCaretPosition();
+
     }
-    
+
     /**
      * Overriding replaceSelection so that stuff can't be written in any previous lines
-     * 
+     *
      * @see {@link CodeArea#replaceSelection(String)}
      */
     @Override
@@ -96,13 +82,13 @@ public class ConsoleArea extends ColoredCodeArea {
         // Check whether it's a valid position
         if (this.currentLine > this.getCaretPosition())
             this.selectRange(this.getLength(), this.getLength());
-        
+
         super.replaceSelection(text);
     }
-    
+
     /**
      * Overriding replaceText so that stuff can't be written in any previous lines
-     * 
+     *
      * @see {@link CodeArea#replaceText(int, int, String)}
      */
     @Override
@@ -112,11 +98,11 @@ public class ConsoleArea extends ColoredCodeArea {
                 end < this.currentLine ? end : end,
                 text);
     }
-    
+
     /**
      * Sets the currentline for this class. Anything before this line can't be edited.
-     * 
-     * @param currentLine
+     *
+     * @param currentLine the current line to set
      */
     public void setCurrentLine(final int currentLine) {
         this.currentLine = currentLine;
