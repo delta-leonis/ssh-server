@@ -42,3 +42,10 @@ function getBall()
   end
   return nil
 end
+
+--[[ Prints all variables currently initialized]]--
+function locals()
+	for k,v in pairs(_G) do
+		print("Global key", k, "value", v)
+	end
+end
