@@ -7,7 +7,6 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.ssh.field3d.core.game.Game;
-import org.ssh.field3d.gameobjects.CarGO;
 import org.ssh.field3d.gameobjects.DetectionGameObject;
 import org.ssh.field3d.gameobjects.GeometryGameObject;
 import org.ssh.field3d.gameobjects.detection.BallGameObject;
@@ -181,7 +180,7 @@ public class FieldGame extends Game {
      * {@inheritDoc}
      */
     public void updateGeometry() {
-        if (this.isInitialized) {
+        //if (this.isInitialized) {
             // Trying to get field vision model
             Optional<Field> tmpOptionalField = Models.get("field");
             
@@ -219,7 +218,7 @@ public class FieldGame extends Game {
                 
                 geometryGameObject.onUpdateGeometry();
             }
-        }
+        //}
     }
     
     /**
@@ -228,8 +227,6 @@ public class FieldGame extends Game {
     public void updateDetection() {
         
         List<Ball> tmpBalls = Models.<Ball>getAll("ball");
-        
-        System.out.println("ball list size: " + tmpBalls.size());
         
         if (this.isInitialized) {
 
@@ -353,6 +350,7 @@ public class FieldGame extends Game {
     /**
      * Clear robots method. This method clears the robots on the field.
      */
+    @SuppressWarnings("unused")
     private void clearRobots() {
         
         // Loop through robot game objects
