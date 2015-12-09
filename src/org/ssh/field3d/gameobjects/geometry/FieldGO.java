@@ -105,9 +105,10 @@ public class FieldGO extends GeometryGameObject {
     private PenaltySpotGO               penaltySpotWest;
                                         
     private final Group                 fieldGroup;
+    private final Group                 fieldTileGroup;
                                         
     /**
-     * 
+     * Constructor
      * @param game
      * @param fieldVisionModel
      */
@@ -125,6 +126,7 @@ public class FieldGO extends GeometryGameObject {
         this.contextOverlayGO = new ContextOverlayGO(game);
         
         this.fieldGroup = new Group();
+        this.fieldTileGroup = new Group();
         
         // Creating grass material with lawn green diffuse color
         this.grassMaterial = new PhongMaterial(Color.LAWNGREEN);
@@ -162,7 +164,9 @@ public class FieldGO extends GeometryGameObject {
             
             if (!this.getGame().getWorldGroup().getChildren().contains(this.fieldGroup)) {
                 
+                this.fieldGroup.getChildren().add(this.fieldTileGroup);
                 this.getGame().getWorldGroup().getChildren().add(this.fieldGroup);
+                
             }
             
         });
@@ -260,6 +264,8 @@ public class FieldGO extends GeometryGameObject {
             
             this.fieldGroup.setRotationAxis(Rotate.Y_AXIS);
             this.fieldGroup.setRotate(180);
+            this.fieldTileGroup.setRotationAxis(Rotate.X_AXIS);
+            this.fieldTileGroup.setRotate(180);
         }
     }
     
@@ -353,7 +359,7 @@ public class FieldGO extends GeometryGameObject {
             
         // Creating new arc
         final FlatArc3D tmpArc = new FlatArc3D(startAngle, endAngle, diameter, thickness, ARC_NUM_DIVISIONS);
-        
+
         // Translate to position
         tmpArc.getMeshView().setTranslateX(center.getX());
         tmpArc.getMeshView().setTranslateY(LINE_Y_OFFSET);
@@ -361,7 +367,9 @@ public class FieldGO extends GeometryGameObject {
         
         // Add arc to the world
         Platform.runLater(() -> {
+
             if (!this.fieldGroup.getChildren().contains(tmpArc.getMeshView())) {
+
                 this.fieldGroup.getChildren().add(tmpArc.getMeshView());
             }
         });
@@ -419,7 +427,7 @@ public class FieldGO extends GeometryGameObject {
         this.fieldBoxes.add(box);
         
         // Add box to the world group
-        Platform.runLater(() -> this.fieldGroup.getChildren().add(box));
+        Platform.runLater(() -> this.fieldTileGroup.getChildren().add(box));
         
         // Hook on mouse clicked event
         box.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -429,16 +437,19 @@ public class FieldGO extends GeometryGameObject {
                 
                 // Check if the right mouse button was clicked
                 if (event.getButton() == MouseButton.SECONDARY) {
-                    
+
                     // Getting the intersected point
                     Point3D intersectedPoint = event.getPickResult().getIntersectedPoint();
                     
                     // Transform the click location on the tile to world space
                     intersectedPoint = box.localToParent(intersectedPoint);
-                    
+
+                    // Setting goals
+                    contextOverlayGO.setGoals(goalGameObjects);
+
                     // Setting field location
                     contextOverlayGO.setFieldLoc(new Point2D(intersectedPoint.getX(), intersectedPoint.getZ()));
-                    
+
                     // Showing context menu
                     contextOverlayGO.show();
                 }
@@ -481,6 +492,7 @@ public class FieldGO extends GeometryGameObject {
             this.removeBox(box);
         }
     }
+
     
     /**
      * generateArcs method. This method generates the arcs of the field.
@@ -502,7 +514,7 @@ public class FieldGO extends GeometryGameObject {
                 final float diameter = circularArc.getRadius() * 2;
                 final float thickness = circularArc.getThickness();
                 final Vector2f center = circularArc.getCenter();
-                
+
                 // Add arc to the world
                 this.addArc(startAngle, endAngle, diameter, center, thickness);
             }

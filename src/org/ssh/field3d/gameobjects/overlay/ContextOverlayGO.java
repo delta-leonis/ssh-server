@@ -1,15 +1,19 @@
 package org.ssh.field3d.gameobjects.overlay;
 
 import java.util.List;
+import java.util.Queue;
 
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
+import org.ssh.field3d.gameobjects.geometry.GoalGameObject;
+import org.ssh.managers.manager.Models;
 import org.ssh.models.Robot;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
+import org.ssh.models.Team;
 
 /**
  * ContextOverlayGO class. This class is responsible for the 2d context menu overlay.
@@ -29,17 +33,16 @@ public class ContextOverlayGO extends OverlayGO {
                                 
     /** The field location. */
     private Point2D             fieldLoc;
-                                
-    /** The list of robots. */
-    private List<Robot>         robots;
+
+    private List<Robot> robots;
+    private Queue<GoalGameObject> goalGameObjects;
+
                                 
     /**
      * Constructor.
      *
      * @param game
      *            The {@link Game} of the {@link GameObject}.
-     * @param robots
-     *            The {@link List} of robots active in the game.
      */
     public ContextOverlayGO(Game game) {
         
@@ -142,6 +145,11 @@ public class ContextOverlayGO extends OverlayGO {
     @Override
     public void onUpdateDetection() {        
     }
+
+    public void setGoals(Queue<GoalGameObject> goalGameObjects) {
+
+        this.goalGameObjects = goalGameObjects;
+    }
     
     /**
      * Checks if the {@link Point2D mouse scene location} is inside of the context menu.
@@ -227,6 +235,15 @@ public class ContextOverlayGO extends OverlayGO {
     protected void onChangeSidesButtonClick(ActionEvent actionEvent) {
         
         // TODO: send pipeline packet to update the sides
+        System.out.println(this.fieldLoc);
+
+        //Models.<Team>get("team Y").ifPresent((team) -> team.swapDirection());
+        Models.<Team>getAll("team").forEach((team) -> team.swapDirection());
+
+        for (GoalGameObject goalGameObject : goalGameObjects) {
+
+            goalGameObject.onUpdateGeometry();
+        }
         
         // Hide
         this.hide();
