@@ -71,20 +71,6 @@ public class KeyInputHandler extends GameObject {
     }
     
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onUpdateGeometry() {
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onUpdateDetection() {
-    }
-    
-    /**
      * Checks if the key is down.
      * 
      * @param keyCode

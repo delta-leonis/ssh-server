@@ -117,8 +117,6 @@ public class ThirdPersonCamera extends GameObject {
         
         // Flip y-axis so positive y is upwards
         this.xForm3.setRotateZ(180.0);
-        
-        this.cameraSettingsModel.saveAsDefault();
     }
     
     /**
@@ -245,20 +243,6 @@ public class ThirdPersonCamera extends GameObject {
                 
         // Save camera settings model
         this.cameraSettingsModel.save();
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onUpdateGeometry() {
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onUpdateDetection() {
     }
     
     /**

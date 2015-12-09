@@ -131,20 +131,6 @@ public class ContextOverlayGO extends OverlayGO {
         // Call show method of the super class
         super.show();
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onUpdateGeometry() {
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onUpdateDetection() {        
-    }
 
     public void setGoals(Queue<GoalGameObject> goalGameObjects) {
 
@@ -234,16 +220,11 @@ public class ContextOverlayGO extends OverlayGO {
     @FXML
     protected void onChangeSidesButtonClick(ActionEvent actionEvent) {
         
-        // TODO: send pipeline packet to update the sides
-        System.out.println(this.fieldLoc);
-
-        //Models.<Team>get("team Y").ifPresent((team) -> team.swapDirection());
+        // Loop through teams, swap direction
         Models.<Team>getAll("team").forEach((team) -> team.swapDirection());
 
-        for (GoalGameObject goalGameObject : goalGameObjects) {
-
-            goalGameObject.onUpdateGeometry();
-        }
+        // Loop through gameObjects update geometry (update colors)
+        goalGameObjects.forEach(GoalGameObject::onUpdateGeometry);
         
         // Hide
         this.hide();

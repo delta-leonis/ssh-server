@@ -95,12 +95,7 @@ public abstract class OverlayGO extends GameObject {
     @Override
     public void onUpdate(long timeDivNano) {
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public abstract void onUpdateGeometry();
+
     
     /**
      * Show method. This method makes the container visible.

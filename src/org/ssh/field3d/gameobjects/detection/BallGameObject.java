@@ -34,7 +34,7 @@ public class BallGameObject extends DetectionGameObject {
         super(game);
         
         // Creating sphere for the ball
-        this.ballModel = new Sphere(Ball.BALL_DIAMETER * 4);
+        this.ballModel = new Sphere(Ball.BALL_DIAMETER);
         
         // Setting ball vision model
         this.ballVisionModel = ballVisionModel;

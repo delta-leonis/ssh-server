@@ -45,19 +45,6 @@ public abstract class GameObject {
     public abstract void onUpdate(long timeDivNano);
     
     /**
-     * Abstract update geometry method. This is called from {@link Game}.
-     * This is called whenever there is new geometry data available from the vision model.
-     */
-    public abstract void onUpdateGeometry();
-    
-    
-    /**
-     * Abstract update detection method. This is called from {@link Game}.
-     * This is called whenever there is new detection data available from the vision model.
-     */
-    public abstract void onUpdateDetection();
-    
-    /**
      * Gets the game of the {@link GameObject}.
      *
      * @return The {@link Game} of the {@link GameObject}.

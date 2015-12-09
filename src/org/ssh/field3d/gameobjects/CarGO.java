@@ -107,20 +107,4 @@ public class CarGO extends GameObject {
             Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().remove(modelGroup));
         }
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onUpdateGeometry() {
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onUpdateDetection() {
-        // TODO Auto-generated method stub
-        
-    }
 }

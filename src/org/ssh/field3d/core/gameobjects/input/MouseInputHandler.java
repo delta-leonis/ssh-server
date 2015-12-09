@@ -181,20 +181,6 @@ public class MouseInputHandler extends GameObject {
     }
     
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onUpdateGeometry() {
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onUpdateDetection() {
-    }
-    
-    /**
      * Gets the mouse delta x.
      *
      * @return The mouse delta x.
