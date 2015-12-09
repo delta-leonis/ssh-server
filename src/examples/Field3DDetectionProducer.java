@@ -25,13 +25,6 @@ public class Field3DDetectionProducer extends Producer<DetectionPacket> {
     /** The number of robots per team. */
     private static int NUM_ROBOTS_PER_TEAM = 11;
     
-    /** The number of frames per second. */
-    private static float FPS = 60.0f;
-    
-    /** The time to sleep */
-    private static int TIME_TO_SLEEP = (int)((1.0f / FPS) * 1000.0f);
-    
-    
     /**
      * Instantiates a new 3D detection producer.
      */
@@ -39,8 +32,6 @@ public class Field3DDetectionProducer extends Producer<DetectionPacket> {
        
         // Initialize super class
         super("detectionproducer", ProducerType.SINGLE);
-        
-
 
         // Setting callable
         this.setCallable(() -> {
@@ -67,12 +58,12 @@ public class Field3DDetectionProducer extends Producer<DetectionPacket> {
                 for (int j = 0; j < NUM_ROBOTS_PER_TEAM; j++) {
                     
                     // Generate random x coordinates
-                    float xRandomBlue = (random.nextFloat() * 4500.0f) - 00.0f;
-                    float xRandomYellow = (random.nextFloat() * 4500.0f) - 00.0f;
+                    float xRandomBlue = (random.nextFloat() * 9000.0f) - 4500.0f;
+                    float xRandomYellow = (random.nextFloat() * 9000.0f) - 4500.0f;
                     
                     // Generate random y coordinates
-                    float yRandomBlue = (random.nextFloat() * 3000.0f) - 000.0f;
-                    float yRandomYellow = (random.nextFloat() * 3000.0f) - 000.0f;
+                    float yRandomBlue = (random.nextFloat() * 6000.0f) - 3000.0f;
+                    float yRandomYellow = (random.nextFloat() * 6000.0f) - 3000.0f;
                     
                     // Creating robots
                     DetectionRobot robotBlue = DetectionRobot.newBuilder().setRobotId(j).setX(xRandomBlue).setY(yRandomBlue).setHeight(Robot.ROBOT_HEIGHT).build();
@@ -85,20 +76,17 @@ public class Field3DDetectionProducer extends Producer<DetectionPacket> {
                 
                 // Create a detection frame
                 DetectionFrame detectionFrame = DetectionFrame.newBuilder().addAllRobotsBlue(visionBlueRobots).addAllRobotsYellow(visionYellowRobots).addBalls(visionBall).build();
+
                 // Create a detection packet
-
-
                 DetectionPacket detectionPacket = new DetectionPacket(detectionFrame);
+                // Setting last detection packet
                 lastDetectionPacket = detectionPacket;
 
                 // Put data on the pipeline
                 Pipelines.getOfDataType(DetectionPacket.class).forEach((pipe -> pipe.addPacket(detectionPacket).processPacket()));
-            
-                //return detectionPacket;
-                // Sleep for a while
-                //Thread.sleep(TIME_TO_SLEEP);
             }
 
+            // Return the last detection packet again
             return lastDetectionPacket;
         });
     }
