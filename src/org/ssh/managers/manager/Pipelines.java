@@ -82,7 +82,8 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
                 // filter out the services compatible with this pipeline
                 .filter(service -> service.getType().equals(pipeline.getType()))
                 // map them to the correct parameterized type and collect them in a list
-                .map(service -> (C) service.getType().getClass().cast(service)).collect(Collectors.toList());
+                .map(service -> (C) service)
+                .collect(Collectors.toList());
                 
         Pipelines.LOG.info("%d Consumer(s) found to be compatible with type %s",
                 collect.size(),
@@ -142,7 +143,8 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
                 // filter out the services compatible with this pipeline
                 .filter(service -> service.getType().equals(pipeline.getType()))
                 // map them to the correct parameterized type and collect them in a list
-                .map(service -> (C) service.getType().getClass().cast(service)).collect(Collectors.toList());
+                .map(service -> (C) service)
+                .collect(Collectors.toList());
 
         Pipelines.LOG.info("%d Producers found to be compatible with genericType %s",
                 collect.size(),
@@ -169,6 +171,7 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
         final List<P> collect = Pipelines.getAll().stream()
                 // filter out the compatible ones by type
                 .filter(pipeline -> pipeline.getType().getTypeName().equals(packetType.getTypeName()))
+                // map them to the correct parameterized type and collect them in a list
                 .map(pipeline -> (P) pipeline)
                 .collect(Collectors.toList());
                 

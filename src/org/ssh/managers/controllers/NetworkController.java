@@ -58,7 +58,7 @@ public class NetworkController extends ManagerController<Service<? extends Proto
      * @return Pipeline if found
      */
     private boolean hasPipeline() {
-        if (pipeline == null) pipeline = (RadioPipeline) Pipelines.get("communication").orElse(null);
+        if (pipeline == null) pipeline = Pipelines.<RadioPipeline>get("communication").orElse(null);
         return pipeline != null;
     }
     
@@ -66,7 +66,7 @@ public class NetworkController extends ManagerController<Service<? extends Proto
      * @return Sender if found
      */
     private boolean hasSender() {
-        if (sender == null) sender = (RadioPacketSender) Services.get("RadioPacketConsumer").orElse(null);
+        if (sender == null) sender = Services.<RadioPacketSender>get("RadioPacketConsumer").orElse(null);
         return sender != null;
     }
     
