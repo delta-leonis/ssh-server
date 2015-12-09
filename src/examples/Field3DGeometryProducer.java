@@ -36,11 +36,10 @@ public class Field3DGeometryProducer extends Producer<GeometryPacket> {
         // Initialize super class
         super("geometryproducer", ProducerType.SINGLE);
         
-        this.createTestData();
-        
         // Setting callable
         this.setCallable(() -> {
-            
+
+            // Loop till infinity
             while (true) {
                 
                 // Creating geometry field size
@@ -56,8 +55,6 @@ public class Field3DGeometryProducer extends Producer<GeometryPacket> {
                 // Sleep for 3 seconds
                 Thread.sleep(3000);
             }
-            // Return the packets
-            //return packet;
         });
     }
     
@@ -68,11 +65,11 @@ public class Field3DGeometryProducer extends Producer<GeometryPacket> {
     private void createTestData() {
         
         // Creating field model
-        Field fieldVisionModel = (Field) Models.create(Field.class);
+        Field fieldVisionModel = Models.<Field>create(Field.class);
         
-        List<Goal> goals = new ArrayList<Goal>();
-        Goal goalEast = (Goal) Models.create(Goal.class, Direction.EAST);
-        Goal goalWest = (Goal) Models.create(Goal.class, Direction.WEST);
+        List<Goal> goals = new ArrayList<>();
+        Goal goalEast = Models.<Goal>create(Goal.class, Direction.EAST);
+        Goal goalWest = Models.<Goal>create(Goal.class, Direction.WEST);
         
         goalEast.update("goalWidth", new Integer(1000));
         goalEast.update("goalHeight", new Integer(160));
@@ -147,27 +144,27 @@ public class Field3DGeometryProducer extends Producer<GeometryPacket> {
                 .setP2(westDefenseLineEnd).setThickness(10.0f).build();
                 
         // Mid circle
-        FieldCicularArc midCircle = FieldCicularArc.newBuilder().setA1(0.0f).setA2(360.0f).setThickness(10.0f)
+        FieldCicularArc midCircle = FieldCicularArc.newBuilder().setA1(0.0f).setA2((float)(2 * Math.PI)).setThickness(10.0f)
                 .setRadius(500.0f).build();
                 
         // East defense arc left
         Vector2f eastDefenseArcLeftCenter = Vector2f.newBuilder().setX(-4500.0f).setY(250.0f).build();
-        FieldCicularArc eastDefenseArcLeft = FieldCicularArc.newBuilder().setA1(0.0f).setA2(90.0f).setThickness(10.0f)
+        FieldCicularArc eastDefenseArcLeft = FieldCicularArc.newBuilder().setA1(0.0f).setA2((float)(0.5f * Math.PI)).setThickness(10.0f)
                 .setRadius(1000.0f).setCenter(eastDefenseArcLeftCenter).build();
                 
         // East defense arc right
         Vector2f eastDefenseArcRightCenter = Vector2f.newBuilder().setX(-4500.0f).setY(-250.0f).build();
-        FieldCicularArc eastDefenseArcRight = FieldCicularArc.newBuilder().setA1(270.0f).setA2(360.0f)
+        FieldCicularArc eastDefenseArcRight = FieldCicularArc.newBuilder().setA1((float)(1.5f * Math.PI)).setA2((float)(2 * Math.PI))
                 .setThickness(10.0f).setRadius(1000.0f).setCenter(eastDefenseArcRightCenter).build();
                 
         // West defense arc left
         Vector2f westDefenseArcLeftCenter = Vector2f.newBuilder().setX(4500.0f).setY(-250.0f).build();
-        FieldCicularArc westDefenseArcLeft = FieldCicularArc.newBuilder().setA1(180.0f).setA2(270.0f)
+        FieldCicularArc westDefenseArcLeft = FieldCicularArc.newBuilder().setA1((float)Math.PI).setA2((float)(1.5f * Math.PI))
                 .setThickness(10.0f).setRadius(1000.0f).setCenter(westDefenseArcLeftCenter).build();
                 
         // West defense arc right
         Vector2f westDefenseArcRightCenter = Vector2f.newBuilder().setX(4500.0f).setY(250.0f).build();
-        FieldCicularArc westDefenseArcRight = FieldCicularArc.newBuilder().setA1(90.0f).setA2(180.0f)
+        FieldCicularArc westDefenseArcRight = FieldCicularArc.newBuilder().setA1((float)(0.5f * Math.PI)).setA2((float)Math.PI)
                 .setThickness(10.0f).setRadius(1000.0f).setCenter(westDefenseArcRightCenter).build();
                 
         GeometryFieldSize fieldSize = GeometryData.newBuilder().getFieldBuilder().setFieldWidth(6000)
@@ -175,6 +172,7 @@ public class Field3DGeometryProducer extends Producer<GeometryPacket> {
                 .addFieldLines(eastLine).addFieldLines(eastDefenseLine).addFieldLines(westLine)
                 .addFieldLines(westDefenseLine).addFieldArcs(midCircle).addFieldArcs(eastDefenseArcLeft)
                 .addFieldArcs(eastDefenseArcRight).addFieldArcs(westDefenseArcLeft).addFieldArcs(westDefenseArcRight)
+                .setGoalDepth(180).setGoalWidth(1000)
                 .build();
                 
         return fieldSize;
