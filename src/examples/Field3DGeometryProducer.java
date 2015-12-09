@@ -1,4 +1,4 @@
-package org.ssh.services.producers;
+package examples;
 
 import java.util.ArrayList;
 import java.util.List;

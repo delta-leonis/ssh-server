@@ -1,4 +1,4 @@
-package org.ssh.services.producers;
+package examples;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,14 +40,17 @@ public class Field3DDetectionProducer extends Producer<DetectionPacket> {
         // Initialize super class
         super("detectionproducer", ProducerType.SINGLE);
         
-        // Creating random
-        Random random = new Random();
-        
+
+
         // Setting callable
         this.setCallable(() -> {
+
+            // Creating random
+            Random random = new Random();
+            DetectionPacket lastDetectionPacket = null;
             
             // Loop till infinity
-            while(true) {
+            for (int i = 0; i < 1000; i++) {
                 
                 // Creating lists for the robots
                 final List<DetectionRobot> visionBlueRobots = new ArrayList<DetectionRobot>();
@@ -61,19 +64,19 @@ public class Field3DDetectionProducer extends Producer<DetectionPacket> {
                 final DetectionBall visionBall = DetectionBall.newBuilder().setX(xRandomBall).setY(yRandomBall).build();
                 
                 // Loop through number of robots per team
-                for (int i = 0; i < NUM_ROBOTS_PER_TEAM; i++) {
+                for (int j = 0; j < NUM_ROBOTS_PER_TEAM; j++) {
                     
                     // Generate random x coordinates
-                    float xRandomBlue = (random.nextFloat() * 9000.0f) - 4500.0f;
-                    float xRandomYellow = (random.nextFloat() * 9000.0f) - 4500.0f;
+                    float xRandomBlue = (random.nextFloat() * 4500.0f) - 00.0f;
+                    float xRandomYellow = (random.nextFloat() * 4500.0f) - 00.0f;
                     
                     // Generate random y coordinates
-                    float yRandomBlue = (random.nextFloat() * 6000.0f) - 3000.0f;
-                    float yRandomYellow = (random.nextFloat() * 6000.0f) - 3000.0f;
+                    float yRandomBlue = (random.nextFloat() * 3000.0f) - 000.0f;
+                    float yRandomYellow = (random.nextFloat() * 3000.0f) - 000.0f;
                     
                     // Creating robots
-                    DetectionRobot robotBlue = DetectionRobot.newBuilder().setRobotId(i).setX(xRandomBlue).setY(yRandomBlue).setHeight(Robot.ROBOT_HEIGHT).build();
-                    DetectionRobot robotYellow = DetectionRobot.newBuilder().setRobotId(i).setX(xRandomYellow).setY(yRandomYellow).setHeight(Robot.ROBOT_HEIGHT).build();
+                    DetectionRobot robotBlue = DetectionRobot.newBuilder().setRobotId(j).setX(xRandomBlue).setY(yRandomBlue).setHeight(Robot.ROBOT_HEIGHT).build();
+                    DetectionRobot robotYellow = DetectionRobot.newBuilder().setRobotId(j).setX(xRandomYellow).setY(yRandomYellow).setHeight(Robot.ROBOT_HEIGHT).build();
                     
                     // Add robots to list
                     visionBlueRobots.add(robotBlue);
@@ -83,14 +86,20 @@ public class Field3DDetectionProducer extends Producer<DetectionPacket> {
                 // Create a detection frame
                 DetectionFrame detectionFrame = DetectionFrame.newBuilder().addAllRobotsBlue(visionBlueRobots).addAllRobotsYellow(visionYellowRobots).addBalls(visionBall).build();
                 // Create a detection packet
+
+
                 DetectionPacket detectionPacket = new DetectionPacket(detectionFrame);
-                
+                lastDetectionPacket = detectionPacket;
+
                 // Put data on the pipeline
                 Pipelines.getOfDataType(DetectionPacket.class).forEach((pipe -> pipe.addPacket(detectionPacket).processPacket()));
             
+                //return detectionPacket;
                 // Sleep for a while
-                Thread.sleep(TIME_TO_SLEEP);
+                //Thread.sleep(TIME_TO_SLEEP);
             }
+
+            return lastDetectionPacket;
         });
     }
 }
