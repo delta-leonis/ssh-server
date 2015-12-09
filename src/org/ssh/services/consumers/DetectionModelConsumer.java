@@ -70,6 +70,14 @@ public class DetectionModelConsumer extends Consumer<DetectionPacket> {
             //reduce to a single succes value
         ).reduce(true, (accumulator, succes) -> succes && accumulator);
 
+		if (frame.getBallsCount() > 0) {
+            
+            Models.<Ball>get("ball").orElseGet(() -> Models.<Ball>create(Ball.class))
+                    .update("x", frame.getBallsList().get(0).getX(),
+                      "y", frame.getBallsList().get(0).getY(),
+                      "z", frame.getBallsList().get(0).getZ());
+        }
+
         // loop all robots that haven't been processed
         Models.<Robot> getAll("robot").forEach(robot -> {
             if(frame.getTSent() - robot.lastUpdated() > 0.5){
