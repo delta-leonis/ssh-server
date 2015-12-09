@@ -85,7 +85,7 @@ public class BallGameObject extends DetectionGameObject {
             Platform.runLater(() -> {
                 
                 // Translate ball into the position
-                this.ballModel.setTranslateX(this.ballVisionModel.getPosition().getX());
+                this.ballModel.setTranslateX(-this.ballVisionModel.getPosition().getX());
                 this.ballModel.setTranslateY(this.ballVisionModel.getZPos() + this.ballModel.getRadius());
                 this.ballModel.setTranslateZ(this.ballVisionModel.getPosition().getY());
             });
