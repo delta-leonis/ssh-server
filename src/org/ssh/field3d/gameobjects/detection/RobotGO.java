@@ -35,10 +35,10 @@ import javafx.scene.transform.Rotate;
 public class RobotGO extends DetectionGameObject {
     
     /** The conversion from radians to degrees */
-    private static final double RAD_TO_DEG = (2.0 * Math.PI) / 180.0;
+    private static final float RAD_TO_DEG = (float)(2.0f * Math.PI) / 180.0f;
     
     /** The thickness of the selection circle. */
-    private static final double ROBOT_SELECTION_CIRCLE_THICKNESS = 50.0;
+    private static final float ROBOT_SELECTION_CIRCLE_THICKNESS = 50.0f;
                                                                  
     /** The starting y-coordinate for the robot model */
     private static final float  ROBOT_STARTING_Y                 = 10.0f;
@@ -50,7 +50,7 @@ public class RobotGO extends DetectionGameObject {
     private static final int    ROBOT_SEL_CIRCLE_NUM_OF_SEGMENTS = 100;
                                                                  
     /** The angle in degrees for a full circle */
-    private static final double FULL_CIRCLE                      = 360.0;
+    private static final float FULL_CIRCLE                      = 360.0f;
                                                                  
     /** The specular power of the robot (shininess) */
     private static final double SPECULAR_POWER                   = 20.0;
@@ -104,7 +104,7 @@ public class RobotGO extends DetectionGameObject {
         super(game);
         
         // Creating selection circle
-        this.selectionArc = new FlatArc3D(0.0,
+        this.selectionArc = new FlatArc3D(0.0f,
                 FULL_CIRCLE,
                 Robot.ROBOT_DIAMETER + ROBOT_SELECTION_CIRCLE_THICKNESS + SELECTION_CIRCLE_OFFSET,
                 ROBOT_SELECTION_CIRCLE_THICKNESS,
@@ -206,12 +206,12 @@ public class RobotGO extends DetectionGameObject {
                     }
                     
                     // Translate to location
-                    this.model.setTranslateX(this.visionRobotModel.getPosition().getX());
+                    this.model.setTranslateX(-this.visionRobotModel.getPosition().getX());
                     this.model.setTranslateY(this.robotYOffset);
                     this.model.setTranslateZ(this.visionRobotModel.getPosition().getY());
                     
                     // Translate selection circle to location
-                    this.selectionArcMesh.setTranslateX(this.visionRobotModel.getPosition().getX());
+                    this.selectionArcMesh.setTranslateX(-this.visionRobotModel.getPosition().getX());
                     this.selectionArcMesh.setTranslateY(ROBOT_STARTING_Y);
                     this.selectionArcMesh.setTranslateZ(this.visionRobotModel.getPosition().getY());
                 });
