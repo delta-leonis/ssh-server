@@ -160,6 +160,8 @@ public class FieldGame extends Game {
             
             this.isInitialized = true;
         });
+
+        this.updateGeometry();
     }
     
     /**
