@@ -41,10 +41,10 @@ public class FlatArc3D {
      * @param numDivisions
      *            The number of divisions of the arc.
      */
-    public FlatArc3D(final double startAngle,
-            final double endAngle,
-            final double diameter,
-            final double thickness,
+    public FlatArc3D(final float startAngle,
+            final float endAngle,
+            final float diameter,
+            final float thickness,
             final int numDivisions) {
             
         // Creating new triangle mesh
@@ -149,16 +149,16 @@ public class FlatArc3D {
      *            The number of divisions in the arc.
      * @return Returns an array with the vertices.
      */
-    private float[] calculateVertices(final double startRad,
-            final double endRad,
-            final double diameter,
-            final double thickness,
+    private float[] calculateVertices(final float startRad,
+            final float endRad,
+            final float diameter,
+            final float thickness,
             int numDivisions) {
             
         // Calculating total angle of the arc
-        final double totalAngleRad = endRad - startRad;
+        final float totalAngleRad = endRad - startRad;
         // Calculating angle per step
-        final double anglePerStepRad = totalAngleRad / numDivisions;
+        final float anglePerStepRad = totalAngleRad / numDivisions;
         // Setting current angle
         double curAngleRad = startRad;
         
@@ -166,39 +166,42 @@ public class FlatArc3D {
         numDivisions++;
         
         // Calculating half of the thickness
-        final double halfOfThickness = thickness / 2.0;
+        final float halfOfThickness = thickness / 2.0f;
         // Calculating radius
-        final double radius = diameter / 2.0;
+        final float radius = diameter / 2.0f;
        
         
         // Calculating amount of vertices to generate
         final int amountOfVertices = numDivisions * VERTICES_PER_EDGE;
         // Creating array for the amount of vertices
         final float vertices[] = new float[amountOfVertices * VALUES_PER_COORD];
+
+        final float radiusSubtracted = radius - halfOfThickness;
+        final float radiusAdded = radius + halfOfThickness;
         
         // Loop through edges
         for (int i = 0; i < numDivisions; i++) {
+
+            // Calculate sinus & cosinus for the current angle in radians
+            final float cosCalc = (float)Math.cos(curAngleRad);
+            final float sinCalc = (float)Math.sin(curAngleRad);
             
             // Calculating first point
-            final double b1x = Math.cos(curAngleRad) * (radius - halfOfThickness);
-            final double b1z = Math.sin(curAngleRad) * (radius - halfOfThickness);
+            final float b1x = cosCalc * radiusSubtracted;
+            final float b1z = sinCalc * radiusSubtracted;
             // Calculating second point
-            final double b11x = Math.cos(curAngleRad) * (radius + halfOfThickness);
-            final double b11z = Math.sin(curAngleRad) * (radius + halfOfThickness);
-            
-            // Creating vectors for the points (B' & B'')
-            final Point3D pointB1 = new Point3D(b1x, 0.0f, b1z);
-            final Point3D pointB11 = new Point3D(b11x, 0.0f, b11z);
-            
+            final float b11x = cosCalc * radiusAdded;
+            final float b11z = sinCalc * radiusAdded;
+
             // Adding B' to vertices 
-            vertices[i * 6] = (float)pointB1.getX();
-            vertices[i * 6 + 1] = (float)pointB1.getY();
-            vertices[i * 6 + 2] = (float)pointB1.getZ();
+            vertices[i * 6] = b1x;
+            vertices[i * 6 + 1] = 0.0f;
+            vertices[i * 6 + 2] = b1z;
             
             // Adding B'' to vertices
-            vertices[i * 6 + 3] = (float)pointB11.getX();
-            vertices[i * 6 + 4] = (float)pointB11.getY();
-            vertices[i * 6 + 5] = (float)pointB11.getZ();
+            vertices[i * 6 + 3] = b11x;
+            vertices[i * 6 + 4] = 0.0f;
+            vertices[i * 6 + 5] = b11z;
             
             // Increase angle in RAD
             curAngleRad += anglePerStepRad;
