@@ -26,12 +26,12 @@ import protobuf.Geometry.Vector2f;
  * @author marklef2
  *
  */
-public class Field3DGeometryProducer extends Producer<GeometryPacket> {
+public class Field3DGeometryProducerExample extends Producer<GeometryPacket> {
     
     /**
      * Constructor.
      */
-    public Field3DGeometryProducer() {
+    public Field3DGeometryProducerExample() {
         
         // Initialize super class
         super("geometryproducer", ProducerType.SINGLE);

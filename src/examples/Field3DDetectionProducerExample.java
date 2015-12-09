@@ -20,7 +20,7 @@ import protobuf.Detection.DetectionRobot;
  * @author marklef2
  * @see Producer
  */
-public class Field3DDetectionProducer extends Producer<DetectionPacket> {
+public class Field3DDetectionProducerExample extends Producer<DetectionPacket> {
     
     /** The number of robots per team. */
     private static int NUM_ROBOTS_PER_TEAM = 11;
@@ -28,7 +28,7 @@ public class Field3DDetectionProducer extends Producer<DetectionPacket> {
     /**
      * Instantiates a new 3D detection producer.
      */
-    public Field3DDetectionProducer() {
+    public Field3DDetectionProducerExample() {
        
         // Initialize super class
         super("detectionproducer", ProducerType.SINGLE);
