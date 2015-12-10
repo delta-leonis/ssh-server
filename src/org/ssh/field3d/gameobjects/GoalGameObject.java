@@ -1,6 +1,7 @@
 package org.ssh.field3d.gameobjects;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
@@ -247,7 +248,8 @@ public class GoalGameObject extends GameObject {
     private void updateTeamColor() {
         
         // Getting list of teams
-        this.teams = Models.<Team>getAll("team");
+        this.teams = Models.<Team>getAll().stream()
+                .filter(team -> team.getName().equals("team")).collect(Collectors.toList());
         
         // Loop through teams
         for (Team team : teams) {

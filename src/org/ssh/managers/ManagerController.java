@@ -1,12 +1,8 @@
 package org.ssh.managers;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-
-import com.google.common.base.Predicates;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.ImmutableList;
 
 /**
  * The Class ManagerController.
@@ -22,14 +18,14 @@ import com.google.common.collect.ImmutableList;
 public abstract class ManagerController<M extends Manageable> {
     
     /** The manageables which are being managed by this controller. */
-    protected ImmutableList<M> manageables;
+    protected Map<String, M> manageables;
     
     /**
      * Sets up the controller.
      */
     public ManagerController() {
         // set attributes
-        this.manageables = ImmutableList.of();
+        this.manageables = new ConcurrentHashMap<>();
     }
     
     /**
@@ -39,8 +35,9 @@ public abstract class ManagerController<M extends Manageable> {
      *            the name of the manageable
      * @return An Optional representing the Manageable.
      */
+    @SuppressWarnings("unchecked")
     public <N> Optional<N> get(String name) {
-        return (Optional<N>) this.manageables.stream().filter(manageable -> manageable.getName().equals(name)).findFirst();
+        return (Optional<N>) Optional.of(this.manageables.get(name));
     }
     
     /**
@@ -49,46 +46,60 @@ public abstract class ManagerController<M extends Manageable> {
      * @return The List of Manageables
      */
     public <N> List<N> getAll() {
-        return (List<N>) this.manageables.stream().collect(Collectors.toList());
+        return new ArrayList<>((Collection<? extends N>) this.manageables.values());
     }
-    
+
     /**
-     * Gets the all the Manageables with the specified name.
-     *
-     * @param name
-     *            The name of the Manageables
-     * @return All the Manageables with the specified name
+     * Adds a {@link Manageable} to the Manager with the default name.
+     * @param manageable The Manageable to be added.
+     * @return           true, if successful
      */
-    public <N> List<N> getAll(String name) {
-        return (List<N>) this.manageables.stream().filter(manageable -> manageable.getName().equals(name))
-                .collect(Collectors.toList());
+    public boolean add(final M manageable) {
+        return this.put(manageable.getName(), manageable);
     }
-    
+
     /**
-     * Adds a {@link Manageable} to the Manager.
+     * Adds a {@link Manageable} to the Manager with the specified name.
      *
-     * @param <N>
-     *            The return type of the Manageable.
      * @param manageable
      *            the Manageable to be added
      * @return true, if successful
      */
-    @SuppressWarnings ("unchecked")
-    public <N extends Manageable> boolean add(final N manageable) {
-        if (this.manageables.contains(manageable)) {
-            return false;
-        }
-        else {
-            this.manageables = ImmutableList.<M>builder().addAll(this.manageables)
-                    .add((M)manageable).build();
+    public boolean put(final String name, final M manageable) {
+        if (!this.manageables.containsValue(manageable)) {
+            this.manageables.put(name, manageable);
             return true;
         }
+        return false;
     }
-    
+
+    /**
+     * Removes a {@link Manageable} with the specified key from the list of Manageables.
+     * @param name  The key belonging to the Manageable.
+     * @param <N>   The type of Manageable requested by the user.
+     * @return      The removed Manageable.
+     */
+    public <N extends Manageable> N remove(final String name) {
+        return (N) this.manageables.remove(name);
+    }
+
+    /**
+     * Removes the supplied {@link Manageable} from the list of Manageables if it is present in the list.
+     * @param manageable    The Manageable to be removed.
+     * @param <N>           The type of Manageable requested by the user.
+     * @return              The removed Manageable.
+     */
     public <N extends Manageable> N remove(final N manageable){
-        if(!this.manageables.contains(manageable))
+        // check to see if the Manageable is in the list, return null otherwise
+        if(!this.manageables.containsValue(manageable))
             return null;
-        manageables = ImmutableList.copyOf(Collections2.filter(manageables, Predicates.not(Predicates.equalTo(manageable))));
+
+        // loop through the list and remove the manageable if it is present anywhere
+        this.manageables.forEach((key, value) -> {
+            if (manageable.equals(value))
+                this.manageables.remove(key);
+        });
+        // return the removed manageable
         return manageable;
     }
     
@@ -104,7 +115,7 @@ public abstract class ManagerController<M extends Manageable> {
     public <N extends Manageable> List<N> getOfType(final Class<?> type) {
         // get the list of manageables
         @SuppressWarnings ("unchecked")
-        final List<N> collect = (List<N>) this.manageables.stream()
+        final List<N> collect = (List<N>) this.manageables.values().stream()
                 // filter out the compatible ones by type
                 .filter(manageable -> manageable.getClass().equals(type))
                 // and stick them in a list

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Collectors;
 
 import org.ssh.field3d.core.game.Game;
 // import org.ssh.field3d.gameobjects.CarGO;
@@ -253,7 +254,8 @@ public class FieldGame extends Game {
     private void createRobots() {
         
         // Getting list of robots from the vision model
-        this.robotsVisionModel = Models.<Robot>getAll("robot");
+        this.robotsVisionModel = Models.<Robot>getAll().stream()
+                .filter(robot -> robot.getName().equals("robot")).collect(Collectors.toList());
         
         // Loop through robot models
         for (Robot robot : this.robotsVisionModel) {

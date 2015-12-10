@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.ssh.managers.Manager;
 import org.ssh.managers.controllers.ModelController;
 import org.ssh.models.Model;
-import org.ssh.models.Robot;
 import org.ssh.models.Settings;
 import org.ssh.ui.lua.console.AvailableInLua;
 import org.ssh.util.Logger;
@@ -26,7 +25,7 @@ public final class Models implements Manager<Model>{
     /**
      * The models store has a controller that runs the store.
      */
-    private static ModelController modelController;
+    private static ModelController controller;
                                    
     /** The instance. */
     private static final Object    instance = new Object();
@@ -38,7 +37,8 @@ public final class Models implements Manager<Model>{
     /**
      * Private constructor to hide the implicit public one.
      */
-    private Models() { }
+    private Models() {
+    }
     
     /**
      * adds a models to this manager
@@ -47,7 +47,7 @@ public final class Models implements Manager<Model>{
      *            the model
      */
     public static void add(final Model model) {
-        Models.modelController.add(model);
+        Models.controller.add(model);
     }
     
     /**
@@ -60,7 +60,7 @@ public final class Models implements Manager<Model>{
      * @return the model
      */
     public static <M extends Model> M create(final Class<?> clazz, final Object... args) {
-        return ModelController.<M> create(clazz, args);
+        return Models.controller.<M> create(clazz, args);
     }
     
     /**
@@ -71,25 +71,14 @@ public final class Models implements Manager<Model>{
      * @return The requested model.
      */
     public static <M extends Model> Optional<M> get(final String modelName) {
-        return Models.modelController.<M> getByName(modelName);
+        return Models.controller.<M> getByName(modelName);
     }
     
     /**
      * @return all Models currently in the modelcontroller
      */
-    public static List<?> getAll() {
-        return Models.modelController.getAll();
-    }
-    
-    /**
-     * This method finds all models matching the name and returns them as an List<Model>.
-     *
-     * @param modelName
-     *            The (fuzzy) name of the model you want to find.
-     * @return The requested models.
-     */
-    public static <M extends Model> List<M> getAll(final String modelName) {
-        return Models.modelController.<M>getAll(modelName);
+    public static <M extends Model> List<M> getAll() {
+        return Models.controller.getAll();
     }
     
     /**
@@ -109,7 +98,7 @@ public final class Models implements Manager<Model>{
      * @return success value
      */
     public static boolean initialize(final Model model) {
-        return Models.modelController.load(model);
+        return Models.controller.load(model);
     }
     
     /**
@@ -118,7 +107,7 @@ public final class Models implements Manager<Model>{
      * @return success value
      */
     public static boolean initializeAll() {
-        return Models.modelController.initializeAll();
+        return Models.controller.initializeAll();
     }
     
     /**
@@ -130,7 +119,7 @@ public final class Models implements Manager<Model>{
      * @return success value
      */
     public static boolean reinitialize(final Model model) {
-        return Models.modelController.reinitialize(model);
+        return Models.controller.reinitialize(model);
     }
     
     /**
@@ -140,7 +129,7 @@ public final class Models implements Manager<Model>{
      * @return success value
      */
     public static boolean reinitializeAll() {
-        return Models.modelController.reinitializeAll();
+        return Models.controller.reinitializeAll();
     }
     
     /**
@@ -151,7 +140,7 @@ public final class Models implements Manager<Model>{
      * @return success value
      */
     public static boolean save(final Model model) {
-        return Models.modelController.save(model);
+        return Models.controller.save(model);
     }
     
     /**
@@ -162,7 +151,7 @@ public final class Models implements Manager<Model>{
      * @return succes value
      */
     public static boolean saveAsDefault(final Model model) {
-        return Models.modelController.saveAsDefault(model);
+        return Models.controller.saveAsDefault(model);
     }
     
     /**
@@ -171,8 +160,19 @@ public final class Models implements Manager<Model>{
      * @param model model to remove
      * @return model if it exists (otherwise null)
      */
-    public static Model remove(final Model model){
-        return Models.modelController.remove(model);
+    public static <M extends Model> M remove(final M model){
+        return Models.controller.remove(model);
+    }
+
+    /**
+     * Removes a {@link Model} with the specified key from the list of Manageables.
+     *
+     * @param name The key belonging to the Manageable.
+     * @param <M>  The type of Manageable requested by the user.
+     * @return The removed Manageable.
+     */
+    public static <M extends Model> M remove(final String name) {
+        return Models.controller.remove(name);
     }
 
     /**
@@ -181,8 +181,8 @@ public final class Models implements Manager<Model>{
     public static void start() {
         Models.LOG.info("Starting Models...");
         
-        // create modelController
-        Models.modelController = new ModelController();
+        // create controller
+        Models.controller = new ModelController();
         // create a settings models (will self-assign in the factory)
         Models.create(Settings.class);
     }

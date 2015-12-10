@@ -64,7 +64,7 @@ public class ModelController extends ManagerController<Model> {
      *            arguments that will be passed to the constructor (supply them in the right order).
      * @return a created Model
      */
-    public static <M extends Model> M create(final Class<?> clazz, final Object... args) {
+    public <M extends Model> M create(final Class<?> clazz, final Object... args) {
         Class<?>[] cArgs = null;
         try {
             // get all Types for the arguments
@@ -77,7 +77,8 @@ public class ModelController extends ManagerController<Model> {
             LOG.info("created %s", clazz);
             
             // add model to ModelController
-            Models.add(model);
+            // TODO: Jerone
+            this.put(model.getFullName(), model);
             // initialize this models
             if(!Models.initialize(model))
                 ModelController.LOG.info("Could not initialize %s.", clazz.getSimpleName());
@@ -104,8 +105,7 @@ public class ModelController extends ManagerController<Model> {
      * When a {@link Settings} model is added, it is being set as default settings for this
      * controller
      */
-    @Override
-    public <N extends Manageable> boolean add(final N manageable) {
+    public boolean add(final Model manageable) {
         if (manageable instanceof Settings) this.settings = (Settings) manageable;
         
         return super.add(manageable);
@@ -120,7 +120,7 @@ public class ModelController extends ManagerController<Model> {
      * @return model with given name
      */
     public <M extends Model> Optional<M> getByName(String fullname) {
-        return (Optional<M>) this.manageables.stream().filter(manageable -> manageable.getFullName().equals(fullname.trim()))
+        return (Optional<M>) this.manageables.values().stream().filter(manageable -> manageable.getFullName().equals(fullname.trim()))
                 .findFirst();
     }
     
@@ -183,8 +183,8 @@ public class ModelController extends ManagerController<Model> {
      * @return success value
      */
     public boolean initializeAll() {
-        return this.manageables.stream().map(model -> this.load(model)).reduce(true,
-                (accumulator, succes) -> succes && accumulator);
+        return this.manageables.values().stream().map(model -> this.load(model)).reduce(true,
+                (accumulator, success) -> success && accumulator);
     }
     
     /**
@@ -266,8 +266,8 @@ public class ModelController extends ManagerController<Model> {
      * @return success value
      */
     public boolean reinitializeAll() {
-        return this.manageables.stream().map(model -> this.reinitialize(model)).reduce(true,
-                (accumulator, succes) -> succes && accumulator);
+        return this.manageables.values().stream().map(model -> this.reinitialize(model)).reduce(true,
+                (accumulator, success) -> success && accumulator);
     }
     
     /**

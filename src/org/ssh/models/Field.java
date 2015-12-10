@@ -2,6 +2,7 @@ package org.ssh.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.ssh.managers.manager.Models;
 
@@ -89,7 +90,7 @@ public class Field extends Model {
      * @return The {@link List} of the goals on the field.
      */
     public List<Goal> getFieldGoals() {
-        return Models.<Goal> getAll("goal");
+        return Models.<Goal> getAll().stream().filter(goal -> goal.getName().equals("goal")).collect(Collectors.toList());
     }
     
     /**

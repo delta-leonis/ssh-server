@@ -45,8 +45,9 @@ public class World {
      * @return list with all robots of a specific color
      */
     public List<Robot> getRobots(final TeamColor teamColor) {
-        return Models.getAll("robot").stream().filter(robot -> ((Robot) robot).getTeamColor().equals(teamColor))
-                .map(model -> (Robot) model).collect(Collectors.toList());
+        return Models.<Robot>getAll().stream()
+                .filter(robot -> robot.getTeamColor().equals(teamColor) && robot.getName().equals("robot"))
+                .collect(Collectors.toList());
     }
     
     /**
@@ -63,16 +64,16 @@ public class World {
     /**
      * Gets the Team that is assigned to control a specific robot.
      * 
-     * @param Lost_and_damned_robot
+     * @param lostAndDamnedRobot
      *            robot to get the team from
      * @return team that controls this robot.
      */
-    public Team getTeam(final Robot Lost_and_damned_robot) {
-        return (Team) Models.getAll("team")
+    public Team getTeam(final Robot lostAndDamnedRobot) {
+        return Models.<Team>getAll()
                 // Get all team models as a stream
                 .stream()
                 // Compare individual teamcolor to robots teamcolor
-                .filter(team -> ((Team) team).getTeamColor().equals(Lost_and_damned_robot.getTeamColor()))
+                .filter(team -> team.getTeamColor().equals(lostAndDamnedRobot.getTeamColor()) && team.getName().equals("team"))
                 // Return the first match
                 .findFirst().get();
     }

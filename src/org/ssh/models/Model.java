@@ -24,7 +24,6 @@ import org.ssh.util.Reflect;
  * file by the {@link #save()} method.
  *
  * @see {@link #update(Map)}
- * @see {@link ModelFactory}
  * @see {@link ModelController}
  *      
  * @author Jeroen de Jong
@@ -172,19 +171,17 @@ public abstract class Model extends Manageable {
         // create map
         Map<String, Object> fieldMap = new HashMap<String, Object>();
         
-        // loop all inhereted classes, starting with the highest one
+        // loop all inherited classes, starting with the highest one
         while (clazz.getSuperclass() != null) {
             // get all fields
             Stream.of(clazz.getDeclaredFields())
                     // if it isn't transient
-                    .filter(field -> !Modifier.isTransient(field.getModifiers()))
-                    // and not final
-                    .filter(field -> !Modifier.isFinal(field.getModifiers()))
-                    // and not yet set (inheritance)
-                    .filter(field -> !fieldMap.containsKey(field.getName()))
+                    .filter(field -> !Modifier.isTransient(field.getModifiers())
+                            && !Modifier.isFinal(field.getModifiers())
+                            && !fieldMap.containsKey(field.getName()))
                     // loop all left-over fields
                     .forEach(Unchecked.consumer(field -> {
-                        // get the right acces rights
+                        // get the right access rights
                         if (!field.isAccessible()) field.setAccessible(true);
                         // put k-v in the map
                         fieldMap.put(field.getName(), field.get(this));

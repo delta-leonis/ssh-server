@@ -66,7 +66,7 @@ public class DetectionModelConsumer extends Consumer<DetectionPacket> {
         ).reduce(true, (accumulator, succes) -> succes && accumulator);
 
         // loop all robots that haven't been processed
-        Models.<Robot> getAll("robot").forEach(robot -> {
+        Models.<Robot> getAll().stream().filter(robot -> robot.getName().equals("robot")).forEach(robot -> {
             System.out.println(frame.getTSent() + " - " + robot.lastUpdated() + " = " + (frame.getTSent() - robot.lastUpdated()));
             if(frame.getTSent() - robot.lastUpdated() > 0.5){
                 // remove models that aren't on the field
