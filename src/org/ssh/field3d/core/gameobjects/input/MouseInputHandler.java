@@ -10,10 +10,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 
 /**
- * MouseInputHandler class. This class handles mouse input.
+ * MouseInputHandler class. This class handles the mouse input for the 3d field.
  *
- * @author Mark Lefering
  * @see GameObject
+ * @author Mark Lefering
  */
 public class MouseInputHandler extends GameObject {
     
@@ -65,29 +65,43 @@ public class MouseInputHandler extends GameObject {
     /** The state for checking if the mouse wheel y value has changed since the last frame. */
     private boolean                   mouseWheelYChanged;
                                       
-    /** The mouse x-coordinate & y-coordinate. */
-    private double                    mouseX, mouseY;
+    /** The mouse x-coordinate. */
+    private double                    mouseX;
+    /** The mouse y-coordinate. */
+    private double                    mouseY;
                                       
-    /** The current mouse x-coordinate & y-coordinate. */
-    private double                    curMouseX, curMouseY;
+    /** The current mouse x-coordinate. */
+    private double                    curMouseX;
+    /** The current mouse y-coordinate. */
+    private double                    curMouseY;
                                       
-    /** The previous mouse x-coordinate & y-coordinate. */
-    private double                    prevMouseX, prevMouseY;
+    /** The previous mouse x-coordinate. */
+    private double                    prevMouseX;
+    /** The previous mouse y-coordinate. */
+    private double                    prevMouseY;
                                       
-    /** The scroll wheel x & y value. */
-    private long                      scrollWheelXValue, scrollWheelYValue;
+    /** The x scroll wheel value. */
+    private long                      scrollWheelXValue;
+    /** The y scroll wheel value. */
+    private long                      scrollWheelYValue;
                                       
-    /** The previous scroll wheel x & y value. */
-    private long                      prevScrollWheelXValue, prevScrollWheelYValue;
+    /** The previous scroll wheel x value. */
+    private long                      prevScrollWheelXValue;
+    /** The previous scroll wheel y value. */
+    private long                      prevScrollWheelYValue;
                                       
-    /** The current scroll wheel x & y value. */
-    private long                      curScrollWheelXValue, curScrollWheelYValue;
+    /** The current scroll wheel x value. */
+    private long                      curScrollWheelXValue;
+    /** The current scroll wheel y value. */
+    private long                      curScrollWheelYValue;
                                       
-    /** The min & max scroll wheel value. */
-    private long                      maxScrollWheelValue, minScrollWheelValue;
+    /** The minimal scroll wheel value. */
+    private long                      maxScrollWheelValue;
+    /** The maximal scroll wheel value. */
+    private long                      minScrollWheelValue;
                                       
     /**
-     * Constructor.
+     * Constructor. This instantiates a new MouseInputHandler object.
      *
      * @param game
      *            The {@link Game} of the {@link GameObject}.
@@ -156,16 +170,10 @@ public class MouseInputHandler extends GameObject {
         this.curScrollWheelYValue = this.scrollWheelYValue;
         
         // Check if the mouse wheel x value has changed since the last frame
-        if (this.prevScrollWheelXValue != this.curScrollWheelXValue)
-            this.mouseWheelXChanged = true;
-        else
-            this.mouseWheelXChanged = false;
+        this.mouseWheelXChanged = this.prevScrollWheelXValue != this.curScrollWheelXValue;
             
         // Check if the mouse wheel y value has changed since the last frame
-        if (this.prevScrollWheelYValue != this.curScrollWheelYValue)
-            this.mouseWheelYChanged = true;
-        else
-            this.mouseWheelYChanged = false;
+        this.mouseWheelYChanged = this.prevScrollWheelYValue != this.curScrollWheelYValue;
             
         // Copy current button states to the previous button states
         this.prevButtonStates = Arrays.copyOf(this.curButtonStates, this.curButtonStates.length);
@@ -221,6 +229,7 @@ public class MouseInputHandler extends GameObject {
      *
      * @return The scroll wheel x value.
      */
+    @SuppressWarnings("unused")
     public long getScrollWheelXValue() {
         return this.scrollWheelXValue;
     }
@@ -259,6 +268,7 @@ public class MouseInputHandler extends GameObject {
      *            The number of the button, 0 for left, 1 for mid and 2 for right.
      * @return True, if is button down.
      */
+    @SuppressWarnings("unused")
     public boolean isButtonDown(final int buttonNumber) {
         return this.curButtonStates[buttonNumber];
     }
@@ -270,6 +280,7 @@ public class MouseInputHandler extends GameObject {
      *            The number of the button, 0 for left, 1 for mid and 2 for right.
      * @return True, if the button is up.
      */
+    @SuppressWarnings("unused")
     public boolean isButtonUp(final int buttonNumber) {
         return !this.curButtonStates[buttonNumber];
     }
@@ -288,6 +299,7 @@ public class MouseInputHandler extends GameObject {
      *
      * @return True, if the left mouse button is up.
      */
+    @SuppressWarnings("unused")
     public boolean isLeftButtonUp() {
         return !this.curButtonStates[MOUSE_BUTTON_LEFT];
     }
@@ -306,6 +318,7 @@ public class MouseInputHandler extends GameObject {
      * 
      * @return True, if the middle mouse button is up.
      */
+    @SuppressWarnings("unused")
     public boolean isMidButtonUp() {
         return !this.curButtonStates[MOUSE_BUTTON_MID];
     }
@@ -324,6 +337,7 @@ public class MouseInputHandler extends GameObject {
      *
      * @return True, if the right mouse button is up.
      */
+    @SuppressWarnings("unused")
     public boolean isRightButtonUp() {
         return !this.curButtonStates[MOUSE_BUTTON_RIGHT];
     }
@@ -342,6 +356,7 @@ public class MouseInputHandler extends GameObject {
      *
      * @return True, if the left mouse button is being released.
      */
+    @SuppressWarnings("unused")
     public boolean isLeftButtonReleasing() {
         return isButtonReleasing(MOUSE_BUTTON_LEFT);
         
@@ -361,6 +376,7 @@ public class MouseInputHandler extends GameObject {
      *
      * @return True, if the middle mouse button is being released.
      */
+    @SuppressWarnings("unused")
     public boolean isMidButtonReleasing() {
         return isButtonReleasing(MOUSE_BUTTON_MID);
     }
@@ -370,6 +386,7 @@ public class MouseInputHandler extends GameObject {
      *
      * @return True, if the right mouse button is being pressed.
      */
+    @SuppressWarnings("unused")
     public boolean isRightButtonPressing() {
         return isButtonPressing(MOUSE_BUTTON_RIGHT);
     }
@@ -379,6 +396,7 @@ public class MouseInputHandler extends GameObject {
      *
      * @return True, if the right mouse button is being released.
      */
+    @SuppressWarnings("unused")
     public boolean isRightButtonReleasing() {
         return isButtonReleasing(MOUSE_BUTTON_RIGHT);
     }
@@ -463,6 +481,7 @@ public class MouseInputHandler extends GameObject {
      * @param value
      *            The new mouse wheel x value.
      */
+    @SuppressWarnings("unused")
     public void setMouseWheelXValue(final long value) {
         
         if (value >= this.minScrollWheelValue && value <= this.maxScrollWheelValue) {

@@ -17,44 +17,90 @@ import javafx.scene.SubScene;
 import javafx.util.Duration;
 
 /**
- *
- * Game class This is the core of the game. This class contains the game objects, input handlers and
+ * Game class. This is the core of the game. This class contains the game objects, input handlers and
  * camera. This class creates the actual game loop.
  *
  * @author Mark Lefering
  */
 public abstract class Game extends SubScene {
-    
+
+    /**
+     * The target FPS of the 3d field.
+     */
     private static final int      FPS           = 60;
-    private static final int      FRAME_TIME_MS = (1 / Game.FPS) * 1000;
-                                                
+    /**
+     * The target frame time of the 3d field.
+     */
+    private static final int      FRAME_TIME_MS = (int)((1.0 / Game.FPS) * 1000.0);
+
+    /**
+     * The timeline of the 3d field.
+     */
     private Timeline              timeline;
+    /**
+     * The animation timer handler.
+     */
     private AnimationTimerHandler animationTimerHandler;
-    private SubScene              scene3D;
-                                  
+
+    /**
+     * The queue of game objects.
+     */
     private Queue<GameObject>     gameObjects;
-                                  
+
+    /**
+     * The mouse input handler.
+     */
     private MouseInputHandler     mouseInputHandler;
+    /**
+     * The third person camera.
+     */
     private ThirdPersonCamera     thirdPersonCamera;
-                                  
+
+    /**
+     * The 3d SubScene for the 3d field.
+     */
+    private SubScene              scene3D;
+
+    /**
+     * The world group.
+     */
     private Group                 worldGroup;
+    /**
+     * The camera group.
+     */
     private Group                 cameraGroup;
+    /**
+     * The 2d overlay group.
+     */
     private Group                 group2d;
+    /**
+     * The 3d group.
+     */
     private Group                 group3d;
-                                  
-    private long                  curTime, prevTime;
-                                  
+
+    /**
+     * The current time in nanoseconds.
+     */
+    private long                  curTime;
+    /**
+     * The previous time in nanoseconds.
+     */
+    private long                  prevTime;
+
+    /**
+     * The first frame state.
+     */
     private boolean               isFirstFrame;
                                   
     /**
-     * Constructor
+     * Constructor. Instantiates a new Game.
      *
      * @param root
-     *            root of the SubScene.
+     *            root of the {@link SubScene}.
      * @param width
-     *            width of the SubScene.
+     *            width of the {@link SubScene}.
      * @param height
-     *            height of the SubScene.
+     *            height of the {@link SubScene}.
      */
     public Game(final Parent root, final double width, final double height) {
         
@@ -158,9 +204,9 @@ public abstract class Game extends SubScene {
      * frame. It gets called from AnimationTimerHandler at the end of this document.
      */
     public void internalUpdate() {
-        
-        long timeDivNano = 0;
-        
+
+        long timeDivNano;
+
         // Update previous time
         this.prevTime = this.curTime;
         // Update current time
@@ -216,15 +262,6 @@ public abstract class Game extends SubScene {
     }
     
     /**
-     * On exit method. This method should be called when the game closes.
-     */
-    public void onExit() {
-        
-        // Call destroy method
-        this.internalDestroy();
-    }
-    
-    /**
      * Gets the 2d {@link Group} of the game.
      * 
      * @return The 2d {@link Group} of the game.
@@ -238,6 +275,7 @@ public abstract class Game extends SubScene {
      *
      * @return The 3d {@link Group} of the game.
      */
+    @SuppressWarnings("unused")
     public Group get3DGroup() {
         return this.group3d;
     }
@@ -289,15 +327,10 @@ public abstract class Game extends SubScene {
         
         // Check if we need to update
         if (this.gameObjects != null) {
-            
-            // Loop through game objects
-            for (final GameObject gameObject : this.gameObjects) {
-                
-                // Check if we can update the current game object
-                if (gameObject != null)
-                    // Update the game object
-                    gameObject.onUpdate(timeDivNano);
-            }
+
+            // Get the game object which are not null, and loop through them and call the onUpdate(timeDifNano)
+            this.gameObjects.stream().filter(gameObject -> gameObject != null)
+                    .forEach(gameObject -> gameObject.onUpdate(timeDivNano));
         }
     }
     
@@ -310,36 +343,30 @@ public abstract class Game extends SubScene {
         // Check if we need to update
         if (this.gameObjects != null) {
             
-            // Loop through game objects
-            for (final GameObject gameObject : this.gameObjects) {
-                
-                // Check if we can destroy the current game object
-                if (gameObject != null) {
-                    
-                    // Destroy the current game object
-                    gameObject.onDestroy();
-                    // Remove from array list
-                    this.removeGameObject(gameObject);
-                }
-            }
+            // Get the game object who aren't null, and loop through them
+            this.gameObjects.stream().filter(gameObject -> gameObject != null).forEach(gameObject -> {
+
+                // Destroy the current game object
+                gameObject.onDestroy();
+                // Remove from array list
+                this.removeGameObject(gameObject);
+            });
         }
     }
-    
+
     /**
+     * Initialize method. This method is used in the constructor of this class, its used to create a
+     * generic "constructor".
      *
-     * initialize method This method is used in the constructor of this class, its used to create a
-     * generic "constructor"
-     *
-     * @param root
-     *            Root of the SubScene.
      * @param width
-     *            Width of the SubScene.
+     *              The width of the {@link SubScene}.
      * @param height
-     *            Height of the SubScene.
+     *              The height of the {@link SubScene}.
      * @param depthBuffer
-     *            Depth buffer enabled state.
+     *              The depth buffer enabled state of the {@link SubScene}.
      * @param antiAliasing
-     *            Anti-aliasing mode, SceneAntialiasing.DISABLED.
+     *              The anti-aliasing mode, {@link SceneAntialiasing#BALANCED} for anti-aliasing enabled.
+     *              {@link SceneAntialiasing#DISABLED} for anti-aliasing disabled.
      */
     private void initialize(final double width,
             final double height,
@@ -358,7 +385,7 @@ public abstract class Game extends SubScene {
         this.group3d = new Group();
         
         // Creating new array list for the game objects
-        this.gameObjects = new ConcurrentLinkedQueue<GameObject>();
+        this.gameObjects = new ConcurrentLinkedQueue<>();
         
         // Creating new keyboard input handler
         this.mouseInputHandler = new MouseInputHandler(this);
@@ -407,7 +434,9 @@ public abstract class Game extends SubScene {
     }
     
     /**
-     * 
+     * Set first frame state method. This method sets the first frame state.
+     *
+     * @param isFirstFrame The first frame state.
      */
     private void setIsFirstFrame(boolean isFirstFrame) {
         
@@ -419,8 +448,7 @@ public abstract class Game extends SubScene {
      *
      * AnimationTimerHandler class This class handles the animation timer and updates the game.
      *
-     * @author marklef2
-     * @date 5-11-2015
+     * @author Mark Lefering
      */
     class AnimationTimerHandler extends AnimationTimer {
         

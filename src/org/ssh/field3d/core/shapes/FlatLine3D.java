@@ -5,42 +5,36 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
 /**
- * FlatLine3D class
- *
- * This class represents a flat(2d plane) line in 3d space, it gets drawn on the x, z axis.
+ * FlatLine3D class. This class represents a flat(2d plane) line in 3d space, it gets drawn on the x, z axis.
  *
  * @author Mark Lefering
  */
 public class FlatLine3D {
     
     /** The constant for half of a circle. */
-    private static final float HALF_CIRCLE_DEG  = 180.0f;
+    private static final float HALF_CIRCLE_DEG       = 180.0f;
                                                 
     /** The constant for the faces. */
-    private static final int   FACES[]          = { 0, 0, 1, 1, 2, 2, 1, 1, 3, 3, 2, 2 };
+    private static final int   FACES[]               = { 0, 0, 1, 1, 2, 2, 1, 1, 3, 3, 2, 2 };
                                                 
     /** The constant for the texture coordinates. */
-    private static final float TEXTURE_COORDS[] = { 1, 1, 1, 0, 0, 1, 0, 0 };
+    private static final float TEXTURE_COORDINATES[] = { 1, 1, 1, 0, 0, 1, 0, 0 };
                                                 
     /** The mesh. */
     private final TriangleMesh mesh;
                                
     /** The mesh view. */
     private final MeshView     meshView;
-                               
+
     /**
-     * Constructor.
+     * Constructor. This instantiates a new FlatLine3D object.
      *
-     * @param startX
-     *            Start of the line, x coordinate.
-     * @param startZ
-     *            Start of the line, z coordinate.
-     * @param endX
-     *            End of the line, x coordinate.
-     * @param endZ
-     *            End of the line, z coordinate.
+     * @param startPoint
+     *              The start {@link Point2D point} of the line.
+     * @param endPoint
+     *              The end {@link Point2D point} of the line.
      * @param thickness
-     *            Thickness of the line.
+     *              The thickness of the line.
      */
     public FlatLine3D(final Point2D startPoint, final Point2D endPoint, final double thickness) {
         
@@ -55,9 +49,7 @@ public class FlatLine3D {
     }
     
     /**
-     * Build mesh method.
-     * 
-     * This method is responsible for building the triangle mesh of the line.
+     * Build mesh method. This method is responsible for building the triangle mesh of the line.
      * 
      * @param startX
      *            Start of the line, x coordinate.
@@ -107,8 +99,8 @@ public class FlatLine3D {
         
         // Add vertices
         this.mesh.getPoints().addAll(vertices);
-        // Add texture coords
-        this.mesh.getTexCoords().addAll(FlatLine3D.TEXTURE_COORDS);
+        // Add texture coordinates
+        this.mesh.getTexCoords().addAll(FlatLine3D.TEXTURE_COORDINATES);
         // Add faces
         this.mesh.getFaces().addAll(FlatLine3D.FACES);
     }
@@ -127,6 +119,7 @@ public class FlatLine3D {
      *
      * @return The {@link TriangleMesh} of the line.
      */
+    @SuppressWarnings("unused")
     public TriangleMesh getTriangleMesh() {
         return this.mesh;
     }

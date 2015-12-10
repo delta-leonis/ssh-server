@@ -4,14 +4,12 @@ import org.ssh.field3d.core.game.Game;
 
 /**
  * GameObject class. This class is the abstract class for the game objects in the game.
- * 
- * @see Game
- *      
+ *
  * @author Mark Lefering
  */
 public abstract class GameObject {
     
-    /** The {@link Game}. */
+    /** The {@link Game} of the {@link GameObject}. */
     private final Game game;
     
     /**

@@ -15,9 +15,9 @@ import javafx.scene.transform.Rotate;
 
 /**
  * Goal game object class. This class represents a 3D goal on the 3D field.
- * 
+ *
+ * @see GeometryGameObject
  * @author marklef2
- * @see GameObject
  */
 public class GoalGameObject extends GeometryGameObject {
     
@@ -46,7 +46,7 @@ public class GoalGameObject extends GeometryGameObject {
      * @param game
      *            The game of the {@link GameObject}.
      * @param goalVisionModel
-     *            The vision {@ink Goal model} of the goal.
+     *            The vision {@link Goal model} of the goal.
      */
     public GoalGameObject(Game game, Goal goalVisionModel, final Group fieldGroup) {
         
@@ -72,7 +72,8 @@ public class GoalGameObject extends GeometryGameObject {
         
         // Setting goal vision model
         this.goalVisionModel = goalVisionModel;
-        
+
+        // Setting field group
         this.fieldGroup = fieldGroup;
         
         // Setting rotation axis
@@ -132,8 +133,10 @@ public class GoalGameObject extends GeometryGameObject {
      */
     @Override
     public void onDestroy() {
-        
+
+        // Execute on UI thread
         Platform.runLater(() -> {
+
             // Check if we need to remove the goal group
             if (this.fieldGroup.getChildren().contains(goalGroup)) {
                 
@@ -152,7 +155,7 @@ public class GoalGameObject extends GeometryGameObject {
         // Update team color
         updateTeamColor();
         
-        // Add goal group to the world group
+        // Execute on UI thread; add goal group to the field group
         Platform.runLater(() -> this.fieldGroup.getChildren().add(this.goalGroup));
     }
     
@@ -165,7 +168,7 @@ public class GoalGameObject extends GeometryGameObject {
         // Update team color
         updateTeamColor();
 
-// Translate goal
+		// Translate goal
         this.goalGroup.setTranslateX(this.goalVisionModel.getPosition().getX());
         this.goalGroup.setTranslateZ(this.goalVisionModel.getPosition().getY());
     }

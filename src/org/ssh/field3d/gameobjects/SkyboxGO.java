@@ -25,6 +25,7 @@ import javafx.scene.transform.Rotate;
  *         
  * @see GameObject
  */
+@SuppressWarnings("unused")
 public class SkyboxGO extends GameObject {
     
     /** The logger */
@@ -43,10 +44,10 @@ public class SkyboxGO extends GameObject {
     private final PhongMaterial skyMaterial;
                                 
     /**
-     * Constructor.
+     * Constructor. This instantiates a new SkyboxGO object.
      *
      * @param game
-     *            The {@link GameObject}'s {@link Game}.
+     *            The {@link Game} of the {@link GameObject}.
      */
     public SkyboxGO(final Game game) {
         
@@ -66,7 +67,8 @@ public class SkyboxGO extends GameObject {
             
             // Open texture file
             fs = new FileInputStream("./assets/textures/skybox.jpg");
-            
+            // Setting diffuse color map
+            this.skyMaterial.setDiffuseMap(new Image(fs));
         }
         catch (final FileNotFoundException fileNotFoundException) {
             
@@ -74,10 +76,7 @@ public class SkyboxGO extends GameObject {
             LOG.info("Could not load: " + SKYBOX_TEXTURE_FILE);
             LOG.exception(fileNotFoundException);
         }
-        
-        // Setting diffuse color map
-        this.skyMaterial.setDiffuseMap(new Image(fs));
-        
+
         // Setting model material
         this.model.setMaterial(this.skyMaterial);
         // Setting face culling to none
@@ -89,8 +88,8 @@ public class SkyboxGO extends GameObject {
         
         // Close file
         try {
-            
-            fs.close();
+            if (fs != null)
+                fs.close();
         }
         catch (IOException ioException) {
             
@@ -105,7 +104,7 @@ public class SkyboxGO extends GameObject {
     @Override
     public void onInitialize() {
         
-        // Add models to world group
+        // Execute on UI thread; add models to world group
         Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(this.model));
     }
     
@@ -129,5 +128,4 @@ public class SkyboxGO extends GameObject {
             this.getGame().getWorldGroup().getChildren().remove(this.model);
         }
     }
-    
 }

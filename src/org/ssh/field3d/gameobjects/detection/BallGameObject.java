@@ -11,22 +11,24 @@ import javafx.scene.shape.Sphere;
 /**
  * Ball game object class. This class is responsible for the ball on the 3D field.
  *
+ * @see DetectionGameObject
  * @author marklef2
- * @see GameObject
  */
 public class BallGameObject extends DetectionGameObject {
     
-    /** The ball model. */
+    /** The 3D ball model. */
     private final Sphere ballModel;
     
     /** The ball vision model. */
     private Ball         ballVisionModel;
                          
     /**
-     * Instantiates a new ball game object.
+     * Constructor. This instantiates a new BallGameObject object.
      *
-     * @param game The {@link Game game}.
-     * @param ballVisionModel The vision model of the {@link Ball ball}.
+     * @param game
+     *              The {@link Game game}.
+     * @param ballVisionModel
+     *              The vision model of the {@link Ball ball}.
      */
     public BallGameObject(Game game, Ball ballVisionModel) {
         
@@ -45,7 +47,8 @@ public class BallGameObject extends DetectionGameObject {
      */
     @Override
     public void onInitialize() {
-        
+
+        // Sync with UI thread
         Platform.runLater(() -> {
             
             // Check if we need to add the ball model to the world
@@ -62,7 +65,8 @@ public class BallGameObject extends DetectionGameObject {
      */
     @Override
     public void onDestroy() {
-        
+
+        // Sync with UI thread
         Platform.runLater(() -> {
            
             // Check if we need to remove the ball model from the world group
@@ -79,9 +83,11 @@ public class BallGameObject extends DetectionGameObject {
      */
     @Override
     public void onUpdateDetection() {
-        
+
+        // Check if the vision model is not null and also if the position of the vision model is not null
         if (this.ballVisionModel != null && this.ballVisionModel.getPosition() != null) {
-            
+
+            // Sync with UI thread
             Platform.runLater(() -> {
                 
                 // Translate ball into the position

@@ -8,7 +8,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.ssh.field3d.FieldGame;
 import org.ssh.field3d.core.game.Game;
-import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.field3d.core.shapes.FlatArc3D;
 import org.ssh.field3d.core.shapes.FlatLine3D;
 import org.ssh.field3d.gameobjects.GeometryGameObject;
@@ -20,13 +19,11 @@ import org.ssh.models.Model;
 import org.ssh.util.Logger;
 
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -38,10 +35,9 @@ import protobuf.Geometry.Vector2f;
 /**
  * FieldGO class. This class creates the field, the goals, lines and arcs.
  *
+ * @see GeometryGameObject
  * @author marklef2
- * @see GameObject
  */
-// TODO: Read location of penalty spot + penalty spot size from model
 public class FieldGO extends GeometryGameObject {
     
     /** The height of the field. */
@@ -72,8 +68,7 @@ public class FieldGO extends GeometryGameObject {
     private static final int            ARC_NUM_DIVISIONS       = 1000;
                                                                 
     /** The tiles of the field. */
-    private final Queue<Box>            fieldBoxes;
-                                        
+    private final Queue<Box>            fieldTiles;
     /** The lines of the field. */
     private final Queue<FlatLine3D>     fieldLines;
                                         
@@ -103,14 +98,17 @@ public class FieldGO extends GeometryGameObject {
                                         
     /** The west penalty spot. */
     private PenaltySpotGO               penaltySpotWest;
-                                        
+
+    /** The group for the field. */
     private final Group                 fieldGroup;
+    /** The group for the tiles of the field. */
     private final Group                 fieldTileGroup;
-                                        
+
     /**
-     * Constructor
+     * Constructor. This instantiates a new FieldGO object.
+     *
      * @param game
-     * @param fieldVisionModel
+     *          The {@link Game} of the game object.
      */
     public FieldGO(final Game game) {
         
@@ -118,13 +116,15 @@ public class FieldGO extends GeometryGameObject {
         super(game);
         
         // Creating lists for the tiles and lines
-        this.fieldBoxes = new ConcurrentLinkedQueue<Box>();
-        this.fieldLines = new ConcurrentLinkedQueue<FlatLine3D>();
-        this.fieldArcs = new ConcurrentLinkedQueue<FlatArc3D>();
-        this.goalGameObjects = new ConcurrentLinkedQueue<GoalGameObject>();
-        
+        this.fieldTiles = new ConcurrentLinkedQueue<>();
+        this.fieldLines = new ConcurrentLinkedQueue<>();
+        this.fieldArcs = new ConcurrentLinkedQueue<>();
+        this.goalGameObjects = new ConcurrentLinkedQueue<>();
+
+        // Creating new context overlay game object
         this.contextOverlayGO = new ContextOverlayGO(game);
-        
+
+        // Creating groups
         this.fieldGroup = new Group();
         this.fieldTileGroup = new Group();
         
@@ -134,6 +134,9 @@ public class FieldGO extends GeometryGameObject {
         // Setting tile dimensions
         this.tileDepth = FIELD_TILE_DEPTH;
         this.tileWidth = FIELD_TILE_WIDTH;
+
+        // Add tile group to the field group
+        this.fieldGroup.getChildren().add(this.fieldTileGroup);
         
         // Getting resource
         InputStream textureInputStream = this.getClass().getResourceAsStream(GRASS_TEXTURE_FILE);
@@ -159,16 +162,16 @@ public class FieldGO extends GeometryGameObject {
         
         // Add context menu to the game objects of the game
         this.getGame().addGameObject(this.contextOverlayGO);
-        
+
+        // Execute on UI thread
         Platform.runLater(() -> {
-            
+
+            // Check if the world group does not contain the field group
             if (!this.getGame().getWorldGroup().getChildren().contains(this.fieldGroup)) {
-                
-                this.fieldGroup.getChildren().add(this.fieldTileGroup);
+
+                // Add the field group to the world
                 this.getGame().getWorldGroup().getChildren().add(this.fieldGroup);
-                
             }
-            
         });
     }
     
@@ -177,33 +180,17 @@ public class FieldGO extends GeometryGameObject {
      */
     @Override
     public void onDestroy() {
-        
-        if (this.getGame().getWorldGroup().getChildren().contains(this.fieldGroup)) {
-            
-            this.getGame().getWorldGroup().getChildren().remove(this.fieldGroup);
-        }
-        
-        // Check if we need to remove field boxes
-        if ((this.fieldBoxes != null) && (this.fieldBoxes.size() > 0)) {
-            
-            // Loop through field tiles
-            for (final Box tmpBox : this.fieldBoxes) {
-                
-                // Remove box from list
-                this.fieldBoxes.remove(tmpBox);
+
+        // Execute on UI thread
+        Platform.runLater(() -> {
+
+            // Check if the world group contains the field group
+            if (this.getGame().getWorldGroup().getChildren().contains(this.fieldGroup)) {
+
+                // Remove the field group from the world group
+                this.getGame().getWorldGroup().getChildren().remove(this.fieldGroup);
             }
-        }
-        
-        // Check if we need to remove field lines
-        if ((this.fieldLines != null) && (this.fieldLines.size() > 0)) {
-            
-            // Loop through field lines
-            for (final FlatLine3D line : this.fieldLines) {
-                
-                // Remove line from list
-                this.fieldLines.remove(line);
-            }
-        }
+        });
     }
     
     /**
@@ -261,28 +248,26 @@ public class FieldGO extends GeometryGameObject {
             // Adding new penalty spots
             ((FieldGame)this.getGame()).addGeometryGameObject(penaltySpotEast);
             ((FieldGame)this.getGame()).addGeometryGameObject(penaltySpotWest);
-            
+
+            // Rotate the entire field 180 degrees around the y-axis
             this.fieldGroup.setRotationAxis(Rotate.Y_AXIS);
             this.fieldGroup.setRotate(180);
+            // Rotate the tiles of the field 180 degrees around the x-axis
             this.fieldTileGroup.setRotationAxis(Rotate.X_AXIS);
             this.fieldTileGroup.setRotate(180);
         }
     }
-    
+
     /**
-     * addLine method. This method creates and adds flat lines to the world.
-     * 
-     * @param startX
-     *            The x-coordinate for the start of the line.
-     * @param startZ
-     *            The z-coordinate for the start of the line.
-     * @param endX
-     *            The x-coordinate for the end of the line.
-     * @param endZ
-     *            The z-coordinate for the end of the line.
+     * Add line method. This method adds an {@link FlatLine3D} to the field.
+     *
+     * @param start
+     *              The start {@link Point2D location} of the {@link FlatLine3D line}.
+     * @param end
+     *              The end {@link Point2D location} of the {@link FlatLine3D line}.
      * @param thickness
-     *            The thickness of the line
-     * @return The line created.
+     *              The thickness of the line.
+     * @return The {@link FlatLine3D} added to the field.
      */
     private FlatLine3D addLine(final Point2D start, final Point2D end, final double thickness) {
         
@@ -295,7 +280,7 @@ public class FieldGO extends GeometryGameObject {
         // Translate a bit upwards
         line.getMeshView().setTranslateY(FieldGO.LINE_Y_OFFSET);
         
-        // Add to world group
+        // Execute on UI thread; add line mesh to the field group
         Platform.runLater(() -> this.fieldGroup.getChildren().add(line.getMeshView()));
         
         // Return the line
@@ -303,20 +288,22 @@ public class FieldGO extends GeometryGameObject {
     }
     
     /**
-     * Remove line method. This method removes a {@line FlatLine3D line} from the field.
+     * Remove line method. This method removes a {@link FlatLine3D line} from the field.
      * 
      * @param line
-     *            The line to remove from the field.
+     *            The {@link FlatLine3D line} to remove from the field.
      */
     private void removeLine(FlatLine3D line) {
-        
+
+        // Execute UI thread
         Platform.runLater(() -> {
+
             // Check if we need to remove a line from the field
-            if (this.fieldLines != null && this.fieldLines.contains(line)) {
+            if (this.fieldLines != null && this.fieldLines.contains(line) && this.fieldGroup.getChildren().contains(line.getMeshView())) {
                 
-                // Remove line from world
-                this.getGame().getWorldGroup().getChildren().remove(line.getMeshView());
-                
+                // Remove line from the field group
+                this.fieldGroup.getChildren().remove(line.getMeshView());
+
                 // Remove line from line list
                 this.fieldLines.remove(line);
             }
@@ -328,16 +315,12 @@ public class FieldGO extends GeometryGameObject {
      */
     private void clearLines() {
         
-        // Loop through lines
-        for (FlatLine3D line : this.fieldLines) {
-            
-            // Remove the line
-            this.removeLine(line);
-        }
+        // Loop through lines, and remove them from the world
+        this.fieldLines.forEach(this::removeLine);
     }
     
     /**
-     * addArc method. This method adds an arc to the field.
+     * Add arc method. This method adds an {@link FlatArc3D arc} to the field.
      * 
      * @param startAngle
      *            The starting angle of the arc.
@@ -349,13 +332,17 @@ public class FieldGO extends GeometryGameObject {
      *            The center location of the arc.
      * @param thickness
      *            The thickness of the arc.
-     * @return The arc.
+     * @return The arc, null if something fails.
      */
     private FlatArc3D addArc(final float startAngle,
             final float endAngle,
             final float diameter,
             final Vector2f center,
             final float thickness) {
+
+        // Check if the center point is not null
+        if (center == null)
+            return null;
             
         // Creating new arc
         final FlatArc3D tmpArc = new FlatArc3D(startAngle, endAngle, diameter, thickness, ARC_NUM_DIVISIONS);
@@ -365,11 +352,13 @@ public class FieldGO extends GeometryGameObject {
         tmpArc.getMeshView().setTranslateY(LINE_Y_OFFSET);
         tmpArc.getMeshView().setTranslateZ(center.getY());
         
-        // Add arc to the world
+        // Execute on UI thread
         Platform.runLater(() -> {
 
+            // Check if the field group does not contain the arc we are trying to add
             if (!this.fieldGroup.getChildren().contains(tmpArc.getMeshView())) {
 
+                // Add the arc mesh to the field group
                 this.fieldGroup.getChildren().add(tmpArc.getMeshView());
             }
         });
@@ -382,7 +371,7 @@ public class FieldGO extends GeometryGameObject {
     }
     
     /**
-     * Remove arc method. This method removes a {@FlatArc3D arc} from the field.
+     * Remove arc method. This method removes a {@link FlatArc3D arc} from the field.
      * 
      * @param arc
      *            The {@link FlatArc3D} to remove from the field.
@@ -407,95 +396,82 @@ public class FieldGO extends GeometryGameObject {
      */
     private void clearArcs() {
         
-        // Loop through arcs
-        for (FlatArc3D arc : this.fieldArcs) {
-            
-            // Remove the arc
-            this.removeArc(arc);
-        }
+        // Loop through arcs, remove the arc
+        this.fieldArcs.forEach(this::removeArc);
     }
     
     /**
-     * addBox method. This method adds an box to the world.
+     * Add tile method. This method adds an {@link Box tile} to the field.
      * 
-     * @param box
-     *            The {@link Box} to be added.
+     * @param tile
+     *            The {@link Box tile} to add to the field.
      */
-    private void addTile(Box box) {
+    private void addTile(Box tile) {
         
         // Add box to field boxes
-        this.fieldBoxes.add(box);
+        this.fieldTiles.add(tile);
         
         // Add box to the world group
-        Platform.runLater(() -> this.fieldTileGroup.getChildren().add(box));
+        Platform.runLater(() -> this.fieldTileGroup.getChildren().add(tile));
         
         // Hook on mouse clicked event
-        box.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            
-            @Override
-            public void handle(MouseEvent event) {
-                
-                // Check if the right mouse button was clicked
-                if (event.getButton() == MouseButton.SECONDARY) {
+        tile.setOnMouseClicked(event -> {
 
-                    // Getting the intersected point
-                    Point3D intersectedPoint = event.getPickResult().getIntersectedPoint();
-                    
-                    // Transform the click location on the tile to world space
-                    intersectedPoint = box.localToParent(intersectedPoint);
+            // Check if the right mouse button was clicked
+            if (event.getButton() == MouseButton.SECONDARY) {
 
-                    // Setting goals
-                    contextOverlayGO.setGoals(goalGameObjects);
+                // Getting the intersected point
+                Point3D intersectedPoint = event.getPickResult().getIntersectedPoint();
 
-                    // Setting field location
-                    contextOverlayGO.setFieldLoc(new Point2D(intersectedPoint.getX(), intersectedPoint.getZ()));
+                // Transform the click location on the tile to world space
+                intersectedPoint = tile.localToParent(intersectedPoint);
 
-                    // Showing context menu
-                    contextOverlayGO.show();
-                }
+                // Setting goals
+                contextOverlayGO.setGoals(goalGameObjects);
+
+                // Setting field location
+                contextOverlayGO.setFieldLoc(new Point2D(intersectedPoint.getX(), intersectedPoint.getZ()));
+
+                // Showing context menu
+                contextOverlayGO.show();
             }
-            
         });
     }
     
     /**
-     * Remove box method. This method removes a {@link Box} from the field.
+     * Remove tile method. This method removes a {@link Box tile} from the field.
      * 
-     * @param box
-     *            The {@link Box} to remove.
+     * @param tile
+     *            The {@link Box tile} to remove from the field.
      */
-    private void removeBox(Box box) {
-        
+    private void removeTile(Box tile) {
+
+        // Execute on UI thread
         Platform.runLater(() -> {
             
             // Check if we need to remove a box from the field
-            if (this.fieldBoxes != null && this.fieldBoxes.contains(box)) {
+            if (this.fieldTiles != null && this.fieldTiles.contains(tile)) {
                 
                 // Remove from the field group
-                this.fieldGroup.getChildren().remove(box);
+                this.fieldGroup.getChildren().remove(tile);
                 
                 // Remove from box list
-                this.fieldBoxes.remove(box);
+                this.fieldTiles.remove(tile);
             }
         });
     }
     
     /**
-     * Clear boxes method. This method clears the boxes of the field.
+     * Clear tiles method. This method clears the boxes of the field.
      */
     private void clearBoxes() {
         
-        // Loop through 'tiles'
-        for (Box box : this.fieldBoxes) {
-            
-            // Remove tile
-            this.removeBox(box);
-        }
+        // Loop through boxes and remove them
+        this.fieldTiles.forEach(this::removeTile);
     }
 
-    
     /**
-     * generateArcs method. This method generates the arcs of the field.
+     * Generate arcs method. This method generates the arcs of the field.
      */
     private void generateArcs() {
         
@@ -522,7 +498,7 @@ public class FieldGO extends GeometryGameObject {
     }
     
     /**
-     * generateGoals method. This method generates the goals on the field.
+     * Generate goals method. This method generates the goals on the field.
      */
     private void generateGoals() {
         
@@ -551,16 +527,20 @@ public class FieldGO extends GeometryGameObject {
      * Clear goals method. This method clears the goals of the field.
      */
     private void clearGoals() {
-        
+
         // Loop through goal game objects
-        for (GoalGameObject goalGameObject : this.goalGameObjects) {
-            
-            ((FieldGame)this.getGame()).removeGeometryGameObject(goalGameObject);
-        }
+        this.goalGameObjects.forEach((goalGameObject) -> {
+
+            // Remove goal from the geometry game objects
+            ((FieldGame) this.getGame()).removeGeometryGameObject(goalGameObject);
+
+            // Remove from the goal game object list
+            this.goalGameObjects.remove(goalGameObject);
+        });
     }
     
     /**
-     * generateLines method. This method generates the lines on the field.
+     * Generate lines method. This method generates the lines on the field.
      */
     private void generateLines() {
         
@@ -569,22 +549,22 @@ public class FieldGO extends GeometryGameObject {
         
         // Check if the list is not null
         if (fieldLineSegments != null) {
-            
+
             // Loop through line segments
-            for (FieldLineSegment lineSegment : fieldLineSegments) {
-                
+            fieldLineSegments.forEach((lineSegment) -> {
+
                 // Getting start & end point of the line
                 Point2D lineStart = new Point2D(lineSegment.getP1().getX(), lineSegment.getP1().getY());
                 Point2D lineEnd = new Point2D(lineSegment.getP2().getX(), lineSegment.getP2().getY());
-                
+
                 // Add line to the field
                 this.addLine(lineStart, lineEnd, lineSegment.getThickness());
-            }
+            });
         }
     }
     
     /**
-     * generateTiles method. This method generates the field tiles.
+     * Generate tiles method. This method generates the field tiles.
      */
     private void generateTiles() {
         

@@ -10,26 +10,27 @@ import javafx.application.Platform;
 import javafx.scene.Group;
 
 /**
- * CarGO class. This class represents the easter egg car. It shows when the right mouse button is
- * clicked.
+ * Car game object class. This class represents the easter egg car. It shows when the right mouse button is
+ * held down.
  *
  * @see GameObject
  *      
  * @author Mark Lefering
  */
+@SuppressWarnings("unused")
 public class CarGO extends GameObject {
-    
+
     /** The logger. */
     private static final Logger LOG            = Logger.getLogger("CarGO");
-                                               
+
     /** The file name for the car model. */
     private static final String CAR_MODEL_FILE = "/org/ssh/view/3dmodels/cars/Avent2.obj";
-                                               
+
     /** The model group. */
     private Group               modelGroup;
-                                
+
     /**
-     * Constructor.
+     * Constructor. Instantiates a new CarGO object.
      *
      * @param game
      *            The {@link Game} of the {@link GameObject}.
@@ -49,10 +50,10 @@ public class CarGO extends GameObject {
         
         // Check if the model importer read something
         if (modelImporter.getImport().length > 0) {
-            
+
             // Loop through imports
             for (int i = 0; i < modelImporter.getImport().length; i++) {
-                
+
                 // Adding imports to the model group
                 this.modelGroup.getChildren().add(modelImporter.getImport()[i]);
             }
@@ -70,7 +71,7 @@ public class CarGO extends GameObject {
     @Override
     public void onInitialize() {
         
-        // Add model group to the world group
+        // Execute on UI thread; add model group to the world group
         Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(this.modelGroup));
     }
     
@@ -91,7 +92,6 @@ public class CarGO extends GameObject {
             // Set model group to be not visible
             this.modelGroup.setVisible(false);
         }
-        
     }
     
     /**
@@ -99,12 +99,16 @@ public class CarGO extends GameObject {
      */
     @Override
     public void onDestroy() {
-        
-        // Check if we need to remove model group from the world group
-        if (this.getGame().getWorldGroup().getChildren().contains(modelGroup)) {
-            
-            // Remove model group from the world group
-            Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().remove(modelGroup));
-        }
+
+        // Execute on UI thread
+        Platform.runLater(() -> {
+
+            // Check if we need to remove model group from the world group
+            if (this.getGame().getWorldGroup().getChildren().contains(modelGroup)) {
+
+                // Remove model group from the world group
+                this.getGame().getWorldGroup().getChildren().remove(modelGroup);
+            }
+        });
     }
 }

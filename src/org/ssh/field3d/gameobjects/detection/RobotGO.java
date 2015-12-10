@@ -15,21 +15,18 @@ import org.ssh.util.Logger;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 
 /**
- * RobotGO class This class is for robot game objects. This class loads the 3d model, textures and
+ * RobotGO class. This class is for robot game objects. This class loads the 3D model, textures and
  * the selection arc.
  * 
- * @see GameObject
- *      
+ * @see DetectionGameObject
  * @author Mark Lefering
  */
 public class RobotGO extends DetectionGameObject {
@@ -38,7 +35,7 @@ public class RobotGO extends DetectionGameObject {
     private static final float RAD_TO_DEG = (float)(2.0f * Math.PI) / 180.0f;
     
     /** The thickness of the selection circle. */
-    private static final float ROBOT_SELECTION_CIRCLE_THICKNESS = 50.0f;
+    private static final float  ROBOT_SELECTION_CIRCLE_THICKNESS = 50.0f;
                                                                  
     /** The starting y-coordinate for the robot model */
     private static final float  ROBOT_STARTING_Y                 = 10.0f;
@@ -50,7 +47,7 @@ public class RobotGO extends DetectionGameObject {
     private static final int    ROBOT_SEL_CIRCLE_NUM_OF_SEGMENTS = 100;
                                                                  
     /** The angle in degrees for a full circle */
-    private static final float FULL_CIRCLE                      = 360.0f;
+    private static final float  FULL_CIRCLE                      = 360.0f;
                                                                  
     /** The specular power of the robot (shininess) */
     private static final double SPECULAR_POWER                   = 20.0;
@@ -75,7 +72,8 @@ public class RobotGO extends DetectionGameObject {
                                 
     /** The selection arc mesh. */
     private final MeshView      selectionArcMesh;
-                                
+
+    /** The vision model of the robot. */
     private Robot               visionRobotModel;
                                 
     /** The model. */
@@ -86,14 +84,15 @@ public class RobotGO extends DetectionGameObject {
                                 
     /** The selected state */
     private boolean             isSelected;
-                                
+
+    /** The offset on the y-axis of the robot. */
     private float               robotYOffset;
-                                
+
+    /** The last id of the robot. */
     private int                 lastID;
                                 
     /**
-     * 
-     * Constructor of {@link RobotGO}.
+     * Constructor. This instantiates a new RobotGO object.
      * 
      * @param game
      *            The {@link Game} of the {@link GameObject}.
@@ -110,9 +109,11 @@ public class RobotGO extends DetectionGameObject {
                 ROBOT_SELECTION_CIRCLE_THICKNESS,
                 ROBOT_SEL_CIRCLE_NUM_OF_SEGMENTS);
                 
-        // Creating PhongMaterials
+        // Creating PhongMaterial
         this.material = new PhongMaterial(Color.WHITE);
         this.selectionCircleMaterial = new PhongMaterial();
+
+        // Creating group for the robot and selection arc
         this.modelGroup = new Group();
         
         // Setting vision robot model
@@ -129,7 +130,7 @@ public class RobotGO extends DetectionGameObject {
         if (this.visionRobotModel != null) {
             
             // Load texture
-            this.loadTexture(this.visionRobotModel.getRobotId(), this.visionRobotModel.getTeamColor());
+            this.loadTexture();
             
             // Setting last vision model id
             this.lastID = this.visionRobotModel.getRobotId();
@@ -152,8 +153,8 @@ public class RobotGO extends DetectionGameObject {
         
         // Add models to model group
         modelGroup.getChildren().add(this.selectionArcMesh);
-        
-        // Add model group to the world group
+
+        // Sync with UI thread, Add model group to the world group
         Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().addAll(modelGroup));
     }
     
@@ -162,7 +163,8 @@ public class RobotGO extends DetectionGameObject {
      */
     @Override
     public void onDestroy() {
-        
+
+        // Sync with UI thread
         Platform.runLater(() -> {
             
             // Check if world group contains the 3d model of the robot
@@ -188,21 +190,23 @@ public class RobotGO extends DetectionGameObject {
     public void onUpdateDetection() {
         
         // Checking if we have got valid data
-        if (this.visionRobotModel != null && this.model != null) {
-            
-            if (!this.model.isVisible()) this.model.setVisible(true);
+        if (this.visionRobotModel != null && this.modelGroup != null) {
+
+
+            if (!this.modelGroup.isVisible()) this.modelGroup.setVisible(true);
             
             this.setSelected(this.visionRobotModel.isSelected());
             
             // Check if position is not null
             if (visionRobotModel.getPosition() != null) {
-                
+
+                // Sync with UI thread
                 Platform.runLater(() -> {
                     
                     if (this.visionRobotModel.getOrientation() != null) {
                         
                         // Set the orientation of the robot
-                        this.model.setRotate(this.visionRobotModel.getOrientation() * RAD_TO_DEG);
+                        this.modelGroup.setRotate(this.visionRobotModel.getOrientation() * RAD_TO_DEG);
                     }
                     
                     // Translate to location
@@ -218,8 +222,13 @@ public class RobotGO extends DetectionGameObject {
             }
         }
         else {
-            
-            if (this.model.isVisible()) this.model.setVisible(false);
+
+            // Check if model group not null and visible
+            if (this.modelGroup != null && this.modelGroup.isVisible()) {
+
+                // Set not visible
+                this.modelGroup.setVisible(false);
+            }
         }
     }
     
@@ -228,6 +237,7 @@ public class RobotGO extends DetectionGameObject {
      * 
      * @return True, if selected.
      */
+    @SuppressWarnings("unused")
     public boolean getSelected() {
         return this.isSelected;
     }
@@ -252,23 +262,31 @@ public class RobotGO extends DetectionGameObject {
      * @param color
      *            The {@link Color} of the circle.
      */
+    @SuppressWarnings("unused")
     public void setSelectionCircleColor(final Color color) {
         
         // Update material diffuse & specular color
         this.selectionCircleMaterial.setDiffuseColor(color);
         this.selectionCircleMaterial.setSpecularColor(color);
     }
-    
+
+    /**
+     * Set robot vision model method. This method sets the vision model of the robot.
+     *
+     * @param id
+     *          The id of the robot vision model.
+     * @param color
+     *          The {@link TeamColor color} of the robot.
+     */
     public void setRobotVisionModel(int id, TeamColor color) {
         
         // Convert team color to char
         char teamColorAsChar = color.toString().charAt(0);
         // Try to get robot model
         Optional<Robot> tmpOptionalVisionRobot = Models.<Robot> get("robot " + teamColorAsChar + id);
-        
-        if (this.lastID == id) {
-            return;
-        }
+
+        // If the id is the same, do nothing
+        if (this.lastID == id) return;
         
         // Check if we've found
         if (tmpOptionalVisionRobot.isPresent()) {
@@ -280,7 +298,7 @@ public class RobotGO extends DetectionGameObject {
             if (this.lastID != id) {
                 
                 // Load texture
-                this.loadTexture(id, color);
+                this.loadTexture();
                 // Update last id
                 this.lastID = id;
             }
@@ -294,32 +312,40 @@ public class RobotGO extends DetectionGameObject {
             this.modelGroup.setVisible(false);
         }
     }
-    
-    private void loadTexture(int id, TeamColor teamColor) {
-        
-        // Generating texture file name
-        String textureFilename = ROBOT_TEXTURE_DIR + "robot" + visionRobotModel.getTeamColorIdentifier()
-                + visionRobotModel.getRobotId() + ".png";
-                
-        // Getting texture as input stream
-        InputStream textureInputStream = this.getClass().getResourceAsStream(textureFilename);
-        
-        // If the texture input stream is not null
-        if (textureInputStream != null) {
-            
-            // Loading texture & setting diffuse map of the model material
-            this.material.setDiffuseMap(new Image(textureInputStream));
+
+    /**
+     * Load texture method. This method loads the correct texture according to the vision model.
+     */
+    private void loadTexture() {
+
+        if (this.visionRobotModel != null) {
+
+            // Generating texture file name
+            String textureFilename = ROBOT_TEXTURE_DIR + "robot" + visionRobotModel.getTeamColorIdentifier()
+                    + visionRobotModel.getRobotId() + ".png";
+
+            // Getting texture as input stream
+            InputStream textureInputStream = this.getClass().getResourceAsStream(textureFilename);
+
+            // If the texture input stream is not null
+            if (textureInputStream != null) {
+
+                // Loading texture & setting diffuse map of the model material
+                this.material.setDiffuseMap(new Image(textureInputStream));
+            } else {
+
+                // Log error
+                LOG.warning("Could not load texture: " + textureFilename);
+            }
+
+            // Setting model material
+            this.model.setMaterial(this.material);
         }
-        else {
-            
-            // Log error
-            LOG.warning("Could not load texture: " + textureFilename);
-        }
-        
-        // Setting model material
-        this.model.setMaterial(this.material);
     }
-    
+
+    /**
+     * Load model method. This method loads the 3D model of the robot.
+     */
     private void loadModel() {
         
         // Creating model importer
@@ -341,14 +367,10 @@ public class RobotGO extends DetectionGameObject {
             this.modelGroup.getChildren().add(this.model);
             
             // Add mouse clicked event
-            this.model.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                
-                @Override
-                public void handle(MouseEvent event) {
-                    
-                    // Setting selected state
-                    setSelected(!isSelected);
-                }
+            this.model.setOnMouseClicked(event -> {
+
+                // Setting selected state
+                setSelected(!isSelected);
             });
             
             // Calculating offset of the robot on the y-axis
@@ -361,9 +383,6 @@ public class RobotGO extends DetectionGameObject {
             
             // Log error
             LOG.info("Could not load " + ROBOT_MODEL_FILE);
-            
-            // Break out of constructor
-            return;
         }
     }
 }

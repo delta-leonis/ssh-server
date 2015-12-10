@@ -1,22 +1,21 @@
 package org.ssh.field3d.core.shapes;
 
-import javafx.geometry.Point3D;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.VertexFormat;
 import javafx.scene.shape.TriangleMesh;
 
 /**
- * FlatArc3D class. This class creates a triangle mesh for a flat arc in 3d space.
+ * FlatArc3D class. This class creates a triangle mesh for a flat arc in 3d space, it gets drawn on the x, z axis.
  * 
  * @author marklef2
  */
 public class FlatArc3D {
     
     /** The texture coordinates. */
-    private static final float[] TEXTURE_COORDS    = { 1, 1, 1, 0, 0, 1, 0, 0 };
+    private static final float[] TEXTURE_COORDINATES = { 1, 1, 1, 0, 0, 1, 0, 0 };
                                                    
     /** The values per coordinate. */
-    private static final int     VALUES_PER_COORD  = 3;
+    private static final int     VALUES_PER_COORDINATE = 3;
                                                    
     /** The vertices per edge. */
     private static final int     VERTICES_PER_EDGE = 2;
@@ -28,11 +27,11 @@ public class FlatArc3D {
     private final MeshView       meshView;
                                  
     /**
-     * Instantiates a new flat arc 3d.
+     * Constructor. This instantiates a new FlatArc3D object.
      *
-     * @param startAngle
-     *            The starting angle of the arc.
-     * @param endAngle
+     * @param startAngleRad
+     *            The starting angle of the arc in radians.
+     * @param endAngleRad
      *            The ending angle of the arc.
      * @param diameter
      *            The diameter of the arc.
@@ -41,8 +40,8 @@ public class FlatArc3D {
      * @param numDivisions
      *            The number of divisions of the arc.
      */
-    public FlatArc3D(final float startAngle,
-            final float endAngle,
+    public FlatArc3D(final float startAngleRad,
+            final float endAngleRad,
             final float diameter,
             final float thickness,
             final int numDivisions) {
@@ -51,11 +50,11 @@ public class FlatArc3D {
         this.triangleMesh = new TriangleMesh(VertexFormat.POINT_TEXCOORD);
         
         // Calculate vertices
-        final float[] vertices = this.calculateVertices(startAngle, endAngle, diameter, thickness, numDivisions);
+        final float[] vertices = this.calculateVertices(startAngleRad, endAngleRad, diameter, thickness, numDivisions);
         // Add vertices to the point list of the triangle mesh
         this.triangleMesh.getPoints().addAll(vertices);
         // Add texture coordinates to the triangle mesh
-        this.triangleMesh.getTexCoords().addAll(TEXTURE_COORDS);
+        this.triangleMesh.getTexCoords().addAll(TEXTURE_COORDINATES);
         
         // Calculate the faces of the mesh
         final int faces[] = this.calculateFaces(numDivisions);
@@ -67,7 +66,7 @@ public class FlatArc3D {
     }
     
     /**
-     * Calculate faces.
+     * Calculate faces method. This method calculates the faces of the FlatArc3D.
      *
      * @param numDivisions
      *            The number of divisions of the arc.
@@ -75,7 +74,7 @@ public class FlatArc3D {
      */
     private int[] calculateFaces(final int numDivisions) {
         
-        final int indicies[] = new int[(numDivisions * 2) * 6];
+        final int indices[] = new int[(numDivisions * 2) * 6];
         int triangleCounter = 0;
         
         // Loop through faces, 2 faces(triangles) per division
@@ -84,45 +83,45 @@ public class FlatArc3D {
             // Map faces counter-clockwise so it faces towards us
             if ((i % 2) == 0) {
                 
-                indicies[i * 6] = i + 2;
-                indicies[(i * 6) + 2] = i + 1;
-                indicies[(i * 6) + 4] = i;
+                indices[i * 6] = i + 2;
+                indices[(i * 6) + 2] = i + 1;
+                indices[(i * 6) + 4] = i;
                 
             }
             else {
                 
-                indicies[i * 6] = i;
-                indicies[(i * 6) + 2] = i + 1;
-                indicies[(i * 6) + 4] = i + 2;
+                indices[i * 6] = i;
+                indices[(i * 6) + 2] = i + 1;
+                indices[(i * 6) + 4] = i + 2;
             }
             
-            // Map texture coords
+            // Map texture coordinates
             if (triangleCounter == 0) {
                 
-                indicies[(i * 6) + 1] = 2;
-                indicies[(i * 6) + 3] = 0;
-                indicies[(i * 6) + 5] = 3;
+                indices[(i * 6) + 1] = 2;
+                indices[(i * 6) + 3] = 0;
+                indices[(i * 6) + 5] = 3;
                 
             }
             else if (triangleCounter == 1) {
                 
-                indicies[(i * 6) + 1] = 0;
-                indicies[(i * 6) + 3] = 3;
-                indicies[(i * 6) + 5] = 1;
+                indices[(i * 6) + 1] = 0;
+                indices[(i * 6) + 3] = 3;
+                indices[(i * 6) + 5] = 1;
                 
             }
             else if (triangleCounter == 2) {
                 
-                indicies[(i * 6) + 1] = 3;
-                indicies[(i * 6) + 3] = 1;
-                indicies[(i * 6) + 5] = 2;
+                indices[(i * 6) + 1] = 3;
+                indices[(i * 6) + 3] = 1;
+                indices[(i * 6) + 5] = 2;
                 
             }
             else if (triangleCounter == 3) {
                 
-                indicies[(i * 6) + 1] = 1;
-                indicies[(i * 6) + 3] = 2;
-                indicies[(i * 6) + 5] = 0;
+                indices[(i * 6) + 1] = 1;
+                indices[(i * 6) + 3] = 2;
+                indices[(i * 6) + 5] = 0;
                 
                 triangleCounter = 0;
                 continue;
@@ -131,11 +130,11 @@ public class FlatArc3D {
             triangleCounter++;
         }
         
-        return indicies;
+        return indices;
     }
     
     /**
-     * Calculate vertices.
+     * Calculate vertices method. This method calculates the vertices of the FlatArc3D.
      *
      * @param startRad
      *            The starting angle of the arc in radians.
@@ -174,9 +173,11 @@ public class FlatArc3D {
         // Calculating amount of vertices to generate
         final int amountOfVertices = numDivisions * VERTICES_PER_EDGE;
         // Creating array for the amount of vertices
-        final float vertices[] = new float[amountOfVertices * VALUES_PER_COORD];
+        final float vertices[] = new float[amountOfVertices * VALUES_PER_COORDINATE];
 
+        // Calculate radius of the inner circle
         final float radiusSubtracted = radius - halfOfThickness;
+        // Calculate radius of the outer circle
         final float radiusAdded = radius + halfOfThickness;
         
         // Loop through edges

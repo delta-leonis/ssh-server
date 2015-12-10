@@ -21,15 +21,15 @@ import protobuf.Geometry.GeometryFieldSize;
 import protobuf.Geometry.Vector2f;
 
 /**
- * 3D field geometry producer. This class is responsible for creating test geometry data
- * 
- * @author marklef2
+ * 3D field geometry producer class. This class is responsible for creating test geometry data.
  *
+ * @see Producer
+ * @author marklef2
  */
 public class Field3DGeometryProducerExample extends Producer<GeometryPacket> {
     
     /**
-     * Constructor.
+     * Constructor. This instantiates a new {@link Field3DGeometryProducerExample}
      */
     public Field3DGeometryProducerExample() {
         
@@ -59,38 +59,43 @@ public class Field3DGeometryProducerExample extends Producer<GeometryPacket> {
     }
     
     /**
-     * This method is used to create the test data. 
+     * Create test data method. This method is used to create some test data.
      */
     @SuppressWarnings ("unused")
     private void createTestData() {
         
         // Creating field model
         Field fieldVisionModel = Models.<Field>create(Field.class);
-        
+
+        // Creating list for the goals
         List<Goal> goals = new ArrayList<>();
+        // Create goal models
         Goal goalEast = Models.<Goal>create(Goal.class, Direction.EAST);
         Goal goalWest = Models.<Goal>create(Goal.class, Direction.WEST);
-        
-        goalEast.update("goalWidth", new Integer(1000));
-        goalEast.update("goalHeight", new Integer(160));
-        goalEast.update("goalDepth", new Integer(180));
+
+        // Setting east goal properties
+        goalEast.update("goalWidth", 1000);
+        goalEast.update("goalHeight", 160);
+        goalEast.update("goalDepth", 180);
         goalEast.update("position", new Point2D(4500.0f + 90.0f, 0.0f));
-        
-        goalWest.update("goalWidth", new Integer(1000));
-        goalWest.update("goalHeight", new Integer(160));
-        goalWest.update("goalDepth", new Integer(180));
+
+        // Setting west goal properties
+        goalWest.update("goalWidth", 1000);
+        goalWest.update("goalHeight", 160);
+        goalWest.update("goalDepth", 180);
         goalWest.update("position", new Point2D(-4500.0f - 90.0f, 0.0f));
-        
+
+        // Adding goals to the goal list
         goals.add(goalWest);
         goals.add(goalEast);
         
         // Update field, create field geometry field size
         fieldVisionModel.update("field", createGeometryFieldSize());
         fieldVisionModel.update("goals", goals);
-        
-        goalWest.save();
-        goalEast.save();
-        fieldVisionModel.save();
+
+        // Save goals
+        goalWest.saveAsDefault();
+        goalEast.saveAsDefault();
         fieldVisionModel.saveAsDefault();
     }
     
@@ -166,15 +171,13 @@ public class Field3DGeometryProducerExample extends Producer<GeometryPacket> {
         Vector2f westDefenseArcRightCenter = Vector2f.newBuilder().setX(4500.0f).setY(250.0f).build();
         FieldCicularArc westDefenseArcRight = FieldCicularArc.newBuilder().setA1((float)(0.5f * Math.PI)).setA2((float)Math.PI)
                 .setThickness(10.0f).setRadius(1000.0f).setCenter(westDefenseArcRightCenter).build();
-                
-        GeometryFieldSize fieldSize = GeometryData.newBuilder().getFieldBuilder().setFieldWidth(6000)
+
+        return GeometryData.newBuilder().getFieldBuilder().setFieldWidth(6000)
                 .setFieldLength(9000).addFieldLines(midLine).addFieldLines(northLine).addFieldLines(southLine)
                 .addFieldLines(eastLine).addFieldLines(eastDefenseLine).addFieldLines(westLine)
                 .addFieldLines(westDefenseLine).addFieldArcs(midCircle).addFieldArcs(eastDefenseArcLeft)
                 .addFieldArcs(eastDefenseArcRight).addFieldArcs(westDefenseArcLeft).addFieldArcs(westDefenseArcRight)
                 .setGoalDepth(180).setGoalWidth(1000)
                 .build();
-                
-        return fieldSize;
     }
 }

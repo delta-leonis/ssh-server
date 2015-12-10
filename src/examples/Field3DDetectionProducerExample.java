@@ -15,10 +15,11 @@ import protobuf.Detection.DetectionFrame;
 import protobuf.Detection.DetectionRobot;
 
 /**
- * 3D Field Detection producer class. This class is responsible for generating random detection data.
- * 
- * @author marklef2
+ * 3D Field Detection producer class. This class is responsible for generating 1000
+ * {@link DetectionPacket DetectionPackets}, the last packet is being send twice.
+ *
  * @see Producer
+ * @author marklef2
  */
 public class Field3DDetectionProducerExample extends Producer<DetectionPacket> {
     
@@ -26,7 +27,7 @@ public class Field3DDetectionProducerExample extends Producer<DetectionPacket> {
     private static int NUM_ROBOTS_PER_TEAM = 11;
     
     /**
-     * Instantiates a new 3D detection producer.
+     * Constructor. Instantiates a new {@link Field3DDetectionProducerExample}.
      */
     public Field3DDetectionProducerExample() {
        
@@ -44,8 +45,8 @@ public class Field3DDetectionProducerExample extends Producer<DetectionPacket> {
             for (int i = 0; i < 1000; i++) {
                 
                 // Creating lists for the robots
-                final List<DetectionRobot> visionBlueRobots = new ArrayList<DetectionRobot>();
-                final List<DetectionRobot> visionYellowRobots = new ArrayList<DetectionRobot>();
+                final List<DetectionRobot> visionBlueRobots = new ArrayList<>();
+                final List<DetectionRobot> visionYellowRobots = new ArrayList<>();
                 
                 // Generate random ball location
                 final float xRandomBall = (random.nextFloat() * 9000.0f) - 4500.0f;

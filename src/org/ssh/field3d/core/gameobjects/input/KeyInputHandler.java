@@ -16,6 +16,7 @@ import javafx.scene.input.KeyEvent;
  * 
  * @author Mark Lefering
  */
+@SuppressWarnings("unused")
 public class KeyInputHandler extends GameObject {
     
     private final Map<KeyCode, Boolean> curKeyState;
@@ -23,7 +24,7 @@ public class KeyInputHandler extends GameObject {
     private final KeyReleasedHandler    keyReleasedHandler;
                                         
     /**
-     * Constructor
+     * Constructor. This instantiates a new KeyInputHandler object.
      * 
      * @param game
      *            The {@link Game} of the {@link GameObject}.
@@ -34,15 +35,15 @@ public class KeyInputHandler extends GameObject {
         super(game);
         
         // Creating new hash map
-        this.curKeyState = new HashMap<KeyCode, Boolean>();
+        this.curKeyState = new HashMap<>();
         
         // Creating key pressed and released handler
         this.keyPressedHandler = new KeyPressedHandler();
         this.keyReleasedHandler = new KeyReleasedHandler();
     }
-    
+
     /**
-     * Initialize method. This method hooks the OnKeyPressed & OnKeyReleased events.
+     * {@inheritDoc}
      */
     @Override
     public void onInitialize() {
@@ -53,14 +54,14 @@ public class KeyInputHandler extends GameObject {
     }
     
     /**
-     * Update method.
+     * {@inheritDoc}
      */
     @Override
     public void onUpdate(final long timeDivNano) {
     }
-    
+
     /**
-     * Destroy method. This method unhooks the keyboard events.
+     * {@inheritDoc}
      */
     @Override
     public void onDestroy() {
@@ -71,10 +72,10 @@ public class KeyInputHandler extends GameObject {
     }
     
     /**
-     * Checks if the key is down.
+     * Checks if a specific {@link KeyCode key} is down.
      * 
      * @param keyCode
-     *            The {@link KeyCode key}.
+     *            The {@link KeyCode key} to check.
      * @return True, if the {@link KeyCode key} is down.
      */
     public boolean isKeyDown(final KeyCode keyCode) {
@@ -91,10 +92,10 @@ public class KeyInputHandler extends GameObject {
     }
     
     /**
-     * Checks if the key is up.
+     * Checks if a specific {@link KeyCode key} is up.
      * 
      * @param keyCode
-     *            The {@link KeyCode key}.
+     *            The {@link KeyCode key} to check.
      * @return True, if the {@link KeyCode key} is up.
      */
     public boolean isKeyUp(final KeyCode keyCode) {
@@ -111,7 +112,7 @@ public class KeyInputHandler extends GameObject {
     }
     
     /**
-     * setState method. This method set the state of a key.
+     * Set state method. This method sets the state of a specific {@link KeyCode key}.
      * 
      * @param keyCode
      *            The {@link KeyCode} to set the state of.
