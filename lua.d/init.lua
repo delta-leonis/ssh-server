@@ -14,30 +14,31 @@ function sleep(n)
 end
 
 -- Create "aliases" for all robots. Robot B0 is robotB[0]
-robotA = {}
-for i=0, 12 do
-    robot = Models:get("robot A" .. tonumber(i))
-    if robot:isPresent() then
-        robot = robot:get()
-	else
-		robot = nil
-    end
-	robotA[i] = robot
+function robotA(integer)
+   robot = Models:get("robot A" .. tonumber(integer))
+   if robot:isPresent() then
+       return robot:get()
+   else
+      print("robot A" .. tonumber(integer) .. " not present")
+       return nil
+   end
 end
 
-robotO = {}
-for i=0, 12 do
-    robot = Models:get("robot O" .. tonumber(i))
-    if robot:isPresent() then
-        robot = robot:get()
-	else
-		robot = nil
-    end
-	robotO[i] = robot
+function robotO(integer)
+   robot = Models:get("robot O" .. tonumber(integer))
+   if robot:isPresent() then
+       return robot:get()
+   else
+       print("robot O" .. tonumber(integer) .. " not present")
+       return nil
+   end
 end
 
 -- Create "alias" for ball
-ball = Models:get("ball")
-if ball:isPresent() then
-    ball = ball:get()
+function getBall()
+  ball = Models:get("ball")
+  if ball:isPresent() then
+      ball = ball:get()
+  end
+  return nil
 end
