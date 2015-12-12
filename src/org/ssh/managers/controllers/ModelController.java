@@ -32,12 +32,8 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
 /**
- * The Class ModelController. manages all {@link Model Models}. Also contains the factory (
- * {@link #create(Class, Object...)}) to create instances for {@link Model Models} that will
- * register to the {@link ModelController}.
+ * The Class ModelController. manages all {@link Model Models}.
  *
-import org.ssh.controllers.ControllerLayoutDeserializer;
- * @TODO replace {@link Reflect} with {@link Reflection} in {@link #readConfig(Path, Class)}
  *       
  * @author Jeroen de Jong
  */
@@ -52,52 +48,6 @@ public class ModelController extends ManagerController<Model> {
     private Settings            settings;
     // Respective logger
     private static final Logger LOG = Logger.getLogger();
-                                    
-    /**
-     * Create a Model instance based on given class, with given arguments.<br />
-     * Registers the created instance by {@link Models#add(Model) Models} and
-     * {@link Models#initialize(Model) initializes} the models.
-     * 
-     * @param clazz
-     *            class to create
-     * @param args
-     *            arguments that will be passed to the constructor (supply them in the right order).
-     * @return a created Model
-     */
-    public <M extends Model> M create(final Class<?> clazz, final Object... args) {
-        Class<?>[] cArgs = null;
-        try {
-            // get all Types for the arguments
-            cArgs = new Class[args.length];
-            for (int i = 0; i < args.length; i++)
-                cArgs[i] = args[i].getClass();
-            
-            // call constructor and cast instance
-            M model = (M) clazz.getDeclaredConstructor(cArgs).newInstance(args);
-            LOG.info("created %s", clazz);
-            
-            // add model to ModelController
-            // TODO: Jerone
-            this.put(model.getFullName(), model);
-            // initialize this models
-            if(!Models.initialize(model))
-                ModelController.LOG.info("Could not initialize %s.", clazz.getSimpleName());
-            return model;
-        }
-        catch (java.lang.NoSuchMethodException exception) {
-            ModelController.LOG.exception(exception);
-            // either clazz isn't a models, or the constructor doesn't exist
-            ModelController.LOG.warning("Could not create Model %s%nDoes the constructor %s(%s) exist?",
-                    clazz,
-                    clazz.getSimpleName(),
-                    (cArgs.length > 0 ? Arrays.toString(cArgs).replace("class ", "") : ""));
-        }
-        catch (Exception exception) {
-            ModelController.LOG.exception(exception);
-            ModelController.LOG.warning("Could not create Model %s", clazz);
-        }
-        return null;
-    }
     
     /**
      * {@inheritDoc}
@@ -105,32 +55,20 @@ public class ModelController extends ManagerController<Model> {
      * When a {@link Settings} model is added, it is being set as default settings for this
      * controller
      */
-    public boolean add(final Model manageable) {
-        if (manageable instanceof Settings) this.settings = (Settings) manageable;
+    @Override
+    public boolean put(final String name, final Model manageable) {
+        if (manageable instanceof Settings)
+            this.settings = (Settings) manageable;
         
-        return super.add(manageable);
+        return super.put(name, manageable);
     }
-    
-    /**
-     * Find a model based on exact full name
-     * 
-     * @see #search()
-     * @param fullname
-     *            full name of a model
-     * @return model with given name
-     */
-    public <M extends Model> Optional<M> getByName(String fullname) {
-        return (Optional<M>) this.manageables.values().stream().filter(manageable -> manageable.getFullName().equals(fullname.trim()))
-                .findFirst();
-    }
-    
+
     /**
      * Instantiates a new models controller.
      */
     public ModelController() {
         gson = new GsonBuilder()
                 .registerTypeAdapter(ControllerLayout.class, new ControllerLayoutSerializer())
-
                 .setPrettyPrinting()
                 .create();
     }
@@ -167,7 +105,7 @@ public class ModelController extends ManagerController<Model> {
      * 
      * @param obj
      *            Object to generate map for
-     * @return a map compaitble with update method in Model (see {@link Models.update(map)})
+     * @return a map compaitble with update method in Model (see {@link Model#update(Map)})
      */
     private Map<String, Object> generateFieldMap(final Object obj) {
         return Stream.of(obj.getClass().getDeclaredFields())
@@ -188,10 +126,10 @@ public class ModelController extends ManagerController<Model> {
     }
     
     /**
-     * loads all values in the configfile for given models
+     * loads all values in the configfile for given model
      * 
-     * @param models
-     *            models to initialize
+     * @param model
+     *            model to initialize
      * @return success value
      */
     public boolean load(final Model model) {
@@ -250,7 +188,7 @@ public class ModelController extends ManagerController<Model> {
      * Set all non-{@link Modifier#TRANSIENT transient} fields of given models to null, and reload
      * values from configfile.
      * 
-     * @param models
+     * @param model
      *            to reinitialize
      * @return success value
      */
@@ -273,7 +211,7 @@ public class ModelController extends ManagerController<Model> {
     /**
      * Save the current state of the models in profiles path.
      * 
-     * @param models
+     * @param model
      *            models to save
      * @return success value
      */
@@ -286,7 +224,7 @@ public class ModelController extends ManagerController<Model> {
      * 
      * @param filePath
      *            filepath to save to
-     * @param models
+     * @param model
      *            models to save
      * @return succes value
      */
@@ -319,7 +257,7 @@ public class ModelController extends ManagerController<Model> {
     /**
      * Save given models as default for this models type.
      * 
-     * @param models
+     * @param model
      *            to save
      * @return succes value
      */

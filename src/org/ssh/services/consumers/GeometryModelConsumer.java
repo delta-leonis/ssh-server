@@ -55,7 +55,7 @@ public class GeometryModelConsumer extends Consumer<GeometryPacket> {
                 // Update field
                 field.update("field", fieldData);
                 
-                field.getFieldGoals().forEach(goal -> {
+                Models.<Goal>getAll("goal").forEach(goal -> {
                     // get position modifier (+1 or -1 according to field position
                     int modifier = goal.getSide().equals(Direction.EAST) ? 1 : -1;
                     

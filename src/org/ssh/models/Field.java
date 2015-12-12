@@ -27,12 +27,7 @@ public class Field extends Model {
      * Instantiates a field.
      */
     public Field() {
-        super("field");
-    }
-    
-    @Override
-    public String getSuffix() {
-        return "";
+        super("field", "");
     }
     
     /**
@@ -68,31 +63,23 @@ public class Field extends Model {
     }
     
     /**
-     * Get a specific {@link FieldLineSegments line segment}.
+     * Get a specific {@link protobuf.Geometry.FieldLineSegment line segment}.
      * 
      * @param index
-     *            index of the {@link FieldLineSegments line segment}
-     * @return a specific {@link FieldLineSegments line segment}.
+     *            index of the {@link protobuf.Geometry.FieldLineSegment line segment}
+     * @return a specific {@link protobuf.Geometry.FieldLineSegment line segment}.
      */
     public FieldLineSegment getFieldLine(final int index) {
         return this.field.getFieldLines(index);
     }
-    
+
     /**
-     * @return all {@link FieldLineSegments line segments} on the field.
+     * @return all {@link protobuf.Geometry.FieldLineSegment line segments} on the field.
      */
     public List<FieldLineSegment> getFieldLines() {
         return this.field.getFieldLinesList();
     }
-    
-    /**
-     * Gets the {@link List} of the goals on the field.
-     * @return The {@link List} of the goals on the field.
-     */
-    public List<Goal> getFieldGoals() {
-        return Models.<Goal> getAll().stream().filter(goal -> goal.getName().equals("goal")).collect(Collectors.toList());
-    }
-    
+
     /**
      * @return Width of the field.
      */

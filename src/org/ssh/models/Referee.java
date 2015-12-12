@@ -47,7 +47,7 @@ public class Referee extends Model {
      * Instantiates a new Referee
      */
     public Referee() {
-        super("Referee");
+        super("Referee", "");
         stageHistory = new ArrayList<Stage>();
         commandHistory = new ArrayList<RefereeCommand>();
     }
@@ -135,10 +135,5 @@ public class Referee extends Model {
      */
     public void setStageTimeLeft(final int stageTimeLeft) {
         this.stageTimeLeft = stageTimeLeft;
-    }
-    
-    @Override
-    public String getSuffix() {
-        return "";
     }
 }

@@ -33,22 +33,26 @@ public abstract class Model extends Manageable {
     
     // respective logger
     private static final transient Logger LOG = Logger.getLogger();
-    
+
+    /** unique identifier for this model */
+    private String identifier;
+
     /**
      * Instantiates a new models.
      *
      * @param name
      *            the name
      */
-    public Model(final String name) {
+    public Model(final String name, final String identifier) {
         super(name);
+        this.identifier = identifier;
     }
     
     /**
      * @return name used for config
      */
     public String getConfigName() {
-        return this.getFullName().replace(" ", "_") + ".json";
+        return this.getName().replace(" ", "_") + ".json";
     }
     
     /**
@@ -229,15 +233,7 @@ public abstract class Model extends Manageable {
     /**
      * @return unique suffix describing the manageable.
      */
-    public abstract String getSuffix();
-    
-    /**
-     * Gets the name including the suffix
-     * 
-     * @return name and suffix
-     */
-    public String getFullName() {
-        return String.format("%s %s", getName(), getSuffix()).trim();
+    public String getIdentifier(){
+        return String.format("%s %s", getName(), identifier).trim();
     }
-    
 }

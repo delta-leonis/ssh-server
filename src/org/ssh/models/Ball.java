@@ -20,12 +20,7 @@ public class Ball extends FieldObject {
      * Instantiates a ball
      */
     public Ball() {
-        super("ball");
-    }
-    
-    @Override
-    public String getSuffix() {
-        return "";
+        super("ball", "");
     }
     
     /**

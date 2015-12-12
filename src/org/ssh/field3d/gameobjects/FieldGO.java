@@ -104,7 +104,6 @@ public class FieldGO extends GameObject {
     /**
      * 
      * @param game
-     * @param fieldVisionModel
      */
     public FieldGO(final Game game) {
         
@@ -502,7 +501,7 @@ public class FieldGO extends GameObject {
     private void generateGoals() {
         
         // Getting list of goals
-        List<Goal> goals = this.fieldVisionModel.getFieldGoals();
+        List<Goal> goals = Models.<Goal>getAll("goal");
         
         // Check if goal
         if (goals != null) {

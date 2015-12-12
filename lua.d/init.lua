@@ -1,39 +1,39 @@
 -- Initialisation script
 -- This script initialises all useful variables for further use
 
---[[ Import system ]]-- 
+--[[ Import system ]]--
 system = luajava.bindClass('java.lang.System')
 --[[ function newPoint ]]--
 function newPoint(x, y)
     return luajava.newInstance("javafx.geometry.Point2D", x, y)
 end
 
---[[ sleep function ]]-- 
+--[[ sleep function ]]--
 function sleep(n)
 	luajava.bindClass("java.lang.Thread"):currentThread():sleep(n)
 end
 
 -- Create "aliases" for all robots. Robot B0 is robotB[0]
-robotB = {}
+robotA = {}
 for i=0, 12 do
-    robot = Models:get("robot B" .. tonumber(i))
-    if robot:isPresent() then 
+    robot = Models:get("robot A" .. tonumber(i))
+    if robot:isPresent() then
         robot = robot:get()
 	else
 		robot = nil
     end
-	robotB[i] = robot
+	robotA[i] = robot
 end
 
-robotY = {}
+robotO = {}
 for i=0, 12 do
-    robot = Models:get("robot Y" .. tonumber(i))
-    if robot:isPresent() then 
+    robot = Models:get("robot O" .. tonumber(i))
+    if robot:isPresent() then
         robot = robot:get()
 	else
 		robot = nil
     end
-	robotY[i] = robot
+	robotO[i] = robot
 end
 
 -- Create "alias" for ball

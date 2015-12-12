@@ -305,7 +305,7 @@ public class ControllerHandler extends Producer {
                 // check for false succes values
                 .reduce(true, (accumulator, succes) -> accumulator && succes))
             Service.LOG.warning("Not every button-press was processed succesfully (controller: %s).\n",
-                    this.layout.getFullName());
+                    this.layout.getController().getName());
     }
 
     /**
@@ -376,8 +376,8 @@ public class ControllerHandler extends Producer {
             case SELECT_NEXT_ROBOT:
             case SELECT_PREV_ROBOT:
                 if (ControllerHandler.isPressed(buttonValue))
-                    Services.<ControllerListener>get("ControllerListener").ifPresent(listener -> listener
-                            .changeRobotId(this, function.equals(ButtonFunction.SELECT_NEXT_ROBOT)));
+                    Services.<ControllerListener>get("ControllerListener").ifPresent(listener ->
+                            ((ControllerListener)listener).changeRobotId(this, function.equals(ButtonFunction.SELECT_NEXT_ROBOT)));
                 return true;
 
             case KICK_STRENGTH:

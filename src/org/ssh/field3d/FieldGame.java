@@ -148,13 +148,13 @@ public class FieldGame extends Game {
     public void updateGeometry() {
         
         // Trying to get field vision model
-        Optional<Model> tmpOptionalField = Models.get("field");
+        Optional<Field> tmpOptionalField = Models.<Field>get("field");
         
         // If a model is present
         if (tmpOptionalField.isPresent()) {
             
             // Set field vision model
-            this.fieldVisionModel = (Field) tmpOptionalField.get();
+            this.fieldVisionModel = tmpOptionalField.get();
             
             // Setting bounds for the location of the camera
             this.getThirdPersonCamera().setMaxLocX(this.fieldVisionModel.getFieldLength() / 2.0);
@@ -254,8 +254,7 @@ public class FieldGame extends Game {
     private void createRobots() {
         
         // Getting list of robots from the vision model
-        this.robotsVisionModel = Models.<Robot>getAll().stream()
-                .filter(robot -> robot.getName().equals("robot")).collect(Collectors.toList());
+        this.robotsVisionModel = Models.<Robot>getAll("robot");
         
         // Loop through robot models
         for (Robot robot : this.robotsVisionModel) {

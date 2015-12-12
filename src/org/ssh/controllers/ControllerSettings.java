@@ -31,7 +31,7 @@ public class ControllerSettings extends Model{
     private Float maxDribbleSpeed;
     
     public ControllerSettings() {
-        super("controllersettings");
+        super("controllersettings", "");
     }
     
     /**
@@ -67,10 +67,5 @@ public class ControllerSettings extends Model{
      */
     public float getMaxDribbleSpeed() {
         return maxDribbleSpeed;
-    }
-
-    @Override
-    public String getSuffix() {
-        return "";
     }
 }

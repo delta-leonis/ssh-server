@@ -16,128 +16,109 @@ import java.util.stream.Stream;
 /**
  * Used for binding {@link AbstractComponent Components} as found in a {@link Controller} to a
  * {@link ButtonFunction}.<br>
- * note: {@link ButtonFunctions} and {@link AbstractComponent} cannot be mounted more than one at a
- * time.
- *       
+ *
  * @author Jeroen de Jong
  * @author Thomas Hakkers
- *         
  */
 public class ControllerLayout extends Model {
-    
+
     /**
      * JInput Model representing physical {@link Controller}
      */
-    private transient final Controller                       controller;
+    private transient final Controller controller;
     /**
-     * Map containing all {@link Component} as found on the {@link controller} and the bound
+     * Map containing all {@link Component} as found on the {@link #controller} and the bound
      * {@link ButtonFunction functions}
      */
-    public Multimap<Component, ButtonFunction> bindings =  ArrayListMultimap.create();
+    public Multimap<Component, ButtonFunction> bindings = ArrayListMultimap.create();
 
     // respective logger
-    private transient final static Logger          LOG      = Logger.getLogger();
-                                                            
+    private transient final static Logger LOG = Logger.getLogger();
+
     /**
-     * Instantiates a layout linked to given {@link Controller}
-     * 
-     * @param controller
-     *            controller to link to
+     * Instantiates a layout linked  to given {@link Controller}
+     *
+     * @param controller controller to link to
      */
     public ControllerLayout(final Controller controller) {
-        super("controller");
+        super("controller", controller.getType().toString());
         this.controller = controller;
     }
-    
+
     /**
      * attach a specific {@link AbstractComponent} to a {@link ButtonFunction}. Will overwrite a
      * binding whenever a {@link AbstractComponent} is already bound to a {@link ButtonFunction}
-     * 
-     * @param component
-     *            component to link to
-     * @param function
-     *            buttonfunction to define
-     * @return
+     *
+     * @param component component to link to
+     * @param function  buttonfunction to define
+     * @return true on success
      */
     public boolean attach(final Component component, final ButtonFunction function) {
-        // check if it will be overriden
-        
-        this.bindings.put(component, function);
-                
-        return true;
+        return this.bindings.put(component, function);
     }
-    
+
     /**
      * Checks whether the given {@link ButtonFunction} is already bound to a {@link Component}
+     *
      * @param function The {@link ButtonFunction} to check for
      * @return true if it's already bound, false otherwise
      */
     public boolean containsBinding(final ButtonFunction function) {
         return this.bindings.entries().stream().filter(entry -> entry.getValue().equals(function)).count() > 0;
     }
-    
+
     /**
      * Detach a binding by {@link ButtonFunction}.
-     * 
-     * @param function
-     *            buttonFunction to detach
+     *
+     * @param function buttonFunction to detach
      */
     public void detach(final ButtonFunction function) {
         this.bindings.removeAll(function);
     }
-    
+
     /**
      * detatch the binding of a button
-     * 
-     * @param button
-     *            button to detatch
+     *
+     * @param button button to detatch
      * @return succes value
      */
     public boolean detach(final Component button) {
         this.bindings.removeAll(button);
         return !this.bindings.containsKey(button);
     }
-    
+
     /**
-     * Gets the right
-     * 
-     * 
-     * note: one exception does the following: whenever {@link ButtonFunction.CHIPKICK_STRENGTH
-     * CHIPKICK_STRENGTH} is bound, and the argument states {@link ButtonFunction.CHIP_STRENGTH
-     * CHIP_STRENGTH} or {@link ButtonFunction.KICK_STRENGTH KICK_STRENGTH}, it will return the
-     * value for CHIPKICK_STRENGTH instead of a possible unbound KICK/CHIP_STRENGTH.
-     * 
-     * @param function
-     *            function to read
+     * Gets the value for a specific {@link ButtonFunction}
+     *
+     * @param function function to read
      * @return value for specific function
      */
     public float get(final ButtonFunction function) {
-        
+
         if (!this.containsBinding(function)) {
             ControllerLayout.LOG.info("Could not get data for %s, no binding found.\n", function);
             return 0f;
         }
-        
+
         return this.bindings.entries().stream().filter(entry -> entry.getValue().equals(function))
                 .map(entry -> entry.getKey().getPollData()).findFirst().get();
     }
-    
+
     /**
      * @return Map with all the bindings for this layout
      */
     public Multimap<Component, ButtonFunction> getBindings() {
         return this.bindings;
     }
-    
+
     /**
-     * @param id
-     *            unique identifier for a component
+     * @param id unique identifier for a component
      * @return a 'physical' component on a {@link Controller}
      */
     public Component getComponent(final Identifier id) {
         return this.controller.getComponent(id);
     }
-    
+
     /**
      * @param identifier The identifier of the component, can be retrieved with {@link Component#getIdentifier()}
      * @return maybe a component of with a specific identifier
@@ -146,44 +127,37 @@ public class ControllerLayout extends Model {
         return Stream.of(this.controller.getComponents())
                 .filter(component -> component.getIdentifier().getName().equals(identifier)).findFirst();
     }
-    
+
     /**
      * @return a configname for every controllertype
      */
-    @Override
-    public String getConfigName() {
-        return String.format("%s %s", Controller.class.getSimpleName(), this.controller.getName()).replace(" ", "_") + ".json";
+    @Override public String getConfigName() {
+        return String.format("%s %s", Controller.class.getSimpleName(), this.controller.getName()).replace(" ", "_")
+                + ".json";
     }
-    
+
     /**
      * @return Model of physical controller currently in use
      */
     public Controller getController() {
         return this.controller;
     }
-    
+
     /**
      * Check whether this layout has a couple of buttons matching a 'pattern'
-     * 
-     * @param pattern
-     *            piece of String to match
+     *
+     * @param pattern piece of String to match
      * @return succes value
      */
     public boolean hasButtons(final String pattern) {
         return this.bindings.values().stream().anyMatch(entry -> entry.toString().contains(pattern));
     }
-    
+
     /**
-     * Check whether this controller is complete (e.g. has orientation and directional assignments)
-     * 
-     * @return
+     * @return whether this controller is complete (e.g. has orientation and directional assignments)
      */
     public boolean isComplete() {
         return this.hasButtons("DIRECTION_") && this.hasButtons("ORIENTATION_");
     }
 
-    @Override
-    public String getSuffix() {
-        return controller.getType().toString();
-    }
 }

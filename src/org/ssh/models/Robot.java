@@ -1,7 +1,10 @@
 package org.ssh.models;
 
+import org.ssh.managers.manager.Models;
 import org.ssh.models.enums.TeamColor;
 import org.ssh.util.Alias;
+
+import java.util.Optional;
 
 /**
  * Describes a Robot on the {@link Field} as a {@link FieldObject}
@@ -54,11 +57,18 @@ public class Robot extends FieldObject {
      *            color that controls this robot
      */
     public Robot(final Integer robotId, final TeamColor teamColor) {
-        super("robot");
+        super("robot", Robot.identifierOf(robotId, teamColor));
         // assign teamcolor
         this.teamColor = teamColor;
         this.robotId = robotId;
         this.isSelected = false;
+    }
+
+    public static String identifierOf(final Integer robotId, TeamColor teamColor){
+        Optional<Game> oGame = Models.<Game>get("game");
+        return oGame.isPresent() ?
+                String.format("%s%d", oGame.get().getAllegiance(teamColor).identifier(), robotId) :
+                "A" + robotId;
     }
     
     /**
@@ -87,11 +97,6 @@ public class Robot extends FieldObject {
      */
     public Integer getRobotId() {
         return this.robotId;
-    }
-    
-    @Override
-    public String getSuffix() {
-        return this.getTeamColorIdentifier() + robotId;
     }
     
     /**

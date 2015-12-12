@@ -92,7 +92,6 @@ public class UDPReceiver extends Service<ProtoPacket<?>> {
         
         // create networkSettings
         this.networkSettings = Models.create(NetworkSettings.class, packetType);
-        
         Service.LOG.info("Created UDPReceiver for %s<%s>.", packetType.getSimpleName(), messageType.getTypeName());
     }
     
@@ -121,14 +120,14 @@ public class UDPReceiver extends Service<ProtoPacket<?>> {
             Service.LOG.info("Could not join multicastgroup on %s:%s for %s.",
                     networkSettings.getIP(),
                     networkSettings.getPort(),
-                    networkSettings.getSuffix());
+                    networkSettings.getPacketType().getTypeName());
         }
         catch (IOException exception) {
             Service.LOG.exception(exception);
             Service.LOG.info("Could not open connection to %s:%s for %s",
                     networkSettings.getIP(),
                     networkSettings.getPort(),
-                    networkSettings.getSuffix());
+                    networkSettings.getPacketType().getTypeName());
         }
         return false;
     }
@@ -229,7 +228,7 @@ public class UDPReceiver extends Service<ProtoPacket<?>> {
                 } catch (IOException exception) {
                     Service.LOG.exception(exception);
                     Service.LOG.warning("Could not maintain connection with %s (ip: %s). closing connection.",
-                            networkSettings.getSuffix(),
+                            networkSettings.getPacketType().getTypeName(),
                             networkSettings.getIP());
                     networkSettings.update("closed", Boolean.TRUE);
                 }

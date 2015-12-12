@@ -5,18 +5,14 @@ import org.ssh.models.enums.Direction;
 /**
  * Describes a goal on the {@link Field}
  *
- * @author Jeroen
+ * @author Jeroen de Jong
  */
 public class Goal extends FieldObject {
     
-    /**
-     * Location of this goal
-     */
+    /** Location of this goal */
     private final Direction                fieldHalf;
-                                           
-    /**
-     * Dimensions of the goal
-     */
+
+    /** Dimensions of the goal */
     private Integer                        goalDepth, goalWidth;
     public transient static final Integer GOAL_HEIGHT = 160;
                                                        
@@ -27,8 +23,7 @@ public class Goal extends FieldObject {
      *            location of the goal
      */
     public Goal(final Direction fieldHalf) {
-        
-        super("goal");
+        super("goal", fieldHalf.name());
         
         this.fieldHalf = fieldHalf;
         this.goalDepth = 0;
@@ -54,10 +49,5 @@ public class Goal extends FieldObject {
      */
     public Direction getSide() {
         return this.fieldHalf;
-    }
-    
-    @Override
-    public String getSuffix() {
-        return getSide().name();
     }
 }

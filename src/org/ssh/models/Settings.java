@@ -39,7 +39,7 @@ public class Settings extends Model {
     private static final transient String USER_PROFILES   = System.getProperty("user.name");
                                                           
     /**
-     * Separator for folders (should be {@link File.separator}, but URI can't play nice)
+     * Separator for folders (should be {@link File#separator}, but URI can't play nice)
      */
     private static final transient String SEPARATOR       = "/";
                                                           
@@ -47,7 +47,7 @@ public class Settings extends Model {
                                                           
     private transient String              current_profile = "";
 
-    /** The folder containing all init files that are run whenever the {@link Console} is initialized */
+    /** The folder containing all init files that are run whenever the {@link org.ssh.ui.lua.console.Console} is initialized */
     private String luaInitFolder = "";
     /** Folder containing all other lua scripts */
     private String luaScriptFolder = "";
@@ -58,7 +58,7 @@ public class Settings extends Model {
      * Create a settings model
      */
     public Settings() {
-        super("settings");
+        super("settings", "");
     }
     
     /**
@@ -101,11 +101,6 @@ public class Settings extends Model {
     public String getProfile() {
         return current_profile.isEmpty() ? default_profile.isEmpty() ? Settings.TEMP_FOLDER : default_profile
                 : current_profile;
-    }
-    
-    @Override
-    public String getSuffix() {
-        return "";
     }
 
     /**

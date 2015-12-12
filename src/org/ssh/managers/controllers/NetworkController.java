@@ -15,9 +15,10 @@ import org.ssh.services.producers.UDPReceiver;
 
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.Message;
+import protobuf.Radio;
 
 /**
- * Manages all networkconnections. Controlls all {@link UDPReceivers}. This class also acts as a
+ * Manages all networkconnections. Controlls all {@link UDPReceiver UDPReceivers}. This class also acts as a
  * interface for a {@link RadioPacketSender}.
  * 
  * @author Jeroen de Jong
@@ -42,11 +43,11 @@ public class NetworkController extends ManagerController<Service<? extends Proto
     }
     
     /**
-     * Define the SendMethod to send messages, as used in {@link #send(Message)}<br />
+     * Define the SendMethod to send messages, as used in {@link #transmit(Radio.RadioProtocolWrapper.Builder, SendMethod...)}<br />
      * A handler for the {@link SendMethod} should be {@link #register(SendMethod, SenderInterface)
      * registered} before setting new send method
      * 
-     * @param newSendMethod
+     * @param newSendMethods new methods to use add default
      * @return succes value
      */
     public boolean addDefault(final SendMethod... newSendMethods) {
@@ -123,7 +124,7 @@ public class NetworkController extends ManagerController<Service<? extends Proto
      * 
      * @param genericBuilder
      *            a RadioWrapper Builder<?>
-     * @param sendMethod
+     * @param sendMethods
      *            SendMethod that will be used to send message
      */
     public boolean transmit(final protobuf.Radio.RadioProtocolWrapper.Builder genericBuilder,
@@ -144,5 +145,4 @@ public class NetworkController extends ManagerController<Service<? extends Proto
         if (hasSender()) sender.unregister(sendmethod);
         return false;
     }
-    
 }

@@ -8,8 +8,10 @@ import org.ssh.managers.manager.Pipelines;
 import org.ssh.managers.manager.Services;
 import org.ssh.managers.manager.UI;
 import org.ssh.models.Field;
+import org.ssh.models.Game;
 import org.ssh.models.Goal;
 import org.ssh.models.Team;
+import org.ssh.models.enums.Allegiance;
 import org.ssh.models.enums.Direction;
 import org.ssh.models.enums.SendMethod;
 import org.ssh.models.enums.TeamColor;
@@ -55,12 +57,11 @@ public class Main extends Application {
     }
     
     private static void build(){
-        // Allies (yellow) on the west side of the field
-        Models.create(Team.class, TeamColor.YELLOW);
-        // Opponents (blue) on the east side of the field
-        Models.create(Team.class, TeamColor.BLUE);
+        Models.create(Game.class);
         Models.create(Goal.class, Direction.EAST);
         Models.create(Goal.class, Direction.WEST);
+        Models.create(Team.class, Allegiance.ALLY);
+        Models.create(Team.class, Allegiance.OPPONENT);
         Models.create(Field.class);
         
         new WrapperPipeline("Wrappahrs");

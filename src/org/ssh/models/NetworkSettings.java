@@ -29,7 +29,7 @@ public class NetworkSettings extends Model {
      *            {@link ProtoPacket ProtoPacket<?>} which these settings are for
      */
     public NetworkSettings(Class<? extends ProtoPacket<?>> type) {
-        super("NetworkSettings");
+        super("NetworkSettings", type.getSimpleName());
         this.packetType = type;
         // standard this sockets should be open
         this.closed = Boolean.FALSE;
@@ -55,11 +55,6 @@ public class NetworkSettings extends Model {
     /** Port to connect to */
     public Integer getPort() {
         return this.port;
-    }
-    
-    @Override
-    public String getSuffix() {
-        return packetType.getSimpleName();
     }
     
     /**

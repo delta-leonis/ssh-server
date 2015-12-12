@@ -1,7 +1,6 @@
 package org.ssh.field3d.gameobjects;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
@@ -246,22 +245,9 @@ public class GoalGameObject extends GameObject {
      * vision model).
      */
     private void updateTeamColor() {
-        
-        // Getting list of teams
-        this.teams = Models.<Team>getAll().stream()
-                .filter(team -> team.getName().equals("team")).collect(Collectors.toList());
-        
-        // Loop through teams
-        for (Team team : teams) {
-            
-            // Check if the direction of the team matches the side of the goal vision model
-            if (team.getDirection() == goalVisionModel.getSide()) {
-                // Setting color
-                goalMaterial.setDiffuseColor(team.getTeamColor().toColor());
-
-                // Break out of loop
-                break;
-            }
-        }
+        Models.<org.ssh.models.Game> get("game").ifPresent(game ->
+                goalMaterial.setDiffuseColor(
+                        game.getTeamColor(goalVisionModel.getSide()).toColor())
+        );
     }
 }

@@ -20,7 +20,7 @@ public enum TeamColor {
         return Color.YELLOW;
     }
 
-    public TeamColor swap() {
+    public TeamColor getOpposite() {
         return (this.equals(TeamColor.BLUE) ? TeamColor.YELLOW : TeamColor.BLUE);
     }
 }
