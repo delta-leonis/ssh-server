@@ -1,5 +1,7 @@
 package org.ssh.managers;
 
+import org.ssh.expressions.languages.Meme;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -19,6 +21,11 @@ public abstract class ManagerController<M extends Manageable> {
     
     /** The manageables which are being managed by this controller. */
     protected Map<String, M> manageables;
+    /**
+     * The manageable expression parser. This is used to lookup
+     * manageables by their name in the manageables map.
+     */
+    protected static Meme memeEngine;
     
     /**
      * Sets up the controller.
@@ -26,8 +33,34 @@ public abstract class ManagerController<M extends Manageable> {
     public ManagerController() {
         // set attributes
         this.manageables = new ConcurrentHashMap<>();
+        // build the engine if it doesn't exist yet
+        if (memeEngine == null) {
+            memeEngine = new Meme();
+        }
     }
-    
+
+    /**
+     * Finds all the Manageables whose true name matches the given pattern.
+     * @param pattern   The pattern to match on.
+     * @param <N>       The type of Manageable requested by the user.
+     * @return          The list of Manageables matching the given pattern.
+     */
+    @SuppressWarnings("unchecked")
+    public <N extends Manageable> List<N> find(String pattern) {
+        // evaluate the pattern
+        List<String> possibilities = memeEngine.evaluate(pattern);
+        // parallelize a search
+        return (List<N>) possibilities.stream().parallel()
+            .map(possibility -> this.manageables.entrySet().stream().parallel()
+                // filter on a partial match of the string
+                .filter(entry -> entry.getKey().contains(possibility))
+                // map the match to the target object
+                .map(Map.Entry::getValue)
+                // collect the unique values in a list
+                .collect(Collectors.toList()))
+            .flatMap(Collection::stream).distinct().collect(Collectors.toList());
+    }
+
     /**
      * Gets the Manageable with the specified name as an Optional<Manageable>.
      *
@@ -36,7 +69,7 @@ public abstract class ManagerController<M extends Manageable> {
      * @return An Optional representing the Manageable.
      */
     @SuppressWarnings("unchecked")
-    public <N> Optional<N> get(String name) {
+    public <N extends Manageable> Optional<N> get(String name) {
         return (Optional<N>) Optional.ofNullable(this.manageables.get(name));
     }
     
@@ -45,7 +78,8 @@ public abstract class ManagerController<M extends Manageable> {
      *
      * @return The List of Manageables
      */
-    public <N> List<N> getAll() {
+    @SuppressWarnings("unchecked")
+    public <N extends Manageable> List<N> getAll() {
         return new ArrayList<>((Collection<? extends N>) this.manageables.values());
     }
 
@@ -79,6 +113,7 @@ public abstract class ManagerController<M extends Manageable> {
      * @param <N>   The type of Manageable requested by the user.
      * @return      The removed Manageable.
      */
+    @SuppressWarnings("unchecked")
     public <N extends Manageable> N remove(final String name) {
         return (N) this.manageables.remove(name);
     }
@@ -112,14 +147,13 @@ public abstract class ManagerController<M extends Manageable> {
      *            The type of the requested manageables
      * @return The list of manageables
      */
+    @SuppressWarnings("unchecked")
     public <N extends Manageable> List<N> getOfType(final Class<?> type) {
         // get the list of manageables
-        @SuppressWarnings ("unchecked")
-        final List<N> collect = (List<N>) this.manageables.values().stream()
+        return (List<N>) this.manageables.values().stream()
                 // filter out the compatible ones by type
                 .filter(manageable -> manageable.getClass().equals(type))
                 // and stick them in a list
                 .collect(Collectors.toList());
-        return collect;
     }
 }

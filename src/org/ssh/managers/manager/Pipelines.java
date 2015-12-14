@@ -6,6 +6,7 @@ import org.ssh.pipelines.Pipeline;
 import org.ssh.pipelines.PipelinePacket;
 import org.ssh.services.service.Coupler;
 import org.ssh.services.service.Producer;
+import org.ssh.ui.lua.console.AvailableInLua;
 import org.ssh.util.Logger;
 
 import java.lang.reflect.Type;
@@ -23,6 +24,7 @@ import java.util.stream.Stream;
  *
  * @author Rimon Oz
  */
+@AvailableInLua
 public final class Pipelines implements Manager<Pipeline<? extends PipelinePacket<?>>> {
 
     /**
@@ -248,5 +250,15 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      */
     public static <P extends Pipeline<? extends PipelinePacket<?>>> P remove(final P pipeline) {
         return Pipelines.controller.remove(pipeline);
+    }
+
+    /**
+     * Finds all the Pipelines whose true name matches the given pattern.
+     * @param pattern   The pattern to match on.
+     * @param <P>       The type of Pipeline requested by the user.
+     * @return          The list of Pipelines matching the given pattern.
+     */
+    public static <P extends Pipeline<? extends PipelinePacket<?>>> List<P> find(final String pattern) {
+        return Pipelines.controller.find(pattern);
     }
 }

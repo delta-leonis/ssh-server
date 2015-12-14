@@ -1,27 +1,24 @@
 package org.ssh.managers.manager;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.Callable;
-import java.util.stream.Stream;
-
-import org.ssh.managers.Manageable;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListenableScheduledFuture;
 import org.ssh.managers.Manager;
-import org.ssh.managers.ManagerController;
 import org.ssh.managers.controllers.ServicesController;
 import org.ssh.pipelines.PipelinePacket;
 import org.ssh.services.Service;
 import org.ssh.ui.lua.console.AvailableInLua;
 import org.ssh.util.Logger;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListenableScheduledFuture;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.Callable;
+import java.util.stream.Stream;
 
 /**
  * The Class Services.
  * <p>
  * This class is one of the main components of the framework. Services.java gets instantiated as
- * lazy-loaded Singleton {@link https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom}
+ * lazy-loaded Singleton {@link //en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom}
  * . For Services functionality see {@link ServicesController}
  *
  * @author Rimon Oz
@@ -67,7 +64,7 @@ public final class Services implements Manager<Service<? extends PipelinePacket<
      * @return A ScheduledFuture that can be used to cancel the periodic execution.
      * @see org.ssh.managers.controllers.ServicesController#scheduleTask(String, Runnable, long)
      */
-    public static ListenableScheduledFuture<?> scheduleTask(final String taskName,
+    public static ListenableScheduledFuture scheduleTask(final String taskName,
                                                             final Runnable task,
                                                             final long delay) {
         Services.LOG.info("Scheduling a task named %s with an interval of %d us", taskName, delay);
@@ -105,6 +102,7 @@ public final class Services implements Manager<Service<? extends PipelinePacket<
      * @return A ListenableFuture representing the result of the task.
      * @see org.ssh.managers.controllers.ServicesController#submitTask(Callable)
      */
+    @SuppressWarnings("unchecked")
     public static <L> ListenableFuture<L> submitTask(final String taskName, final Runnable task) {
         Services.LOG.info("Submitting task named %s ...", taskName);
         return (ListenableFuture<L>) Services.controller.submitTask(task);
@@ -189,5 +187,15 @@ public final class Services implements Manager<Service<? extends PipelinePacket<
      */
     public static <S extends Service<? extends PipelinePacket<?>>> S remove(final S service) {
         return Services.controller.remove(service);
+    }
+
+    /**
+     * Finds all the Services whose true name matches the given pattern.
+     * @param pattern   The pattern to match on.
+     * @param <S>       The type of Service requested by the user.
+     * @return          The list of Services matching the given pattern.
+     */
+    public static <S extends Service<? extends PipelinePacket<?>>>  List<S> find(final String pattern) {
+        return Services.controller.find(pattern);
     }
 }

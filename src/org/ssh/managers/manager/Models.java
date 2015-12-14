@@ -41,7 +41,8 @@ public final class Models implements Manager<Model>{
     /**
      * Private constructor to hide the implicit public one.
      */
-    private Models() { }
+    private Models() {
+    }
 
     /**
      * This method instantiates a controller to run the store.
@@ -224,5 +225,15 @@ public final class Models implements Manager<Model>{
      */
     public static <M extends Model> M remove(final String name) {
         return Models.controller.remove(name);
+    }
+
+    /**
+     * Finds all the Models whose true name matches the given pattern.
+     * @param pattern   The pattern to match on.
+     * @param <M>       The type of Model requested by the user.
+     * @return          The list of Models matching the given pattern.
+     */
+    public static <M extends Model> List<M> find(final String pattern) {
+        return Models.controller.find(pattern);
     }
 }
