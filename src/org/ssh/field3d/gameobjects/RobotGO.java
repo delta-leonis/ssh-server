@@ -138,7 +138,7 @@ public class RobotGO extends GameObject {
                         oGameModel.get().getTeamColor(visionRobotModel.getAllegiance()).identifier())
                 .replace(" ", "")
                 + ".png";
-                
+
         // Read model into model importer
         modelImporter.read(this.getClass().getResource(ROBOT_MODEL_FILE));
         

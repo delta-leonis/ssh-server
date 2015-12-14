@@ -54,7 +54,8 @@ public class ModelExample  {
         // new teamcolor
         changes.put("allegiance", Allegiance.OPPONENT);
         // change the position in FieldObject
-        changes.put("position", new Point2D(Math.random() * 4000, Math.random() * 4000));
+        changes.put("x", Math.random() * 4000.0f);
+        changes.put("y", Math.random() * 4000.0f);
         
         // update the Model with these new changes
         robot.update(changes);
@@ -63,14 +64,14 @@ public class ModelExample  {
         ModelExample.logger.info(robot.toString());
         
         // manually update fields
-        robot.update("position", new Point2D(23123, 33333), "allegiance", Allegiance.OPPONENT);
+        robot.update("x", 129.0f, "y", 12.0f, "allegiance", Allegiance.ALLY);
 
         // Alias field example
         robot.update("robot_id", 8282382);
         ModelExample.logger.info("after update: ");
         ModelExample.logger.info(robot.toString());
-        
-        robot.saveAsDefault();
-        robot.save();
+
+        // robot.saveAsDefault();
+        // robot.save();
     }
 }

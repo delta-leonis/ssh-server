@@ -179,10 +179,10 @@ public class FieldGame extends Game {
             this.pointLightEastNorth.setTranslateY(2000.0);
             this.pointLightEastNorth.setTranslateZ(this.fieldVisionModel.getFieldWidth() / 4.0);
         }
-        
+
         // Clear robots
         this.clearRobots();
-        
+
         // There has been new data, re-create robots
         this.createRobots();
         

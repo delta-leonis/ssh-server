@@ -65,13 +65,12 @@ public class Main extends Application {
         float fieldLength = field.getFieldLength();
 
         IntStream.range(0, 8).forEach(id ->{
-                    Models.create(Robot.class, id, Allegiance.ALLY)
-                            .update("x", id*200f - fieldLength/2 + 180f, "y", fieldWidth/2 - 180f);
-
                     Models.create(Robot.class, id, Allegiance.OPPONENT)
-                            .update("x", fieldLength/2 - id*200f - 180f, "y", -fieldWidth/2 + 180f);
-                }
-        );
+                            .update("x", fieldLength / 2 - id * 200f - 180f, "y", -fieldWidth / 2 + 180f);
+                    Models.create(Robot.class, id, Allegiance.ALLY)
+                            .update("x", id * 200f - fieldLength / 2 + 180f, "y", fieldWidth / 2 - 180f);
+
+                });
         new WrapperPipeline("Wrappahrs");
         // make a pipeline
         new GeometryPipeline("fieldbuilder");

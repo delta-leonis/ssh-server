@@ -1,11 +1,13 @@
 package org.ssh.models;
 
+import com.google.protobuf.Descriptors;
 import org.jooq.lambda.Unchecked;
 import org.ssh.managers.Manageable;
 import org.ssh.managers.controllers.ModelController;
 import org.ssh.managers.manager.Models;
 import org.ssh.util.Logger;
 import org.ssh.util.Reflect;
+import protobuf.Detection;
 
 import java.io.StringWriter;
 import java.lang.reflect.Field;
@@ -13,6 +15,7 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -29,9 +32,6 @@ import java.util.stream.Stream;
  */
 
 public abstract class Model extends Manageable {
-
-    // respective logger
-    private static final transient Logger LOG = Logger.getLogger();
 
     /** unique identifier for this model */
     private String identifier;
@@ -223,10 +223,18 @@ public abstract class Model extends Manageable {
         final Map<String, Object> changeMap = new HashMap<>();
 
         // map every odd Object as String, and every even Object as Object
-        for (int i = 0; i < (changes.length - 1); i+=2)
-            changeMap.put((String) changes[i], changes[i-1]);
+        for (int i = 0; i < (changes.length - 1); i++)
+            changeMap.put((String) changes[i], changes[++i]);
 
         return this.update(changeMap);
+    }
+
+    public boolean update(final Detection.DetectionRobot protobufRobot){
+        return update((Map<String, Object>)
+                protobufRobot.getAllFields().entrySet().stream().collect(Collectors.toMap(
+                        entry -> entry.getKey().getName(),
+                        Map.Entry::getValue
+                )));
     }
 
     /**

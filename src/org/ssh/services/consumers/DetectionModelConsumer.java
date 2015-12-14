@@ -69,7 +69,7 @@ public class DetectionModelConsumer extends Consumer<DetectionPacket> {
                         shouldUpdate = true;
                         //create robotclass
                         return Models.<Robot> create(Robot.class, robot.getRobotId(), getAllegiance(robot, yellowTeam));
-                    }).update("x", robot.getX(), "y", robot.getY(), "height", robot.getHeight(), "lastUpdated", frame.getTSent())
+                    }).update(robot)
             //reduce to a single succes value
         ).reduce(true, (accumulator, succes) -> succes && accumulator);
 
