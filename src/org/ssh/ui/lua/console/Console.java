@@ -484,9 +484,7 @@ public class Console extends Tab {
                     this.println("-- IOException whilst looking for lua.d\n\t" + exception.getMessage());
                 }
             }
-            return;
         });
-        this.println("-- could not find init.lua");
     }
 
     /**

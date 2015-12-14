@@ -36,7 +36,8 @@ public class GoalGameObject extends GameObject {
                               
     /** The list of teams. */
     private List<Team>        teams;
-                              
+    private org.ssh.models.Game game;
+
     /**
      * Constructor of the GoalGameObject. This creates a new instance of GoalGameObject.
      * 
@@ -49,10 +50,18 @@ public class GoalGameObject extends GameObject {
         
         // Initialize super class
         super(game);
-        
+
         // Creating group for the goal elements
         this.goalGroup = new Group();
-        
+
+        // retreive helper-class 'Game' (for team-colors and playside)
+        Models.<org.ssh.models.Game> get("game").ifPresent(gameModel -> this.game = gameModel);
+
+        //require game to be set
+        if(this.game == null)
+            return;
+
+        // require goalVisionModel to be set
         if (goalVisionModel == null)
             return;
         
@@ -70,9 +79,9 @@ public class GoalGameObject extends GameObject {
                 Goal.GOAL_HEIGHT,
                 this.goalVisionModel.getGoalDepth(),
                 this.goalMaterial);
-                
+
         // Check which side the goal belongs to
-        switch (this.goalVisionModel.getSide()) {
+        switch (this.game.getSide(goalVisionModel.getAllegiance())) {
             
             // Goal is on the west side
             case WEST: {
@@ -84,7 +93,7 @@ public class GoalGameObject extends GameObject {
                 
                 // The goal is on the south side
             case SOUTH: {
-                
+
                 // Rotate a half
                 this.goalGroup.setRotate(180.0);
                 break;
@@ -245,9 +254,8 @@ public class GoalGameObject extends GameObject {
      * vision model).
      */
     private void updateTeamColor() {
-        Models.<org.ssh.models.Game> get("game").ifPresent(game ->
-                goalMaterial.setDiffuseColor(
-                        game.getTeamColor(goalVisionModel.getSide()).toColor())
-        );
+        if(game != null)
+            goalMaterial.setDiffuseColor(this.game.getTeamColor(goalVisionModel.getAllegiance()).toColor());
+
     }
 }

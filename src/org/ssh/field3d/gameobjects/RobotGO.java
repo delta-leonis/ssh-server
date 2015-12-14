@@ -1,11 +1,13 @@
 package org.ssh.field3d.gameobjects;
 
 import java.io.InputStream;
+import java.util.Optional;
 
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.field3d.core.math.Vector3f;
 import org.ssh.field3d.core.shapes.FlatArc3D;
+import org.ssh.managers.manager.Models;
 import org.ssh.models.Robot;
 import org.ssh.util.Logger;
 
@@ -122,10 +124,20 @@ public class RobotGO extends GameObject {
         this.selectionCircleMaterial.setSpecularPower(SPECULAR_POWER);
         // Setting selection circle material
         this.selectionArcMesh.setMaterial(this.selectionCircleMaterial);
-        
-        // Generating texture file name
-        String textureFilename = ROBOT_TEXTURE_DIR + "robot" + visionRobotModel.getTeamColorIdentifier()
-                + visionRobotModel.getRobotId() + ".png";
+
+
+        Optional<org.ssh.models.Game> oGameModel = Models.<org.ssh.models.Game>get("game");
+        if(!oGameModel.isPresent()){
+            RobotGO.LOG.warning("Could not load texture for %s because GameModel is missing", visionRobotModel.getIdentifier());
+            return;
+        }
+
+        String textureFilename = ROBOT_TEXTURE_DIR
+                + visionRobotModel.getIdentifier()
+                .replaceFirst("(A|O)",
+                        oGameModel.get().getTeamColor(visionRobotModel.getAllegiance()).identifier())
+                .replace(" ", "")
+                + ".png";
                 
         // Read model into model importer
         modelImporter.read(this.getClass().getResource(ROBOT_MODEL_FILE));

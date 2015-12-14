@@ -1,6 +1,5 @@
 {
-  "direction": "WEST",
-  "teamColor": "YELLOW",
+  "allegiance": "OPPONENT",
   "teamName": "Luftwaffe",
   "yellowCards": [],
   "redCards": [],

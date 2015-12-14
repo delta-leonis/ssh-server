@@ -1,6 +1,5 @@
 {
-  "direction": "EAST",
-  "teamColor": "BLUE",
+  "allegiance": "ALLY",
   "teamName": "Small Size Holland",
   "yellowCards": [],
   "redCards": [],

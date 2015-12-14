@@ -104,6 +104,7 @@ public final class Models implements Manager<Model>{
      *            the model
      */
     public static void add(final Model model) {
+        Models.LOG.info("Toegevoegt met id: %s", model.getIdentifier());
         Models.controller.put(model.getIdentifier(), model);
     }
 

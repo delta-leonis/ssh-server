@@ -1,20 +1,19 @@
 package org.ssh.models;
 
-import java.io.StringWriter;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Stream;
-
 import org.jooq.lambda.Unchecked;
 import org.ssh.managers.Manageable;
 import org.ssh.managers.controllers.ModelController;
 import org.ssh.managers.manager.Models;
 import org.ssh.util.Logger;
 import org.ssh.util.Reflect;
+
+import java.io.StringWriter;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * The Class Model.<br />
@@ -25,12 +24,12 @@ import org.ssh.util.Reflect;
  *
  * @see {@link #update(Map)}
  * @see {@link ModelController}
- *      
+ *
  * @author Jeroen de Jong
  */
 
 public abstract class Model extends Manageable {
-    
+
     // respective logger
     private static final transient Logger LOG = Logger.getLogger();
 
@@ -47,42 +46,42 @@ public abstract class Model extends Manageable {
         super(name);
         this.identifier = identifier;
     }
-    
+
     /**
      * @return name used for config
      */
     public String getConfigName() {
-        return this.getName().replace(" ", "_") + ".json";
+        return this.getIdentifier().replace(" ", "_") + ".json";
     }
-    
+
     /**
      * Save this models in current Profile
-     * 
+     *
      * @return success value
      */
     public boolean save() {
         return Models.save(this);
     }
-    
+
     /**
-     * Save this models as sytem-wide default
-     * 
+     * Save this models as system-wide default
+     *
      * @return success value
      */
     public boolean saveAsDefault() {
         return Models.saveAsDefault(this);
     }
-    
+
     /**
      * Set a specific {@link Field} to a specific value
-     * 
+     *
      * @param fieldName
      *            string name of a field to set
      * @param value
      *            value to set
      * @return success value
      */
-    public <T extends Object> boolean set(final String fieldName, final T value) {
+    public <T> boolean set(final String fieldName, final T value) {
         try {
             // try to get the field
             final Optional<Field> oField = Reflect.getField(fieldName, this.getClass());
@@ -94,9 +93,10 @@ public abstract class Model extends Manageable {
                     Model.LOG.info("%s in is not a modifiable field", field.getName(), this.getClass().getSimpleName());
                     return false;
                 }
-                if (!field.isAccessible()) field.setAccessible(true);
+                if (!field.isAccessible())
+                    field.setAccessible(true);
                 // try to cast this value, and set the field
-                field.set(this, (field.getType().cast(value)));
+                field.set(this, field.getType().cast(value));
                 return true;
             }
             else {
@@ -112,15 +112,15 @@ public abstract class Model extends Manageable {
             return false;
         }
     }
-    
+
     /**
      * Generates a human-readable string of all {@link Field Fields} in this class by refactoring.
      */
     @Override
     public String toString() {
-        // create a stringwriter
+        // create a string writer
         final StringWriter tostring = new StringWriter();
-        
+
         // loop to the highest superclass before java.Object
         Class<?> clazz = this.getClass();
         while (clazz.getSuperclass() != null) {
@@ -142,12 +142,12 @@ public abstract class Model extends Manageable {
         // return build string
         return tostring.toString();
     }
-    
+
     /**
      * Update a number of fields as described in given Map. Key describes a {@link Field field name}
      * in a {@link Model} and the value contains the respective {@link Object} that corresponds to
      * that field.
-     * 
+     *
      * @param changes
      *            changes to make to this models
      * @return success value
@@ -160,21 +160,21 @@ public abstract class Model extends Manageable {
                 .filter(entry -> Reflect.containsField(entry.getKey(), this.getClass()))
                 // set this value
                 .map(entry -> this.set(entry.getKey(), entry.getValue()))
-                // reduce succes value
-                .reduce(true, (accumulator, succes) -> accumulator && succes);
+                // reduce success value
+                .reduce(true, (accumulator, success) -> accumulator && success);
     }
-    
+
     /**
-     * Serialize this Model to a Map, with each fieldname as a key, and each fieldvalue as value.
-     * 
+     * Serialize this Model to a Map, with each fieldname as a key, and each field value as value.
+     *
      * @return map containing fieldnames and their values
      */
     public Map<String, Object> toMap() {
         // get Class<?> object
         Class<?> clazz = this.getClass();
         // create map
-        Map<String, Object> fieldMap = new HashMap<String, Object>();
-        
+        Map<String, Object> fieldMap = new HashMap<>();
+
         // loop all inherited classes, starting with the highest one
         while (clazz.getSuperclass() != null) {
             // get all fields
@@ -196,20 +196,19 @@ public abstract class Model extends Manageable {
         // return the map
         return fieldMap;
     }
-    
+
     /**
      * update this Model with a primitive array.
-     * 
+     *
      * @param changes
      *            should consist of a even number of arguments, with each odd argument being a
      *            String representing a field and every even argument representing it's new
      *            contents.
      * @example
-     *          
      *          <pre>
      *          Model.update("position", new Point2D(123, 123), "robotId", 12);
      *          </pre>
-     * 
+     *
      * @see {@link Model#update(Map)}
      * @return success value
      */
@@ -219,17 +218,17 @@ public abstract class Model extends Manageable {
             Model.LOG.warning("Uneven number of changes.");
             return false;
         }
-        
+
         // new map for update(map) method
-        final Map<String, Object> changeMap = new HashMap<String, Object>();
-        
+        final Map<String, Object> changeMap = new HashMap<>();
+
         // map every odd Object as String, and every even Object as Object
-        for (int i = 0; i < (changes.length - 1); i++)
-            changeMap.put((String) changes[i], changes[++i]);
-            
+        for (int i = 0; i < (changes.length - 1); i+=2)
+            changeMap.put((String) changes[i], changes[i-1]);
+
         return this.update(changeMap);
     }
-    
+
     /**
      * @return unique suffix describing the manageable.
      */

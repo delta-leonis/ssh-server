@@ -1,17 +1,22 @@
 package org.ssh.services.consumers;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.ssh.field3d.FieldGame;
 import org.ssh.managers.manager.Models;
 import org.ssh.managers.manager.UI;
+import org.ssh.models.Game;
 import org.ssh.models.Robot;
+import org.ssh.models.enums.Allegiance;
 import org.ssh.models.enums.TeamColor;
 import org.ssh.pipelines.packets.DetectionPacket;
 import org.ssh.services.service.Consumer;
 import org.ssh.ui.windows.MainWindow;
 
+import protobuf.Detection;
 import protobuf.Detection.DetectionFrame;
 import protobuf.Detection.DetectionRobot;
 
@@ -27,6 +32,9 @@ public class DetectionModelConsumer extends Consumer<DetectionPacket> {
     private FieldGame     fieldGame;
     /** whether the robot-list has changed, and the 3Dfield should be updated */
     private boolean shouldUpdate;
+
+    /** helperclass containing information about the game */
+    private Game game;
                           
     /**
      * Create a new consumer for {@link DetectionPacket}s.
@@ -44,7 +52,7 @@ public class DetectionModelConsumer extends Consumer<DetectionPacket> {
             // Getting reference to the main window
             UI.<MainWindow> get("main").ifPresent(main -> 
                 fieldGame = main.field);
-        
+
         // read the packet
         DetectionFrame frame = pipelinePacket.read();
         // create a reference for the yellow team
@@ -60,14 +68,13 @@ public class DetectionModelConsumer extends Consumer<DetectionPacket> {
                         //update 3dfield
                         shouldUpdate = true;
                         //create robotclass
-                        return Models.<Robot> create(Robot.class, robot.getRobotId(), getTeamColor(robot, yellowTeam));
+                        return Models.<Robot> create(Robot.class, robot.getRobotId(), getAllegiance(robot, yellowTeam));
                     }).update("x", robot.getX(), "y", robot.getY(), "height", robot.getHeight(), "lastUpdated", frame.getTSent())
             //reduce to a single succes value
         ).reduce(true, (accumulator, succes) -> succes && accumulator);
 
         // loop all robots that haven't been processed
-        Models.<Robot> getAll().stream().filter(robot -> robot.getName().equals("robot")).forEach(robot -> {
-            System.out.println(frame.getTSent() + " - " + robot.lastUpdated() + " = " + (frame.getTSent() - robot.lastUpdated()));
+        Models.<Robot> getAll("robot").forEach(robot -> {
             if(frame.getTSent() - robot.lastUpdated() > 0.5){
                 // remove models that aren't on the field
                 Models.remove(robot);
@@ -86,7 +93,32 @@ public class DetectionModelConsumer extends Consumer<DetectionPacket> {
 
         return returnVal;
     }
-    
+
+    /**
+     * Returns the {@link Allegiance} of a robot (either {@link Allegiance#ALLY} or {@link Allegiance#OPPONENT}.
+     *
+     * @param robot robot to get {@link Allegiance} for
+     * @param yellowTeam list of all detected yellow robots
+     * @return
+     */
+    private Allegiance getAllegiance(DetectionRobot robot, List<DetectionRobot> yellowTeam) {
+        return game.getAllegiance(DetectionModelConsumer.getTeamColor(robot, yellowTeam));
+    }
+
+    /**
+     * Get the teamcolor based on the presents of the robot in the provided list. <br /><br />
+     *
+     * NOTE: list should be of the yellow team.
+     *
+     * @param robot robot to get {@link TeamColor} for.
+     * @param yellowTeam
+     *          list of all detected yellow robots
+     * @return {@link TeamColor} of given robot
+     */
+    private static TeamColor getTeamColor(DetectionRobot robot, List<DetectionRobot> yellowTeam) {
+        return yellowTeam.contains(robot) ? TeamColor.YELLOW : TeamColor.BLUE;
+    }
+
     /**
      * Get the proposed name of {@link DetectionRobot} based on it's present in the given list. <br /><br />
      * 
@@ -94,25 +126,16 @@ public class DetectionModelConsumer extends Consumer<DetectionPacket> {
      * 
      * @param robot         robot to generate modelname for
      * @param yellowTeam
-     *          list of all yellow robots
-     * @return proposed robotname (i.e. "robot Y3")
+     *          list of all detected yellow robots
+     * @return proposed robotname (i.e. "robot A3")
      */
     private String getModelName(DetectionRobot robot, List<DetectionRobot> yellowTeam) {
-        return String.format("robot %s%d", yellowTeam.contains(robot) ? "Y" : "B", robot.getRobotId());
+        Optional<Game> oGame = Models.<Game>get("game");
+        if(oGame.isPresent()) {
+            this.game = oGame.get();
+            return String.format("robot %s%d", game.getAllegiance(getTeamColor(robot, yellowTeam)).identifier(), robot.getRobotId());
+        }
+        Consumer.LOG.info("No Game model, could not determine robot name");
+        return "robot ";
     }
-    
-    /**
-     * Get the teamcolor based on the presents of the robot in the provided list. <br /><br />
-     * 
-     * NOTE: list should be of the yellow team.
-     * 
-     * @param robot robot to get {@link TeamColor} for.
-     * @param yellowTeam 
-     *          list of all yellow robots
-     * @return
-     */
-    private TeamColor getTeamColor(DetectionRobot robot, List<DetectionRobot> yellowTeam) {
-        return yellowTeam.contains(robot) ? TeamColor.YELLOW : TeamColor.BLUE;
-    }
-    
 }

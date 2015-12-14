@@ -194,13 +194,13 @@ public class FieldGO extends GameObject {
     public void onUpdateGeometry() {
         
         // Trying to get Field model
-        Optional<Model> optionalModel = Models.get("field");
+        Optional<Field> optionalModel = Models.<Field>get("field");
         
         // If there is a model present
         if (optionalModel.isPresent()) {
             
             // Setting vision model
-            this.fieldVisionModel = (Field) optionalModel.get();
+            this.fieldVisionModel = optionalModel.get();
             
             // Clear arcs
             this.clearArcs();
@@ -502,22 +502,18 @@ public class FieldGO extends GameObject {
         
         // Getting list of goals
         List<Goal> goals = Models.<Goal>getAll("goal");
-        
-        // Check if goal
-        if (goals != null) {
-            
-            // Loop through goals
-            for (Goal goal : goals) {
-                
-                // Create a game object for the goal
-                GoalGameObject goal3d = new GoalGameObject(this.getGame(), goal);
-                
-                // Add goal to goal game objects
-                this.goalGameObjects.add(goal3d);
-                
-                // Add goal game object to the list of game objects
-                this.getGame().addGameObject(goal3d);
-            }
+
+        // Loop through goals
+        for (Goal goal : goals) {
+
+            // Create a game object for the goal
+            GoalGameObject goal3d = new GoalGameObject(this.getGame(), goal);
+
+            // Add goal to goal game objects
+            this.goalGameObjects.add(goal3d);
+
+            // Add goal game object to the list of game objects
+            this.getGame().addGameObject(goal3d);
         }
     }
     

@@ -37,7 +37,7 @@ public abstract class ManagerController<M extends Manageable> {
      */
     @SuppressWarnings("unchecked")
     public <N> Optional<N> get(String name) {
-        return (Optional<N>) Optional.of(this.manageables.get(name));
+        return (Optional<N>) Optional.ofNullable(this.manageables.get(name));
     }
     
     /**

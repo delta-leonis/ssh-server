@@ -1,16 +1,14 @@
 package org.ssh;
 
 import java.util.logging.Level;
+import java.util.stream.IntStream;
 
 import org.ssh.managers.manager.Models;
 import org.ssh.managers.manager.Network;
 import org.ssh.managers.manager.Pipelines;
 import org.ssh.managers.manager.Services;
 import org.ssh.managers.manager.UI;
-import org.ssh.models.Field;
-import org.ssh.models.Game;
-import org.ssh.models.Goal;
-import org.ssh.models.Team;
+import org.ssh.models.*;
 import org.ssh.models.enums.Allegiance;
 import org.ssh.models.enums.Direction;
 import org.ssh.models.enums.SendMethod;
@@ -33,7 +31,7 @@ import javafx.stage.Stage;
  */
 public class Main extends Application {
 
-    
+
     /**
      * The main method.
      *
@@ -41,7 +39,7 @@ public class Main extends Application {
      *            Command line arguments
      */
     static public void main(final String[] arg) {
-        
+
         // start the managers
         Services.start();
         Models.start();
@@ -50,20 +48,30 @@ public class Main extends Application {
         Network.register(SendMethod.DEBUG, new DebugSender(Level.INFO));
 
         build();
-        
+
         /** java fx start **/
         Application.launch(arg);
 
     }
-    
+
     private static void build(){
         Models.create(Game.class);
-        Models.create(Goal.class, Direction.EAST);
-        Models.create(Goal.class, Direction.WEST);
+        Models.create(Goal.class, Allegiance.ALLY);
+        Models.create(Goal.class, Allegiance.OPPONENT);
         Models.create(Team.class, Allegiance.ALLY);
         Models.create(Team.class, Allegiance.OPPONENT);
-        Models.create(Field.class);
-        
+        Field field = Models.create(Field.class);
+        float fieldWidth = field.getFieldWidth();
+        float fieldLength = field.getFieldLength();
+
+        IntStream.range(0, 8).forEach(id ->{
+                    Models.create(Robot.class, id, Allegiance.ALLY)
+                            .update("x", id*200f - fieldLength/2 + 180f, "y", fieldWidth/2 - 180f);
+
+                    Models.create(Robot.class, id, Allegiance.OPPONENT)
+                            .update("x", fieldLength/2 - id*200f - 180f, "y", -fieldWidth/2 + 180f);
+                }
+        );
         new WrapperPipeline("Wrappahrs");
         // make a pipeline
         new GeometryPipeline("fieldbuilder");
@@ -71,7 +79,7 @@ public class Main extends Application {
         new DetectionPipeline("detection");
         // make another pipeline
         new RadioPipeline("controller");
-        
+
         // make splitter from wrapper -> geometry / detection
         new WrapperConsumer().attachToCompatiblePipelines();
         new GeometryModelConsumer("oome geo").attachToCompatiblePipelines();
@@ -79,10 +87,10 @@ public class Main extends Application {
 
         Network.listenFor(WrapperPacket.class);
     }
-    
+
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javafx.application.Application#start(javafx.stage.Stage)
      */
     @Override
@@ -92,7 +100,7 @@ public class Main extends Application {
 
         // Disable logger
         //LogManager.getLogManager().reset();
-        
+
         /********************************/
         /* Below is just for testing!!! */
         /********************************/

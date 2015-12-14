@@ -1,6 +1,6 @@
 package org.ssh.models;
 
-import org.ssh.models.enums.Direction;
+import org.ssh.models.enums.Allegiance;
 
 /**
  * Describes a goal on the {@link Field}
@@ -9,8 +9,8 @@ import org.ssh.models.enums.Direction;
  */
 public class Goal extends FieldObject {
     
-    /** Location of this goal */
-    private final Direction                fieldHalf;
+    /** Defending team for this goal */
+    private Allegiance allegiance;
 
     /** Dimensions of the goal */
     private Integer                        goalDepth, goalWidth;
@@ -19,13 +19,13 @@ public class Goal extends FieldObject {
     /**
      * Creates a goal on a specified field half
      * 
-     * @param fieldHalf
-     *            location of the goal
+     * @param allegiance
+     *            Defending team for this goal
      */
-    public Goal(final Direction fieldHalf) {
-        super("goal", fieldHalf.name());
-        
-        this.fieldHalf = fieldHalf;
+    public Goal(final Allegiance allegiance) {
+        super("goal", allegiance.name());
+
+        this.allegiance = allegiance;
         this.goalDepth = 0;
         this.goalWidth = 0;
     }
@@ -45,9 +45,9 @@ public class Goal extends FieldObject {
     }
 
     /**
-     * @return side that the goal is on
+     * @return Defending team for this goal
      */
-    public Direction getSide() {
-        return this.fieldHalf;
+    public Allegiance getAllegiance() {
+        return this.allegiance;
     }
 }

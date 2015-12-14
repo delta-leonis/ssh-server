@@ -9,6 +9,7 @@ import org.ssh.models.Model;
 import org.ssh.models.NetworkSettings;
 import org.ssh.models.Robot;
 import org.ssh.models.Settings;
+import org.ssh.models.enums.Allegiance;
 import org.ssh.models.enums.TeamColor;
 import org.ssh.util.Logger;
 
@@ -28,17 +29,17 @@ public class ModelExample  {
         Settings settings = (Settings) oSettings.get();
         
         // without json
-        Models.create(Robot.class, 3, TeamColor.YELLOW);
+        Models.create(Robot.class, 3, Allegiance.ALLY);
         
         // with json
         Models.create(Robot.class, 12, "Foutief");
         
         // Retrieve a models
-        final Optional<Model> oRobot = Models.get("robot Y3");
+        final Optional<Model> oRobot = Models.get("robot A3");
         
         // check if found
         if (!oRobot.isPresent()) {
-            ModelExample.logger.severe("robot model Y3 not found");
+            ModelExample.logger.severe("robot model A3 not found");
             return;
         }
         
@@ -51,7 +52,7 @@ public class ModelExample  {
         // new robotid
         changes.put("robotId", Integer.valueOf(12));
         // new teamcolor
-        changes.put("teamColor", TeamColor.BLUE);
+        changes.put("allegiance", Allegiance.OPPONENT);
         // change the position in FieldObject
         changes.put("position", new Point2D(Math.random() * 4000, Math.random() * 4000));
         
@@ -62,8 +63,9 @@ public class ModelExample  {
         ModelExample.logger.info(robot.toString());
         
         // manually update fields
-        robot.update("position", new Point2D(23123, 33333), "teamColor", TeamColor.BLUE);
+        robot.update("position", new Point2D(23123, 33333), "allegiance", Allegiance.OPPONENT);
 
+        // Alias field example
         robot.update("robot_id", 8282382);
         ModelExample.logger.info("after update: ");
         ModelExample.logger.info(robot.toString());

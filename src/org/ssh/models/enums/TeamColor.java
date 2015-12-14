@@ -23,4 +23,8 @@ public enum TeamColor {
     public TeamColor getOpposite() {
         return (this.equals(TeamColor.BLUE) ? TeamColor.YELLOW : TeamColor.BLUE);
     }
+
+    public String identifier() {
+        return name().substring(0, 1);
+    }
 }

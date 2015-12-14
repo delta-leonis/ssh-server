@@ -6,6 +6,7 @@ import org.ssh.field3d.FieldGame;
 import org.ssh.managers.manager.Models;
 import org.ssh.managers.manager.UI;
 import org.ssh.models.Field;
+import org.ssh.models.Game;
 import org.ssh.models.Goal;
 import org.ssh.models.enums.Direction;
 import org.ssh.pipelines.packets.GeometryPacket;
@@ -25,6 +26,8 @@ public class GeometryModelConsumer extends Consumer<GeometryPacket> {
     
     /** Reference to FieldGame in GUI, used for updating */
     private FieldGame fieldGame;
+
+    private Game game;
     
     /**
      * creates a new modelconsumer for {@link GeometryPacket}s.
@@ -46,6 +49,14 @@ public class GeometryModelConsumer extends Consumer<GeometryPacket> {
         if(fieldGame == null)
             return false;
 
+        if(game == null)
+            // Getting reference to the main window
+            Models.<Game> get("game").ifPresent(gameModel ->
+                    this.game = gameModel);
+
+        if(game == null)
+            return false;
+
         Models.<Field> get("field").ifPresent(field -> {
             // read received data
             GeometryFieldSize fieldData = pipelinePacket.read().getField();
@@ -57,7 +68,7 @@ public class GeometryModelConsumer extends Consumer<GeometryPacket> {
                 
                 Models.<Goal>getAll("goal").forEach(goal -> {
                     // get position modifier (+1 or -1 according to field position
-                    int modifier = goal.getSide().equals(Direction.EAST) ? 1 : -1;
+                    int modifier = game.getSide(goal.getAllegiance()).equals(Direction.EAST) ? 1 : -1;
                     
                     // update goal
                     goal.update("x",
