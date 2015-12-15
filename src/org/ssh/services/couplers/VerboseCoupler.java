@@ -19,24 +19,13 @@ public class VerboseCoupler extends Coupler<RadioPacket> {
      * @param name
      *            The name of the new Coupler.
      */
-    public VerboseCoupler(final String name) {
-        super(name);
-    }
-    
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.ssh.services.Coupler#process(org.ssh.services.pipeline.PipelinePacket)
-     */
-    @Override
-    public RadioPacket process(RadioPacket radioPacket) {
-        // modify the packet and return it
-        return new RadioPacket(radioPacket.apply(content -> {
+    public VerboseCoupler() {
+        super("verbosecoupler", packet -> new RadioPacket(packet.apply(content -> {
             // print the data
             Service.LOG.info("The VerboseCoupler ate a packet that looked like: \n%s",
-                    radioPacket.read().toString());
+                    packet.read().toString());
             // and return it
             return content;
-        }));
+        })));
     }
 }

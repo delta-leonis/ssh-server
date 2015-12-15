@@ -3,6 +3,7 @@ package org.ssh.expressions.languages;
 import org.ssh.expressions.RegularLanguage;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -22,9 +23,9 @@ public class Meme {
     /**
      * Instantiates a new Meme.
      */
-    public Meme() {
+    public Meme(Function<String, String> resolvingOperation) {
         // create the language with ">" as the concatenation operator
-        this.regularLanguage = new RegularLanguage<>(name -> name)
+        this.regularLanguage = new RegularLanguage<>(resolvingOperation)
                 .addConcatenator(">", (leftMember, rightMember) ->
                         new ArrayList<>(Collections.singletonList(leftMember.concat(rightMember))))
                 // adds the range function for numeric ranges

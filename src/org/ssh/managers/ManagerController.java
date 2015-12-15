@@ -12,8 +12,7 @@ import java.util.stream.Collectors;
  * A ManagerController is used by a Manager to operate on Manageables. Since a Manager is static and
  * final another class is needed to operate on dynamic data.
  *
- * @param <M>
- *            the generic type of {@link Manageable} this ManagerController operates on.
+ * @param <M> The generic type of {@link Manageable} this ManagerController operates on.
  *            
  * @author Rimon Oz
  */
@@ -35,7 +34,7 @@ public abstract class ManagerController<M extends Manageable> {
         this.manageables = new ConcurrentHashMap<>();
         // build the engine if it doesn't exist yet
         if (memeEngine == null) {
-            memeEngine = new Meme();
+            memeEngine = new Meme(name -> name);
         }
     }
 

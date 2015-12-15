@@ -11,7 +11,7 @@ import org.ssh.pipelines.Pipeline;
 import org.ssh.pipelines.PipelinePacket;
 import org.ssh.services.Service;
 import org.ssh.util.Logger;
-import org.ssh.util.TaskFutureCallback;
+import org.ssh.pipelines.PacketProductionCallback;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -24,26 +24,23 @@ import com.google.common.util.concurrent.ListenableScheduledFuture;
  * A Producer generates packets of the type (or subtype of) {@link PipelinePacket}. It does this by
  * running single or scheduled tasks.
  *
- * @param
- *            <P>
- *            A PipelinePacket this Producer can work with.
+ * @param <P> A PipelinePacket this Producer can work with.
  *
  * @author Rimon Oz
  */
 public abstract class Producer<P extends PipelinePacket<? extends Object>> extends Service<P> {
-    
-    // a logger for good measure
-    private static final Logger     LOG = Logger.getLogger();
-                                        
+
     /** The work function which generates PipelinePackets. */
     private Callable<P>             workerLambda;
-                                    
+
     /** The type of packets made by the Producer. */
     private ProducerType            producerType;
-                                    
+
     /** The pipelines subscribed to this Producer . */
     private final List<Pipeline<P>> registeredPipelines;
-                                        
+
+    // a logger for good measure
+    private static final Logger     LOG = Logger.getLogger();
     /**
      * Instantiates a new Producer.
      *
@@ -110,7 +107,7 @@ public abstract class Producer<P extends PipelinePacket<? extends Object>> exten
         // submit the task to the worker pool in the services store.
         final ListenableFuture<P> producerFuture = Services.submitTask(taskName, this.getCallable());
         // add callbacks to the future that get triggered once the thread is done executing
-        FutureCallback<P> taskCallback = new TaskFutureCallback<P>(this.getName());
+        FutureCallback<P> taskCallback = new PacketProductionCallback<P>(this.getName());
         
         Futures.addCallback(producerFuture, taskCallback);
         // return the future so the user can use it
@@ -137,7 +134,7 @@ public abstract class Producer<P extends PipelinePacket<? extends Object>> exten
         final ListenableScheduledFuture<P> scheduleFuture = (ListenableScheduledFuture<P>) Services
                 .scheduleTask(taskName, workerLambda, taskInterval);
                 
-        FutureCallback<P> scheduleCallback = new TaskFutureCallback<P>(this.getName());
+        FutureCallback<P> scheduleCallback = new PacketProductionCallback<P>(this.getName());
         Futures.addCallback(scheduleFuture, scheduleCallback);
         // return the future so the user can use it
         return scheduleFuture;

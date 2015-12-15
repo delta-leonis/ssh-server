@@ -1,5 +1,6 @@
 package org.ssh.managers.manager;
 
+import org.ssh.expressions.languages.Pepe;
 import org.ssh.managers.Manager;
 import org.ssh.managers.controllers.PipelineController;
 import org.ssh.pipelines.Pipeline;
@@ -13,6 +14,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -36,6 +38,11 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      * The instance.
      */
     private static final Object instance = new Object();
+    /**
+     * The pipeline expression parser. This is used to evaluate pipeline routes
+     * and multi-pipe configurations
+     */
+    private static Pepe pepeEngine;
 
     // a logger for good measure
     private static final Logger LOG = Logger.getLogger();
@@ -61,6 +68,11 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
     public static void start() {
         Pipelines.LOG.info("Starting Pipelines...");
         Pipelines.controller = new PipelineController();
+
+        // instantiate pepe if it doesn't exist yet
+        if (pepeEngine == null) {
+            pepeEngine = new Pepe(name -> Services.<Coupler<PipelinePacket<?>>>get(name).get().getTransferFunction());
+        }
     }
 
     /**
@@ -260,5 +272,15 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      */
     public static <P extends Pipeline<? extends PipelinePacket<?>>> List<P> find(final String pattern) {
         return Pipelines.controller.find(pattern);
+    }
+
+    /**
+     * Generates the routes for a given pattern using PEPE. The routes are stored as lambda's generated
+     * by currying the Coupler's transfer functions.
+     * @param pattern The pattern which to generate routes from.
+     * @return        The list of resulting lambda(s) representing a single branch in the route.
+     */
+    public static List<Function<PipelinePacket<?>, PipelinePacket<?>>> generateRoutes(String pattern) {
+        return Pipelines.pepeEngine.evaluate(pattern);
     }
 }

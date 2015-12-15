@@ -10,9 +10,7 @@ import org.ssh.services.Service;
  *
  * A Consumer takes a PipelinePacket and consumes it.
  *
- * @param
- *            <P>
- *            A PipelinePacket this Consumer can work with.
+ * @param <P> A PipelinePacket this Consumer can work with.
  *            
  * @author Rimon Oz
  */
@@ -36,7 +34,7 @@ public abstract class Consumer<P extends PipelinePacket<? extends Object>> exten
      * @return The Consumer itself.
      */
     public <C extends Consumer<P>> C attachToCompatiblePipelines() {
- long noPipes = Pipelines.getOfDataType(this.getType()).stream()
+        long noPipes = Pipelines.getOfDataType(this.getType()).stream()
                 // register with the pipeline
                 .map(pipeline -> ((Pipeline<P>) pipeline).registerConsumer(this))
                 .count();

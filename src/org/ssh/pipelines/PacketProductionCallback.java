@@ -1,12 +1,12 @@
-package org.ssh.util;
+package org.ssh.pipelines;
 
 import org.ssh.managers.manager.Pipelines;
-import org.ssh.pipelines.PipelinePacket;
 
 import com.google.common.util.concurrent.FutureCallback;
+import org.ssh.util.Logger;
 
 /**
- * The Class TaskFutureCallback.
+ * The Class PacketProductionCallback.
  * 
  * This class gets attached to a task once its submitted to the Services store. This class can be
  * used to cancel currently running tasks and holds completion handlers that automatically add
@@ -18,7 +18,7 @@ import com.google.common.util.concurrent.FutureCallback;
  *            
  * @author Rimon Oz
  */
-public class TaskFutureCallback<P extends PipelinePacket<? extends Object>> implements FutureCallback<P> {
+public class PacketProductionCallback<P extends PipelinePacket<? extends Object>> implements FutureCallback<P> {
     
     /** The name of the task. */
     private String              name;
@@ -32,7 +32,7 @@ public class TaskFutureCallback<P extends PipelinePacket<? extends Object>> impl
      * @param name
      *            the name
      */
-    public TaskFutureCallback(String name) {
+    public PacketProductionCallback(String name) {
         this.setName(name);
     }
     
@@ -45,7 +45,7 @@ public class TaskFutureCallback<P extends PipelinePacket<? extends Object>> impl
     @Override
     public void onFailure(final Throwable failPacket) {
         // log error
-        TaskFutureCallback.LOG.exception((Exception) failPacket);
+        PacketProductionCallback.LOG.exception((Exception) failPacket);
     }
     
     /**
@@ -56,7 +56,7 @@ public class TaskFutureCallback<P extends PipelinePacket<? extends Object>> impl
      */
     @Override
     public void onSuccess(final P successPacket) {
-        TaskFutureCallback.LOG.fine("Task completed by %s", this.getName());
+        PacketProductionCallback.LOG.fine("Task completed by %s", this.getName());
         Pipelines.getOfDataType(successPacket.getClass()).stream()
                 // process the packet
                 .forEach(pipeline -> pipeline.addPacket(successPacket).processPacket());

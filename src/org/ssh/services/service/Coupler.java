@@ -5,68 +5,51 @@ import org.ssh.models.enums.PacketPriority;
 import org.ssh.pipelines.PipelinePacket;
 import org.ssh.services.Service;
 
+import java.util.function.Function;
+
 /**
  * The Class Coupler.
  *
  * A Coupler takes a {@link PipelinePacket} and returns a PipelinePacket of the same type.
  *
- * @param <P>
- *            A PipelinePacket this Coupler can work with.
+ * @param <P> A PipelinePacket this Coupler can work with.
  *
  * @author Rimon Oz
  */
 public abstract class Coupler<P extends PipelinePacket<? extends Object>> extends Service<P> {
-    
+
+    /**
+     * The transfer function representing the process the coupler symbolizes.
+     */
+    public Function<P, P> transferFunction;
+
     /**
      * Instantiates a new Coupler.
      *
      * @param name
      *            The name of the new Coupler.
      */
-    public Coupler(final String name) {
+    public Coupler(final String name, final Function<P, P> transferFunction) {
         super(name);
+        this.setTransferFunction(transferFunction);
     }
-    
+
     /**
-     * Attaches to all compatible Pipelines.
-     *
-     * @param <C>
-     *            The generic type of Coupler requested by the user.
-     * @return The Coupler itself.
+     * Sets the transfer function to the supplied function.
+     * @param transferFunction The transfer function to be set.
+     * @return                 The Coupler itself, to support method chaining.
      */
-    @SuppressWarnings ("unchecked")
-    public <C extends Coupler<P>> C attachToCompatiblePipelines() {
-        Pipelines.getOfDataType(this.getType()).stream()
-                // register with the pipeline
-                .forEach(pipeline -> pipeline.registerCoupler(this));
-                
-        return (C) this;
+    public Coupler<P> setTransferFunction(final Function<P, P> transferFunction) {
+        this.transferFunction = transferFunction;
+        return this;
     }
-    
+
     /**
-     * Attaches to all compatible Pipelines with the given Priority.
-     *
-     * @param <C>
-     *            The generic type of Coupler requested by the user.
-     * @param couplerPriority
-     *            The Priority with which the Coupler is to be registered.
-     * @return The Coupler itself.
+     * Returns the transfer function.
+     * @return The transfer function.
      */
-    public <C extends Coupler<P>> C attachToCompatiblePipelines(final PacketPriority couplerPriority) {
-        Pipelines.getOfDataType(this.getType()).stream()
-                // register with the pipelines
-                .forEach(pipeline -> pipeline.registerCoupler(couplerPriority, this));
-                
-        return this.<C>getAsService();
+    public Function<P, P> getTransferFunction () {
+        return this.transferFunction;
     }
-    
-    /**
-     * Process the PipelinePacket and return a PipelinePacket of the same type.
-     *
-     * @param pipelinePacket
-     *            The old PipelinePacket
-     * @return The new PipelinePacket
-     */
-    public abstract P process(P pipelinePacket);
     
 }
