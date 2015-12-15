@@ -96,7 +96,22 @@ public abstract class Model extends Manageable {
                 if (!field.isAccessible())
                     field.setAccessible(true);
                 // try to cast this value, and set the field
-                field.set(this, field.getType().cast(value));
+                // Slightly hacky way to deal with primitive numbers.
+                if(value instanceof Number) {
+                    Float floatRepresentation = new Float(((Number) value).floatValue());
+                    if(field.getType().equals(Float.class))
+                        field.set(this, floatRepresentation);
+                    else if(field.getType().equals(Double.class))
+                        field.set(this, floatRepresentation.doubleValue());
+                    else if(field.getType().equals(Integer.class))
+                        field.set(this, floatRepresentation.intValue());
+                    else if(field.getType().equals(Long.class))
+                        field.set(this, floatRepresentation.longValue());
+                    else if(field.getType().equals(Short.class))
+                        field.set(this, floatRepresentation.shortValue());
+                }else {
+                    field.set(this, field.getType().cast(value));
+                }
                 return true;
             }
             else {

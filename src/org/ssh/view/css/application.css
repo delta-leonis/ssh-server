@@ -22,6 +22,9 @@
 }
 
 /* *** ColoredCodeArea Style *** */
+.caret {
+    -fx-stroke: red;
+}
 .codearea-background{
 	-fx-background-color: #333333;
 	-fx-highlight-fill: white;
