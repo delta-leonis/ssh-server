@@ -3,6 +3,8 @@ package org.ssh.field3d.gameobjects;
 import java.io.InputStream;
 import java.util.Optional;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.field3d.core.math.Vector3f;
@@ -45,7 +47,7 @@ public class RobotGO extends GameObject {
     private static final int    ROBOT_SEL_CIRCLE_NUM_OF_SEGMENTS = 100;
                                                                  
     /** The angle in degrees for a full circle */
-    private static final double FULL_CIRCLE                      = 360.0;
+    private static final double FULL_CIRCLE                      = 2.0 * Math.PI;
                                                                  
     /** The specular power of the robot (shininess) */
     private static final double SPECULAR_POWER                   = 20.0;
@@ -70,7 +72,8 @@ public class RobotGO extends GameObject {
                                 
     /** The selection arc mesh. */
     private final MeshView      selectionArcMesh;
-                                
+
+    /** The data of the robot */
     private final Robot         visionRobotModel;
                                 
     /** The model. */
@@ -124,6 +127,8 @@ public class RobotGO extends GameObject {
         this.selectionCircleMaterial.setSpecularPower(SPECULAR_POWER);
         // Setting selection circle material
         this.selectionArcMesh.setMaterial(this.selectionCircleMaterial);
+        // When the robot is selected, the arc should be drawn
+        this.selectionArcMesh.visibleProperty().bind((visionRobotModel.isSelectedProperty()));
 
 
         Optional<org.ssh.models.Game> oGameModel = Models.<org.ssh.models.Game>get("game");
@@ -177,15 +182,7 @@ public class RobotGO extends GameObject {
         }
         
         // Add mouse clicked event
-        this.model.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            
-            @Override
-            public void handle(MouseEvent event) {
-                
-                // Setting selected state
-                setSelected(!isSelected);
-            }
-        });
+        this.model.setOnMouseClicked( event -> visionRobotModel.update("isSelected", !visionRobotModel.isSelected()) );
     }
     
     /**
@@ -200,9 +197,6 @@ public class RobotGO extends GameObject {
         // Add models to model group
         modelGroup.getChildren().add(this.model);
         modelGroup.getChildren().add(this.selectionArcMesh);
-        
-        // Setting selected state
-        this.setSelected(this.visionRobotModel.isSelected());
         
         // Add model group to the world group
         Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().addAll(modelGroup));
@@ -287,16 +281,7 @@ public class RobotGO extends GameObject {
     public Vector3f getLocation() {
         return this.location;
     }
-    
-    /**
-     * Gets the selected state of the robot.
-     * 
-     * @return True, if selected.
-     */
-    public boolean getSelected() {
-        return this.isSelected;
-    }
-    
+
     /**
      * Sets the location of the robot.
      * 
@@ -306,20 +291,7 @@ public class RobotGO extends GameObject {
     public void setLocation(final Vector3f location) {
         this.location = location;
     }
-    
-    /**
-     * Sets the selected state of the robot.
-     * 
-     * @param isSelected
-     *            the new selected state of the robot as boolean.
-     */
-    public void setSelected(final boolean isSelected) {
-        
-        // Setting selected state
-        this.isSelected = isSelected;
-        // Setting visibility of the selection arc mesh
-        this.selectionArcMesh.setVisible(this.isSelected);
-    }
+
     
     /**
      * This method set the color of the selection circle material.

@@ -12,11 +12,20 @@ import protobuf.Detection;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import javafx.beans.value.WritableValue;
+import org.jooq.lambda.Unchecked;
+import org.ssh.managers.Manageable;
+import org.ssh.managers.controllers.ModelController;
+import org.ssh.managers.manager.Models;
+import org.ssh.util.Logger;
+import org.ssh.util.Reflect;
 
 /**
  * The Class Model.<br />
@@ -26,6 +35,7 @@ import java.util.stream.Stream;
  * file by the {@link #save()} method.
  *
  * @see {@link #update(Map)}
+ * @see {@link ModelFactory}
  * @see {@link ModelController}
  *
  * @author Jeroen de Jong
@@ -93,25 +103,29 @@ public abstract class Model extends Manageable {
                     Model.LOG.info("%s in is not a modifiable field", field.getName(), this.getClass().getSimpleName());
                     return false;
                 }
-                if (!field.isAccessible())
-                    field.setAccessible(true);
-                // try to cast this value, and set the field
-                // Slightly hacky way to deal with primitive numbers.
-                if(value instanceof Number) {
-                    Float floatRepresentation = new Float(((Number) value).floatValue());
-                    if(field.getType().equals(Float.class))
-                        field.set(this, floatRepresentation);
-                    else if(field.getType().equals(Double.class))
-                        field.set(this, floatRepresentation.doubleValue());
-                    else if(field.getType().equals(Integer.class))
-                        field.set(this, floatRepresentation.intValue());
-                    else if(field.getType().equals(Long.class))
-                        field.set(this, floatRepresentation.longValue());
-                    else if(field.getType().equals(Short.class))
-                        field.set(this, floatRepresentation.shortValue());
-                }else {
-                    field.set(this, field.getType().cast(value));
-                }
+                if (!field.isAccessible()) field.setAccessible(true);
+                // check if the field has a wrapperclass surrounding it
+                if (field.get(this) instanceof WritableValue)
+                    // if so, use the setValue method of field so its bounded properties get updated
+                    ((WritableValue) field.get(this)).setValue(value);
+                else
+                                    // try to cast this value, and set the field
+		        // Slightly hacky way to deal with primitive numbers.
+		        if(value instanceof Number) {
+		            Float floatRepresentation = new Float(((Number) value).floatValue());
+		            if(field.getType().equals(Float.class))
+		                field.set(this, floatRepresentation);
+		            else if(field.getType().equals(Double.class))
+		                field.set(this, floatRepresentation.doubleValue());
+		            else if(field.getType().equals(Integer.class))
+		                field.set(this, floatRepresentation.intValue());
+		            else if(field.getType().equals(Long.class))
+		                field.set(this, floatRepresentation.longValue());
+		            else if(field.getType().equals(Short.class))
+		                field.set(this, floatRepresentation.shortValue());
+		        }else {
+		            field.set(this, field.getType().cast(value));
+		        }
                 return true;
             }
             else {
@@ -220,6 +234,7 @@ public abstract class Model extends Manageable {
      *            String representing a field and every even argument representing it's new
      *            contents.
      * @example
+     *          
      *          <pre>
      *          Model.update("position", new Point2D(123, 123), "robotId", 12);
      *          </pre>
@@ -258,4 +273,5 @@ public abstract class Model extends Manageable {
     public String getIdentifier(){
         return String.format("%s %s", getName(), identifier).trim();
     }
+    
 }

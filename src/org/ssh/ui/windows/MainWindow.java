@@ -1,12 +1,14 @@
 package org.ssh.ui.windows;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -15,14 +17,14 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import org.ssh.field3d.FieldGame;
+import org.ssh.managers.manager.Models;
+import org.ssh.models.Robot;
+import org.ssh.models.enums.TeamColor;
 import org.ssh.ui.UIController;
-import org.ssh.ui.components.Enroller;
-import org.ssh.ui.components.LoggerConsole;
-import org.ssh.ui.components.MatchlogSelector;
-import org.ssh.ui.components.Profilemenu;
-import org.ssh.ui.components.Timeslider;
-import org.ssh.ui.components.Toolbox;
+import org.ssh.ui.components.*;
 import org.ssh.ui.components.Enroller.ExtendDirection;
+
+import java.util.stream.Collectors;
 
 /**
  * The Class MainWindow.
@@ -119,6 +121,12 @@ public class MainWindow extends UIController<StackPane> {
 	private ImageView enrollToolboxImage;
 
 	/**
+	 * panel containing all the robot status boxes.
+	 */
+	@FXML
+	private FlowPane robotStatusContainer;
+
+	/**
 	 * {@link Enroller} for the loggingconsole
 	 */
 	private Enroller loggingconsoleEnroller;
@@ -130,7 +138,8 @@ public class MainWindow extends UIController<StackPane> {
 	 * {@link Enroller} for the toolbox
 	 */
 	private Enroller toolboxEnroller;
-	
+
+
 	public FieldGame 
     field = new FieldGame(new Group(), 500, 500, SceneAntialiasing.BALANCED);
 	
@@ -147,7 +156,7 @@ public class MainWindow extends UIController<StackPane> {
 
 		// If your screen has a lower resolution than this, you are too inferior
 		// to use the software
-		this.setMinimumDimensions(800, 730);
+		this.setMinimumDimensions(900, 850);
 		
 		// When one screen is connected the stage should be displayed
 		// on fullscreen, otherwise it should be maximized and set op top (when not
@@ -205,6 +214,25 @@ public class MainWindow extends UIController<StackPane> {
 		// Set a style class for the profilemenuEnroller
 		matchlogEnroller.getStyleClass().add("matchlogEnroller");
 		this.matchlogWrapper.getChildren().add(matchlogEnroller);
+
+		// Get all robot-models, map it to a list of type Robot and filter it to only contain blue
+		// team robots.
+		// this is done to
+		for (Robot robot : Models.getAll("robot").stream().map(model -> (Robot) model)
+				.filter(aRobot -> aRobot.getTeamColor() == TeamColor.BLUE).collect(Collectors.toList())) {
+
+			// A new robotstatus is made and added to the robotstatuscontainer
+			final RobotStatus robotStatus = new RobotStatus(robot);
+			this.robotStatusContainer.getChildren().add(robotStatus);
+
+			// fix resizing
+			robotStatus.getRobotstatusRoot().prefHeightProperty()
+					.bind(Bindings.divide(robotStatusContainer.heightProperty(), 2.05));
+			robotStatus.getRobotstatusRoot().prefWidthProperty()
+					.bind(Bindings.divide(robotStatusContainer.heightProperty(), 2.75));
+
+
+		}
 
 		// Make a timeslider and add it in its wrapper
 		Timeslider timeslider = new Timeslider();

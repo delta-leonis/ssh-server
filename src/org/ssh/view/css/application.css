@@ -105,3 +105,74 @@
 #navigationbutton {
 	-fx-background-color: rgba(0, 0, 0, 0.0);
 }
+
+
+/* *** StatusBox style *** */
+.statusbox-unselected {
+	-fx-border-color: grey;
+}
+
+.statusbox-selected {
+	-fx-border-color: blue;
+}
+
+.statusbox-operational {
+	-fx-background-color: green;
+}
+
+.statusbox-warning {
+	-fx-background-color: yellow;
+}
+
+.statusbox-error {
+	-fx-background-color: red;
+}
+
+.statusBox-basis {
+	-fx-background-radius: 13.0;
+}
+
+#robotIcon {
+	-fx-background-image: url("../icon/robot.png");
+	-fx-background-size: cover;
+}
+
+#connectionIcon {
+	-fx-background-size: cover;
+}
+
+.connection-icon {
+	-fx-background-image: url("../icon/connection.png");
+}
+
+.noconnection-icon {
+	-fx-background-image: url("../icon/noconnection.png");
+}
+
+#sightIcon {
+	-fx-background-size: cover;
+}
+
+.sight-icon {
+	-fx-background-image: url("../icon/sight.png");
+}
+
+.nosight-icon {
+	-fx-background-image: url("../icon/nosight.png");
+}
+
+#robotId {
+	-fx-fill: grey;
+    -fx-font-weight: bold;
+}
+
+#robotIconBackground{
+	-fx-background-radius: 13.0;
+}
+
+#robotIconBorder{
+	-fx-border-width: 3.0px;
+	-fx-border-radius: 10.0;
+}
+
+/* *** StatusBox end */

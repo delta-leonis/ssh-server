@@ -64,7 +64,7 @@ public class ModelExample  {
         ModelExample.logger.info(robot.toString());
         
         // manually update fields
-        robot.update("x", 129.0f, "y", 12.0f, "allegiance", Allegiance.ALLY);
+        robot.update("x", 129.0f, "y", 12.0f, "allegiance", Allegiance.ALLY, "isSelected", true);
 
         // Alias field example
         robot.update("robot_id", 8282382);
