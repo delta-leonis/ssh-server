@@ -9,7 +9,6 @@ import java.util.stream.Stream;
 
 import org.ssh.managers.Manageable;
 import org.ssh.managers.manager.Pipelines;
-import org.ssh.models.enums.PacketPriority;
 import org.ssh.services.service.Consumer;
 import org.ssh.services.service.Coupler;
 import org.ssh.services.service.Producer;
@@ -108,6 +107,7 @@ public abstract class Pipeline<P extends PipelinePacket<?>> extends Manageable {
      *
      * @return true, if successful
      */
+    @SuppressWarnings("unchecked")
     public boolean processPacket() {
         // check to see if there's a packet available
         if (this.queue.peek() == null) {
@@ -119,11 +119,16 @@ public abstract class Pipeline<P extends PipelinePacket<?>> extends Manageable {
         // get the packet
         final P pipelinePacket = this.queue.poll();
 
-        return this.routes.stream()
+        // get the results
+        List<P> resultPackets = (List<P>) this.routes.stream()
                 .map(route -> route.apply(pipelinePacket))
-                .map(resultPacket -> this.consumers.stream()
+                .collect(Collectors.toList());
+
+        // map the results on the consumers
+        return resultPackets.stream().map(resultPacket -> this.consumers.stream()
                         .map(consumer -> consumer.consume((P)resultPacket)).collect(Collectors.toList()))
                 .flatMap(Collection::stream)
+                // return true if everything succeeded, false otherwise
                 .reduce(true, (accumulator, success) -> accumulator && success);
 
     }
@@ -134,7 +139,7 @@ public abstract class Pipeline<P extends PipelinePacket<?>> extends Manageable {
      * @param <C>
      *            The generic type of Consumer supplied by the user.
      * @param <S>
-     *            The generic tyinfope of Pipeline requested by the user.
+     *            The generic type of of Pipeline requested by the user.
      * @param consumer
      *            The Consumer to be registered with the Pipeline.
      * @return The Pipeline itself.

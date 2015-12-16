@@ -8,13 +8,12 @@ import java.util.*;
 import java.util.function.Function;
 
 /**
- * The Class Meme.
+ * The Class Pepe.
  * <p>
- * MEME: Evaluates Manageable Expressions
+ * PEPE: Evaluates Manageable Expressions
  * <p>
- * Meme is a regular language whose words are Strings.
- * Meme is a purpose-specific language made for looking up objects in a ConcurrentHashMap by their key (the symbolic
- * token) and resolving to their values (the associated meaning).
+ * Pepe is a regular language whose words are lambdas.
+ * Pepe is a purpose-specific language made for currying lambdas according to a provided expression
  *
  * @author Rimon Oz
  */
