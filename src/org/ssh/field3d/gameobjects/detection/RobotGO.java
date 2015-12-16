@@ -237,7 +237,7 @@ public class RobotGO extends DetectionGameObject {
      * 
      * @return True, if selected.
      */
-    @SuppressWarnings("unused")
+
     public boolean getSelected() {
         return this.isSelected;
     }
@@ -262,7 +262,7 @@ public class RobotGO extends DetectionGameObject {
      * @param color
      *            The {@link Color} of the circle.
      */
-    @SuppressWarnings("unused")
+
     public void setSelectionCircleColor(final Color color) {
         
         // Update material diffuse & specular color

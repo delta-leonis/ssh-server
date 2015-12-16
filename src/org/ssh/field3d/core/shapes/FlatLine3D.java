@@ -119,7 +119,7 @@ public class FlatLine3D {
      *
      * @return The {@link TriangleMesh} of the line.
      */
-    @SuppressWarnings("unused")
+
     public TriangleMesh getTriangleMesh() {
         return this.mesh;
     }

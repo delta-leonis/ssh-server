@@ -275,7 +275,7 @@ public abstract class Game extends SubScene {
      *
      * @return The 3d {@link Group} of the game.
      */
-    @SuppressWarnings("unused")
+
     public Group get3DGroup() {
         return this.group3d;
     }

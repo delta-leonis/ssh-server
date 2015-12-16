@@ -17,7 +17,7 @@ import javafx.scene.Group;
  *      
  * @author Mark Lefering
  */
-@SuppressWarnings("unused")
+
 public class CarGO extends GameObject {
 
     /** The logger. */

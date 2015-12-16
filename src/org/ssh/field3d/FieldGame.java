@@ -201,6 +201,8 @@ public class FieldGame extends Game {
 
         // Update geometry
         this.updateGeometry();
+        // Update detection
+        this.updateDetection();
     }
 
     /**
@@ -225,41 +227,45 @@ public class FieldGame extends Game {
         // Trying to get field vision model
         Optional<Field> tmpOptionalField = Models.get("field");
 
-        // If a model is present
-        if (tmpOptionalField.isPresent()) {
+        // Check if the game already is initialized
+        if (this.isInitialized) {
 
-            // Set field vision model
-            Field fieldVisionModel = tmpOptionalField.get();
+            // If a model is present
+            if (tmpOptionalField.isPresent()) {
 
-            // Setting bounds for the location of the camera
-            this.getThirdPersonCamera().setMaxLocX(fieldVisionModel.getFieldLength() / 2.0);
-            this.getThirdPersonCamera().setMinLocX(-(fieldVisionModel.getFieldLength() / 2.0));
-            this.getThirdPersonCamera().setMaxLocZ(fieldVisionModel.getFieldWidth() / 2.0);
-            this.getThirdPersonCamera().setMinLocZ(-(fieldVisionModel.getFieldWidth() / 2.0));
+                // Set field vision model
+                Field fieldVisionModel = tmpOptionalField.get();
 
-            // Setting location of the south west point light
-            this.pointLightWestSouth.setTranslateX(-(fieldVisionModel.getFieldLength() / 4.0));
-            this.pointLightWestSouth.setTranslateY(2000.0);
-            this.pointLightWestSouth.setTranslateZ(-(fieldVisionModel.getFieldWidth() / 4.0));
+                // Setting bounds for the location of the camera
+                this.getThirdPersonCamera().setMaxLocX(fieldVisionModel.getFieldLength() / 2.0);
+                this.getThirdPersonCamera().setMinLocX(-(fieldVisionModel.getFieldLength() / 2.0));
+                this.getThirdPersonCamera().setMaxLocZ(fieldVisionModel.getFieldWidth() / 2.0);
+                this.getThirdPersonCamera().setMinLocZ(-(fieldVisionModel.getFieldWidth() / 2.0));
 
-            // Setting location of the north west point light
-            this.pointLightWestNorth.setTranslateX(-(fieldVisionModel.getFieldLength() / 4.0));
-            this.pointLightWestNorth.setTranslateY(2000.0);
-            this.pointLightWestNorth.setTranslateZ(fieldVisionModel.getFieldWidth() / 4.0);
+                // Setting location of the south west point light
+                this.pointLightWestSouth.setTranslateX(-(fieldVisionModel.getFieldLength() / 4.0));
+                this.pointLightWestSouth.setTranslateY(2000.0);
+                this.pointLightWestSouth.setTranslateZ(-(fieldVisionModel.getFieldWidth() / 4.0));
 
-            // Setting location of the south east point light
-            this.pointLightEastSouth.setTranslateX(fieldVisionModel.getFieldLength() / 4.0);
-            this.pointLightEastSouth.setTranslateY(2000.0);
-            this.pointLightEastSouth.setTranslateZ(-(fieldVisionModel.getFieldWidth() / 4.0));
+                // Setting location of the north west point light
+                this.pointLightWestNorth.setTranslateX(-(fieldVisionModel.getFieldLength() / 4.0));
+                this.pointLightWestNorth.setTranslateY(2000.0);
+                this.pointLightWestNorth.setTranslateZ(fieldVisionModel.getFieldWidth() / 4.0);
 
-            // Setting location of the north east point light
-            this.pointLightEastNorth.setTranslateX(fieldVisionModel.getFieldLength() / 4.0);
-            this.pointLightEastNorth.setTranslateY(2000.0);
-            this.pointLightEastNorth.setTranslateZ(fieldVisionModel.getFieldWidth() / 4.0);
+                // Setting location of the south east point light
+                this.pointLightEastSouth.setTranslateX(fieldVisionModel.getFieldLength() / 4.0);
+                this.pointLightEastSouth.setTranslateY(2000.0);
+                this.pointLightEastSouth.setTranslateZ(-(fieldVisionModel.getFieldWidth() / 4.0));
+
+                // Setting location of the north east point light
+                this.pointLightEastNorth.setTranslateX(fieldVisionModel.getFieldLength() / 4.0);
+                this.pointLightEastNorth.setTranslateY(2000.0);
+                this.pointLightEastNorth.setTranslateZ(fieldVisionModel.getFieldWidth() / 4.0);
+            }
+
+            // Loop through every geometry game object and call the onUpdateGeometry() method
+            this.geometryGameObjects.forEach(GeometryGameObject::onUpdateGeometry);
         }
-
-        // Loop through every geometry game object and call the onUpdateGeometry() method
-        this.geometryGameObjects.forEach(GeometryGameObject::onUpdateGeometry);
     }
 
     /**

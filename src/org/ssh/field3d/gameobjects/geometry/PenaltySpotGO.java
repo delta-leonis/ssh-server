@@ -121,7 +121,7 @@ public class PenaltySpotGO extends GeometryGameObject {
      *
      * @return Returns a double containing the radius of the penalty spot.
      */
-    @SuppressWarnings("unused")
+
     public double getRadius() {
         return this.model.getRadius();
     }
@@ -153,7 +153,7 @@ public class PenaltySpotGO extends GeometryGameObject {
      * @param radius
      *            The radius of the model as double.
      */
-    @SuppressWarnings("unused")
+
     public void setRadius(final double radius) {
 
         // Setting radius of the model

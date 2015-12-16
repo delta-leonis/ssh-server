@@ -16,7 +16,7 @@ import javafx.scene.input.KeyEvent;
  * 
  * @author Mark Lefering
  */
-@SuppressWarnings("unused")
+
 public class KeyInputHandler extends GameObject {
     
     private final Map<KeyCode, Boolean> curKeyState;

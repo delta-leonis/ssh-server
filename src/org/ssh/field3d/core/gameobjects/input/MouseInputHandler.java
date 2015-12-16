@@ -229,7 +229,7 @@ public class MouseInputHandler extends GameObject {
      *
      * @return The scroll wheel x value.
      */
-    @SuppressWarnings("unused")
+
     public long getScrollWheelXValue() {
         return this.scrollWheelXValue;
     }
@@ -268,7 +268,7 @@ public class MouseInputHandler extends GameObject {
      *            The number of the button, 0 for left, 1 for mid and 2 for right.
      * @return True, if is button down.
      */
-    @SuppressWarnings("unused")
+
     public boolean isButtonDown(final int buttonNumber) {
         return this.curButtonStates[buttonNumber];
     }
@@ -280,7 +280,7 @@ public class MouseInputHandler extends GameObject {
      *            The number of the button, 0 for left, 1 for mid and 2 for right.
      * @return True, if the button is up.
      */
-    @SuppressWarnings("unused")
+
     public boolean isButtonUp(final int buttonNumber) {
         return !this.curButtonStates[buttonNumber];
     }
@@ -299,7 +299,7 @@ public class MouseInputHandler extends GameObject {
      *
      * @return True, if the left mouse button is up.
      */
-    @SuppressWarnings("unused")
+
     public boolean isLeftButtonUp() {
         return !this.curButtonStates[MOUSE_BUTTON_LEFT];
     }
@@ -318,7 +318,7 @@ public class MouseInputHandler extends GameObject {
      * 
      * @return True, if the middle mouse button is up.
      */
-    @SuppressWarnings("unused")
+
     public boolean isMidButtonUp() {
         return !this.curButtonStates[MOUSE_BUTTON_MID];
     }
@@ -337,7 +337,7 @@ public class MouseInputHandler extends GameObject {
      *
      * @return True, if the right mouse button is up.
      */
-    @SuppressWarnings("unused")
+
     public boolean isRightButtonUp() {
         return !this.curButtonStates[MOUSE_BUTTON_RIGHT];
     }
@@ -356,7 +356,7 @@ public class MouseInputHandler extends GameObject {
      *
      * @return True, if the left mouse button is being released.
      */
-    @SuppressWarnings("unused")
+
     public boolean isLeftButtonReleasing() {
         return isButtonReleasing(MOUSE_BUTTON_LEFT);
         
@@ -376,7 +376,7 @@ public class MouseInputHandler extends GameObject {
      *
      * @return True, if the middle mouse button is being released.
      */
-    @SuppressWarnings("unused")
+
     public boolean isMidButtonReleasing() {
         return isButtonReleasing(MOUSE_BUTTON_MID);
     }
@@ -386,7 +386,7 @@ public class MouseInputHandler extends GameObject {
      *
      * @return True, if the right mouse button is being pressed.
      */
-    @SuppressWarnings("unused")
+
     public boolean isRightButtonPressing() {
         return isButtonPressing(MOUSE_BUTTON_RIGHT);
     }
@@ -396,7 +396,7 @@ public class MouseInputHandler extends GameObject {
      *
      * @return True, if the right mouse button is being released.
      */
-    @SuppressWarnings("unused")
+
     public boolean isRightButtonReleasing() {
         return isButtonReleasing(MOUSE_BUTTON_RIGHT);
     }
@@ -481,7 +481,7 @@ public class MouseInputHandler extends GameObject {
      * @param value
      *            The new mouse wheel x value.
      */
-    @SuppressWarnings("unused")
+
     public void setMouseWheelXValue(final long value) {
         
         if (value >= this.minScrollWheelValue && value <= this.maxScrollWheelValue) {

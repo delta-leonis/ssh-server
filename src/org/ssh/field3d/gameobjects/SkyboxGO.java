@@ -25,7 +25,7 @@ import javafx.scene.transform.Rotate;
  *         
  * @see GameObject
  */
-@SuppressWarnings("unused")
+
 public class SkyboxGO extends GameObject {
     
     /** The logger */
