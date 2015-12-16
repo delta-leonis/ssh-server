@@ -156,8 +156,17 @@ public class Robot extends FieldObject {
     /**
      * @return A list of all the malfunctions in this robot
      */
-    public ArrayList<Malfunction> getMalfunctions() {
-        return new ArrayList<Malfunction>(malfunctions.get());
+    public List<Malfunction> getMalfunctions() {
+        return malfunctions.get();
+    }
+
+    /**
+     * @param malfunctionType the type of malfunction to collect a list from
+     * @return a list of malfunctions of a specified type
+     */
+    public List<Malfunction> getMalfunctions(MalfunctionType malfunctionType){
+        return malfunctions.stream().filter(malfunction -> malfunction.getMalfunctionType() == malfunctionType)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -172,7 +181,7 @@ public class Robot extends FieldObject {
      * @param malfunctionType the type to look for in the list of malfunctions
      * @return true if the list of malfunctions contains a mach of this malfunctiontype
      */
-    private boolean hasType(MalfunctionType malfunctionType){
+    public boolean hasType(MalfunctionType malfunctionType){
         return malfunctions.stream().anyMatch(funct -> funct.getMalfunctionType().equals(malfunctionType));
     }
 
@@ -187,8 +196,7 @@ public class Robot extends FieldObject {
      * @return a list of all the errors in this robot
      */
     public List<Malfunction> getErrors() {
-        return malfunctions.stream().filter(malfunction -> malfunction.getMalfunctionType() == MalfunctionType.ERROR)
-                .collect(Collectors.toList());
+        return getMalfunctions(MalfunctionType.ERROR);
     }
 
     /**
@@ -202,7 +210,6 @@ public class Robot extends FieldObject {
      * @return a list containing all the warning-type malfunctions.
      */
     public List<Malfunction> getWarnings() {
-        return malfunctions.stream().filter(malfunction -> malfunction.getMalfunctionType() == MalfunctionType.WARNING)
-                .collect(Collectors.toList());
+        return getMalfunctions(MalfunctionType.WARNING);
     }
 }
