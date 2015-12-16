@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import javafx.scene.*;
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.gameobjects.DetectionGameObject;
 import org.ssh.field3d.gameobjects.GeometryGameObject;
@@ -19,10 +20,6 @@ import org.ssh.models.Field;
 import org.ssh.models.enums.TeamColor;
 
 import javafx.application.Platform;
-import javafx.scene.AmbientLight;
-import javafx.scene.Parent;
-import javafx.scene.PointLight;
-import javafx.scene.SceneAntialiasing;
 import javafx.scene.paint.Color;
 
 /**
@@ -160,40 +157,11 @@ public class FieldGame extends Game {
         // Add lights to the world
         Platform.runLater(() -> {
 
-            // Check if the ambient light is already added to the world
-            if (!this.getWorldGroup().getChildren().contains(ambientLight)) {
-
-                // Add ambient light to the world group
-                this.getWorldGroup().getChildren().add(this.ambientLight);
-            }
-
-            // Check if the south west point light already is added to the world
-            if (!this.getWorldGroup().getChildren().contains(this.pointLightWestSouth)) {
-
-                // Add the south west point light to the world
-                this.getWorldGroup().getChildren().add(this.pointLightWestSouth);
-            }
-
-            // Check if the north west point light already is added to the world
-            if (!this.getWorldGroup().getChildren().contains(this.pointLightWestNorth)) {
-
-                // Add the north west point light to the world
-                this.getWorldGroup().getChildren().add(this.pointLightWestNorth);
-            }
-
-            // Check if the south east point light already is added to the world
-            if (!this.getWorldGroup().getChildren().contains(this.pointLightEastSouth)) {
-
-                // Add the south east point light to the world
-                this.getWorldGroup().getChildren().add(this.pointLightEastSouth);
-            }
-
-            // Check if the north east point light already is added to the world
-            if (!this.getWorldGroup().getChildren().contains(this.pointLightEastNorth)) {
-
-                // Add the north east point light to the world
-                this.getWorldGroup().getChildren().add(this.pointLightEastNorth);
-            }
+            this.addToWorldIfAbsent(this.ambientLight);
+            this.addToWorldIfAbsent(this.pointLightEastNorth);
+            this.addToWorldIfAbsent(this.pointLightEastSouth);
+            this.addToWorldIfAbsent(this.pointLightWestNorth);
+            this.addToWorldIfAbsent(this.pointLightWestSouth);
         });
 
         // Setting initialized state
@@ -468,5 +436,15 @@ public class FieldGame extends Game {
                     // Remove ball
                     this.removeBall((BallGameObject) detectionGameObject);
                 });
+    }
+
+    /**
+     * Add to world if absent method. Adds a {@link Node} to the world group if absent.
+     * @param node The {@link Node} to add.
+     */
+    private void addToWorldIfAbsent(Node node) {
+
+        if (!this.getWorldGroup().getChildren().contains(node))
+            this.getWorldGroup().getChildren().add(node);
     }
 }
