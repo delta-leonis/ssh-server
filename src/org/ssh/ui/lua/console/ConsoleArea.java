@@ -43,6 +43,9 @@ public class ConsoleArea extends ColoredCodeArea {
         EventHandlerHelper.install(this.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.V, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN))
                         .act(event -> this.paste()).create());
+        // On Home, go to the first line
+        EventHandlerHelper.install(this.onKeyPressedProperty(),
+                EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.HOME)).act(event -> this.selectRange(this.currentLine, this.currentLine)).create());
         // Keycombination ENTER + ALT for printlns
         EventHandlerHelper.install(this.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.ENTER, KeyCombination.ALT_DOWN))
@@ -56,11 +59,11 @@ public class ConsoleArea extends ColoredCodeArea {
      * Custom backspace. Makes sure you can't use backspace in invalid positions.
      */
     private void backspace() {
-        if (this.isValid()) {
-            this.replaceText(this.getAnchor() - 1, this.getAnchor(), "");
-        }
-        else if(!"".equals(this.getSelectedText())){
+        if(!"".equals(this.getSelectedText())){
             this.replaceText(this.getSelection().getStart(), this.getSelection().getEnd(), "");
+        }
+        else if(this.isValid()) {
+            this.replaceText(this.getAnchor() - 1, this.getAnchor(), "");
         }
     }
 
