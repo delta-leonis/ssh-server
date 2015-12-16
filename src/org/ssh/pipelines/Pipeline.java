@@ -124,6 +124,9 @@ public abstract class Pipeline<P extends PipelinePacket<?>> extends Manageable {
                 .map(route -> route.apply(pipelinePacket))
                 .collect(Collectors.toList());
 
+        // if there were no couplers then the result is the original packet
+        resultPackets = resultPackets.isEmpty() ? Collections.singletonList(pipelinePacket) : resultPackets;
+
         // map the results on the consumers
         return resultPackets.stream().map(resultPacket -> this.consumers.stream()
                         .map(consumer -> consumer.consume((P)resultPacket)).collect(Collectors.toList()))
