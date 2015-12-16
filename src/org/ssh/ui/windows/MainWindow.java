@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import org.ssh.field3d.FieldGame;
 import org.ssh.managers.manager.Models;
 import org.ssh.models.Robot;
+import org.ssh.models.enums.Allegiance;
 import org.ssh.models.enums.TeamColor;
 import org.ssh.ui.UIController;
 import org.ssh.ui.components.*;
@@ -219,7 +220,7 @@ public class MainWindow extends UIController<StackPane> {
 		// team robots.
 		// this is done to
 		for (Robot robot : Models.getAll("robot").stream().map(model -> (Robot) model)
-				.filter(aRobot -> aRobot.getTeamColor() == TeamColor.BLUE).collect(Collectors.toList())) {
+				.filter(aRobot -> aRobot.getAllegiance() == Allegiance.ALLY).collect(Collectors.toList())) {
 
 			// A new robotstatus is made and added to the robotstatuscontainer
 			final RobotStatus robotStatus = new RobotStatus(robot);

@@ -4,15 +4,11 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
+import org.ssh.models.enums.Allegiance;
 import org.ssh.models.enums.Malfunction;
 import org.ssh.models.enums.Malfunction.MalfunctionType;
-import org.ssh.models.enums.TeamColor;
 import org.ssh.util.Alias;
-import org.ssh.managers.manager.Models;
-import org.ssh.models.enums.Allegiance;
 
-import java.util.Optional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,13 +40,20 @@ public class Robot extends FieldObject {
     private Float                       dribbleSpeed;
                                         
     /** The boolean for the selected state */
-    private Boolean                     isSelected;
+    private BooleanProperty             isSelected;
                                         
     /** Orientation which the robot is facing, not driving */
     private Float                       orientation;
                                         
     /** height of this robot as provided by ssl-vision */
     private Float                       height;
+
+    /** If the robot is connected to the sofware */
+    private transient BooleanProperty                 isConnected;
+    /** If the robot is on sight */
+    private transient BooleanProperty                 isOnSight;
+    /** The boolean for the selected state */
+    private transient SimpleListProperty<Malfunction> malfunctions;
 
     /**
      * Instantiates a new robot with specified properties
