@@ -169,12 +169,18 @@ public class Robot extends FieldObject {
     }
 
     /**
+     * @param malfunctionType the type to look for in the list of malfunctions
+     * @return true if the list of malfunctions contains a mach of this malfunctiontype
+     */
+    private boolean hasType(MalfunctionType malfunctionType){
+        return malfunctions.stream().anyMatch(funct -> funct.getMalfunctionType().equals(malfunctionType));
+    }
+
+    /**
      * @return a boolean indicating whether the list of malfunctions contains an error-type malfunction.
      */
     public boolean hasErrors() {
-        // dunno which is better
-        return malfunctions.stream().anyMatch(funct -> funct.getMalfunctionType().equals(MalfunctionType.ERROR));
-        // return getErrors > 0;
+        return hasType(MalfunctionType.ERROR);
     }
 
     /**
@@ -189,9 +195,7 @@ public class Robot extends FieldObject {
      * @return a boolean indicating whether the list of this robots malfunctions contains a warning.
      */
     public boolean hasWarnings() {
-        // dunno which is better
-        return malfunctions.stream().anyMatch(funct -> funct.getMalfunctionType().equals(MalfunctionType.WARNING));
-        // return getWarnings > 0;
+        return hasType(MalfunctionType.WARNING);
     }
 
     /**

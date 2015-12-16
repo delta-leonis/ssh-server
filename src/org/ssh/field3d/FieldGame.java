@@ -78,11 +78,6 @@ public class FieldGame extends Game {
         // Initialize super class
         super(root, width, height, true, antiAliasing);
 
-        // Create robots
-        for (int i = 0; i < 8; i++) {
-            Models.create(Robot.class, i, TeamColor.BLUE);
-        }
-
         // Creating ambient light
         this.ambientLight = new AmbientLight(Color.DARKGRAY);
         

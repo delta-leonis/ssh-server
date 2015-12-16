@@ -60,7 +60,21 @@ public abstract class FieldObject extends Model {
     public FloatProperty yPositionProperty() {
         return yPosition;
     }
-    
+
+    /**
+     * @return the xPosition as a float
+     */
+    public Float getXPosition(){
+        return xPosition.get();
+    }
+
+    /**
+     * @return the yPosition as a float
+     */
+    public Float getYPosition(){
+        return yPosition.get();
+    }
+
     /**
      * position of this object according to the Cartesian system with the origin in the center.
      * 
