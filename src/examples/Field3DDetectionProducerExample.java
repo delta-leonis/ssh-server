@@ -41,7 +41,7 @@ public class Field3DDetectionProducerExample extends Producer<DetectionPacket> {
             Random random = new Random();
             DetectionPacket lastDetectionPacket = null;
             
-            // Loop till infinity
+            // Generate 1000 packets
             for (int i = 0; i < 1000; i++) {
                 
                 // Creating lists for the robots
@@ -87,7 +87,7 @@ public class Field3DDetectionProducerExample extends Producer<DetectionPacket> {
                 Pipelines.getOfDataType(DetectionPacket.class).forEach((pipe -> pipe.addPacket(detectionPacket).processPacket()));
             }
 
-            // Return the last detection packet again
+            // Return the last detection packet again (packet 1001)
             return lastDetectionPacket;
         });
     }

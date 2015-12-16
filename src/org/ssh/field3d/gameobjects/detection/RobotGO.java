@@ -47,7 +47,7 @@ public class RobotGO extends DetectionGameObject {
     private static final int    ROBOT_SEL_CIRCLE_NUM_OF_SEGMENTS = 100;
                                                                  
     /** The angle in degrees for a full circle */
-    private static final float  FULL_CIRCLE                      = 360.0f;
+    private static final float  FULL_CIRCLE                      = (float) (2.0 * Math.PI);
                                                                  
     /** The specular power of the robot (shininess) */
     private static final double SPECULAR_POWER                   = 20.0;
