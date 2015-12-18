@@ -50,7 +50,7 @@ public class Field3DGeometryProducerExample extends Producer<GeometryPacket> {
                 GeometryPacket packet = new GeometryPacket(geometryData);
                 
                 // Put data on the pipeline
-                Pipelines.getOfDataType(GeometryPacket.class).forEach((pipe -> pipe.addPacket(packet).processPacket()));
+                Pipelines.getOfDataType(GeometryPacket.class).forEach(pipe -> pipe.addPacket(packet).processPacket());
                 
                 // Sleep for 3 seconds
                 Thread.sleep(3000);
