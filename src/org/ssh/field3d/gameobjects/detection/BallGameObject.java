@@ -15,6 +15,8 @@ import javafx.scene.shape.Sphere;
  * @author marklef2
  */
 public class BallGameObject extends DetectionGameObject {
+
+    private static final int STARTING_OFFSET_Y = 10;
     
     /** The 3D ball model. */
     private final Sphere ballModel;
@@ -92,7 +94,7 @@ public class BallGameObject extends DetectionGameObject {
                 
                 // Translate ball into the position
                 this.ballModel.setTranslateX(-this.ballVisionModel.getPosition().getX());
-                this.ballModel.setTranslateY(this.ballVisionModel.getZPos() + this.ballModel.getRadius());
+                this.ballModel.setTranslateY(this.ballVisionModel.getZPos() + this.ballModel.getRadius() + STARTING_OFFSET_Y);
                 this.ballModel.setTranslateZ(this.ballVisionModel.getPosition().getY());
             });
         }
