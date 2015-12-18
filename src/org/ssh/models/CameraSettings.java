@@ -23,14 +23,12 @@ public class CameraSettings extends Model {
                     
     /**
      * Constructor. This instantiates the CameraSettings class.
-     * 
-     * @param name
-     *            The name of the model.
+
      */
     public CameraSettings() {
         
         // Initialize super class
-        super("camerasettings");
+        super("camerasettings", "");
         
         // Setting default values
         zoom = yaw = pitch = 0.0;
@@ -73,13 +71,5 @@ public class CameraSettings extends Model {
      */
     public Point3D getLocation() {
         return this.location;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getSuffix() {
-        return "";
     }
 }

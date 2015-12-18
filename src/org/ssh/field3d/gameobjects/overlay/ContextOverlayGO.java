@@ -1,6 +1,7 @@
 package org.ssh.field3d.gameobjects.overlay;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Queue;
 
 import org.ssh.field3d.core.game.Game;
@@ -18,7 +19,7 @@ import org.ssh.models.Team;
 /**
  * ContextOverlayGO class. This class is responsible for the 2d context menu overlay.
  *
- * @see GameObjects
+ * @see OverlayGO
  *      
  * @author marklef2
  */
@@ -219,13 +220,19 @@ public class ContextOverlayGO extends OverlayGO {
      */
     @FXML
     protected void onChangeSidesButtonClick(ActionEvent actionEvent) {
-        
-        // Loop through teams, swap direction
-        Models.<Team>getAll("team").forEach((team) -> team.swapDirection());
 
-        // Loop through gameObjects update geometry (update colors)
-        goalGameObjects.forEach(GoalGameObject::onUpdateGeometry);
-        
+        // Getting game model
+        Optional<org.ssh.models.Game> optionalGame = Models.<org.ssh.models.Game>get("game");
+
+        if (optionalGame.isPresent()) {
+
+            // Swap sides
+            optionalGame.get().swapSides();
+
+            // Loop through gameObjects update geometry (update colors)
+            goalGameObjects.forEach(GoalGameObject::onUpdateGeometry);
+        }
+
         // Hide
         this.hide();
     }

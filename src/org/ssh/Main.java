@@ -10,14 +10,9 @@ import org.ssh.managers.manager.Services;
 import org.ssh.managers.manager.UI;
 import org.ssh.models.*;
 import org.ssh.models.enums.Allegiance;
-import org.ssh.models.enums.Direction;
 import org.ssh.models.enums.SendMethod;
-import org.ssh.models.enums.TeamColor;
 import org.ssh.pipelines.packets.WrapperPacket;
-import org.ssh.pipelines.pipeline.DetectionPipeline;
-import org.ssh.pipelines.pipeline.GeometryPipeline;
-import org.ssh.pipelines.pipeline.RadioPipeline;
-import org.ssh.pipelines.pipeline.WrapperPipeline;
+import org.ssh.pipelines.pipeline.*;
 import org.ssh.senders.DebugSender;
 import org.ssh.services.consumers.DetectionModelConsumer;
 import org.ssh.services.consumers.GeometryModelConsumer;
@@ -54,16 +49,22 @@ public class Main extends Application {
 
     }
 
-    private static void build(){
+    private static void build() {
+
+        // Creating models
         Models.create(Game.class);
         Models.create(Goal.class, Allegiance.ALLY);
         Models.create(Goal.class, Allegiance.OPPONENT);
         Models.create(Team.class, Allegiance.ALLY);
         Models.create(Team.class, Allegiance.OPPONENT);
         Field field = Models.create(Field.class);
+
+        // Getting field dimensions
         float fieldWidth = field.getFieldWidth();
         float fieldLength = field.getFieldLength();
 
+
+        // Create some robots
         IntStream.range(0, 8).forEach(id ->{
                     Models.create(Robot.class, id, Allegiance.OPPONENT)
                             .update("x", fieldLength / 2 - id * 200f - 180f, "y", -fieldWidth / 2 + 180f);
@@ -71,6 +72,7 @@ public class Main extends Application {
                             .update("x", id * 200f - fieldLength / 2 + 180f, "y", fieldWidth / 2 - 180f);
 
                 });
+
         new WrapperPipeline("Wrappahrs");
         // make a pipeline
         new GeometryPipeline("fieldbuilder");
@@ -96,9 +98,6 @@ public class Main extends Application {
     public void start(final Stage primaryStage) throws Exception {
 
         UI.start(primaryStage);
-
-        // Disable logger
-        //LogManager.getLogManager().reset();
 
         /********************************/
         /* Below is just for testing!!! */

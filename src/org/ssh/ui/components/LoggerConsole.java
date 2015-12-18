@@ -195,7 +195,7 @@ public class LoggerConsole extends UIComponent {
                 LOG.exception(exception);
             }
             try {
-                Platform.runLater(() -> root.sort());
+                //Platform.runLater(() -> root.sort());
             }
             catch (Exception exception) {
                 LOG.exception(exception);

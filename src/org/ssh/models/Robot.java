@@ -16,13 +16,13 @@ import java.util.stream.Collectors;
  * Describes a Robot on the {@link Field} as a {@link FieldObject}
  *
  * @author Jeroen de Jong
- *         
+ *
  */
 public class Robot extends FieldObject {
-    
+
     /** The robot height. */
     public static final transient float ROBOT_HEIGHT   = 150.0f;
-                                                       
+
     /** The robot radius */
     public static final transient float ROBOT_DIAMETER = 180.0f;
 
@@ -32,19 +32,19 @@ public class Robot extends FieldObject {
     /**  Unique robot id [0-15] */
     @Alias ("robot_id")
     private final transient Integer     robotId;
-                                        
+
     /** timestamp of last update for this model */
-    private transient Double            lastUpdated;
+    private transient Long              lastUpdated;
 
     /** current dribble speed (-1 is max backward, 1 is max forward) */
     private Float                       dribbleSpeed;
-                                        
+
     /** The boolean for the selected state */
     private BooleanProperty             isSelected;
-                                        
+
     /** Orientation which the robot is facing, not driving */
     private Float                       orientation;
-                                        
+
     /** height of this robot as provided by ssl-vision */
     private Float                       height;
 
@@ -57,7 +57,7 @@ public class Robot extends FieldObject {
 
     /**
      * Instantiates a new robot with specified properties
-     * 
+     *
      * @param robotId
      *            robot id
      * @param allegiance
@@ -71,50 +71,51 @@ public class Robot extends FieldObject {
         this.isConnected = new SimpleBooleanProperty(false);
         this.isOnSight = new SimpleBooleanProperty(false);
         this.malfunctions = new SimpleListProperty<Malfunction>();
+        this.lastUpdated = System.currentTimeMillis();
     }
-    
+
     /**
      * @return current dribblespeed
      */
     public float getDribbleSpeed() {
         return this.dribbleSpeed;
     }
-    
+
     /**
      * @return presumed height of this robot as provided by ssl-vision
      */
     public Float getHeight() {
         return height;
     }
-    
+
     /**
      * @return the Orientation which the robot is facing, not driving
      */
     public Float getOrientation() {
         return this.orientation;
     }
-    
+
     /**
      * @return robot ID [0-15]
      */
     public Integer getRobotId() {
         return this.robotId;
     }
-    
+
     /**
      * @return team allegiance of this robot (Ally / Opponent)
      */
     public Allegiance getAllegiance() {
         return this.allegiance;
     }
-    
+
     /**
      * @return timestamp of last update for this model
      */
-    public Double lastUpdated(){
+    public Long lastUpdated(){
         return lastUpdated;
     }
-    
+
     /**
      * @return True, if the robot is selected.
      */

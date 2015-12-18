@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 import org.ssh.field3d.FieldGame;
 import org.ssh.managers.manager.Models;
 import org.ssh.managers.manager.UI;
+import org.ssh.models.Ball;
 import org.ssh.models.Game;
 import org.ssh.models.Robot;
 import org.ssh.models.enums.Allegiance;
@@ -43,53 +44,45 @@ public class DetectionModelConsumer extends Consumer<DetectionPacket> {
     public DetectionModelConsumer(String name) {
         super(name);
     }
-    
+
     @Override
     public boolean consume(DetectionPacket pipelinePacket) {
-        if(fieldGame == null)
+
+        if(fieldGame == null) {
+
             // Getting reference to the main window
-            UI.<MainWindow> get("main").ifPresent(main -> 
-                fieldGame = main.field);
+            UI.<MainWindow>get("Leo regulus").ifPresent(main ->
+                    fieldGame = main.field);
+        }
 
         // read the packet
         DetectionFrame frame = pipelinePacket.read();
         // create a reference for the yellow team
         List<DetectionRobot> yellowTeam = frame.getRobotsYellowList();
 
-        boolean returnVal =
         // merge both list
-        Stream.concat(yellowTeam.stream(), frame.getRobotsBlueList().stream()).map(robot -> 
-            //return the updated robot model
-             Models.<Robot> get(getModelName(robot, yellowTeam))
-                    // try to get the existing model, if that doesnt work (orElse) create a new one
-                    .orElseGet(() -> {
+        Stream.concat(yellowTeam.stream(), frame.getRobotsBlueList().stream()).forEach(robot ->
+                        //return the updated robot model
+                        Models.<Robot> get(getModelName(robot, yellowTeam))
+                                // try to get the existing model, if that doesnt work (orElse) create a new one
+                                .orElseGet(() -> {
+                                    //create robotclass
+                                    return Models.<Robot> create(Robot.class, robot.getRobotId(), getAllegiance(robot, yellowTeam));
+                                }).update(robot)
+        );
 
-                        //create robotclass
-                        return Models.<Robot> create(Robot.class, robot.getRobotId(), getAllegiance(robot, yellowTeam));
-                    }).update(robot)
-            //reduce to a single succes value
-        ).reduce(true, (accumulator, succes) -> succes && accumulator);
-
-		if (frame.getBallsCount() > 0) {
-            
-            Models.<Ball>get("ball").orElseGet(() -> Models.<Ball>create(Ball.class))
-                    .update("x", frame.getBallsList().get(0).getX(),
-                      "y", frame.getBallsList().get(0).getY(),
-                      "z", frame.getBallsList().get(0).getZ());
-        }
-
-        // loop all robots that haven't been processed
+        // loop all robots that haven't been processjavaed
         Models.<Robot> getAll("robot").forEach(robot -> {
-            if(frame.getTSent() - robot.lastUpdated() > 0.5){
+            if(frame.getTSent() - robot.lastUpdated() > 500){
                 // remove models that aren't on the field
                 Models.remove(robot);
             }
         });
 
+        if (fieldGame != null)
+            fieldGame.updateDetection();
 
-		fieldGame.updateDetection();
-
-        return returnVal;
+        return true;
     }
 
     /**
@@ -119,9 +112,9 @@ public class DetectionModelConsumer extends Consumer<DetectionPacket> {
 
     /**
      * Get the proposed name of {@link DetectionRobot} based on it's present in the given list. <br /><br />
-     * 
+     *
      * NOTE: list should be of the yellow team.
-     * 
+     *
      * @param robot         robot to generate modelname for
      * @param yellowTeam
      *          list of all detected yellow robots

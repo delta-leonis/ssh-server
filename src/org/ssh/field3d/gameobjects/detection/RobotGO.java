@@ -9,6 +9,7 @@ import org.ssh.field3d.core.shapes.FlatArc3D;
 import org.ssh.field3d.gameobjects.DetectionGameObject;
 import org.ssh.managers.manager.Models;
 import org.ssh.models.Robot;
+import org.ssh.models.enums.Allegiance;
 import org.ssh.models.enums.TeamColor;
 import org.ssh.util.Logger;
 
@@ -78,6 +79,8 @@ public class RobotGO extends DetectionGameObject {
                                 
     /** The model. */
     private MeshView            model;
+
+    private org.ssh.models.Game game;
                                 
     /** The model group */
     private final Group         modelGroup;
@@ -108,6 +111,7 @@ public class RobotGO extends DetectionGameObject {
                 Robot.ROBOT_DIAMETER + ROBOT_SELECTION_CIRCLE_THICKNESS + SELECTION_CIRCLE_OFFSET,
                 ROBOT_SELECTION_CIRCLE_THICKNESS,
                 ROBOT_SEL_CIRCLE_NUM_OF_SEGMENTS);
+
                 
         // Creating PhongMaterial
         this.material = new PhongMaterial(Color.WHITE);
@@ -188,14 +192,15 @@ public class RobotGO extends DetectionGameObject {
      */
     @Override
     public void onUpdateDetection() {
-        
+
         // Checking if we have got valid data
         if (this.visionRobotModel != null && this.modelGroup != null) {
 
-
+            // Show robot if needed
             if (!this.modelGroup.isVisible()) this.modelGroup.setVisible(true);
-            
-            this.setSelected(this.visionRobotModel.isSelected());
+
+            // Bind visible property of the selection arc to the vision model
+            this.selectionArcMesh.visibleProperty().bind(this.visionRobotModel.isSelectedProperty());
             
             // Check if position is not null
             if (visionRobotModel.getPosition() != null) {
@@ -278,12 +283,20 @@ public class RobotGO extends DetectionGameObject {
      * @param color
      *          The {@link TeamColor color} of the robot.
      */
-    public void setRobotVisionModel(int id, TeamColor color) {
-        
-        // Convert team color to char
-        char teamColorAsChar = color.toString().charAt(0);
+    public void setRobotVisionModel(int id, Allegiance color) {
+
+        if (game == null) {
+
+            Optional<org.ssh.models.Game> optionalGame = Models.<org.ssh.models.Game>get("game");
+
+            if (optionalGame.isPresent()) {
+
+                this.game = optionalGame.get();
+            }
+        }
+
         // Try to get robot model
-        Optional<Robot> tmpOptionalVisionRobot = Models.<Robot> get("robot " + teamColorAsChar + id);
+        Optional<Robot> tmpOptionalVisionRobot = Models.<Robot> get("robot " + color.identifier() + id);
 
         // If the id is the same, do nothing
         if (this.lastID == id) return;
@@ -320,9 +333,11 @@ public class RobotGO extends DetectionGameObject {
 
         if (this.visionRobotModel != null) {
 
-            // Generating texture file name
-            String textureFilename = ROBOT_TEXTURE_DIR + "robot" + visionRobotModel.getTeamColorIdentifier()
-                    + visionRobotModel.getRobotId() + ".png";
+            String textureFilename = ROBOT_TEXTURE_DIR
+                    + visionRobotModel.getIdentifier()
+                    .replaceFirst("(A|O)", this.game.getTeamColor(visionRobotModel.getAllegiance()).identifier())
+                    .replace(" ", "")
+                    + ".png";
 
             // Getting texture as input stream
             InputStream textureInputStream = this.getClass().getResourceAsStream(textureFilename);

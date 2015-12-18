@@ -17,7 +17,7 @@ import org.ssh.field3d.gameobjects.overlay.CameraControlOverlayGO;
 import org.ssh.managers.manager.Models;
 import org.ssh.models.Ball;
 import org.ssh.models.Field;
-import org.ssh.models.enums.TeamColor;
+import org.ssh.models.enums.Allegiance;
 
 import javafx.application.Platform;
 import javafx.scene.paint.Color;
@@ -72,11 +72,11 @@ public class FieldGame extends Game {
     /**
      * The list of blue robots.
      */
-    private final List<DetectionGameObject> blueRobots;
+    private final List<DetectionGameObject> allyRobots;
     /**
      * The list of yellow robots.
      */
-    private final List<DetectionGameObject> yellowRobots;
+    private final List<DetectionGameObject> opponentRobots;
     /**
      * The list of balls.
      */
@@ -117,8 +117,8 @@ public class FieldGame extends Game {
         this.geometryGameObjects = new ConcurrentLinkedQueue<>();
 
         // Creating lists for robots & balls
-        this.blueRobots = new ArrayList<>();
-        this.yellowRobots = new ArrayList<>();
+        this.allyRobots = new ArrayList<>();
+        this.opponentRobots = new ArrayList<>();
         this.balls = new ArrayList<>();
 
         // Creating field GameObject
@@ -274,16 +274,16 @@ public class FieldGame extends Game {
                     RobotGO tmpRobot = (RobotGO) detectionGameObject;
 
                     // Check if blue robots contains the robot
-                    if (this.blueRobots.contains(tmpRobot)) {
+                    if (this.allyRobots.contains(tmpRobot)) {
 
                         // Setting vision model of the robot
-                        tmpRobot.setRobotVisionModel(this.blueRobots.indexOf(tmpRobot), TeamColor.BLUE);
+                        tmpRobot.setRobotVisionModel(this.allyRobots.indexOf(tmpRobot), Allegiance.ALLY);
                     }
                     // Check if yellow robots contains the robot
-                    else if (this.yellowRobots.contains(tmpRobot)) {
+                    else if (this.opponentRobots.contains(tmpRobot)) {
 
                         // Setting vision model of the robot
-                        tmpRobot.setRobotVisionModel(this.yellowRobots.indexOf(tmpRobot), TeamColor.YELLOW);
+                        tmpRobot.setRobotVisionModel(this.opponentRobots.indexOf(tmpRobot), Allegiance.OPPONENT);
                     }
                 }
 
@@ -374,18 +374,18 @@ public class FieldGame extends Game {
         for (int i = 0; i < ROBOTS_PER_TEAM; i++) {
 
             // Creating blue robot
-            RobotGO blueRobot = new RobotGO(this, null);
+            RobotGO allyRobots = new RobotGO(this, null);
             // Create yellow robot
-            RobotGO yellowRobot = new RobotGO(this, null);
+            RobotGO opponentRobot = new RobotGO(this, null);
 
             // Add robots to the list of detection game objects
-            this.addDetectionGameObject(blueRobot);
-            this.addDetectionGameObject(yellowRobot);
+            this.addDetectionGameObject(allyRobots);
+            this.addDetectionGameObject(opponentRobot);
 
             // Add the blue robot to the blue robot list
-            this.blueRobots.add(blueRobot);
+            this.allyRobots.add(allyRobots);
             // Add the yellow robot to the yellow robot list
-            this.yellowRobots.add(yellowRobot);
+            this.opponentRobots.add(opponentRobot);
         }
     }
 

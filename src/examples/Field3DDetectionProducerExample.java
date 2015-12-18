@@ -16,7 +16,7 @@ import protobuf.Detection.DetectionRobot;
 
 /**
  * 3D Field Detection producer class. This class is responsible for generating 1000
- * {@link DetectionPacket DetectionPackets}, the last packet is being send twice.
+ * {@link DetectionPacket DetectionPackets}.
  *
  * @see Producer
  * @author marklef2
@@ -87,8 +87,8 @@ public class Field3DDetectionProducerExample extends Producer<DetectionPacket> {
                 Pipelines.getOfDataType(DetectionPacket.class).forEach((pipe -> pipe.addPacket(detectionPacket).processPacket()));
             }
 
-            // Return the last detection packet again (packet 1001)
-            return lastDetectionPacket;
+            // Return nothing
+            return null;
         });
     }
 }

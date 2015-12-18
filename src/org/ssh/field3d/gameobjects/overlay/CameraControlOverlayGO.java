@@ -135,8 +135,6 @@ public class CameraControlOverlayGO extends OverlayGO {
             
             // Zoom in
             this.getGame().getThirdPersonCamera().setZoom((long) (cameraZoom + zoomAmount));
-            
-            System.out.println("Camera zoom: " + cameraZoom + ", zoom amount " + zoomAmount);
         }
         else if (this.buttonZoomOutPressing) {
             

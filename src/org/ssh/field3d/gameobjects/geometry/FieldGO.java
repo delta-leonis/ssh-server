@@ -503,7 +503,7 @@ public class FieldGO extends GeometryGameObject {
     private void generateGoals() {
         
         // Getting list of goals
-        List<Goal> goals = this.fieldVisionModel.getFieldGoals();
+        List<Goal> goals = Models.getAll("goal");
         
         // Check if goal
         if (goals != null) {

@@ -13,6 +13,8 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 
+import java.util.List;
+
 /**
  * Goal game object class. This class represents a 3D goal on the 3D field.
  *
@@ -37,7 +39,7 @@ public class GoalGameObject extends GeometryGameObject {
     private PhongMaterial     goalMaterial;
                               
     /** The list of teams. */
-    private List<Team>        teams;
+    private List<Team> teams;
     private org.ssh.models.Game game;
 
     /**
@@ -55,17 +57,6 @@ public class GoalGameObject extends GeometryGameObject {
         
         // Creating group for the goal elements
         this.goalGroup = new Group();
-
-        // retreive helper-class 'Game' (for team-colors and playside)
-        Models.<org.ssh.models.Game> get("game").ifPresent(gameModel -> this.game = gameModel);
-
-        //require game to be set
-        if(this.game == null)
-            return;
-
-        // require goalVisionModel to be set
-        if (goalVisionModel == null)
-            return;
         
         // Creating a PhongMaterial for the goal
         this.goalMaterial = new PhongMaterial();
@@ -78,7 +69,18 @@ public class GoalGameObject extends GeometryGameObject {
         
         // Setting rotation axis
         this.goalGroup.setRotationAxis(Rotate.Y_AXIS);
-        
+
+        // retreive helper-class 'Game' (for team-colors and playside)
+        Models.<org.ssh.models.Game> get("game").ifPresent(gameModel -> this.game = gameModel);
+
+        //require game to be set
+        if(this.game == null)
+            return;
+
+        // require goalVisionModel to be set
+        if (goalVisionModel == null)
+            return;
+
         // Create goal
         createGoal(this.goalVisionModel.getGoalWidth(),
                 Goal.GOAL_HEIGHT,
