@@ -83,7 +83,7 @@ public class Settings extends Model {
      * @return Path to folder containing all profiles for a specific user.
      */
     public URI getUserProfilePath() {
-        return URI.create(Settings.BASE_PATH + Settings.SEPARATOR + Settings.USER_PROFILES + Settings.SEPARATOR);
+        return URI.create((Settings.BASE_PATH + Settings.SEPARATOR + Settings.USER_PROFILES + Settings.SEPARATOR).replace(" ", ""));
     }
     
     /**
