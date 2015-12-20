@@ -160,8 +160,8 @@ public class MainWindow extends UIController<StackPane> {
 		this.setMinimumDimensions(900, 850);
 		
 		// When one screen is connected the stage should be displayed
-		// on fullscreen, otherwise it should be maximized and set op top (when not
-		// set on top, the stage disappears on undesirable moments when using
+		// on fullscreen, otherwise it should be maximized and set op TopSection (when not
+		// set on TopSection, the stage disappears on undesirable moments when using
 		// utilities)
 		if (Screen.getScreens().size() <= 1) {
 			primaryStage.setFullScreen(true);

@@ -30,7 +30,7 @@ public class CameraControlOverlayGO extends OverlayGO {
     /** The amount of nano seconds per second. */
     private static final float  NANO_SEC_PER_SEC     = 1000000000.0f;
                                                      
-    /** The zoom value for the top view preset */
+    /** The zoom value for the TopSection view preset */
     private static final float  ZOOM_TOP_VIEW        = -350.0f;
                                                      
     /** The zoom value for the side view preset. */
@@ -147,7 +147,7 @@ public class CameraControlOverlayGO extends OverlayGO {
     }
     
     /**
-     * On button top view action event handler.
+     * On button TopSection view action event handler.
      *
      * @param actionEvent
      *            The {@link ActionEvent}.

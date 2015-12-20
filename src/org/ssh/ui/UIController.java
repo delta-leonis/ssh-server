@@ -113,7 +113,7 @@ public abstract class UIController<T extends Pane> {
         this.setScene(new Scene(this.getRootNode(), 600, 400));
         this.loadCSS("application.css");
     }
-    
+
     /**
      * Adds a Node to the window's children.
      *

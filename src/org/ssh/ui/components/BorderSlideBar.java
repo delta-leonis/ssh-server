@@ -9,7 +9,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
 
 /**
- * Animates a node on and off screen to the top, right, bottom or left side.
+ * Animates a node on and off screen to the TopSection, right, bottom or left side.
  *
  * Note: Works best in a {@link BorderPane}
  *

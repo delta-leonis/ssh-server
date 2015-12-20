@@ -18,7 +18,7 @@ import javafx.util.Duration;
 /**
  * Enroller for vertical or horizontal use. It uses an internal
  * {@link BorderPane} where the {@link ReadOnlyDoubleProperty doubleproperties}
- * bound to. A {@link Pane} is set as top or bottom (vertical) or as left or
+ * bound to. A {@link Pane} is set as TopSection or bottom (vertical) or as left or
  * right (horizontal) of the {@link BorderPane} depending on the
  * {@link ExtendDirection}. The content is contained by this pane.
  * 
@@ -256,7 +256,7 @@ public class Enroller extends BorderPane {
 			}
 
 			// The animations ensures that the slidingWrapper grows and shrinks,
-			// so if it placed in the top of the base borderpane it looks like
+			// so if it placed in the TopSection of the base borderpane it looks like
 			// sliding down and so for the other directions
 			switch (extendDirection) {
 			case DOWN:
@@ -379,7 +379,7 @@ public class Enroller extends BorderPane {
 			slidingWrapper = new BorderPane();
 
 			// The animations ensures that the slidingWrapper grows and shrinks,
-			// so if it placed in the top of the base borderpane it looks like
+			// so if it placed in the TopSection of the base borderpane it looks like
 			// sliding down and so for the other directions
 			switch (extendDirection) {
 			case DOWN:

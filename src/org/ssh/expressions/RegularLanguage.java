@@ -227,7 +227,7 @@ public class RegularLanguage<O> {
                 case "o": // it's an operator
                     // turn it into an operator
                     OperatorToken<O> operator = (OperatorToken<O>) token;
-                    // while there's another operator at the top of the stack and either
+                    // while there's another operator at the TopSection of the stack and either
                     // the first operator is left-associative and has precedence <= the precedence of the second operator
                     // or the first operator is right-associative and has precedence < the precedence of the second operator
                     while (!operatorStack.isEmpty() && "o".equals(operatorStack.peek().getType())
@@ -244,14 +244,14 @@ public class RegularLanguage<O> {
                     operatorStack.push(token);
                     break;
                 case ")": // it's a right parenthesis
-                    // until there's a left parenthesis at the top of the operator stack
+                    // until there's a left parenthesis at the TopSection of the operator stack
                     while (!"(".equals(operatorStack.peek().getType())) {
                         // pop operators from the operator stack and push them onto the outputstack
                         outputStack.push(operatorStack.pop());
                     }
                     // pop the left parenthesis from the operatorstack and make it disappear
                     operatorStack.pop();
-                    // if there's a function at the top of the operator-stack
+                    // if there's a function at the TopSection of the operator-stack
                     if (!operatorStack.isEmpty() && "f".equals(operatorStack.peek().getType())) {
                         // pop it off and push it onto the output-stack
                         outputStack.push(operatorStack.pop());
@@ -270,7 +270,7 @@ public class RegularLanguage<O> {
         }
         // until the operator-stack is empty
         while (!operatorStack.isEmpty()) {
-            // if there's a left parenthesis or a right parenthesis at the top of the operator-stack
+            // if there's a left parenthesis or a right parenthesis at the TopSection of the operator-stack
             // there's mismatched parentheses
             if ("(".equals(operatorStack.peek().getSymbol()) || ")".equals(operatorStack.peek().getSymbol())) {
                 RegularLanguage.LOG.fine("A regular language encountered a mismatched parenthesis.");

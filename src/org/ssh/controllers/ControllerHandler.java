@@ -270,7 +270,7 @@ public class ControllerHandler extends Producer {
                 currentButtonState.put(entry.getValue(), entry.getKey().getPollData());
             }
             else {
-                // if it already exists, add the value on top of the current value
+                // if it already exists, add the value on TopSection of the current value
                 currentButtonState
                         .put(entry.getValue(), currentButtonState.get(entry.getValue()) + entry.getKey().getPollData());
             }

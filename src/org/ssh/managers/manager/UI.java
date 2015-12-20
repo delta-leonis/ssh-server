@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.ssh.ui.UIController;
 import org.ssh.ui.windows.MainWindow;
+import org.ssh.ui.windows.MainWindow2;
 import org.ssh.util.Logger;
 
 import javafx.scene.layout.Pane;
@@ -102,6 +103,6 @@ public final class UI {
         UI.uiControllers = new ArrayList<UIController<?>>();
         UI.LOG.info("Instantiating new window with id mainWindow");
         // instantiate a new MainWindow and add it to the UI store
-        return UI.uiControllers.add(new MainWindow("Leo regulus", primaryStage));
+        return UI.uiControllers.add(new MainWindow2("Leo regulus", primaryStage));
     }
 }

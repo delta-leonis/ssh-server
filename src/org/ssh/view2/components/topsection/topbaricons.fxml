@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane id="TopBarIcons"  xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
+    <fx:define>
+        <Double fx:value="1.7976931348623157E308" fx:id="maxValue" />
+    </fx:define>
+
+    <columnConstraints>
+        <ColumnConstraints percentWidth="20.0" />
+        <ColumnConstraints fillWidth="true" />
+        <ColumnConstraints maxWidth="35.0" />
+        <ColumnConstraints maxWidth="35.0" />
+        <ColumnConstraints maxWidth="35.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="100.0" />
+    </rowConstraints>
+    <children>
+        <Button id="profileButton" maxHeight="${maxValue}" maxWidth="${maxValue}" text="Current User" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#enrollProfilemenu">
+            <graphic>
+                <ImageView>
+                    <image>
+                        <Image url="@../../icon/user24.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
+        <Pane id="topButtonsSpacer" maxHeight="${maxValue}" pickOnBounds="false" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS">
+        </Pane>
+        <Button id="iconizeButton" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#iconize">
+            <graphic>
+                <ImageView>
+                    <image>
+                        <Image url="@../../icon/iconize16.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
+        <Button id="minimizeButton" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#minimize">
+            <graphic>
+                <ImageView>
+                    <image>
+                        <Image url="@../../icon/minimize16.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
+        <Button id="exitButton" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.columnIndex="4" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#exit">
+            <graphic>
+                <ImageView>
+                    <image>
+                        <Image url="@../../icon/exit16.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
+    </children>
+</GridPane>
