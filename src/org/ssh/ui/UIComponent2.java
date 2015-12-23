@@ -1,10 +1,14 @@
 package org.ssh.ui;
 
+import com.google.common.eventbus.Subscribe;
 import com.sun.istack.internal.Nullable;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.SubScene;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.ssh.util.Logger;
@@ -48,36 +52,50 @@ public class UIComponent2<N extends Pane> {
         return name;
     }
 
-    public boolean add(UIComponent2 childComponent, boolean bind) {
-        if(this.getComponent().getChildren().contains(childComponent.getComponent())) {
-            UIComponent2.LOG.info("Could not add %s, since it already has been added", childComponent.getName());
+
+    public <M extends Node> boolean add(M component){
+        return add(component, false);
+    }
+    public <M extends Node> boolean add(M component, boolean bind){
+        if(this.getComponent().getChildren().contains(component)) {
+            UIComponent2.LOG.info("Could not add %s, since it already has been added", component);
             return false;
         }
 
-        this.getComponent().getChildren().add(childComponent.getComponent());
+        this.getComponent().getChildren().add(component);
 
         if(bind)
-            this.bindSize(childComponent);
+            bindSize(component);
 
         return true;
+    }
+
+    public <M extends Node> void bindSize(M component){
+        if(component instanceof Region)
+            this.bindSize((Region) component);
+        else if(component instanceof SubScene)
+            this.bindSize((SubScene) component);
     }
 
     public boolean add(UIComponent2 childComponent) {
         return add(childComponent, false);
     }
-
-    public <M extends Pane> void bindSize(M childComponent){
-        childComponent.minWidthProperty().bind(component.minWidthProperty());
-        childComponent.maxWidthProperty().bind(component.maxWidthProperty());
-        childComponent.prefWidthProperty().bind(component.prefWidthProperty());
-        childComponent.minHeightProperty().bind(component.minHeightProperty());
-        childComponent.maxHeightProperty().bind(component.maxHeightProperty());
-        childComponent.prefHeightProperty().bind(component.prefHeightProperty());
+    public boolean add(UIComponent2 childComponent, boolean bind) {
+        return add(childComponent.getComponent(), bind);
     }
 
-    public UIComponent2 bindSize(UIComponent2 childComponent){
-        bindSize(childComponent.getComponent());
-        return childComponent;
+    public <M extends SubScene> void bindSize(M childComponent){
+        childComponent.heightProperty().bind(component.heightProperty());
+        childComponent.widthProperty().bind(component.widthProperty());
+    }
+
+    public <M extends Region> void bindSize(M childComponent){
+        childComponent.minWidthProperty().bind(component.widthProperty());
+        childComponent.maxWidthProperty().bind(component.widthProperty());
+        childComponent.prefWidthProperty().bind(component.widthProperty());
+        childComponent.minHeightProperty().bind(component.heightProperty());
+        childComponent.maxHeightProperty().bind(component.heightProperty());
+        childComponent.prefHeightProperty().bind(component.heightProperty());
     }
 
     /**

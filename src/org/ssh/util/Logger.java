@@ -248,7 +248,7 @@ public class Logger extends java.util.logging.Logger {
      */
     public void exception(final Exception exception) {
         exception.printStackTrace();
-        super.finest(Stream.of(exception.getStackTrace())
+        super.warning(Stream.of(exception.getStackTrace())
                 .reduce("",
                         (result, curRule) -> String.format("%s%s%n", result, curRule.toString()),
                         (left, right) -> left + right)

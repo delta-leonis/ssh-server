@@ -145,6 +145,14 @@ public class FieldGame extends Game {
         // Adding game objects
         this.addGeometryGameObject(this.fieldGO);
         this.addGameObject(this.cameraControlOverlayGO);
+
+        // for resizing purposes
+        this.setManaged(false);
+
+        // When this SubScene is added
+        // it should be notified through a call to #internalInitialize
+        Platform.runLater(()->
+        this.internalInitialize());
         ///this.addGameObject(this.easterCarGO);
     }
 

@@ -25,45 +25,6 @@
 		</rowConstraints>
 		<children>
 
-		<Pane fx:id="centerwrapper" GridPane.columnIndex="0" GridPane.rowIndex="1">
-			<children>
-			<StackPane id="baseCenter" fx:id="baseCenter">
-				<children>
-				<Group fx:id="fieldBase">
-				</Group>
-				<GridPane pickOnBounds="false">
-					<columnConstraints>
-						<ColumnConstraints percentWidth="20.0" />
-						<ColumnConstraints minWidth="30.0" maxWidth="30.0" prefWidth="30.0" />
-						<ColumnConstraints fillWidth="true" />
-					</columnConstraints>
-					<rowConstraints>
-						<RowConstraints percentHeight="8.0" />
-						<RowConstraints percentHeight="84.0" />
-						<RowConstraints percentHeight="8.0" />
-					</rowConstraints>
-					<children>
-					<Pane fx:id="matchlogWrapper" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="1" minWidth="0.0"></Pane>
-					<Pane fx:id="matchlogButtonSizer" pickOnBounds="false" GridPane.columnIndex="1" GridPane.rowIndex="1" minWidth="0.0"></Pane>
-					</children>
-				</GridPane>
-				<GridPane pickOnBounds="false">
-					<columnConstraints>
-						<ColumnConstraints percentWidth="100.0" />
-					</columnConstraints>
-					<rowConstraints>
-						<RowConstraints percentHeight="50.0" />
-						<RowConstraints percentHeight="50.0" />
-					</rowConstraints>
-					<children>
-					<Pane fx:id="toolboxWrapper" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="1" minHeight="0.0"></Pane>
-					</children>
-				</GridPane>
-			</children>
-			</StackPane>
-			</children>
-		</Pane>
-
 		<GridPane id="baseBottom" fx:id="baseBottom" GridPane.columnIndex="0" GridPane.rowIndex="2">
 			<columnConstraints>
 					<ColumnConstraints fillWidth="true" />

@@ -4,9 +4,13 @@ import javafx.application.Platform;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.ssh.managers.manager.UI;
+import org.ssh.ui.UIComponent;
 import org.ssh.ui.UIComponent2;
 import org.ssh.ui.UIController;
+import org.ssh.ui.components2.CenterSection;
 import org.ssh.ui.components2.TopSection;
 
 /**
@@ -34,10 +38,24 @@ public class MainWindow2 extends UIController<StackPane> {
 		// to use the software
 		this.setMinimumDimensions(900, 850);
 
+		// When one screen is connected the stage should be displayed
+		// on fullscreen, otherwise it should be maximized and set op TopSection (when not
+		// set on TopSection, the stage disappears on undesirable moments when using
+		// utilities)
+		if (Screen.getScreens().size() <= 1) {
+			primaryStage.setFullScreen(true);
+		} else {
+			primaryStage.setAlwaysOnTop(true);
+			primaryStage.setMaximized(true);
+		}
+
 		//add top section
 		this.add(new TopSection(), 0, 0);
+		//add center section
+		this.add(new CenterSection(), 0, 1);
 
-		// spawn the window
+
+		//Building is finished, lets spawn the window
 		this.spawnWindow();
 
 		// this handler makes sure the stage shuts down when the main window closes
