@@ -1,9 +1,8 @@
 package org.ssh.ui.components2;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
+import javafx.scene.layout.Pane;
 import org.ssh.ui.UIComponent2;
 
 /**
@@ -12,9 +11,15 @@ import org.ssh.ui.UIComponent2;
  */
 public class TopSection extends UIComponent2<GridPane> {
 
+    @FXML
+    Pane profilemenuWrapper;
+
     public TopSection() {
         super("topbar", "topsection/top.fxml");
 
         add(new TopbarIcons());
+
+        add(new TopContent());
+
     }
 }

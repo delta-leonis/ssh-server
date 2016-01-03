@@ -31,9 +31,10 @@ public class UIComponent2<N extends Pane> {
     private static final Logger LOG = Logger.getLogger();
 
     public UIComponent2 ( String name, String fxmlFile) {
+        this.name = name;
+
         loadFXML(fxmlFile);
 
-        this.name = name;
         Platform.runLater(() ->
                 stage = ((Stage)getComponent().getScene().getWindow()));
     }

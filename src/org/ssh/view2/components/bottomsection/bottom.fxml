@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane id="baseBottom" fx:id="baseBottom" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" GridPane.columnIndex="0" GridPane.rowIndex="2">
+    <columnConstraints>
+        <ColumnConstraints fillWidth="true" />
+        <ColumnConstraints fillWidth="true" />
+        <ColumnConstraints fillWidth="true" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="100.0" />
+    </rowConstraints>
+
+    <children>
+        <Button id="enrollButton" maxHeight="${maxValue}" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <graphic>
+                <ImageView fx:id="enrollToolboxImage">
+                    <image>
+                        <Image url="@../../icon/enrollup32.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
+        <Pane fx:id="timesliderWrapper" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.hgrow="ALWAYS" GridPane.columnIndex="1" GridPane.rowIndex="0"></Pane>
+        <Button id="secondscreenButton" maxHeight="${maxValue}" GridPane.columnIndex="2" GridPane.rowIndex="0">
+            <graphic>
+                <ImageView>
+                    <image>
+                        <Image url="@../../icon/secondscreen32.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
+    </children>
+</GridPane>

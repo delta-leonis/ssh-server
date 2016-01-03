@@ -1,17 +1,15 @@
 package org.ssh.ui.windows;
 
 import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.ssh.managers.manager.UI;
-import org.ssh.ui.UIComponent;
 import org.ssh.ui.UIComponent2;
 import org.ssh.ui.UIController;
-import org.ssh.ui.components2.CenterSection;
-import org.ssh.ui.components2.TopSection;
+import org.ssh.ui.components2.*;
 
 /**
  * The Class MainWindow.
@@ -20,6 +18,9 @@ import org.ssh.ui.components2.TopSection;
  * @author Joost Overeem
  */
 public class MainWindow2 extends UIController<StackPane> {
+
+	@FXML
+	Pane profilemenuWrapper;
 
 	/**
 	 * Instantiates the main window.
@@ -53,7 +54,14 @@ public class MainWindow2 extends UIController<StackPane> {
 		this.add(new TopSection(), 0, 0);
 		//add center section
 		this.add(new CenterSection(), 0, 1);
+		// add bottom section
+        this.add(new BottomSection(), 0, 2);
 
+		// add overlay for profile menu
+        this.addOverlay(new ProfilemenuOverlay());
+		// add overlay for Matchlogmenu
+        this.addOverlay(new MatchlogmenuOverlay());
+        this.addOverlay(new LoggerConsoleOverlay());
 
 		//Building is finished, lets spawn the window
 		this.spawnWindow();
@@ -67,6 +75,11 @@ public class MainWindow2 extends UIController<StackPane> {
 			System.exit(0);
 		});
 	}
+
+    public <C extends UIComponent2<?>> void addOverlay(C component){
+        ((StackPane)getRootNode().getParent())
+                .getChildren().add(component.getComponent());
+    }
 
 	public <C extends UIComponent2<?>> void add(C component, int row, int column){
 		((GridPane)getRootNode()).add(component.getComponent(), row, column);

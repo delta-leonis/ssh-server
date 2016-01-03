@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane id="overlay" fx:id="overlay" pickOnBounds="false" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <fx:define>
+        <Double fx:value="1.7976931348623157E308" fx:id="maxValue" />
+    </fx:define>
+
+    <columnConstraints>
+        <ColumnConstraints percentWidth="20.0" />
+        <ColumnConstraints minWidth="30.0" maxWidth="30.0" prefWidth="30.0" />
+        <ColumnConstraints fillWidth="true" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="10.0" />
+        <RowConstraints percentHeight="80.0" />
+        <RowConstraints percentHeight="10.0" />
+    </rowConstraints>
+    <children>
+        <Pane fx:id="matchlogWrapper" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="1" minWidth="0.0"></Pane>
+        <Pane fx:id="matchlogButtonSizer" pickOnBounds="false" GridPane.columnIndex="1" GridPane.rowIndex="1" minWidth="0.0"></Pane>
+    </children>
+</GridPane>

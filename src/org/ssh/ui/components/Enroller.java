@@ -1,5 +1,6 @@
 package org.ssh.ui.components;
 
+import javafx.scene.layout.Region;
 import org.ssh.ui.UIComponent;
 import org.ssh.util.Logger;
 
@@ -26,10 +27,10 @@ import javafx.util.Duration;
  *
  * @TODO add Logging through the class
  */
-public class Enroller extends BorderPane {
+public class Enroller<N extends Region> extends BorderPane {
 
 	private static final Logger LOG = Logger.getLogger();
-	
+
 	/**
 	 * {@link BorderPane} that is to contain the real content.
 	 */
@@ -45,7 +46,7 @@ public class Enroller extends BorderPane {
 	/**
 	 * The content displayed in the slider.
 	 */
-	private UIComponent content;
+	private N content;
 	/**
 	 * The properties where the sliderBase is bound to. These properties are
 	 * used to fit the enroller in.
@@ -182,7 +183,7 @@ public class Enroller extends BorderPane {
 	 *            the enroller. If so, the button will fill the size of the
 	 *            collapsed size
 	 */
-	public Enroller(UIComponent content, ExtendDirection extendDirection, ReadOnlyDoubleProperty fixedSizeProperty,
+	public Enroller(N content, ExtendDirection extendDirection, ReadOnlyDoubleProperty fixedSizeProperty,
 			ReadOnlyDoubleProperty collapsedSizeProperty, ReadOnlyDoubleProperty extendedSizeProperty,
 			boolean buttonIncluded) {
 		super();
@@ -360,7 +361,7 @@ public class Enroller extends BorderPane {
 	 *            {@link ReadOnlyDoubleProperty widthProperty} for the extended
 	 *            size
 	 */
-	public Enroller(UIComponent content, ExtendDirection extendDirection, ReadOnlyDoubleProperty fixedSizeProperty,
+	public Enroller(N content, ExtendDirection extendDirection, ReadOnlyDoubleProperty fixedSizeProperty,
 			ReadOnlyDoubleProperty extendedSizeProperty) {
 		super();
 		// Only start the initialisation if shit aint null, if there is any null

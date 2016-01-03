@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<GridPane id="overlayLogconsole" pickOnBounds="false" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <columnConstraints>
+        <ColumnConstraints percentWidth="25.0" />
+        <ColumnConstraints minWidth="30.0" maxWidth="30.0" prefWidth="30.0" />
+        <ColumnConstraints fillWidth="true" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="6.0" />
+        <RowConstraints percentHeight="64.0" />
+        <RowConstraints percentHeight="30.0" />
+    </rowConstraints>
+    <children>
+        <Pane fx:id="loggingconsoleWrapper" pickOnBounds="false" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+        <Button id="enrollLogconsole" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#enrollLoggingconsole">
+            <graphic>
+                <ImageView fx:id="enrollLogconsoleImage">
+                        <Image url="@../../icon/enroll16.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+
+    </children>
+</GridPane>

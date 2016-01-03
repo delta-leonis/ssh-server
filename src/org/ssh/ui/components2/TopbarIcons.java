@@ -4,7 +4,10 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import javafx.stage.WindowEvent;
+import org.ssh.managers.manager.UI;
+import org.ssh.ui.UIComponent;
 import org.ssh.ui.UIComponent2;
+import org.ssh.ui.UIController;
 import org.ssh.ui.components.Enroller;
 
 /**
@@ -16,15 +19,6 @@ public class TopbarIcons  extends UIComponent2<GridPane> {
 
     public TopbarIcons() {
         super("TopBarIcons", "topsection/topbaricons.fxml");
-    }
-
-    /**
-     * Extends and collapses the profilemenu
-     */
-    @FXML
-    private void enrollProfilemenu() {
-        // Call Enroller function to handle enrollment
-        ((Enroller)getComponent().getParent().lookup("#profilemenuEnroller")).handleEnrollment();
     }
 
     /**

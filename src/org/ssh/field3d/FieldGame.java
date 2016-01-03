@@ -154,7 +154,7 @@ public class FieldGame extends Game {
         Platform.runLater(()->
         this.internalInitialize());
         ///this.addGameObject(this.easterCarGO);
-    }
+            }
 
     /**
      * {@inheritDoc}

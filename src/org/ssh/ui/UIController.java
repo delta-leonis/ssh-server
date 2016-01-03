@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.ssh.managers.manager.UI;
 import org.ssh.util.Logger;
 
 import com.google.common.reflect.TypeToken;
@@ -87,7 +88,11 @@ public abstract class UIController<T extends Pane> {
         this.setScene(new Scene(this.getRootNode(), width, height));
         this.loadCSS("application.css");
     }
-    
+
+    public ArrayList<Node> getAllNodes(){
+        return UI.getAllNodes(this.getRootNode());
+    }
+
     /**
      * Instantiates a new window/UI controller.
      *
@@ -364,7 +369,9 @@ public abstract class UIController<T extends Pane> {
      */
     public void spawnWindow() {
         UIController.LOG.fine("Spawning a window for UIController %s", this.getName());
-        this.show();
+        Platform.runLater(()->
+            this.show()
+        );
     }
     
     /**

@@ -23,41 +23,26 @@
         <RowConstraints percentHeight="100.0" />
     </rowConstraints>
     <children>
-        <Button id="profileButton" maxHeight="${maxValue}" maxWidth="${maxValue}" text="Current User" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#enrollProfilemenu">
-            <graphic>
-                <ImageView>
-                    <image>
-                        <Image url="@../../icon/user24.png" />
-                    </image>
-                </ImageView>
-            </graphic>
-        </Button>
         <Pane id="topButtonsSpacer" maxHeight="${maxValue}" pickOnBounds="false" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS">
         </Pane>
         <Button id="iconizeButton" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#iconize">
             <graphic>
                 <ImageView>
-                    <image>
                         <Image url="@../../icon/iconize16.png" />
-                    </image>
                 </ImageView>
             </graphic>
         </Button>
         <Button id="minimizeButton" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#minimize">
             <graphic>
                 <ImageView>
-                    <image>
                         <Image url="@../../icon/minimize16.png" />
-                    </image>
                 </ImageView>
             </graphic>
         </Button>
         <Button id="exitButton" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.columnIndex="4" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#exit">
             <graphic>
                 <ImageView>
-                    <image>
-                        <Image url="@../../icon/exit16.png" />
-                    </image>
+                    <Image url="@../../icon/exit16.png" />
                 </ImageView>
             </graphic>
         </Button>
