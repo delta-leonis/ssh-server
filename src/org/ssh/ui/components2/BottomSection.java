@@ -13,7 +13,6 @@ import org.ssh.ui.components.Toolbox;
 import org.ssh.ui.windows.WidgetWindow;
 import org.ssh.util.Logger;
 
-import java.awt.event.ActionEvent;
 import java.util.Optional;
 
 /**
@@ -56,6 +55,8 @@ public class BottomSection extends UIComponent2<GridPane> {
             // Toolbox wrapped in an Enroller for fancy up and down sliding
             toolboxEnroller = new Enroller(new Toolbox(), Enroller.ExtendDirection.UP, toolboxWrapper.widthProperty(),
                     toolboxWrapper.heightProperty());
+            // Set a style class for the toolboxEnroller
+            toolboxEnroller.getStyleClass().add("toolboxEnroller");
             this.toolboxWrapper.getChildren().add(toolboxEnroller);
 
             Timeslider t = new Timeslider();
@@ -71,9 +72,9 @@ public class BottomSection extends UIComponent2<GridPane> {
     @FXML
     private void enrollToolbox() {
         // Call Enroller function to handle enrollment
-        toolboxEnroller.handleEnrollment();
-        UI.flipImage(enrollToolboxImage);
+        toolboxEnroller.handleEnrollment(() -> UI.flipImage(enrollToolboxImage));
     }
+
 
     @FXML
     private void toggleSecondScreen() {

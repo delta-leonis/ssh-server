@@ -65,8 +65,8 @@ public class WidgetWindow extends UIController<FlowPane> {
      */
     public void showWidgetWindow(Stage primaryStage) {
         // Find the screen of the stage with the main window
-        ObservableList<Screen> stagepoint = Screen.getScreensForRectangle(primaryStage.getX(), primaryStage.getY(), 100,
-                100);
+        ObservableList<Screen> stagepoint = Screen.getScreensForRectangle(primaryStage.getX(), primaryStage.getY(), primaryStage.getWidth(),
+                primaryStage.getHeight());
         // There is only one, so the first one of the list should be the screen with the main window
         Screen applicationscreen = stagepoint.get(0);
         // Find the biggest screen

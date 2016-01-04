@@ -148,9 +148,12 @@ public abstract class UIController<T extends Pane> {
                 return;
             }
             Pane pane = (Pane) node;
+
             pane.getChildren().add(component.getComponent());
+
             if(bind)
                 UI.bindSize(component.getComponent(), pane);
+
         });
     }
     
