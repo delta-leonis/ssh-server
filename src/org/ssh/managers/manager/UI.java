@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.SubScene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import org.ssh.ui.UIController;
@@ -143,10 +145,51 @@ public final class UI {
         image.setRotate((image.getRotate() + 180) % 360);
     }
 
-    public static final void bindSize(Region component, Region pane) {
-        component.maxHeightProperty().bind(pane.heightProperty());
-        component.minHeightProperty().bind(pane.heightProperty());
-        component.minWidthProperty().bind(pane.widthProperty());
-        component.maxWidthProperty().bind(pane.widthProperty());
+    public static final void bindSize(Node child, Node parent) {
+        if(!(child instanceof Region || child instanceof SubScene)) {
+            UI.LOG.info("Could not bind child, since it isn't an instance of Region or SubScene");
+            return;
+        }
+
+        if(!(parent instanceof Region || parent instanceof SubScene)) {
+            UI.LOG.info("Could not bind to parent, since it isn't an instance of Region or SubScene");
+            return;
+        }
+
+        //karig²
+        if(child instanceof SubScene)
+            if (parent instanceof SubScene)
+                bindSize((SubScene) child, (SubScene) parent);
+            else
+                bindSize((SubScene) child, (Region) parent);
+        else
+            if(parent instanceof Region)
+                bindSize((Region) child, (Region) parent);
+            else
+                bindSize((Region) child, (SubScene) parent);
+    }
+
+    private static final void bindSize(SubScene child, Region parent) {
+        child.heightProperty().bind(parent.heightProperty());
+        child.widthProperty().bind(parent.widthProperty());
+    }
+
+    private static final void bindSize(SubScene child, SubScene parent) {
+        child.heightProperty().bind(parent.heightProperty());
+        child.widthProperty().bind(parent.widthProperty());
+    }
+
+    public static final void bindSize(Region child, SubScene parent) {
+        child.maxHeightProperty().bind(parent.heightProperty());
+        child.minHeightProperty().bind(parent.heightProperty());
+        child.maxWidthProperty().bind(parent.widthProperty());
+        child.minWidthProperty().bind(parent.widthProperty());
+    }
+
+    public static final void bindSize(Region child, Region parent) {
+        child.maxHeightProperty().bind(parent.heightProperty());
+        child.minHeightProperty().bind(parent.heightProperty());
+        child.maxWidthProperty().bind(parent.widthProperty());
+        child.minWidthProperty().bind(parent.widthProperty());
     }
 }

@@ -24,6 +24,8 @@ public class BottomSection extends UIComponent2<GridPane> {
 
     private Enroller toolboxEnroller;
 
+    @FXML
+    private Pane timesliderWrapper;
     /**
      * {@link Pane} to wrap the toolbox in and bind its sizeproperties to.
      */
@@ -38,7 +40,7 @@ public class BottomSection extends UIComponent2<GridPane> {
     public BottomSection() {
         super("baseBottom", "bottomsection/bottom.fxml");
 
-        add(new Timeslider(), "#timesliderWrapper", true);
+        timesliderWrapper.setStyle("-fx-background-color: rgba(255, 0, 0, 1.0);");
 
         Platform.runLater(() -> {
             Optional<Pane> oToolboxWrapper = UI.getByName("toolboxWrapper", UI.getHighestParent(this.getComponent()));
@@ -55,6 +57,10 @@ public class BottomSection extends UIComponent2<GridPane> {
             // Set a style class for the toolboxEnroller
             toolboxEnroller.getStyleClass().add("toolboxEnroller");
             this.toolboxWrapper.getChildren().add(toolboxEnroller);
+
+            Timeslider t = new Timeslider();
+            add(t, "#timesliderWrapper", true);
+            UI.bindSize(t, timesliderWrapper);
         });
     }
 

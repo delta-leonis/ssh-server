@@ -9,7 +9,6 @@
 	</columnConstraints>
 	<rowConstraints>
 		<RowConstraints percentHeight="21.875" />
-		<RowConstraints percentHeight="78.125" />
 	</rowConstraints>
 	<children>
 	</children>

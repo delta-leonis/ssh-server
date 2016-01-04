@@ -22,8 +22,8 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Pane fx:id="timesliderWrapper" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-        <Button id="secondscreenButton" maxHeight="Infinity" GridPane.columnIndex="2" GridPane.rowIndex="0">
+        <Pane fx:id="timesliderWrapper" id="timesliderWrapper" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+        <Button id="secondscreenButton" maxHeight="Infinity" GridPane.columnIndex="2" GridPane.rowIndex="0" opacity="0.5">
             <graphic>
                 <ImageView>
                         <Image url="@../../icon/secondscreen32.png" />

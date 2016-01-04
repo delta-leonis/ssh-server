@@ -82,7 +82,7 @@ public class UIComponent2<N extends Pane> {
         }
 
         if(bind)
-            bindSize(component);
+            UI.bindSize(component, selected);
 
         return true;
     }
@@ -96,7 +96,7 @@ public class UIComponent2<N extends Pane> {
         this.getComponent().getChildren().add(index, component);
 
         if(bind)
-            bindSize(component);
+            UI.bindSize(component, this.component);
 
         return true;
 
