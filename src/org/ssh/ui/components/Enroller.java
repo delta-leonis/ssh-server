@@ -16,9 +16,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
-import java.util.concurrent.Callable;
-import java.util.function.Consumer;
-
 /**
  * Enroller for vertical or horizontal use. It uses an internal
  * {@link BorderPane} where the {@link ReadOnlyDoubleProperty doubleproperties}

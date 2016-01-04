@@ -9,8 +9,8 @@ import org.ssh.models.Goal;
 import org.ssh.models.enums.Direction;
 import org.ssh.pipelines.packets.GeometryPacket;
 import org.ssh.services.service.Consumer;
-import org.ssh.ui.windows.MainWindow;
 
+import org.ssh.ui.windows.MainWindow;
 import protobuf.Geometry.GeometryFieldSize;
 
 /**
@@ -41,8 +41,8 @@ public class GeometryModelConsumer extends Consumer<GeometryPacket> {
     public boolean consume(GeometryPacket pipelinePacket) {
         if(fieldGame == null)
             // Getting reference to the main window
-            UI.<MainWindow> get("main").ifPresent(main -> 
-                fieldGame = main.field);
+            UI.<MainWindow> get("main").ifPresent(main ->
+                fieldGame = main.getFieldGame());
         
         if(fieldGame == null)
             return false;

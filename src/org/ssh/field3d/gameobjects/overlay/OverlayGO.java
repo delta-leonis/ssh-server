@@ -20,7 +20,7 @@ import javafx.scene.Group;
 public abstract class OverlayGO extends GameObject {
     
     /** The FXML directory. */
-    private static final String FXML_DIR = "/org/ssh/view/components/overlay/";
+    private static final String FXML_DIR = "/org/ssh/view/components/centersection/overlay/";
                                          
     /** The logger. */
     private static final Logger LOG      = Logger.getLogger();

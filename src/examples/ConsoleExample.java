@@ -50,7 +50,7 @@ public class ConsoleExample extends Application {
         final ConsoleManager console = new ConsoleManager("bottom-console");
         
         // Create base
-        final Scene scene = new Scene(console, ConsoleExample.WIDTH, ConsoleExample.HEIGHT, Color.WHITE);
+        final Scene scene = new Scene(console.getComponent(), ConsoleExample.WIDTH, ConsoleExample.HEIGHT, Color.WHITE);
         
         // Add TextArea
         primaryStage.setScene(scene);

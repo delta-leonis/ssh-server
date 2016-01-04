@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<GridPane id="toolbox" fx:id="toolboxcontainer" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" pickOnBounds="false">
+
+	<fx:define>
+		<Double fx:value="1.7976931348623157E308" fx:id="maxValue" />
+	</fx:define>
+	
+	<columnConstraints>
+		<ColumnConstraints percentWidth="7.0" />
+		<ColumnConstraints percentWidth="93.0" />
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints percentHeight="100.0" />
+	</rowConstraints>
+	<children>
+		<GridPane id="buttonGroup" GridPane.columnIndex="0" GridPane.rowIndex="0">
+			<columnConstraints>
+				<ColumnConstraints percentWidth="100.0" />
+			</columnConstraints>
+			<rowConstraints>
+				<RowConstraints percentHeight="25.0" />
+				<RowConstraints percentHeight="25.0" />
+				<RowConstraints percentHeight="25.0" />
+				<RowConstraints percentHeight="25.0" />
+			</rowConstraints>
+			<children>
+				<Button id="widgetsButton" maxHeight="${maxValue}" minHeight="0.0"
+					maxWidth="${maxValue}" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS"
+					GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#enrollWidgets">
+					<graphic>
+						<ImageView>
+							<image>
+								<Image url="@../../../view/icon/widgets32.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+				<Button id="consoleButton" maxHeight="${maxValue}" minHeight="0.0"
+					maxWidth="${maxValue}" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS"
+					GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" onAction="#enrollConsole">
+					<graphic>
+						<ImageView>
+							<image>
+								<Image url="@../../../view/icon/console32.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+				<Button id="luaButton" maxHeight="${maxValue}" minHeight="0.0"
+					maxWidth="${maxValue}" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS"
+					GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" onAction="#enrollLua">
+					<graphic>
+						<ImageView>
+							<image>
+								<Image url="@../../../view/icon/lua32.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+				<Button id="settingsButton" maxHeight="${maxValue}"
+					minHeight="0.0" maxWidth="${maxValue}" GridPane.columnIndex="0"
+					GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS"
+					onAction="#enrollSettings">
+					<graphic>
+						<ImageView>
+							<image>
+								<Image url="@../../../view/icon/settings32.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+			</children>
+		</GridPane>
+	</children>
+</GridPane>

@@ -1,7 +1,9 @@
 package org.ssh.ui.lua.console;
 
+import javafx.scene.layout.Pane;
 import org.fxmisc.wellbehaved.event.EventHandlerHelper;
 import org.fxmisc.wellbehaved.event.EventPattern;
+import org.ssh.managers.manager.UI;
 import org.ssh.ui.UIComponent;
 
 import javafx.fxml.FXML;
@@ -15,8 +17,11 @@ import javafx.scene.input.KeyCombination;
  * 
  * @author Thomas Hakkers
  */
-public class ConsoleManager extends UIComponent {
-    
+public class ConsoleManager extends UIComponent<Pane> {
+
+    @FXML
+    private Pane rootPane;
+
     /** The {@link TabPane} that holds all tabs */
     @FXML
     private TabPane tabPane;
@@ -30,23 +35,22 @@ public class ConsoleManager extends UIComponent {
      *            The name of the {@link UIComponent}
      */
     public ConsoleManager(String name) {
-        super(name, "consolemanager.fxml");
-        tabPane.minHeightProperty().bind(this.heightProperty());
-        tabPane.maxHeightProperty().bind(this.heightProperty());
-        tabPane.minWidthProperty().bind(this.widthProperty());
-        tabPane.maxWidthProperty().bind(this.widthProperty());
+        super(name, "bottomsection/consolemanager.fxml");
+
+        UI.bindSize(tabPane, rootPane);
+
         // Open a new tab
         this.openNewTab();
         // Open a new tab when pressing CTRL + T
-        EventHandlerHelper.install(this.onKeyPressedProperty(),
+        EventHandlerHelper.install(tabPane.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.T, KeyCombination.CONTROL_DOWN))
                         .act(event -> this.openNewTab()).create());
         // Close a tab when pressing CTRL + W
-        EventHandlerHelper.install(this.onKeyPressedProperty(),
+        EventHandlerHelper.install(tabPane.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.W, KeyCombination.CONTROL_DOWN))
                         .act(event -> this.closeTab((Console) tabPane.getSelectionModel().getSelectedItem())).create());
         // Keycombination to cancel a command
-        EventHandlerHelper.install(this.onKeyPressedProperty(),
+        EventHandlerHelper.install(tabPane.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.C, KeyCombination.CONTROL_DOWN))
                         .act(event -> ConsoleManager.cancelTab((Console) tabPane.getSelectionModel().getSelectedItem()))
                         .create());

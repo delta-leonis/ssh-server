@@ -381,13 +381,6 @@ public class RobotGO extends DetectionGameObject {
             // Add model to model group
             this.modelGroup.getChildren().add(this.model);
             
-            // Add mouse clicked event
-            this.model.setOnMouseClicked(event -> {
-
-                // Setting selected state
-                setSelected(!isSelected);
-            });
-            
             // Calculating offset of the robot on the y-axis
             this.robotYOffset = (float) (this.model.getBoundsInLocal().getHeight() / 2.0f + ROBOT_STARTING_Y);
             

@@ -1,23 +1,20 @@
 package org.ssh.services.consumers;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.ssh.field3d.FieldGame;
 import org.ssh.managers.manager.Models;
 import org.ssh.managers.manager.UI;
-import org.ssh.models.Ball;
 import org.ssh.models.Game;
 import org.ssh.models.Robot;
 import org.ssh.models.enums.Allegiance;
 import org.ssh.models.enums.TeamColor;
 import org.ssh.pipelines.packets.DetectionPacket;
 import org.ssh.services.service.Consumer;
-import org.ssh.ui.windows.MainWindow;
 
-import protobuf.Detection;
+import org.ssh.ui.windows.MainWindow;
 import protobuf.Detection.DetectionFrame;
 import protobuf.Detection.DetectionRobot;
 
@@ -51,8 +48,8 @@ public class DetectionModelConsumer extends Consumer<DetectionPacket> {
         if(fieldGame == null) {
 
             // Getting reference to the main window
-            UI.<MainWindow>get("Leo regulus").ifPresent(main ->
-                    fieldGame = main.field);
+            UI.<MainWindow> get("main").ifPresent(main ->
+                    fieldGame = main.getFieldGame());
         }
 
         // read the packet

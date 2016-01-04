@@ -141,7 +141,7 @@ public abstract class UIController<T extends Pane> {
      * @param identifier unique name of a node
      * @param bind true if binding (max/min height/width) is required to the parent
      */
-    public <C extends UIComponent2<?>> void add(C component, String identifier, boolean bind){
+    public <C extends UIComponent<?>> void add(C component, String identifier, boolean bind){
         UI.getByName(identifier, this.getRootNode()).ifPresent(node -> {
             if(!(node instanceof Pane)) {
                 UIController.LOG.info("Could not add component at '%s' since it's not an instance of Pane.", identifier);

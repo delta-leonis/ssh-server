@@ -1,14 +1,13 @@
 package org.ssh.ui.lua.editor;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 
-import javax.swing.JTextArea;
 
+import javafx.fxml.FXML;
 import org.ssh.ui.UIComponent;
 import org.ssh.ui.lua.console.ColoredCodeArea;
 import org.ssh.util.Logger;
@@ -37,6 +36,7 @@ public class ScriptEditor extends UIComponent {
     private ScriptArea          codeArea;
     private String              path;
     private FileChooser         fileChooser;
+    @FXML
     private VBox                root;
                                 
     /**
@@ -44,17 +44,11 @@ public class ScriptEditor extends UIComponent {
      * @param name Name of the {@link ScriptEditor}
      */
     public ScriptEditor(final String name) {
-        super(name, "scripteditor.fxml");
-        this.root = new VBox();
-        root.minHeightProperty().bind(this.heightProperty());
-        root.maxHeightProperty().bind(this.heightProperty());
-        root.minWidthProperty().bind(this.widthProperty());
-        root.maxWidthProperty().bind(this.widthProperty());
+        super(name, "bottomsection/scripteditor.fxml");
         
         this.initializeMenu();
         this.initializeTextArea();
-        
-        this.getChildren().add(root);
+
         // Create a FileChooser for future use
         this.fileChooser = new FileChooser();
         this.fileChooser.setTitle("File Chooser");
@@ -104,7 +98,7 @@ public class ScriptEditor extends UIComponent {
                 LuaUtils.getLuaFunctions());
         this.codeArea.prefWidthProperty().bind(root.widthProperty());
         this.codeArea.prefHeightProperty().bind(root.heightProperty());
-        this.root.getChildren().add(this.codeArea);
+        root.getChildren().add(this.codeArea);
     }
     
     /**
@@ -137,7 +131,7 @@ public class ScriptEditor extends UIComponent {
      */
     private void saveAsFile() {
         // Select path
-        File file = fileChooser.showSaveDialog(this.getScene().getWindow());
+        File file = fileChooser.showSaveDialog(root.getScene().getWindow());
         // Only save file if path != null to avoid recursion
         if (file != null) {
             this.path = file.getAbsolutePath();
@@ -150,7 +144,7 @@ public class ScriptEditor extends UIComponent {
      */
     public void openFile() {
         // Select path
-        File file = fileChooser.showOpenDialog(this.getScene().getWindow());
+        File file = fileChooser.showOpenDialog(root.getScene().getWindow());
         // Set the text of the textarea if a file has been found.
         if (file != null) setTextFromFile(file.getAbsolutePath());
     }
