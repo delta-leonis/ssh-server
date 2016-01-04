@@ -7,6 +7,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.ssh.managers.manager.UI;
 import org.ssh.ui.UIComponent2;
 import org.ssh.ui.UIController;
 import org.ssh.ui.components2.*;
@@ -54,7 +55,7 @@ public class MainWindow2 extends UIController<StackPane> {
 		//add top section
 		this.add(new TopSection(), 0, 0);
 		//add center section
-		this.add(new CenterSection(), 0, 1);
+		this.add(new CenterSection(), "centerSection", true);
 		// add bottom section
         this.add(new BottomSection(), 0, 2);
 
@@ -76,6 +77,22 @@ public class MainWindow2 extends UIController<StackPane> {
 			System.exit(0);
 		});
 	}
+
+	public <C extends UIComponent2<?>> void add(C component, String identifier, boolean bind){
+		UI.getByName(identifier, this.getRootNode()).ifPresent(node -> {
+			Pane pane = (Pane) node;
+			pane.getChildren().add(component.getComponent());
+            if(bind)
+                bindSize(component.getComponent(), pane);
+		});
+	}
+
+    private void bindSize(Pane component, Pane pane) {
+        component.maxHeightProperty().bind(pane.heightProperty());
+        component.minHeightProperty().bind(pane.heightProperty());
+        component.minWidthProperty().bind(pane.widthProperty());
+        component.maxWidthProperty().bind(pane.widthProperty());
+    }
 
     public <C extends UIComponent2<?>> void addOverlay(C component){
         ((StackPane)getRootNode().getParent())

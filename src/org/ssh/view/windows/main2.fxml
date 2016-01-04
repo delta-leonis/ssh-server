@@ -15,6 +15,7 @@
 			<RowConstraints percentHeight="7.0" />
 		</rowConstraints>
 		<children>
+			<Pane fx:id="centerSection" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="1" />
 		</children>
 	</GridPane>
 
