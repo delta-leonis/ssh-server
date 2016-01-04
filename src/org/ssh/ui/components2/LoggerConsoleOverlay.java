@@ -43,8 +43,6 @@ public class LoggerConsoleOverlay  extends UIComponent2<GridPane> {
     @FXML
     private void enrollLoggingconsole() {
         // Call Enroller function to handle enrollment
-        loggingconsoleEnroller.handleEnrollment();
-
-        UI.flipImage(enrollLogconsoleImage);
+        loggingconsoleEnroller.handleEnrollment(() -> UI.flipImage(enrollLogconsoleImage));
     }
 }

@@ -16,6 +16,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
+import java.util.concurrent.Callable;
+import java.util.function.Consumer;
+
 /**
  * Enroller for vertical or horizontal use. It uses an internal
  * {@link BorderPane} where the {@link ReadOnlyDoubleProperty doubleproperties}
@@ -56,6 +59,8 @@ public class Enroller<N extends Region> extends BorderPane {
 	 * {@link Button} for enrollactions that is included in the enroller.
 	 */
 	private ImageView enrollIcon;
+
+    private Runnable onfinishMethod;
 	/**
 	 * Extendsize is the maximum size of the slider in the extending direction,
 	 * so to where the slider should grow.
@@ -464,63 +469,68 @@ public class Enroller<N extends Region> extends BorderPane {
 		this.handleEnrollment();
 	}
 
+    /**
+     *
+     * @param onFinish lambda to execute when animation is finished
+     */
+    public void handleEnrollment(Runnable onFinish){
+        onfinishMethod = onFinish;
+        this.handleEnrollment();
+    }
+
+
+
 	/**
 	 * Function to set the onFinishedProperties of the {@link Animation}s.
 	 */
 	private void initAnimations() {
-		collapse.onFinishedProperty().set(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent actionEvent) {
-				// If the pane should not collapse completely we need to set the
-				// extending size property again
-				if (collapsedSizeProperty != null) {
-					// Of course first check if we have a vertical or horizontal
-					// sliding enroller
-					if (extendDirection == ExtendDirection.DOWN || extendDirection == ExtendDirection.UP) {
-						// It is vertical so we bind the height
-						slidingWrapper.minHeightProperty().bind(collapsedSizeProperty);
-						slidingWrapper.maxHeightProperty().bind(collapsedSizeProperty);
-					} else {
-						// It is horizontal so we bind the width
-						slidingWrapper.minWidthProperty().bind(collapsedSizeProperty);
-						slidingWrapper.maxWidthProperty().bind(collapsedSizeProperty);
-					}
-				} else {
-					// Set the content invisible, otherwise images would crop op
-					// and still be partially visible. This counts of course not for
-					// a content that doesn't dissapear completely
-					content.setVisible(false);
-				}
-				if(enrollIcon != null) {
-					// Flip the icon
-					enrollIcon.setRotate((enrollIcon.getRotate() + 180) % 360);
-				}				// Set the state to collapsed because collapsing is finished
-				state = State.COLLAPSED;
-			}
-		});
-		extend.onFinishedProperty().set(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent actionEvent) {
-				// Now the animation is finished we can bind the size property
-				// again to the property of the extended size
-				// So check if we slide horizontal or vertical..
-				if (extendDirection == ExtendDirection.DOWN || extendDirection == ExtendDirection.UP) {
-					// It is vertical so we unbind the height
-					slidingWrapper.minHeightProperty().bind(extendedSizeProperty);
-					slidingWrapper.maxHeightProperty().bind(extendedSizeProperty);
-				} else {
-					// It is horizontal so we unbind the width
-					slidingWrapper.minWidthProperty().bind(extendedSizeProperty);
-					slidingWrapper.maxWidthProperty().bind(extendedSizeProperty);
-				}
-				if(enrollIcon != null) {
-					// Flip the icon
-					enrollIcon.setRotate((enrollIcon.getRotate() + 180) % 360);
-				}
-				// Set the state to extended because extending is finished
-				state = State.EXTENDED;
-			}
-		});
+		collapse.onFinishedProperty().set(actionEvent -> {
+						// If the pane should not collapse completely we need to set the
+						// extending size property again
+						if (collapsedSizeProperty != null) {
+							// Of course first check if we have a vertical or horizontal
+							// sliding enroller
+							if (extendDirection == ExtendDirection.DOWN || extendDirection == ExtendDirection.UP) {
+								// It is vertical so we bind the height
+								slidingWrapper.minHeightProperty().bind(collapsedSizeProperty);
+								slidingWrapper.maxHeightProperty().bind(collapsedSizeProperty);
+							} else {
+								// It is horizontal so we bind the width
+								slidingWrapper.minWidthProperty().bind(collapsedSizeProperty);
+								slidingWrapper.maxWidthProperty().bind(collapsedSizeProperty);
+							}
+						} else {
+							// Set the content invisible, otherwise images would crop op
+							// and still be partially visible. This counts of course not for
+							// a content that doesn't dissapear completely
+							content.setVisible(false);
+						}
+            // Set the state to collapsed because collapsing is finished
+            state = State.COLLAPSED;
+
+            if(onfinishMethod != null)
+                onfinishMethod.run();
+        });
+		extend.onFinishedProperty().set(actionEvent -> {
+            // Now the animation is finished we can bind the size property
+            // again to the property of the extended size
+            // So check if we slide horizontal or vertical..
+            if (extendDirection == ExtendDirection.DOWN || extendDirection == ExtendDirection.UP) {
+                // It is vertical so we unbind the height
+                slidingWrapper.minHeightProperty().bind(extendedSizeProperty);
+                slidingWrapper.maxHeightProperty().bind(extendedSizeProperty);
+            } else {
+                // It is horizontal so we unbind the width
+                slidingWrapper.minWidthProperty().bind(extendedSizeProperty);
+                slidingWrapper.maxWidthProperty().bind(extendedSizeProperty);
+            }
+
+
+            if(onfinishMethod != null)
+                onfinishMethod.run();
+            // Set the state to extended because extending is finished
+            state = State.EXTENDED;
+        });
 	}
 
 	/**
