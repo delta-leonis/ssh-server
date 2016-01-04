@@ -5,6 +5,7 @@ import com.sun.istack.internal.Nullable;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.SubScene;
 import javafx.scene.layout.Pane;
@@ -57,18 +58,51 @@ public class UIComponent2<N extends Pane> {
     public <M extends Node> boolean add(M component){
         return add(component, false);
     }
-    public <M extends Node> boolean add(M component, boolean bind){
-        if(this.getComponent().getChildren().contains(component)) {
+
+    public <M extends Node> boolean add(String identifier, M component, boolean bind) {
+        if (this.getComponent().getChildren().contains(component)) {
             UIComponent2.LOG.info("Could not add %s, since it already has been added", component);
             return false;
         }
 
-        this.getComponent().getChildren().add(component);
+        Node selected = this.getComponent().lookup(identifier);
+        if (selected == null) {
+            UIComponent2.LOG.info("Could not find %s, thus element has not been added.", identifier);
+            return false;
+        }
+
+        if(selected instanceof Pane)
+            ((Pane)selected).getChildren().add(component);
+        else if(selected instanceof Group)
+            ((Group)selected).getChildren().add(component);
+        else {
+            UIComponent2.LOG.info("identifier doesn't select pane or group, element could not be added");
+            return false;
+        }
 
         if(bind)
             bindSize(component);
 
         return true;
+    }
+
+    public <M extends Node> boolean add(M component, int index, boolean bind){
+        if(this.getComponent().getChildren().contains(component)) {
+            UIComponent2.LOG.info("Could not add %s, since it already has been added", component);
+            return false;
+        }
+
+        this.getComponent().getChildren().add(index, component);
+
+        if(bind)
+            bindSize(component);
+
+        return true;
+
+    }
+
+    public <M extends Node> boolean add(M component, boolean bind){
+        return add(component, getComponent().getChildren().size()-1, bind);
     }
 
     public <M extends Node> void bindSize(M component){

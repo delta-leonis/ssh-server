@@ -12,6 +12,7 @@ import org.ssh.field3d.FieldGame;
 import org.ssh.managers.manager.UI;
 import org.ssh.ui.UIComponent2;
 import org.ssh.ui.components.Enroller;
+import org.ssh.ui.components.MatchlogSelector;
 import org.ssh.ui.components.Toolbox;
 import org.ssh.util.Logger;
 
@@ -23,9 +24,22 @@ public class CenterSection extends UIComponent2<StackPane> {
 
     private static final Logger LOG = Logger.getLogger();
 
+    @FXML
+    private Pane matchlogWrapper;
+
+    @FXML
+    private Pane matchlogButtonSizer;
+
     public CenterSection() {
         super("center", "centersection/center.fxml");
 
-        add(new FieldGame(new Group(), 500, 500, SceneAntialiasing.BALANCED), true);
+        add("#fieldBase", new FieldGame(new Group(), 500, 500, SceneAntialiasing.BALANCED), true);
+
+        // MatchlogSelector wrapped in an Enroller for fancy up and down sliding
+        Enroller matchlogEnroller = new Enroller(new MatchlogSelector(), Enroller.ExtendDirection.RIGHT, matchlogWrapper.heightProperty(),
+                matchlogButtonSizer.widthProperty(), matchlogWrapper.widthProperty(), true);
+        // Set a style class for the profilemenuEnroller
+        matchlogEnroller.getStyleClass().add("matchlogEnroller");
+        this.matchlogWrapper.getChildren().add(matchlogEnroller);
     }
 }

@@ -33,6 +33,8 @@ public class LoggerConsoleOverlay  extends UIComponent2<GridPane> {
         // Set a style class for the loggingconsoleEnroller
         loggingconsoleEnroller.getStyleClass().add("loggingconsoleEnroller");
         loggingconsoleWrapper.getChildren().add(loggingconsoleEnroller);
+
+        loggingconsoleEnroller.handleEnrollment();
     }
 
     /**

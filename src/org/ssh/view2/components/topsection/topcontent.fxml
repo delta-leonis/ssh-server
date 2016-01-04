@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane fx:id="topElementswrapper" id="topElementswrapper" GridPane.columnIndex="0" GridPane.rowIndex="1" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
+<GridPane fx:id="topElementswrapper" pickOnBounds="false" id="topElementswrapper" GridPane.columnIndex="0" GridPane.rowIndex="1" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
     <columnConstraints>
         <ColumnConstraints percentWidth="25.0"/>
         <ColumnConstraints minWidth="30.0" maxWidth="30.0" prefWidth="30.0" />
@@ -14,8 +12,6 @@
         <RowConstraints percentHeight="100.0" />
     </rowConstraints>
     <children>
-        <FlowPane id="robotStatusContainer" fx:id="robotStatusContainer"
-                  GridPane.columnIndex="0" GridPane.rowIndex="0">
-        </FlowPane>
+        <FlowPane id="robotStatusContainer" fx:id="robotStatusContainer" GridPane.columnIndex="0" GridPane.rowIndex="0" />
     </children>
 </GridPane>

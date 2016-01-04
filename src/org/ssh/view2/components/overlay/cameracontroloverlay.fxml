@@ -17,10 +17,6 @@
 <GridPane fx:id="rootPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 	pickOnBounds="false">
 
-	<fx:define>
-		<Double fx:value="1.7976931348623157E308" fx:id="maxValue" />
-	</fx:define>
-
 	<columnConstraints>
 		<ColumnConstraints fillWidth="true" />
 		<ColumnConstraints prefWidth="28.0" minWidth="28.0"
@@ -53,10 +49,10 @@
 	</rowConstraints>
 
 	<children>
-		<Pane id="topButtonsSpacer" maxHeight="${maxValue}" pickOnBounds="false" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
+		<Pane id="topButtonsSpacer" maxHeight="Infinity" pickOnBounds="false" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
 		</Pane>
 		<Button id="navigationbutton" GridPane.columnIndex="3"
-			GridPane.rowIndex="1" maxHeight="${maxValue}" maxWidth="${maxValue}"
+			GridPane.rowIndex="1" maxHeight="Infinity" maxWidth="Infinity"
 			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onMousePressed="#onButtonRotateUpPressed"
 			onMouseReleased="#onButtonRotateUpReleased">
 			<graphic>
@@ -72,7 +68,7 @@
 		</Button>
 
 		<Button id="navigationbutton" GridPane.columnIndex="3"
-			GridPane.rowIndex="3" maxHeight="${maxValue}" maxWidth="${maxValue}"
+			GridPane.rowIndex="3" maxHeight="Infinity" maxWidth="Infinity"
 			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onMousePressed="#onButtonRotateDownPressed"
 			onMouseReleased="#onButtonRotateDownReleased">
 			<graphic>
@@ -88,7 +84,7 @@
 		</Button>
 
 		<Button id="navigationbutton" GridPane.columnIndex="2"
-			GridPane.rowIndex="2" maxHeight="${maxValue}" maxWidth="${maxValue}"
+			GridPane.rowIndex="2" maxHeight="Infinity" maxWidth="Infinity"
 			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onMousePressed="#onButtonRotateLeftPressed"
 			onMouseReleased="#onButtonRotateLeftReleased">
 			<graphic>
@@ -104,7 +100,7 @@
 		</Button>
 
 		<Button id="navigationbutton" GridPane.columnIndex="4"
-			GridPane.rowIndex="2" maxHeight="${maxValue}" maxWidth="${maxValue}"
+			GridPane.rowIndex="2" maxHeight="Infinity" maxWidth="Infinity"
 			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onMousePressed="#onButtonRotateRightPressed"
 			onMouseReleased="#onButtonRotateRightReleased">
 			<graphic>
@@ -120,7 +116,7 @@
 		</Button>
 
 		<Button id="navigationbutton" GridPane.columnIndex="1"
-			GridPane.rowIndex="2" maxHeight="${maxValue}" maxWidth="${maxValue}"
+			GridPane.rowIndex="2" maxHeight="Infinity" maxWidth="Infinity"
 			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
 			onAction="#hopCameraPositionQuarterRight">
 			<graphic>
@@ -136,7 +132,7 @@
 		</Button>
 
 		<Button id="navigationbutton" GridPane.columnIndex="5"
-			GridPane.rowIndex="2" maxHeight="${maxValue}" maxWidth="${maxValue}"
+			GridPane.rowIndex="2" maxHeight="Infinity" maxWidth="Infinity"
 			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
 			onAction="#hopCameraPositionQuarterLeft">>
 			<graphic>
@@ -152,7 +148,7 @@
 		</Button>
 
 		<Button id="navigationbutton" GridPane.columnIndex="3"
-			GridPane.rowIndex="4" maxHeight="${maxValue}" maxWidth="${maxValue}"
+			GridPane.rowIndex="4" maxHeight="Infinity" maxWidth="Infinity"
 			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onAction="#onButton45DegViewAction">
 			<graphic>
 				<ImageView>
@@ -167,7 +163,7 @@
 		</Button>
 
 		<Button id="navigationbutton" GridPane.columnIndex="3"
-			GridPane.rowIndex="5" maxHeight="${maxValue}" maxWidth="${maxValue}"
+			GridPane.rowIndex="5" maxHeight="Infinity" maxWidth="Infinity"
 			GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onAction="#onButtonTopViewAction">
 			<graphic>
 				<ImageView>
@@ -195,7 +191,7 @@
 			</rowConstraints>
 			<children>
 				<Button id="navigationbutton" GridPane.columnIndex="0"
-					GridPane.rowIndex="0" maxHeight="${maxValue}" maxWidth="${maxValue}"
+					GridPane.rowIndex="0" maxHeight="Infinity" maxWidth="Infinity"
 					GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onMousePressed="#onButtonZoomInPressed"
 					onMouseReleased="#onButtonZoomInReleased">
 					<graphic>
@@ -210,7 +206,7 @@
      				</padding>
 				</Button>
 				<Button id="navigationbutton" GridPane.columnIndex="0"
-					GridPane.rowIndex="1" maxHeight="${maxValue}" maxWidth="${maxValue}"
+					GridPane.rowIndex="1" maxHeight="Infinity" maxWidth="Infinity"
 					GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" onMousePressed="#onButtonZoomOutPressed"
 					onMouseReleased="#onButtonZoomOutReleased">
 					<graphic>

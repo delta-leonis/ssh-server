@@ -1,6 +1,8 @@
 package org.ssh.models;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.ssh.managers.manager.Models;
 import org.ssh.models.enums.Direction;
@@ -174,5 +176,9 @@ public class Game extends Model {
      */
     public TeamColor getTeamColor(Allegiance allegiance) {
         return allegiance.equals(Allegiance.ALLY) ? getAllyColor() : getOpponentColor();
+    }
+
+    public List<Robot> getRobots(Allegiance allegiance){
+        return Models.<Robot>getAll("robot").stream().filter(robot -> robot.getAllegiance().equals(allegiance)).collect(Collectors.toList());
     }
 }

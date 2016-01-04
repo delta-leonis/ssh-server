@@ -16,6 +16,7 @@ import org.ssh.ui.components2.*;
  *
  * @author Rimon Oz
  * @author Joost Overeem
+ * @author Jeroen de Jong
  */
 public class MainWindow2 extends UIController<StackPane> {
 
@@ -60,7 +61,7 @@ public class MainWindow2 extends UIController<StackPane> {
 		// add overlay for profile menu
         this.addOverlay(new ProfilemenuOverlay());
 		// add overlay for Matchlogmenu
-        this.addOverlay(new MatchlogmenuOverlay());
+        //this.addOverlay(new MatchlogmenuOverlay());
         this.addOverlay(new LoggerConsoleOverlay());
 
 		//Building is finished, lets spawn the window

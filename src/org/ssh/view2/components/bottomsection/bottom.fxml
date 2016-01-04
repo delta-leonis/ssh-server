@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
@@ -18,22 +15,18 @@
     </rowConstraints>
 
     <children>
-        <Button id="enrollButton" maxHeight="${maxValue}" GridPane.columnIndex="0" GridPane.rowIndex="0">
+        <Button id="enrollButton" maxHeight="Infinity" GridPane.columnIndex="0" GridPane.rowIndex="0" onAction="#enrollToolbox">
             <graphic>
                 <ImageView fx:id="enrollToolboxImage">
-                    <image>
                         <Image url="@../../icon/enrollup32.png" />
-                    </image>
                 </ImageView>
             </graphic>
         </Button>
-        <Pane fx:id="timesliderWrapper" maxHeight="${maxValue}" maxWidth="${maxValue}" GridPane.hgrow="ALWAYS" GridPane.columnIndex="1" GridPane.rowIndex="0"></Pane>
-        <Button id="secondscreenButton" maxHeight="${maxValue}" GridPane.columnIndex="2" GridPane.rowIndex="0">
+        <Pane fx:id="timesliderWrapper" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+        <Button id="secondscreenButton" maxHeight="Infinity" GridPane.columnIndex="2" GridPane.rowIndex="0">
             <graphic>
                 <ImageView>
-                    <image>
                         <Image url="@../../icon/secondscreen32.png" />
-                    </image>
                 </ImageView>
             </graphic>
         </Button>

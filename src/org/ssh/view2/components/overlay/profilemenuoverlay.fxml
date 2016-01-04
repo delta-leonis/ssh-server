@@ -6,10 +6,6 @@
 <?import javafx.scene.layout.*?>
 
 <GridPane id="overlay" fx:id="overlay" pickOnBounds="false" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-    <fx:define>
-        <Double fx:value="1.7976931348623157E308" fx:id="maxValue" />
-    </fx:define>
-
     <columnConstraints>
         <ColumnConstraints percentWidth="20.0" />
         <ColumnConstraints percentWidth="80.0" />
@@ -20,11 +16,11 @@
         <RowConstraints percentHeight="64.0" />
     </rowConstraints>
     <children>
-        <Button id="profileButton" maxHeight="${maxValue}" maxWidth="${maxValue}" text="Current User" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#enrollProfilemenu">
+        <Button id="profileButton" maxHeight="Infinity" maxWidth="Infinity" text="Current User" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#enrollProfilemenu">
             <graphic><ImageView>
                 <Image url="@../../icon/user24.png" />
             </ImageView></graphic>
         </Button>
-        <Pane fx:id="profilemenuWrapper" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="1"></Pane>
+        <Pane fx:id="profilemenuWrapper" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
     </children>
 </GridPane>

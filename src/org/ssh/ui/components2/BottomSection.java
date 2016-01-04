@@ -16,7 +16,38 @@ import org.ssh.ui.components.Toolbox;
  */
 public class BottomSection extends UIComponent2<GridPane> {
 
+    private Enroller toolboxEnroller;
+
+    /**
+     * {@link Pane} to wrap the toolbox in and bind its sizeproperties to.
+     */
+    @FXML
+    private Pane toolboxWrapper;
+    /**
+     * {@link ImageView} where the enrollment icon is displayed in. When extending Toolbox, the icon can be flipped.
+     */
+    @FXML
+    private ImageView enrollToolboxImage;
+
     public BottomSection() {
         super("baseBottom", "bottomsection/bottom.fxml");
+
+        // Toolbox wrapped in an Enroller for fancy up and down sliding
+//        toolboxEnroller = new Enroller(new Toolbox(), Enroller.ExtendDirection.UP, toolboxWrapper.widthProperty(),
+//                toolboxWrapper.heightProperty());
+//        // Set a style class for the toolboxEnroller
+//        toolboxEnroller.getStyleClass().add("toolboxEnroller");
+//        this.toolboxWrapper.getChildren().add(toolboxEnroller);
+    }
+
+
+    /**
+     * Extends and collapses the toolbox
+     */
+    @FXML
+    private void enrollToolbox() {
+        // Call Enroller function to handle enrollment
+        toolboxEnroller.handleEnrollment();
+        UI.flipImage(enrollToolboxImage);
     }
 }

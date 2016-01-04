@@ -4,11 +4,6 @@
 <?import javafx.scene.layout.*?>
 
 <StackPane fx:id="rootNode" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-
-	<fx:define>
-		<Double fx:value="1.7976931348623157E308" fx:id="maxValue" />
-	</fx:define>
-
 	<children>
 	<GridPane id="basePane" fx:id="basePane">
 		<columnConstraints>
@@ -20,7 +15,6 @@
 			<RowConstraints percentHeight="7.0" />
 		</rowConstraints>
 		<children>
-
 		</children>
 	</GridPane>
 
@@ -33,7 +27,7 @@
 				<RowConstraints percentHeight="50.0" />
 			</rowConstraints>
 			<children>
-				<Pane fx:id="toolboxWrapper" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="1" minHeight="0.0"></Pane>
+				<Pane fx:id="toolboxWrapper" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="1" minHeight="0.0"/>
 			</children>
 		</GridPane>
 	</children>
