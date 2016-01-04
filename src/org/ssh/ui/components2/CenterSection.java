@@ -33,7 +33,7 @@ public class CenterSection extends UIComponent2<StackPane> {
     public CenterSection() {
         super("center", "centersection/center.fxml");
 
-        add("#fieldBase", new FieldGame(new Group(), 500, 500, SceneAntialiasing.BALANCED), true);
+        add(new FieldGame(new Group(), 500, 500, SceneAntialiasing.BALANCED), "#fieldBase", true);
 
         // MatchlogSelector wrapped in an Enroller for fancy up and down sliding
         Enroller matchlogEnroller = new Enroller(new MatchlogSelector(), Enroller.ExtendDirection.RIGHT, matchlogWrapper.heightProperty(),

@@ -53,24 +53,24 @@ public class MainWindow2 extends UIController<StackPane> {
 		}
 
 		//add top section
-		this.add(new TopSection(), 0, 0);
+		this.add(new TopSection(), "topSection", true);
 		//add center section
 		this.add(new CenterSection(), "centerSection", true);
 		// add bottom section
-        this.add(new BottomSection(), 0, 2);
+        this.add(new BottomSection(), "bottomSection", true);
 
 		// add overlay for profile menu
         this.addOverlay(new ProfilemenuOverlay());
 		// add overlay for Matchlogmenu
-        //this.addOverlay(new MatchlogmenuOverlay());
         this.addOverlay(new LoggerConsoleOverlay());
+
+        this.addOverlay(new ToolboxOverlay());
 
 		//Building is finished, lets spawn the window
 		this.spawnWindow();
 
 		// this handler makes sure the stage shuts down when the main window closes
 		primaryStage.setOnCloseRequest(windowEvent -> {
-
 			// Shut down javafx platform
 			Platform.exit();
 			// Shut down program
@@ -78,28 +78,8 @@ public class MainWindow2 extends UIController<StackPane> {
 		});
 	}
 
-	public <C extends UIComponent2<?>> void add(C component, String identifier, boolean bind){
-		UI.getByName(identifier, this.getRootNode()).ifPresent(node -> {
-			Pane pane = (Pane) node;
-			pane.getChildren().add(component.getComponent());
-            if(bind)
-                bindSize(component.getComponent(), pane);
-		});
-	}
-
-    private void bindSize(Pane component, Pane pane) {
-        component.maxHeightProperty().bind(pane.heightProperty());
-        component.minHeightProperty().bind(pane.heightProperty());
-        component.minWidthProperty().bind(pane.widthProperty());
-        component.maxWidthProperty().bind(pane.widthProperty());
-    }
-
     public <C extends UIComponent2<?>> void addOverlay(C component){
         ((StackPane)getRootNode().getParent())
                 .getChildren().add(component.getComponent());
     }
-
-	public <C extends UIComponent2<?>> void add(C component, int row, int column){
-		((GridPane)getRootNode()).add(component.getComponent(), row, column);
-	}
 }

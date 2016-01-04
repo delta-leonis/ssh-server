@@ -8,6 +8,7 @@ import javafx.scene.layout.Pane;
 import org.ssh.managers.manager.UI;
 import org.ssh.ui.UIComponent2;
 import org.ssh.ui.components.Enroller;
+import org.ssh.ui.components.Timeslider;
 import org.ssh.ui.components.Toolbox;
 import org.ssh.util.Logger;
 
@@ -37,20 +38,24 @@ public class BottomSection extends UIComponent2<GridPane> {
     public BottomSection() {
         super("baseBottom", "bottomsection/bottom.fxml");
 
-        Optional<Pane> oToolboxWrapper = UI.getByName("toolboxWrapper", UI.getHighestParent(this.getComponent()));
+        add(new Timeslider(), "#timesliderWrapper", true);
 
-        if(!oToolboxWrapper.isPresent()){
-            BottomSection.LOG.warning("Could not create bottom section because #toolboxWrapper could not be found.");
-            return;
-        }
-        toolboxWrapper = oToolboxWrapper.get();
+        Platform.runLater(() -> {
+            Optional<Pane> oToolboxWrapper = UI.getByName("toolboxWrapper", UI.getHighestParent(this.getComponent()));
 
-        // Toolbox wrapped in an Enroller for fancy up and down sliding
-        toolboxEnroller = new Enroller(new Toolbox(), Enroller.ExtendDirection.UP, toolboxWrapper.widthProperty(),
-                toolboxWrapper.heightProperty());
-        // Set a style class for the toolboxEnroller
-        toolboxEnroller.getStyleClass().add("toolboxEnroller");
-        this.toolboxWrapper.getChildren().add(toolboxEnroller);
+            if (!oToolboxWrapper.isPresent()) {
+                BottomSection.LOG.warning("Could not create bottom section because #toolboxWrapper could not be found.");
+                return;
+            }
+            toolboxWrapper = oToolboxWrapper.get();
+
+            // Toolbox wrapped in an Enroller for fancy up and down sliding
+            toolboxEnroller = new Enroller(new Toolbox(), Enroller.ExtendDirection.UP, toolboxWrapper.widthProperty(),
+                    toolboxWrapper.heightProperty());
+            // Set a style class for the toolboxEnroller
+            toolboxEnroller.getStyleClass().add("toolboxEnroller");
+            this.toolboxWrapper.getChildren().add(toolboxEnroller);
+        });
     }
 
 

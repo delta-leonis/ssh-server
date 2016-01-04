@@ -132,6 +132,27 @@ public abstract class UIController<T extends Pane> {
         UIController.LOG.fine("Adding a Node to UIController %s", this.getName());
         return this.getChildren().add(node);
     }
+
+
+    /**
+     * Add a component at a specific place identified by the identifier
+     *
+     * @param component
+     * @param identifier unique name of a node
+     * @param bind true if binding (max/min height/width) is required to the parent
+     */
+    public <C extends UIComponent2<?>> void add(C component, String identifier, boolean bind){
+        UI.getByName(identifier, this.getRootNode()).ifPresent(node -> {
+            if(!(node instanceof Pane)) {
+                UIController.LOG.info("Could not add component at '%s' since it's not an instance of Pane.", identifier);
+                return;
+            }
+            Pane pane = (Pane) node;
+            pane.getChildren().add(component.getComponent());
+            if(bind)
+                UI.bindSize(component.getComponent(), pane);
+        });
+    }
     
     /**
      * Adds a list of Nodes to the window's children.

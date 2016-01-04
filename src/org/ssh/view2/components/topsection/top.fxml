@@ -16,9 +16,9 @@
             <RowConstraints percentHeight="70.0" />
         </rowConstraints>
         <children>
-            <StackPane id="topbar" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <StackPane id="topbar" GridPane.columnIndex="0" GridPane.rowIndex="0" pickOnBounds="false">
                 <children>
-                    <GridPane id="scorebox">
+                    <GridPane id="scorebox" pickOnBounds="false">
                         <columnConstraints>
                             <ColumnConstraints fillWidth="true" />
                             <ColumnConstraints prefWidth="13" />

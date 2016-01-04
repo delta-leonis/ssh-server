@@ -7,6 +7,7 @@ import java.util.Optional;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Region;
 import org.ssh.ui.UIController;
 import org.ssh.ui.components.Enroller;
 import org.ssh.ui.windows.MainWindow;
@@ -98,15 +99,8 @@ public final class UI {
     public static <N extends Node> Optional<N> getByName(String name, Parent parent) {
         return (Optional<N>) UI.getAllNodes(
                 UI.getHighestParent(parent)).stream()
-                .filter(child ->{
-                    System.out.println(child.getId());
-
-                    return child.getId().equals(name);
-                }).findAny();
-    }
-
-    public static <N extends Node> Optional<N> getOfType(final Class<?> type, Parent parent){
-        return (Optional<N>) UI.getAllNodes(UI.getHighestParent(parent)).stream().filter(child -> child.getClass().equals(type)).findAny();
+                .filter(child -> child.getId() != null && child.getId().equals(name))
+                .findAny();
     }
 
     public static Parent getHighestParent(Parent child){
@@ -147,5 +141,12 @@ public final class UI {
 
     public static void flipImage(ImageView image) {
         image.setRotate((image.getRotate() + 180) % 360);
+    }
+
+    public static final void bindSize(Region component, Region pane) {
+        component.maxHeightProperty().bind(pane.heightProperty());
+        component.minHeightProperty().bind(pane.heightProperty());
+        component.minWidthProperty().bind(pane.widthProperty());
+        component.maxWidthProperty().bind(pane.widthProperty());
     }
 }
