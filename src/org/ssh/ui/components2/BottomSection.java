@@ -10,8 +10,10 @@ import org.ssh.ui.UIComponent2;
 import org.ssh.ui.components.Enroller;
 import org.ssh.ui.components.Timeslider;
 import org.ssh.ui.components.Toolbox;
+import org.ssh.ui.windows.WidgetWindow;
 import org.ssh.util.Logger;
 
+import java.awt.event.ActionEvent;
 import java.util.Optional;
 
 /**
@@ -54,8 +56,6 @@ public class BottomSection extends UIComponent2<GridPane> {
             // Toolbox wrapped in an Enroller for fancy up and down sliding
             toolboxEnroller = new Enroller(new Toolbox(), Enroller.ExtendDirection.UP, toolboxWrapper.widthProperty(),
                     toolboxWrapper.heightProperty());
-            // Set a style class for the toolboxEnroller
-            toolboxEnroller.getStyleClass().add("toolboxEnroller");
             this.toolboxWrapper.getChildren().add(toolboxEnroller);
 
             Timeslider t = new Timeslider();
@@ -73,5 +73,19 @@ public class BottomSection extends UIComponent2<GridPane> {
         // Call Enroller function to handle enrollment
         toolboxEnroller.handleEnrollment();
         UI.flipImage(enrollToolboxImage);
+    }
+
+    @FXML
+    private void toggleSecondScreen() {
+        if (WidgetWindow.getInstance().getStage().isShowing()) {
+            WidgetWindow.getInstance().hideWidgetWindow();
+        } else {
+            WidgetWindow.getInstance().showWidgetWindow(this.getStage());
+        }
+        //TODO remove this ExampleWidget shit (is for test purpose)
+        for (int i = 0; i < 3; i++) {
+            ExampleWidget e = new ExampleWidget();
+            new Draggable(e);
+        }
     }
 }
