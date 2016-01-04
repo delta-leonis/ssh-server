@@ -2,6 +2,8 @@ package org.ssh.ui.windows;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
@@ -45,6 +47,7 @@ public class WidgetWindow extends UIController<FlowPane> {
         this.getStage().setOnCloseRequest(event -> hideWidgetWindow());
         this.getStage().initStyle(StageStyle.UTILITY);
         this.getStage().setAlwaysOnTop(true);
+        widgetcontainer.setRowValignment(VPos.TOP);
         // spawn the window
         this.spawnWindow();
     }
