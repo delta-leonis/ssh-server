@@ -15,7 +15,10 @@ import org.ssh.ui.components.Enroller;
 public class LoggerConsoleOverlay  extends UIComponent<GridPane> {
 
     @FXML
-    private Pane loggingconsoleWrapper;
+    private Pane loggingconsoleextendedWrapper;
+
+    @FXML
+    private Pane loggingconsolecollapsedWrapper;
 
     @FXML
     private ImageView enrollLogconsoleImage;
@@ -26,13 +29,11 @@ public class LoggerConsoleOverlay  extends UIComponent<GridPane> {
         super("loggerconsoleoverlay", "overlay/loggerconsoleoverlay.fxml");
         // Add the logger an Enroller for enlarging when you want to see more lines at a time.
         loggingconsoleEnroller = new Enroller(new LoggerConsole().getComponent(), Enroller.ExtendDirection.DOWN,
-                loggingconsoleWrapper.widthProperty(), getComponent().heightProperty(),
-                loggingconsoleWrapper.heightProperty(), false);
+                loggingconsolecollapsedWrapper.widthProperty(), loggingconsolecollapsedWrapper.heightProperty(),
+                loggingconsoleextendedWrapper.heightProperty(), false);
         // Set a style class for the loggingconsoleEnroller
         loggingconsoleEnroller.getStyleClass().add("loggingconsoleEnroller");
-        loggingconsoleWrapper.getChildren().add(loggingconsoleEnroller);
-
-        loggingconsoleEnroller.handleEnrollment();
+        loggingconsoleextendedWrapper.getChildren().add(loggingconsoleEnroller);
     }
 
     /**

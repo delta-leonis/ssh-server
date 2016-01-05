@@ -18,8 +18,6 @@ import org.ssh.util.MaxSizeArrayList;
 
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
@@ -39,7 +37,7 @@ import javafx.scene.layout.GridPane;
 public class LoggerConsole extends UIComponent {
     
     /**
-     * {@link GridPane} that is the root in the fxml file, is used for binding the height and width
+     * {@link GridPane} that is the ruleTableView in the fxml file, is used for binding the height and width
      * properties.
      */
     @FXML
@@ -77,13 +75,18 @@ public class LoggerConsole extends UIComponent {
             }
         }
         // Add a tab to see all logging
-        tabPane.getTabs().add(new Tab("all", new LoggingTab("all", Logger.getLogger("org.ssh")).getComponent()));
+
+        LoggingTab logtab = new LoggingTab("all", Logger.getLogger("org.ssh"));
+        logtab.getComponent().setStyle("-fx-background-color: red;");
+        tabPane.getTabs().add(new Tab("all", logtab.getComponent()));
+//        tabPane.setStyle("-fx-background-color: red;");
         // Add a tab for all packages in the list tabNames. These are all packages in org.ssh where
         // a Logger is present
-        for (int i = 0; i < tabNames.size(); i++)
+        for (int i = 0; i < tabNames.size(); i++) {
+            LoggingTab tab = new LoggingTab(tabNames.get(i), Logger.getLogger("org.ssh." + tabNames.get(i)));
             tabPane.getTabs().add(new Tab(tabNames.get(i),
-                    new LoggingTab(tabNames.get(i), Logger.getLogger("org.ssh." + tabNames.get(i))).getComponent()));
-                    
+                    tab.getComponent()));
+        }
     }
     
     /**
@@ -97,7 +100,7 @@ public class LoggerConsole extends UIComponent {
      * @author Joost Overeem
      *         
      */
-    protected class LoggingTab extends UIComponent {
+    protected class LoggingTab extends UIComponent<Pane> {
         
         /**
          * The {@link org.ssh.util.Logger} of this class.
@@ -108,10 +111,10 @@ public class LoggerConsole extends UIComponent {
         private Pane rootPane;
 
         /**
-         * The root in the fxml file. {@link LogRule}s can be displayed in here.
+         * The ruleTableView in the fxml file. {@link LogRule}s can be displayed in here.
          */
         @FXML
-        private TableView<LogRule>  root;
+        private TableView<LogRule> ruleTableView;
                                     
         /**
          * {@link ChoiceBox} to choose the {@link Level} with that should be displayed.
@@ -137,38 +140,36 @@ public class LoggerConsole extends UIComponent {
             // Call super constructor with right fxml file
             super("logtab " + name, "overlay/loggertab.fxml");
 
-            UI.bindSize(rootPane, root);
-
+            UI.bindSize(ruleTableView, rootPane);
             // Make a memory handler for the logger.
             loggerHandler = new LoggerMemoryHandler(this);
             // Add the to the logger this tab displays
             logger.addHandler(loggerHandler);
             
-            levelDropdown.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-                
-                @Override
-                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                    
-                    loggerHandler.changeLogLevel(Level.parse(newValue));
-                }
+            levelDropdown.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                loggerHandler.changeLogLevel(Level.parse(newValue));
             });
         }
-        
+
+        protected TableView getRuleTableView() {
+            return ruleTableView;
+        }
+
         /**
          * Empties the list of {@link LogRule}s that are displayed currently.
          */
         protected void flushLogRules() {
             // Get the displayed list
-            ObservableList<LogRule> data = root.getItems();
+            ObservableList<LogRule> data = ruleTableView.getItems();
             // Clear it
-            Platform.runLater(() -> data.clear());
+            Platform.runLater(data::clear);
         }
         
         /**
-         * Adds a {@link LogRule} to the {@link #root table}.
+         * Adds a {@link LogRule} to the {@link #ruleTableView table}.
          * 
          * @param record
-         *            {@link LogRecord} to add to the {@link #root table}.
+         *            {@link LogRecord} to add to the {@link #ruleTableView table}.
          */
         protected void addLogRule(LogRecord record) {
             LogRule rule = new LogRule(
@@ -183,13 +184,13 @@ public class LoggerConsole extends UIComponent {
                     // the message as description
                     record.getMessage());
             try {
-                root.getItems().add(rule);
+                ruleTableView.getItems().add(rule);
             }
             catch (Exception exception) {
                 LOG.exception(exception);
             }
             try {
-                //Platform.runLater(() -> root.sort());
+                //Platform.runLater(() -> ruleTableView.sort());
             }
             catch (Exception exception) {
                 LOG.exception(exception);
