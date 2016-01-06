@@ -6,12 +6,12 @@ import org.ssh.managers.manager.Services;
 import org.ssh.pipelines.packets.DetectionPacket;
 import org.ssh.pipelines.packets.GeometryPacket;
 import org.ssh.pipelines.packets.WrapperPacket;
-import org.ssh.pipelines.pipeline.DetectionPipeline;
-import org.ssh.pipelines.pipeline.GeometryPipeline;
-import org.ssh.pipelines.pipeline.WrapperPipeline;
-import org.ssh.services.consumers.GeometryModelConsumer;
+import org.ssh.network.receive.detection.DetectionPipeline;
+import org.ssh.network.receive.geometry.GeometryPipeline;
+import org.ssh.network.receive.wrapper.WrapperPipeline;
+import org.ssh.network.receive.geometry.consumers.GeometryModelConsumer;
 import org.ssh.services.consumers.ProtoConsumer;
-import org.ssh.services.consumers.WrapperConsumer;
+import org.ssh.network.receive.wrapper.consumers.WrapperConsumer;
 
 public class ReceiverExample {
     

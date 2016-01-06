@@ -9,6 +9,7 @@ import java.net.URI;
 /**
  * This class contains all settings regarding the models and the configpaths.<br />
  * Folder structure: <br />
+ * 
  * <pre>
  *  .
  *  └─ config/                This folder contains configuration files for the project
@@ -17,12 +18,12 @@ import java.net.URI;
           ├─  workspace1/     This folder contains specific settings for this specific workspace
           ├─  workspace2/     This folder contains specific settings for this specific workspace
           └─  temp/           This folder contains settings saved when no workspace was selected
- * </pre>
+ * </pre> 
  *       
  * @author Jeroen de Jong
  *         
  */
-public class Settings extends Model {
+public class Settings extends AbstractModel {
 
     /** Base path for all config files */
     private static final transient String BASE_PATH       = "config";
@@ -34,7 +35,6 @@ public class Settings extends Model {
     private static final transient String USERNAME  = System.getProperty("user.name");
     /** Separator for folders (should be {@link File#separator}, but URI can't play nice) */
     private static final transient String SEPARATOR       = "/";
-
 
     /** user configurable default workspace upon selecting a profile */
     private String defaultWorkspace;

@@ -4,7 +4,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.java.games.input.Controller;
 import org.ssh.managers.manager.Network;
-import org.ssh.services.Service;
+import org.ssh.services.AbstractService;
 import protobuf.Radio.RadioProtocolCommand;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.ListIterator;
 import java.util.stream.Collectors;
 
 /**
- * A {@link Service} that manages all {@link ControllerHandler controllers} for every
+ * A {@link AbstractService} that manages all {@link ControllerHandler controllers} for every
  * robotId
  *
  * @author Jeroen de Jong
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  *         
  */
 @SuppressWarnings ("rawtypes")
-public class ControllerListener extends Service {
+public class ControllerListener extends AbstractService {
     
     /**
      * List of handlers<br/>

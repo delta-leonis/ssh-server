@@ -2,6 +2,7 @@ package org.ssh.pipelines.packets;
 
 import org.ssh.models.enums.SendMethod;
 
+import org.ssh.pipelines.AbstractPipelinePacket;
 import protobuf.Radio.RadioProtocolWrapper;
 import protobuf.Radio.RadioProtocolWrapper.Builder;
 
@@ -12,7 +13,7 @@ import protobuf.Radio.RadioProtocolWrapper.Builder;
  * @author Jeroen de Jong
  * 
  * @see {@link org.ssh.managers.manager.Pipelines Pipelines}
- * @see {@link org.ssh.pipelines.PipelinePacket PipelinePackets}
+ * @see {@link AbstractPipelinePacket PipelinePackets}
  * @see {@link org.ssh.pipelines.packets.ProtoPacket ProtoPacket}
  */
 public class RadioPacket extends ProtoPacket<RadioProtocolWrapper> {
@@ -39,7 +40,7 @@ public class RadioPacket extends ProtoPacket<RadioProtocolWrapper> {
      * @param builder
      *            the message.
      * @param methods
-     *            specify senders different than default.
+     *            specify transmit different than default.
      */
     public RadioPacket(final RadioProtocolWrapper message, final SendMethod... methods) {
         super(message);

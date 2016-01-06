@@ -5,11 +5,11 @@ import javafx.geometry.Point3D;
 /**
  * CameraSettings model class. This class is responsible for the camera settings.
  * 
- * @see Model
+ * @see AbstractModel
  *      
  * @author marklef2
  */
-public class CameraSettings extends Model {
+public class CameraSettings extends AbstractModel {
     
     /** The zoom of the camera. */
     private Double  zoom;

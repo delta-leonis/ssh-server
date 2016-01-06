@@ -15,7 +15,7 @@ import org.ssh.models.enums.Allegiance;
  * @see Models
  *
  */
-public class Team extends Model {
+public class Team extends AbstractModel {
 
     /** Whether this is an {@link Allegiance#ALLY} or  {@link Allegiance#OPPONENT}*/
     private transient Allegiance allegiance;

@@ -6,9 +6,9 @@ import org.ssh.managers.manager.Models;
 import org.ssh.managers.manager.Network;
 import org.ssh.managers.manager.Services;
 import org.ssh.models.enums.SendMethod;
-import org.ssh.senders.DebugSender;
-import org.ssh.senders.UDPSender;
-import org.ssh.services.couplers.RoundCoupler;
+import org.ssh.network.transmit.senders.DebugSender;
+import org.ssh.network.transmit.senders.UDPSender;
+import org.ssh.network.transmit.radio.couplers.RoundCoupler;
 
 import protobuf.Radio.RadioProtocolCommand;
 
@@ -22,7 +22,7 @@ public class CommunicationExample {
         // make network available
         Network.start();
         
-        //register some senders
+        //register some transmit
         Network.register(SendMethod.UDP, new UDPSender("192.168.1.10", 1337));
         Network.register(SendMethod.DEBUG, new DebugSender(Level.INFO));
         // add another default sendmethod

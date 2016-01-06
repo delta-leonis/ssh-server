@@ -8,16 +8,16 @@ import org.ssh.managers.manager.Models;
 import org.ssh.models.enums.Direction;
 import org.ssh.models.enums.TeamColor;
 import org.ssh.models.enums.Allegiance;
-import org.ssh.util.Logger;
+import org.ssh.network.receive.detection.consumers.DetectionModelConsumer;
 
 /**
  * Helper class used for abstracting {@link TeamColor} and {@link Direction} out of {@link Robot}, {@link Goal}
  * and {@link Field}, but keeping this information available for drawing purposed (i.e. {@link org.ssh.field3d.FieldGame})
- * and recoginision of vision data stream (i.e. {@link org.ssh.services.consumers.DetectionModelConsumer})
+ * and recoginision of vision data stream (i.e. {@link DetectionModelConsumer})
  *      
  * @author Jeroen de Jong
  */
-public class Game extends Model {
+public class Game extends AbstractModel {
 
     /** Color of the {@link Allegiance#ALLY} team */
     private TeamColor allyColor;
@@ -37,6 +37,7 @@ public class Game extends Model {
         allyColor = TeamColor.YELLOW;
         allySide = Direction.EAST;
     }
+
     /**
      * @return the {@link Team} of the if {@link Allegiance#ALLY allies} found
      */

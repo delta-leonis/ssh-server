@@ -4,14 +4,14 @@
 -- Communicator "alias" 
 Pipelines = luajava.bindClass("org.ssh.managers.manager.Pipelines")
 radioConsumer = luajava.newInstance("org.ssh.services.consumers.RadioPacketConsumer")
-radioConsumer:register(SendMethod.UDP, luajava.newInstance("org.ssh.senders.UDPSender", "192.168.1.10", 1337))
+radioConsumer:register(SendMethod.UDP, luajava.newInstance("org.ssh.network.transmit.senders.UDPSender", "192.168.1.10", 1337))
 radioConsumer:addDefault(SendMethod.DEBUG) -- at this moment both UDP and DEBUG are default
 
 Services:add(luajava.newInstance("org.ssh.services.producers.Communicator"))
 -- add a consumer voor radiopackets
 Pipelines:get("communication pipeline"):get():registerConsumer(radioConsumer);
 
-Pipelines:get("communication pipeline"):get():registerCoupler(luajava.newInstance("org.ssh.services.couplers.RoundCoupler"))
+Pipelines:get("communication pipeline"):get():registerCoupler(luajava.newInstance("org.ssh.network.transmit.radio.couplers.RoundCoupler"))
 		
 function send(id, velocityR, velocityX, velocityY)
 	Radio = luajava.bindClass("protobuf.Radio")

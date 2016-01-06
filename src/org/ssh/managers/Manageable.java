@@ -1,13 +1,13 @@
 package org.ssh.managers;
 
-import org.ssh.models.Model;
+import org.ssh.models.AbstractModel;
 import org.ssh.util.Logger;
 
 /**
  * The Class Manageable.
  * 
  * A Manageable represents an Object that is managed by a {@link Manager}. Examples of Manageable
- * are {@link Model} and {@link Service}.
+ * are {@link AbstractModel} and {@link AbstractService}.
  * 
  * @author Rimon Oz
  */

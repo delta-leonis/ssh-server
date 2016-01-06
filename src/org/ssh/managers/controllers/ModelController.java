@@ -16,31 +16,33 @@ import java.util.stream.Stream;
 
 import org.ssh.controllers.ControllerLayout;
 import org.ssh.controllers.ControllerLayoutSerializer;
+import org.ssh.managers.Manageable;
 import org.ssh.managers.ManagerController;
-import org.ssh.models.Model;
+import org.ssh.models.AbstractModel;
 import org.ssh.models.Settings;
 import org.ssh.util.Logger;
+import org.ssh.util.Reflect;
 
 import com.google.common.io.Files;
+import com.google.common.reflect.Reflection;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
-import org.ssh.util.Reflect;
 
 /**
- * The Class ModelController. manages all {@link Model Models}.
+ * The Class ModelController. manages all {@link AbstractModel Models}.
  *
  *       
  * @author Jeroen de Jong
  */
-public class ModelController extends ManagerController<Model> {
+public class ModelController extends ManagerController<AbstractModel> {
     
     /** Builder for reading and writing Objects to Json **/
     private final Gson          gson;
                                 
     /**
-     * Settings for this specific controller ({@link #add(Model)} adds the settings)
+     * Settings for this specific controller ({@link #add(AbstractModel)} adds the settings)
      **/
     private Settings            settings;
     // Respective logger
@@ -53,7 +55,7 @@ public class ModelController extends ManagerController<Model> {
      * controller
      */
     @Override
-    public boolean put(final String name, final Model manageable) {
+    public boolean put(final String name, final AbstractModel manageable) {
         if (manageable instanceof Settings)
             this.settings = (Settings) manageable;
         
@@ -114,7 +116,7 @@ public class ModelController extends ManagerController<Model> {
      *            model to initialize
      * @return success value
      */
-    public boolean load(final Model model) {
+    public boolean load(final AbstractModel model) {
         // try to find a configfile
         final Optional<Path> configFile = this.findValidPath(model.getConfigName());
         
@@ -136,7 +138,7 @@ public class ModelController extends ManagerController<Model> {
      *            configfile to read
      * @return succes value
      */
-    public boolean load(final Model model, Path configFile) {
+    public boolean load(final AbstractModel model, Path configFile) {
         try {
             // read all JSON to a reader
             JsonReader configReader = new JsonReader(
@@ -144,7 +146,7 @@ public class ModelController extends ManagerController<Model> {
             // chill out will ya ?
             configReader.setLenient(true);
             // load everything into a new model
-            Model newModel = this.gson.fromJson(configReader, model.getClass());
+            AbstractModel newModel = this.gson.fromJson(configReader, model.getClass());
             // create a updatemap from the newModel, and update the given model with all these
             // changes.
             // !!! This way all transient fields will be untouched, as is preferable
@@ -179,8 +181,7 @@ public class ModelController extends ManagerController<Model> {
      *            to reinitialize
      * @return success value
      */
-    public boolean reinitialize(final Model model) {
-        //model.update(this.generateFieldMap(model));
+    public boolean reinitialize(final AbstractModel model) {
         model.reset(Reflect.fieldList(model.getClass()));
         model.initialize();
         return this.load(model);
@@ -204,7 +205,7 @@ public class ModelController extends ManagerController<Model> {
      *            models to save
      * @return success value
      */
-    public boolean save(final Model model) {
+    public boolean save(final AbstractModel model) {
         return this.saveAs(this.settings.getCurrentWorkspacePath() + model.getConfigName(), model);
     }
     
@@ -217,7 +218,7 @@ public class ModelController extends ManagerController<Model> {
      *            models to save
      * @return succes value
      */
-    public boolean saveAs(final String filePath, final Model model) {
+    public boolean saveAs(final String filePath, final AbstractModel model) {
         try {
             ModelController.LOG.info("Saving %s as %s", model.getClass().getName(), filePath);
             // open configfile
@@ -250,7 +251,7 @@ public class ModelController extends ManagerController<Model> {
      *            to save
      * @return succes value
      */
-    public boolean saveAsDefault(final Model model) {
+    public boolean saveAsDefault(final AbstractModel model) {
         return this.saveAs(this.settings.getDefaultPath() + model.getConfigName(), model);
     }
 }

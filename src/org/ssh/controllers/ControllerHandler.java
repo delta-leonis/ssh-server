@@ -3,26 +3,26 @@ package org.ssh.controllers;
 import net.java.games.input.Controller;
 import org.ssh.managers.manager.Models;
 import org.ssh.managers.manager.Services;
-import org.ssh.models.Model;
+import org.ssh.models.AbstractModel;
 import org.ssh.models.Robot;
 import org.ssh.models.enums.ButtonFunction;
 import org.ssh.models.enums.ProducerType;
-import org.ssh.services.Service;
-import org.ssh.services.service.Producer;
+import org.ssh.services.AbstractService;
+import org.ssh.services.AbstractProducer;
 import protobuf.Radio.RadioProtocolCommand;
 
 import java.util.*;
 import java.util.Map.Entry;
 
 /**
- * This class is used to process a {@link ControllerLayout Controller} {@link Model} and generate a
+ * This class is used to process a {@link ControllerLayout Controller} {@link AbstractModel} and generate a
  * protobuf message accordingly.
  *
  * @author Jeroen de Jong
  * @author Thomas Hakkers
  */
 @SuppressWarnings ("rawtypes")
-public class ControllerHandler extends Producer {
+public class ControllerHandler extends AbstractProducer {
 
     /** Settings about the controllers */
     private static ControllerSettings settings;
@@ -41,7 +41,7 @@ public class ControllerHandler extends Producer {
 
         this.layout = layout;
 
-        Optional<Model> model = Models.get("controllersettings");
+        Optional<AbstractModel> model = Models.get("controllersettings");
         if (model.isPresent())
             settings = (ControllerSettings) model.get();
 
@@ -73,7 +73,7 @@ public class ControllerHandler extends Producer {
             return true;
         }
         else {
-            Service.LOG.warning("Settings in velocityX is null");
+            AbstractService.LOG.warning("Settings in velocityX is null");
             return false;
         }
     }
@@ -91,7 +91,7 @@ public class ControllerHandler extends Producer {
             return true;
         }
         else {
-            Service.LOG.warning("Settings in velocityY is null");
+            AbstractService.LOG.warning("Settings in velocityY is null");
             return false;
         }
     }
@@ -109,7 +109,7 @@ public class ControllerHandler extends Producer {
         if (settings != null)
             dribbleSpeed *= settings.getMaxDribbleSpeed();
         else
-            Service.LOG.warning("ControllerSettings not initialized. Could not read MaxFlatKickSpeed");
+            AbstractService.LOG.warning("ControllerSettings not initialized. Could not read MaxFlatKickSpeed");
 
         packet.setDribblerSpin(dribbleSpeed);
         return true;
@@ -193,7 +193,7 @@ public class ControllerHandler extends Producer {
         // If the robot isn't present
         if (!oRobot.isPresent()) {
             // Give a warning (It'll get sent anyway)
-            Service.LOG.info("Could not find robot %d", packet.getRobotId());
+            AbstractService.LOG.info("Could not find robot %d", packet.getRobotId());
         }
         // If it is present, however
         else {
@@ -270,7 +270,7 @@ public class ControllerHandler extends Producer {
                 currentButtonState.put(entry.getValue(), entry.getKey().getPollData());
             }
             else {
-                // if it already exists, add the value on TopSection of the current value
+                // if it already exists, add the value on top of the current value
                 currentButtonState
                         .put(entry.getValue(), currentButtonState.get(entry.getValue()) + entry.getKey().getPollData());
             }
@@ -304,7 +304,7 @@ public class ControllerHandler extends Producer {
                 .map(entry -> this.processButtonEntry(entry, packet, currentButtonState))
                 // check for false succes values
                 .reduce(true, (accumulator, succes) -> accumulator && succes))
-            Service.LOG.warning("Not every button-press was processed succesfully (controller: %s).\n",
+            AbstractService.LOG.warning("Not every button-press was processed succesfully (controller: %s).\n",
                     this.layout.getController().getName());
     }
 
@@ -370,7 +370,7 @@ public class ControllerHandler extends Producer {
 
             case STOP_ALL_ROBOTS:
                 if (ControllerHandler.isPressed(buttonValue))
-                    Service.LOG.warning("Did not stop all robots.");
+                    AbstractService.LOG.warning("Did not stop all robots.");
                 return true;
 
             case SELECT_NEXT_ROBOT:
@@ -386,7 +386,7 @@ public class ControllerHandler extends Producer {
                 return true;
 
             default:
-                Service.LOG.info("No implementation for %s.\n", button.getKey());
+                AbstractService.LOG.info("No implementation for %s.\n", button.getKey());
                 return false;
         }
     }
@@ -412,7 +412,7 @@ public class ControllerHandler extends Producer {
             if (settings != null)
                 kickStrength *= settings.getMaxFlatKickSpeed();
             else
-                Service.LOG.warning("ControllerSettings not initialized. Could not read MaxFlatKickSpeed");
+                AbstractService.LOG.warning("ControllerSettings not initialized. Could not read MaxFlatKickSpeed");
             // Make sure it's never below 0
             packet.setFlatKick(Math.abs(kickStrength));
         }
@@ -440,7 +440,7 @@ public class ControllerHandler extends Producer {
             if (settings != null)
                 chipStrength *= settings.getMaxChipKickSpeed();
             else
-                Service.LOG.warning("ControllerSettings not initialized. Could not read MaxChipKickSpeed");
+                AbstractService.LOG.warning("ControllerSettings not initialized. Could not read MaxChipKickSpeed");
             // Make sure it's never below 0
             packet.setChipKick(Math.abs(chipStrength));
         }
@@ -461,7 +461,7 @@ public class ControllerHandler extends Producer {
         // make sure both axis are bound
         if (!(this.layout.containsBinding(ButtonFunction.ORIENTATION_X) && this.layout
                 .containsBinding(ButtonFunction.ORIENTATION_Y))) {
-            Service.LOG.warning("Both orientation directions (x and y) should be bound.");
+            AbstractService.LOG.warning("Both orientation directions (x and y) should be bound.");
             return false;
         }
         float x = currentButtonState.get(ButtonFunction.ORIENTATION_X);

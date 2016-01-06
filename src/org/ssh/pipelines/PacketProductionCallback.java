@@ -18,7 +18,7 @@ import org.ssh.util.Logger;
  *            
  * @author Rimon Oz
  */
-public class PacketProductionCallback<P extends PipelinePacket<? extends Object>> implements FutureCallback<P> {
+public class PacketProductionCallback<P extends AbstractPipelinePacket<? extends Object>> implements FutureCallback<P> {
     
     /** The name of the task. */
     private String              name;

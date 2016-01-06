@@ -9,8 +9,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.ssh.managers.ManagerController;
 import org.ssh.managers.manager.Services;
-import org.ssh.pipelines.PipelinePacket;
-import org.ssh.services.Service;
+import org.ssh.pipelines.AbstractPipelinePacket;
+import org.ssh.services.AbstractService;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableScheduledFuture;
@@ -26,13 +26,13 @@ import com.google.common.util.concurrent.MoreExecutors;
  *
  * @author Rimon Oz
  */
-public class ServicesController extends ManagerController<Service<? extends PipelinePacket<? extends Object>>> {
+public class ServicesController extends ManagerController<AbstractService<? extends AbstractPipelinePacket<? extends Object>>> {
     
     /** The scheduler service. */
     private final ListeningScheduledExecutorService                      scheduler;
                                                                          
     /** The scheduled tasks. */
-    private final Map<String, ScheduledFuture<? extends PipelinePacket<? extends Object>>> scheduledTasks;
+    private final Map<String, ScheduledFuture<? extends AbstractPipelinePacket<? extends Object>>> scheduledTasks;
                                                                          
     /** The completion service. */
     private final ListeningExecutorService                               taskService;
@@ -43,7 +43,7 @@ public class ServicesController extends ManagerController<Service<? extends Pipe
     public ServicesController() {
         this.scheduler = MoreExecutors.listeningDecorator(Executors.newScheduledThreadPool(1));
         this.taskService = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
-        this.scheduledTasks = new HashMap<String, ScheduledFuture<? extends PipelinePacket<? extends Object>>>();
+        this.scheduledTasks = new HashMap<String, ScheduledFuture<? extends AbstractPipelinePacket<? extends Object>>>();
     }
     
     /**
@@ -66,7 +66,7 @@ public class ServicesController extends ManagerController<Service<? extends Pipe
                 delay,
                 TimeUnit.MICROSECONDS);
         // save the ListenableFuture for future use
-        this.scheduledTasks.put(taskName, (ScheduledFuture<? extends PipelinePacket<? extends Object>>) scheduledFuture);
+        this.scheduledTasks.put(taskName, (ScheduledFuture<? extends AbstractPipelinePacket<? extends Object>>) scheduledFuture);
         
         return (ListenableScheduledFuture<L>) scheduledFuture;
     }
@@ -81,7 +81,7 @@ public class ServicesController extends ManagerController<Service<? extends Pipe
      *            The task as a Runnable.
      * @return A ListenableFuture representing the result of the task.
      */
-    public <P extends PipelinePacket<? extends Object>> ListenableFuture<P> submitTask(final Callable<P> task) {
+    public <P extends AbstractPipelinePacket<? extends Object>> ListenableFuture<P> submitTask(final Callable<P> task) {
         return this.taskService.submit(task);
     }
     

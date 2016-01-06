@@ -1,5 +1,6 @@
 package org.ssh.pipelines.packets;
 
+import org.ssh.pipelines.AbstractPipelinePacket;
 import protobuf.Detection.DetectionFrame;
 
 /**
@@ -8,7 +9,7 @@ import protobuf.Detection.DetectionFrame;
  * @author Jeroen
  *         
  * @see {@link org.ssh.managers.manager.Pipelines Pipelines}
- * @see {@link org.ssh.pipelines.PipelinePacket PipelinePackets}
+ * @see {@link AbstractPipelinePacket PipelinePackets}
  * @see {@link org.ssh.pipelines.packets.ProtoPacket ProtoPacket}
  *      
  */

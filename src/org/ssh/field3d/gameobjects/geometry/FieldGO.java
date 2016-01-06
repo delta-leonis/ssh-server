@@ -15,7 +15,7 @@ import org.ssh.field3d.gameobjects.overlay.ContextOverlayGO;
 import org.ssh.managers.manager.Models;
 import org.ssh.models.Field;
 import org.ssh.models.Goal;
-import org.ssh.models.Model;
+import org.ssh.models.AbstractModel;
 import org.ssh.util.Logger;
 
 import javafx.application.Platform;
@@ -200,7 +200,7 @@ public class FieldGO extends GeometryGameObject {
     public void onUpdateGeometry() {
         
         // Trying to get Field model
-        Optional<Model> optionalModel = Models.get("field");
+        Optional<AbstractModel> optionalModel = Models.get("field");
         
         // If there is a model present
         if (optionalModel.isPresent()) {

@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
  * </ul>
  * <p>
  * Example Command stolen from {@link CommunicationExample}: Communicator:register(SendMethod.UDP,
- * luajava.newInstance("org.ssh.senders.UDPSender" , "127.0.0.1", 9292)) To make a new instance of
+ * luajava.newInstance("org.ssh.network.transmit.senders.UDPSender" , "127.0.0.1", 9292)) To make a new instance of
  * something, call: luajava.newInstance(Object.class, Arguments...) To access a static variable in
  * an object, use a period instead of a colon. So SendMethod.UDP, not SendMethod:UDP
  * <p>

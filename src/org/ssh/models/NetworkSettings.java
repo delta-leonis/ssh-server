@@ -9,7 +9,7 @@ import org.ssh.pipelines.packets.ProtoPacket;
  * @author Jeroen de Jong
  *        
  */
-public class NetworkSettings extends Model {
+public class NetworkSettings extends AbstractModel {
     /** IP to connect to */
     private String                                    IP;
     /** Port to connect to */

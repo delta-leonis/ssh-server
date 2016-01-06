@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.ssh.managers.manager.Models;
-import org.ssh.models.Model;
+import org.ssh.models.AbstractModel;
 import org.ssh.models.Robot;
 import org.ssh.models.Settings;
 import org.ssh.models.enums.Allegiance;
@@ -21,7 +21,7 @@ public class ModelExample  {
 
         Models.<Settings> get("settings").ifPresent(set -> set.getProfilesPath());
         
-        Optional<Model> oSettings = Models.get("settings");
+        Optional<AbstractModel> oSettings = Models.get("settings");
         Settings settings = (Settings) oSettings.get();
         
         // without json
@@ -31,7 +31,7 @@ public class ModelExample  {
         Models.create(Robot.class, 12, "Foutief");
         
         // Retrieve a models
-        final Optional<Model> oRobot = Models.get("robot A3");
+        final Optional<AbstractModel> oRobot = Models.get("robot A3");
         
         // check if found
         if (!oRobot.isPresent()) {

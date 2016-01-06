@@ -4,11 +4,10 @@ import javafx.scene.input.KeyCode;
 import org.fxmisc.wellbehaved.event.EventHandlerHelper;
 import org.fxmisc.wellbehaved.event.EventPattern;
 import org.luaj.vm2.Globals;
-import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 import org.luaj.vm2.lib.jse.JsePlatform;
 import org.ssh.managers.manager.Models;
-import org.ssh.models.Model;
+import org.ssh.models.AbstractModel;
 import org.ssh.models.Settings;
 import org.ssh.ui.lua.console.AvailableInLua;
 import org.ssh.ui.lua.console.ColoredCodeArea;
@@ -21,7 +20,6 @@ import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -171,7 +169,7 @@ public class ScriptArea extends ColoredCodeArea {
      */
     private void initialize() {
         // Find init script based on Settings and execute it
-        Optional<Model> oSettings = Models.get("settings");
+        Optional<AbstractModel> oSettings = Models.get("settings");
         // If settings exists
         if (oSettings.isPresent()) {
             Settings settings = (Settings) oSettings.get();

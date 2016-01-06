@@ -16,7 +16,7 @@ import protobuf.RefereeOuterClass;
  * @author Jeroen de Jong
  *         
  */
-public class Referee extends Model {
+public class Referee extends AbstractModel {
     
     // Respective logger
     private static final Logger        LOG = Logger.getLogger();
@@ -55,7 +55,7 @@ public class Referee extends Model {
         stageHistory = new ArrayList<Stage>();
         commandHistory = new ArrayList<RefereeCommand>();
     }
-
+    
     /**
      * @return return number of commands
      */

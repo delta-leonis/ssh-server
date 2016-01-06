@@ -1,6 +1,7 @@
 package org.ssh.pipelines.packets;
 
 
+import org.ssh.pipelines.AbstractPipelinePacket;
 import protobuf.RefereeOuterClass.Referee;
 
 /**
@@ -9,7 +10,7 @@ import protobuf.RefereeOuterClass.Referee;
  * @author Jeroen de Jong
  *         
  * @see {@link org.ssh.managers.manager.Pipelines Pipelines}
- * @see {@link org.ssh.pipelines.PipelinePacket PipelinePackets}
+ * @see {@link AbstractPipelinePacket PipelinePackets}
  * @see {@link org.ssh.pipelines.packets.ProtoPacket ProtoPacket}
  */
 public class RefereePacket extends ProtoPacket<Referee> {

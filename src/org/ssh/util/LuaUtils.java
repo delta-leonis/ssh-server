@@ -3,8 +3,6 @@ package org.ssh.util;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,9 +13,6 @@ import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 import org.luaj.vm2.lib.jse.JsePlatform;
-import org.ssh.managers.manager.Models;
-import org.ssh.models.Model;
-import org.ssh.models.Settings;
 import org.ssh.ui.lua.console.AvailableInLua;
 
 import com.google.common.reflect.ClassPath;

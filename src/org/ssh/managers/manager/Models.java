@@ -14,8 +14,8 @@ import org.ssh.util.Logger;
 import org.ssh.ui.lua.console.AvailableInLua;
 
 /**
- * The Class Models. Contains the manager for all {@link Model Models} that are in use. Also contains the factory (
- * {@link #create(Class, Object...)} ) to create instances for {@link Model Models} that will
+ * The Class Models. Contains the manager for all {@link AbstractModel Models} that are in use. Also contains the factory (
+ * {@link #create(Class, Object...)} ) to create instances for {@link AbstractModel Models} that will
  * register to the {@link ModelController}.
  *
  * @author Jeroen de Jong
@@ -24,7 +24,7 @@ import org.ssh.ui.lua.console.AvailableInLua;
  *
  */
 @AvailableInLua
-public final class Models implements Manager<Model>{
+public final class Models implements Manager<AbstractModel>{
 
     /**
      * The models store has a controller that runs the store.
@@ -57,8 +57,8 @@ public final class Models implements Manager<Model>{
     }
     /**
      * Create a Model instance based on given class, with given arguments.<br />
-     * Registers the created instance by {@link Models#add(Model) Models} and
-     * {@link Models#initialize(Model) initializes} the models.
+     * Registers the created instance by {@link AbstractModels#add(AbstractModel) Models} and
+     * {@link Models#initialize(AbstractModel) initializes} the models.
      *
      * @param clazz
      *            class to create
@@ -66,7 +66,7 @@ public final class Models implements Manager<Model>{
      *            arguments that will be passed to the constructor (supply them in the right order).
      * @return a created Model
      */
-    public static <M extends Model> M create(final Class<?> clazz, final Object... args) {
+    public static <M extends AbstractModel> M create(final Class<?> clazz, final Object... args) {
         Class<?>[] cArgs = new Class[args.length];
         try {
             // get all Types for the arguments
@@ -104,7 +104,7 @@ public final class Models implements Manager<Model>{
      * @param model
      *            the model
      */
-    public static void add(final Model model) {
+    public static void add(final AbstractModel model) {
         Models.LOG.info("Toegevoegt met id: %s", model.getIdentifier());
         Models.controller.put(model.getIdentifier(), model);
     }
@@ -116,18 +116,18 @@ public final class Models implements Manager<Model>{
      *            The full name of the model you want to find.
      * @return The requested model.
      */
-    public static <M extends Model> Optional<M> get(final String modelName) {
+    public static <M extends AbstractModel> Optional<M> get(final String modelName) {
         return Models.controller.<M> get(modelName);
     }
 
     /**
      * @return all Models currently in the modelcontroller
      */
-    public static <M extends Model> List<M> getAll() {
+    public static <M extends AbstractModel> List<M> getAll() {
         return Models.controller.getAll();
     }
 
-    public static <M extends Model> List<M> getAll(String type) {
+    public static <M extends AbstractModel> List<M> getAll(String type) {
         return (List<M>) Models.getAll().stream()
                 .filter(model -> model.getName().equals(type))
                 .collect(Collectors.toList());
@@ -149,8 +149,7 @@ public final class Models implements Manager<Model>{
      *            model to initialize
      * @return success value
      */
-    public static boolean initialize(final Model model) {
-        model.initialize();
+    public static boolean initialize(final AbstractModel model) {
         return Models.controller.load(model);
     }
 
@@ -171,7 +170,7 @@ public final class Models implements Manager<Model>{
      *            to reinitialize
      * @return success value
      */
-    public static boolean reinitialize(final Model model) {
+    public static boolean reinitialize(final AbstractModel model) {
         return Models.controller.reinitialize(model);
     }
 
@@ -192,7 +191,7 @@ public final class Models implements Manager<Model>{
      *            the model
      * @return success value
      */
-    public static boolean save(final Model model) {
+    public static boolean save(final AbstractModel model) {
         return Models.controller.save(model);
     }
 
@@ -203,7 +202,7 @@ public final class Models implements Manager<Model>{
      *            the model
      * @return succes value
      */
-    public static boolean saveAsDefault(final Model model) {
+    public static boolean saveAsDefault(final AbstractModel model) {
         return Models.controller.saveAsDefault(model);
     }
 
@@ -213,18 +212,18 @@ public final class Models implements Manager<Model>{
      * @param model model to remove
      * @return model if it exists (otherwise null)
      */
-    public static <M extends Model> M remove(final M model){
+    public static <M extends AbstractModel> M remove(final M model){
         return Models.controller.remove(model);
     }
 
     /**
-     * Removes a {@link Model} with the specified key from the list of Manageables.
+     * Removes a {@link AbstractModel} with the specified key from the list of Manageables.
      *
      * @param name The key belonging to the Manageable.
      * @param <M>  The type of Manageable requested by the user.
      * @return The removed Manageable.
      */
-    public static <M extends Model> M remove(final String name) {
+    public static <M extends AbstractModel> M remove(final String name) {
         return Models.controller.remove(name);
     }
 
@@ -234,7 +233,7 @@ public final class Models implements Manager<Model>{
      * @param <M>       The type of Model requested by the user.
      * @return          The list of Models matching the given pattern.
      */
-    public static <M extends Model> List<M> find(final String pattern) {
+    public static <M extends AbstractModel> List<M> find(final String pattern) {
         return Models.controller.find(pattern);
     }
 }

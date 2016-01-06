@@ -1,10 +1,9 @@
 package org.ssh.pipelines.packets;
 
-import org.ssh.pipelines.PipelinePacket;
+import org.ssh.pipelines.AbstractPipelinePacket;
 
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.Message.Builder;
-import com.google.protobuf.Parser;
 
 /**
  * PipelinePacket for protobuf packets, class implements some usefull methods for use with protobuf
@@ -16,9 +15,9 @@ import com.google.protobuf.Parser;
  *            type of protobuf message.
  *            
  * @see {@link org.ssh.managers.manager.Pipelines Pipelines}
- * @see {@link org.ssh.pipelines.PipelinePacket PipelinePackets}
+ * @see {@link AbstractPipelinePacket PipelinePackets}
  */
-public class ProtoPacket<M extends GeneratedMessage> extends PipelinePacket<M> {
+public class ProtoPacket<M extends GeneratedMessage> extends AbstractPipelinePacket<M> {
     
     /**
      * Instantiates a protopacket based on a message.

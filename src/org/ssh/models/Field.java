@@ -16,7 +16,7 @@ import protobuf.Geometry.GeometryFieldSize;
  * @author Jeroen de Jong
  *         
  */
-public class Field extends Model {
+public class Field extends AbstractModel {
     
     /**
      * Field object from protobuf packet

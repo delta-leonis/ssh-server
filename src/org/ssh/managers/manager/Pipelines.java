@@ -3,10 +3,10 @@ package org.ssh.managers.manager;
 import org.ssh.expressions.languages.Pepe;
 import org.ssh.managers.Manager;
 import org.ssh.managers.controllers.PipelineController;
-import org.ssh.pipelines.Pipeline;
-import org.ssh.pipelines.PipelinePacket;
-import org.ssh.services.service.Coupler;
-import org.ssh.services.service.Producer;
+import org.ssh.pipelines.AbstractPipeline;
+import org.ssh.pipelines.AbstractPipelinePacket;
+import org.ssh.services.AbstractCoupler;
+import org.ssh.services.AbstractProducer;
 import org.ssh.ui.lua.console.AvailableInLua;
 import org.ssh.util.Logger;
 
@@ -21,13 +21,13 @@ import java.util.stream.Stream;
 /**
  * The Class Pipelines
  * <p>
- * Pipelines is responsible for managing {@link Producer}, {@link Coupler}, and {@link Consumer}
+ * Pipelines is responsible for managing {@link AbstractProducer}, {@link Coupler}, and {@link Consumer}
  * relationships. Most datastreams within the application should be abstracted as pipelines.
  *
  * @author Rimon Oz
  */
 @AvailableInLua
-public final class Pipelines implements Manager<Pipeline<? extends PipelinePacket<?>>> {
+public final class Pipelines implements Manager<AbstractPipeline<? extends AbstractPipelinePacket<?>>> {
 
     /**
      * The Pipelines manager has a controller that runs the place.
@@ -71,20 +71,20 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
 
         // instantiate pepe if it doesn't exist yet
         if (pepeEngine == null) {
-            pepeEngine = new Pepe(name -> Services.<Coupler<PipelinePacket<?>>>get(name).get().getTransferFunction());
+            pepeEngine = new Pepe(name -> Services.<AbstractCoupler<AbstractPipelinePacket<?>>>get(name).get().getTransferFunction());
         }
     }
 
     /**
-     * Gets a List of available {@link Consumer} compatible with the given {@link Pipeline}.
+     * Gets a List of available {@link Consumer} compatible with the given {@link AbstractPipeline}.
      *
-     * @param <P>      The generic type of {@link PipelinePacket} handled by the Consumer.
+     * @param <P>      The generic type of {@link AbstractPipelinePacket} handled by the Consumer.
      * @param <C>      The generic type Consumer compatible with the Pipeline.
      * @param pipeline The given pipeline.
      * @return The compatible Consumers.
      */
-    public static <P extends PipelinePacket<?>, C extends Consumer<P>> List<C> getCompatibleConsumers(
-            final Pipeline<P> pipeline) {
+    public static <P extends AbstractPipelinePacket<?>, C extends Consumer<P>> List<C> getCompatibleConsumers(
+            final AbstractPipeline<P> pipeline) {
         Pipelines.LOG.info("Getting compatible Consumer(s) for type: %s", pipeline.getType().toString());
 
         @SuppressWarnings("unchecked")
@@ -104,20 +104,20 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
     }
 
     /**
-     * Gets a List of available {@link Coupler} compatible with the given {@link Pipeline}.
+     * Gets a List of available {@link Coupler} compatible with the given {@link AbstractPipeline}.
      *
-     * @param <P>      The generic type of {@link PipelinePacket} handled by the Consumer.
-     * @param <C>      The generic type Coupler compatible with the Pipeline.
+     * @param <P>      The generic type of {@link AbstractPipelinePacket} handled by the Consumer.
+     * @param <C>      The generic type AbstractCoupler compatible with the Pipeline.
      * @param pipeline The given pipeline.
      * @return The compatible Couplers.
      */
-    public static <P extends PipelinePacket<?>, C extends Coupler<P>> List<C> getCompatibleCouplers(
-            final Pipeline<P> pipeline) {
+    public static <P extends AbstractPipelinePacket<?>, C extends AbstractCoupler<P>> List<C> getCompatibleCouplers(
+            final AbstractPipeline<P> pipeline) {
         Pipelines.LOG.info("Getting compatible Coupler(s) for type: %s", pipeline.getType().toString());
 
         @SuppressWarnings("unchecked")
         // get the list of services
-        final List<C> collect = Services.getOfType(Coupler.class).stream()
+        final List<C> collect = Services.getOfType(AbstractCoupler.class).stream()
                 // filter out the services compatible with this pipeline
                 .filter(service -> service.getType().equals(pipeline.getType()))
                 // map them to the correct parameterized type and collect them in a list
@@ -132,20 +132,20 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
     }
 
     /**
-     * Gets a List of available {@link Producer} compatible with the given {@link Pipeline}.
+     * Gets a List of available {@link AbstractProducer} compatible with the given {@link AbstractPipeline}.
      *
-     * @param <P>      The generic type of {@link PipelinePacket} handled by the Producer.
+     * @param <P>      The generic type of {@link AbstractPipelinePacket} handled by the Producer.
      * @param <C>      The generic type Producer compatible with the Pipeline.
      * @param pipeline The given pipeline.
      * @return The compatible Producers.
      */
-    public static <P extends PipelinePacket<?>, C extends Producer<P>> List<C> getCompatibleProducers(
-            final Pipeline<P> pipeline) {
+    public static <P extends AbstractPipelinePacket<?>, C extends AbstractProducer<P>> List<C> getCompatibleProducers(
+            final AbstractPipeline<P> pipeline) {
         Pipelines.LOG.info("Getting compatible Producers for genericType: %s", pipeline.getType().toString());
 
         @SuppressWarnings("unchecked")
         // get the list of services
-        final List<C> collect = Services.getOfType(Producer.class).stream()
+        final List<C> collect = Services.getOfType(AbstractProducer.class).stream()
                 // filter out the services compatible with this pipeline
                 .filter(service -> service.getType().equals(pipeline.getType()))
                 // map them to the correct parameterized type and collect them in a list
@@ -160,14 +160,14 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
     }
 
     /**
-     * Gets a list of {@link Pipeline} that operates on the supplied Type of
-     * {@link org.ssh.pipelines.PipelinePacket}.
+     * Gets a list of {@link AbstractPipeline} that operates on the supplied Type of
+     * {@link AbstractPipelinePacket}.
      *
      * @param <P>        The generic type of Pipeline requested by the user
      * @param packetType The Type with which the Pipelines need to be compatible.
      * @return The list of compatible Pipelines.
      */
-    public static <P extends Pipeline<PipelinePacket<?>>> List<P> getOfDataType(final Type packetType) {
+    public static <P extends AbstractPipeline<AbstractPipelinePacket<?>>> List<P> getOfDataType(final Type packetType) {
         Pipelines.LOG.fine("Getting compatible pipelines for type: %s", packetType.getTypeName());
 
         // get the list of pipelines
@@ -184,12 +184,12 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
     }
 
     /**
-     * Finds a {@link Pipeline} with the given name in the Pipelines manager.
+     * Finds a {@link AbstractPipeline} with the given name in the Pipelines manager.
      *
      * @param name The name of the wanted Pipelines
      * @return The requested Pipeline
      */
-    public static <P extends Pipeline<? extends PipelinePacket<?>>> Optional<P> get(final String name) {
+    public static <P extends AbstractPipeline<? extends AbstractPipelinePacket<?>>> Optional<P> get(final String name) {
         Pipelines.LOG.fine("Getting a Pipeline named: %s", name);
         return Pipelines.controller.get(name);
     }
@@ -200,18 +200,18 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      * @return All the Pipelines
      * @see org.ssh.managers.ManagerController#getAll()
      */
-    public static <P extends Pipeline<? extends PipelinePacket<?>>> List<P> getAll() {
+    public static <P extends AbstractPipeline<? extends AbstractPipelinePacket<?>>> List<P> getAll() {
         return Pipelines.controller.getAll();
     }
 
     /**
-     * Adds a {@link Pipeline} to the Pipelines manager.
+     * Adds a {@link AbstractPipeline} to the Pipelines manager.
      *
      * @param <P>      The generic type of Pipeline requested by the user
      * @param pipeline The Pipeline to be added.
      * @return true, if successful.
      */
-    public static <P extends Pipeline<? extends PipelinePacket<?>>> boolean add(final P pipeline) {
+    public static <P extends AbstractPipeline<? extends AbstractPipelinePacket<?>>> boolean add(final P pipeline) {
         Pipelines.LOG.info("Adding Pipeline: " + pipeline.getClass().getName());
         return Pipelines.controller.put(pipeline.getName(), pipeline);
     }
@@ -224,9 +224,9 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      * @return true if all succeeded, false otherwise
      */
     @SuppressWarnings("unchecked")
-    public static <P extends Pipeline<? extends PipelinePacket<?>>> boolean addAll(final P... pipelines) {
+    public static <P extends AbstractPipeline<? extends AbstractPipelinePacket<?>>> boolean addAll(final P... pipelines) {
         return Stream.of(pipelines).map(manageable -> Pipelines.controller.put(manageable.getName(), manageable))
-                // collect all success values and reduce to true if all senders
+                // collect all success values and reduce to true if all transmit
                 // succeeded; false otherwise
                 .reduce(true, (accumulator, success) -> accumulator && success);
     }
@@ -238,29 +238,29 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      * @param type The type of the requested Pipelines
      * @return The list of Pipelines matching the supplied type
      */
-    public static <P extends Pipeline<? extends PipelinePacket<?>>> List<P> getOfType(final Class<?> type) {
+    public static <P extends AbstractPipeline<? extends AbstractPipelinePacket<?>>> List<P> getOfType(final Class<?> type) {
         return Pipelines.controller.getOfType(type);
     }
 
     /**
-     * Removes a {@link Pipeline} with the specified key from the list of Manageables.
+     * Removes a {@link AbstractPipeline} with the specified key from the list of Manageables.
      *
      * @param name The key belonging to the Manageable.
      * @param <P>  The type of Manageable requested by the user.
      * @return The removed Manageable.
      */
-    public static <P extends Pipeline<? extends PipelinePacket<?>>> P remove(final String name) {
+    public static <P extends AbstractPipeline<? extends AbstractPipelinePacket<?>>> P remove(final String name) {
         return Pipelines.controller.remove(name);
     }
 
     /**
-     * Removes the supplied {@link Pipeline} from the list of Manageables if it is present in the list.
+     * Removes the supplied {@link AbstractPipeline} from the list of Manageables if it is present in the list.
      *
      * @param pipeline The Manageable to be removed.
      * @param <P>      The type of Manageable requested by the user.
      * @return The removed Manageable.
      */
-    public static <P extends Pipeline<? extends PipelinePacket<?>>> P remove(final P pipeline) {
+    public static <P extends AbstractPipeline<? extends AbstractPipelinePacket<?>>> P remove(final P pipeline) {
         return Pipelines.controller.remove(pipeline);
     }
 
@@ -270,17 +270,17 @@ public final class Pipelines implements Manager<Pipeline<? extends PipelinePacke
      * @param <P>       The type of Pipeline requested by the user.
      * @return          The list of Pipelines matching the given pattern.
      */
-    public static <P extends Pipeline<? extends PipelinePacket<?>>> List<P> find(final String pattern) {
+    public static <P extends AbstractPipeline<? extends AbstractPipelinePacket<?>>> List<P> find(final String pattern) {
         return Pipelines.controller.find(pattern);
     }
 
     /**
      * Generates the routes for a given pattern using PEPE. The routes are stored as lambda's generated
-     * by currying the Coupler's transfer functions.
+     * by currying the AbstractCoupler's transfer functions.
      * @param pattern The pattern which to generate routes from.
      * @return        The list of resulting lambda(s) representing a single branch in the route.
      */
-    public static List<Function<PipelinePacket<?>, PipelinePacket<?>>> generateRoutes(String pattern) {
+    public static List<Function<AbstractPipelinePacket<?>, AbstractPipelinePacket<?>>> generateRoutes(String pattern) {
         return Pipelines.pepeEngine.evaluate(pattern);
     }
 }

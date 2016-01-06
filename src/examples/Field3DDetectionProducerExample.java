@@ -8,7 +8,7 @@ import org.ssh.managers.manager.Pipelines;
 import org.ssh.models.Robot;
 import org.ssh.models.enums.ProducerType;
 import org.ssh.pipelines.packets.DetectionPacket;
-import org.ssh.services.service.Producer;
+import org.ssh.services.AbstractProducer;
 
 import protobuf.Detection.DetectionBall;
 import protobuf.Detection.DetectionFrame;
@@ -18,10 +18,10 @@ import protobuf.Detection.DetectionRobot;
  * 3D Field Detection producer class. This class is responsible for generating 1000
  * {@link DetectionPacket DetectionPackets}.
  *
- * @see Producer
+ * @see AbstractProducer
  * @author marklef2
  */
-public class Field3DDetectionProducerExample extends Producer<DetectionPacket> {
+public class Field3DDetectionProducerExample extends AbstractProducer<DetectionPacket> {
     
     /** The number of robots per team. */
     private static int NUM_ROBOTS_PER_TEAM = 11;

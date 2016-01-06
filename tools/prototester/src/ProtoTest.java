@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.stream.Stream;
 
-import org.ssh.senders.UDPCommunicator;
+import org.ssh.network.transmit.UDPCommunicator;
 import protobuf.Radio.RadioProtocolCommand;
 import protobuf.Radio.RadioProtocolWrapper;
 
@@ -29,7 +29,7 @@ public class ProtoTest {
 			System.out.printf("-c	defines number of commands per wrapper(default: %d)\n", DEFAULT_COMMAND_COUNT);
 			System.out.printf("-w	defines number of wrappers (default: %d)\n", DEFAULT_WRAPPER_COUNT );
 			System.out.printf("-t	defines timout (default: %d)\n", DEFAULT_TIMEOUT );
-			System.out.printf("-v	verbose org.ssh.senders (default: %s)\n", DEFAULT_VERBOSE ? "true" : "false" );
+			System.out.printf("-v	verbose org.ssh.network.transmit (default: %s)\n", DEFAULT_VERBOSE ? "true" : "false" );
 			System.exit(0);
 		}
 		

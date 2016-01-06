@@ -3,8 +3,8 @@ package org.ssh.services.consumers;
 import java.lang.reflect.Type;
 
 import org.ssh.pipelines.packets.ProtoPacket;
-import org.ssh.services.Service;
-import org.ssh.services.service.Consumer;
+import org.ssh.services.AbstractService;
+import org.ssh.services.AbstractConsumer;
 
 import com.google.common.reflect.TypeToken;
 
@@ -13,7 +13,7 @@ import com.google.common.reflect.TypeToken;
  * 
  * @author Jeroen de Jong
  */
-public class ProtoConsumer extends Consumer<ProtoPacket<?>> {
+public class ProtoConsumer extends AbstractConsumer<ProtoPacket<?>> {
     
     /**
      * Instantiates a new Consumer that consumes RadioPackets
@@ -31,11 +31,11 @@ public class ProtoConsumer extends Consumer<ProtoPacket<?>> {
     /*
      * (non-Javadoc)
      *
-     * @see org.ssh.services.Consumer#consume(org.ssh.services.pipeline.PipelinePacket)
+     * @see org.ssh.services.AbstractConsumer#consume(org.ssh.services.pipeline.AbstractPipelinePacket)
      */
     @Override
     public boolean consume(ProtoPacket<?> pipelinePacket) {
-        Service.LOG.info("The ProtoConsumer<%s> ate a packet that looked like: \n%s",
+        AbstractService.LOG.info("The ProtoConsumer<%s> ate a packet that looked like: \n%s",
                 this.genericType,
                 pipelinePacket.read().toString());
         return true;

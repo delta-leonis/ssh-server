@@ -1,13 +1,13 @@
 package org.ssh.controllers;
 
-import org.ssh.models.Model;
+import org.ssh.models.AbstractModel;
 
 /**
  * Contains all settings used by the {@link ControllerHandler}
  * 
  * @author Thomas Hakkers
  */
-public class ControllerSettings extends Model{
+public class ControllerSettings extends AbstractModel {
     
     /**
      * The speed at which the robot is allowed to kick in percent 0 - 100% 

@@ -10,7 +10,7 @@ import org.ssh.models.Goal;
 import org.ssh.models.enums.Direction;
 import org.ssh.models.enums.ProducerType;
 import org.ssh.pipelines.packets.GeometryPacket;
-import org.ssh.services.service.Producer;
+import org.ssh.services.AbstractProducer;
 
 import com.sun.javafx.geom.Point2D;
 
@@ -23,10 +23,10 @@ import protobuf.Geometry.Vector2f;
 /**
  * 3D field geometry producer class. This class is responsible for creating test geometry data.
  *
- * @see Producer
+ * @see AbstractProducer
  * @author marklef2
  */
-public class Field3DGeometryProducerExample extends Producer<GeometryPacket> {
+public class Field3DGeometryProducerExample extends AbstractProducer<GeometryPacket> {
     
     /**
      * Constructor. This instantiates a new {@link Field3DGeometryProducerExample}

@@ -1,4 +1,4 @@
-package org.ssh.senders;
+package org.ssh.network.transmit;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

@@ -13,8 +13,8 @@ import org.ssh.managers.manager.Pipelines;
 import org.ssh.managers.manager.Services;
 import org.ssh.models.enums.ButtonFunction;
 import org.ssh.models.enums.SendMethod;
-import org.ssh.pipelines.pipeline.RadioPipeline;
-import org.ssh.senders.LegacyUDPSender;
+import org.ssh.network.transmit.radio.RadioPipeline;
+import org.ssh.network.transmit.senders.LegacyUDPSender;
 import org.ssh.util.Logger;
 
 import javafx.application.Application;

@@ -4,17 +4,16 @@ import org.ssh.managers.ManagerController;
 import org.ssh.managers.manager.Pipelines;
 import org.ssh.managers.manager.Services;
 import org.ssh.models.enums.SendMethod;
-import org.ssh.pipelines.Pipeline;
+import org.ssh.pipelines.AbstractPipeline;
 import org.ssh.pipelines.packets.ProtoPacket;
 import org.ssh.pipelines.packets.RadioPacket;
-import org.ssh.pipelines.pipeline.RadioPipeline;
-import org.ssh.senders.SenderInterface;
-import org.ssh.services.Service;
-import org.ssh.services.consumers.RadioPacketSender;
-import org.ssh.services.producers.UDPReceiver;
+import org.ssh.network.transmit.radio.RadioPipeline;
+import org.ssh.network.transmit.senders.SenderInterface;
+import org.ssh.services.AbstractService;
+import org.ssh.network.transmit.radio.consumers.RadioPacketSender;
+import org.ssh.network.receive.receivers.UDPReceiver;
 
 import com.google.protobuf.GeneratedMessage;
-import com.google.protobuf.Message;
 import protobuf.Radio;
 
 /**
@@ -24,7 +23,7 @@ import protobuf.Radio;
  * @author Jeroen de Jong
  *         
  */
-public class NetworkController extends ManagerController<Service<? extends ProtoPacket<? extends GeneratedMessage>>> {
+public class NetworkController extends ManagerController<AbstractService<? extends ProtoPacket<? extends GeneratedMessage>>> {
     
     /** Pipeline for communication */
     private RadioPipeline     pipeline;
@@ -116,11 +115,11 @@ public class NetworkController extends ManagerController<Service<? extends Proto
      *            type to stop listening for
      */
     public <M extends GeneratedMessage, P extends ProtoPacket<M>> void stopListening(Class<P> type) {
-        this.<UDPReceiver>get(type.getName()).ifPresent(Service::stop);
+        this.<UDPReceiver>get(type.getName()).ifPresent(AbstractService::stop);
     }
     
     /**
-     * Creates a {@link RadioPacket} and puts it in the {@link Pipeline Pipeline<RadioPacket>}
+     * Creates a {@link RadioPacket} and puts it in the {@link AbstractPipeline AbstractPipeline<RadioPacket>}
      * 
      * @param genericBuilder
      *            a RadioWrapper Builder<?>

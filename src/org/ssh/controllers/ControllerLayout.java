@@ -6,7 +6,7 @@ import net.java.games.input.AbstractComponent;
 import net.java.games.input.Component;
 import net.java.games.input.Component.Identifier;
 import net.java.games.input.Controller;
-import org.ssh.models.Model;
+import org.ssh.models.AbstractModel;
 import org.ssh.models.enums.ButtonFunction;
 import org.ssh.util.Logger;
 
@@ -20,7 +20,7 @@ import java.util.stream.Stream;
  * @author Jeroen de Jong
  * @author Thomas Hakkers
  */
-public class ControllerLayout extends Model {
+public class ControllerLayout extends AbstractModel {
 
     /**
      * JInput Model representing physical {@link Controller}

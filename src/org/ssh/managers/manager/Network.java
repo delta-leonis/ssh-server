@@ -6,11 +6,11 @@ import org.ssh.managers.Manager;
 import org.ssh.managers.controllers.NetworkController;
 import org.ssh.models.enums.SendMethod;
 import org.ssh.pipelines.packets.ProtoPacket;
-import org.ssh.pipelines.pipeline.RadioPipeline;
-import org.ssh.senders.SenderInterface;
-import org.ssh.services.Service;
-import org.ssh.services.consumers.RadioPacketSender;
-import org.ssh.services.producers.UDPReceiver;
+import org.ssh.network.transmit.radio.RadioPipeline;
+import org.ssh.network.transmit.senders.SenderInterface;
+import org.ssh.services.AbstractService;
+import org.ssh.network.transmit.radio.consumers.RadioPacketSender;
+import org.ssh.network.receive.receivers.UDPReceiver;
 import org.ssh.ui.lua.console.AvailableInLua;
 import org.ssh.util.Logger;
 
@@ -28,7 +28,7 @@ import protobuf.Radio.RadioProtocolWrapper;
  *         
  */
 @AvailableInLua
-public class Network implements Manager<Service<? extends ProtoPacket<? extends GeneratedMessage>>> {
+public class Network implements Manager<AbstractService<? extends ProtoPacket<? extends GeneratedMessage>>> {
     
     /**
      * The network store has a controller that runs the store.
