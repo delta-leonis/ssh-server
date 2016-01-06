@@ -27,7 +27,7 @@ import com.google.common.util.concurrent.ListenableScheduledFuture;
  *
  * @author Rimon Oz
  */
-public abstract class AbstractProducer<P extends AbstractPipelinePacket<? extends Object>> extends AbstractService<P> {
+public abstract class AbstractProducer<P extends AbstractPipelinePacket<?>> extends AbstractService<P> {
 
     /** The work function which generates PipelinePackets. */
     private Callable<P>             workerLambda;
@@ -52,7 +52,7 @@ public abstract class AbstractProducer<P extends AbstractPipelinePacket<? extend
         super(name);
         // set attributes
         this.producerType = producerType;
-        this.registeredPipelines = new ArrayList<AbstractPipeline<P>>();
+        this.registeredPipelines = new ArrayList<>();
     }
     
     /**
@@ -65,7 +65,7 @@ public abstract class AbstractProducer<P extends AbstractPipelinePacket<? extend
     public <S extends AbstractProducer<P>> S attachToCompatiblePipelines() {
         // find compatible pipelines and attach
         Pipelines.getOfDataType(this.getType()).stream()
-            .forEach(pipeline -> this.registerPipeline(pipeline));
+            .forEach(this::registerPipeline);
         
         return this.<S>getAsService();
     }
@@ -106,7 +106,7 @@ public abstract class AbstractProducer<P extends AbstractPipelinePacket<? extend
         // submit the task to the worker pool in the services store.
         final ListenableFuture<P> producerFuture = Services.submitTask(taskName, this.getCallable());
         // add callbacks to the future that get triggered once the thread is done executing
-        FutureCallback<P> taskCallback = new PacketProductionCallback<P>(this.getName());
+        FutureCallback<P> taskCallback = new PacketProductionCallback<>(this.getName());
         
         Futures.addCallback(producerFuture, taskCallback);
         // return the future so the user can use it
@@ -126,14 +126,12 @@ public abstract class AbstractProducer<P extends AbstractPipelinePacket<? extend
     public ListenableFuture<P> produceSchedule(final String taskName, final long taskInterval) {
         // add the task to the scheduled worker pool
         
-        Runnable workerLambda = () -> {
-            this.produceOnce(this.getName() + "-schedule");
-        };
+        Runnable workerLambda = () -> this.produceOnce(this.getName() + "-schedule");
         
         final ListenableScheduledFuture<P> scheduleFuture = (ListenableScheduledFuture<P>) Services
                 .scheduleTask(taskName, workerLambda, taskInterval);
                 
-        FutureCallback<P> scheduleCallback = new PacketProductionCallback<P>(this.getName());
+        FutureCallback<P> scheduleCallback = new PacketProductionCallback<>(this.getName());
         Futures.addCallback(scheduleFuture, scheduleCallback);
         // return the future so the user can use it
         return scheduleFuture;
@@ -200,9 +198,25 @@ public abstract class AbstractProducer<P extends AbstractPipelinePacket<? extend
             this.produceOnce(this.getName());
         }
         else if (this.producerType.equals(ProducerType.SCHEDULED)) {
-            AbstractProducer.LOG.fine("Producer %s is starting scheduled production ...", this.getName());
             // start a scheduled production with a default interval (of 1s)
-            this.produceSchedule(this.getName(), 16500);
+            this.start(1000000);
+        }
+        return this.<S>getAsService();
+    }
+
+    /**
+     * Starts production with the supplied execution interval (in us).
+     * @param interval The requested interval between execution start-times (in us).
+     * @param <S>      The generic type of AbstractService this object represents.
+     * @return         The class itself for method chaining.
+     */
+    public <S extends AbstractService<?>> S start(int interval) {
+        if (this.producerType.equals(ProducerType.SCHEDULED)) {
+            AbstractProducer.LOG.fine("Producer %s is starting scheduled production ...", this.getName());
+            this.produceSchedule(this.getName(), interval);
+        }
+        else {
+            AbstractProducer.LOG.fine("Producer %s is not a scheduled producer, aborting scheduled production ...", this.getName());
         }
         return this.<S>getAsService();
     }
