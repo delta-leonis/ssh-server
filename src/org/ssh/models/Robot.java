@@ -7,8 +7,10 @@ import javafx.beans.property.SimpleListProperty;
 import org.ssh.models.enums.Allegiance;
 import org.ssh.models.enums.Malfunction;
 import org.ssh.models.enums.Malfunction.MalfunctionType;
+import protobuf.Detection;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -69,7 +71,7 @@ public class Robot extends FieldObject {
         this.isSelected = new SimpleBooleanProperty(false);
         this.isConnected = new SimpleBooleanProperty(false);
         this.isOnSight = new SimpleBooleanProperty(false);
-        this.malfunctions = new SimpleListProperty<Malfunction>();
+        this.malfunctions = new SimpleListProperty<>();
         this.lastUpdated = System.currentTimeMillis();
     }
 
@@ -214,5 +216,18 @@ public class Robot extends FieldObject {
      */
     public List<Malfunction> getWarnings() {
         return getMalfunctions(MalfunctionType.WARNING);
+    }
+
+    /**
+     * Update this Robot-model based on a {@link Detection.DetectionRobot} protobuf message
+     *
+     * @param protobufRobot protobuf message with new information
+     * @return succesvalue of the update
+     */
+    public boolean update(final Detection.DetectionRobot protobufRobot){
+        return update(protobufRobot.getAllFields().entrySet().stream().collect(Collectors.toMap(
+                entry -> entry.getKey().getName(),
+                Map.Entry::getValue
+        )));
     }
 }

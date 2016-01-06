@@ -20,7 +20,7 @@ import com.google.common.reflect.TypeToken;
  *
  * @author Rimon Oz
  */
-public abstract class PipelinePacket<O extends Object> {
+public abstract class PipelinePacket<O> {
     
     /** The mutability setting. */
     private boolean isMutable;
@@ -97,7 +97,7 @@ public abstract class PipelinePacket<O extends Object> {
      * @return The PipelinePacket itself.
      */
     @SuppressWarnings ("unchecked")
-    public <I extends Object> PipelinePacket<O> save(I data) {
+    public <I> PipelinePacket<O> save(I data) {
         this.data = (O) data;
         return this;
     }
@@ -122,9 +122,9 @@ public abstract class PipelinePacket<O extends Object> {
      * @return The data in the packet as a Map.
      */
     @SuppressWarnings ("unchecked")
-    public <F extends Object> Map<String, F> toMap(final Class<?> clazz) {
+    public <F> Map<String, F> toMap(final Class<?> clazz) {
         return Stream.of(clazz.getDeclaredFields())
-                .filter(field -> Reflect.containsField(field.getName(), this.getClass()))
+                .filter(field -> Reflect.hasField(field.getName(), this.getClass()))
                 .collect(Collectors.toMap(Field::getName, Unchecked.function(field -> (F) field.get(this))));
     }
 }

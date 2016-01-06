@@ -60,7 +60,7 @@ public class LoggerConsole extends UIComponent {
         super("loggerconsole", "overlay/loggerconsole.fxml");
         
         // Make a list to store the tabNames in while searching all the tabNames
-        List<String> tabNames = new ArrayList<String>();
+        List<String> tabNames = new ArrayList<>();
         // Get an enumeration with all the names of loggers
         Enumeration<String> loggerNames = LogManager.getLogManager().getLoggerNames();
         // Loop through all the names to search for the names of the packages in org.ssh
@@ -278,6 +278,7 @@ public class LoggerConsole extends UIComponent {
      * {@link List}s of {@link LogRecord}s (one for every {@link Level}).<br />
      *
      * @author Joost Overeem
+     * @author Jeroen de Jong
      *
      */
     public class LoggerMemoryHandler extends Handler {
@@ -295,9 +296,10 @@ public class LoggerConsole extends UIComponent {
         }
 
         /**
-         * Adds the record to the correct list of log records
+         * Converts the {@link LogRecord} to a {@link LogTableRow} and stores it in a list
          *
-         * @param record
+         * @param record description of the log event. A null record is
+         *                 silently ignored and is not published
          */
         @Override
         public void publish(LogRecord record) {

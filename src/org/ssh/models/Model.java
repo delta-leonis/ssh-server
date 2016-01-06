@@ -1,13 +1,10 @@
 package org.ssh.models;
 
-import com.google.protobuf.Descriptors;
 import org.jooq.lambda.Unchecked;
 import org.ssh.managers.Manageable;
 import org.ssh.managers.controllers.ModelController;
 import org.ssh.managers.manager.Models;
-import org.ssh.util.Logger;
 import org.ssh.util.Reflect;
-import protobuf.Detection;
 
 import java.io.StringWriter;
 import java.lang.annotation.ElementType;
@@ -16,30 +13,24 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javafx.beans.value.WritableValue;
-import org.jooq.lambda.Unchecked;
-import org.ssh.managers.Manageable;
-import org.ssh.managers.controllers.ModelController;
-import org.ssh.managers.manager.Models;
-import org.ssh.util.Logger;
-import org.ssh.util.Reflect;
 
 /**
  * The Class Model.<br />
  *
- * Note: A lot of refactoring is being done for this class, to keep this class dynamic. Remember to
+ * <strong>Note:</strong> A lot of refactoring is being done for this class, to keep this class dynamic. Remember to
  * use the transient {@link Modifier} for {@link Field Fields} that don't need to be saved in a json
  * file by the {@link #save()} method.
+ *<strong>Note:</strong> Models should be created using {@link Models#create}. This way insures the Models are being added to
+ * their {@link Models Manager} and the correct config files are being loaded on initialisation.
  *
  * @see {@link #update(Map)}
- * @see {@link ModelFactory}
+ * @see {@link Models#create}
  * @see {@link ModelController}
  *
  * @author Jeroen de Jong
@@ -116,7 +107,7 @@ public abstract class Model extends Manageable {
                                     // try to cast this value, and set the field
 		        // Slightly hacky way to deal with primitive numbers.
 		        if(value instanceof Number) {
-		            Float floatRepresentation = new Float(((Number) value).floatValue());
+		            Float floatRepresentation = ((Number) value).floatValue();
 		            if(field.getType().equals(Float.class))
 		                field.set(this, floatRepresentation);
 		            else if(field.getType().equals(Double.class))
@@ -190,7 +181,7 @@ public abstract class Model extends Manageable {
         // loop all changes
         return changes.entrySet().stream()
                 // check whether this field exists
-                .filter(entry -> Reflect.containsField(entry.getKey(), this.getClass()))
+                .filter(entry -> Reflect.hasField(entry.getKey(), this.getClass()))
                 // set this value
                 .map(entry -> this.set(entry.getKey(), entry.getValue()))
                 // reduce success value
@@ -261,14 +252,6 @@ public abstract class Model extends Manageable {
             changeMap.put((String) changes[i], changes[++i]);
 
         return this.update(changeMap);
-    }
-
-    public boolean update(final Detection.DetectionRobot protobufRobot){
-        return update((Map<String, Object>)
-                protobufRobot.getAllFields().entrySet().stream().collect(Collectors.toMap(
-                        entry -> entry.getKey().getName(),
-                        Map.Entry::getValue
-                )));
     }
 
     /**
