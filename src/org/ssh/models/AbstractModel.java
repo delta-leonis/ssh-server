@@ -2,7 +2,7 @@ package org.ssh.models;
 
 import com.google.protobuf.Descriptors;
 import org.jooq.lambda.Unchecked;
-import org.ssh.managers.Manageable;
+import org.ssh.managers.AbstractManageable;
 import org.ssh.managers.controllers.ModelController;
 import org.ssh.managers.manager.Models;
 import org.ssh.util.Logger;
@@ -46,7 +46,7 @@ import org.ssh.util.Reflect;
  * @author Jeroen de Jong
  */
 
-public abstract class AbstractModel extends Manageable {
+public abstract class AbstractModel extends AbstractManageable {
 
     /** unique identifier for this model */
     private transient String identifier;

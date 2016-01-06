@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 import org.ssh.controllers.ControllerLayout;
 import org.ssh.controllers.ControllerLayoutSerializer;
 import org.ssh.managers.Manageable;
-import org.ssh.managers.ManagerController;
+import org.ssh.managers.AbstractManagerController;
 import org.ssh.models.AbstractModel;
 import org.ssh.models.Settings;
 import org.ssh.util.Logger;
@@ -36,7 +36,7 @@ import com.google.gson.stream.JsonReader;
  *       
  * @author Jeroen de Jong
  */
-public class ModelController extends ManagerController<AbstractModel> {
+public class ModelController extends AbstractManagerController<AbstractModel> {
     
     /** Builder for reading and writing Objects to Json **/
     private final Gson          gson;

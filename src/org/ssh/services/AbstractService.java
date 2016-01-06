@@ -2,7 +2,7 @@ package org.ssh.services;
 
 import java.lang.reflect.Type;
 
-import org.ssh.managers.Manageable;
+import org.ssh.managers.AbstractManageable;
 import org.ssh.managers.manager.Services;
 import org.ssh.pipelines.AbstractPipelinePacket;
 import org.ssh.util.Logger;
@@ -20,7 +20,7 @@ import com.google.common.reflect.TypeToken;
  *           
  * @author Rimon Oz
  */
-public abstract class AbstractService<P extends AbstractPipelinePacket<? extends Object>> extends Manageable {
+public abstract class AbstractService<P extends AbstractPipelinePacket<? extends Object>> extends AbstractManageable {
     
     /** Whether the service is enabled. */
     private boolean               enabled     = false;

@@ -9,7 +9,7 @@ import java.util.function.Function;
 /**
  * The Class Pepe.
  * <p>
- * PEPE: Evaluates Manageable Expressions
+ * PEPE: Evaluates Pipeline Expressions
  * <p>
  * Pepe is a regular language whose words are lambdas.
  * Pepe is a purpose-specific language made for currying lambdas according to a provided expression

@@ -1,6 +1,6 @@
 package org.ssh.managers.controllers;
 
-import org.ssh.managers.ManagerController;
+import org.ssh.managers.AbstractManagerController;
 import org.ssh.managers.manager.Pipelines;
 import org.ssh.pipelines.AbstractPipeline;
 import org.ssh.pipelines.AbstractPipelinePacket;
@@ -13,7 +13,7 @@ import org.ssh.pipelines.AbstractPipelinePacket;
  *
  * @author Rimon Oz
  */
-public class PipelineController extends ManagerController<AbstractPipeline<? extends AbstractPipelinePacket<? extends Object>>> {
+public class PipelineController extends AbstractManagerController<AbstractPipeline<? extends AbstractPipelinePacket<? extends Object>>> {
 
     
 

@@ -1,17 +1,18 @@
 package org.ssh.managers;
 
 import org.ssh.models.AbstractModel;
+import org.ssh.services.AbstractService;
 import org.ssh.util.Logger;
 
 /**
- * The Class Manageable.
+ * The Class AbstractManageable.
  * 
- * A Manageable represents an Object that is managed by a {@link Manager}. Examples of Manageable
+ * A Manageable represents an Object that is managed by a {@link ManagerInterface}. Examples of Manageable
  * are {@link AbstractModel} and {@link AbstractService}.
  * 
  * @author Rimon Oz
  */
-public abstract class Manageable {
+public abstract class AbstractManageable {
     
     /** The name of the Manageable. */
     private transient String                name;
@@ -25,7 +26,7 @@ public abstract class Manageable {
      * @param name
      *            The name of the manageable.
      */
-    public Manageable(String name) {
+    public AbstractManageable(String name) {
         this.name = name;
     }
     
@@ -48,8 +49,8 @@ public abstract class Manageable {
      * @return The current Manageable.
      */
     @SuppressWarnings ("unchecked")
-    public <M extends Manageable> M setName(final String name) {
-        Manageable.LOG.fine("Manageable named %s has changed its name to %s", this.getName(), name);
+    public <M extends AbstractManageable> M setName(final String name) {
+        AbstractManageable.LOG.fine("Manageable named %s has changed its name to %s", this.getName(), name);
         this.name = name;
         return (M) this;
     }

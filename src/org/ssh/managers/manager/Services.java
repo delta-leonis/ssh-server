@@ -2,7 +2,8 @@ package org.ssh.managers.manager;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableScheduledFuture;
-import org.ssh.managers.Manager;
+import org.ssh.managers.AbstractManagerController;
+import org.ssh.managers.ManagerInterface;
 import org.ssh.managers.controllers.ServicesController;
 import org.ssh.pipelines.AbstractPipelinePacket;
 import org.ssh.services.AbstractService;
@@ -24,7 +25,7 @@ import java.util.stream.Stream;
  * @author Rimon Oz
  */
 @AvailableInLua
-public final class Services implements Manager<AbstractService<? extends AbstractPipelinePacket<?>>> {
+public final class Services implements ManagerInterface<AbstractService<? extends AbstractPipelinePacket<?>>> {
 
     /**
      * The Services manager has a controller that runs the place.
@@ -123,7 +124,7 @@ public final class Services implements Manager<AbstractService<? extends Abstrac
      * Gets all the Services in the Services manager.
      *
      * @return All the Services
-     * @see org.ssh.managers.ManagerController#getAll()
+     * @see AbstractManagerController#getAll()
      */
     public static <S extends AbstractService<? extends AbstractPipelinePacket<?>>> List<S> getAll() {
         return Services.controller.getAll();

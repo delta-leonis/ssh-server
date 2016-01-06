@@ -1,6 +1,6 @@
 package org.ssh.managers.controllers;
 
-import org.ssh.managers.ManagerController;
+import org.ssh.managers.AbstractManagerController;
 import org.ssh.managers.manager.Pipelines;
 import org.ssh.managers.manager.Services;
 import org.ssh.models.enums.SendMethod;
@@ -23,7 +23,7 @@ import protobuf.Radio;
  * @author Jeroen de Jong
  *         
  */
-public class NetworkController extends ManagerController<AbstractService<? extends ProtoPacket<? extends GeneratedMessage>>> {
+public class NetworkController extends AbstractManagerController<AbstractService<? extends ProtoPacket<? extends GeneratedMessage>>> {
     
     /** Pipeline for communication */
     private RadioPipeline     pipeline;

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.ssh.managers.Manager;
+import org.ssh.managers.ManagerInterface;
 import org.ssh.managers.controllers.ModelController;
 import org.ssh.models.Model;
 import org.ssh.models.Settings;
@@ -24,7 +24,7 @@ import org.ssh.ui.lua.console.AvailableInLua;
  *
  */
 @AvailableInLua
-public final class Models implements Manager<AbstractModel>{
+public final class Models implements ManagerInterface<AbstractModel> {
 
     /**
      * The models store has a controller that runs the store.

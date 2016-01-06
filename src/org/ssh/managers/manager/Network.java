@@ -2,7 +2,7 @@ package org.ssh.managers.manager;
 
 import java.util.ArrayList;
 
-import org.ssh.managers.Manager;
+import org.ssh.managers.ManagerInterface;
 import org.ssh.managers.controllers.NetworkController;
 import org.ssh.models.enums.SendMethod;
 import org.ssh.pipelines.packets.ProtoPacket;
@@ -28,7 +28,7 @@ import protobuf.Radio.RadioProtocolWrapper;
  *         
  */
 @AvailableInLua
-public class Network implements Manager<AbstractService<? extends ProtoPacket<? extends GeneratedMessage>>> {
+public class Network implements ManagerInterface<AbstractService<? extends ProtoPacket<? extends GeneratedMessage>>> {
     
     /**
      * The network store has a controller that runs the store.

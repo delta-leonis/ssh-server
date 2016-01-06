@@ -7,7 +7,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.ssh.managers.ManagerController;
+import org.ssh.managers.AbstractManagerController;
 import org.ssh.managers.manager.Services;
 import org.ssh.pipelines.AbstractPipelinePacket;
 import org.ssh.services.AbstractService;
@@ -26,7 +26,7 @@ import com.google.common.util.concurrent.MoreExecutors;
  *
  * @author Rimon Oz
  */
-public class ServicesController extends ManagerController<AbstractService<? extends AbstractPipelinePacket<? extends Object>>> {
+public class ServicesController extends AbstractManagerController<AbstractService<? extends AbstractPipelinePacket<? extends Object>>> {
     
     /** The scheduler service. */
     private final ListeningScheduledExecutorService                      scheduler;

@@ -7,7 +7,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.ssh.managers.Manageable;
+import org.ssh.managers.AbstractManageable;
 import org.ssh.managers.manager.Pipelines;
 import org.ssh.services.AbstractConsumer;
 import org.ssh.services.AbstractProducer;
@@ -25,7 +25,7 @@ import com.google.common.reflect.TypeToken;
  *
  * @author Rimon Oz
  */
-public abstract class AbstractPipeline<P extends AbstractPipelinePacket<?>> extends Manageable {
+public abstract class AbstractPipeline<P extends AbstractPipelinePacket<?>> extends AbstractManageable {
 
     /** The Consumers registered to this Pipeline. */
     private final List<AbstractConsumer<P>>               consumers;

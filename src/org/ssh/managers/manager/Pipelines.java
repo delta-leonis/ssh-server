@@ -1,7 +1,8 @@
 package org.ssh.managers.manager;
 
 import org.ssh.expressions.languages.Pepe;
-import org.ssh.managers.Manager;
+import org.ssh.managers.AbstractManagerController;
+import org.ssh.managers.ManagerInterface;
 import org.ssh.managers.controllers.PipelineController;
 import org.ssh.pipelines.AbstractPipeline;
 import org.ssh.pipelines.AbstractPipelinePacket;
@@ -27,7 +28,7 @@ import java.util.stream.Stream;
  * @author Rimon Oz
  */
 @AvailableInLua
-public final class Pipelines implements Manager<AbstractPipeline<? extends AbstractPipelinePacket<?>>> {
+public final class Pipelines implements ManagerInterface<AbstractPipeline<? extends AbstractPipelinePacket<?>>> {
 
     /**
      * The Pipelines manager has a controller that runs the place.
@@ -198,7 +199,7 @@ public final class Pipelines implements Manager<AbstractPipeline<? extends Abstr
      * Gets all the Pipelines in the Pipelines manager.
      *
      * @return All the Pipelines
-     * @see org.ssh.managers.ManagerController#getAll()
+     * @see AbstractManagerController#getAll()
      */
     public static <P extends AbstractPipeline<? extends AbstractPipelinePacket<?>>> List<P> getAll() {
         return Pipelines.controller.getAll();
