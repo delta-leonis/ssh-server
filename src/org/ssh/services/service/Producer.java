@@ -203,7 +203,7 @@ public abstract class Producer<P extends PipelinePacket<? extends Object>> exten
         else if (this.producerType.equals(ProducerType.SCHEDULED)) {
             Producer.LOG.fine("Producer %s is starting scheduled production ...", this.getName());
             // start a scheduled production with a default interval (of 1s)
-            this.produceSchedule(this.getName(), 1000000);
+            this.produceSchedule(this.getName(), 16500);
         }
         return this.<S>getAsService();
     }

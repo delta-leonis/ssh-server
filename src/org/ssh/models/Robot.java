@@ -7,7 +7,6 @@ import javafx.beans.property.SimpleListProperty;
 import org.ssh.models.enums.Allegiance;
 import org.ssh.models.enums.Malfunction;
 import org.ssh.models.enums.Malfunction.MalfunctionType;
-import org.ssh.util.Alias;
 
 import java.util.List;
 import java.util.stream.Collectors;

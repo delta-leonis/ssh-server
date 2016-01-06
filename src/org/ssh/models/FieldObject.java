@@ -2,7 +2,6 @@ package org.ssh.models;
 
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
-import org.ssh.util.Alias;
 
 import javafx.geometry.Point2D;
 

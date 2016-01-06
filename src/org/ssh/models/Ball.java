@@ -1,7 +1,5 @@
 package org.ssh.models;
 
-import org.ssh.util.Alias;
-
 /**
  * Describes a ball {@link FieldObject object}.
  * 

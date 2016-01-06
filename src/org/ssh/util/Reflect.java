@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import com.google.common.reflect.Reflection;
+import org.ssh.models.Model;
 
 /**
  * TODO remove, and use {@link Reflection} library instead.
@@ -28,7 +29,7 @@ public class Reflect {
             }
             catch (final NoSuchFieldException exception) {
                 Optional<Field> oField = Stream.of(clazzI.getDeclaredFields()).filter(field -> {
-                    Alias annotation = field.getAnnotation(Alias.class);
+                    Model.Alias annotation = field.getAnnotation(Model.Alias.class);
                     if (annotation != null) return annotation.value().equals(fieldName);
                     return false;
                 }).findFirst();
