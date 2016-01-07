@@ -3,7 +3,7 @@
 --[[
 -- Communicator "alias" 
 Pipelines = luajava.bindClass("org.ssh.managers.manager.Pipelines")
-radioConsumer = luajava.newInstance("org.ssh.services.consumers.RadioPacketConsumer")
+radioConsumer = luajava.newInstance("org.ssh.pipelines.consumers.RadioPacketConsumer")
 radioConsumer:register(SendMethod.UDP, luajava.newInstance("org.ssh.network.transmit.senders.UDPSender", "192.168.1.10", 1337))
 radioConsumer:addDefault(SendMethod.DEBUG) -- at this moment both UDP and DEBUG are default
 

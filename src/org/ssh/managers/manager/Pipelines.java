@@ -8,6 +8,7 @@ import org.ssh.pipelines.AbstractPipeline;
 import org.ssh.pipelines.AbstractPipelinePacket;
 import org.ssh.services.AbstractCoupler;
 import org.ssh.services.AbstractProducer;
+import org.ssh.services.AbstractTranslator;
 import org.ssh.ui.lua.console.AvailableInLua;
 import org.ssh.util.Logger;
 
@@ -105,9 +106,9 @@ public final class Pipelines implements ManagerInterface<AbstractPipeline<? exte
     }
 
     /**
-     * Gets a List of available {@link Coupler} compatible with the given {@link AbstractPipeline}.
+     * Gets a List of available {@link AbstractCoupler} compatible with the given {@link AbstractPipeline}.
      *
-     * @param <P>      The generic type of {@link AbstractPipelinePacket} handled by the Consumer.
+     * @param <P>      The generic type of {@link AbstractPipelinePacket} handled by the Coupler.
      * @param <C>      The generic type AbstractCoupler compatible with the Pipeline.
      * @param pipeline The given pipeline.
      * @return The compatible Couplers.
@@ -126,6 +127,34 @@ public final class Pipelines implements ManagerInterface<AbstractPipeline<? exte
                 .collect(Collectors.toList());
 
         Pipelines.LOG.info("%d Coupler(s) found to be compatible with type %s",
+                collect.size(),
+                pipeline.getType().toString());
+
+        return collect;
+    }
+
+    /**
+     * Gets a List of available {@link AbstractTranslator} compatible with the given {@link AbstractPipeline}.
+     *
+     * @param <P>      The generic type of {@link AbstractPipelinePacket} handled by the Translator.
+     * @param <C>      The generic type AbstractTranslator compatible with the Pipeline.
+     * @param pipeline The given pipeline.
+     * @return The compatible Couplers.
+     */
+    public static <P extends AbstractPipelinePacket<?>, Q extends AbstractPipelinePacket<?>, C extends AbstractTranslator<P, Q>> List<C> getCompatibleTranslators(
+            final AbstractPipeline<P> pipeline) {
+        Pipelines.LOG.info("Getting compatible Translator(s) for input type: %s", pipeline.getType().toString());
+
+        @SuppressWarnings("unchecked")
+        // get the list of services
+        final List<C> collect = Services.getOfType(AbstractTranslator.class).stream()
+                // filter out the services compatible with this pipeline
+                .filter(service -> service.getType().equals(pipeline.getType()))
+                // map them to the correct parameterized type and collect them in a list
+                .map(service -> (C) service)
+                .collect(Collectors.toList());
+
+        Pipelines.LOG.info("%d Translator(s) found to be compatible with input type %s",
                 collect.size(),
                 pipeline.getType().toString());
 

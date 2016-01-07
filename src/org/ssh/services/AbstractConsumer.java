@@ -26,7 +26,7 @@ public abstract class AbstractConsumer<P extends AbstractPipelinePacket<? extend
     }
     
     /**
-     * Attachs to all compatible Pipelines.
+     * Attaches to all compatible Pipelines.
      *
      * @param <C>
      *            The generic type of AbstractConsumer requested by the user.

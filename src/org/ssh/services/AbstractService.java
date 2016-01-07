@@ -1,6 +1,8 @@
 package org.ssh.services;
 
 import java.lang.reflect.Type;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.ssh.managers.AbstractManageable;
 import org.ssh.managers.manager.Services;
@@ -8,6 +10,7 @@ import org.ssh.pipelines.AbstractPipelinePacket;
 import org.ssh.util.Logger;
 
 import com.google.common.reflect.TypeToken;
+import com.google.common.reflect.TypeToken.TypeSet;
 
 /**
  * The Class Service.
@@ -64,6 +67,15 @@ public abstract class AbstractService<P extends AbstractPipelinePacket<? extends
      */
     public Type getType() {
         return this.genericType.getType();
+    }
+
+    /**
+     * Gets all the types of {@link AbstractPipelinePacket} on which this Service operates.
+     *
+     * @return The types of AbstractPipelinePacket on which this Service operates.
+     */
+    public List<Type> getTypes() {
+        return this.genericType.getTypes().stream().map(TypeToken::getType).collect(Collectors.toList());
     }
     
     /**

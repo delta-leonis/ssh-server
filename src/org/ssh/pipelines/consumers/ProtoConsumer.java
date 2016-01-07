@@ -1,4 +1,4 @@
-package org.ssh.services.consumers;
+package org.ssh.pipelines.consumers;
 
 import java.lang.reflect.Type;
 

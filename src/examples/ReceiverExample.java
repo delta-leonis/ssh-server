@@ -10,7 +10,7 @@ import org.ssh.network.receive.detection.DetectionPipeline;
 import org.ssh.network.receive.geometry.GeometryPipeline;
 import org.ssh.network.receive.wrapper.WrapperPipeline;
 import org.ssh.network.receive.geometry.consumers.GeometryModelConsumer;
-import org.ssh.services.consumers.ProtoConsumer;
+import org.ssh.pipelines.consumers.ProtoConsumer;
 import org.ssh.network.receive.wrapper.consumers.WrapperConsumer;
 
 public class ReceiverExample {

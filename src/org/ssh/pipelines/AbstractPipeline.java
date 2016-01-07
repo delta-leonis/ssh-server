@@ -126,6 +126,11 @@ public abstract class AbstractPipeline<P extends AbstractPipelinePacket<?>> exte
         // if there were no couplers then the result is the original packet
         resultPackets = resultPackets.isEmpty() ? Collections.singletonList(pipelinePacket) : resultPackets;
 
+        // find correct translators
+        // retrieve output type
+        // map onto translators
+        // map result onto
+
         // map the results on the consumers
         return resultPackets.stream().map(resultPacket -> this.consumers.stream()
                         .map(consumer -> consumer.consume((P)resultPacket)).collect(Collectors.toList()))
