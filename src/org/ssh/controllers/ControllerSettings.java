@@ -33,6 +33,11 @@ public class ControllerSettings extends Model{
     public ControllerSettings() {
         super("controllersettings", "");
     }
+
+    @Override
+    public void initialize(){
+        // no default values
+    }
     
     /**
      * @return The speed at which the robot is allowed to kick in percent 0 - 100% 

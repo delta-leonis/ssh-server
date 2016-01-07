@@ -15,7 +15,7 @@
         <RowConstraints percentHeight="64.0" />
     </rowConstraints>
     <children>
-        <Button id="profileButton" maxHeight="Infinity" maxWidth="Infinity" text="Current User" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#enrollProfilemenu">
+        <Button fx:id="profileButton" id="profileButton" maxHeight="Infinity" maxWidth="Infinity" text="Current User" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#enrollProfilemenu">
             <graphic><ImageView>
                 <Image url="@../../icon/user24.png" />
             </ImageView></graphic>

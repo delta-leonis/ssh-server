@@ -45,6 +45,11 @@
 						<PropertyValueFactory property="location" />
 					</cellValueFactory>
 				</TableColumn>
+				<TableColumn text="Method" maxWidth="130" minWidth="130">
+					<cellValueFactory>
+						<PropertyValueFactory property="method" />
+					</cellValueFactory>
+				</TableColumn>
 				<TableColumn text="Time" maxWidth="68" minWidth="68">
 					<cellValueFactory>
 						<PropertyValueFactory property="time" />

@@ -15,6 +15,7 @@ import org.ssh.field3d.gameobjects.detection.RobotGO;
 import org.ssh.field3d.gameobjects.geometry.FieldGO;
 import org.ssh.field3d.gameobjects.overlay.CameraControlOverlayGO;
 import org.ssh.managers.manager.Models;
+import org.ssh.managers.manager.Services;
 import org.ssh.models.Ball;
 import org.ssh.models.Field;
 import org.ssh.models.enums.Allegiance;
@@ -151,11 +152,22 @@ public class FieldGame extends Game {
 
         // When this SubScene is added
         // it should be notified through a call to #internalInitialize
-        Platform.runLater(()->
-        this.internalInitialize());
+        Platform.runLater(() ->
+                this.internalInitialize());
         ///this.addGameObject(this.easterCarGO);
-            }
 
+        Services.scheduleTask("veld", () ->
+        {
+            try {
+                this.updateGeometry();
+                this.updateDetection();
+            }
+            catch(Exception e) {
+                System.err.println("FAGGOTRY");
+                e.printStackTrace();
+            }
+        }, 1000000);
+    }
     /**
      * {@inheritDoc}
      */

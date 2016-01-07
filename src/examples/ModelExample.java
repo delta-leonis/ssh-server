@@ -6,14 +6,10 @@ import java.util.Optional;
 
 import org.ssh.managers.manager.Models;
 import org.ssh.models.Model;
-import org.ssh.models.NetworkSettings;
 import org.ssh.models.Robot;
 import org.ssh.models.Settings;
 import org.ssh.models.enums.Allegiance;
-import org.ssh.models.enums.TeamColor;
 import org.ssh.util.Logger;
-
-import javafx.geometry.Point2D;
 
 public class ModelExample  {
     
@@ -23,7 +19,7 @@ public class ModelExample  {
         // Start the Models controller
         Models.start();
 
-        Models.<Settings> get("settings").ifPresent(set -> set.getUserProfilePath());
+        Models.<Settings> get("settings").ifPresent(set -> set.getProfilesPath());
         
         Optional<Model> oSettings = Models.get("settings");
         Settings settings = (Settings) oSettings.get();

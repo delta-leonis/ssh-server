@@ -7,8 +7,6 @@ import org.ssh.util.Logger;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,8 +22,6 @@ import javafx.util.Duration;
  * {@link ExtendDirection}. The content is contained by this pane.
  * 
  * @author Joost Overeem
- *
- * @TODO add Logging through the class
  */
 public class Enroller<N extends Region> extends BorderPane {
 
@@ -52,11 +48,10 @@ public class Enroller<N extends Region> extends BorderPane {
 	 * used to fit the enroller in.
 	 */
 	private ReadOnlyDoubleProperty collapsedSizeProperty, extendedSizeProperty;
-	/**
-	 * {@link Button} for enrollactions that is included in the enroller.
-	 */
-	private ImageView enrollIcon;
 
+    /**
+     * Lambda that will be run after an animation is finished
+     */
     private Runnable onfinishMethod;
 	/**
 	 * Extendsize is the maximum size of the slider in the extending direction,
@@ -74,7 +69,7 @@ public class Enroller<N extends Region> extends BorderPane {
 	 */
 	private final Animation collapse = new Transition() {
 		{
-			// Sliding takes 250 milisec
+			// Sliding takes 250 milliseconds
 			setCycleDuration(Duration.millis(250));
 		}
 
@@ -107,7 +102,7 @@ public class Enroller<N extends Region> extends BorderPane {
 	 */
 	private final Animation extend = new Transition() {
 		{
-			// Sliding takes 250 milisec
+			// Sliding takes 250 milliseconds
 			setCycleDuration(Duration.millis(250));
 		}
 
@@ -132,9 +127,6 @@ public class Enroller<N extends Region> extends BorderPane {
 				slidingWrapper.setMaxWidth(size);
 				slidingWrapper.setPrefWidth(size);
 			}
-			// Set the content visible, so that you see the content appearing
-			// instead of when finished the animation suddenly see it
-			content.setVisible(true);
 		}
 	};
 
@@ -144,7 +136,7 @@ public class Enroller<N extends Region> extends BorderPane {
 	 * @author Joost Overeem
 	 *
 	 */
-	public static enum State {
+	public enum State {
 		COLLAPSED, EXTENDED
 	}
 
@@ -154,7 +146,7 @@ public class Enroller<N extends Region> extends BorderPane {
 	 * @author Joost Overeem
 	 *
 	 */
-	public static enum ExtendDirection {
+	public enum ExtendDirection {
 		UP, DOWN, LEFT, RIGHT
 	}
 
@@ -162,7 +154,7 @@ public class Enroller<N extends Region> extends BorderPane {
 	 * Constructor for an enroller which is partially visible when collapsed.
 	 * 
 	 * @param content
-	 *            {@link UIComponent} which should be displayed in the enroller
+	 *            {@link UIComponent} which should be displayed in the 3enroller
 	 * @param extendDirection
 	 *            {@link ExtendDirection} to indicate if the enroller expands
 	 *            down, up, left or right
@@ -248,14 +240,11 @@ public class Enroller<N extends Region> extends BorderPane {
 					enrollButton.maxWidthProperty().bind(collapsedSizeProperty);
 				}
 				// Now we bind the onAction to the button
-				enrollButton.setOnAction(new EventHandler<ActionEvent>() {
-					@Override
-					public void handle(ActionEvent arg0) {
-						// Handle the enrollment
-						Enroller.this.handleEnrollment();
-						enrollButton.getGraphic().setRotate((enrollButton.getGraphic().getRotate() + 180) % 360);
-					}
-				});
+				enrollButton.setOnAction(arg0 -> {
+                    // Handle the enrollment
+                    Enroller.this.handleEnrollment();
+                    enrollButton.getGraphic().setRotate((enrollButton.getGraphic().getRotate() + 180) % 360);
+                });
 			}
 
 			// The animations ensures that the slidingWrapper grows and shrinks,
@@ -454,18 +443,6 @@ public class Enroller<N extends Region> extends BorderPane {
 		}
 	}
 
-	/**
-	 * Function for handeling the enrollment. Checks if there should be
-	 * collapsed or extended and then plays the {@link Animation}. <br />
-	 * <br />
-	 * Note: The functions unbinds the heightproperties but in the
-	 * {@link Animation animations'} own onFinishedProperties the
-	 */
-	public void handleEnrollment(ImageView enrollicon) {
-		this.enrollIcon = enrollicon;
-		this.handleEnrollment();
-	}
-
     /**
      *
      * @param onFinish lambda to execute when animation is finished
@@ -522,17 +499,20 @@ public class Enroller<N extends Region> extends BorderPane {
                 slidingWrapper.maxWidthProperty().bind(extendedSizeProperty);
             }
 
+			// Set the content visible, so that you see the content appearing
+			// instead of when finished the animation suddenly see it
+			content.setVisible(true);
 
             if(onfinishMethod != null)
                 onfinishMethod.run();
+
             // Set the state to extended because extending is finished
             state = State.EXTENDED;
         });
 	}
 
 	/**
-	 * Function for handeling the enrollment for when an {@link #enrollIcon} is
-	 * known (otherwise use the {@link #handleEnrollment(ImageView)}). Checks if
+	 * Function for handeling the enrollment. Checks if
 	 * there should be collapsed or extended and then plays the
 	 * {@link Animation}. <br />
 	 * <br />

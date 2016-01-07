@@ -11,7 +11,7 @@ import javafx.geometry.Point2D;
  * @author Jeroen de Jong
  *         
  */
-public abstract class FieldObject extends Model {
+public class FieldObject extends Model {
     
     /** certainty of detection by ssl-vision */
     private Float   confidence;
@@ -37,10 +37,14 @@ public abstract class FieldObject extends Model {
      */
     public FieldObject(final String name, final String identifier) {
         super(name, identifier);
+    }
+
+    @Override
+    public void initialize() {
         xPosition = new SimpleFloatProperty(0f);
         yPosition = new SimpleFloatProperty(0f);
     }
-    
+
     /**
      * @return certainty of detection by ssl-vision
      */

@@ -31,6 +31,10 @@ public class NetworkSettings extends Model {
     public NetworkSettings(Class<? extends ProtoPacket<?>> type) {
         super("NetworkSettings", type.getSimpleName());
         this.packetType = type;
+    }
+
+    @Override
+    public void initialize(){
         // standard this sockets should be open
         this.closed = Boolean.FALSE;
     }

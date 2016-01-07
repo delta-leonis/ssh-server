@@ -9,7 +9,6 @@ import java.util.stream.Stream;
  *
  * @author Jeroen de Jong
  * @author Rimon Oz
- *         
  */
 public class Logger extends java.util.logging.Logger {
     
@@ -20,18 +19,23 @@ public class Logger extends java.util.logging.Logger {
      * @return a suitable logger
      */
     public static Logger getLogger() {
-        //return getLogger(Thread.currentThread().getStackTrace()[2].getClassName());
-        // is this more better?
-        return Logger.getLogger(new SecurityManager() {
-            
-            String className = this.getClassContext()[1].getName();
-        }.className);
-        
+        // Retrieve the calling class name by :
+        // 1. creating an anonymous SecurityManager this way we can call the private method #getClassContext()
+        String callingClassName = new SecurityManager() {
+            // 2. create a public field in which we store the callers name.
+            String className = this.getClassContext()[2].getName();
+        }// 3. access the classname outside this scope
+        .className;
+        // 4. ???
+
+        // 5. profit!
+        return Logger.getLogger(callingClassName);
     }
     
     /**
-     * get a java.util.logging.logger and cast it to logger for String.format
-     * functionality
+     * get a {@link java.util.logging.Logger} and cast it to {@link Logger} for String.format
+     * functionality. If the loggername starts with "org.ssh", a new {@link LoggerMemoryHandler} will be
+     * attached for future use ({@link org.ssh.ui.components.overlay.LoggerConsole} for example)
      * 
      * @param name
      *            A name for the logger. This should be a dot-separated name and should normally be
@@ -39,15 +43,67 @@ public class Logger extends java.util.logging.Logger {
      *            javax.swing
      * @return a suitable Logger
      */
-    public static Logger getLogger(final String name) {
-        final LogManager m = LogManager.getLogManager();
-        Object l = m.getLogger(name);
-        if (l == null) m.addLogger(new Logger(name, null));
-        l = m.getLogger(name);
-        ((Logger) l).setLevel(Level.ALL);
-        return (Logger) l;
+    public static Logger getLogger(String name) {
+        //retrieve the manager
+        final LogManager logManager = LogManager.getLogManager();
+        //retrieve the logger with given name
+        Logger logger = (Logger) logManager.getLogger(name);
+        //if it doesn't work
+        if (logger == null) {
+            // create the logger
+            logManager.addLogger(new Logger(name, null));
+            //retrieve the logger
+            logger = (Logger) logManager.getLogger(name);
+        }
+
+        // by default every loglevel should be accepted
+        logger.setLevel(Level.ALL);
+
+        // if it is a logger for starting with org.ssh,
+        // we probably want a LoggerMemoryHandler attached.
+        if (name.matches("^org\\.ssh(.*?)$"))
+            logger.attachMemoryHandler();
+
+        // oh, we're finished... let's return the logger then.
+        return logger;
     }
-    
+
+    /**
+     * Attaches a new {@link LoggerMemoryHandler} as long
+     */
+    private void attachMemoryHandler() {
+        //make sure the name contains the right format
+        if (!getName().matches("^org\\.ssh(.*?)$"))
+            return;
+
+        String packageName = getName();
+
+        // org.ssh is an exception that will not need formatting
+        if(!getName().equals("org.ssh")) {
+            // split at the dots (org[.]ssh[.]package[.]class
+            String[] nameParts = getName().split("\\.", 4);
+            // it should contain multiple dots
+            if (nameParts.length < 3) return;
+            //construct the name
+            packageName = "org.ssh." + nameParts[2];
+        }
+
+        //retrieve the manager
+        final LogManager logManager = LogManager.getLogManager();
+
+        // get the logger of the package
+        java.util.logging.Logger logger = logManager.getLogger(packageName);
+
+        //create if it doesn't exist yet
+        if(logger == null) {
+            logManager.addLogger(new Logger(packageName, null));
+            //retrieve
+            logger = logManager.getLogger(packageName);
+        }
+        //attach a LoggerMemoryHandler
+        logger.addHandler(new LoggerMemoryHandler());
+    }
+
     /**
      * Creates a Logger instance
      * 
@@ -233,16 +289,8 @@ public class Logger extends java.util.logging.Logger {
      * If the logger is currently enabled for the EXCEPTION message level then the given message is
      * forwarded to log level FINEST
      * 
-     * @param format
-     *            A format string</a>
-     *            
-     * @param args
-     *            Arguments referenced by the format specifiers in the format string. If there are
-     *            more arguments than format specifiers, the extra arguments are ignored. The number
-     *            of arguments is variable and may be zero. The maximum number of arguments is
-     *            limited by the maximum dimension of a Java array as defined by <cite>The
-     *            Java&trade; Virtual Machine Specification</cite>. The behaviour on a {@code null}
-     *            argument depends on the conversion</a>.
+     * @param exception
+     *          The exception that occured, this will be formatted
      *            
      * @see java.util.Formatter
      */

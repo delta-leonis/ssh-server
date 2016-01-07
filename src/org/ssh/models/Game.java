@@ -30,12 +30,13 @@ public class Game extends Model {
      */
     public Game() {
         super("game", "");
+    }
 
-        // Default settings
+    @Override
+    public void initialize() {
         allyColor = TeamColor.YELLOW;
         allySide = Direction.EAST;
     }
-
     /**
      * @return the {@link Team} of the if {@link Allegiance#ALLY allies} found
      */

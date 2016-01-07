@@ -10,7 +10,7 @@ import org.ssh.models.enums.Allegiance;
 public class Goal extends FieldObject {
     
     /** Defending team for this goal */
-    private Allegiance allegiance;
+    private transient Allegiance allegiance;
 
     /** Dimensions of the goal */
     private Integer                        goalDepth, goalWidth;
@@ -26,8 +26,13 @@ public class Goal extends FieldObject {
         super("goal", allegiance.name());
 
         this.allegiance = allegiance;
-        this.goalDepth = 0;
-        this.goalWidth = 0;
+    }
+
+    @Override
+    public void initialize(){
+        super.initialize();
+        goalDepth = 0;
+        goalWidth = 0;
     }
     
     /**

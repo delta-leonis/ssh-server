@@ -8,7 +8,7 @@ import java.lang.reflect.Modifier;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,20 +16,17 @@ import java.util.stream.Stream;
 
 import org.ssh.controllers.ControllerLayout;
 import org.ssh.controllers.ControllerLayoutSerializer;
-import org.ssh.managers.Manageable;
 import org.ssh.managers.ManagerController;
-import org.ssh.managers.manager.Models;
 import org.ssh.models.Model;
 import org.ssh.models.Settings;
 import org.ssh.util.Logger;
-import org.ssh.util.Reflect;
 
 import com.google.common.io.Files;
-import com.google.common.reflect.Reflection;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
+import org.ssh.util.Reflect;
 
 /**
  * The Class ModelController. manages all {@link Model Models}.
@@ -85,11 +82,11 @@ public class ModelController extends ManagerController<Model> {
         ModelController.LOG.info("Searching for configfile %s", filename);
         
         // for the settings.json
-        File config = new File(this.settings.getUserProfilePath() + filename);
+        File config = new File(this.settings.getProfilesPath() + filename);
         if ((config.exists() && !config.isDirectory())) return Optional.of(config.toPath());
         
         // check for a custom file
-        config = new File(this.settings.getProfilePath() + filename);
+        config = new File(this.settings.getCurrentWorkspacePath() + filename);
         if ((config.exists() && !config.isDirectory())) return Optional.of(config.toPath());
         
         // check for a default one
@@ -99,22 +96,7 @@ public class ModelController extends ManagerController<Model> {
         // none found
         return Optional.empty();
     }
-    
-    /**
-     * Generate a map of all non-transient {@link Field fields}, and fill them with null
-     * 
-     * @param obj
-     *            Object to generate map for
-     * @return a map compaitble with update method in Model (see {@link Model#update(Map)})
-     */
-    private Map<String, Object> generateFieldMap(final Object obj) {
-        return Stream.of(obj.getClass().getDeclaredFields())
-                // filter all non-transient fields
-                .filter(field -> !Modifier.isTransient(field.getModifiers()))
-                // collect them to a map (key = field, value = null)
-                .collect(Collectors.toMap(Field::getName, null));
-    }
-    
+
     /**
      * Initialize all values in the configfile for each models
      * 
@@ -181,6 +163,11 @@ public class ModelController extends ManagerController<Model> {
             ModelController.LOG.warning("Could not read '%s' for model '%s'.", configFile, model.getName());
             return false;
         }
+        catch(Exception exception) {
+            ModelController.LOG.exception(exception);
+            ModelController.LOG.warning("Could not read '%s' for model '%s', Generic exception occured", configFile, model.getName());
+            return false;
+        }
     }
 
     
@@ -193,7 +180,9 @@ public class ModelController extends ManagerController<Model> {
      * @return success value
      */
     public boolean reinitialize(final Model model) {
-        model.update(this.generateFieldMap(model));
+        //model.update(this.generateFieldMap(model));
+        model.reset(Reflect.fieldList(model.getClass()));
+        model.initialize();
         return this.load(model);
     }
     
@@ -216,7 +205,7 @@ public class ModelController extends ManagerController<Model> {
      * @return success value
      */
     public boolean save(final Model model) {
-        return this.saveAs(this.settings.getProfilePath() + model.getConfigName(), model);
+        return this.saveAs(this.settings.getCurrentWorkspacePath() + model.getConfigName(), model);
     }
     
     /**

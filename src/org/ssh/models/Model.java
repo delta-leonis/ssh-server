@@ -14,6 +14,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -39,7 +40,7 @@ import javafx.beans.value.WritableValue;
 public abstract class Model extends Manageable {
 
     /** unique identifier for this model */
-    private String identifier;
+    private transient String identifier;
 
     /**
      * Instantiates a new models.
@@ -51,6 +52,11 @@ public abstract class Model extends Manageable {
         super(name);
         this.identifier = identifier;
     }
+
+    /**
+     * Should contains all initial values as declared normally in the constructor
+     */
+    public abstract void initialize();
 
     /**
      * @return name used for config
@@ -259,6 +265,15 @@ public abstract class Model extends Manageable {
      */
     public String getIdentifier(){
         return String.format("%s %s", getName(), identifier).trim();
+    }
+
+    /**
+     * Reset a number of fields
+     * @param fields field to reset to null
+     */
+    public void reset(List<String> fields){
+        fields.forEach(field ->
+                set(field, null));
     }
 
     @Target(value = ElementType.FIELD)

@@ -24,12 +24,12 @@ public class Referee extends Model {
     /**
      * History of all the {@link Stage stages}, last index is last received {@link Stage stage}
      */
-    private final List<Stage>          stageHistory;
+    private List<Stage>          stageHistory;
     /**
      * History of all the {@link RefereeCommand commands}, last index is last received
      * {@link RefereeCommand command}
      */
-    private final List<RefereeCommand> commandHistory;
+    private List<RefereeCommand> commandHistory;
     /**
      * Timestamp in ms of the last parsed {@link RefereeOuterClass.Referee referee message}
      */
@@ -48,10 +48,14 @@ public class Referee extends Model {
      */
     public Referee() {
         super("Referee", "");
+    }
+
+    @Override
+    public void initialize() {
         stageHistory = new ArrayList<Stage>();
         commandHistory = new ArrayList<RefereeCommand>();
     }
-    
+
     /**
      * @return return number of commands
      */

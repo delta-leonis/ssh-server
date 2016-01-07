@@ -150,6 +150,7 @@ public final class Models implements Manager<Model>{
      * @return success value
      */
     public static boolean initialize(final Model model) {
+        model.initialize();
         return Models.controller.load(model);
     }
 

@@ -29,10 +29,13 @@ public class CameraSettings extends Model {
         
         // Initialize super class
         super("camerasettings", "");
-        
+    }
+
+    @Override
+    public void initialize(){
         // Setting default values
         zoom = yaw = pitch = 0.0;
-        
+
         // Setting location
         location = new Point3D(0.0, 0.0, 0.0);
     }

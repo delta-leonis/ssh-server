@@ -1,5 +1,8 @@
 package org.ssh.models;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import java.io.File;
 import java.net.URI;
 
@@ -14,7 +17,7 @@ import java.net.URI;
       \-  lastSession   This folder contains settings which were active in the last session in this profile
  * </pre>
  * 
- * @TODO change profile_folder to be settable, since Settings aren't only applicable to a user.name,
+ * @TODO change profiles_folder to be settable, since Settings aren't only applicable to a user.name,
  *       but also a custom name
  * @TODO define these constants while initializing this Model in main manager class
  *       
@@ -30,35 +33,50 @@ public class Settings extends Model {
     /**
      * Folder for the default config files
      */
-    private static final transient String DEFAULT_FOLDER  = "default";
-                                                          
-    private static final transient String TEMP_FOLDER     = "temp";
+    private static final transient String DEFAULT_WORKSPACE = "default";
     /**
-     * Folder for settings which override default settings
+     * Folder used as standard workspace
      */
-    private static final transient String USER_PROFILES   = System.getProperty("user.name");
-                                                          
+    private static final transient String TEMP_WORKSPACE = "temp";
+
+    /**
+     * Username of current user
+     */
+    private static final transient String USERNAME  = System.getProperty("user.name");
+
     /**
      * Separator for folders (should be {@link File#separator}, but URI can't play nice)
      */
     private static final transient String SEPARATOR       = "/";
                                                           
-    private String                        default_profile = "";
+    private String defaultWorkspace;
                                                           
-    private transient String              current_profile = "";
+    private transient StringProperty      currentProfile;
+
+    private transient String              currentWorkspace = "";
 
     /** The folder containing all init files that are run whenever the {@link org.ssh.ui.lua.console.Console} is initialized */
-    private String luaInitFolder = "";
+    private String luaInitFolder;
     /** Folder containing all other lua scripts */
-    private String luaScriptFolder = "";
+    private String luaScriptFolder;
     /** The path to application.css */
-    private String applicationCss = "";
+    private String applicationCss;
 
     /**
      * Create a settings model
      */
     public Settings() {
         super("settings", "");
+    }
+
+    @Override
+    public void initialize(){
+        currentProfile = new SimpleStringProperty(USERNAME);
+        luaInitFolder = "";
+        luaScriptFolder = "";
+        applicationCss = "";
+        defaultWorkspace = "";
+        resetWorkspace();
     }
     
     /**
@@ -74,7 +92,7 @@ public class Settings extends Model {
      * @return default path for settings and modeldumps.
      */
     public URI getDefaultPath() {
-        return URI.create(Settings.BASE_PATH + Settings.SEPARATOR + Settings.DEFAULT_FOLDER + Settings.SEPARATOR);
+        return URI.create(Settings.BASE_PATH + Settings.SEPARATOR + Settings.DEFAULT_WORKSPACE + Settings.SEPARATOR);
     }
     
     /**
@@ -82,25 +100,42 @@ public class Settings extends Model {
      * 
      * @return Path to folder containing all profiles for a specific user.
      */
-    public URI getUserProfilePath() {
-        return URI.create((Settings.BASE_PATH + Settings.SEPARATOR + Settings.USER_PROFILES + Settings.SEPARATOR).replace(" ", ""));
+    public URI getProfilesPath() {
+        return URI.create((Settings.BASE_PATH + Settings.SEPARATOR + getProfile() + Settings.SEPARATOR).replace(" ", ""));
     }
-    
+
+    public StringProperty getCurrentProfileProperty(){
+        return currentProfile;
+    }
+    public String getCurrentProfile(){
+        return currentProfile.getValue();
+    }
+
     /**
-     * if lastSessionpath is empty, the profile path should be read.
-     * 
      * @return profile specific path for settings and modeldumps
      */
-    public URI getProfilePath() {
-        return URI.create(getUserProfilePath() + getProfile() + Settings.SEPARATOR);
+    public URI getCurrentWorkspacePath() {
+        return URI.create(getProfilesPath() + getCurrentWorkspace() + Settings.SEPARATOR);
     }
     
     /**
-     * @return Current (should be) loaded profile.
+     * @return Current (should be) loaded workspace.
      */
-    public String getProfile() {
-        return current_profile.isEmpty() ? default_profile.isEmpty() ? Settings.TEMP_FOLDER : default_profile
-                : current_profile;
+    public String getCurrentWorkspace() {
+        return currentWorkspace;
+    }
+
+    public String getProfile(){
+        return currentProfile.getValue().isEmpty() ?  Settings.DEFAULT_WORKSPACE :  currentProfile.getValue();
+    }
+
+    public void resetWorkspace(){
+        // empty current workspace
+        currentWorkspace = "";
+        //if it isn't default, it should set a workspace
+        if(!getDefaultPath().equals(getProfilesPath()))
+            //which is either default, or a temp
+            currentWorkspace = defaultWorkspace.isEmpty() ? Settings.TEMP_WORKSPACE : Settings.DEFAULT_WORKSPACE;
     }
 
     /**

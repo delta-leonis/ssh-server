@@ -1,14 +1,12 @@
 package org.ssh.ui.components.overlay;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
+import java.util.stream.Stream;
 
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
@@ -26,6 +24,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
+import org.ssh.util.LoggerMemoryHandler;
 
 /**
  * Class for displaying data of the {@link Logger}. It consists of a {@link TabPane} where several
@@ -50,7 +49,7 @@ public class LoggerConsole extends UIComponent {
      */
     @FXML
     private TabPane  tabPane;
-                     
+
     /**
      * Constructor for {@link LoggerConsole}. Search for all packages in org.ssh and makes a
      * {@link LoggingTab} for each package as displayed group of {@link Logger}s.
@@ -58,7 +57,7 @@ public class LoggerConsole extends UIComponent {
     public LoggerConsole() {
         // Call super constructor with right fxml file
         super("loggerconsole", "overlay/loggerconsole.fxml");
-        
+
         // Make a list to store the tabNames in while searching all the tabNames
         List<String> tabNames = new ArrayList<>();
         // Get an enumeration with all the names of loggers
@@ -112,13 +111,7 @@ public class LoggerConsole extends UIComponent {
          */
         @FXML
         private ChoiceBox<String>   levelDropdown;
-                                    
-        /**
-         * {@link LoggerMemoryHandler} for handling the logging and managing what {@link Level} of
-         * logging is displayed.
-         */
-        private LoggerMemoryHandler loggerHandler;
-                                    
+
         /**
          * Constructor for {@link LoggingTab}. Makes the tab existing of a {@link TableView} with
          * {@link LogTableRow}s and adds a {@link LoggerMemoryHandler} to the {@link Logger} that
@@ -133,12 +126,21 @@ public class LoggerConsole extends UIComponent {
 
             UI.bindSize(rowTableView, rootPane);
             // Make a memory handler for the logger.
-            loggerHandler = new LoggerMemoryHandler();
-            // Add the to the logger this tab displays
-            logger.addHandler(loggerHandler);
+
+            Optional<Handler> oHandler = Stream.of(logger.getHandlers())
+                    //filter for the right listnener
+                    .filter(handler -> handler instanceof LoggerMemoryHandler)
+                    //return one
+                    .findAny();
+
+            //make sure it has been found
+            if(!oHandler.isPresent()) {
+                UIComponent.LOG.warning("Could not find LoggerMemoryHandler to bind to LoggerConsole for %s", logger.getName());
+                return;
+            }
 
             //filter data to contain everything
-            FilteredList<LogTableRow> filteredData = new FilteredList<>(loggerHandler.getLogrecords(),
+            FilteredList<LogTableRow> filteredData = new FilteredList<>(((LoggerMemoryHandler)oHandler.get()).getLogrecords(),
                     p -> true);
 
             // create a handler which will filter based on selected LEVEL in table
@@ -156,176 +158,4 @@ public class LoggerConsole extends UIComponent {
             rowTableView.setItems(sortedData);
         }
     }
-
-    /**
-     * Class that describes a {@link LogRecord} in legible attributes. This class is used to
-     * store as element in a list ({@link TableView}) of rows that are displayed as a table.
-     *
-     * @author Joost Overeem
-     * @author Jeroen de Jong
-     */
-    protected class LogTableRow {
-        /**
-         * The unique id (to be retrieved from the sequenceNumber of {@link LogRecord}).
-         */
-        @FXML
-        private int    id;
-        /**
-         * {@link Level} name of the log.
-         */
-        @FXML
-        private String level;
-        /**
-         * The class name of the class that called the {@link Logger}.
-         */
-        @FXML
-        private String location;
-        /**
-         * The time in a HH:mm:ss format.
-         */
-        @FXML
-        private String time;
-        /**
-         * The description (message in {@link LogRecord}).
-         */
-        @FXML
-        private String description;
-
-        /**
-         *
-         * @param id
-         *            Id as an int, from a {@link LogRecord} the
-         *            {@link LogRecord#getSequenceNumber()}.
-         * @param level
-         *            {@link Level} from a {@link LogRecord} the
-         *            {@link LogRecord#getLevel()}.
-         * @param location
-         *            Location, from a {@link LogRecord} the
-         *            {@link LogRecord#getSourceClassName()}.
-         * @param time
-         *            Time, from a {@link LogRecord} the {@link LogRecord#getMillis()}, but then
-         *            in a HH:mm:ss format.
-         * @param description
-         *            Description, from a {@link LogRecord} the {@link LogRecord#getMessage()}.
-         */
-        public LogTableRow(int id, String level, String location, String time, String description) {
-            this.id = id;
-            this.level = level;
-            this.location = location;
-            this.time = time;
-            this.description = description;
-        }
-
-        /**
-         * Instansiates a new LogTableRow based on information in given {@link LogRecord}
-         *
-         * @param record record to parse
-         */
-        public LogTableRow(LogRecord record){
-            this((int) record.getSequenceNumber(),
-                    // name of the log level
-                    record.getLevel().getName(),
-                    // name of the source class (not the whole path of course)
-                    record.getSourceClassName(),
-                    // the time in a legible format in stead of epoch
-                    (new SimpleDateFormat("HH:mm:ss")).format(new Date(record.getMillis())),
-                    // the message as description
-                    record.getMessage());
-        }
-
-        /**
-         *
-         * @return The unique id (to be retrieved from the sequenceNumber of {@link LogRecord}).
-         */
-        public int getId() {
-            return id;
-        }
-
-        /**
-         *
-         * @return The name of the {@link Level} the log is.
-         */
-        public String getLevel() {
-            return level;
-        }
-
-        /**
-         *
-         * @return The class name of the class that called the {@link Logger}.
-         */
-        public String getLocation() {
-            return location;
-        }
-
-        /**
-         *
-         * @return The time in a HH:mm:ss format.
-         */
-        public String getTime() {
-            return time;
-        }
-
-        /**
-         *
-         * @return The description (message in {@link LogRecord}).
-         */
-        public String getDescription() {
-            return description;
-        }
-    }
-    /**
-     * {@link Handler} that stores all published {@link LogRecord}s from a {@link Logger} in
-     * {@link List}s of {@link LogRecord}s (one for every {@link Level}).<br />
-     *
-     * @author Joost Overeem
-     * @author Jeroen de Jong
-     *
-     */
-    public class LoggerMemoryHandler extends Handler {
-
-        /**
-         * List of all records
-         */
-        private ObservableList<LogTableRow> records;
-
-        /**
-         * Constructor for {@link LoggerMemoryHandler}.
-         */
-        public LoggerMemoryHandler() {
-            records = FXCollections.observableArrayList();
-        }
-
-        /**
-         * Converts the {@link LogRecord} to a {@link LogTableRow} and stores it in a list
-         *
-         * @param record description of the log event. A null record is
-         *                 silently ignored and is not published
-         */
-        @Override
-        public void publish(LogRecord record) {
-            Platform.runLater(() ->
-                    records.add(new LogTableRow(record)));
-       }
-
-        /**
-         * Clears all log records.
-         */
-        @Override
-        public void flush() {
-            Platform.runLater(records::clear);
-        }
-
-        @Override
-        public void close() throws SecurityException {
-            // Nothing to close
-        }
-
-        /**
-         * @return reference to observable list containing all {@link LogTableRow}s.
-         */
-        public ObservableList<LogTableRow> getLogrecords(){
-            return records;
-        }
-    }
-
 }

@@ -45,6 +45,11 @@ public class ControllerLayout extends Model {
         this.controller = controller;
     }
 
+    @Override
+    public void initialize(){
+        // no default values
+    }
+
     /**
      * attach a specific {@link AbstractComponent} to a {@link ButtonFunction}. Will overwrite a
      * binding whenever a {@link AbstractComponent} is already bound to a {@link ButtonFunction}

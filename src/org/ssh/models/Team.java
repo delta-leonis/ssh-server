@@ -18,15 +18,15 @@ import org.ssh.models.enums.Allegiance;
 public class Team extends Model {
 
     /** Whether this is an {@link Allegiance#ALLY} or  {@link Allegiance#OPPONENT}*/
-    private Allegiance allegiance;
+    private transient Allegiance allegiance;
 
     /** teamname given by {@link Referee} */
     private String           teamName;
 
     /** log with received cards and score, index is the count-value and Object is the timestamp. */
-    private final List<Long> yellowCards = new ArrayList<Long>(),
-            redCards = new ArrayList<Long>(),
-            scores = new ArrayList<Long>();
+    private List<Long> yellowCards,
+            redCards,
+            scores;
 
     /** team properties as time left for timeouts, number of timeouts and the goalie ID. */
     private Integer          goalieId, timeoutLeft, timeouts;
@@ -40,6 +40,14 @@ public class Team extends Model {
     public Team(final Allegiance allegiance) {
         super("team", allegiance.name());
         this.allegiance = allegiance;
+    }
+
+    @Override
+    public void initialize() {
+        yellowCards = new ArrayList<>();
+        redCards = new ArrayList<>();
+        scores = new ArrayList<>();
+
     }
 
     @Override

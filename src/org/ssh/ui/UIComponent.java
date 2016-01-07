@@ -27,7 +27,7 @@ public class UIComponent<N extends Pane> {
     private String name;
 
     // a logger for good measure
-    private static final Logger LOG = Logger.getLogger();
+    protected static final Logger LOG = Logger.getLogger();
 
     public UIComponent(String name, String fxmlFile) {
         this.name = name;

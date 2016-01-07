@@ -1,8 +1,11 @@
 package org.ssh.ui.components.overlay;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import org.ssh.managers.manager.Models;
+import org.ssh.models.Settings;
 import org.ssh.ui.UIComponent;
 import org.ssh.ui.components.Enroller;
 
@@ -16,11 +19,17 @@ public class ProfilemenuOverlay extends UIComponent<GridPane> {
     @FXML
     private Pane profilemenuWrapper;
 
+    @FXML
+    private Button profileButton;
+
     public ProfilemenuOverlay() {
         super("profile menu", "overlay/profilemenuoverlay.fxml");
 
-        profilemenu = new Enroller(new ProfileMenu().getComponent(), Enroller.ExtendDirection.DOWN,
-                profilemenuWrapper.widthProperty(), profilemenuWrapper.heightProperty());
+        ProfileMenuContents cont = new ProfileMenuContents();
+        profilemenu = new Enroller(cont.getComponent(), Enroller.ExtendDirection.DOWN,
+                profilemenuWrapper.widthProperty(), cont.getComponent().heightProperty());
+
+        //
 
         // Set a style class for the profilemenuEnroller
         profilemenu.getStyleClass().add("profilemenuEnroller");
@@ -28,6 +37,10 @@ public class ProfilemenuOverlay extends UIComponent<GridPane> {
         // add menu to wrapper
         profilemenuWrapper.getChildren().add(profilemenu);
 
+        Models.<Settings>get("settings")
+                .ifPresent(settings ->
+                        profileButton.textProperty().bind(settings.getCurrentProfileProperty())
+                );
     }
 
     /**

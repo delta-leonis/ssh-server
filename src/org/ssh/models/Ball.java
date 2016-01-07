@@ -23,7 +23,12 @@ public class Ball extends FieldObject {
     public Ball() {
         super("ball", "");
     }
-    
+
+    @Override
+    public void initialize(){
+        super.initialize();
+        //no default values
+    }
     /**
      * @return Height of the ball as provided by ssl-vision
      */

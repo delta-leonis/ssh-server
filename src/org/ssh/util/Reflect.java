@@ -1,7 +1,11 @@
 package org.ssh.util;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.ssh.models.Model;
 
@@ -68,4 +72,32 @@ public class Reflect {
         Reflect.LOG.info("Could not find %s in %s (or a parent).", fieldName, clazz.getName());
         return Optional.empty();
     }
+
+    /**
+     * Create a list of all fieldnames that aren't Transient
+     *
+     * @param clazz  Class to create list for
+     * @return list of all fieldnames that aren't Transient
+     */
+    public static List<String> fieldList(final Class<?> clazz){
+        List<String> fieldnames = new ArrayList<String>();
+
+        // local class Iterator
+        Class<?> clazzI = clazz;
+        // loop until all superclasses has been tried
+        while (clazzI.getSuperclass() != null) {
+            //get all fieldnames for this class
+            fieldnames.addAll(Stream.of(clazzI.getDeclaredFields())
+                    // it should not be transient, final or static
+                    .filter(field ->  !Modifier.isTransient(field.getModifiers())
+                            && !Modifier.isFinal(field.getModifiers())
+                            && !Modifier.isStatic(field.getModifiers()))
+                    //field -> fieldname
+                    .map(Field::getName)
+                    .collect(Collectors.toList()));
+            clazzI = clazzI.getSuperclass();
+        }
+        return fieldnames;
+    }
+
 }

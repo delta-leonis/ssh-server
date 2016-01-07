@@ -68,6 +68,11 @@ public class Robot extends FieldObject {
         super("robot", allegiance.identifier() + robotId);
         this.allegiance = allegiance;
         this.robotId = robotId;
+    }
+
+    @Override
+    public void initialize() {
+        super.initialize();
         this.isSelected = new SimpleBooleanProperty(false);
         this.isConnected = new SimpleBooleanProperty(false);
         this.isOnSight = new SimpleBooleanProperty(false);

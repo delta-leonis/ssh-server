@@ -29,6 +29,11 @@ public class Field extends Model {
     public Field() {
         super("field", "");
     }
+
+    @Override
+    public void initialize(){
+        //no default values
+    }
     
     /**
      * @return Width of the boundary around the field.
