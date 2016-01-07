@@ -9,6 +9,9 @@ import org.ssh.ui.UIComponent;
 import org.ssh.ui.components.Enroller;
 
 /**
+ * Class containing the wrapper and {@link Enroller} for the {@link LoggerConsole}.
+ *
+ * @see LoggerConsole
  * @author Jeroen de Jong
  * @date 12/23/2015
  */
