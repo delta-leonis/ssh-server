@@ -1,8 +1,10 @@
 package org.ssh.pipelines.translators;
 
 import org.ssh.pipelines.packets.DetectionPacket;
+import org.ssh.pipelines.packets.RadioPacket;
 import org.ssh.pipelines.packets.StrategyPacket;
 import org.ssh.services.AbstractTranslator;
+import protobuf.Radio;
 
 import java.util.HashMap;
 import java.util.function.Function;
@@ -11,7 +13,7 @@ import java.util.function.Function;
  * The Class DetectionToStrategyTranslator
  * @author Rimon Oz
  */
-public class DetectionToStrategyTranslator extends AbstractTranslator<DetectionPacket, StrategyPacket> {
+public class DetectionToStrategyTranslator extends AbstractTranslator<DetectionPacket, RadioPacket> {
     /**
      * Instantiates a new Translator.
      *
@@ -19,6 +21,8 @@ public class DetectionToStrategyTranslator extends AbstractTranslator<DetectionP
      * @param translationFunction
      */
     public DetectionToStrategyTranslator(String name) {
-        super(name, (DetectionPacket packet) -> new StrategyPacket(new HashMap<>()));
+        super(name, (DetectionPacket packet) -> {
+            return new RadioPacket(Radio.RadioProtocolWrapper.newBuilder());
+        });
     }
 }

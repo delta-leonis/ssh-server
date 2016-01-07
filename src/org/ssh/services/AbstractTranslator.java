@@ -1,7 +1,9 @@
 package org.ssh.services;
 
+import com.google.common.reflect.TypeToken;
 import org.ssh.pipelines.AbstractPipelinePacket;
 
+import java.lang.reflect.Type;
 import java.util.function.Function;
 
 /**
@@ -20,6 +22,11 @@ public abstract class AbstractTranslator<P extends AbstractPipelinePacket<?>, Q 
      * The transfer function representing the process the coupler symbolizes.
      */
     public Function<P, Q> translationFunction;
+
+    /** The reflected TypeToken (o¬‿¬o ). */
+    @SuppressWarnings ("serial")
+    private TypeToken<Q> outputType = new TypeToken<Q>(this.getClass()) {
+    };
 
     /**
      * Instantiates a new Translator.
@@ -50,4 +57,20 @@ public abstract class AbstractTranslator<P extends AbstractPipelinePacket<?>, Q 
         return this.translationFunction;
     }
 
+    /**
+     * Translates a packet from type P to type Q.
+     * @param inputPacket   The packet of type P.
+     * @return              The packet of type Q.
+     */
+    public Q translate(final P inputPacket) {
+        return this.getTranslationFunction().apply(inputPacket);
+    }
+
+    /**
+     * Returns the output type (Q) of this translator.
+     * @return The type of output packet produced by this translator.
+     */
+    public Type getOutputType() {
+        return outputType.getType();
+    }
 }

@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 import org.ssh.managers.AbstractManageable;
 import org.ssh.managers.manager.Pipelines;
 import org.ssh.services.AbstractConsumer;
+import org.ssh.services.AbstractCoupler;
 import org.ssh.services.AbstractProducer;
 import org.ssh.util.Logger;
 
@@ -18,7 +19,7 @@ import com.google.common.reflect.TypeToken;
 /**
  * The Class AbstractPipeline.
  *
- * A Pipeline processes data using {@link AbstractProducer}, {@link Coupler}, and {@link AbstractConsumer}.
+ * A Pipeline processes data using {@link AbstractProducer}, {@link AbstractCoupler}, and {@link AbstractConsumer}.
  *
  * @param <P>
  *            A PipelinePacket this Pipeline can work with.
@@ -119,20 +120,21 @@ public abstract class AbstractPipeline<P extends AbstractPipelinePacket<?>> exte
         final P pipelinePacket = this.queue.poll();
 
         // get the results
-        List<P> resultPackets = (List<P>) this.routes.stream()
+        List<P> resultPackets = (List<P>) this.routes.stream().parallel()
                 .map(route -> route.apply(pipelinePacket))
                 .collect(Collectors.toList());
 
         // if there were no couplers then the result is the original packet
-        resultPackets = resultPackets.isEmpty() ? Collections.singletonList(pipelinePacket) : resultPackets;
+        final List<P> resultant = resultPackets.isEmpty() ? Collections.singletonList(pipelinePacket) : resultPackets;
 
-        // find correct translators
-        // retrieve output type
-        // map onto translators
-        // map result onto
+        // map the packet onto the compatible translators
+        Pipelines.getCompatibleTranslators(this).forEach(translator -> resultant.forEach(resultPacket -> {
+            Pipelines.getOfDataType(translator.getOutputType())
+                    .forEach(pipeline -> pipeline.addPacket(translator.translate(resultPacket)).processPacket());
+        }));
 
         // map the results on the consumers
-        return resultPackets.stream().map(resultPacket -> this.consumers.stream()
+        return resultant.stream().parallel().map(resultPacket -> this.consumers.stream()
                         .map(consumer -> consumer.consume((P)resultPacket)).collect(Collectors.toList()))
                 .flatMap(Collection::stream)
                 // return true if everything succeeded, false otherwise
