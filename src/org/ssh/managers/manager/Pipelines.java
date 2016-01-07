@@ -6,6 +6,7 @@ import org.ssh.managers.ManagerInterface;
 import org.ssh.managers.controllers.PipelineController;
 import org.ssh.pipelines.AbstractPipeline;
 import org.ssh.pipelines.AbstractPipelinePacket;
+import org.ssh.services.AbstractConsumer;
 import org.ssh.services.AbstractCoupler;
 import org.ssh.services.AbstractProducer;
 import org.ssh.services.AbstractTranslator;
@@ -23,7 +24,7 @@ import java.util.stream.Stream;
 /**
  * The Class Pipelines
  * <p>
- * Pipelines is responsible for managing {@link AbstractProducer}, {@link Coupler}, and {@link Consumer}
+ * Pipelines is responsible for managing {@link AbstractProducer}, {@link AbstractCoupler}, and {@link Consumer}
  * relationships. Most datastreams within the application should be abstracted as pipelines.
  *
  * @author Rimon Oz
@@ -85,13 +86,13 @@ public final class Pipelines implements ManagerInterface<AbstractPipeline<? exte
      * @param pipeline The given pipeline.
      * @return The compatible Consumers.
      */
-    public static <P extends AbstractPipelinePacket<?>, C extends Consumer<P>> List<C> getCompatibleConsumers(
+    public static <P extends AbstractPipelinePacket<?>, C extends AbstractConsumer<P>> List<C> getCompatibleConsumers(
             final AbstractPipeline<P> pipeline) {
         Pipelines.LOG.info("Getting compatible Consumer(s) for type: %s", pipeline.getType().toString());
 
         @SuppressWarnings("unchecked")
         // get the list of services
-        final List<C> collect = Services.getOfType(Consumer.class).stream()
+        final List<C> collect = Services.getOfType(AbstractConsumer.class).stream()
                 // filter out the services compatible with this pipeline
                 .filter(service -> service.getType().equals(pipeline.getType()))
                 // map them to the correct parameterized type and collect them in a list
@@ -149,7 +150,7 @@ public final class Pipelines implements ManagerInterface<AbstractPipeline<? exte
         // get the list of services
         final List<C> collect = Services.getOfType(AbstractTranslator.class).stream()
                 // filter out the services compatible with this pipeline
-                .filter(service -> service.getType().equals(pipeline.getType()))
+                .filter(service -> service.getTypes().contains(pipeline.getType()))
                 // map them to the correct parameterized type and collect them in a list
                 .map(service -> (C) service)
                 .collect(Collectors.toList());

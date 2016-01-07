@@ -151,7 +151,7 @@ public abstract class AbstractManagerController<M extends AbstractManageable> {
         // get the list of manageables
         return (List<N>) this.manageables.values().stream()
                 // filter out the compatible ones by type
-                .filter(manageable -> manageable.getClass().equals(type))
+                .filter(manageable -> type.isAssignableFrom(manageable.getClass()))
                 // and stick them in a list
                 .collect(Collectors.toList());
     }

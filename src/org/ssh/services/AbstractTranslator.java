@@ -29,7 +29,7 @@ public abstract class AbstractTranslator<P extends AbstractPipelinePacket<?>, Q 
      */
     public AbstractTranslator(final String name, final Function<P, Q> translationFunction) {
         super(name);
-        this.setTransferFunction(translationFunction);
+        this.setTranslationFunction(translationFunction);
     }
 
     /**
@@ -37,7 +37,7 @@ public abstract class AbstractTranslator<P extends AbstractPipelinePacket<?>, Q 
      * @param translationFunction The translation function to be set.
      * @return                    The Translator itself, to support method chaining.
      */
-    public AbstractTranslator<P, Q> setTransferFunction(final Function<P, Q> translationFunction) {
+    public AbstractTranslator<P, Q> setTranslationFunction(final Function<P, Q> translationFunction) {
         this.translationFunction = translationFunction;
         return this;
     }
