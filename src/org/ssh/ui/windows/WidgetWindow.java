@@ -11,6 +11,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.ssh.managers.manager.UI;
 import org.ssh.ui.UIController;
 
 import java.util.List;
@@ -48,6 +49,9 @@ public class WidgetWindow extends UIController<FlowPane> {
         this.getStage().initStyle(StageStyle.UTILITY);
         this.getStage().setAlwaysOnTop(true);
         widgetcontainer.setRowValignment(VPos.TOP);
+
+//        UI.getInstance().getWidget(widgetOrder.get(15));
+
         // spawn the window
         this.spawnWindow();
     }

@@ -94,6 +94,7 @@ public class Settings extends Model {
     public StringProperty getCurrentProfileProperty(){
         return currentProfile;
     }
+
     public String getCurrentProfile(){
         return currentProfile.getValue();
     }
@@ -128,7 +129,7 @@ public class Settings extends Model {
         //if it isn't default, it should set a workspace
         if(!getDefaultPath().equals(getProfilesPath()))
             //which is either default, or a temp
-            currentWorkspace = defaultWorkspace.isEmpty() ? Settings.TEMP_WORKSPACE : Settings.DEFAULT_FOLDER;
+            currentWorkspace = (defaultWorkspace == null || defaultWorkspace.isEmpty() )? Settings.TEMP_WORKSPACE : Settings.DEFAULT_FOLDER;
     }
 
     /**

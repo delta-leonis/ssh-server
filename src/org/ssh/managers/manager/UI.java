@@ -4,12 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
+import org.ssh.managers.Manageable;
+import org.ssh.managers.Manager;
+import org.ssh.managers.ManagerController;
+import org.ssh.managers.controllers.UIComponentController;
+import org.ssh.ui.UIComponent;
 import org.ssh.ui.UIController;
+import org.ssh.ui.components.widget.AbstractWidget;
 import org.ssh.ui.windows.MainWindow;
 import org.ssh.util.Logger;
 
@@ -29,18 +37,20 @@ import javafx.stage.Stage;
  * @TODO add removeWindow()
  * @TODO addWindow() needs to check for duplicate window names
  */
-public final class UI {
+public final class UI implements Manager<UIComponent<? extends Pane>> {
     
     /**
      * The services store has a controller that runs the store.
      */
     private static List<UIController<?>> uiControllers;
-                                         
+
+    private static UIComponentController controller;
+
     /**
      * The single instance of the class (lazy-loaded singleton).
      */
     private static final Object          instance = new Object();
-                                                  
+
     /** The Constant LOG. */
     // a logger for good measure
     private static final Logger          LOG      = Logger.getLogger();
@@ -102,6 +112,22 @@ public final class UI {
                 .findAny();
     }
 
+    public static void add(final UIComponent<?> component) {
+        controller.add(component);
+    }
+
+    public <N extends UIComponent<?>> List<N> find(String pattern) {
+        return controller.find(pattern);
+    }
+
+//    public <N extends Manageable> Optional<N> get(String name) {
+//        return controller.get(name);
+//    }
+
+    public <N extends Manageable> List<N> getAll() {
+        return controller.getAll();
+    }
+
     public static Parent getHighestParent(Parent child){
         if(child.getParent() == null)
             return child;
@@ -122,6 +148,29 @@ public final class UI {
         }
     }
 
+    public static void addWidget(AbstractWidget widget) {
+        controller.addWidget(widget);
+    }
+
+    public static List<AbstractWidget> getOrderedWidgetsForShortcuts() {
+        return controller.getOrderedShortcuts();
+    }
+
+    public static List<AbstractWidget> getOrderedWidgetsForWindow() {
+        return controller.getOrderedWidgetsForWindow();
+    }
+
+    public static void swapWindowOrder(int row1, int row2) {
+        controller.swapWindowOrder(row1, row2);
+    }
+
+    public static void swapShortcutOrder(int col1, int col2) {
+        controller.swapShortcutOrder(col1, col2);
+    }
+
+    public static int getNumberOfWidgets() {
+        return controller.getNumberOfWidgets();
+    }
 
     /**
      * Starts the UI store and spawns the main window.
@@ -133,6 +182,8 @@ public final class UI {
     public static boolean start(final Stage primaryStage) {
         // set attributes
         UI.uiControllers = new ArrayList<UIController<?>>();
+        UI.controller = new UIComponentController();
+
         UI.LOG.info("Instantiating new window with id mainWindow");
         // instantiate a new MainWindow and add it to the UI store
         return UI.uiControllers.add(new MainWindow("Leo regulus", primaryStage));

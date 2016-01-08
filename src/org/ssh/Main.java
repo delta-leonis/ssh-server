@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import org.ssh.ui.components.overlay.LoggerConsole;
 import org.ssh.util.Logger;
 import org.ssh.util.LoggerMemoryHandler;
+import org.ssh.ui.components.widget.TestWidget;
 
 /**
  * The Class Main.
@@ -88,6 +89,35 @@ public class Main extends Application {
         Network.listenFor(WrapperPacket.class);
     }
 
+    /** Test method */
+    private static void createWidgets() {
+        UI.addWidget(new TestWidget("widget 0"));
+        UI.addWidget(new TestWidget("widget 1"));
+        UI.addWidget(new TestWidget("widget 2"));
+        UI.addWidget(new TestWidget("widget 3"));
+        UI.addWidget(new TestWidget("widget 4"));
+        UI.addWidget(new TestWidget("widget 5"));
+        UI.addWidget(new TestWidget("widget 6"));
+        UI.addWidget(new TestWidget("widget 7"));
+        UI.addWidget(new TestWidget("widget 8"));
+        UI.addWidget(new TestWidget("widget 9"));
+        UI.addWidget(new TestWidget("widget 10"));
+        UI.addWidget(new TestWidget("widget 11"));
+        UI.addWidget(new TestWidget("widget 12"));
+        UI.addWidget(new TestWidget("widget 13"));
+        UI.addWidget(new TestWidget("widget 14"));
+        UI.addWidget(new TestWidget("widget 15"));
+        UI.addWidget(new TestWidget("widget 16"));
+        UI.addWidget(new TestWidget("widget 17"));
+        UI.addWidget(new TestWidget("widget 18"));
+        UI.addWidget(new TestWidget("widget 19"));
+        UI.addWidget(new TestWidget("widget 20"));
+        UI.addWidget(new TestWidget("widget 21"));
+        UI.addWidget(new TestWidget("widget 22"));
+        UI.addWidget(new TestWidget("widget 23"));
+        UI.addWidget(new TestWidget("widget 24"));
+        UI.addWidget(new TestWidget("widget 25"));
+    }
     /*
      * (non-Javadoc)
      *
@@ -106,9 +136,9 @@ public class Main extends Application {
 
         UI.start(primaryStage);
 
-
         /********************************/
         /* Below is just for testing!!! */
         /********************************/
+        createWidgets();
     }
 }

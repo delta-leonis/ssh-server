@@ -9,6 +9,7 @@ import javafx.scene.SubScene;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
+import org.ssh.managers.Manageable;
 import org.ssh.managers.manager.UI;
 import org.ssh.util.Logger;
 
@@ -18,19 +19,19 @@ import java.io.IOException;
  * @author Jeroen de Jong
  * @date 12/19/2015
  */
-public class UIComponent<N extends Pane> {
+public class UIComponent<N extends Pane> extends Manageable {
 
     private N component;
 
     private Stage stage;
 
-    private String name;
-
     // a logger for good measure
     protected static final Logger LOG = Logger.getLogger();
 
     public UIComponent(String name, String fxmlFile) {
-        this.name = name;
+        super(name);
+
+        UI.add(this);
 
         loadFXML(fxmlFile);
 
@@ -45,11 +46,6 @@ public class UIComponent<N extends Pane> {
 
     @Nullable
     public N getComponent() { return component; }
-
-    public String getName(){
-        return name;
-    }
-
 
     public <M extends Node> boolean add(M component){
         return add(component, false);
@@ -128,7 +124,7 @@ public class UIComponent<N extends Pane> {
      *            The name of the file (e.g. "application.css")
      */
     public void loadCSS(final String fileName) {
-        UIComponent.LOG.fine("Loaded CSS file /org/ssh/view2/css/%s into UIComponent %s.", fileName, this.name);
+        UIComponent.LOG.fine("Loaded CSS file /org/ssh/view2/css/%s into UIComponent %s.", fileName, this.getName());
         // apply the stylesheet
         Platform.runLater(() -> component.getStylesheets()
                 .addAll(this.getClass().getResource("/org/ssh/view2/css/" + fileName).toExternalForm()));

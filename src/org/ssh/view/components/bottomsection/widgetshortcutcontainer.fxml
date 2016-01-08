@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.Pane?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+
+<Pane fx:id="rootPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" pickOnBounds="false">
+	<ScrollPane fx:id="scrollPane">
+		<content>
+			<GridPane fx:id="shortcutPane" pickOnBounds="false">
+				<columnConstraints>
+					<ColumnConstraints percentWidth="20" />
+					<ColumnConstraints percentWidth="20" />
+					<ColumnConstraints percentWidth="20" />
+					<ColumnConstraints percentWidth="20" />
+					<ColumnConstraints percentWidth="20" />
+				</columnConstraints>
+			</GridPane>
+		</content>
+	</ScrollPane>
+</Pane>
