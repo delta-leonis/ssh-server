@@ -28,7 +28,7 @@ public class Robot extends FieldObject {
     public static final transient float ROBOT_DIAMETER = 180.0f;
 
     /** allegiance of this robot */
-    private Allegiance allegiance;
+    private final transient Allegiance allegiance;
 
     /**  Unique robot id [0-15] */
     @Alias ("robot_id")
@@ -54,7 +54,7 @@ public class Robot extends FieldObject {
     /** If the robot is on sight */
     private transient BooleanProperty                 isOnSight;
     /** The boolean for the selected state */
-    private transient SimpleListProperty<Malfunction> malfunctions;
+    private transient ListProperty<Malfunction> malfunctions;
 
     /**
      * Instantiates a new robot with specified properties
@@ -76,7 +76,8 @@ public class Robot extends FieldObject {
         this.isSelected = new SimpleBooleanProperty(false);
         this.isConnected = new SimpleBooleanProperty(false);
         this.isOnSight = new SimpleBooleanProperty(false);
-        this.malfunctions = new SimpleListProperty<>();
+this.malfunctions = new SimpleListProperty<>(
+                javafx.collections.FXCollections.observableList(new ArrayList<>()));
         this.lastUpdated = System.currentTimeMillis();
     }
 
@@ -191,7 +192,7 @@ public class Robot extends FieldObject {
      * @param malfunctionType the type to look for in the list of malfunctions
      * @return true if the list of malfunctions contains a mach of this malfunctiontype
      */
-    public boolean hasType(MalfunctionType malfunctionType){
+    public boolean hasMalfunctionOfType(MalfunctionType malfunctionType){
         return malfunctions.stream().anyMatch(funct -> funct.getMalfunctionType().equals(malfunctionType));
     }
 
@@ -199,7 +200,7 @@ public class Robot extends FieldObject {
      * @return a boolean indicating whether the list of malfunctions contains an error-type malfunction.
      */
     public boolean hasErrors() {
-        return hasType(MalfunctionType.ERROR);
+        return hasMalfunctionOfType(MalfunctionType.ERROR);
     }
 
     /**
@@ -213,7 +214,7 @@ public class Robot extends FieldObject {
      * @return a boolean indicating whether the list of this robots malfunctions contains a warning.
      */
     public boolean hasWarnings() {
-        return hasType(MalfunctionType.WARNING);
+        return hasMalfunctionOfType(MalfunctionType.WARNING);
     }
 
     /**

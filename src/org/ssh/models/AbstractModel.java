@@ -113,44 +113,53 @@ public abstract class AbstractModel extends AbstractManageable {
                     AbstractModel.LOG.info("%s in is not a modifiable field", field.getName(), this.getClass().getSimpleName());
                     return false;
                 }
-                if (!field.isAccessible()) field.setAccessible(true);
-                // check if the field has a wrapperclass surrounding it
-                if (field.get(this) instanceof WritableValue)
+                if (!field.isAccessible())field.setAccessible(true);
+                // if the field is a collection and the value is not, the value is added to the collection
+                if (field.get(this) instanceof Collection && !(value instanceof Collection))
+                    ((Collection) field.get(this)).add(value);
+                // check if the field is a writable value surrounding it
+                else if (field.get(this) instanceof WritableValue)
                     // if so, use the setValue method of field so its bounded properties get updated
-                    ((WritableValue) field.get(this)).setValue(value);
-                else
-                                    // try to cast this value, and set the field
-		        // Slightly hacky way to deal with primitive numbers.
-		        if(value instanceof Number) {
-		            Float floatRepresentation = ((Number) value).floatValue();
+                    if (value instanceof WritableValue)
+                        ((WritableValue) field.get(this)).setValue(((WritableValue) value).getValue());
+                    else
+                        ((WritableValue) field.get(this)).setValue(value);
+                // try to cast this value, and set the field
+                // Slightly hacky way to deal with primitive numbers.
+                else if(value instanceof Number) {
 		            if(field.getType().equals(Float.class))
-		                field.set(this, floatRepresentation);
+		                field.set(this, ((Number) value).floatValue());
 		            else if(field.getType().equals(Double.class))
-		                field.set(this, floatRepresentation.doubleValue());
+		                field.set(this, ((Number) value).doubleValue());
 		            else if(field.getType().equals(Integer.class))
-		                field.set(this, floatRepresentation.intValue());
+		                field.set(this, ((Number) value).intValue());
 		            else if(field.getType().equals(Long.class))
-		                field.set(this, floatRepresentation.longValue());
+		                field.set(this, ((Number) value).longValue());
 		            else if(field.getType().equals(Short.class))
-		                field.set(this, floatRepresentation.shortValue());
-		        }else {
-		            field.set(this, field.getType().cast(value));
+		                field.set(this, ((Number) value).shortValue());
 		        }
+                else
+                    field.set(this, field.getType().cast(value));
                 return true;
             }
-            else {
+            else
                 // field doesn't exist
-                AbstractModel.LOG.info("%s does not exist.\n", fieldName);
-                return false;
-            }
+                Model.LOG.info("%s does not exist.\n", fieldName);
         }
-        catch (IllegalAccessException | ClassCastException exception) {
+        catch (IllegalAccessException exception) {
             // field is either not accessible, or the fieldType didn't match
             AbstractModel.LOG.info("%s is not a (accessible) field.\n", fieldName);
             AbstractModel.LOG.exception(exception);
-            return false;
         }
+        catch (ClassCastException exception) {
+            AbstractModel.LOG.info("%s is not assignable from %s.\n", fieldName, value.getClass().getTypeName());
+        }
+        catch (UnsupportedOperationException exception) {
+            AbstractModel.LOG.info("Collection %s cannot be modified.", fieldName);
+        }
+        return false;
     }
+
 
     /**
      * Generates a human-readable string of all {@link Field Fields} in this class by refactoring.

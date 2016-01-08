@@ -69,11 +69,8 @@ public class Main extends Application {
 
         // Create some robots
         IntStream.range(0, 8).forEach(id ->{
-                    Models.create(Robot.class, id, Allegiance.OPPONENT)
-                            .update("x", fieldLength / 2 - id * 200f - 180f, "y", -fieldWidth / 2 + 180f);
-                    Models.create(Robot.class, id, Allegiance.ALLY)
-                            .update("x", id * 200f - fieldLength / 2 + 180f, "y", fieldWidth / 2 - 180f);
-
+                    Models.create(Robot.class, id, Allegiance.OPPONENT);
+                    Models.create(Robot.class, id, Allegiance.ALLY);
                 });
 
         new WrapperPipeline("Wrappahrs");

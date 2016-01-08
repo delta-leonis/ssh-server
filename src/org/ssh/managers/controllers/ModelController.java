@@ -68,6 +68,14 @@ public class ModelController extends AbstractManagerController<AbstractModel> {
     public ModelController() {
         gson = new GsonBuilder()
                 .registerTypeAdapter(ControllerLayout.class, new ControllerLayoutSerializer())
+                .registerTypeAdapter(BooleanProperty.class, new PropertyTypeAdapter<>())
+                .registerTypeAdapter(IntegerProperty.class, new PropertyTypeAdapter<>())
+                .registerTypeAdapter(LongProperty.class, new PropertyTypeAdapter<>())
+                .registerTypeAdapter(FloatProperty.class, new PropertyTypeAdapter<>())
+                .registerTypeAdapter(DoubleProperty.class, new PropertyTypeAdapter<>())
+                .registerTypeAdapter(StringProperty.class, new PropertyTypeAdapter<>())
+                .registerTypeAdapter(ObjectProperty.class, new PropertyTypeAdapter<>())
+                .registerTypeAdapter(ListProperty.class, new PropertyTypeAdapter<>())
                 .setPrettyPrinting()
                 .create();
     }
