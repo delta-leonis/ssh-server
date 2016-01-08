@@ -155,18 +155,6 @@ public class FieldGame extends Game {
         Platform.runLater(() ->
                 this.internalInitialize());
         ///this.addGameObject(this.easterCarGO);
-
-        Services.scheduleTask("veld", () ->
-        {
-            try {
-                this.updateGeometry();
-                this.updateDetection();
-            }
-            catch(Exception e) {
-                System.err.println("FAGGOTRY");
-                e.printStackTrace();
-            }
-        }, 1000000);
     }
     /**
      * {@inheritDoc}

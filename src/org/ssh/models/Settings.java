@@ -9,52 +9,39 @@ import java.net.URI;
 /**
  * This class contains all settings regarding the models and the configpaths.<br />
  * Folder structure: <br />
- * 
  * <pre>
- *   config/               This folder contains configuration files for the project
-    |-  default/        This folder contains all default settings
-    \-  customProfile   This folder contains settings for profile 'customProfile'
-      \-  lastSession   This folder contains settings which were active in the last session in this profile
+ *  .
+ *  └─ config/                This folder contains configuration files for the project
+       ├─ default/            This folder contains all default settings
+       └─ customProfile/      This folder contains settings for profile 'customProfile', usually this is a username
+          ├─  workspace1/     This folder contains specific settings for this specific workspace
+          ├─  workspace2/     This folder contains specific settings for this specific workspace
+          └─  temp/           This folder contains settings saved when no workspace was selected
  * </pre>
- * 
- * @TODO change profiles_folder to be settable, since Settings aren't only applicable to a user.name,
- *       but also a custom name
- * @TODO define these constants while initializing this Model in main manager class
  *       
  * @author Jeroen de Jong
  *         
  */
 public class Settings extends Model {
 
-    /**
-     * Base path for all config files
-     */
+    /** Base path for all config files */
     private static final transient String BASE_PATH       = "config";
-    /**
-     * Folder for the default config files
-     */
-    private static final transient String DEFAULT_WORKSPACE = "default";
-    /**
-     * Folder used as standard workspace
-     */
+    /** Folder for the default config files */
+    private static final transient String DEFAULT_FOLDER = "default";
+    /** Folder used as standard workspace */
     private static final transient String TEMP_WORKSPACE = "temp";
-
-    /**
-     * Username of current user
-     */
+    /** Username of current user */
     private static final transient String USERNAME  = System.getProperty("user.name");
-
-    /**
-     * Separator for folders (should be {@link File#separator}, but URI can't play nice)
-     */
+    /** Separator for folders (should be {@link File#separator}, but URI can't play nice) */
     private static final transient String SEPARATOR       = "/";
-                                                          
+
+
+    /** user configurable default workspace upon selecting a profile */
     private String defaultWorkspace;
-                                                          
+    /** the current used profile containing all workspaces */
     private transient StringProperty      currentProfile;
-
+    /** the current used workspace */
     private transient String              currentWorkspace = "";
-
     /** The folder containing all init files that are run whenever the {@link org.ssh.ui.lua.console.Console} is initialized */
     private String luaInitFolder;
     /** Folder containing all other lua scripts */
@@ -92,7 +79,7 @@ public class Settings extends Model {
      * @return default path for settings and modeldumps.
      */
     public URI getDefaultPath() {
-        return URI.create(Settings.BASE_PATH + Settings.SEPARATOR + Settings.DEFAULT_WORKSPACE + Settings.SEPARATOR);
+        return URI.create(Settings.BASE_PATH + Settings.SEPARATOR + Settings.DEFAULT_FOLDER + Settings.SEPARATOR);
     }
     
     /**
@@ -125,17 +112,23 @@ public class Settings extends Model {
         return currentWorkspace;
     }
 
+    /**
+     * @return the profile
+     */
     public String getProfile(){
-        return currentProfile.getValue().isEmpty() ?  Settings.DEFAULT_WORKSPACE :  currentProfile.getValue();
+        return currentProfile.getValue().isEmpty() ?  Settings.DEFAULT_FOLDER :  currentProfile.getValue();
     }
 
+    /**
+     * Reset the workspace to the {@link #defaultWorkspace default workspace} or the {@link #TEMP_WORKSPACE temporary folder}
+     */
     public void resetWorkspace(){
         // empty current workspace
         currentWorkspace = "";
         //if it isn't default, it should set a workspace
         if(!getDefaultPath().equals(getProfilesPath()))
             //which is either default, or a temp
-            currentWorkspace = defaultWorkspace.isEmpty() ? Settings.TEMP_WORKSPACE : Settings.DEFAULT_WORKSPACE;
+            currentWorkspace = defaultWorkspace.isEmpty() ? Settings.TEMP_WORKSPACE : Settings.DEFAULT_FOLDER;
     }
 
     /**
