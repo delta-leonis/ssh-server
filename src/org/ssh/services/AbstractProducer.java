@@ -40,6 +40,7 @@ public abstract class AbstractProducer<P extends AbstractPipelinePacket<?>> exte
 
     // a logger for good measure
     private static final Logger     LOG = Logger.getLogger();
+
     /**
      * Instantiates a new Producer.
      *
@@ -104,10 +105,10 @@ public abstract class AbstractProducer<P extends AbstractPipelinePacket<?>> exte
      */
     public ListenableFuture<P> produceOnce(final String taskName) {
         // submit the task to the worker pool in the services store.
-        final ListenableFuture<P> producerFuture = Services.submitTask(taskName, this.getCallable());
+        final ListenableFuture<P> producerFuture = Services.submitTask(this.getName() + "-" + taskName, this.getCallable());
         // add callbacks to the future that get triggered once the thread is done executing
         FutureCallback<P> taskCallback = new PacketProductionCallback<>(this.getName());
-        
+
         Futures.addCallback(producerFuture, taskCallback);
         // return the future so the user can use it
         return producerFuture;
@@ -126,10 +127,10 @@ public abstract class AbstractProducer<P extends AbstractPipelinePacket<?>> exte
     public ListenableFuture<P> produceSchedule(final String taskName, final long taskInterval) {
         // add the task to the scheduled worker pool
         
-        Runnable workerLambda = () -> this.produceOnce(this.getName() + "-schedule");
+        Runnable workerLambda = () -> this.produceOnce(taskName + "-schedule-partial");
         
         final ListenableScheduledFuture<P> scheduleFuture = (ListenableScheduledFuture<P>) Services
-                .scheduleTask(taskName, workerLambda, taskInterval);
+                .scheduleTask(this.getName() + "-" + taskName + "-schedule", workerLambda, taskInterval);
                 
         FutureCallback<P> scheduleCallback = new PacketProductionCallback<>(this.getName());
         Futures.addCallback(scheduleFuture, scheduleCallback);
