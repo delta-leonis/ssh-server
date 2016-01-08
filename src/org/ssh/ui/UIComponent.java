@@ -11,6 +11,7 @@ import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import org.ssh.managers.AbstractManageable;
 import org.ssh.managers.manager.UI;
+import org.ssh.util.Logger;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -23,7 +24,6 @@ import java.io.IOException;
  * @date 12/19/2015
  */
 public class UIComponent<N extends Pane> extends AbstractManageable {
-
     /** component to manage */
     private N component;
 
@@ -40,7 +40,6 @@ public class UIComponent<N extends Pane> extends AbstractManageable {
 
         //load the fxml
         loadFXML(fxmlFile);
-
     }
 
     /**
@@ -55,17 +54,10 @@ public class UIComponent<N extends Pane> extends AbstractManageable {
      * @return The containing component for actual use in GUI
      */
     @Nullable
-    public N getComponent() {
-        return component;
-    }
+    public N getComponent() { return component; }
 
-    /**
-     * Add a component to this pane
-     * @param component component to add
-     * @param <M> Type of component
-     * @return success value, true if added successfully
-     */
-    public <M extends Node> boolean add(M component) {
+
+    public <M extends Node> boolean add(M component){
         return add(component, false);
     }
 
@@ -83,7 +75,6 @@ public class UIComponent<N extends Pane> extends AbstractManageable {
             return false;
         }
 
-        // find the node based on the identifier
         Node selected = this.getComponent().lookup(identifier);
         if (selected == null) {
             UIComponent.LOG.info("Could not find %s, thus element has not been added.", identifier);

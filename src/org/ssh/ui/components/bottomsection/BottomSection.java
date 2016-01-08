@@ -8,9 +8,8 @@ import javafx.scene.layout.Pane;
 import org.ssh.managers.manager.UI;
 import org.ssh.ui.UIComponent;
 import org.ssh.ui.components.Enroller;
-import org.ssh.ui.components.widget.Draggable;
-import org.ssh.ui.components.widget.ExampleWidget;
 import org.ssh.ui.windows.WidgetWindow;
+import org.ssh.util.Logger;
 
 import java.util.Optional;
 
@@ -19,6 +18,8 @@ import java.util.Optional;
  * @date 12/23/2015
  */
 public class BottomSection extends UIComponent<GridPane> {
+
+    private static final Logger LOG = Logger.getLogger();
 
     private Enroller toolboxEnroller;
 
@@ -77,11 +78,6 @@ public class BottomSection extends UIComponent<GridPane> {
             WidgetWindow.getInstance().hideWidgetWindow();
         } else {
             WidgetWindow.getInstance().showWidgetWindow(this.getStage());
-        }
-        //TODO remove this ExampleWidget shit (is for test purpose)
-        for (int i = 0; i < 3; i++) {
-            ExampleWidget e = new ExampleWidget();
-            new Draggable(e);
         }
     }
 }

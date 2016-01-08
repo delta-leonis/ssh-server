@@ -3,12 +3,13 @@ package org.ssh.ui.components.widget;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import org.ssh.ui.UIComponent;
 
 /**
  * Class that can be used to display an overlaying resize icon on a widget or other {@link UIComponent}.
  * It displays an 24x24 px icon that, when dragged, lets the given content grow or shrink.
+ *
+ * @author Joost Overeem
  */
 public class WidgetResizer extends UIComponent<GridPane> {
 
@@ -19,15 +20,15 @@ public class WidgetResizer extends UIComponent<GridPane> {
     private GridPane rootPane;
 
     /**
-     * {@link Pane Widget} that is to be resizable.
+     * {@link AbstractWidget Widget} that is to be resizable.
      */
-    private Pane content;
+    private AbstractWidget content;
 
     /**
-     * {@link Draggable} that has the resizable content. Variable used in this class for calling
-     * {@link Draggable#setBlockDragging(boolean)}.
+     * {@link WidgetDraggable} that has the resizable content. Variable used in this class for calling
+     * {@link WidgetDraggable#setBlockDragging(boolean)}.
      */
-    private Draggable draggable;
+    private WidgetDraggable widgetDraggable;
 
     /**
      * The x location in the {@link javafx.scene.Scene} where the dragging is started.
@@ -50,15 +51,17 @@ public class WidgetResizer extends UIComponent<GridPane> {
      * Constructor for {@link WidgetResizer}. Handles the needed initialization and binds
      * the width and height properties so that the root automatically resizes.
      *
-     * @param draggable The {@link Draggable} that has the resizable content.
-     * @param content   The widget that where the resizing is about.
+     * @param widgetDraggable
+     *              The {@link WidgetDraggable} that has the resizable content.
+     * @param content
+     *              The widget that where the resizing is about.
      */
-    public WidgetResizer(Draggable draggable, Pane content) {
+    public WidgetResizer(WidgetDraggable widgetDraggable, AbstractWidget content) {
         super("widgetresizer", "widget/widgetresizer.fxml");
         // set the content
         this.content = content;
-        // set the draggable
-        this.draggable = draggable;
+        // set the widgetDraggable
+        this.widgetDraggable = widgetDraggable;
         // Initialize mouse position on 0.0
         dragStartpointX = dragStartpointY = dragStartWidth = dragStartHeight = 0.0;
     }
@@ -75,13 +78,13 @@ public class WidgetResizer extends UIComponent<GridPane> {
         dragStartpointX = 0.0;
         dragStartpointY = 0.0;
         // Release the drag blocking
-        draggable.setBlockDragging(false);
+        widgetDraggable.setBlockDragging(false);
     }
 
     /**
      * Function for handling the dragging, is sets the new size of the {@link #content}.
-     *
-     * @param event The {@link MouseEvent} where the coordinates are retrieved from.
+     * @param event
+     *              The {@link MouseEvent} where the coordinates are retrieved from.
      */
     @FXML
     private void drag(MouseEvent event) {
@@ -91,10 +94,10 @@ public class WidgetResizer extends UIComponent<GridPane> {
             dragStartpointX = event.getSceneX();
             dragStartpointY = event.getSceneY();
             // Set the start size
-            dragStartWidth = content.getWidth();
-            dragStartHeight = content.getHeight();
+            dragStartWidth = content.getComponent().getWidth();
+            dragStartHeight = content.getComponent().getHeight();
 
-            draggable.setBlockDragging(true);
+            widgetDraggable.setBlockDragging(true);
         }
         // The new width is the old width plus the difference in x from where the dragging is started and
         // where the mouse is now
@@ -106,31 +109,31 @@ public class WidgetResizer extends UIComponent<GridPane> {
 
     /**
      * Sets the height of the {@link #content} with a minimum of 30.
-     *
-     * @param height The height of the {@link #content} should get.
+     * @param height
+     *              The height of the {@link #content} should getUIController.
      */
     private void setWidgetHeight(double height) {
         // Check for small values and set it 30 if small
         // This is because too small sizes are undesirable
-        Math.max(height, 30);
+        if(height < 30) height = 30;
         // Set pref, min and max to make sure the size is set
-        content.setPrefHeight(height);
-        content.setMinHeight(height);
-        content.setMaxHeight(height);
+        content.getComponent().setPrefHeight(height);
+        content.getComponent().setMinHeight(height);
+        content.getComponent().setMaxHeight(height);
     }
 
     /**
      * Sets the width of the {@link #content} with a minimum of 30.
-     *
-     * @param width The width of the {@link #content} should get.
+     * @param width
+     *              The width of the {@link #content} should getUIController.
      */
     private void setWidgetWidth(double width) {
         // Check for small values and set it 30 if small
         // This is because too small sizes are undesirable
-        Math.max(width, 30);
+        if(width < 30) width = 30;
         // Set pref, min and max to make sure the size is set
-        content.setPrefWidth(width);
-        content.setMinWidth(width);
-        content.setMaxWidth(width);
+        content.getComponent().setPrefWidth(width);
+        content.getComponent().setMinWidth(width);
+        content.getComponent().setMaxWidth(width);
     }
 }

@@ -126,6 +126,8 @@
 /* *** ColoredCodeArea END *** */
 
 
+/* Check slider.css to see how icons can be applied to buttons */
+
 .toolboxEnroller {
 	-fx-opacity: 0.7;
 }
@@ -246,6 +248,21 @@
 }
 
 /* *** StatusBox end */
+#widgetlabel {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 15pt;
+    -fx-font-family: "Courier New";
+}
+.widget {
+    -fx-background-color: #555555;
+    -fx-background-position: center center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 60, 60;
+}
+.widget_settings { -fx-background-image: url("../icon/widget_settings.png"); }
+.widget_analysis { -fx-background-image: url("../icon/widget_analysis.png"); }
+.widget_control  { -fx-background-image: url("../icon/widget_control.png"); }
+.widget_tests    { -fx-background-image: url("../icon/widget_tests.png"); }
 
 #profilemenucontents .selected {
     -fx-background-color: red;

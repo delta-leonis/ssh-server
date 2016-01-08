@@ -11,7 +11,12 @@ import org.ssh.ui.lua.editor.ScriptEditor;
 import java.util.Optional;
 
 /**
+ * 
  * @author Joost Overeem
+ *        
+ * @TODO create public <P extends Pane> void enroll(P pane)
+ * @TODO write javadoc
+ *      
  */
 public class Toolbox extends UIComponent {
 
@@ -32,12 +37,12 @@ public class Toolbox extends UIComponent {
     private void enrollConsole(final ActionEvent e) {
         changeToolboxTab(consoleComponent);
     }
-
+    
     @FXML
     private void enrollLua(final ActionEvent e) {
         changeToolboxTab(luaComponent);
     }
-
+    
     @FXML
     private void enrollSettings(final ActionEvent e) {
         changeToolboxTab(settingsComponent);

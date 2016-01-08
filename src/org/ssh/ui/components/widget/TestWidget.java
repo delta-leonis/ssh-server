@@ -13,11 +13,20 @@ import java.util.Random;
  */
 public class TestWidget extends AbstractWidget {
 
+    /**
+     * rootPain
+     */
     @FXML
     private FlowPane root;
 
+    /**
+     * Constructor for testwidget
+     *
+     * @param name
+     *          The name
+     */
     public TestWidget(String name) {
-        super(name, "widget/testwidget.fxml", WidgetCategory.ANALYSES);
+        super(name, "widget/testwidget.fxml", WidgetCategory.ANALYSIS);
         Random r = new Random();
 
         root.getChildren().add(new Label(name));

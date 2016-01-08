@@ -24,11 +24,12 @@ import java.util.Optional;
  * The Class UI.
  * <p>
  * This class is one of the main components of the framework. UI.java gets instantiated as
- * lazy-loaded Singleton <a href=https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom></a>
- * This class holds references to all the windows and makes instantiating windows easier.
+ * lazy-loaded Singleton {@link https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom}
+ * . This class holds references to all the windows and makes instantiating windows easier.
  *
  * @author Rimon Oz
  * @author Jeroen de Jong
+ * @autor Joost Overeem
  */
 public final class UI implements ManagerInterface<UIComponent<? extends Pane>> {
 
@@ -37,6 +38,14 @@ public final class UI implements ManagerInterface<UIComponent<? extends Pane>> {
      */
     private static List<UIController<?>> uiControllers;
 
+    /**
+     * The {@link UIComponent}s in a list.
+     */
+    private static List<UIComponent> uiComponents;
+
+    /**
+     * The {@link UIComponentController}.
+     */
     private static UIComponentController controller;
 
     /**
@@ -76,7 +85,7 @@ public final class UI implements ManagerInterface<UIComponent<? extends Pane>> {
      * @return An Optional containing the window.
      */
     @SuppressWarnings("unchecked")
-    public static <U extends UIController<? extends Pane>> Optional<U> get(final String name) {
+    public static <U extends UIController<? extends Pane>> Optional<U> getController(final String name) {
         UI.LOG.fine("Getting a window named %s from the UI store", name);
         // get a stream of all the windows
         return UI.uiControllers.stream()
@@ -86,6 +95,14 @@ public final class UI implements ManagerInterface<UIComponent<? extends Pane>> {
                 .findFirst();
     }
 
+    public static <U extends UIComponent> Optional<U> getComponent(final String name) {
+        UI.LOG.fine("Getting a component named %s from the UI store", name);
+        // getUIComponents a stream of all the windows
+        return UI.uiComponents.stream()
+                .filter(component -> component.getName().equals(name)).map(component -> (U) component)
+                .findFirst();
+    }
+    
     /**
      * Gets the Singleton instance of the UI store.
      *
@@ -108,6 +125,7 @@ public final class UI implements ManagerInterface<UIComponent<? extends Pane>> {
      */
     public static void add(final UIComponent<?> component) {
         controller.add(component);
+        UI.uiComponents.add(component);
     }
 
     /**
@@ -119,10 +137,6 @@ public final class UI implements ManagerInterface<UIComponent<? extends Pane>> {
     public static <N extends UIComponent<?>> List<N> find(String pattern) {
         return controller.find(pattern);
     }
-
-//    public <N extends Manageable> Optional<N> get(String name) {
-//        return controller.get(name);
-//    }
 
     /**
      * @param <N> preferred return type
@@ -231,6 +245,7 @@ public final class UI implements ManagerInterface<UIComponent<? extends Pane>> {
     public static boolean start(final Stage primaryStage) {
         // set attributes
         UI.uiControllers = new ArrayList<UIController<?>>();
+        UI.uiComponents = new ArrayList<UIComponent>();
         UI.controller = new UIComponentController();
 
         UI.LOG.info("Instantiating new window with id mainWindow");
