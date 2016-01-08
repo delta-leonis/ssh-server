@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * rows = window
  *
  */
-public class WidgetSettings extends Model {
+public class WidgetSettings extends AbstractModel {
 
     private Table<Integer, Integer, AbstractWidget> widgets;
 

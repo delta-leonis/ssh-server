@@ -11,9 +11,9 @@ import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
-import org.ssh.managers.Manageable;
-import org.ssh.managers.Manager;
-import org.ssh.managers.ManagerController;
+import org.ssh.managers.AbstractManageable;
+import org.ssh.managers.ManagerInterface;
+import org.ssh.managers.AbstractManagerController;
 import org.ssh.managers.controllers.UIComponentController;
 import org.ssh.ui.UIComponent;
 import org.ssh.ui.UIController;
@@ -37,7 +37,7 @@ import javafx.stage.Stage;
  * @TODO add removeWindow()
  * @TODO addWindow() needs to check for duplicate window names
  */
-public final class UI implements Manager<UIComponent<? extends Pane>> {
+public final class UI implements ManagerInterface<UIComponent<? extends Pane>> {
     
     /**
      * The services store has a controller that runs the store.
@@ -124,7 +124,7 @@ public final class UI implements Manager<UIComponent<? extends Pane>> {
 //        return controller.get(name);
 //    }
 
-    public <N extends Manageable> List<N> getAll() {
+    public <N extends AbstractManageable> List<N> getAll() {
         return controller.getAll();
     }
 

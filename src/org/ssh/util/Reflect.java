@@ -1,5 +1,7 @@
 package org.ssh.util;
 
+import org.ssh.models.AbstractModel;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -7,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.ssh.models.Model;
 
 /**
  * Class used for tools concerning {@link java.lang.reflect}
@@ -53,7 +54,7 @@ public class Reflect {
                         //stream all fields, and filter the fields based on their equality in name
                         .filter(field -> {
                             // retrieve the annotation
-                            Model.Alias annotation = field.getAnnotation(Model.Alias.class);
+                            AbstractModel.Alias annotation = field.getAnnotation(AbstractModel.Alias.class);
                             // return the equality state
                             return annotation != null && annotation.value().equals(fieldName);
                         }).findAny();

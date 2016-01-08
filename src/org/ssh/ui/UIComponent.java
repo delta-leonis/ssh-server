@@ -9,7 +9,7 @@ import javafx.scene.SubScene;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-import org.ssh.managers.Manageable;
+import org.ssh.managers.AbstractManageable;
 import org.ssh.managers.manager.UI;
 import org.ssh.util.Logger;
 
@@ -19,11 +19,9 @@ import java.io.IOException;
  * @author Jeroen de Jong
  * @date 12/19/2015
  */
-public class UIComponent<N extends Pane> extends Manageable {
+public class UIComponent<N extends Pane> extends AbstractManageable {
 
     private N component;
-
-    private Stage stage;
 
     // a logger for good measure
     protected static final Logger LOG = Logger.getLogger();
@@ -35,13 +33,11 @@ public class UIComponent<N extends Pane> extends Manageable {
 
         loadFXML(fxmlFile);
 
-        Platform.runLater(() ->
-                stage = ((Stage)getComponent().getScene().getWindow()));
     }
 
     @Nullable
     public Stage getStage() {
-        return stage;
+        return ((Stage)getComponent().getScene().getWindow());
     }
 
     @Nullable

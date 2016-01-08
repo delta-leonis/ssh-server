@@ -33,7 +33,6 @@ public class WidgetShortcutContainer extends UIComponent<Pane> {
         super("widget shortcuts", "bottomsection/widgetshortcutcontainer.fxml");
         UI.bindSize(scrollPane, rootPane);
         shortcutPane.minWidthProperty().bind(scrollPane.prefViewportWidthProperty());
-        Platform.runLater(() -> System.out.println(scrollPane.prefViewportWidthProperty().doubleValue() + " " + scrollPane.minViewportWidthProperty()));
         Platform.runLater(this::displayWidgets);
     }
 

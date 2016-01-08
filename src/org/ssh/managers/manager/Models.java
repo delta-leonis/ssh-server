@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import org.ssh.managers.ManagerInterface;
 import org.ssh.managers.controllers.ModelController;
-import org.ssh.models.Model;
+import org.ssh.models.AbstractModel;
 import org.ssh.models.Settings;
 import org.ssh.util.Logger;
 import org.ssh.ui.lua.console.AvailableInLua;
@@ -57,7 +57,7 @@ public final class Models implements ManagerInterface<AbstractModel> {
     }
     /**
      * Create a Model instance based on given class, with given arguments.<br />
-     * Registers the created instance by {@link AbstractModels#add(AbstractModel) Models} and
+     * Registers the created instance by {@link Models#add(AbstractModel) Models} and
      * {@link Models#initialize(AbstractModel) initializes} the models.
      *
      * @param clazz
@@ -150,6 +150,7 @@ public final class Models implements ManagerInterface<AbstractModel> {
      * @return success value
      */
     public static boolean initialize(final AbstractModel model) {
+        model.initialize();
         return Models.controller.load(model);
     }
 

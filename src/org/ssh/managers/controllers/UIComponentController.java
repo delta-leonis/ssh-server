@@ -1,7 +1,7 @@
 package org.ssh.managers.controllers;
 
 import javafx.scene.layout.Pane;
-import org.ssh.managers.ManagerController;
+import org.ssh.managers.AbstractManagerController;
 import org.ssh.managers.manager.Models;
 import org.ssh.models.WidgetSettings;
 import org.ssh.ui.UIComponent;
@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by joost on 1/5/16.
  */
-public class UIComponentController extends ManagerController<UIComponent<? extends Pane>> {
+public class UIComponentController extends AbstractManagerController<UIComponent<? extends Pane>> {
 
     WidgetSettings widgetSettings;
 

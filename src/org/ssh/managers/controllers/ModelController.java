@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 
 import org.ssh.controllers.ControllerLayout;
 import org.ssh.controllers.ControllerLayoutSerializer;
-import org.ssh.managers.Manageable;
+import org.ssh.managers.AbstractManageable;
 import org.ssh.managers.AbstractManagerController;
 import org.ssh.models.AbstractModel;
 import org.ssh.models.Settings;

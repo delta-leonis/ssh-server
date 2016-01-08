@@ -20,7 +20,6 @@ public class Splashscreen extends Preloader {
     }
  
     public void start(Stage stage) throws Exception {
-        System.out.println("starts splash");
         this.stage = stage;
         stage.setScene(createPreloaderScene());
         stage.show();
@@ -28,7 +27,7 @@ public class Splashscreen extends Preloader {
     
     @Override
     public void stop() {
-        System.out.println("stops");
+        // nothing here yet...
     }
  
     @Override

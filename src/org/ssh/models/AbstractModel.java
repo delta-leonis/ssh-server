@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 
 import javafx.beans.value.WritableValue;
 import org.jooq.lambda.Unchecked;
-import org.ssh.managers.Manageable;
+import org.ssh.managers.AbstractManageable;
 import org.ssh.managers.controllers.ModelController;
 import org.ssh.managers.manager.Models;
 import org.ssh.util.Logger;
