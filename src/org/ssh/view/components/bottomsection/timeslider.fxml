@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.GridPane?>
 
 <GridPane fx:id="timesliderRoot" id="timesliderRoot" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+
 	<columnConstraints>
 		<ColumnConstraints percentWidth="10.0" />
 		<ColumnConstraints percentWidth="76.0" />
@@ -13,7 +18,6 @@
 	<rowConstraints>
 		<RowConstraints percentHeight="100.0" />
 	</rowConstraints>
-
 	<children>
 	<GridPane GridPane.columnIndex="0" GridPane.rowIndex="0">
 		<columnConstraints>
@@ -27,17 +31,17 @@
 		</rowConstraints>
 		<children>
 		<Button fx:id="leftButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
-				GridPane.columnIndex="0" GridPane.rowIndex="0" />
+				GridPane.columnIndex="0" GridPane.rowIndex="0" onAction="#slowDown" styleClass="button-left"/>
 		<Button fx:id="selectFileButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
-				GridPane.columnIndex="0" GridPane.rowIndex="1" />
+				GridPane.columnIndex="0" GridPane.rowIndex="1" onAction="#openDialog" styleClass="button-select-file"/>
 		<Button fx:id="playButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
-				GridPane.columnIndex="1" GridPane.rowIndex="0" />
-		<Button fx:id="pauseButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
-				GridPane.columnIndex="1" GridPane.rowIndex="1" />
+				GridPane.columnIndex="1" GridPane.rowIndex="0" onAction="#start" styleClass="button-play"/>
+		<Button fx:id="reverseButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
+				GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#reverse" styleClass="button-reverse"/>
 		<Button fx:id="rightButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
-				GridPane.columnIndex="2" GridPane.rowIndex="0" />
+				GridPane.columnIndex="2" GridPane.rowIndex="0" onAction="#fastForward" styleClass="button-right"/>
 		<Button fx:id="recordButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
-				GridPane.columnIndex="2" GridPane.rowIndex="1" />
+				GridPane.columnIndex="2" GridPane.rowIndex="1" styleClass="button-record"/>
 		</children>
 	</GridPane>
 		
@@ -68,8 +72,15 @@
 		</rowConstraints>
 		<children>
 			<Label fx:id="timeLabel" alignment="CENTER" prefWidth="100.0" text="00:00" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-			<CheckBox fx:id="goalCheckBox" mnemonicParsing="false" text="Goals" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-			<CheckBox fx:id="timeoutCheckBox" mnemonicParsing="false" text="Timeouts" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+			<HBox GridPane.columnIndex="0" GridPane.rowIndex="1">
+				<children>
+					<Label fx:id="blueScoreLabel" alignment="CENTER" prefWidth="45.0" text="0" styleClass="yellow-score-label"/>
+					<Label alignment="CENTER" prefWidth="10.0" text="_"/>
+					<Label fx:id="yellowScoreLabel" alignment="CENTER" prefWidth="45.0" text="0" styleClass="blue-score-label"/>
+				</children>
+			</HBox>
+			<CheckBox fx:id="goalCheckBox" mnemonicParsing="false" text="Goals" GridPane.columnIndex="1" GridPane.rowIndex="0" onAction="#updateSlider"/>
+			<CheckBox fx:id="timeoutCheckBox" mnemonicParsing="false" text="Timeouts" GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#updateSlider"/>
 		</children>
 	</GridPane>
 	</children>

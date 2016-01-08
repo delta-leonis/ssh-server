@@ -6,9 +6,17 @@
 .slider .thumb {
     -fx-padding: 7;
 }
+
 /* Markers used for the squares in the slider */
-.goal-marker {
+.yellow-goal-marker {
     -fx-fill: yellow;
+    -fx-scale-x: 4;
+    -fx-scale-y: 14;
+    -fx-translate-y: 22;
+}
+
+.blue-goal-marker {
+    -fx-fill: blue;
     -fx-scale-x: 4;
     -fx-scale-y: 14;
     -fx-translate-y: 22;
@@ -20,6 +28,56 @@
     -fx-scale-y: 14;
     -fx-translate-y: 22;
 }
+
+.blue-score-label {
+    -fx-font-size: 14pt;
+    -fx-text-fill: blue;
+    -fx-font-weight: bold;
+}
+
+.yellow-score-label {
+    -fx-font-size: 14pt;
+    -fx-text-fill: gold;
+    -fx-font-weight: bold;
+}
+
+/* *** Timeslider buttons *** */
+
+.button-play {
+    -fx-graphic: url("../icon/slider/play16.png");
+    -fx-padding: 3 3 3 3;
+}
+
+.button-reverse {
+	-fx-graphic: url("../icon/slider/stop16.png");
+	-fx-padding: 3 3 3 3;
+}
+
+.button-pause {
+	-fx-graphic: url("../icon/slider/pause16.png");
+	-fx-padding: 3 3 3 3;
+}
+
+.button-left {
+	-fx-graphic: url("../icon/slider/slowdown16.png");
+	-fx-padding: 3 3 3 3;
+}
+
+.button-right {
+	-fx-graphic: url("../icon/slider/fastforward16.png");
+	-fx-padding: 3 3 3 3;
+}
+
+.button-select-file {
+	-fx-graphic: url("../icon/slider/folder16.png");
+	-fx-padding: 3 3 3 3;
+}
+
+.button-record {
+	-fx-graphic: url("../icon/slider/record16.png");
+	-fx-padding: 3 3 3 3;
+}
+
 
 /* *** ColoredCodeArea Style *** */
 .caret {
@@ -67,8 +125,6 @@
 }
 /* *** ColoredCodeArea END *** */
 
-
-/* Check slider.css to see how icons can be applied to buttons */
 
 .toolboxEnroller {
 	-fx-opacity: 0.7;
