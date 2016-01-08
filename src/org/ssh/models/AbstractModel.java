@@ -16,11 +16,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -144,7 +140,7 @@ public abstract class AbstractModel extends AbstractManageable {
             }
             else
                 // field doesn't exist
-                Model.LOG.info("%s does not exist.\n", fieldName);
+                AbstractModel.LOG.info("%s does not exist.\n", fieldName);
         }
         catch (IllegalAccessException exception) {
             // field is either not accessible, or the fieldType didn't match

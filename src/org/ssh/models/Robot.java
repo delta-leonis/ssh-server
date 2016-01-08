@@ -9,6 +9,7 @@ import org.ssh.models.enums.Malfunction;
 import org.ssh.models.enums.Malfunction.MalfunctionType;
 import protobuf.Detection;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -76,7 +77,7 @@ public class Robot extends FieldObject {
         this.isSelected = new SimpleBooleanProperty(false);
         this.isConnected = new SimpleBooleanProperty(false);
         this.isOnSight = new SimpleBooleanProperty(false);
-this.malfunctions = new SimpleListProperty<>(
+        this.malfunctions = new SimpleListProperty<>(
                 javafx.collections.FXCollections.observableList(new ArrayList<>()));
         this.lastUpdated = System.currentTimeMillis();
     }

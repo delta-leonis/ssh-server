@@ -14,17 +14,18 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javafx.beans.property.*;
 import org.ssh.controllers.ControllerLayout;
 import org.ssh.controllers.ControllerLayoutSerializer;
 import org.ssh.managers.AbstractManageable;
 import org.ssh.managers.AbstractManagerController;
 import org.ssh.models.AbstractModel;
+import org.ssh.models.PropertyTypeAdapter;
 import org.ssh.models.Settings;
 import org.ssh.util.Logger;
 import org.ssh.util.Reflect;
 
 import com.google.common.io.Files;
-import com.google.common.reflect.Reflection;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -66,18 +67,18 @@ public class ModelController extends AbstractManagerController<AbstractModel> {
      * Instantiates a new models controller.
      */
     public ModelController() {
-        gson = new GsonBuilder()
-                .registerTypeAdapter(ControllerLayout.class, new ControllerLayoutSerializer())
-                .registerTypeAdapter(BooleanProperty.class, new PropertyTypeAdapter<>())
-                .registerTypeAdapter(IntegerProperty.class, new PropertyTypeAdapter<>())
-                .registerTypeAdapter(LongProperty.class, new PropertyTypeAdapter<>())
-                .registerTypeAdapter(FloatProperty.class, new PropertyTypeAdapter<>())
-                .registerTypeAdapter(DoubleProperty.class, new PropertyTypeAdapter<>())
-                .registerTypeAdapter(StringProperty.class, new PropertyTypeAdapter<>())
-                .registerTypeAdapter(ObjectProperty.class, new PropertyTypeAdapter<>())
-                .registerTypeAdapter(ListProperty.class, new PropertyTypeAdapter<>())
-                .setPrettyPrinting()
-                .create();
+        this.gson = new GsonBuilder()
+            .registerTypeAdapter(ControllerLayout.class, new ControllerLayoutSerializer())
+            .registerTypeAdapter(BooleanProperty.class, new PropertyTypeAdapter<>())
+            .registerTypeAdapter(IntegerProperty.class, new PropertyTypeAdapter<>())
+            .registerTypeAdapter(LongProperty.class, new PropertyTypeAdapter<>())
+            .registerTypeAdapter(FloatProperty.class, new PropertyTypeAdapter<>())
+            .registerTypeAdapter(DoubleProperty.class, new PropertyTypeAdapter<>())
+            .registerTypeAdapter(StringProperty.class, new PropertyTypeAdapter<>())
+            .registerTypeAdapter(ObjectProperty.class, new PropertyTypeAdapter<>())
+            .registerTypeAdapter(ListProperty.class, new PropertyTypeAdapter<>())
+            .setPrettyPrinting()
+            .create();
     }
     
     /**
