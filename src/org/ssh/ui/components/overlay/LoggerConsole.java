@@ -75,12 +75,15 @@ public class LoggerConsole extends UIComponent {
                     tabNames.add(tabName);
             }
         }
+
+        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+
         // Add a tab to see all logging
         tabPane.getTabs().add(new Tab("all", new LoggingTab("all", Logger.getLogger("org.ssh")).getComponent()));
         // Add a tab for all packages in the list tabNames. These are all packages in org.ssh where
         // a Logger is present
-        for (String tabname : tabNames)
-            tabPane.getTabs().add(new Tab(tabname, new LoggingTab(tabname, Logger.getLogger("org.ssh." + tabname)).getComponent()));
+        for (String tabName : tabNames)
+            tabPane.getTabs().add(new Tab(tabName, new LoggingTab(tabName, Logger.getLogger("org.ssh." + tabName)).getComponent()));
     }
     
     /**

@@ -69,6 +69,9 @@ public class ConsoleManager extends UIComponent<Pane> {
         // Change focus to the newly created tab
         tabPane.getSelectionModel().select(console);
         console.requestFocus();
+
+        // Make closing unavailable if only one tab is open
+        tabPane.setTabClosingPolicy( tabPane.getTabs().size() > 1 ? TabPane.TabClosingPolicy.ALL_TABS : TabPane.TabClosingPolicy.UNAVAILABLE);
     }
     
     /**
@@ -81,6 +84,8 @@ public class ConsoleManager extends UIComponent<Pane> {
          selectedTab.cancelTask();
         // Remove the selected tab
         this.tabPane.getTabs().remove(selectedTab);
+        // Make closing unavailable if only one tab is open
+        tabPane.setTabClosingPolicy( tabPane.getTabs().size() > 1 ? TabPane.TabClosingPolicy.ALL_TABS : TabPane.TabClosingPolicy.UNAVAILABLE);
         this.switchFocusToCurrentTab();
     }
     
