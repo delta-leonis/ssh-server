@@ -24,7 +24,6 @@ import org.ssh.util.Logger;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class UI.
  *
@@ -33,9 +32,7 @@ import javafx.stage.Stage;
  * . This class holds references to all the windows and makes instantiating windows easier.
  *
  * @author Rimon Oz
- *         
- * @TODO add removeWindow()
- * @TODO addWindow() needs to check for duplicate window names
+ * @author Jeroen de Jong
  */
 public final class UI implements ManagerInterface<UIComponent<? extends Pane>> {
     

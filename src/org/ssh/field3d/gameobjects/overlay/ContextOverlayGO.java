@@ -31,14 +31,14 @@ public class ContextOverlayGO extends OverlayGO {
     /** The container pane. */
     @FXML
     private Pane                containerPane;
-                                
+
     /** The field location. */
     private Point2D             fieldLoc;
 
     private List<Robot> robots;
     private Queue<GoalGameObject> goalGameObjects;
 
-                                
+
     /**
      * Constructor.
      *
@@ -49,7 +49,7 @@ public class ContextOverlayGO extends OverlayGO {
         
         // Initialize super class
         super(game, LAYOUT_FXML_FILE);
-        
+
         // Creating new 2d point for the location clicked on the field
         fieldLoc = new Point2D(0.0, 0.0);
     }
@@ -197,9 +197,6 @@ public class ContextOverlayGO extends OverlayGO {
                 
                 // If the robot is selected, move
                 if (robot.isSelected()) {
-                    
-                    // TODO: send pipeline packet to update the position of the robot
-                    
                     // Update robot position
                     robot.update("position", this.fieldLoc);
                     // No more work to do

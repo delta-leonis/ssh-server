@@ -27,7 +27,6 @@ public class ProfileMenuContents extends UIComponent<GridPane> {
     @FXML
     private VBox profiles, workspaces;
 
-    /** TODO in the future this should contain the VBox's  */
     @FXML
     private ScrollPane workspacesPane,
                        profilesPane;

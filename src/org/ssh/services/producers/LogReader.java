@@ -18,9 +18,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Created by Thomas on 6-1-2016.
  * Loads a proto log file. (takes a while) after the log file is loaded, log files can be retrieved using an index.
- * TODO fix timeouts
+ *
+ * @author Thomas Hakkers
+ * @date 6-1-2016
  */
 public class LogReader extends AbstractService<ProtoPacket<?>> {
     // a logger for good measure
@@ -230,7 +231,6 @@ public class LogReader extends AbstractService<ProtoPacket<?>> {
 
     /**
      * @returns a list of times (in ms) the a timeout has occurred.
-     * TODO Currently not working properly
      */
     public List<Long> getTimeouts(){
         return timeouts;
