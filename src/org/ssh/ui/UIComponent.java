@@ -1,5 +1,6 @@
 package org.ssh.ui;
 
+import javax.annotation.Nullable;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -12,7 +13,6 @@ import org.ssh.managers.AbstractManageable;
 import org.ssh.managers.manager.UI;
 import org.ssh.util.Logger;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 
 /**
