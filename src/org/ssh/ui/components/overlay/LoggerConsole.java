@@ -146,7 +146,7 @@ public class LoggerConsole extends UIComponent {
 
             //filter data to contain everything
             FilteredList<LogTableRow> filteredData = new FilteredList<>(((LoggerMemoryHandler)oHandler.get()).getLogrecords(),
-                    p -> true);
+                    row -> Level.parse(row.getLevel()).intValue() >= Level.parse(levelDropdown.getValue()).intValue());
 
             // create a handler which will filter based on selected LEVEL in table
             levelDropdown.getSelectionModel().selectedItemProperty()

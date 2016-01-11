@@ -22,7 +22,7 @@
 				</TableColumn>
 				<TableColumn text="Level" maxWidth="105" minWidth="105">
 					<graphic>
-						<ChoiceBox fx:id="levelDropdown" value="FINEST">
+						<ChoiceBox fx:id="levelDropdown" value="INFO">
 							<items>
 								<FXCollections fx:factory="observableArrayList">
 									<String fx:value="SEVERE" />
