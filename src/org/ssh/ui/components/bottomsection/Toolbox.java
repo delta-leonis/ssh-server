@@ -1,15 +1,14 @@
 package org.ssh.ui.components.bottomsection;
 
-import java.util.Optional;
-
-import org.ssh.ui.UIComponent;
-import org.ssh.ui.lua.console.ConsoleManager;
-import org.ssh.ui.lua.editor.ScriptEditor;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
+import org.ssh.ui.UIComponent;
+import org.ssh.ui.lua.console.ConsoleManager;
+import org.ssh.ui.lua.editor.ScriptEditor;
+
+import java.util.Optional;
 
 /**
  * 

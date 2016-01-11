@@ -1,13 +1,12 @@
 package org.ssh.field3d.core.gameobjects.input;
 
-import java.util.Arrays;
-
-import org.ssh.field3d.core.game.Game;
-import org.ssh.field3d.core.gameobjects.GameObject;
-
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import org.ssh.field3d.core.game.Game;
+import org.ssh.field3d.core.gameobjects.GameObject;
+
+import java.util.Arrays;
 
 /**
  * MouseInputHandler class. This class handles the mouse input for the 3d field.

@@ -1,9 +1,5 @@
 package examples;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
 import org.ssh.managers.manager.Models;
 import org.ssh.models.AbstractModel;
 import org.ssh.models.Robot;
@@ -11,15 +7,23 @@ import org.ssh.models.Settings;
 import org.ssh.models.enums.Allegiance;
 import org.ssh.util.Logger;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 public class ModelExample  {
     
-    private static Logger logger = Logger.getLogger();
-    
+    private static Logger LOG = Logger.getLogger();
+
+    private ModelExample(){}
+
     public static void main(final String[] args) {
         // Start the Models controller
         Models.start();
 
-        Models.<Settings> get("settings").ifPresent(set -> set.getProfilesPath());
+        //get settings from the models manager
+        Models.<Settings> get("settings").ifPresent(settings -> ModelExample.LOG.info("Current workspace, as retrieved from the settings: %s", settings.getCurrentWorkspace()));
+
         
         Optional<AbstractModel> oSettings = Models.get("settings");
         Settings settings = (Settings) oSettings.get();
@@ -35,7 +39,7 @@ public class ModelExample  {
         
         // check if found
         if (!oRobot.isPresent()) {
-            ModelExample.logger.severe("robot model A3 not found");
+            ModelExample.LOG.severe("robot model A3 not found");
             return;
         }
         
@@ -56,16 +60,16 @@ public class ModelExample  {
         // update the Model with these new changes
         robot.update(changes);
         
-        ModelExample.logger.info("after update: ");
-        ModelExample.logger.info(robot.toString());
+        ModelExample.LOG.info("after update: ");
+        ModelExample.LOG.info(robot.toString());
         
         // manually update fields
         robot.update("x", 129.0f, "y", 12.0f, "allegiance", Allegiance.ALLY, "isSelected", true);
 
         // Alias field example
         robot.update("robot_id", 8282382);
-        ModelExample.logger.info("after update: ");
-        ModelExample.logger.info(robot.toString());
+        ModelExample.LOG.info("after update: ");
+        ModelExample.LOG.info(robot.toString());
 
         // robot.saveAsDefault();
         // robot.save();

@@ -35,7 +35,7 @@ public class ProfileMenuContents extends UIComponent<GridPane> {
         super("profilemenucontents", "topsection/profilemenucontents.fxml");
 
         // retrieve the settings
-        Models.<Settings>get("settings").ifPresent(settings -> this.settings = settings);
+        Models.<Settings>get("settings").ifPresent(set -> this.settings = set);
 
         // build the menu items
         buildMenu();
@@ -44,7 +44,7 @@ public class ProfileMenuContents extends UIComponent<GridPane> {
     private void buildMenu(){
         // if the settings aren't set yet, we should try to get them
         if(settings == null)
-            Models.<Settings>get("settings").ifPresent(settings -> this.settings = settings);
+            Models.<Settings>get("settings").ifPresent(set -> this.settings = set);
 
         // still not found? fuck it
         if(settings == null)

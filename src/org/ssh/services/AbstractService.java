@@ -1,16 +1,14 @@
 package org.ssh.services;
 
-import java.lang.reflect.Type;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.google.common.reflect.TypeToken;
 import org.ssh.managers.AbstractManageable;
 import org.ssh.managers.manager.Services;
 import org.ssh.pipelines.AbstractPipelinePacket;
 import org.ssh.util.Logger;
 
-import com.google.common.reflect.TypeToken;
-import com.google.common.reflect.TypeToken.TypeSet;
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The Class Service.

@@ -32,25 +32,25 @@ public class Xform extends Group {
     }
     
     /** The translation. */
-    public Translate translate    = new Translate();
+    public final Translate translate    = new Translate();
                                   
     /** The pivot translations. */
-    public Translate pivot        = new Translate();
+    public final Translate pivot        = new Translate();
                                   
     /** The inverse pivot translation. */
-    public Translate inversePivot = new Translate();
+    public final Translate inversePivot = new Translate();
                                   
     /** The rotation around the x-axis. */
-    public Rotate    rotationX    = new Rotate();
+    public final Rotate    rotationX    = new Rotate();
                                   
     /** The rotation around the y-axis. */
-    public Rotate    rotationY    = new Rotate();
+    public final Rotate    rotationY    = new Rotate();
                                   
     /** The rotation around the z-axis. */
-    public Rotate    rotationZ    = new Rotate();
+    public final Rotate    rotationZ    = new Rotate();
                                   
     /** The scale. */
-    public Scale     scale        = new Scale();
+    public final Scale     scale        = new Scale();
                                   
     /**
      * Instantiates a new Xform.

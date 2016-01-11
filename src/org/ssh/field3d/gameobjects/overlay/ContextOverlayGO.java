@@ -1,20 +1,18 @@
 package org.ssh.field3d.gameobjects.overlay;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Queue;
-
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
+import javafx.scene.layout.Pane;
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.field3d.gameobjects.geometry.GoalGameObject;
 import org.ssh.managers.manager.Models;
 import org.ssh.models.Robot;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
-import javafx.scene.layout.Pane;
-import org.ssh.models.Team;
+import java.util.List;
+import java.util.Optional;
+import java.util.Queue;
 
 /**
  * ContextOverlayGO class. This class is responsible for the 2d context menu overlay.
@@ -52,21 +50,11 @@ public class ContextOverlayGO extends OverlayGO {
 
         // Creating new 2d point for the location clicked on the field
         fieldLoc = new Point2D(0.0, 0.0);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onInitialize() {
-        
+
         // Hide
         this.hide();
-        
-        // Call on initialize method of the super class
-        super.onInitialize();
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -84,7 +72,8 @@ public class ContextOverlayGO extends OverlayGO {
             if (isNotClicked(sceneLoc)) {
                 
                 // Hide context menu if needed
-                if (this.isVisible()) this.hide();
+                if (this.isVisible())
+                    this.hide();
             }
            
         }
@@ -93,7 +82,8 @@ public class ContextOverlayGO extends OverlayGO {
         if (this.getGame().getMouseInputHandler().isMidButtonPressing()) {
             
             // Hide context menu if needed
-            if (this.isVisible()) this.hide();
+            if (this.isVisible())
+                this.hide();
         }
         
         // Check if the any of the mouse wheel values has changed
@@ -101,20 +91,11 @@ public class ContextOverlayGO extends OverlayGO {
                 || this.getGame().getMouseInputHandler().isMouseWheelYChanged()) {
                 
             // Hide context menu if needed
-            if (this.isVisible()) this.hide();
+            if (this.isVisible())
+                this.hide();
         }
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onDestroy() {
-        
-        // Call on destroy method of the super class
-        super.onDestroy();
-    }
-    
+
     /**
      * {@inheritDoc}
      */

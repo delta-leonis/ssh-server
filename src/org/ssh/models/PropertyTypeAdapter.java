@@ -5,7 +5,8 @@ import javafx.beans.property.*;
 import javafx.beans.value.WritableValue;
 import org.ssh.util.Logger;
 
-import java.lang.reflect.*;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 /**
@@ -16,7 +17,7 @@ import java.util.ArrayList;
  */
 public class PropertyTypeAdapter <T extends WritableValue> implements JsonSerializer<T>, JsonDeserializer<T>{
     /** Logger to log loggable logstuff */
-    protected static final transient Logger LOG = Logger.getLogger();
+    private static final Logger LOG = Logger.getLogger();
 
     @Override
     public JsonElement serialize(T property, Type type, JsonSerializationContext jsonSerializationContext) {

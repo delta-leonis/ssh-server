@@ -6,7 +6,6 @@ import javafx.scene.input.KeyCombination;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.wellbehaved.event.EventHandlerHelper;
 import org.fxmisc.wellbehaved.event.EventPattern;
-
 import org.ssh.util.LuaUtils;
 
 

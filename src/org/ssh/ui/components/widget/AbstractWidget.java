@@ -1,6 +1,5 @@
 package org.ssh.ui.components.widget;
 
-import org.ssh.managers.manager.UI;
 import org.ssh.ui.UIComponent;
 
 /**

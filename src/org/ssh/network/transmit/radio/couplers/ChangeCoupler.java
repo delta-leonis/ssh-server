@@ -1,8 +1,8 @@
 package org.ssh.network.transmit.radio.couplers;
 
 import org.ssh.pipelines.packets.RadioPacket;
-import org.ssh.services.AbstractService;
 import org.ssh.services.AbstractCoupler;
+import org.ssh.services.AbstractService;
 
 
 /**

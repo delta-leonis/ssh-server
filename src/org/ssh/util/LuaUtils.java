@@ -1,5 +1,13 @@
 package org.ssh.util;
 
+import com.google.common.reflect.ClassPath;
+import org.luaj.vm2.Globals;
+import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.lib.jse.CoerceJavaToLua;
+import org.luaj.vm2.lib.jse.JsePlatform;
+import org.ssh.ui.lua.console.AvailableInLua;
+import org.ssh.ui.lua.console.Console;
+
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -8,15 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.luaj.vm2.Globals;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.jse.CoerceJavaToLua;
-import org.luaj.vm2.lib.jse.JsePlatform;
-import org.ssh.ui.lua.console.AvailableInLua;
-
-import com.google.common.reflect.ClassPath;
-import org.ssh.ui.lua.console.Console;
 
 /**
  * Class that has all sorts of utility functions for the luaj library

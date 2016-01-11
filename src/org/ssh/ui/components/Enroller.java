@@ -1,9 +1,5 @@
 package org.ssh.ui.components;
 
-import javafx.scene.layout.Region;
-import org.ssh.ui.UIComponent;
-import org.ssh.util.Logger;
-
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.beans.property.ReadOnlyDoubleProperty;
@@ -12,7 +8,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.util.Duration;
+import org.ssh.ui.UIComponent;
+import org.ssh.util.Logger;
+
+import java.util.stream.Stream;
 
 /**
  * Enroller for vertical or horizontal use. It uses an internal
@@ -52,56 +53,42 @@ public class Enroller<N extends Region> extends BorderPane {
     /**
      * Lambda that will be run after an animation is finished
      */
-    private Runnable onfinishMethod;
+    private Runnable onFinishMethod;
 	/**
 	 * Extendsize is the maximum size of the slider in the extending direction,
 	 * so to where the slider should grow.
 	 */
-	private double extendsize;
+	private double extendSize;
 	/**
 	 * Collapsesize is the size of the slider in the extending direction when
 	 * collapsed.
 	 */
-	private double collapsesize;
+	private double collapseSize;
 
 	/**
 	 * Animation to extend the slidingWrapper.
 	 */
-	private final Animation collapse = new Transition() {
-		{
-			// Sliding takes 250 milliseconds
-			setCycleDuration(Duration.millis(250));
-		}
-
-		// Function that fixes the sliding, frac indicates how big the displayed
-		// fraction of the slidingWrapper should be
-		@Override
-		protected void interpolate(double frac) {
-			// Calculate the size of the slidingWrapper
-			final double size = collapsesize + ((extendsize - collapsesize) * (1.0 - frac));
-
-			// Check if we have a vertical or a horizontal slider
-			if (extendDirection == ExtendDirection.DOWN || extendDirection == ExtendDirection.UP) {
-				// Make sure it is the size we want by setting the min, max and
-				// pref height
-				slidingWrapper.setMinHeight(size);
-				slidingWrapper.setMaxHeight(size);
-				slidingWrapper.setPrefHeight(size);
-			} else {
-				// Make sure it is the size we want by setting the min, max and
-				// pref width
-				slidingWrapper.setMinWidth(size);
-				slidingWrapper.setMaxWidth(size);
-				slidingWrapper.setPrefWidth(size);
-			}
-		}
-	};
+	private final SlideAnimation collapse = new SlideAnimation(State.COLLAPSED);
 
 	/**
 	 * Animation to collapse the slidingWrapper
 	 */
-	private final Animation extend = new Transition() {
-		{
+	private final SlideAnimation extend = new SlideAnimation(State.EXTENDED);
+
+
+    /**
+     * Slide animation based on a action, either to collapse, or to extend
+     */
+    private class SlideAnimation extends Transition{
+        private State direction;
+
+        /**
+         *
+         * @param direction either to collapse, or extend
+         */
+        public SlideAnimation(State direction) {
+            super();
+            this.direction = direction;
 			// Sliding takes 250 milliseconds
 			setCycleDuration(Duration.millis(250));
 		}
@@ -109,9 +96,9 @@ public class Enroller<N extends Region> extends BorderPane {
 		// Function that fixes the sliding, frac indicates how big the displayed
 		// fraction of the slidingWrapper should be
 		@Override
-		protected void interpolate(double frac) {
+		protected void interpolate(double fraction) {
 			// Calculate the size of the slidingWrapper
-			final double size = collapsesize + ((extendsize - collapsesize) * frac);
+			final double size = collapseSize + ((extendSize - collapseSize) * (direction.equals(State.COLLAPSED) ? 1.0 - fraction : fraction) );
 
 			// Check if we have a vertical or a horizontal slider
 			if (extendDirection == ExtendDirection.DOWN || extendDirection == ExtendDirection.UP) {
@@ -150,6 +137,15 @@ public class Enroller<N extends Region> extends BorderPane {
 		UP, DOWN, LEFT, RIGHT
 	}
 
+    /**
+     * Checks whether any parameter is null
+     * @param parameters parameters to check
+     * @return true if any passed parameter is null
+     */
+	public boolean isNull(Object... parameters){
+		return Stream.of(parameters).anyMatch(parameter -> parameter == null);
+	}
+
 	/**
 	 * Constructor for an enroller which is partially visible when collapsed.
 	 * 
@@ -184,8 +180,7 @@ public class Enroller<N extends Region> extends BorderPane {
 		// Only start the initialisation if shit aint null, if there is any null
 		// we anounce it with a severe logging. This is because all parameters
 		// are required.
-		if (content != null && extendDirection != null && fixedSizeProperty != null && collapsedSizeProperty != null
-				&& extendedSizeProperty != null) {
+		if (!isNull(content, extendDirection, fixedSizeProperty, collapsedSizeProperty, extendedSizeProperty)) {
 			// Set the parameters as object variables for later use
 			this.content = content;
 			this.extendDirection = extendDirection;
@@ -358,14 +353,14 @@ public class Enroller<N extends Region> extends BorderPane {
 		// Only start the initialisation if shit aint null, if there is any null
 		// we anounce it with a severe logging. This is because all parameters
 		// are required.
-		if (content != null && extendDirection != null && fixedSizeProperty != null && extendedSizeProperty != null) {
+		if (!isNull(content, extendDirection, fixedSizeProperty, extendedSizeProperty)) {
 			// Set the parameters as object variables for later use
 			this.content = content;
 			this.extendDirection = extendDirection;
 			this.extendedSizeProperty = extendedSizeProperty;
-			// Set the collapsesize to 0.0 because this constructor is for an
+			// Set the collapseSize to 0.0 because this constructor is for an
 			// enroller that completely collapses
-			collapsesize = 0.0;
+			collapseSize = 0.0;
 			// Make new pane to place the content in. This is the pane used for
 			// the animated sliding
 			slidingWrapper = new BorderPane();
@@ -448,7 +443,7 @@ public class Enroller<N extends Region> extends BorderPane {
      * @param onFinish lambda to execute when animation is finished
      */
     public void handleEnrollment(Runnable onFinish){
-        onfinishMethod = onFinish;
+        onFinishMethod = onFinish;
         this.handleEnrollment();
     }
 
@@ -482,8 +477,8 @@ public class Enroller<N extends Region> extends BorderPane {
             // Set the state to collapsed because collapsing is finished
             state = State.COLLAPSED;
 
-            if(onfinishMethod != null)
-                onfinishMethod.run();
+            if(onFinishMethod != null)
+                new Thread(onFinishMethod).start();
         });
 		extend.onFinishedProperty().set(actionEvent -> {
             // Now the animation is finished we can bind the size property
@@ -498,8 +493,8 @@ public class Enroller<N extends Region> extends BorderPane {
                 slidingWrapper.minWidthProperty().bind(extendedSizeProperty);
                 slidingWrapper.maxWidthProperty().bind(extendedSizeProperty);
             }
-            if(onfinishMethod != null)
-                onfinishMethod.run();
+            if(onFinishMethod != null)
+				new Thread(onFinishMethod).start();
 
             // Set the state to extended because extending is finished
             state = State.EXTENDED;
@@ -528,11 +523,11 @@ public class Enroller<N extends Region> extends BorderPane {
 			slidingWrapper.maxWidthProperty().unbind();
 		}
 		// Set the extend and collapse sizes
-		extendsize = extendedSizeProperty.doubleValue();
+		extendSize = extendedSizeProperty.doubleValue();
 		// But collapse size only when there is an height property for because
 		// otherwise it stays 0.0
 		if (collapsedSizeProperty != null)
-			collapsesize = collapsedSizeProperty.doubleValue();
+			collapseSize = collapsedSizeProperty.doubleValue();
 
 		// Check if the slider is collapsed or extended
 		if (state == State.COLLAPSED) {

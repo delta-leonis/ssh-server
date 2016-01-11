@@ -2,9 +2,8 @@ package org.ssh.network.transmit.radio.producers;
 
 import org.ssh.models.enums.ProducerType;
 import org.ssh.pipelines.packets.RadioPacket;
-import org.ssh.services.AbstractService;
 import org.ssh.services.AbstractProducer;
-
+import org.ssh.services.AbstractService;
 import protobuf.Radio.RadioProtocolCommand;
 import protobuf.Radio.RadioProtocolWrapper;
 

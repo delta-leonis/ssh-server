@@ -1,13 +1,5 @@
 package org.ssh.field3d.gameobjects;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import org.ssh.field3d.core.game.Game;
-import org.ssh.field3d.core.gameobjects.GameObject;
-import org.ssh.util.Logger;
-
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -15,6 +7,13 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
+import org.ssh.field3d.core.game.Game;
+import org.ssh.field3d.core.gameobjects.GameObject;
+import org.ssh.util.Logger;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * SkyboxGO class. This class is the class used for creating a 3d skybox. It creates an enormous

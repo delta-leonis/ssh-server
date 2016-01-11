@@ -1,16 +1,6 @@
 package org.ssh.ui;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
-
-import org.ssh.managers.manager.UI;
-import org.ssh.util.Logger;
-
 import com.google.common.reflect.TypeToken;
-
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -20,6 +10,14 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.ssh.managers.manager.UI;
+import org.ssh.util.Logger;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * The Class UIController.
@@ -51,9 +49,9 @@ public abstract class UIController<T extends Pane> {
     private final List<UIComponent> components;
                                     
     /**
-     * The parameterized genericType of the window (<T extends Pane>).
+     * The parametrized genericType of the window (<T extends Pane>).
      * 
-     * @see {@link https://github.com/google/guava/wiki/ReflectionExplained}
+     * @see <a href="https://github.com/google/guava/wiki/ReflectionExplained">https://github.com/google/guava/wiki/ReflectionExplained</a>
      */
     @SuppressWarnings ("serial")
     public TypeToken<T>             genericType = new TypeToken<T>(this.getClass()) {
@@ -78,7 +76,7 @@ public abstract class UIController<T extends Pane> {
         // set attributes
         this.setName(name);
         this.setStage(new Stage());
-        this.components = new ArrayList<UIComponent>();
+        this.components = new ArrayList<>();
         
         // load the template from file
         this.loadFXML(fxmlFile);
@@ -107,7 +105,7 @@ public abstract class UIController<T extends Pane> {
         // set attributes
         this.name = name;
         this.setStage(stage);
-        this.components = new ArrayList<UIComponent>();
+        this.components = new ArrayList<>();
         
         // load the template from file
         this.loadFXML(fxmlFile);
@@ -137,7 +135,7 @@ public abstract class UIController<T extends Pane> {
     /**
      * Add a component at a specific place identified by the identifier
      *
-     * @param component
+     * @param component new component
      * @param identifier unique name of a node
      * @param bind true if binding (max/min height/width) is required to the parent
      */
@@ -273,7 +271,7 @@ public abstract class UIController<T extends Pane> {
             // attributes
             fxmlLoader.setController(this);
             // extract the Nodes
-            final Parent documentRoot = (Parent) fxmlLoader.load();
+            final Parent documentRoot = fxmlLoader.load();
             // if the root node is of the wrong genericType
             if (!documentRoot.getClass().equals(this.getType())) {
                 // warn the user
@@ -393,9 +391,7 @@ public abstract class UIController<T extends Pane> {
      */
     public void spawnWindow() {
         UIController.LOG.fine("Spawning a window for UIController %s", this.getName());
-        Platform.runLater(()->
-            this.show()
-        );
+        Platform.runLater(this::show);
     }
     
     /**

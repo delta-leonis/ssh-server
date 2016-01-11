@@ -1,26 +1,21 @@
 package org.ssh.ui.components.bottomsection;
 
-import javafx.event.ActionEvent;
-import javafx.scene.shape.Rectangle;
-import javafx.stage.FileChooser;
-import org.ssh.services.producers.LogReader;
-import org.ssh.ui.UIComponent;
-
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.FileChooser;
 import javafx.util.Duration;
+import org.ssh.services.producers.LogReader;
+import org.ssh.ui.UIComponent;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -66,7 +61,7 @@ public class Timeslider extends UIComponent {
     private LogReader logReader;
     private FileChooser fileChooser;
 
-    private static final int fineness = 10;
+    private static final int STEP_SIZE = 10;
                                      
     public Timeslider() {
         super("timeslider", "bottomsection/timeslider.fxml");
@@ -82,10 +77,10 @@ public class Timeslider extends UIComponent {
                 .setProgress(newValue.doubleValue() / this.slider.getMax()));
         // Initialize the label that displays the time
         this.timeLabel.setText(
-                this.getIntToTime((int) this.slider.getValue()) + "/" + this.getIntToTime((int) this.slider.getMax()));
+                Timeslider.getIntToTime((int) this.slider.getValue()) + "/" + Timeslider.getIntToTime((int) this.slider.getMax()));
         // Make sure the timeLabel gets updated whenever the slider gets updated
         this.slider.valueProperty().addListener((observable, oldValue, newValue) -> this.timeLabel.setText(
-                this.getIntToTime((int) this.slider.getValue()) + "/" + this.getIntToTime((int) this.slider.getMax())));
+                Timeslider.getIntToTime((int) this.slider.getValue()) + "/" + Timeslider.getIntToTime((int) this.slider.getMax())));
         this.slider.valueProperty().addListener(observable -> updateScoreLabel());
 
         this.setupTimer();
@@ -114,8 +109,8 @@ public class Timeslider extends UIComponent {
      */
     private void updateScoreLabel(){
         if(logReader != null) {
-            blueScoreLabel.setText("" + logReader.getBlueScoreAtTimeMillis((long) slider.getValue()));
-            yellowScoreLabel.setText("" + logReader.getYellowScoreAtTimeMillis((long) slider.getValue()));
+            blueScoreLabel.setText(Integer.toString(logReader.getBlueScoreAtTimeMillis((long) slider.getValue())));
+            yellowScoreLabel.setText(Integer.toString(logReader.getYellowScoreAtTimeMillis((long) slider.getValue())));
         }
     }
     
@@ -178,7 +173,7 @@ public class Timeslider extends UIComponent {
      */
     private void setupTimer() {
         // Define a single frame, with the duration of second/60
-        final KeyFrame keyFrame = new KeyFrame(new Duration(fineness), event -> this.updateKeyFrame());
+        final KeyFrame keyFrame = new KeyFrame(new Duration(STEP_SIZE), event -> this.updateKeyFrame());
         
         // The render loop play the frames
         this.timeline = new Timeline(keyFrame);
@@ -207,7 +202,7 @@ public class Timeslider extends UIComponent {
      * Adds speedPerTick to the slider value
      */
     private void updateKeyFrame() {
-        double speed = fineness * this.speedPerTick;
+        double speed = STEP_SIZE * this.speedPerTick;
         final double newValue = !reverse ? this.slider.getValue() + speed: this.slider.getValue() - speed;
         this.slider.setValue(newValue > this.slider.getMax() ? this.slider.getMax() : newValue);
         logReader.sendDetectionMessage((long)slider.getValue());

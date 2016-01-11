@@ -1,14 +1,13 @@
 package org.ssh.field3d.core.gameobjects.input;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.ssh.field3d.core.game.Game;
-import org.ssh.field3d.core.gameobjects.GameObject;
-
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import org.ssh.field3d.core.game.Game;
+import org.ssh.field3d.core.gameobjects.GameObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * KeyInputHandler class. This class is responsible for the handling the keyboard input for the 3d

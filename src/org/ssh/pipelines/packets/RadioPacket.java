@@ -1,7 +1,6 @@
 package org.ssh.pipelines.packets;
 
 import org.ssh.models.enums.SendMethod;
-
 import org.ssh.pipelines.AbstractPipelinePacket;
 import protobuf.Radio.RadioProtocolWrapper;
 import protobuf.Radio.RadioProtocolWrapper.Builder;

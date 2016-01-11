@@ -10,6 +10,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.ssh.models.AbstractModel.*;
+
 /**
  * Class used for tools concerning {@link java.lang.reflect}
  *
@@ -18,12 +20,18 @@ import java.util.stream.Stream;
 public class Reflect {
 
     //respective logger
-    private static Logger LOG = Logger.getLogger();
+    private static final Logger LOG = Logger.getLogger();
 
     /**
-     * Checks whether a Class or it's parents contain a field with given name or {@link Model.Alias}.
+     * This class should merely act as a toolkit, so it shouldn't be be instantiated.
+     */
+    private Reflect(){
+    }
+
+    /**
+     * Checks whether a Class or it's parents contain a field with given name or {@link Alias}.
      *
-     * @param fieldName name or {@link Model.Alias} of a field to check for
+     * @param fieldName name or {@link Alias} of a field to check for
      * @param clazz class object to check for the field
      * @return true if class or parent contains a field by this name
      */
@@ -32,9 +40,9 @@ public class Reflect {
     }
 
     /**
-     * Gets a {@link Field} of a Class or it's parents with given name or {@link Model.Alias}.
+     * Gets a {@link Field} of a Class or it's parents with given name or {@link Alias}.
      *
-     * @param fieldName name or {@link Model.Alias} of a field to check for
+     * @param fieldName name or {@link Alias} of a field to check for
      * @param clazz class object to check for the field
      * @return {@link Field} if found, or else an empty optional
      */
@@ -49,12 +57,13 @@ public class Reflect {
             }
             // gets thrown by #getDeclaredField(String) when a field is not found
             catch (final NoSuchFieldException exception) {
+                Reflect.LOG.exception(exception);
                 //try to find the field based on an Model.Alias
                 Optional<Field> oField = Stream.of(clazzI.getDeclaredFields())
                         //stream all fields, and filter the fields based on their equality in name
                         .filter(field -> {
                             // retrieve the annotation
-                            AbstractModel.Alias annotation = field.getAnnotation(AbstractModel.Alias.class);
+                            Alias annotation = field.getAnnotation(Alias.class);
                             // return the equality state
                             return annotation != null && annotation.value().equals(fieldName);
                         }).findAny();
@@ -81,14 +90,14 @@ public class Reflect {
      * @return list of all fieldnames that aren't Transient
      */
     public static List<String> fieldList(final Class<?> clazz){
-        List<String> fieldnames = new ArrayList<String>();
+        List<String> fieldNames = new ArrayList<String>();
 
         // local class Iterator
         Class<?> clazzI = clazz;
         // loop until all superclasses has been tried
         while (clazzI.getSuperclass() != null) {
             //get all fieldnames for this class
-            fieldnames.addAll(Stream.of(clazzI.getDeclaredFields())
+            fieldNames.addAll(Stream.of(clazzI.getDeclaredFields())
                     // it should not be transient, final or static
                     .filter(field ->  !Modifier.isTransient(field.getModifiers())
                             && !Modifier.isFinal(field.getModifiers())
@@ -98,7 +107,7 @@ public class Reflect {
                     .collect(Collectors.toList()));
             clazzI = clazzI.getSuperclass();
         }
-        return fieldnames;
+        return fieldNames;
     }
 
 }

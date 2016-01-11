@@ -1,12 +1,11 @@
 package org.ssh.pipelines.consumers;
 
-import java.lang.reflect.Type;
-
-import org.ssh.pipelines.packets.ProtoPacket;
-import org.ssh.services.AbstractService;
-import org.ssh.services.AbstractConsumer;
-
 import com.google.common.reflect.TypeToken;
+import org.ssh.pipelines.packets.ProtoPacket;
+import org.ssh.services.AbstractConsumer;
+import org.ssh.services.AbstractService;
+
+import java.lang.reflect.Type;
 
 /**
  * Verbose output for protopackets

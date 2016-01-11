@@ -1,12 +1,8 @@
 package org.ssh.field3d;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
+import javafx.application.Platform;
 import javafx.scene.*;
+import javafx.scene.paint.Color;
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.gameobjects.DetectionGameObject;
 import org.ssh.field3d.gameobjects.GeometryGameObject;
@@ -15,13 +11,15 @@ import org.ssh.field3d.gameobjects.detection.RobotGO;
 import org.ssh.field3d.gameobjects.geometry.FieldGO;
 import org.ssh.field3d.gameobjects.overlay.CameraControlOverlayGO;
 import org.ssh.managers.manager.Models;
-import org.ssh.managers.manager.Services;
 import org.ssh.models.Ball;
 import org.ssh.models.Field;
 import org.ssh.models.enums.Allegiance;
 
-import javafx.application.Platform;
-import javafx.scene.paint.Color;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * FieldGame class This class is the main part of the 3d field, from here everything in the 3d world
@@ -88,9 +86,6 @@ public class FieldGame extends Game {
      */
     private boolean isInitialized;
 
-    /** The easter car game object */
-    //private final CarGO easterCarGO;
-
     /**
      * Constructor.
      *
@@ -154,7 +149,6 @@ public class FieldGame extends Game {
         // it should be notified through a call to #internalInitialize
         Platform.runLater(() ->
                 this.internalInitialize());
-        ///this.addGameObject(this.easterCarGO);
     }
     /**
      * {@inheritDoc}
@@ -186,6 +180,7 @@ public class FieldGame extends Game {
      */
     @Override
     public void update(final long timeDivNano) {
+        // nothing to update
     }
 
     /**
@@ -193,6 +188,7 @@ public class FieldGame extends Game {
      */
     @Override
     public void destroy() {
+        // nothing to destroy
     }
 
     /**
@@ -276,23 +272,23 @@ public class FieldGame extends Game {
             for (DetectionGameObject detectionGameObject : this.detectionGameObjects) {
 
                 // If we've found a RobotGO
-                if (detectionGameObject instanceof RobotGO) {
+                if (!(detectionGameObject instanceof RobotGO))
+                    continue;
 
-                    // Getting RobotGO
-                    RobotGO tmpRobot = (RobotGO) detectionGameObject;
+                // Getting RobotGO
+                RobotGO tmpRobot = (RobotGO) detectionGameObject;
 
-                    // Check if blue robots contains the robot
-                    if (this.allyRobots.contains(tmpRobot)) {
+                // Check if blue robots contains the robot
+                if (this.allyRobots.contains(tmpRobot)) {
 
-                        // Setting vision model of the robot
-                        tmpRobot.setRobotVisionModel(this.allyRobots.indexOf(tmpRobot), Allegiance.ALLY);
-                    }
-                    // Check if yellow robots contains the robot
-                    else if (this.opponentRobots.contains(tmpRobot)) {
+                    // Setting vision model of the robot
+                    tmpRobot.setRobotVisionModel(this.allyRobots.indexOf(tmpRobot), Allegiance.ALLY);
+                }
+                // Check if yellow robots contains the robot
+                else if (this.opponentRobots.contains(tmpRobot)) {
 
-                        // Setting vision model of the robot
-                        tmpRobot.setRobotVisionModel(this.opponentRobots.indexOf(tmpRobot), Allegiance.OPPONENT);
-                    }
+                    // Setting vision model of the robot
+                    tmpRobot.setRobotVisionModel(this.opponentRobots.indexOf(tmpRobot), Allegiance.OPPONENT);
                 }
 
                 // Notify detection game object that there is new data
@@ -382,16 +378,16 @@ public class FieldGame extends Game {
         for (int i = 0; i < ROBOTS_PER_TEAM; i++) {
 
             // Creating blue robot
-            RobotGO allyRobots = new RobotGO(this, null);
+            RobotGO allyRobot = new RobotGO(this, null);
             // Create yellow robot
             RobotGO opponentRobot = new RobotGO(this, null);
 
             // Add robots to the list of detection game objects
-            this.addDetectionGameObject(allyRobots);
+            this.addDetectionGameObject(allyRobot);
             this.addDetectionGameObject(opponentRobot);
 
             // Add the blue robot to the blue robot list
-            this.allyRobots.add(allyRobots);
+            this.allyRobots.add(allyRobot);
             // Add the yellow robot to the yellow robot list
             this.opponentRobots.add(opponentRobot);
         }
@@ -440,10 +436,7 @@ public class FieldGame extends Game {
 
         // Filter the list of detection game objects, get the ball game objects, loop through them and remove them
         this.detectionGameObjects.stream().filter(detectionGameObject -> detectionGameObject instanceof BallGameObject)
-                .forEach(detectionGameObject -> {
-                    // Remove ball
-                    this.removeBall((BallGameObject) detectionGameObject);
-                });
+                .forEach(detectionGameObject -> this.removeBall((BallGameObject) detectionGameObject));
     }
 
     /**

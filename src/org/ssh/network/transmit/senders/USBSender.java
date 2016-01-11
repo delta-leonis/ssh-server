@@ -1,13 +1,11 @@
 package org.ssh.network.transmit.senders;
 
+import com.google.protobuf.Message;
+import jssc.SerialPort;
+import jssc.SerialPortException;
 import org.ssh.models.enums.BaudRate;
 import org.ssh.models.enums.SendMethod;
 import org.ssh.util.Logger;
-
-import com.google.protobuf.Message;
-
-import jssc.SerialPort;
-import jssc.SerialPortException;
 
 /**
  * Implements {@link SendMethod SendMethod.USB}. Currently it has no purpose other than showcasing

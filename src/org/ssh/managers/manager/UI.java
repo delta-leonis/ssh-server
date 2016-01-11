@@ -1,19 +1,14 @@
 package org.ssh.managers.manager;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.stage.Stage;
 import org.ssh.managers.AbstractManageable;
 import org.ssh.managers.ManagerInterface;
-import org.ssh.managers.AbstractManagerController;
 import org.ssh.managers.controllers.UIComponentController;
 import org.ssh.ui.UIComponent;
 import org.ssh.ui.UIController;
@@ -21,8 +16,9 @@ import org.ssh.ui.components.widget.AbstractWidget;
 import org.ssh.ui.windows.MainWindow;
 import org.ssh.util.Logger;
 
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * The Class UI.
@@ -131,7 +127,7 @@ public final class UI implements ManagerInterface<UIComponent<? extends Pane>> {
         return UI.getHighestParent(child.getParent());
     }
 
-    public static ArrayList<Node> getAllNodes(Parent root) {
+    public static List<Node> getAllNodes(Parent root) {
         ArrayList<Node> nodes = new ArrayList<Node>();
         addAllDescendents(root, nodes);
         return nodes;

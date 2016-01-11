@@ -1,14 +1,15 @@
 package org.ssh.field3d.gameobjects.detection;
 
-import java.awt.event.MouseListener;
-import java.io.InputStream;
-import java.util.Optional;
-
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
+import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
+import javafx.application.Platform;
+import javafx.scene.Group;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.MeshView;
+import javafx.scene.transform.Rotate;
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
-import org.ssh.field3d.core.gameobjects.input.MouseInputHandler;
 import org.ssh.field3d.core.shapes.FlatArc3D;
 import org.ssh.field3d.gameobjects.DetectionGameObject;
 import org.ssh.managers.manager.Models;
@@ -17,15 +18,8 @@ import org.ssh.models.enums.Allegiance;
 import org.ssh.models.enums.TeamColor;
 import org.ssh.util.Logger;
 
-import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
-
-import javafx.application.Platform;
-import javafx.scene.Group;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.MeshView;
-import javafx.scene.transform.Rotate;
+import java.io.InputStream;
+import java.util.Optional;
 
 /**
  * RobotGO class. This class is for robot game objects. This class loads the 3D model, textures and
@@ -196,7 +190,8 @@ public class RobotGO extends DetectionGameObject {
         if (this.visionRobotModel != null && this.modelGroup != null) {
 
             // Show robot if needed
-            if (!this.modelGroup.isVisible()) this.modelGroup.setVisible(true);
+            if (!this.modelGroup.isVisible())
+                this.modelGroup.setVisible(true);
 
             if (visionRobotModel.getAllegiance() == Allegiance.ALLY)
                 this.model.setOnMouseClicked(event -> visionRobotModel.update("isSelected", !visionRobotModel.isSelected()) );
@@ -241,13 +236,14 @@ public class RobotGO extends DetectionGameObject {
     public void setRobotVisionModel(int id, Allegiance color) {
 
         if (game == null)
-            Models.<org.ssh.models.Game>get("game").ifPresent(game -> this.game = game);
+            Models.<org.ssh.models.Game>get("game").ifPresent(gameModel -> this.game = gameModel);
 
         // Try to get robot model
         Optional<Robot> tmpOptionalVisionRobot = Models.<Robot> get("robot " + color.identifier() + id);
 
         // If the id is the same, do nothing
-        if (this.lastID == id) return;
+        if (this.lastID == id)
+            return;
         
         // Check if we've found
         if (tmpOptionalVisionRobot.isPresent()) {

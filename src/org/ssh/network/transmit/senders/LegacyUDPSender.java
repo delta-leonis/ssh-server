@@ -1,19 +1,17 @@
 package org.ssh.network.transmit.senders;
 
+import com.google.protobuf.Message;
+import org.ssh.models.enums.SendMethod;
+import org.ssh.util.Logger;
+import protobuf.Radio.RadioProtocolCommand;
+import protobuf.Radio.RadioProtocolWrapper;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-
-import org.ssh.models.enums.SendMethod;
-import org.ssh.util.Logger;
-
-import com.google.protobuf.Message;
-
-import protobuf.Radio.RadioProtocolCommand;
-import protobuf.Radio.RadioProtocolWrapper;
 
 
 /**

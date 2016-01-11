@@ -1,7 +1,6 @@
 package org.ssh.models;
 
 import javafx.beans.property.*;
-import javafx.scene.paint.Color;
 import org.ssh.models.enums.Allegiance;
 import org.ssh.models.enums.Malfunction;
 import org.ssh.models.enums.Malfunction.MalfunctionType;

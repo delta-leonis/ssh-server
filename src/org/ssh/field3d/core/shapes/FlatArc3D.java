@@ -1,8 +1,8 @@
 package org.ssh.field3d.core.shapes;
 
 import javafx.scene.shape.MeshView;
-import javafx.scene.shape.VertexFormat;
 import javafx.scene.shape.TriangleMesh;
+import javafx.scene.shape.VertexFormat;
 
 /**
  * FlatArc3D class. This class creates a triangle mesh for a flat arc in 3d space, it gets drawn on the x, z axis.

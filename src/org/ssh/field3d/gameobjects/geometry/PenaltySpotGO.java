@@ -1,15 +1,14 @@
 package org.ssh.field3d.gameobjects.geometry;
 
-import org.ssh.field3d.core.game.Game;
-import org.ssh.field3d.core.gameobjects.GameObject;
-import org.ssh.field3d.gameobjects.GeometryGameObject;
-
 import javafx.application.Platform;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.transform.Rotate;
+import org.ssh.field3d.core.game.Game;
+import org.ssh.field3d.core.gameobjects.GameObject;
+import org.ssh.field3d.gameobjects.GeometryGameObject;
 
 /**
  * Penalty spot game object class. This is the class for a penalty spot game object. It represents a penalty

@@ -3,15 +3,15 @@ package examples;
 import org.ssh.managers.manager.Models;
 import org.ssh.managers.manager.Network;
 import org.ssh.managers.manager.Services;
+import org.ssh.network.receive.detection.DetectionPipeline;
+import org.ssh.network.receive.geometry.GeometryPipeline;
+import org.ssh.network.receive.geometry.consumers.GeometryModelConsumer;
+import org.ssh.network.receive.wrapper.WrapperPipeline;
+import org.ssh.network.receive.wrapper.consumers.WrapperConsumer;
+import org.ssh.pipelines.consumers.ProtoConsumer;
 import org.ssh.pipelines.packets.DetectionPacket;
 import org.ssh.pipelines.packets.GeometryPacket;
 import org.ssh.pipelines.packets.WrapperPacket;
-import org.ssh.network.receive.detection.DetectionPipeline;
-import org.ssh.network.receive.geometry.GeometryPipeline;
-import org.ssh.network.receive.wrapper.WrapperPipeline;
-import org.ssh.network.receive.geometry.consumers.GeometryModelConsumer;
-import org.ssh.pipelines.consumers.ProtoConsumer;
-import org.ssh.network.receive.wrapper.consumers.WrapperConsumer;
 
 public class ReceiverExample {
     

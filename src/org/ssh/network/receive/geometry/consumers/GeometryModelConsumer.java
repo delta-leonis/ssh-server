@@ -10,7 +10,6 @@ import org.ssh.models.enums.Direction;
 import org.ssh.pipelines.packets.GeometryPacket;
 import org.ssh.services.AbstractConsumer;
 import org.ssh.ui.windows.MainWindow;
-
 import protobuf.Geometry.GeometryFieldSize;
 
 /**

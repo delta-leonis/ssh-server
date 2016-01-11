@@ -1,24 +1,22 @@
 package org.ssh.managers.manager;
 
-import java.util.ArrayList;
-
+import com.google.protobuf.GeneratedMessage;
 import org.ssh.managers.ManagerInterface;
 import org.ssh.managers.controllers.NetworkController;
 import org.ssh.models.enums.SendMethod;
-import org.ssh.pipelines.packets.ProtoPacket;
-import org.ssh.network.transmit.radio.RadioPipeline;
-import org.ssh.network.transmit.senders.SenderInterface;
-import org.ssh.services.AbstractService;
-import org.ssh.network.transmit.radio.consumers.RadioPacketSender;
 import org.ssh.network.receive.receivers.UDPReceiver;
+import org.ssh.network.transmit.radio.RadioPipeline;
+import org.ssh.network.transmit.radio.consumers.RadioPacketSender;
+import org.ssh.network.transmit.senders.SenderInterface;
+import org.ssh.pipelines.packets.ProtoPacket;
+import org.ssh.services.AbstractService;
 import org.ssh.ui.lua.console.AvailableInLua;
 import org.ssh.util.Logger;
-
-import com.google.protobuf.GeneratedMessage;
-
 import protobuf.Radio;
 import protobuf.Radio.RadioProtocolCommand;
 import protobuf.Radio.RadioProtocolWrapper;
+
+import java.util.ArrayList;
 
 /**
  * Manages all networkconnections. Controls all {@link UDPReceivers}. This class also acts as a

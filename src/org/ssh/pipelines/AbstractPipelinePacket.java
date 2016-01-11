@@ -1,17 +1,16 @@
 package org.ssh.pipelines;
 
+import com.google.common.reflect.TypeToken;
+import org.jooq.lambda.Unchecked;
+import org.ssh.util.Logger;
+import org.ssh.util.Reflect;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import org.jooq.lambda.Unchecked;
-import org.ssh.util.Logger;
-import org.ssh.util.Reflect;
-
-import com.google.common.reflect.TypeToken;
 
 /**
  * The Class PipelinePacket.

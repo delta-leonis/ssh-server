@@ -1,18 +1,6 @@
 package org.ssh.ui.lua.editor;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-
-
 import javafx.fxml.FXML;
-import org.ssh.ui.UIComponent;
-import org.ssh.ui.lua.console.ColoredCodeArea;
-import org.ssh.util.Logger;
-import org.ssh.util.LuaUtils;
-
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -20,6 +8,16 @@ import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import org.ssh.ui.UIComponent;
+import org.ssh.ui.lua.console.ColoredCodeArea;
+import org.ssh.util.Logger;
+import org.ssh.util.LuaUtils;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 
 /**
  * Test Module for loading and editing scripts into a {@link ColoredCodeArea} The file gets saved

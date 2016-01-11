@@ -1,12 +1,10 @@
 package org.ssh.field3d.gameobjects.detection;
 
-import org.ssh.field3d.core.game.Game;
-import org.ssh.field3d.core.gameobjects.GameObject;
-import org.ssh.field3d.gameobjects.DetectionGameObject;
-import org.ssh.models.Ball;
-
 import javafx.application.Platform;
 import javafx.scene.shape.Sphere;
+import org.ssh.field3d.core.game.Game;
+import org.ssh.field3d.gameobjects.DetectionGameObject;
+import org.ssh.models.Ball;
 
 /**
  * Ball game object class. This class is responsible for the ball on the 3D field.

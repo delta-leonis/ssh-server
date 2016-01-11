@@ -1,9 +1,8 @@
 package org.ssh.pipelines.packets;
 
-import org.ssh.pipelines.AbstractPipelinePacket;
-
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.Message.Builder;
+import org.ssh.pipelines.AbstractPipelinePacket;
 
 /**
  * PipelinePacket for protobuf packets, class implements some usefull methods for use with protobuf

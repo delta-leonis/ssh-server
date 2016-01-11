@@ -1,16 +1,11 @@
 package org.ssh.controllers;
 
-import java.lang.reflect.Type;
-
-import org.ssh.models.enums.ButtonFunction;
-
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import com.google.gson.*;
+import org.ssh.models.enums.ButtonFunction;
+
+import java.lang.reflect.Type;
 
 /**
  * Custom json-serializer for the {@link ControllerLayout} {@link ControllerLayout} couldn't be

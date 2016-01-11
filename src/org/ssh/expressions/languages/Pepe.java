@@ -3,7 +3,10 @@ package org.ssh.expressions.languages;
 import org.ssh.expressions.RegularLanguage;
 import org.ssh.pipelines.AbstractPipelinePacket;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -32,9 +35,8 @@ public class Pepe {
         this.regularLanguage = new RegularLanguage<>(resolvingOperation)
         // add the concatenation operator
         .addConcatenator(">",
-                (leftMember, rightMember) -> {
-                    return new ArrayList<>(Collections.singletonList(input -> rightMember.apply(leftMember.apply(input))));
-                })
+                (leftMember, rightMember) ->
+                    new ArrayList<>(Collections.singletonList(input -> rightMember.apply(leftMember.apply(input)))))
         // add the parallel operator
         .addOperator("|", true, 2,
                 (leftMember, rightMember) -> new ArrayList<>(Arrays.asList(leftMember::apply, rightMember::apply)))

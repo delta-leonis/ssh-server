@@ -1,8 +1,7 @@
 package org.ssh.network.transmit.senders;
 
-import org.ssh.models.enums.SendMethod;
-
 import com.google.protobuf.Message;
+import org.ssh.models.enums.SendMethod;
 
 /**
  * Interface that enforces a send method for generic protobuf messages.<br />

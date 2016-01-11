@@ -1,12 +1,5 @@
 package org.ssh.field3d.core.game;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
-import org.ssh.field3d.core.gameobjects.GameObject;
-import org.ssh.field3d.core.gameobjects.camera.ThirdPersonCamera;
-import org.ssh.field3d.core.gameobjects.input.MouseInputHandler;
-
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -15,6 +8,12 @@ import javafx.scene.Parent;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.util.Duration;
+import org.ssh.field3d.core.gameobjects.GameObject;
+import org.ssh.field3d.core.gameobjects.camera.ThirdPersonCamera;
+import org.ssh.field3d.core.gameobjects.input.MouseInputHandler;
+
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Game class. This is the core of the game. This class contains the game objects, input handlers and

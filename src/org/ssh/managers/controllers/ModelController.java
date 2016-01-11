@@ -1,19 +1,10 @@
 package org.ssh.managers.controllers;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
+import com.google.common.io.Files;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.stream.JsonReader;
 import javafx.beans.property.*;
 import org.ssh.controllers.ControllerLayout;
 import org.ssh.controllers.ControllerLayoutSerializer;
@@ -25,11 +16,14 @@ import org.ssh.models.Settings;
 import org.ssh.util.Logger;
 import org.ssh.util.Reflect;
 
-import com.google.common.io.Files;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.stream.JsonReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.lang.reflect.Modifier;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.Optional;
 
 /**
  * The Class ModelController. manages all {@link AbstractModel Models}.
@@ -43,12 +37,31 @@ public class ModelController extends AbstractManagerController<AbstractModel> {
     private final Gson          gson;
                                 
     /**
-     * Settings for this specific controller ({@link #add(AbstractModel)} adds the settings)
+     * Settings for this specific controller ({@link #add(AbstractManageable)} adds the settings)
      **/
     private Settings            settings;
+
     // Respective logger
     private static final Logger LOG = Logger.getLogger();
-    
+
+    /**
+     * Instantiates a new models controller.
+     */
+    public ModelController() {
+        this.gson = new GsonBuilder()
+                .registerTypeAdapter(ControllerLayout.class, new ControllerLayoutSerializer())
+                .registerTypeAdapter(BooleanProperty.class, new PropertyTypeAdapter<>())
+                .registerTypeAdapter(IntegerProperty.class, new PropertyTypeAdapter<>())
+                .registerTypeAdapter(LongProperty.class, new PropertyTypeAdapter<>())
+                .registerTypeAdapter(FloatProperty.class, new PropertyTypeAdapter<>())
+                .registerTypeAdapter(DoubleProperty.class, new PropertyTypeAdapter<>())
+                .registerTypeAdapter(StringProperty.class, new PropertyTypeAdapter<>())
+                .registerTypeAdapter(ObjectProperty.class, new PropertyTypeAdapter<>())
+                .registerTypeAdapter(ListProperty.class, new PropertyTypeAdapter<>())
+                .setPrettyPrinting()
+                .create();
+    }
+
     /**
      * {@inheritDoc}
      * 
@@ -61,24 +74,6 @@ public class ModelController extends AbstractManagerController<AbstractModel> {
             this.settings = (Settings) manageable;
         
         return super.put(name, manageable);
-    }
-
-    /**
-     * Instantiates a new models controller.
-     */
-    public ModelController() {
-        this.gson = new GsonBuilder()
-            .registerTypeAdapter(ControllerLayout.class, new ControllerLayoutSerializer())
-            .registerTypeAdapter(BooleanProperty.class, new PropertyTypeAdapter<>())
-            .registerTypeAdapter(IntegerProperty.class, new PropertyTypeAdapter<>())
-            .registerTypeAdapter(LongProperty.class, new PropertyTypeAdapter<>())
-            .registerTypeAdapter(FloatProperty.class, new PropertyTypeAdapter<>())
-            .registerTypeAdapter(DoubleProperty.class, new PropertyTypeAdapter<>())
-            .registerTypeAdapter(StringProperty.class, new PropertyTypeAdapter<>())
-            .registerTypeAdapter(ObjectProperty.class, new PropertyTypeAdapter<>())
-            .registerTypeAdapter(ListProperty.class, new PropertyTypeAdapter<>())
-            .setPrettyPrinting()
-            .create();
     }
     
     /**
@@ -94,15 +89,18 @@ public class ModelController extends AbstractManagerController<AbstractModel> {
         
         // for the settings.json
         File config = new File(this.settings.getProfilesPath() + filename);
-        if ((config.exists() && !config.isDirectory())) return Optional.of(config.toPath());
+        if (config.exists() && !config.isDirectory())
+            return Optional.of(config.toPath());
         
         // check for a custom file
         config = new File(this.settings.getCurrentWorkspacePath() + filename);
-        if ((config.exists() && !config.isDirectory())) return Optional.of(config.toPath());
+        if (config.exists() && !config.isDirectory())
+            return Optional.of(config.toPath());
         
         // check for a default one
         config = new File(this.settings.getDefaultPath() + filename);
-        if ((config.exists() && !config.isDirectory())) return Optional.of(config.toPath());
+        if (config.exists() && !config.isDirectory())
+            return Optional.of(config.toPath());
         
         // none found
         return Optional.empty();
@@ -233,12 +231,12 @@ public class ModelController extends AbstractManagerController<AbstractModel> {
             // open configfile
             final File configFile = new File(filePath);
             // make dirs recursively
-            if (!configFile.getParentFile().isDirectory())
-                if (!configFile.getParentFile().mkdirs()) 
+            if (!configFile.getParentFile().isDirectory()
+                && !configFile.getParentFile().mkdirs())
                     throw new IOException("Could not create (parent) dirs.");
             // create file if it doesn't already
-            if (!configFile.exists())
-                if (!configFile.createNewFile()) 
+            if (!configFile.exists()
+                && !configFile.createNewFile())
                     throw new IOException("Could not create configfile.");
             // write gson-object of all data in models to configFile
             Files.write(this.gson.toJson(model), configFile, Charset.defaultCharset());

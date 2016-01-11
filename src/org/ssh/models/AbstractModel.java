@@ -1,13 +1,11 @@
 package org.ssh.models;
 
-import com.google.protobuf.Descriptors;
+import javafx.beans.value.WritableValue;
 import org.jooq.lambda.Unchecked;
 import org.ssh.managers.AbstractManageable;
 import org.ssh.managers.controllers.ModelController;
 import org.ssh.managers.manager.Models;
-import org.ssh.util.Logger;
 import org.ssh.util.Reflect;
-import protobuf.Detection;
 
 import java.io.StringWriter;
 import java.lang.annotation.ElementType;
@@ -17,16 +15,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javafx.beans.value.WritableValue;
-import org.jooq.lambda.Unchecked;
-import org.ssh.managers.AbstractManageable;
-import org.ssh.managers.controllers.ModelController;
-import org.ssh.managers.manager.Models;
-import org.ssh.util.Logger;
-import org.ssh.util.Reflect;
 
 /**
  * The Class AbstractModel.<br />
@@ -109,7 +98,8 @@ public abstract class AbstractModel extends AbstractManageable {
                     AbstractModel.LOG.info("%s in is not a modifiable field", field.getName(), this.getClass().getSimpleName());
                     return false;
                 }
-                if (!field.isAccessible())field.setAccessible(true);
+                if (!field.isAccessible())
+                    field.setAccessible(true);
                 // if the field is a collection and the value is not, the value is added to the collection
                 if (field.get(this) instanceof Collection && !(value instanceof Collection))
                     ((Collection) field.get(this)).add(value);
@@ -149,9 +139,11 @@ public abstract class AbstractModel extends AbstractManageable {
         }
         catch (ClassCastException exception) {
             AbstractModel.LOG.info("%s is not assignable from %s.\n", fieldName, value.getClass().getTypeName());
+            AbstractModel.LOG.exception(exception);
         }
         catch (UnsupportedOperationException exception) {
             AbstractModel.LOG.info("Collection %s cannot be modified.", fieldName);
+            AbstractModel.LOG.exception(exception);
         }
         return false;
     }
@@ -249,7 +241,6 @@ public abstract class AbstractModel extends AbstractManageable {
      *            String representing a field and every even argument representing it's new
      *            contents.
      * @example
-     *          
      *          <pre>
      *          Model.update("position", new Point2D(123, 123), "robotId", 12);
      *          </pre>

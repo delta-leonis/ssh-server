@@ -1,10 +1,10 @@
 package org.ssh.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.ssh.managers.manager.Models;
 import org.ssh.models.enums.Allegiance;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Describes a team<br />

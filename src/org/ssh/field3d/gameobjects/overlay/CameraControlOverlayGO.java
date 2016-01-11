@@ -1,13 +1,12 @@
 package org.ssh.field3d.gameobjects.overlay;
 
-import org.ssh.field3d.core.game.Game;
-import org.ssh.field3d.core.gameobjects.GameObject;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point3D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import org.ssh.field3d.core.game.Game;
+import org.ssh.field3d.core.gameobjects.GameObject;
 
 /**
  * CameraPresetOverlay class

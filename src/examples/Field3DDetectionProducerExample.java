@@ -1,18 +1,17 @@
 package examples;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import org.ssh.managers.manager.Pipelines;
 import org.ssh.models.Robot;
 import org.ssh.models.enums.ProducerType;
 import org.ssh.pipelines.packets.DetectionPacket;
 import org.ssh.services.AbstractProducer;
-
 import protobuf.Detection.DetectionBall;
 import protobuf.Detection.DetectionFrame;
 import protobuf.Detection.DetectionRobot;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * 3D Field Detection producer class. This class is responsible for generating 1000

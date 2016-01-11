@@ -1,17 +1,16 @@
 package org.ssh.field3d.gameobjects.geometry;
 
+import javafx.application.Platform;
+import javafx.scene.Group;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
+import javafx.scene.transform.Rotate;
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.field3d.gameobjects.GeometryGameObject;
 import org.ssh.managers.manager.Models;
 import org.ssh.models.Goal;
 import org.ssh.models.Team;
-
-import javafx.application.Platform;
-import javafx.scene.Group;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
-import javafx.scene.transform.Rotate;
 
 import java.util.List;
 
@@ -37,9 +36,8 @@ public class GoalGameObject extends GeometryGameObject {
                               
     /** The {@link PhongMaterial} for the goal. */
     private PhongMaterial     goalMaterial;
-                              
-    /** The list of teams. */
-    private List<Team> teams;
+
+    /** Model describing the game state */
     private org.ssh.models.Game game;
 
     /**
@@ -91,37 +89,28 @@ public class GoalGameObject extends GeometryGameObject {
         switch (this.game.getSide(goalVisionModel.getAllegiance())) {
             
             // Goal is on the west side
-            case WEST: {
-                
+            case WEST:
                 // Rotate three-quarter
                 this.goalGroup.setRotate(270.0);
                 break;
-            }
-                
+
                 // The goal is on the south side
-            case SOUTH: {
-                
+            case SOUTH:
                 // Rotate a half
                 this.goalGroup.setRotate(180.0);
                 break;
-            }
                 
                 // The goal is on the east side
-            case EAST: {
-                
+            case EAST:
                 // Rotate a quarter
                 this.goalGroup.setRotate(90.0);
                 break;
-            }
                 
                 // The goal is on the north side NORTH == default
-            default: {
-                
+            default:
                 // Rotate to 0 degrees
                 this.goalGroup.setRotate(0.0);
                 break;
-            }
-            
         }
         
         // Translate into position

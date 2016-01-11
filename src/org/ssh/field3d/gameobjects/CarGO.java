@@ -1,13 +1,11 @@
 package org.ssh.field3d.gameobjects;
 
+import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
+import javafx.application.Platform;
+import javafx.scene.Group;
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.util.Logger;
-
-import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
-
-import javafx.application.Platform;
-import javafx.scene.Group;
 
 /**
  * Car game object class. This class represents the easter egg car. It shows when the right mouse button is

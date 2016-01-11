@@ -1,19 +1,18 @@
 package org.ssh.network.transmit.radio.consumers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
+import com.google.protobuf.Message;
 import org.ssh.models.enums.SendMethod;
 import org.ssh.network.transmit.senders.SenderInterface;
 import org.ssh.pipelines.packets.RadioPacket;
 import org.ssh.services.AbstractConsumer;
 import org.ssh.util.Logger;
 
-import com.google.protobuf.Message;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class RadioPacketSender extends AbstractConsumer<RadioPacket> {
     

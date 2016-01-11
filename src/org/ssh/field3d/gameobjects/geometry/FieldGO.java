@@ -1,23 +1,5 @@
 package org.ssh.field3d.gameobjects.geometry;
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.Optional;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
-import org.ssh.field3d.FieldGame;
-import org.ssh.field3d.core.game.Game;
-import org.ssh.field3d.core.shapes.FlatArc3D;
-import org.ssh.field3d.core.shapes.FlatLine3D;
-import org.ssh.field3d.gameobjects.GeometryGameObject;
-import org.ssh.field3d.gameobjects.overlay.ContextOverlayGO;
-import org.ssh.managers.manager.Models;
-import org.ssh.models.Field;
-import org.ssh.models.Goal;
-import org.ssh.models.AbstractModel;
-import org.ssh.util.Logger;
-
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
@@ -28,9 +10,26 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
+import org.ssh.field3d.FieldGame;
+import org.ssh.field3d.core.game.Game;
+import org.ssh.field3d.core.shapes.FlatArc3D;
+import org.ssh.field3d.core.shapes.FlatLine3D;
+import org.ssh.field3d.gameobjects.GeometryGameObject;
+import org.ssh.field3d.gameobjects.overlay.ContextOverlayGO;
+import org.ssh.managers.manager.Models;
+import org.ssh.models.AbstractModel;
+import org.ssh.models.Field;
+import org.ssh.models.Goal;
+import org.ssh.util.Logger;
 import protobuf.Geometry.FieldCicularArc;
 import protobuf.Geometry.FieldLineSegment;
 import protobuf.Geometry.Vector2f;
+
+import java.io.InputStream;
+import java.util.List;
+import java.util.Optional;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * FieldGO class. This class creates the field, the goals, lines and arcs.

@@ -1,5 +1,16 @@
 package org.ssh.network.receive.receivers;
 
+import com.google.protobuf.GeneratedMessage;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Parser;
+import javafx.concurrent.Task;
+import org.ssh.managers.manager.Models;
+import org.ssh.managers.manager.Pipelines;
+import org.ssh.managers.manager.Services;
+import org.ssh.models.NetworkSettings;
+import org.ssh.pipelines.packets.ProtoPacket;
+import org.ssh.services.AbstractService;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -9,19 +20,6 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
-
-import org.ssh.managers.manager.Models;
-import org.ssh.managers.manager.Pipelines;
-import org.ssh.managers.manager.Services;
-import org.ssh.models.NetworkSettings;
-import org.ssh.pipelines.packets.ProtoPacket;
-import org.ssh.services.AbstractService;
-
-import com.google.protobuf.GeneratedMessage;
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.Parser;
-
-import javafx.concurrent.Task;
 
 /**
  * This receiver class listens to a multicast IP as presented by the {@link NetworkSettings}, which

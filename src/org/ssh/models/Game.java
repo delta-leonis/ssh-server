@@ -1,14 +1,14 @@
 package org.ssh.models;
 
+import org.ssh.managers.manager.Models;
+import org.ssh.models.enums.Allegiance;
+import org.ssh.models.enums.Direction;
+import org.ssh.models.enums.TeamColor;
+import org.ssh.network.receive.detection.consumers.DetectionModelConsumer;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.ssh.managers.manager.Models;
-import org.ssh.models.enums.Direction;
-import org.ssh.models.enums.TeamColor;
-import org.ssh.models.enums.Allegiance;
-import org.ssh.network.receive.detection.consumers.DetectionModelConsumer;
 
 /**
  * Helper class used for abstracting {@link TeamColor} and {@link Direction} out of {@link Robot}, {@link Goal}

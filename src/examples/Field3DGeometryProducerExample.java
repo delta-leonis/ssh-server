@@ -1,8 +1,6 @@
 package examples;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.sun.javafx.geom.Point2D;
 import org.ssh.managers.manager.Models;
 import org.ssh.managers.manager.Pipelines;
 import org.ssh.models.Field;
@@ -11,14 +9,10 @@ import org.ssh.models.enums.Direction;
 import org.ssh.models.enums.ProducerType;
 import org.ssh.pipelines.packets.GeometryPacket;
 import org.ssh.services.AbstractProducer;
+import protobuf.Geometry.*;
 
-import com.sun.javafx.geom.Point2D;
-
-import protobuf.Geometry.FieldCicularArc;
-import protobuf.Geometry.FieldLineSegment;
-import protobuf.Geometry.GeometryData;
-import protobuf.Geometry.GeometryFieldSize;
-import protobuf.Geometry.Vector2f;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 3D field geometry producer class. This class is responsible for creating test geometry data.

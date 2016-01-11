@@ -1,7 +1,5 @@
 package org.ssh.pipelines.packets;
 
-import org.ssh.pipelines.packets.ProtoPacket;
-
 /**
  * Pipelinepacket for {@link protobuf.Wrapper.Wrapperpacket wrapperpackets}, it baiscly wraps the
  * {@link #hasDetection()} and {@link #hasGeometry()} methods as provided in the generated protobuf

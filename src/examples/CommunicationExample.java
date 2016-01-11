@@ -1,16 +1,15 @@
 package examples;
 
-import java.util.logging.Level;
-
 import org.ssh.managers.manager.Models;
 import org.ssh.managers.manager.Network;
 import org.ssh.managers.manager.Services;
 import org.ssh.models.enums.SendMethod;
+import org.ssh.network.transmit.radio.couplers.RoundCoupler;
 import org.ssh.network.transmit.senders.DebugSender;
 import org.ssh.network.transmit.senders.UDPSender;
-import org.ssh.network.transmit.radio.couplers.RoundCoupler;
-
 import protobuf.Radio.RadioProtocolCommand;
+
+import java.util.logging.Level;
 
 public class CommunicationExample {
     

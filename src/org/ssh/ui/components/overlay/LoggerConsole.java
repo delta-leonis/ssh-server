@@ -1,32 +1,27 @@
 package org.ssh.ui.components.overlay;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.LogRecord;
-import java.util.stream.Stream;
-
-import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.scene.layout.Pane;
-import org.ssh.managers.manager.UI;
-import org.ssh.ui.UIComponent;
-import org.ssh.util.Logger;
-
-import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import org.ssh.managers.manager.UI;
+import org.ssh.ui.UIComponent;
+import org.ssh.util.Logger;
 import org.ssh.util.LoggerMemoryHandler;
 
-import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Optional;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.stream.Stream;
 
 /**
  * Class for displaying data of the {@link Logger}. It consists of a {@link TabPane} where several
@@ -150,9 +145,9 @@ public class LoggerConsole extends UIComponent {
 
             // create a handler which will filter based on selected LEVEL in table
             levelDropdown.getSelectionModel().selectedItemProperty()
-                    .addListener((observable, oldValue, newValue) -> {
-                filteredData.setPredicate(row -> Level.parse(row.getLevel()).intValue() >= Level.parse(newValue).intValue());
-            });
+                    .addListener((observable, oldValue, newValue) ->
+                filteredData.setPredicate(row -> Level.parse(row.getLevel()).intValue() >= Level.parse(newValue).intValue())
+            );
 
             // wrap in a sortedlist
             SortedList<LogTableRow> sortedData = new SortedList<>(filteredData);

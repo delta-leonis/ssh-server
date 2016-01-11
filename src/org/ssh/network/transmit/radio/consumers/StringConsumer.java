@@ -1,10 +1,10 @@
 package org.ssh.network.transmit.radio.consumers;
 
-import java.lang.reflect.Type;
-
 import org.ssh.pipelines.AbstractPipelinePacket;
-import org.ssh.services.AbstractService;
 import org.ssh.services.AbstractConsumer;
+import org.ssh.services.AbstractService;
+
+import java.lang.reflect.Type;
 
 /**
  * The Class StringConsumer.

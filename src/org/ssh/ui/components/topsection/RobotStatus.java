@@ -1,11 +1,6 @@
 package org.ssh.ui.components.topsection;
 
-import java.util.stream.Collectors;
-
 import javafx.application.Platform;
-import org.ssh.models.Robot;
-import org.ssh.ui.UIComponent;
-
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
@@ -19,6 +14,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.ssh.models.Robot;
+import org.ssh.ui.UIComponent;
+
+import java.util.stream.Collectors;
 
 /**
  * this class contains all the functionallity behind the robotstatusbox. The layout is defined in

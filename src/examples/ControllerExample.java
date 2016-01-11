@@ -1,8 +1,13 @@
 package examples;
 
-import java.util.Optional;
-import java.util.stream.Stream;
-
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import net.java.games.input.Component;
+import net.java.games.input.Controller;
+import net.java.games.input.Controller.Type;
+import net.java.games.input.ControllerEnvironment;
 import org.ssh.controllers.ControllerHandler;
 import org.ssh.controllers.ControllerLayout;
 import org.ssh.controllers.ControllerListener;
@@ -17,14 +22,8 @@ import org.ssh.network.transmit.radio.RadioPipeline;
 import org.ssh.network.transmit.senders.LegacyUDPSender;
 import org.ssh.util.Logger;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
-import net.java.games.input.Component;
-import net.java.games.input.Controller;
-import net.java.games.input.Controller.Type;
-import net.java.games.input.ControllerEnvironment;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Example to show how to create {@link ControllerHandler ControllerHandlers},

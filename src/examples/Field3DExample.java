@@ -1,13 +1,12 @@
 package examples;
 
-import org.ssh.field3d.FieldGame;
-
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import org.ssh.field3d.FieldGame;
 
 public class Field3DExample extends Application {
     

@@ -1,14 +1,13 @@
 package examples;
 
-import org.ssh.managers.manager.Models;
-import org.ssh.ui.lua.console.AvailableInLua;
-import org.ssh.ui.lua.console.Console;
-import org.ssh.ui.lua.console.ConsoleManager;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.ssh.managers.manager.Models;
+import org.ssh.ui.lua.console.AvailableInLua;
+import org.ssh.ui.lua.console.Console;
+import org.ssh.ui.lua.console.ConsoleManager;
 
 /**
  * Example that runs a {@link Console} The {@link Console} has access to every class that uses the

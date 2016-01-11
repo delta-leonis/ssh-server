@@ -1,14 +1,13 @@
 package org.ssh.field3d.gameobjects.overlay;
 
-import java.io.IOException;
-import java.net.URL;
-
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.util.Logger;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
+import java.io.IOException;
+import java.net.URL;
 
 /**
  * OverlayGO class. This is the base class for the 2d overlay components.

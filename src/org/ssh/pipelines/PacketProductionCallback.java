@@ -1,8 +1,7 @@
 package org.ssh.pipelines;
 
-import org.ssh.managers.manager.Pipelines;
-
 import com.google.common.util.concurrent.FutureCallback;
+import org.ssh.managers.manager.Pipelines;
 import org.ssh.util.Logger;
 
 /**

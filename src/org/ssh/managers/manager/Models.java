@@ -1,17 +1,17 @@
 package org.ssh.managers.manager;
 
+import org.ssh.managers.ManagerInterface;
+import org.ssh.managers.controllers.ModelController;
+import org.ssh.models.AbstractModel;
+import org.ssh.models.Settings;
+import org.ssh.ui.lua.console.AvailableInLua;
+import org.ssh.util.Logger;
+
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.ssh.managers.ManagerInterface;
-import org.ssh.managers.controllers.ModelController;
-import org.ssh.models.AbstractModel;
-import org.ssh.models.Settings;
-import org.ssh.util.Logger;
-import org.ssh.ui.lua.console.AvailableInLua;
 
 /**
  * The Class Models. Contains the manager for all {@link AbstractModel Models} that are in use. Also contains the factory (

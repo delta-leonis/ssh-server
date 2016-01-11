@@ -1,15 +1,14 @@
 package org.ssh.field3d.core.gameobjects.camera;
 
+import javafx.application.Platform;
+import javafx.geometry.Point3D;
+import javafx.scene.DepthTest;
+import javafx.scene.PerspectiveCamera;
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.field3d.core.math.Xform;
 import org.ssh.managers.manager.Models;
 import org.ssh.models.CameraSettings;
-
-import javafx.application.Platform;
-import javafx.geometry.Point3D;
-import javafx.scene.DepthTest;
-import javafx.scene.PerspectiveCamera;
 
 /**
  * ThirdPersonCamera class. This class is used for the third person camera for the 3d world.

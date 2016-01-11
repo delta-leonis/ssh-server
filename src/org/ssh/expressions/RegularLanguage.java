@@ -2,7 +2,6 @@ package org.ssh.expressions;
 
 import org.ssh.expressions.tokens.FunctionToken;
 import org.ssh.expressions.tokens.OperatorToken;
-import org.ssh.managers.manager.Services;
 import org.ssh.util.Logger;
 
 import java.util.*;
@@ -61,6 +60,9 @@ public class RegularLanguage<O> {
      */
     private Function<String, O> resolver;
 
+    // respective logger
+    private static final Logger LOG      = Logger.getLogger();
+
     /**
      * Constructs a new RegularLanguage with the supplied resolving operation.
      *
@@ -69,9 +71,6 @@ public class RegularLanguage<O> {
     public RegularLanguage(Function<String, O> resolver) {
         this.resolver = resolver;
     }
-
-    // respective logger
-    private static final Logger LOG      = Logger.getLogger();
 
     /**
      * Adds a concatenation operator to the language. A concatenation operator is used for chaining

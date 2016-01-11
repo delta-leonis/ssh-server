@@ -2,12 +2,8 @@ package org.ssh.pipelines.translators;
 
 import org.ssh.pipelines.packets.DetectionPacket;
 import org.ssh.pipelines.packets.RadioPacket;
-import org.ssh.pipelines.packets.StrategyPacket;
 import org.ssh.services.AbstractTranslator;
 import protobuf.Radio;
-
-import java.util.HashMap;
-import java.util.function.Function;
 
 /**
  * The Class DetectionToStrategyTranslator

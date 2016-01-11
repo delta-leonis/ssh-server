@@ -1,12 +1,6 @@
 package org.ssh.pipelines;
 
-import java.lang.reflect.Type;
-import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
+import com.google.common.reflect.TypeToken;
 import org.ssh.managers.AbstractManageable;
 import org.ssh.managers.manager.Pipelines;
 import org.ssh.services.AbstractConsumer;
@@ -14,7 +8,12 @@ import org.ssh.services.AbstractCoupler;
 import org.ssh.services.AbstractProducer;
 import org.ssh.util.Logger;
 
-import com.google.common.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * The Class AbstractPipeline.

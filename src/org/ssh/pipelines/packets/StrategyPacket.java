@@ -1,7 +1,6 @@
 package org.ssh.pipelines.packets;
 
 import org.ssh.pipelines.AbstractPipelinePacket;
-import protobuf.Detection.DetectionFrame;
 
 import java.util.HashMap;
 

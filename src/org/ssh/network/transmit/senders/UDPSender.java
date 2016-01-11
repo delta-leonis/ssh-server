@@ -1,14 +1,13 @@
 package org.ssh.network.transmit.senders;
 
+import com.google.protobuf.Message;
+import org.ssh.models.enums.SendMethod;
+import org.ssh.util.Logger;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-
-import org.ssh.models.enums.SendMethod;
-import org.ssh.util.Logger;
-
-import com.google.protobuf.Message;
 
 /**
  * Implements a way to send a Protobuf {@link Message} over {@link SendMethod UDP} to given

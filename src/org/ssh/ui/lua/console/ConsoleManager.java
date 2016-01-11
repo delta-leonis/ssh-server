@@ -1,16 +1,15 @@
 package org.ssh.ui.lua.console;
 
-import javafx.scene.layout.Pane;
-import org.fxmisc.wellbehaved.event.EventHandlerHelper;
-import org.fxmisc.wellbehaved.event.EventPattern;
-import org.ssh.managers.manager.UI;
-import org.ssh.ui.UIComponent;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.Pane;
+import org.fxmisc.wellbehaved.event.EventHandlerHelper;
+import org.fxmisc.wellbehaved.event.EventPattern;
+import org.ssh.managers.manager.UI;
+import org.ssh.ui.UIComponent;
 
 /**
  * Class that manages all {@link Console Consoles} by placing them in different {@link Tab tabs}

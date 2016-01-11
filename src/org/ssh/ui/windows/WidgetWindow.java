@@ -2,21 +2,16 @@ package org.ssh.ui.windows;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.ssh.managers.manager.UI;
 import org.ssh.ui.UIController;
 
 import java.util.List;
 import java.util.function.BinaryOperator;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**

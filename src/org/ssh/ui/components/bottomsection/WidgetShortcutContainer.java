@@ -3,14 +3,12 @@ package org.ssh.ui.components.bottomsection;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.
-        GridPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import org.ssh.managers.manager.UI;
 import org.ssh.ui.UIComponent;
 import org.ssh.ui.components.widget.AbstractWidget;
-import org.ssh.ui.components.widget.TestWidget;
 import org.ssh.ui.components.widget.WidgetShortcut;
 
 import java.util.List;

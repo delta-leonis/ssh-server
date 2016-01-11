@@ -1,8 +1,7 @@
 package org.ssh.models.enums;
 
-import org.ssh.controllers.ControllerLayout;
-
 import net.java.games.input.Component;
+import org.ssh.controllers.ControllerLayout;
 
 /**
  * Describes different assignable functions for a {@link ControllerLayout}, and whether that

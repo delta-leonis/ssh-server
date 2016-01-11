@@ -1,9 +1,5 @@
 package org.ssh.network.receive.detection.consumers;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
-
 import org.ssh.field3d.FieldGame;
 import org.ssh.managers.manager.Models;
 import org.ssh.managers.manager.UI;
@@ -14,9 +10,12 @@ import org.ssh.models.enums.TeamColor;
 import org.ssh.pipelines.packets.DetectionPacket;
 import org.ssh.services.AbstractConsumer;
 import org.ssh.ui.windows.MainWindow;
-
 import protobuf.Detection.DetectionFrame;
 import protobuf.Detection.DetectionRobot;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Class for parsing all {@link DetectionPacket}s to their models.

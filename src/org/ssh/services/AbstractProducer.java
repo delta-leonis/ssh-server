@@ -1,21 +1,20 @@
 package org.ssh.services;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
-
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListenableScheduledFuture;
 import org.ssh.managers.manager.Pipelines;
 import org.ssh.managers.manager.Services;
 import org.ssh.models.enums.ProducerType;
 import org.ssh.pipelines.AbstractPipeline;
 import org.ssh.pipelines.AbstractPipelinePacket;
-import org.ssh.util.Logger;
 import org.ssh.pipelines.PacketProductionCallback;
+import org.ssh.util.Logger;
 
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListenableScheduledFuture;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * The Class AbstractProducer.

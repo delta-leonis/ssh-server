@@ -1,14 +1,10 @@
 package org.ssh.models;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.ssh.managers.manager.Models;
-
 import protobuf.Geometry.FieldCicularArc;
 import protobuf.Geometry.FieldLineSegment;
 import protobuf.Geometry.GeometryFieldSize;
+
+import java.util.List;
 
 /**
  * Describes a field with {@link Goal goals} and a {@link GeometryFieldSize field size}.
