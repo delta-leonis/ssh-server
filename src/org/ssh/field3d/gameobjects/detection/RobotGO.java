@@ -1,10 +1,14 @@
 package org.ssh.field3d.gameobjects.detection;
 
+import java.awt.event.MouseListener;
 import java.io.InputStream;
 import java.util.Optional;
 
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
+import org.ssh.field3d.core.gameobjects.input.MouseInputHandler;
 import org.ssh.field3d.core.shapes.FlatArc3D;
 import org.ssh.field3d.gameobjects.DetectionGameObject;
 import org.ssh.managers.manager.Models;
@@ -31,9 +35,9 @@ import javafx.scene.transform.Rotate;
  * @author Mark Lefering
  */
 public class RobotGO extends DetectionGameObject {
-    
+
     /** The conversion from radians to degrees */
-    private static final float RAD_TO_DEG = (float)(2.0f * Math.PI) / 180.0f;
+    private static final double RAD_TO_DEG =  180.0 / Math.PI / 2.0;
     
     /** The thickness of the selection circle. */
     private static final float  ROBOT_SELECTION_CIRCLE_THICKNESS = 50.0f;
@@ -84,9 +88,6 @@ public class RobotGO extends DetectionGameObject {
                                 
     /** The model group */
     private final Group         modelGroup;
-                                
-    /** The selected state */
-    private boolean             isSelected;
 
     /** The offset on the y-axis of the robot. */
     private float               robotYOffset;
@@ -112,7 +113,6 @@ public class RobotGO extends DetectionGameObject {
                 ROBOT_SELECTION_CIRCLE_THICKNESS,
                 ROBOT_SEL_CIRCLE_NUM_OF_SEGMENTS);
 
-                
         // Creating PhongMaterial
         this.material = new PhongMaterial(Color.WHITE);
         this.selectionCircleMaterial = new PhongMaterial();
@@ -139,7 +139,7 @@ public class RobotGO extends DetectionGameObject {
             // Setting last vision model id
             this.lastID = this.visionRobotModel.getRobotId();
         }
-        
+
         // Setting selection circle diffuse & specular color to Blue
         this.selectionCircleMaterial.setDiffuseColor(Color.BLUE);
         this.selectionCircleMaterial.setSpecularColor(Color.BLUE);
@@ -186,7 +186,6 @@ public class RobotGO extends DetectionGameObject {
             }
         });
     }
-    
     /**
      * {@inheritDoc}
      */
@@ -199,34 +198,28 @@ public class RobotGO extends DetectionGameObject {
             // Show robot if needed
             if (!this.modelGroup.isVisible()) this.modelGroup.setVisible(true);
 
+            if (visionRobotModel.getAllegiance() == Allegiance.ALLY)
+                this.model.setOnMouseClicked(event -> visionRobotModel.update("isSelected", !visionRobotModel.isSelected()) );
+
+            // Set the orientation of the robot
+            this.model.rotateProperty().bind(this.visionRobotModel.orientationProperty().multiply(RAD_TO_DEG));
+            // Set the orientation of the robot
+            this.modelGroup.rotateProperty().bind(this.model.rotateProperty());
+
             // Bind visible property of the selection arc to the vision model
             this.selectionArcMesh.visibleProperty().bind(this.visionRobotModel.isSelectedProperty());
-            
-            // Check if position is not null
-            if (visionRobotModel.getPosition() != null) {
 
-                // Sync with UI thread
-                Platform.runLater(() -> {
-                    
-                    if (this.visionRobotModel.getOrientation() != null) {
-                        
-                        // Set the orientation of the robot
-                        this.modelGroup.setRotate(this.visionRobotModel.getOrientation() * RAD_TO_DEG);
-                    }
-                    
-                    // Translate to location
-                    this.model.setTranslateX(-this.visionRobotModel.getPosition().getX());
-                    this.model.setTranslateY(this.robotYOffset);
-                    this.model.setTranslateZ(this.visionRobotModel.getPosition().getY());
-                    
-                    // Translate selection circle to location
-                    this.selectionArcMesh.setTranslateX(-this.visionRobotModel.getPosition().getX());
-                    this.selectionArcMesh.setTranslateY(ROBOT_STARTING_Y);
-                    this.selectionArcMesh.setTranslateZ(this.visionRobotModel.getPosition().getY());
-                });
-            }
-        }
-        else {
+            // Translate to location
+            this.model.translateXProperty().bind(this.visionRobotModel.xPositionProperty().multiply(-1.0f));
+            this.model.translateZProperty().bind(this.visionRobotModel.yPositionProperty());
+            this.model.setTranslateY(this.robotYOffset);
+
+            // Translate selection circle to location
+            this.selectionArcMesh.translateXProperty().bind(this.visionRobotModel.xPositionProperty().multiply(-1.0f));
+            this.selectionArcMesh.translateZProperty().bind(this.visionRobotModel.yPositionProperty());
+            this.selectionArcMesh.setTranslateY(ROBOT_STARTING_Y);
+
+        } else {
 
             // Check if model group not null and visible
             if (this.modelGroup != null && this.modelGroup.isVisible()) {
@@ -235,44 +228,6 @@ public class RobotGO extends DetectionGameObject {
                 this.modelGroup.setVisible(false);
             }
         }
-    }
-    
-    /**
-     * Gets the selected state of the robot.
-     * 
-     * @return True, if selected.
-     */
-
-    public boolean getSelected() {
-        return this.isSelected;
-    }
-    
-    /**
-     * Sets the selected state of the robot.
-     * 
-     * @param isSelected
-     *            the new selected state of the robot as boolean.
-     */
-    public void setSelected(final boolean isSelected) {
-        
-        // Setting selected state
-        this.isSelected = isSelected;
-        // Setting visibility of the selection arc mesh
-        this.selectionArcMesh.setVisible(this.isSelected);
-    }
-    
-    /**
-     * This method set the color of the selection circle material.
-     * 
-     * @param color
-     *            The {@link Color} of the circle.
-     */
-
-    public void setSelectionCircleColor(final Color color) {
-        
-        // Update material diffuse & specular color
-        this.selectionCircleMaterial.setDiffuseColor(color);
-        this.selectionCircleMaterial.setSpecularColor(color);
     }
 
     /**
@@ -285,15 +240,8 @@ public class RobotGO extends DetectionGameObject {
      */
     public void setRobotVisionModel(int id, Allegiance color) {
 
-        if (game == null) {
-
-            Optional<org.ssh.models.Game> optionalGame = Models.<org.ssh.models.Game>get("game");
-
-            if (optionalGame.isPresent()) {
-
-                this.game = optionalGame.get();
-            }
-        }
+        if (game == null)
+            Models.<org.ssh.models.Game>get("game").ifPresent(game -> this.game = game);
 
         // Try to get robot model
         Optional<Robot> tmpOptionalVisionRobot = Models.<Robot> get("robot " + color.identifier() + id);
@@ -303,13 +251,13 @@ public class RobotGO extends DetectionGameObject {
         
         // Check if we've found
         if (tmpOptionalVisionRobot.isPresent()) {
-            
+
             // Setting vision robot model
             this.visionRobotModel = tmpOptionalVisionRobot.get();
-            
+
             // Check if the last id differs
             if (this.lastID != id) {
-                
+
                 // Load texture
                 this.loadTexture();
                 // Update last id
@@ -374,10 +322,11 @@ public class RobotGO extends DetectionGameObject {
             
             // Getting model from the model importer
             this.model = modelImporter.getImport()[0];
-            
+
             // Setting rotation axis
+            this.model.rotationAxisProperty().bindBidirectional(this.modelGroup.rotationAxisProperty());
             this.model.setRotationAxis(Rotate.Y_AXIS);
-            
+
             // Add model to model group
             this.modelGroup.getChildren().add(this.model);
             

@@ -170,6 +170,16 @@ public class Game extends AbstractModel {
     }
 
     /**
+     * Gets the teamcolor based on the {@link Allegiance} of a {@link Robot}
+     *
+     * @param robot robot to get {@link TeamColor} for
+     * @return {@link TeamColor} of the {@link Team} of the {@link Robot}
+     */
+    public TeamColor getTeamColor(Robot robot){
+        return robot.getAllegiance().equals(Allegiance.ALLY) ? getAllyColor() : getOpponentColor();
+    }
+
+    /**
      * Retrieves the teamcolor based on the {@link Allegiance} of a team
      * @param allegiance the allegiance of a team
      * @return teamcolor of the team with matching {@link Allegiance}

@@ -1,9 +1,7 @@
 package org.ssh.models;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.*;
+import javafx.scene.paint.Color;
 import org.ssh.models.enums.Allegiance;
 import org.ssh.models.enums.Malfunction;
 import org.ssh.models.enums.Malfunction.MalfunctionType;
@@ -45,7 +43,7 @@ public class Robot extends FieldObject {
     private BooleanProperty             isSelected;
 
     /** Orientation which the robot is facing, not driving */
-    private Float                       orientation;
+    private FloatProperty               orientation;
 
     /** height of this robot as provided by ssl-vision */
     private Float                       height;
@@ -77,6 +75,7 @@ public class Robot extends FieldObject {
         this.isSelected = new SimpleBooleanProperty(false);
         this.isConnected = new SimpleBooleanProperty(false);
         this.isOnSight = new SimpleBooleanProperty(false);
+        this.orientation = new SimpleFloatProperty(0.0f);
         this.malfunctions = new SimpleListProperty<>(
                 javafx.collections.FXCollections.observableList(new ArrayList<>()));
         this.lastUpdated = System.currentTimeMillis();
@@ -100,8 +99,13 @@ public class Robot extends FieldObject {
      * @return the Orientation which the robot is facing, not driving
      */
     public Float getOrientation() {
-        return this.orientation;
+        return this.orientation.get();
     }
+
+    /**
+     * @return the Orientation as a property
+     */
+    public FloatProperty orientationProperty() { return orientation; }
 
     /**
      * @return robot ID [0-15]
@@ -130,6 +134,7 @@ public class Robot extends FieldObject {
     public boolean isSelected() {
         return this.isSelected.get();
     }
+
     /**
      * @return Property for binding isSelected to the GUI
      */
