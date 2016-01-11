@@ -25,11 +25,15 @@ public class LoggerMemoryHandler extends Handler {
      */
     private ObservableList<LogTableRow> records;
 
+    /** max number of rows that will be stored */
+    private int maxSize;
+
     /**
      * Constructor for {@link LoggerMemoryHandler}.
      */
-    public LoggerMemoryHandler() {
+    public LoggerMemoryHandler(int maxSize) {
         records = FXCollections.observableArrayList();
+        this.maxSize = maxSize;
     }
 
     /**
@@ -40,8 +44,11 @@ public class LoggerMemoryHandler extends Handler {
      */
     @Override
     public void publish(LogRecord record) {
-        Platform.runLater(() ->
-                records.add(new LogTableRow(record)));
+        Platform.runLater(() -> {
+            if(records.size() > maxSize)
+                records.remove(0);
+            records.add(new LogTableRow(record));
+        });
     }
 
     /**

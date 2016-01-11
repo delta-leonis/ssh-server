@@ -26,6 +26,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
 import org.ssh.util.LoggerMemoryHandler;
 
+import javax.swing.table.DefaultTableModel;
+
 /**
  * Class for displaying data of the {@link Logger}. It consists of a {@link TabPane} where several
  * {@link LoggingTab}s are added to (for every package in org.ssh one and one for showing everything

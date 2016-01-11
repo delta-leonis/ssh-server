@@ -5,13 +5,18 @@ import java.util.logging.LogManager;
 import java.util.stream.Stream;
 
 /**
- * Expanded Logger with build in formatter
+ * Expanded Logger with build in formatter. This logger will also
+ * auto subscribe any loggger to a new instance of {@link LoggerMemoryHandler} if it starts
+ * with "org.ssh".
  *
  * @author Jeroen de Jong
  * @author Rimon Oz
  */
 public class Logger extends java.util.logging.Logger {
-    
+
+    /** Maximum amount of LogRows that will be stored in cache */
+    private static final int MAX_CACHE_SIZE = 5000;
+
     /**
      * gets a logger that uses the classname of the class that called this method using
      * the StackTrace
@@ -101,7 +106,7 @@ public class Logger extends java.util.logging.Logger {
             logger = logManager.getLogger(packageName);
         }
         //attach a LoggerMemoryHandler
-        logger.addHandler(new LoggerMemoryHandler());
+        logger.addHandler(new LoggerMemoryHandler(MAX_CACHE_SIZE));
     }
 
     /**
