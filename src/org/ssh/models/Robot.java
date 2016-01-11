@@ -105,7 +105,7 @@ public class Robot extends FieldObject {
     /**
      * @return the Orientation as a property
      */
-    public FloatProperty orientationProperty() { return orientation; }
+    public ReadOnlyFloatProperty orientationProperty() { return orientation; }
 
     /**
      * @return robot ID [0-15]
@@ -138,7 +138,7 @@ public class Robot extends FieldObject {
     /**
      * @return Property for binding isSelected to the GUI
      */
-    public BooleanProperty isSelectedProperty() {
+    public ReadOnlyBooleanProperty isSelectedProperty() {
         return this.isSelected;
     }
 
@@ -152,7 +152,7 @@ public class Robot extends FieldObject {
     /**
      * @return Property for binding isConnected to the GUI
      */
-    public BooleanProperty isConnectedProperty() {
+    public ReadOnlyBooleanProperty isConnectedProperty() {
         return this.isConnected;
     }
 
@@ -166,7 +166,7 @@ public class Robot extends FieldObject {
     /**
      * @return Property for binding isOnSightProperty to the GUI
      */
-    public BooleanProperty isOnSightProperty() {
+    public ReadOnlyBooleanProperty isOnSightProperty() {
         return this.isOnSight;
     }
 
@@ -190,7 +190,7 @@ public class Robot extends FieldObject {
      * @return the property for binding the list of malfunctions to another property, or to listen
      *         to changes in this list.
      */
-    public ListProperty<Malfunction> malfunctionsProperty() {
+    public ReadOnlyListProperty<Malfunction> malfunctionsProperty() {
         return this.malfunctions;
     }
 

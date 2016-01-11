@@ -1,6 +1,7 @@
 package org.ssh.models;
 
 import javafx.beans.property.FloatProperty;
+import javafx.beans.property.ReadOnlyFloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 
 import javafx.geometry.Point2D;
@@ -55,14 +56,14 @@ public class FieldObject extends AbstractModel {
     /**
      * @return the xPosition as a property, so when it is modified, the changes are fed through to its binded properties
      */
-    public FloatProperty xPositionProperty() {
+    public ReadOnlyFloatProperty xPositionProperty() {
         return xPosition;
     }
 
     /**
      * @return the yPosition as a property, so when it is modified, the changes are fed through to its binded properties
      */
-    public FloatProperty yPositionProperty() {
+    public ReadOnlyFloatProperty yPositionProperty() {
         return yPosition;
     }
 
