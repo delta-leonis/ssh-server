@@ -498,11 +498,6 @@ public class Enroller<N extends Region> extends BorderPane {
                 slidingWrapper.minWidthProperty().bind(extendedSizeProperty);
                 slidingWrapper.maxWidthProperty().bind(extendedSizeProperty);
             }
-
-			// Set the content visible, so that you see the content appearing
-			// instead of when finished the animation suddenly see it
-			content.setVisible(true);
-
             if(onfinishMethod != null)
                 onfinishMethod.run();
 
@@ -541,6 +536,10 @@ public class Enroller<N extends Region> extends BorderPane {
 
 		// Check if the slider is collapsed or extended
 		if (state == State.COLLAPSED) {
+			// Set the content visible, so that you see the content appearing
+			// instead of when finished the animation suddenly see it
+			content.setVisible(true);
+
 			// play extendanimation for sliding up
 			extend.play();
 		} else {
