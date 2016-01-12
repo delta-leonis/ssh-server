@@ -11,7 +11,6 @@ import org.ssh.ui.components.Enroller;
 import org.ssh.ui.components.widget.Draggable;
 import org.ssh.ui.components.widget.ExampleWidget;
 import org.ssh.ui.windows.WidgetWindow;
-import org.ssh.util.Logger;
 
 import java.util.Optional;
 

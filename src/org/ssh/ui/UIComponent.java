@@ -10,7 +10,6 @@ import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import org.ssh.managers.AbstractManageable;
 import org.ssh.managers.manager.UI;
-import org.ssh.util.Logger;
 
 import javax.annotation.Nullable;
 import java.io.IOException;

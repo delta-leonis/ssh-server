@@ -121,9 +121,6 @@ public class FieldGame extends Game {
         this.fieldGO = new FieldGO(this);
         // Creating camera control overlay GameObject
         this.cameraControlOverlayGO = new CameraControlOverlayGO(this);
-        // Creating easter egg car GameObject
-        //this.easterCarGO = new CarGO(this);
-
         // Setting not initialized
         this.isInitialized = false;
 

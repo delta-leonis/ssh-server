@@ -5,7 +5,6 @@ import org.ssh.models.enums.SendMethod;
 import org.ssh.network.transmit.senders.SenderInterface;
 import org.ssh.pipelines.packets.RadioPacket;
 import org.ssh.services.AbstractConsumer;
-import org.ssh.util.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;

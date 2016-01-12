@@ -10,7 +10,6 @@ import org.ssh.models.enums.ProducerType;
 import org.ssh.pipelines.AbstractPipeline;
 import org.ssh.pipelines.AbstractPipelinePacket;
 import org.ssh.pipelines.PacketProductionCallback;
-import org.ssh.util.Logger;
 
 import java.util.ArrayList;
 import java.util.List;

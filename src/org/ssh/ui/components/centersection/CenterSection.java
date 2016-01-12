@@ -8,7 +8,6 @@ import javafx.scene.layout.StackPane;
 import org.ssh.field3d.FieldGame;
 import org.ssh.ui.UIComponent;
 import org.ssh.ui.components.Enroller;
-import org.ssh.util.Logger;
 
 /**
  * @author Jeroen de Jong

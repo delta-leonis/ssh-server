@@ -10,9 +10,6 @@ import org.ssh.field3d.core.gameobjects.GameObject;
 import org.ssh.field3d.gameobjects.GeometryGameObject;
 import org.ssh.managers.manager.Models;
 import org.ssh.models.Goal;
-import org.ssh.models.Team;
-
-import java.util.List;
 
 /**
  * Goal game object class. This class represents a 3D goal on the 3D field.

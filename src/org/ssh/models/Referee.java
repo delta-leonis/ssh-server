@@ -2,7 +2,6 @@ package org.ssh.models;
 
 import org.ssh.models.enums.RefereeCommand;
 import org.ssh.models.enums.Stage;
-import org.ssh.util.Logger;
 import protobuf.RefereeOuterClass;
 
 import java.util.ArrayList;

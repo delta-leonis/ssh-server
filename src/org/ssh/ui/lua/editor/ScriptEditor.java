@@ -10,7 +10,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import org.ssh.ui.UIComponent;
 import org.ssh.ui.lua.console.ColoredCodeArea;
-import org.ssh.util.Logger;
 import org.ssh.util.LuaUtils;
 
 import java.io.File;

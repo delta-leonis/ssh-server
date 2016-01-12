@@ -1,7 +1,5 @@
 package org.ssh.util;
 
-import org.ssh.models.AbstractModel;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -10,7 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.ssh.models.AbstractModel.*;
+import static org.ssh.models.AbstractModel.Alias;
 
 /**
  * Class used for tools concerning {@link java.lang.reflect}

@@ -6,7 +6,7 @@ import javafx.scene.input.KeyEvent;
 import org.ssh.field3d.core.game.Game;
 import org.ssh.field3d.core.gameobjects.GameObject;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 /**
@@ -33,7 +33,7 @@ public class KeyInputHandler extends GameObject {
         super(game);
 
         // Creating new hash map
-        this.curKeyState = new HashMap<>();
+        this.curKeyState = new EnumMap<>(KeyCode.class);
 
         // Creating key pressed and released handler
         this.keyPressedHandler = new KeyPressedHandler();

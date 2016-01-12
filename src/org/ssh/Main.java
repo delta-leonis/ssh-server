@@ -18,7 +18,6 @@ import org.ssh.pipelines.AbstractPipeline;
 import org.ssh.pipelines.packets.WrapperPacket;
 import org.ssh.ui.components.widget.TestWidget;
 import org.ssh.util.Logger;
-import org.ssh.util.LoggerMemoryHandler;
 
 import java.util.logging.Level;
 import java.util.stream.IntStream;

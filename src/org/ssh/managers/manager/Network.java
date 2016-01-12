@@ -16,7 +16,6 @@ import protobuf.Radio;
 import protobuf.Radio.RadioProtocolCommand;
 import protobuf.Radio.RadioProtocolWrapper;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

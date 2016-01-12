@@ -8,7 +8,6 @@ import net.java.games.input.Component.Identifier;
 import net.java.games.input.Controller;
 import org.ssh.models.AbstractModel;
 import org.ssh.models.enums.ButtonFunction;
-import org.ssh.util.Logger;
 
 import java.util.Optional;
 import java.util.stream.Stream;

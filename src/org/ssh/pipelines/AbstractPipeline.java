@@ -6,7 +6,6 @@ import org.ssh.managers.manager.Pipelines;
 import org.ssh.services.AbstractConsumer;
 import org.ssh.services.AbstractCoupler;
 import org.ssh.services.AbstractProducer;
-import org.ssh.util.Logger;
 
 import java.lang.reflect.Type;
 import java.util.*;
