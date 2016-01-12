@@ -17,9 +17,9 @@ import java.net.InetAddress;
  *         
  */
 public class UDPSender implements SenderInterface {
-    
+
     // respective logger
-    private final static Logger LOG = Logger.getLogger();
+    private static final Logger LOG = Logger.getLogger();
                                     
     /** IP address to send the packets to */
     private InetAddress         ipAddress;
@@ -60,11 +60,11 @@ public class UDPSender implements SenderInterface {
     public boolean send(final Message genericMessage) {
         try {
             
-            final DatagramPacket UDPpacket = new DatagramPacket(genericMessage.toByteArray(),
+            final DatagramPacket udpPacket = new DatagramPacket(genericMessage.toByteArray(),
                     genericMessage.getSerializedSize(),
                     this.ipAddress,
                     this.port);
-            this.socket.send(UDPpacket);
+            this.socket.send(udpPacket);
             UDPSender.LOG.fine("Message has been sent over UDP.");
             return true;
             

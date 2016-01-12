@@ -14,7 +14,7 @@ public class Goal extends FieldObject {
 
     /** Dimensions of the goal */
     private Integer                        goalDepth, goalWidth;
-    public transient static final Integer GOAL_HEIGHT = 160;
+    public static final transient Integer GOAL_HEIGHT = 160;
                                                        
     /**
      * Creates a goal on a specified field half

@@ -21,8 +21,6 @@ import java.util.Optional;
  */
 public class BottomSection extends UIComponent<GridPane> {
 
-    private static final Logger LOG = Logger.getLogger();
-
     private Enroller toolboxEnroller;
 
     @FXML

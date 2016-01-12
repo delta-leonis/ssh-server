@@ -104,7 +104,9 @@ public class Robot extends FieldObject {
     /**
      * @return the Orientation as a property
      */
-    public ReadOnlyFloatProperty orientationProperty() { return orientation; }
+    public ReadOnlyFloatProperty orientationProperty() {
+        return orientation;
+    }
 
     /**
      * @return robot ID [0-15]

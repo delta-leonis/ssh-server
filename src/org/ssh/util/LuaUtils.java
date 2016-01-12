@@ -11,10 +11,7 @@ import org.ssh.ui.lua.console.Console;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -44,7 +41,7 @@ public class LuaUtils {
     public static List<Object> getAllAvailableInLua() {
         List<Class<?>> types = LuaUtils.getAllTypesAnnotatedWith(AvailableInLua.class, "org.ssh");
         
-        final ArrayList<Object> objectArrayList = new ArrayList<Object>();
+        final ArrayList<Object> objectArrayList = new ArrayList<>();
         
         // For each class
         types.forEach(clazz -> {
@@ -74,11 +71,11 @@ public class LuaUtils {
                     // Filter based on annotation
                     .filter(classInfo -> classInfo.load().getAnnotation(annotation) != null)
                     // Load the required classes and collect them.
-                    .map(classInfo -> classInfo.load()).collect(Collectors.toList());
+                    .map(ClassPath.ClassInfo::load).collect(Collectors.toList());
         }
         catch (IOException exception) {
             LuaUtils.LOG.exception(exception);
-            return new ArrayList<Class<?>>();
+            return new ArrayList<>();
         }
     }
     
@@ -90,7 +87,7 @@ public class LuaUtils {
      * @return A singleton of the object if it has one, else it just returns the Class.
      */
     @SuppressWarnings ("rawtypes")
-    private static final Object getSingleton(final Class clazz) {
+    private static Object getSingleton(final Class clazz) {
         try {
             // Find any singletons
             Optional<Method> method = Arrays.asList(clazz.getDeclaredMethods()).stream()
@@ -121,9 +118,7 @@ public class LuaUtils {
      */
     public static List<String> getLuaClasses() {
         // Turn everything into a stream
-        return LuaUtils.AVAILABLE_IN_LUA.stream().map(o ->
-        // and get the simple name of each class
-        LuaUtils.getSimpleName(o)).collect(Collectors.toList());
+        return LuaUtils.AVAILABLE_IN_LUA.stream().map(LuaUtils::getSimpleName).collect(Collectors.toList());
     }
     
     /**
@@ -139,11 +134,11 @@ public class LuaUtils {
                 // Turn Method[] into multiple streams
                 .map(me -> Arrays.stream(me)
                         // Retrieve names from methods
-                        .map(m -> m.getName())
+                        .map(Method::getName)
                         // Collect into a list of List<List<String>>
                         .collect(Collectors.toList()))
                 // Turn List<List<String>> into a stream
-                .flatMap(l -> l.stream())
+                .flatMap(Collection::stream)
                 // Collect everything back into a List<String>
                 .collect(Collectors.toList());
     }
@@ -181,23 +176,24 @@ public class LuaUtils {
      *            The name of the object
      * @return The {@link Object} this string belongs to
      */
-    public static final Object getObjectBasedOnString(String string) {
+    public static Object getObjectBasedOnString(String string) {
         Optional<Object> optionalObject = LuaUtils.AVAILABLE_IN_LUA.stream()
                 // Find the object in the objects available in lua
                 .filter(object -> getSimpleName(object).equals(string)).findFirst();
         // Return it if it exists
-        if (optionalObject.isPresent()) return optionalObject.get();
+        if (optionalObject.isPresent())
+            return optionalObject.get();
         return null;
     }
     
     /**
      * Function that returns all functions in the given object.
      */
-    public static final List<String> getPrettyFunctions(final Object object) {
+    public static List<String> getPrettyFunctions(final Object object) {
         // Turn into stream
         return Arrays.asList(getClass(object).getDeclaredMethods()).stream()
                 // Turn into pretty functions
-                .map(method -> getFunctionDescription(method))
+                .map(LuaUtils::getFunctionDescription)
                 // Collect into list and return it
                 .collect(Collectors.toList());
     }
@@ -212,7 +208,7 @@ public class LuaUtils {
      * @see {@link Console}
      */
     @SuppressWarnings ("rawtypes")
-    private static final String getFunctionDescription(Method method) {
+    private static String getFunctionDescription(Method method) {
         // Method + ( = foo(
         String currentString = method.getName() + "(";
         final Class[] parameters = method.getParameterTypes();
@@ -315,9 +311,9 @@ public class LuaUtils {
      * @param callingObject
      *            The Object you're passing.
      */
-    public static final void runScriptFunction(final String script,
-            final String functionname,
-            final Object callingObject) {
+    public static void runScriptFunction(final String script,
+                                         final String functionname,
+                                         final Object callingObject) {
         // Load a script into globals
         LuaUtils.GLOBALS.get("dofile").call(LuaValue.valueOf(script));
         // Turn Java object into LuaValue

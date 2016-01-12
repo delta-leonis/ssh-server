@@ -123,7 +123,7 @@ public class RobotStatus extends UIComponent {
      *            the object of which the style should be returned.
      * @return the style as a observable list of strings.
      */
-    private ObservableList<String> getStyle(Styleable styleable) {
+    private static ObservableList<String> getStyle(Styleable styleable) {
         ObservableList<String> styleClass = styleable.getStyleClass();
 
         // Styleclass is cleared. When this is done, it returns to its base style (#stylename, in
@@ -173,7 +173,7 @@ public class RobotStatus extends UIComponent {
          */
         @Override
         public void invalidated(Observable observable) {
-            getStyle(styleable).add(((BooleanProperty) observable).get() ? trueString : falseString);
+            RobotStatus.getStyle(styleable).add(((BooleanProperty) observable).get() ? trueString : falseString);
         }
     }
 
@@ -203,7 +203,7 @@ public class RobotStatus extends UIComponent {
         public void invalidated(Observable observable) {
             // if an error is found in the list of malfunctions, the statusbox becomes red. if the
             // robot has warnings, it becomes yellow. else it will be green.
-            ObservableList<String> styleClass = getStyle(robotIconBackground);
+            ObservableList<String> styleClass = RobotStatus.getStyle(robotIconBackground);
 
             if (model.hasErrors())
                 styleClass.add("statusbox-error");
@@ -261,7 +261,7 @@ public class RobotStatus extends UIComponent {
                     .collect(Collectors.joining("\n"));
 
             //add the current position to this string
-            String tooltip = String.format("X position: %.1f\nY position: %.1f",
+            String tooltip = String.format("X position: %.1f%nY position: %.1f",
                     model.getXPosition(), model.getYPosition() )
                     + (!error.isEmpty() ? "\nErrors:\n" + error : "")
                     + (!warning.isEmpty() ? "\nWarnings:\n" + warning : "");

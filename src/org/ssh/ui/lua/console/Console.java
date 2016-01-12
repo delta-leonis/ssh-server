@@ -472,8 +472,7 @@ public class Console extends Tab {
                             // Check whether it's a valid file
                             .filter(Files::isRegularFile)
                             .filter(file -> file.toFile().getAbsolutePath().endsWith(".lua"))
-                            // Call the lua files one by one
-                            .forEach(lua -> {
+                            .forEach(lua -> { // Call the lua files one by one
                                 String path = lua.toAbsolutePath().toString();
                                 this.println("-- Loading: " + path);
                                 this.globals.get("dofile").call(LuaValue.valueOf(path));

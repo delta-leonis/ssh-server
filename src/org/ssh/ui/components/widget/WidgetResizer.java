@@ -114,7 +114,7 @@ public class WidgetResizer extends UIComponent<GridPane> {
     private void setWidgetHeight(double height) {
         // Check for small values and set it 30 if small
         // This is because too small sizes are undesirable
-        if(height < 30) height = 30;
+        Math.max(height, 30);
         // Set pref, min and max to make sure the size is set
         content.setPrefHeight(height);
         content.setMinHeight(height);
@@ -129,7 +129,7 @@ public class WidgetResizer extends UIComponent<GridPane> {
     private void setWidgetWidth(double width) {
         // Check for small values and set it 30 if small
         // This is because too small sizes are undesirable
-        if(width < 30) width = 30;
+        Math.max(width, 30);
         // Set pref, min and max to make sure the size is set
         content.setPrefWidth(width);
         content.setMinWidth(width);

@@ -16,10 +16,7 @@ import java.util.List;
  *         
  */
 public class Referee extends AbstractModel {
-    
-    // Respective logger
-    private static final Logger        LOG = Logger.getLogger();
-                                           
+
     /**
      * History of all the {@link Stage stages}, last index is last received {@link Stage stage}
      */

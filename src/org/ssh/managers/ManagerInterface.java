@@ -20,6 +20,6 @@ import org.ssh.util.Logger;
 public interface ManagerInterface<M extends AbstractManageable> {
 
     // a logger for good measure
-    static final Logger  LOG = Logger.getLogger();
+    Logger  LOG = Logger.getLogger();
  
 }

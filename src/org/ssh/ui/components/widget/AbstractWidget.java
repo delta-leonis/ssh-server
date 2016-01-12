@@ -9,7 +9,9 @@ public abstract class AbstractWidget extends UIComponent {
 
     private WidgetCategory category;
 
-    public enum WidgetCategory{SETTINGS, ANALYSES, CONTROL, TESTS}
+    public enum WidgetCategory{
+        SETTINGS, ANALYSES, CONTROL, TESTS
+    }
 
     public AbstractWidget(String name, String fxml, WidgetCategory category) {
         super(name, fxml);

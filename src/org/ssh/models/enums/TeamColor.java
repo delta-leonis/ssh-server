@@ -15,13 +15,11 @@ public enum TeamColor {
      * @return Convert {@link TeamColor} a {@link Color}
      */
     public Color toColor() {
-        if (this.equals(TeamColor.BLUE))
-            return Color.BLUE;
-        return Color.YELLOW;
+        return this.equals(TeamColor.BLUE) ? Color.BLUE : Color.YELLOW;
     }
 
     public TeamColor getOpposite() {
-        return (this.equals(TeamColor.BLUE) ? TeamColor.YELLOW : TeamColor.BLUE);
+        return this.equals(TeamColor.BLUE) ? TeamColor.YELLOW : TeamColor.BLUE;
     }
 
     public String identifier() {

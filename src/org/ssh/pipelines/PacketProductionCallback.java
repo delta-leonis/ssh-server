@@ -79,4 +79,4 @@ public class PacketProductionCallback<P extends AbstractPipelinePacket<? extends
     public void setName(String name) {
         this.name = name;
     }
-};
+}

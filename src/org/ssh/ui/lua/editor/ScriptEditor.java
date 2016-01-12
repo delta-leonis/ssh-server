@@ -27,10 +27,6 @@ import java.nio.file.Files;
  *         
  */
 public class ScriptEditor extends UIComponent {
-    
-    // A logger for errorhandling
-    private static final Logger LOG        = Logger.getLogger();
-                                           
     private ScriptArea          codeArea;
     private String              path;
     private FileChooser         fileChooser;
@@ -144,7 +140,8 @@ public class ScriptEditor extends UIComponent {
         // Select path
         File file = fileChooser.showOpenDialog(root.getScene().getWindow());
         // Set the text of the textarea if a file has been found.
-        if (file != null) setTextFromFile(file.getAbsolutePath());
+        if (file != null)
+            setTextFromFile(file.getAbsolutePath());
     }
     
     /**

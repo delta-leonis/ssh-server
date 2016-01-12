@@ -7,7 +7,7 @@ import protobuf.Geometry.GeometryFieldSize;
 import java.util.List;
 
 /**
- * Describes a field with {@link Goal goals} and a {@link GeometryFieldSize field size}.
+ * Describes a fieldSize with {@link Goal goals} and a {@link GeometryFieldSize fieldSize size}.
  *
  * @author Jeroen de Jong
  *         
@@ -17,13 +17,13 @@ public class Field extends AbstractModel {
     /**
      * Field object from protobuf packet
      */
-    private GeometryFieldSize field;
+    private GeometryFieldSize fieldSize;
                               
     /**
-     * Instantiates a field.
+     * Instantiates a fieldSize.
      */
     public Field() {
-        super("field", "");
+        super("fieldSize", "");
     }
 
     @Override
@@ -32,10 +32,10 @@ public class Field extends AbstractModel {
     }
     
     /**
-     * @return Width of the boundary around the field.
+     * @return Width of the boundary around the fieldSize.
      */
     public int getBoundaryWidth() {
-        return this.field.getBoundaryWidth();
+        return this.fieldSize.getBoundaryWidth();
     }
     
     /**
@@ -46,21 +46,21 @@ public class Field extends AbstractModel {
      * @return a specific {@link FieldCicularArc arc segment}.
      */
     public FieldCicularArc getFieldArc(final int index) {
-        return this.field.getFieldArcs(index);
+        return this.fieldSize.getFieldArcs(index);
     }
     
     /**
-     * @return all {@link FieldCicularArc arc segments} on the field.
+     * @return all {@link FieldCicularArc arc segments} on the fieldSize.
      */
     public List<FieldCicularArc> getFieldArcs() {
-        return this.field.getFieldArcsList();
+        return this.fieldSize.getFieldArcsList();
     }
     
     /**
-     * @return Length of the field.
+     * @return Length of the fieldSize.
      */
     public int getFieldLength() {
-        return this.field.getFieldLength();
+        return this.fieldSize.getFieldLength();
     }
     
     /**
@@ -71,27 +71,27 @@ public class Field extends AbstractModel {
      * @return a specific {@link protobuf.Geometry.FieldLineSegment line segment}.
      */
     public FieldLineSegment getFieldLine(final int index) {
-        return this.field.getFieldLines(index);
+        return this.fieldSize.getFieldLines(index);
     }
 
     /**
-     * @return all {@link protobuf.Geometry.FieldLineSegment line segments} on the field.
+     * @return all {@link protobuf.Geometry.FieldLineSegment line segments} on the fieldSize.
      */
     public List<FieldLineSegment> getFieldLines() {
-        return this.field.getFieldLinesList();
+        return this.fieldSize.getFieldLinesList();
     }
 
     /**
-     * @return Width of the field.
+     * @return Width of the fieldSize.
      */
     public int getFieldWidth() {
-        return this.field.getFieldWidth();
+        return this.fieldSize.getFieldWidth();
     }
     
     /**
-     * @return Protobuf object containing latest information about field/goals.
+     * @return Protobuf object containing latest information about fieldSize/goals.
      */
-    public GeometryFieldSize getField(){
-        return field;
+    public GeometryFieldSize getFieldSize(){
+        return fieldSize;
     }
 }

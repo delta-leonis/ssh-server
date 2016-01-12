@@ -18,7 +18,8 @@ public class Splashscreen extends Preloader {
         p.setCenter(bar);
         return new Scene(p, 300, 150);
     }
- 
+
+    @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
         stage.setScene(createPreloaderScene());
@@ -35,7 +36,7 @@ public class Splashscreen extends Preloader {
         //application loading progress is rescaled to be first 50%
         //Even if there is nothing to load 0% and 100% events can be
         // delivered
-        if (pn.getProgress() != 1.0 || !noLoadingProgress) {
+        if (pn.getProgress() < 1.0|| !noLoadingProgress) {
           bar.setProgress(pn.getProgress()/2);
           if (pn.getProgress() > 0) {
               noLoadingProgress = false;

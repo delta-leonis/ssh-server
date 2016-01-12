@@ -57,7 +57,7 @@ public class FlatArc3D {
         this.triangleMesh.getTexCoords().addAll(TEXTURE_COORDINATES);
         
         // Calculate the faces of the mesh
-        final int faces[] = this.calculateFaces(numDivisions);
+        final int[] faces = this.calculateFaces(numDivisions);
         // Add faces to the mesh
         this.triangleMesh.getFaces().addAll(faces);
         
@@ -74,7 +74,7 @@ public class FlatArc3D {
      */
     private int[] calculateFaces(final int numDivisions) {
         
-        final int indices[] = new int[(numDivisions * 2) * 6];
+        final int[] indices = new int[(numDivisions * 2) * 6];
         int triangleCounter = 0;
         
         // Loop through faces, 2 faces(triangles) per division
@@ -148,7 +148,7 @@ public class FlatArc3D {
      *            The number of divisions in the arc.
      * @return Returns an array with the vertices.
      */
-    private float[] calculateVertices(final float startRad,
+    private static float[] calculateVertices(final float startRad,
             final float endRad,
             final float diameter,
             final float thickness,
@@ -173,7 +173,7 @@ public class FlatArc3D {
         // Calculating amount of vertices to generate
         final int amountOfVertices = numDivisions * VERTICES_PER_EDGE;
         // Creating array for the amount of vertices
-        final float vertices[] = new float[amountOfVertices * VALUES_PER_COORDINATE];
+        final float[] vertices = new float[amountOfVertices * VALUES_PER_COORDINATE];
 
         // Calculate radius of the inner circle
         final float radiusSubtracted = radius - halfOfThickness;

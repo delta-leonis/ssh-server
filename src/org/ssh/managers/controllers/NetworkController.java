@@ -49,7 +49,8 @@ public class NetworkController extends AbstractManagerController<AbstractService
      * @return succes value
      */
     public boolean addDefault(final SendMethod... newSendMethods) {
-        if (hasSender()) return sender.addDefault(newSendMethods);
+        if (hasSender())
+            return sender.addDefault(newSendMethods);
         return false;
     }
     
@@ -57,7 +58,8 @@ public class NetworkController extends AbstractManagerController<AbstractService
      * @return Pipeline if found
      */
     private boolean hasPipeline() {
-        if (pipeline == null) pipeline = Pipelines.<RadioPipeline>get("communication").orElse(null);
+        if (pipeline == null
+                ) pipeline = Pipelines.<RadioPipeline>get("communication").orElse(null);
         return pipeline != null;
     }
     
@@ -65,7 +67,8 @@ public class NetworkController extends AbstractManagerController<AbstractService
      * @return Sender if found
      */
     private boolean hasSender() {
-        if (sender == null) sender = Services.<RadioPacketSender>get("RadioPacketConsumer").orElse(null);
+        if (sender == null)
+            sender = Services.<RadioPacketSender>get("RadioPacketConsumer").orElse(null);
         return sender != null;
     }
     
@@ -91,7 +94,8 @@ public class NetworkController extends AbstractManagerController<AbstractService
      *            communicator that implements given sendmethod
      */
     public boolean register(final SendMethod key, final SenderInterface communicator) {
-        if (hasSender()) sender.register(key, communicator);
+        if (hasSender())
+            sender.register(key, communicator);
         return false;
     }
     
@@ -103,7 +107,8 @@ public class NetworkController extends AbstractManagerController<AbstractService
      * @return succes value
      */
     public boolean removeDefault(final SendMethod method) {
-        if (hasSender()) return sender.removeDefault(method);
+        if (hasSender())
+            return sender.removeDefault(method);
         return false;
     }
     
@@ -140,7 +145,8 @@ public class NetworkController extends AbstractManagerController<AbstractService
      * @return succes value
      */
     public boolean unregister(final SendMethod sendmethod) {
-        if (hasSender()) sender.unregister(sendmethod);
+        if (hasSender())
+            sender.unregister(sendmethod);
         return false;
     }
 }

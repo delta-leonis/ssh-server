@@ -39,7 +39,7 @@ public abstract class AbstractPipelinePacket<O extends Object> {
     
     
     // a logger for good measure
-    public static final Logger                   LOG         = Logger.getLogger();
+    protected final static Logger                   LOG         = Logger.getLogger();
     
     /**
      * The data contained by this package.
@@ -49,13 +49,11 @@ public abstract class AbstractPipelinePacket<O extends Object> {
     /**
      * Applies a lambda to the packet.
      *
-     * @param <P>
-     *            A PipelinePacket this lambda can work with.
      * @param function
      *            The lambda to execute on the PipelinePacket.
      * @return The resulting PipelinePacket.
      */
-    public <P extends AbstractPipelinePacket<O>> O apply(final Function<O, O> function) {
+    public O apply(final Function<O, O> function) {
         return function.apply(this.read());
     }
     

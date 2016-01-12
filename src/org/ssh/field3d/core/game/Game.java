@@ -374,9 +374,7 @@ public abstract class Game extends SubScene {
             
         // Create frame durations
         final Duration duration = Duration.millis(Game.FRAME_TIME_MS);
-        final KeyFrame keyFrame = new KeyFrame(duration, t -> {
-        });
-        
+
         // Creating groups
         this.cameraGroup = new Group();
         this.worldGroup = new Group();
@@ -407,9 +405,6 @@ public abstract class Game extends SubScene {
         this.isFirstFrame = true;
         // Get 2d group (root of this SubScene);
         this.group2d = (Group) this.getRoot();
-        
-        // Add key frame to our time line
-        this.timeline.getKeyFrames().add(keyFrame);
         
         // Add 3d scene to scene
         this.group2d.getChildren().add(this.scene3D);

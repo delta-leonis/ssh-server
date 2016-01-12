@@ -37,9 +37,6 @@ public abstract class AbstractProducer<P extends AbstractPipelinePacket<?>> exte
     /** The pipelines subscribed to this Producer . */
     private final List<AbstractPipeline<P>> registeredPipelines;
 
-    // a logger for good measure
-    private static final Logger     LOG = Logger.getLogger();
-
     /**
      * Instantiates a new Producer.
      *
@@ -126,10 +123,10 @@ public abstract class AbstractProducer<P extends AbstractPipelinePacket<?>> exte
     public ListenableFuture<P> produceSchedule(final String taskName, final long taskInterval) {
         // add the task to the scheduled worker pool
         
-        Runnable workerLambda = () -> this.produceOnce(taskName + "-schedule-partial");
+        Runnable runnable = () -> this.produceOnce(taskName + "-schedule-partial");
         
         final ListenableScheduledFuture<P> scheduleFuture = (ListenableScheduledFuture<P>) Services
-                .scheduleTask(this.getName() + "-" + taskName + "-schedule", workerLambda, taskInterval);
+                .scheduleTask(this.getName() + "-" + taskName + "-schedule", runnable, taskInterval);
                 
         FutureCallback<P> scheduleCallback = new PacketProductionCallback<>(this.getName());
         Futures.addCallback(scheduleFuture, scheduleCallback);

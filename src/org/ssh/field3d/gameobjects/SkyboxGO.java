@@ -112,6 +112,7 @@ public class SkyboxGO extends GameObject {
      */
     @Override
     public void onUpdate(final long timeDivNano) {
+        // no update needed
     }
     
     /**

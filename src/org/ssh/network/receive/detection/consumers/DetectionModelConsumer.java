@@ -61,10 +61,10 @@ public class DetectionModelConsumer extends AbstractConsumer<DetectionPacket> {
                         //return the updated robot model
                         Models.<Robot> get(getModelName(robot, yellowTeam))
                                 // try to get the existing model, if that doesnt work (orElse) create a new one
-                                .orElseGet(() -> {
+                                .orElseGet(() ->
                                     //create robotclass
-                                    return Models.<Robot> create(Robot.class, robot.getRobotId(), getAllegiance(robot, yellowTeam));
-                                }).update(robot)
+                                    Models.<Robot> create(Robot.class, robot.getRobotId(), getAllegiance(robot, yellowTeam))
+                                ).update(robot)
         );
 
         // loop all robots that haven't been processjavaed

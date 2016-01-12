@@ -231,14 +231,14 @@ public class FieldGO extends GeometryGameObject {
             
             // Creating penalty spots
             this.penaltySpotEast = new PenaltySpotGO(this.getGame(),
-                    new Point3D(((fieldVisionModel.getFieldLength() / 2.0) - FieldGO.FIELD_PENALTY_SPOT),
+                    new Point3D((fieldVisionModel.getFieldLength() / 2.0) - FieldGO.FIELD_PENALTY_SPOT,
                             FieldGO.LINE_Y_OFFSET,
                             0.0),
                     FieldGO.FIELD_PENALTY_SPOT_SIZE,
                     this.fieldGroup);
             
             this.penaltySpotWest = new PenaltySpotGO(this.getGame(),
-                    new Point3D((-(fieldVisionModel.getFieldLength() / 2.0) + FieldGO.FIELD_PENALTY_SPOT),
+                    new Point3D(-(fieldVisionModel.getFieldLength() / 2.0) + FieldGO.FIELD_PENALTY_SPOT,
                             FieldGO.LINE_Y_OFFSET,
                             0.0),
                     FieldGO.FIELD_PENALTY_SPOT_SIZE,

@@ -50,13 +50,13 @@ public class MouseInputHandler extends GameObject {
     private final OnMouseDragged      onMouseDragged;
                                       
     /** The current button states. */
-    private boolean                   curButtonStates[];
+    private boolean[]                   curButtonStates;
                                       
     /** The previous button states. */
-    private boolean                   prevButtonStates[];
+    private boolean[]                   prevButtonStates;
                                       
     /** The mouse event button states. */
-    private boolean                   mouseEventBtnStates[];
+    private boolean[]                   mouseEventBtnStates;
                                       
     /** The state for checking if the mouse wheel x value has changed since the last frame. */
     private boolean                   mouseWheelXChanged;
@@ -130,7 +130,12 @@ public class MouseInputHandler extends GameObject {
         this.maxScrollWheelValue = MouseInputHandler.MAX_SCROLL_WHEEL_VALUE;
         this.minScrollWheelValue = MouseInputHandler.MIN_SCROLL_WHEEL_VALUE;
     }
-    
+
+    @Override
+    public void onDestroy() {
+        // nothing to destroy
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -179,14 +184,7 @@ public class MouseInputHandler extends GameObject {
         // Copy mouse event button states to the current button states (update it)
         this.curButtonStates = Arrays.copyOf(this.mouseEventBtnStates, this.mouseEventBtnStates.length);
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onDestroy() {
-    }
-    
+
     /**
      * Gets the mouse delta x.
      *
@@ -451,8 +449,10 @@ public class MouseInputHandler extends GameObject {
     public void setMaxMouseWheelValue(final long value) {
         
         // Update current mouse wheel value if needed
-        if (this.scrollWheelXValue > value) this.scrollWheelXValue = value;
-        if (this.scrollWheelYValue > value) this.scrollWheelYValue = value;
+        if (this.scrollWheelXValue > value)
+            this.scrollWheelXValue = value;
+        if (this.scrollWheelYValue > value)
+            this.scrollWheelYValue = value;
         
         // Setting maximal value
         this.maxScrollWheelValue = value;
@@ -467,8 +467,10 @@ public class MouseInputHandler extends GameObject {
     public void setMinMouseWheelValue(final long value) {
         
         // Update current values if needed
-        if (this.scrollWheelXValue < value) this.scrollWheelXValue = value;
-        if (this.scrollWheelYValue < value) this.scrollWheelYValue = value;
+        if (this.scrollWheelXValue < value)
+            this.scrollWheelXValue = value;
+        if (this.scrollWheelYValue < value)
+            this.scrollWheelYValue = value;
         
         // Setting minimal value
         this.minScrollWheelValue = value;

@@ -23,9 +23,6 @@ public class UIComponent<N extends Pane> extends AbstractManageable {
 
     private N component;
 
-    // a logger for good measure
-    protected static final Logger LOG = Logger.getLogger();
-
     public UIComponent(String name, String fxmlFile) {
         super(name);
 
@@ -37,11 +34,13 @@ public class UIComponent<N extends Pane> extends AbstractManageable {
 
     @Nullable
     public Stage getStage() {
-        return ((Stage)getComponent().getScene().getWindow());
+        return (Stage)getComponent().getScene().getWindow();
     }
 
     @Nullable
-    public N getComponent() { return component; }
+    public N getComponent() {
+        return component;
+    }
 
     public <M extends Node> boolean add(M component){
         return add(component, false);

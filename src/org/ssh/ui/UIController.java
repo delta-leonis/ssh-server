@@ -87,10 +87,6 @@ public abstract class UIController<T extends Pane> {
         this.loadCSS("application.css");
     }
 
-    public ArrayList<Node> getAllNodes(){
-        return UI.getAllNodes(this.getRootNode());
-    }
-
     /**
      * Instantiates a new window/UI controller.
      *
@@ -115,6 +111,10 @@ public abstract class UIController<T extends Pane> {
         // insert the scene into the window
         this.setScene(new Scene(this.getRootNode(), 600, 400));
         this.loadCSS("application.css");
+    }
+
+    public List<Node> getAllNodes(){
+        return UI.getAllNodes(this.getRootNode());
     }
 
     /**

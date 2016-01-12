@@ -15,10 +15,10 @@ public class FlatLine3D {
     private static final float HALF_CIRCLE_DEG       = 180.0f;
                                                 
     /** The constant for the faces. */
-    private static final int   FACES[]               = { 0, 0, 1, 1, 2, 2, 1, 1, 3, 3, 2, 2 };
+    private static final int[]   FACES               = { 0, 0, 1, 1, 2, 2, 1, 1, 3, 3, 2, 2 };
                                                 
     /** The constant for the texture coordinates. */
-    private static final float TEXTURE_COORDINATES[] = { 1, 1, 1, 0, 0, 1, 0, 0 };
+    private static final float[] TEXTURE_COORDINATES = { 1, 1, 1, 0, 0, 1, 0, 0 };
                                                 
     /** The mesh. */
     private final TriangleMesh mesh;
@@ -90,7 +90,7 @@ public class FlatLine3D {
         final float z4 = (float) (endZ - calcCos);
         
         // Create vertices array
-        final float vertices[] = { x1, 0.0f, z1, x2, 0.0f, z2, x3, 0.0f, z3, x4, 0.0f, z4 };
+        final float[] vertices = { x1, 0.0f, z1, x2, 0.0f, z2, x3, 0.0f, z3, x4, 0.0f, z4 };
         
         // Clear mesh
         this.mesh.getPoints().clear();

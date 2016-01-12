@@ -57,6 +57,7 @@ public class KeyInputHandler extends GameObject {
      */
     @Override
     public void onUpdate(final long timeDivNano) {
+        // Nothing to update
     }
 
     /**

@@ -18,7 +18,7 @@ public class USBSender implements SenderInterface {
     /**
      * Logger for this specific class
      */
-    private final static Logger LOG = Logger.getLogger();
+    private static final Logger LOG = Logger.getLogger();
     /**
      * Serialport that will be written to
      */
@@ -46,6 +46,7 @@ public class USBSender implements SenderInterface {
         catch (final SerialPortException spe) {
             // something broke, go fix it
             USBSender.LOG.severe(String.format("Could not open port %s", portName));
+            USBSender.LOG.exception(spe);
         }
     }
     
@@ -65,6 +66,7 @@ public class USBSender implements SenderInterface {
         }
         catch (final SerialPortException spe) {
             USBSender.LOG.warning("Could not send message over USB");
+            USBSender.LOG.exception(spe);
             return false;
         }
         
@@ -90,6 +92,7 @@ public class USBSender implements SenderInterface {
         }
         catch (final SerialPortException e) {
             USBSender.LOG.warning("Can't close serial connection");
+            USBSender.LOG.exception(e);
             return false;
         }
     }

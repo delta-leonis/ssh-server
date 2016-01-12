@@ -149,6 +149,7 @@ public class UDPReceiver extends AbstractService<ProtoPacket<?>> {
         }
         catch (Exception exception) {
             AbstractService.LOG.warning("Could not close connection gracefully (ip: %s).", networkSettings.getIP());
+            AbstractService.LOG.exception(exception);
         }
         return false;
     }
@@ -168,9 +169,7 @@ public class UDPReceiver extends AbstractService<ProtoPacket<?>> {
         // receive packet from open socket
         multicastSocket.receive(packet);
         // convert to a ByteArrayInputStream
-        ByteArrayInputStream input = new ByteArrayInputStream(buffer, 0, packet.getLength());
-        // return to calling method
-        return input;
+        return new ByteArrayInputStream(buffer, 0, packet.getLength());
     }
     
     /**

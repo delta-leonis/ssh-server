@@ -3,6 +3,7 @@ package org.ssh.pipelines.packets;
 import org.ssh.pipelines.AbstractPipelinePacket;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Detection packet class.
@@ -16,7 +17,7 @@ import java.util.HashMap;
  */
 public class StrategyPacket extends AbstractPipelinePacket<HashMap<String, Number>> {
 
-    public StrategyPacket(HashMap<String, Number> metrics) {
+    public StrategyPacket(Map<String, Number> metrics) {
         this.save(metrics);
     }
     

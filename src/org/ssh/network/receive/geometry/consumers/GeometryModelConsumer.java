@@ -59,7 +59,7 @@ public class GeometryModelConsumer extends AbstractConsumer<GeometryPacket> {
             GeometryFieldSize fieldData = pipelinePacket.read().getField();
             
             // Check if there is new data
-            if (!field.getField().equals(fieldData)) {
+            if (!field.getFieldSize().equals(fieldData)) {
                 // Update field
                 field.update("field", fieldData);
                 

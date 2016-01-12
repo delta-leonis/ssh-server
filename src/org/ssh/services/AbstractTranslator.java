@@ -21,7 +21,7 @@ public abstract class AbstractTranslator<P extends AbstractPipelinePacket<?>, Q 
     /**
      * The transfer function representing the process the coupler symbolizes.
      */
-    public Function<P, Q> translationFunction;
+    private Function<P, Q> translationFunction;
 
     /** The reflected TypeToken (o¬‿¬o ). */
     @SuppressWarnings ("serial")

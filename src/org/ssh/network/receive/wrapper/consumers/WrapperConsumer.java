@@ -31,12 +31,14 @@ public class WrapperConsumer extends AbstractConsumer<WrapperPacket> {
     public boolean consume(WrapperPacket packet) {
         // check if a Geometrypacket is present, if so it should be added to each pipeline for that
         // type.
-        if (packet.hasGeometry()) Pipelines.getOfDataType(GeometryPacket.class).stream().forEach(
+        if (packet.hasGeometry())
+            Pipelines.getOfDataType(GeometryPacket.class).stream().forEach(
                 pipeline -> pipeline.addPacket(new GeometryPacket(packet.read().getGeometry())).processPacket());
                 
         // check if a Geometrypacket is present, if so it should be added to each pipeline for that
         // type.
-        if (packet.hasDetection()) Pipelines.getOfDataType(DetectionPacket.class).stream().forEach(
+        if (packet.hasDetection())
+            Pipelines.getOfDataType(DetectionPacket.class).stream().forEach(
                 pipeline -> pipeline.addPacket(new DetectionPacket(packet.read().getDetection())).processPacket());
                 
         return true;

@@ -16,8 +16,6 @@ import org.ssh.util.Logger;
  */
 public class CenterSection extends UIComponent<StackPane> {
 
-    private static final Logger LOG = Logger.getLogger();
-
     @FXML
     private Pane matchlogWrapper;
 

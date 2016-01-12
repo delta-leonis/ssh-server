@@ -79,6 +79,7 @@ public enum Malfunction {
     /**
      * the toString function makes printing the information of a malfunction more easy.
      */
+    @Override
     public String toString() {
         return description;
     }

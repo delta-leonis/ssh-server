@@ -18,6 +18,16 @@ public class Logger extends java.util.logging.Logger {
     private static final int MAX_CACHE_SIZE = 5000;
 
     /**
+     * Creates a Logger instance
+     *
+     * @param name
+     * @param resourceBundleName
+     */
+    protected Logger(final String name, final String resourceBundleName) {
+        super(name, resourceBundleName);
+    }
+
+    /**
      * gets a logger that uses the classname of the class that called this method using
      * the StackTrace
      * 
@@ -84,11 +94,12 @@ public class Logger extends java.util.logging.Logger {
         String packageName = getName();
 
         // org.ssh is an exception that will not need formatting
-        if(!getName().equals("org.ssh")) {
+        if(!"org.ssh".equals(getName())) {
             // split at the dots (org[.]ssh[.]package[.]class
             String[] nameParts = getName().split("\\.", 4);
             // it should contain multiple dots
-            if (nameParts.length < 3) return;
+            if (nameParts.length < 3)
+                return;
             //construct the name
             packageName = "org.ssh." + nameParts[2];
         }
@@ -107,16 +118,6 @@ public class Logger extends java.util.logging.Logger {
         }
         //attach a LoggerMemoryHandler
         logger.addHandler(new LoggerMemoryHandler(MAX_CACHE_SIZE));
-    }
-
-    /**
-     * Creates a Logger instance
-     * 
-     * @param name
-     * @param resourceBundleName
-     */
-    protected Logger(final String name, final String resourceBundleName) {
-        super(name, resourceBundleName);
     }
     
     /**
@@ -300,7 +301,6 @@ public class Logger extends java.util.logging.Logger {
      * @see java.util.Formatter
      */
     public void exception(final Exception exception) {
-        exception.printStackTrace();
         super.warning(Stream.of(exception.getStackTrace())
                 .reduce("",
                         (result, curRule) -> String.format("%s%s%n", result, curRule.toString()),

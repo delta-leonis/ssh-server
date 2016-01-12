@@ -14,11 +14,9 @@ public class DetectionToStrategyTranslator extends AbstractTranslator<DetectionP
      * Instantiates a new Translator.
      *
      * @param name                The name of the new Translator.
-     * @param translationFunction
      */
     public DetectionToStrategyTranslator(String name) {
-        super(name, (DetectionPacket packet) -> {
-            return new RadioPacket(Radio.RadioProtocolWrapper.newBuilder());
-        });
+        super(name, (DetectionPacket packet) ->
+            new RadioPacket(Radio.RadioProtocolWrapper.newBuilder()));
     }
 }

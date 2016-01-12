@@ -104,6 +104,7 @@ public class PenaltySpotGO extends GeometryGameObject {
      */
     @Override
     public void onUpdateGeometry() {
+        // nothing to update
     }
     
     /**

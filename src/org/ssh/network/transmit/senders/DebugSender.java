@@ -13,10 +13,10 @@ import java.util.logging.Level;
  *         
  */
 public class DebugSender implements SenderInterface {
-    
+
     // respective logger
-    private final static Logger LOG = Logger.getLogger();
-    
+    private static final Logger LOG = Logger.getLogger();
+
     /**
      * Create a debug-sender
      * 

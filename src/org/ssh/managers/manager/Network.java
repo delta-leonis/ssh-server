@@ -17,9 +17,10 @@ import protobuf.Radio.RadioProtocolCommand;
 import protobuf.Radio.RadioProtocolWrapper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Manages all networkconnections. Controls all {@link UDPReceivers}. This class also acts as a
+ * Manages all networkconnections. Controls all {@link UDPReceiver UPDReceivers}. This class also acts as a
  * interface for a {@link RadioPacketSender}.
  * 
  * @author Jeroen de Jong
@@ -37,7 +38,14 @@ public class Network implements ManagerInterface<AbstractService<? extends Proto
     private static final Logger      LOG      = Logger.getLogger();
     /** The instance. */
     private static final Object      instance = new Object();
-                                              
+
+
+    /**
+     * Private constructor to hide the implicit public one.
+     */
+    private Network() {
+    }
+
     /**
      * Add one or multiple sendmethods as default in the {@link RadioPacketSender}
      * 
@@ -131,7 +139,7 @@ public class Network implements ManagerInterface<AbstractService<? extends Proto
      *            Array with {@link RadioProtocolCommand} to send
      * @return success value
      */
-    public static boolean transmit(final ArrayList<Radio.RadioProtocolCommand.Builder> commands) {
+    public static boolean transmit(final List<RadioProtocolCommand.Builder> commands) {
         // create a wrapper-builder
         final RadioProtocolWrapper.Builder wrapperBuilder = Radio.RadioProtocolWrapper.newBuilder();
         // and add all commands to the wrapper-builder
@@ -177,11 +185,5 @@ public class Network implements ManagerInterface<AbstractService<? extends Proto
     public static boolean unregister(final SendMethod sendmethod) {
         return networkController.unregister(sendmethod);
     }
-    
-    /**
-     * Private constructor to hide the implicit public one.
-     */
-    private Network() {
-    }
-    
+
 }

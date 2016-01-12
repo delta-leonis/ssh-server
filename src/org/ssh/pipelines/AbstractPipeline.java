@@ -43,9 +43,6 @@ public abstract class AbstractPipeline<P extends AbstractPipelinePacket<?>> exte
      */
     private List<Function<AbstractPipelinePacket<?>, AbstractPipelinePacket<?>>> routes;
 
-    // a logger for good measure
-    private static final Logger                   LOG         = Logger.getLogger();
-
     /**
      * Instantiates a new Pipeline.
      *
@@ -127,10 +124,10 @@ public abstract class AbstractPipeline<P extends AbstractPipelinePacket<?>> exte
         final List<P> resultant = resultPackets.isEmpty() ? Collections.singletonList(pipelinePacket) : resultPackets;
 
         // map the packet onto the compatible translators
-        Pipelines.getCompatibleTranslators(this).forEach(translator -> resultant.forEach(resultPacket -> {
+        Pipelines.getCompatibleTranslators(this).forEach(translator -> resultant.forEach(resultPacket ->
             Pipelines.getOfDataType(translator.getOutputType())
-                    .forEach(pipeline -> pipeline.addPacket(translator.translate(resultPacket)).processPacket());
-        }));
+                    .forEach(pipeline -> pipeline.addPacket(translator.translate(resultPacket)).processPacket())
+        ));
 
         // map the results on the consumers
         return resultant.stream().parallel().map(resultPacket -> this.consumers.stream()

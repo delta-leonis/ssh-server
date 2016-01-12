@@ -33,7 +33,10 @@ public class ConsoleArea extends ColoredCodeArea {
         // On ctrl + Z, do nothing to avoid bugs
         EventHandlerHelper.install(this.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.Z, KeyCombination.CONTROL_DOWN))
-                        .act(event -> {}).create());
+                        .act(care -> {
+                            // ignore when control+Z is pressed down
+                            return;
+                        }).create());
         // Keycombination Control + shift + C for copy
         EventHandlerHelper.install(this.onKeyPressedProperty(),
                 EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.C, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN))

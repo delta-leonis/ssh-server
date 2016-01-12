@@ -18,7 +18,7 @@ public abstract class AbstractCoupler<P extends AbstractPipelinePacket<?>> exten
     /**
      * The transfer function representing the process the coupler symbolizes.
      */
-    public Function<P, P> transferFunction;
+    private Function<P, P> transferFunction;
 
     /**
      * Instantiates a new Coupler.

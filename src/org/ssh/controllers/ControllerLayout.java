@@ -25,15 +25,12 @@ public class ControllerLayout extends AbstractModel {
     /**
      * JInput Model representing physical {@link Controller}
      */
-    private transient final Controller controller;
+    private final transient Controller controller;
     /**
      * Map containing all {@link Component} as found on the {@link #controller} and the bound
      * {@link ButtonFunction functions}
      */
-    public Multimap<Component, ButtonFunction> bindings = ArrayListMultimap.create();
-
-    // respective logger
-    private transient final static Logger LOG = Logger.getLogger();
+    public final Multimap<Component, ButtonFunction> bindings = ArrayListMultimap.create();
 
     /**
      * Instantiates a layout linked  to given {@link Controller}

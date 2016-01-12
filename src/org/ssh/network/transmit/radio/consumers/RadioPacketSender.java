@@ -15,9 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class RadioPacketSender extends AbstractConsumer<RadioPacket> {
-    
-    // respective logger
-    private static final Logger                    LOG         = Logger.getLogger();
+
     /**
      * Maps a {@link SenderInterface} to a {@link SendMethod} for easy management
      */
@@ -38,7 +36,7 @@ public class RadioPacketSender extends AbstractConsumer<RadioPacket> {
      * A handler for the {@link SendMethod} should be {@link #register(SendMethod, SenderInterface)
      * registered} before setting new send method
      * 
-     * @param newSendMethod
+     * @param newSendMethods multiple new sendmethods
      * @return succes value
      */
     public boolean addDefault(final SendMethod... newSendMethods) {

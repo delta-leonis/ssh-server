@@ -89,7 +89,7 @@ public final class Models implements ManagerInterface<AbstractModel> {
             // either clazz isn't a models, or the constructor doesn't exist
             Models.LOG.warning("Could not create Model %s%nDoes the constructor %s(%s) exist?",
                     clazz, clazz.getSimpleName(),
-                    (cArgs.length > 0 ? Arrays.toString(cArgs).replace("class ", "") : "") );
+                    cArgs.length > 0 ? Arrays.toString(cArgs).replace("class ", "") : "" );
         }
         catch (Exception exception) {
             Models.LOG.exception(exception);
