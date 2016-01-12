@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
  * @author Jeroen de Jong
  * @see #create(Class, Object...)
  * @see #get(String)
- *
  */
 @AvailableInLua
 public final class Models implements ManagerInterface<AbstractModel> {
@@ -31,12 +30,16 @@ public final class Models implements ManagerInterface<AbstractModel> {
      */
     private static ModelController controller;
 
-    /** The instance. */
-    private static final Object    instance = new Object();
+    /**
+     * The instance.
+     */
+    private static final Object instance = new Object();
 
-    /** The Constant LOG. */
+    /**
+     * The Constant LOG.
+     */
     // respective logger
-    private static final Logger    LOG      = Logger.getLogger();
+    private static final Logger LOG = Logger.getLogger();
 
     /**
      * Private constructor to hide the implicit public one.
@@ -55,15 +58,14 @@ public final class Models implements ManagerInterface<AbstractModel> {
         // create a settings models (will self-assign in the factory)
         Models.create(Settings.class);
     }
+
     /**
      * Create a Model instance based on given class, with given arguments.<br />
      * Registers the created instance by {@link Models#add(AbstractModel) Models} and
      * {@link Models#initialize(AbstractModel) initializes} the models.
      *
-     * @param clazz
-     *            class to create
-     * @param args
-     *            arguments that will be passed to the constructor (supply them in the right order).
+     * @param clazz class to create
+     * @param args  arguments that will be passed to the constructor (supply them in the right order).
      * @return a created Model
      */
     public static <M extends AbstractModel> M create(final Class<?> clazz, final Object... args) {
@@ -80,18 +82,16 @@ public final class Models implements ManagerInterface<AbstractModel> {
             // add model to ModelController
             Models.add(model);
             // initialize this models
-            if(!Models.initialize(model))
+            if (!Models.initialize(model))
                 Models.LOG.info("Could not initialize %s.", clazz.getSimpleName());
             return model;
-        }
-        catch (java.lang.NoSuchMethodException exception) {
+        } catch (java.lang.NoSuchMethodException exception) {
             Models.LOG.exception(exception);
             // either clazz isn't a models, or the constructor doesn't exist
             Models.LOG.warning("Could not create Model %s%nDoes the constructor %s(%s) exist?",
                     clazz, clazz.getSimpleName(),
-                    cArgs.length > 0 ? Arrays.toString(cArgs).replace("class ", "") : "" );
-        }
-        catch (Exception exception) {
+                    cArgs.length > 0 ? Arrays.toString(cArgs).replace("class ", "") : "");
+        } catch (Exception exception) {
             Models.LOG.exception(exception);
             Models.LOG.warning("Could not create Model %s", clazz);
         }
@@ -101,8 +101,7 @@ public final class Models implements ManagerInterface<AbstractModel> {
     /**
      * adds a models to this manager
      *
-     * @param model
-     *            the model
+     * @param model the model
      */
     public static void add(final AbstractModel model) {
         Models.LOG.info("Toegevoegt met id: %s", model.getIdentifier());
@@ -112,12 +111,11 @@ public final class Models implements ManagerInterface<AbstractModel> {
     /**
      * This method finds a models and returns it as a Model.
      *
-     * @param modelName
-     *            The full name of the model you want to find.
+     * @param modelName The full name of the model you want to find.
      * @return The requested model.
      */
     public static <M extends AbstractModel> Optional<M> get(final String modelName) {
-        return Models.controller.<M> get(modelName);
+        return Models.controller.<M>get(modelName);
     }
 
     /**
@@ -145,8 +143,7 @@ public final class Models implements ManagerInterface<AbstractModel> {
     /**
      * Initialize all values in the configfile for given models
      *
-     * @param model
-     *            model to initialize
+     * @param model model to initialize
      * @return success value
      */
     public static boolean initialize(final AbstractModel model) {
@@ -167,8 +164,7 @@ public final class Models implements ManagerInterface<AbstractModel> {
      * Set all non-{@link Modifier#TRANSIENT transient} fields of given models to null, and
      * reload values from configfile
      *
-     * @param model
-     *            to reinitialize
+     * @param model to reinitialize
      * @return success value
      */
     public static boolean reinitialize(final AbstractModel model) {
@@ -188,8 +184,7 @@ public final class Models implements ManagerInterface<AbstractModel> {
     /**
      * Save the current state of the models in profiles path
      *
-     * @param model
-     *            the model
+     * @param model the model
      * @return success value
      */
     public static boolean save(final AbstractModel model) {
@@ -199,8 +194,7 @@ public final class Models implements ManagerInterface<AbstractModel> {
     /**
      * Save given models as default for this models type
      *
-     * @param model
-     *            the model
+     * @param model the model
      * @return succes value
      */
     public static boolean saveAsDefault(final AbstractModel model) {
@@ -213,7 +207,7 @@ public final class Models implements ManagerInterface<AbstractModel> {
      * @param model model to remove
      * @return model if it exists (otherwise null)
      */
-    public static <M extends AbstractModel> M remove(final M model){
+    public static <M extends AbstractModel> M remove(final M model) {
         return Models.controller.remove(model);
     }
 
@@ -230,9 +224,10 @@ public final class Models implements ManagerInterface<AbstractModel> {
 
     /**
      * Finds all the Models whose true name matches the given pattern.
-     * @param pattern   The pattern to match on.
-     * @param <M>       The type of Model requested by the user.
-     * @return          The list of Models matching the given pattern.
+     *
+     * @param pattern The pattern to match on.
+     * @param <M>     The type of Model requested by the user.
+     * @return The list of Models matching the given pattern.
      */
     public static <M extends AbstractModel> List<M> find(final String pattern) {
         return Models.controller.find(pattern);

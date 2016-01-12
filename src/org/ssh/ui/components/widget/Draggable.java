@@ -33,6 +33,7 @@ public class Draggable {
 
     /**
      * Boolean for if we are allowed to drag the widget.
+     *
      * @see {@link WidgetResizer#drag(MouseEvent)}
      */
     private boolean blockDragging;
@@ -53,8 +54,7 @@ public class Draggable {
     /**
      * Constructor for {@link Draggable}. Sets the widget inside the {@link WidgetWindow}.
      *
-     * @param content
-     *          The widget that has to be draggable.
+     * @param content The widget that has to be draggable.
      */
     public Draggable(Pane content) {
         // Set the widget in the WidgetWindow
@@ -65,8 +65,8 @@ public class Draggable {
 
     /**
      * "To block or not to block, that is the question." Sets the {@link #blockDragging}.
-     * @param block
-     *              Whether to block the dragging or not.
+     *
+     * @param block Whether to block the dragging or not.
      */
     public void setBlockDragging(boolean block) {
         // Set the blockDragging
@@ -78,8 +78,7 @@ public class Draggable {
      * It adds an overlaying resize icon in the left bottom corner for resizing purposes in the
      * {@link WidgetWindow}.
      *
-     * @param contentPane
-     *              The Widget that is to be draggable in the {@link WidgetWindow}.
+     * @param contentPane The Widget that is to be draggable in the {@link WidgetWindow}.
      */
     protected void setInWidgetPane(Pane contentPane) {
         // Make dragPane to put content in, content is the real widget
@@ -102,9 +101,8 @@ public class Draggable {
      * Adds an overlaying {@link WidgetResizer} to the draggable pane with an icon with which
      * the draggable pane can be resized.
      *
-     * @param dragPane
-     *              The {@link StackPane} where the overlaying {@link WidgetResizer} should be
-     *              added to.
+     * @param dragPane The {@link StackPane} where the overlaying {@link WidgetResizer} should be
+     *                 added to.
      */
     private void addResizingButton(StackPane dragPane, Pane contentPane) {
         // Make the resizer overlay
@@ -122,20 +120,18 @@ public class Draggable {
     /**
      * Function for adding handlers to a {@link Pane} that should be draggable. Adds three handlers:
      * <li>
-     *     <ul>Handler that makes the {@link Pane} transparent while dragging it.</ul>
-     *     <ul>Handler for when the mou is released that checks if the {@link Pane}
-     *     should move to an own stage.</ul>
-     *     <ul>Handler for handling the dragging itself.</ul>
+     * <ul>Handler that makes the {@link Pane} transparent while dragging it.</ul>
+     * <ul>Handler for when the mou is released that checks if the {@link Pane}
+     * should move to an own stage.</ul>
+     * <ul>Handler for handling the dragging itself.</ul>
      * </li>
      *
-     * @param dragPane
-     *              A {@link StackPane} that is the pane whose events should be caught and handled.
-     * @param contentPane
-     *              The {@link Pane} that is the Widget to be displayed.
+     * @param dragPane    A {@link StackPane} that is the pane whose events should be caught and handled.
+     * @param contentPane The {@link Pane} that is the Widget to be displayed.
      */
     private void addDragHandlers(StackPane dragPane, Pane contentPane) {
         // Check if the dragPane is really a dragPane with a widget in it
-        if(!dragPane.getChildren().stream().anyMatch(child -> child instanceof ExampleWidget)) {
+        if (!dragPane.getChildren().stream().anyMatch(child -> child instanceof ExampleWidget)) {
             // Log that shit went wrong
             LOG.warning("A dragPane without a Widget as content tried to add draghandlers");
             // Return to prevent risk of getting broke
@@ -144,46 +140,44 @@ public class Draggable {
         // Add handler for when drag is detected
         dragPane.setOnDragDetected(event -> {
             // First check if we are allowed to drag the widget
-            if(blockDragging) return;
+            if (blockDragging) return;
             // Make it transparent while dragging
-            ((StackPane)event.getSource()).setOpacity(0.25);
+            ((StackPane) event.getSource()).setOpacity(0.25);
             // Give signal that processing of event is complete
             event.consume();
         });
         // add handler for when mouse is released
         dragPane.setOnMouseReleased(event -> {
-                // First check if we are allowed to drag the widget
-                if(blockDragging) return;
-                // Set the opacity back to 1.0
-                ((StackPane)event.getSource()).setOpacity(1.0);
-                // If it is dragged out of the WidgetWindow..
-                if(toOwnStage) {
-                    // ..set it in an own stage at the point of the mouse
-                    setInExternalStage(contentPane, toOwnStageX, toOwnStageY);
-                    // remove the dragPane from the WidgetWindow because it is in external stage now
-                    WidgetWindow.getInstance().getChildren().remove(dragPane);
-                    // set the boolean false again
-                    toOwnStage = false;
-                }
-                // Give signal that processing of event is complete
-                event.consume();
+            // First check if we are allowed to drag the widget
+            if (blockDragging) return;
+            // Set the opacity back to 1.0
+            ((StackPane) event.getSource()).setOpacity(1.0);
+            // If it is dragged out of the WidgetWindow..
+            if (toOwnStage) {
+                // ..set it in an own stage at the point of the mouse
+                setInExternalStage(contentPane, toOwnStageX, toOwnStageY);
+                // remove the dragPane from the WidgetWindow because it is in external stage now
+                WidgetWindow.getInstance().getChildren().remove(dragPane);
+                // set the boolean false again
+                toOwnStage = false;
+            }
+            // Give signal that processing of event is complete
+            event.consume();
         });
         // Drag the pane when dragging
         dragPane.setOnMouseDragged(event -> {
             // First check if we are allowed to drag the widget
-            if(blockDragging) return;
+            if (blockDragging) return;
             drag(dragPane, event);
         });
     }
 
     /**
      * Sets the widget in an own {@link Stage}.
-     * @param contentPane
-     *              The widget that is to be displayed.
-     * @param x
-     *              The x coordinate on the screen.
-     * @param y
-     *              The y coordinate on the screen.
+     *
+     * @param contentPane The widget that is to be displayed.
+     * @param x           The x coordinate on the screen.
+     * @param y           The y coordinate on the screen.
      */
     protected void setInExternalStage(Pane contentPane, double x, double y) {
         // Create new stage for widget
@@ -196,10 +190,10 @@ public class Draggable {
         root.getChildren().add(contentPane);
         // Let the widget keep the same width as the root pane
         root.widthProperty().addListener((observable, oldValue, newValue) ->
-            contentPane.setPrefWidth((double) newValue));
+                contentPane.setPrefWidth((double) newValue));
         // Let the widget keep the same height as the root pane
         root.heightProperty().addListener((observable, oldValue, newValue) ->
-            contentPane.setPrefHeight((double) newValue));
+                contentPane.setPrefHeight((double) newValue));
         // Set the scene of the stage
         widgetstage.setScene(widgetscene);
         // Let the stage fit around the scene, so the scene size is determinative
@@ -221,16 +215,14 @@ public class Draggable {
     /**
      * Handles the dragging of a dragging pane.
      *
-     * @param draggingPane
-     *              The {@link Pane} that is dragged
-     * @param event
-     *              The {@link MouseEvent} of the dragging
+     * @param draggingPane The {@link Pane} that is dragged
+     * @param event        The {@link MouseEvent} of the dragging
      */
     private void drag(StackPane draggingPane, MouseEvent event) {
         // See if the dragging is outside the WidgetWindow or inside the window
         // Get the bounds of the node where the dragging pane is in, then see if it
         // contains the x and y coordinates of the mouse event
-        if(!draggingPane.getParent().getLayoutBounds().contains(event.getSceneX(), event.getSceneY())) {
+        if (!draggingPane.getParent().getLayoutBounds().contains(event.getSceneX(), event.getSceneY())) {
             // Outside, so we go to own stage when released
             toOwnStage = true;
             // Set the position to drop the stage when mouse released
@@ -238,8 +230,7 @@ public class Draggable {
             // width of the dragging pane should be subtracted to release it centered
             toOwnStageY = event.getScreenY();
             toOwnStageX = event.getScreenX() - draggingPane.getWidth() / 2;
-        }
-        else {
+        } else {
             // Inside, so we do not go to an own stage when mouse released
             toOwnStage = false;
 
@@ -252,7 +243,7 @@ public class Draggable {
             Optional<StackPane> optionalDraggedOver = draggablePanes.parallelStream()
                     .filter(nodeC -> nodeC.getBoundsInParent().contains(event.getSceneX(), event.getSceneY())).findFirst();
             // See if we are dragging over an other node
-            if(optionalDraggedOver.isPresent()) {
+            if (optionalDraggedOver.isPresent()) {
                 // If so, we get it
                 StackPane draggedOver = optionalDraggedOver.get();
 
@@ -319,8 +310,7 @@ public class Draggable {
                         // Set the list where the swapping is done as the children
                         widgetContainerChildren.setAll(workingCollection);
                     }
-                }
-                else {
+                } else {
                     // We know now that if we have to swap, it is in a vertical direction, so now check if we
                     // have to swap.
                     // If the side of the widget we are dragging over is the opposite side from the side we are

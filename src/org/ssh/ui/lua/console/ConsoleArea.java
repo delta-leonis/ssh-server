@@ -13,17 +13,17 @@ import org.ssh.util.LuaUtils;
  * Class that extends the RTF {@link CodeArea} Used to block certain inputs.
  *
  * @author Thomas Hakkers
- *
  */
 public class ConsoleArea extends ColoredCodeArea {
 
-    /** The currentline of the console. Anything before this line can't be edited */
-    private int                 currentLine;
+    /**
+     * The currentline of the console. Anything before this line can't be edited
+     */
+    private int currentLine;
 
     /**
      * Constructor of the ConsoleArea. Disabled ctrl+Z and changes the behaviour of Backspace so
      * that it can't be used to wipe out the cursor.
-     *
      */
     public ConsoleArea() {
         super.setupColoredCodeArea(LuaUtils.getLuaClasses(), LuaUtils.getLuaFunctions());
@@ -53,18 +53,17 @@ public class ConsoleArea extends ColoredCodeArea {
                 EventHandlerHelper.on(EventPattern.keyPressed(KeyCode.ENTER, KeyCombination.ALT_DOWN))
                         .act(event ->
                                 Platform.runLater(() ->
-                                    this.insertText(this.getCaretPosition(), "\n"))
-                                ).create());
+                                        this.insertText(this.getCaretPosition(), "\n"))
+                        ).create());
     }
 
     /**
      * Custom backspace. Makes sure you can't use backspace in invalid positions.
      */
     private void backspace() {
-        if(!"".equals(this.getSelectedText())){
+        if (!"".equals(this.getSelectedText())) {
             this.replaceText(this.getSelection().getStart(), this.getSelection().getEnd(), "");
-        }
-        else if(this.isValid()) {
+        } else if (this.isValid()) {
             this.replaceText(this.getAnchor() - 1, this.getAnchor(), "");
         }
     }

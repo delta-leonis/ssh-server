@@ -26,8 +26,8 @@ public class FunctionToken<O> extends Token<O> {
      * Constructs a FunctionToken represented by the supplied string with the specified number of arguments
      * and the supplied transfer function.
      *
-     * @param functionToken     The String representation of the function.
-     * @param transferFunction  The function represented by the current class.
+     * @param functionToken    The String representation of the function.
+     * @param transferFunction The function represented by the current class.
      */
     public FunctionToken(String functionToken, Function<List<String>, List<O>> transferFunction) {
         super("f", functionToken);

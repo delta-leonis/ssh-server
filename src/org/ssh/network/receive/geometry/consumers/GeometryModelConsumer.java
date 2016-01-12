@@ -15,58 +15,58 @@ import protobuf.Geometry.GeometryFieldSize;
 /**
  * Class that consumes the parsed {@link GeometryPacket}s and updates the {@link Field} and all
  * {@link Goal}s. Also calls {@link FieldGame#updateGeometry()}
- * 
+ *
  * @author Jeroen de Jong
- *        
  */
 public class GeometryModelConsumer extends AbstractConsumer<GeometryPacket> {
-    
-    /** Reference to FieldGame in GUI, used for updating */
+
+    /**
+     * Reference to FieldGame in GUI, used for updating
+     */
     private FieldGame fieldGame;
 
     private Game game;
-    
+
     /**
      * creates a new modelconsumer for {@link GeometryPacket}s.
-     * 
-     * @param name
-     *            name of this consumer
+     *
+     * @param name name of this consumer
      */
     public GeometryModelConsumer(String name) {
         super(name);
     }
-    
+
     @Override
     public boolean consume(GeometryPacket pipelinePacket) {
-        if(fieldGame == null)
+        if (fieldGame == null)
             // Getting reference to the main window
-            UI.<MainWindow> get("main").ifPresent(main ->
-                fieldGame = main.getFieldGame());
-        
-        if(fieldGame == null)
+            UI.<MainWindow>get("main").ifPresent(main ->
+                    fieldGame = main.getFieldGame());
+
+        if (fieldGame == null)
             return false;
 
-        if(game == null)
+        if (game == null)
             // Getting reference to the main window
-            Models.<Game> get("game").ifPresent(gameModel ->
+            Models.<Game>get("game").ifPresent(gameModel ->
                     this.game = gameModel);
 
-        if(game == null)
+        if (game == null)
             return false;
 
-        Models.<Field> get("field").ifPresent(field -> {
+        Models.<Field>get("field").ifPresent(field -> {
             // read received data
             GeometryFieldSize fieldData = pipelinePacket.read().getField();
-            
+
             // Check if there is new data
             if (!field.getFieldSize().equals(fieldData)) {
                 // Update field
                 field.update("field", fieldData);
-                
+
                 Models.<Goal>getAll("goal").forEach(goal -> {
                     // get position modifier (+1 or -1 according to field position
                     int modifier = game.getSide(goal.getAllegiance()).equals(Direction.EAST) ? 1 : -1;
-                    
+
                     // update goal
                     goal.update("x",
                             Float.valueOf((field.getFieldLength() + fieldData.getGoalDepth()) / 2 * modifier),
@@ -77,10 +77,10 @@ public class GeometryModelConsumer extends AbstractConsumer<GeometryPacket> {
                 });
             }
         });
-        
+
         // Update geometry
         fieldGame.updateGeometry();
         return true;
     }
-    
+
 }

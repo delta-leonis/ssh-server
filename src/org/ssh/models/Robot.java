@@ -15,52 +15,73 @@ import java.util.stream.Collectors;
  * Describes a Robot on the {@link Field} as a {@link FieldObject}
  *
  * @author Jeroen de Jong
- *
  */
 public class Robot extends FieldObject {
 
-    /** The robot height. */
-    public static final transient float ROBOT_HEIGHT   = 150.0f;
+    /**
+     * The robot height.
+     */
+    public static final transient float ROBOT_HEIGHT = 150.0f;
 
-    /** The robot radius */
+    /**
+     * The robot radius
+     */
     public static final transient float ROBOT_DIAMETER = 180.0f;
 
-    /** allegiance of this robot */
+    /**
+     * allegiance of this robot
+     */
     private final transient Allegiance allegiance;
 
-    /**  Unique robot id [0-15] */
-    @Alias ("robot_id")
-    private final transient Integer     robotId;
+    /**
+     * Unique robot id [0-15]
+     */
+    @Alias("robot_id")
+    private final transient Integer robotId;
 
-    /** timestamp of last update for this model */
-    private transient Long              lastUpdated;
+    /**
+     * timestamp of last update for this model
+     */
+    private transient Long lastUpdated;
 
-    /** current dribble speed (-1 is max backward, 1 is max forward) */
-    private Float                       dribbleSpeed;
+    /**
+     * current dribble speed (-1 is max backward, 1 is max forward)
+     */
+    private Float dribbleSpeed;
 
-    /** The boolean for the selected state */
-    private BooleanProperty             isSelected;
+    /**
+     * The boolean for the selected state
+     */
+    private BooleanProperty isSelected;
 
-    /** Orientation which the robot is facing, not driving */
-    private FloatProperty               orientation;
+    /**
+     * Orientation which the robot is facing, not driving
+     */
+    private FloatProperty orientation;
 
-    /** height of this robot as provided by ssl-vision */
-    private Float                       height;
+    /**
+     * height of this robot as provided by ssl-vision
+     */
+    private Float height;
 
-    /** If the robot is connected to the sofware */
-    private transient BooleanProperty                 isConnected;
-    /** If the robot is on sight */
-    private transient BooleanProperty                 isOnSight;
-    /** The boolean for the selected state */
+    /**
+     * If the robot is connected to the sofware
+     */
+    private transient BooleanProperty isConnected;
+    /**
+     * If the robot is on sight
+     */
+    private transient BooleanProperty isOnSight;
+    /**
+     * The boolean for the selected state
+     */
     private transient ListProperty<Malfunction> malfunctions;
 
     /**
      * Instantiates a new robot with specified properties
      *
-     * @param robotId
-     *            robot id
-     * @param allegiance
-     *            allegiance of this robot ({@link Allegiance#ALLY} of {@link Allegiance#OPPONENT})
+     * @param robotId    robot id
+     * @param allegiance allegiance of this robot ({@link Allegiance#ALLY} of {@link Allegiance#OPPONENT})
      */
     public Robot(final Integer robotId, final Allegiance allegiance) {
         super("robot", allegiance.identifier() + robotId);
@@ -125,7 +146,7 @@ public class Robot extends FieldObject {
     /**
      * @return timestamp of last update for this model
      */
-    public Long lastUpdated(){
+    public Long lastUpdated() {
         return lastUpdated;
     }
 
@@ -182,14 +203,14 @@ public class Robot extends FieldObject {
      * @param malfunctionType the type of malfunction to collect a list from
      * @return a list of malfunctions of a specified type
      */
-    public List<Malfunction> getMalfunctions(MalfunctionType malfunctionType){
+    public List<Malfunction> getMalfunctions(MalfunctionType malfunctionType) {
         return malfunctions.stream().filter(malfunction -> malfunction.getMalfunctionType() == malfunctionType)
                 .collect(Collectors.toList());
     }
 
     /**
      * @return the property for binding the list of malfunctions to another property, or to listen
-     *         to changes in this list.
+     * to changes in this list.
      */
     public ReadOnlyListProperty<Malfunction> malfunctionsProperty() {
         return this.malfunctions;
@@ -199,7 +220,7 @@ public class Robot extends FieldObject {
      * @param malfunctionType the type to look for in the list of malfunctions
      * @return true if the list of malfunctions contains a mach of this malfunctiontype
      */
-    public boolean hasMalfunctionOfType(MalfunctionType malfunctionType){
+    public boolean hasMalfunctionOfType(MalfunctionType malfunctionType) {
         return malfunctions.stream().anyMatch(funct -> funct.getMalfunctionType().equals(malfunctionType));
     }
 
@@ -237,7 +258,7 @@ public class Robot extends FieldObject {
      * @param protobufRobot protobuf message with new information
      * @return succesvalue of the update
      */
-    public boolean update(final Detection.DetectionRobot protobufRobot){
+    public boolean update(final Detection.DetectionRobot protobufRobot) {
         return update(protobufRobot.getAllFields().entrySet().stream().collect(Collectors.toMap(
                 entry -> entry.getKey().getName(),
                 Map.Entry::getValue

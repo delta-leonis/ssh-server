@@ -9,26 +9,26 @@
           xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           vgap="2.0">
     <padding>
-        <Insets top="2.0" bottom="2.0" left="2.0" right="2.0" />
+        <Insets top="2.0" bottom="2.0" left="2.0" right="2.0"/>
     </padding>
     <columnConstraints>
-        <ColumnConstraints percentWidth="100.0" />
+        <ColumnConstraints percentWidth="100.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints percentHeight="73.0" />
-        <RowConstraints percentHeight="27.0" />
+        <RowConstraints percentHeight="73.0"/>
+        <RowConstraints percentHeight="27.0"/>
     </rowConstraints>
     <children>
         <StackPane fx:id="stackPane" onMouseClicked="#selectRobot">
-            <Pane id="robotIcon" />
+            <Pane id="robotIcon"/>
             <Pane id="robotIconBackground" fx:id="robotIconBackground"
-                  opacity="0.5" />
+                  opacity="0.5"/>
             <AnchorPane id="robotIconBorder" fx:id="robotIconBorder">
                 <children>
                     <Label AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
                            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                         <tooltip>
-                            <Tooltip fx:id="robotTooltip" />
+                            <Tooltip fx:id="robotTooltip"/>
                         </tooltip>
                     </Label>
                 </children>
@@ -36,19 +36,19 @@
         </StackPane>
         <GridPane fx:id="iconPane" GridPane.rowIndex="1" hgap="2.0">
             <columnConstraints>
-                <ColumnConstraints percentWidth="33.0" />
-                <ColumnConstraints percentWidth="33.0" />
-                <ColumnConstraints percentWidth="7.0" />
-                <ColumnConstraints percentWidth="26.0" />
+                <ColumnConstraints percentWidth="33.0"/>
+                <ColumnConstraints percentWidth="33.0"/>
+                <ColumnConstraints percentWidth="7.0"/>
+                <ColumnConstraints percentWidth="26.0"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints percentHeight="100.0" />
+                <RowConstraints percentHeight="100.0"/>
             </rowConstraints>
             <children>
                 <Pane fx:id="connectionIcon" id="connectionIcon"
-                      GridPane.columnIndex="0" />
-                <Pane fx:id="sightIcon" id="sightIcon" GridPane.columnIndex="1" />
-                <Text fx:id="robotId" id="robotId" GridPane.columnIndex="3" boundsType="VISUAL" />
+                      GridPane.columnIndex="0"/>
+                <Pane fx:id="sightIcon" id="sightIcon" GridPane.columnIndex="1"/>
+                <Text fx:id="robotId" id="robotId" GridPane.columnIndex="3" boundsType="VISUAL"/>
             </children>
         </GridPane>
     </children>

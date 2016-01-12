@@ -23,46 +23,45 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Thomas Hakkers
  * @author Joost Overeem
- *
  */
 public class Timeslider extends UIComponent {
-    
+
     @FXML
-    private GridPane    timesliderRoot;
+    private GridPane timesliderRoot;
     @FXML
-    private Pane        sliderPointsPane;
+    private Pane sliderPointsPane;
     @FXML
-    private StackPane   root;
+    private StackPane root;
     @FXML
     private ProgressBar progressBar;
     @FXML
-    private Slider      slider;
+    private Slider slider;
     @FXML
-    private Label       timeLabel;
+    private Label timeLabel;
     @FXML
-    private Label       blueScoreLabel;
+    private Label blueScoreLabel;
     @FXML
-    private Label       yellowScoreLabel;
+    private Label yellowScoreLabel;
     @FXML
-    private Button      playButton, selectFileButton, reverseButton, recordButton, leftButton, rightButton;
+    private Button playButton, selectFileButton, reverseButton, recordButton, leftButton, rightButton;
     @FXML
-    private GridPane    buttonPane;
+    private GridPane buttonPane;
     @FXML
-    private CheckBox    goalCheckBox, timeoutCheckBox;
+    private CheckBox goalCheckBox, timeoutCheckBox;
     @FXML
-    private Insets      sliderpadding;
-                        
-    private boolean     started      = false;
-    private Timeline    timeline;
-                        
-    private double      speedPerTick = 1.0;
-    private boolean     reverse = false;
+    private Insets sliderpadding;
+
+    private boolean started = false;
+    private Timeline timeline;
+
+    private double speedPerTick = 1.0;
+    private boolean reverse = false;
 
     private LogReader logReader;
     private FileChooser fileChooser;
 
     private static final int STEP_SIZE = 10;
-                                     
+
     public Timeslider() {
         super("timeslider", "bottomsection/timeslider.fxml");
 
@@ -85,35 +84,33 @@ public class Timeslider extends UIComponent {
 
         this.setupTimer();
     }
-    
+
     /**
      * Adds a marker at the specified x value
      *
-     * @param x
-     *            The x position for the marker
-     * @param cssMarker
-     *            The css for the marker.
+     * @param x         The x position for the marker
+     * @param cssMarker The css for the marker.
      */
     private void addMarker(final int x, final String cssMarker) {
         double pos = x > this.logReader.getDuration() ? this.slider.getWidth()
-                : ((double)x / (double)this.logReader.getDuration()) * this.slider.getWidth();
-        pos = (int)(pos - sliderpadding.getRight() - sliderpadding.getLeft());
-        final Rectangle sliderPoint = new Rectangle(0,0,1,1);
+                : ((double) x / (double) this.logReader.getDuration()) * this.slider.getWidth();
+        pos = (int) (pos - sliderpadding.getRight() - sliderpadding.getLeft());
+        final Rectangle sliderPoint = new Rectangle(0, 0, 1, 1);
         sliderPoint.getStyleClass().add(cssMarker);
-        sliderPoint.setLayoutX(pos - sliderPoint.getWidth()/2);
+        sliderPoint.setLayoutX(pos - sliderPoint.getWidth() / 2);
         this.sliderPointsPane.getChildren().add(sliderPoint);
     }
 
     /**
      * Updates the labels that track the current scores, based on the value the slider has.
      */
-    private void updateScoreLabel(){
-        if(logReader != null) {
+    private void updateScoreLabel() {
+        if (logReader != null) {
             blueScoreLabel.setText(Integer.toString(logReader.getBlueScoreAtTimeMillis((long) slider.getValue())));
             yellowScoreLabel.setText(Integer.toString(logReader.getYellowScoreAtTimeMillis((long) slider.getValue())));
         }
     }
-    
+
     /**
      * Changes the given int in seconds into a nicer format like this mm:ss returns the hh:mm:ss
      * format if the match takes longer than an hour.
@@ -124,17 +121,16 @@ public class Timeslider extends UIComponent {
                         TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
                 TimeUnit.MILLISECONDS.toSeconds(millis) -
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
-        if(TimeUnit.MILLISECONDS.toHours(millis) > 0)
+        if (TimeUnit.MILLISECONDS.toHours(millis) > 0)
             timeString = TimeUnit.MILLISECONDS.toHours(millis) + timeString;
 
         return timeString;
     }
-    
+
     /**
      * Function that uses a {@link LogReader} to setup the slideBar
      *
-     * @param path
-     *            The path that leads to the log that needs to be played
+     * @param path The path that leads to the log that needs to be played
      */
     public void loadGameLog(String path) {
         Platform.runLater(() -> {
@@ -146,17 +142,17 @@ public class Timeslider extends UIComponent {
     }
 
     @FXML
-    private void openDialog(ActionEvent event){
+    private void openDialog(ActionEvent event) {
         loadGameLog(fileChooser.showOpenDialog(this.getStage().getScene().getWindow()).getPath());
     }
 
     @FXML
-    private void fastForward(ActionEvent event){
+    private void fastForward(ActionEvent event) {
         this.speedPerTick = this.speedPerTick / 2;
     }
 
     @FXML
-    private void slowDown(ActionEvent event){
+    private void slowDown(ActionEvent event) {
         this.speedPerTick = this.speedPerTick * 2;
     }
 
@@ -164,7 +160,7 @@ public class Timeslider extends UIComponent {
      * Reverses the direction of the slider.
      */
     @FXML
-    private void reverse(ActionEvent event){
+    private void reverse(ActionEvent event) {
         reverse = !reverse;
     }
 
@@ -174,40 +170,40 @@ public class Timeslider extends UIComponent {
     private void setupTimer() {
         // Define a single frame, with the duration of second/60
         final KeyFrame keyFrame = new KeyFrame(new Duration(STEP_SIZE), event -> this.updateKeyFrame());
-        
+
         // The render loop play the frames
         this.timeline = new Timeline(keyFrame);
-        
+
         this.timeline.setCycleCount(Animation.INDEFINITE);
     }
-    
+
     /**
      * Handler for the {@link Button start button}
      */
     @FXML
     private void start(ActionEvent event) {
-            // Switch between start and pause based on the current state
-            if (this.started) {
-                this.started = false;
-                this.playButton.getStyleClass().set(this.playButton.getStyleClass().size() - 1, "button-play");
-                this.timeline.pause();
-            } else {
-                this.started = true;
-                this.playButton.getStyleClass().set(this.playButton.getStyleClass().size() - 1, "button-pause");
-                this.timeline.play();
-            }
+        // Switch between start and pause based on the current state
+        if (this.started) {
+            this.started = false;
+            this.playButton.getStyleClass().set(this.playButton.getStyleClass().size() - 1, "button-play");
+            this.timeline.pause();
+        } else {
+            this.started = true;
+            this.playButton.getStyleClass().set(this.playButton.getStyleClass().size() - 1, "button-pause");
+            this.timeline.play();
+        }
     }
-    
+
     /**
      * Adds speedPerTick to the slider value
      */
     private void updateKeyFrame() {
         double speed = STEP_SIZE * this.speedPerTick;
-        final double newValue = !reverse ? this.slider.getValue() + speed: this.slider.getValue() - speed;
+        final double newValue = !reverse ? this.slider.getValue() + speed : this.slider.getValue() - speed;
         this.slider.setValue(newValue > this.slider.getMax() ? this.slider.getMax() : newValue);
-        logReader.sendDetectionMessage((long)slider.getValue());
+        logReader.sendDetectionMessage((long) slider.getValue());
     }
-    
+
     /**
      * Handler that adds the markers for the goal times and timeouts in the {@link LogReader}
      */

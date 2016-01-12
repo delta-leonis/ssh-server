@@ -34,7 +34,7 @@ public class UIComponent<N extends Pane> extends AbstractManageable {
 
     @Nullable
     public Stage getStage() {
-        return (Stage)getComponent().getScene().getWindow();
+        return (Stage) getComponent().getScene().getWindow();
     }
 
     @Nullable
@@ -42,7 +42,7 @@ public class UIComponent<N extends Pane> extends AbstractManageable {
         return component;
     }
 
-    public <M extends Node> boolean add(M component){
+    public <M extends Node> boolean add(M component) {
         return add(component, false);
     }
 
@@ -58,56 +58,57 @@ public class UIComponent<N extends Pane> extends AbstractManageable {
             return false;
         }
 
-        if(selected instanceof Pane)
-            ((Pane)selected).getChildren().add(component);
-        else if(selected instanceof Group)
-            ((Group)selected).getChildren().add(component);
+        if (selected instanceof Pane)
+            ((Pane) selected).getChildren().add(component);
+        else if (selected instanceof Group)
+            ((Group) selected).getChildren().add(component);
         else {
             UIComponent.LOG.info("identifier doesn't refer to a Pane or Group, element could not be added");
             return false;
         }
 
-        if(bind)
+        if (bind)
             UI.bindSize(component, selected);
 
         return true;
     }
 
-    public <M extends Node> boolean add(M component, int index, boolean bind){
-        if(this.getComponent().getChildren().contains(component)) {
+    public <M extends Node> boolean add(M component, int index, boolean bind) {
+        if (this.getComponent().getChildren().contains(component)) {
             UIComponent.LOG.info("Could not add %s, since it already has been added", component);
             return false;
         }
 
         this.getComponent().getChildren().add(index, component);
 
-        if(bind)
+        if (bind)
             UI.bindSize(component, this.component);
 
         return true;
 
     }
 
-    public <M extends Node> boolean add(M component, boolean bind){
-        return add(component, getComponent().getChildren().size()-1, bind);
+    public <M extends Node> boolean add(M component, boolean bind) {
+        return add(component, getComponent().getChildren().size() - 1, bind);
     }
 
-    public <M extends Node> void bindSize(M component){
-        if(component instanceof Region)
+    public <M extends Node> void bindSize(M component) {
+        if (component instanceof Region)
             UI.bindSize((Region) component, this.component);
-        else if(component instanceof SubScene)
+        else if (component instanceof SubScene)
             this.bindSubSceneSize((SubScene) component);
     }
 
     public boolean add(UIComponent childComponent) {
         return add(childComponent, false);
     }
+
     public boolean add(UIComponent childComponent, boolean bind) {
         return add(childComponent.getComponent(), bind);
     }
 
 
-    public <M extends SubScene> void bindSubSceneSize(M childComponent){
+    public <M extends SubScene> void bindSubSceneSize(M childComponent) {
         childComponent.heightProperty().bind(component.heightProperty());
         childComponent.widthProperty().bind(component.widthProperty());
     }
@@ -115,8 +116,7 @@ public class UIComponent<N extends Pane> extends AbstractManageable {
     /**
      * Sets a CSS-file from /org/ssh/view/css/ on the UI component.
      *
-     * @param fileName
-     *            The name of the file (e.g. "application.css")
+     * @param fileName The name of the file (e.g. "application.css")
      */
     public void loadCSS(final String fileName) {
         UIComponent.LOG.fine("Loaded CSS file /org/ssh/view2/css/%s into UIComponent %s.", fileName, this.getName());
@@ -128,8 +128,7 @@ public class UIComponent<N extends Pane> extends AbstractManageable {
     /**
      * Load FXML file into the component.
      *
-     * @param fileName
-     *            The name of the file.
+     * @param fileName The name of the file.
      * @return true, if successful
      */
     public boolean loadFXML(final String fileName) {
@@ -142,8 +141,7 @@ public class UIComponent<N extends Pane> extends AbstractManageable {
 
             // extract the Nodes
             this.component = fxmlLoader.load();
-        }
-        catch (final IOException exception) {
+        } catch (final IOException exception) {
             UIComponent.LOG.warning("Couldn't load FXML file /org/ssh/view2/components/%s into UIComponent %s",
                     fileName,
                     this.getName());

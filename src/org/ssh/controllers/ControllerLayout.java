@@ -43,7 +43,7 @@ public class ControllerLayout extends AbstractModel {
     }
 
     @Override
-    public void initialize(){
+    public void initialize() {
         // no default values
     }
 
@@ -133,7 +133,8 @@ public class ControllerLayout extends AbstractModel {
     /**
      * @return a configname for every controllertype
      */
-    @Override public String getConfigName() {
+    @Override
+    public String getConfigName() {
         return String.format("%s %s", Controller.class.getSimpleName(), this.controller.getName()).replace(" ", "_")
                 + ".json";
     }

@@ -22,7 +22,7 @@ import java.util.Optional;
 
 /**
  * The Class UI.
- *
+ * <p>
  * This class is one of the main components of the framework. UI.java gets instantiated as
  * lazy-loaded Singleton {@link https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom}
  * . This class holds references to all the windows and makes instantiating windows easier.
@@ -31,7 +31,7 @@ import java.util.Optional;
  * @author Jeroen de Jong
  */
 public final class UI implements ManagerInterface<UIComponent<? extends Pane>> {
-    
+
     /**
      * The services store has a controller that runs the store.
      */
@@ -42,43 +42,40 @@ public final class UI implements ManagerInterface<UIComponent<? extends Pane>> {
     /**
      * The single instance of the class (lazy-loaded singleton).
      */
-    private static final Object          instance = new Object();
+    private static final Object instance = new Object();
 
-    /** The Constant LOG. */
+    /**
+     * The Constant LOG.
+     */
     // a logger for good measure
-    private static final Logger          LOG      = Logger.getLogger();
-                                                  
+    private static final Logger LOG = Logger.getLogger();
+
     /**
      * Private constructor to hide the implicit public one.
      */
     private UI() {
     }
-    
+
     /**
      * Adds a window to the UI store.
      *
-     * @param <T>
-     *            The type of Pane used as a root Node for the window.
-     * @param window
-     *            The window to be added to the UI store.
+     * @param <T>    The type of Pane used as a root Node for the window.
+     * @param window The window to be added to the UI store.
      * @return true, if successful
      */
     public static <T extends UIController<?>> boolean addWindow(final T window) {
         UI.LOG.info("Adding new window named %s to the UI store", window.getName());
         return UI.uiControllers.add(window);
     }
-    
+
     /**
      * Returns an Optional containing the window with the specified name.
      *
-     * @param
-     *            <P>
-     *            the generic type
-     * @param name
-     *            The name of the requested window.
+     * @param <P>  the generic type
+     * @param name The name of the requested window.
      * @return An Optional containing the window.
      */
-    @SuppressWarnings ("unchecked")
+    @SuppressWarnings("unchecked")
     public static <U extends UIController<? extends Pane>> Optional<U> get(final String name) {
         UI.LOG.fine("Getting a window named %s from the UI store", name);
         // get a stream of all the windows
@@ -88,7 +85,7 @@ public final class UI implements ManagerInterface<UIComponent<? extends Pane>> {
                 // and return the first one in the list
                 .findFirst();
     }
-    
+
     /**
      * Gets the Singleton instance of the UI store.
      *
@@ -121,8 +118,8 @@ public final class UI implements ManagerInterface<UIComponent<? extends Pane>> {
         return controller.getAll();
     }
 
-    public static Parent getHighestParent(Parent child){
-        if(child.getParent() == null)
+    public static Parent getHighestParent(Parent child) {
+        if (child.getParent() == null)
             return child;
         return UI.getHighestParent(child.getParent());
     }
@@ -137,7 +134,7 @@ public final class UI implements ManagerInterface<UIComponent<? extends Pane>> {
         for (Node node : parent.getChildrenUnmodifiable()) {
             nodes.add(node);
             if (node instanceof Parent)
-                UI.addAllDescendents((Parent)node, nodes);
+                UI.addAllDescendents((Parent) node, nodes);
         }
     }
 
@@ -168,8 +165,7 @@ public final class UI implements ManagerInterface<UIComponent<? extends Pane>> {
     /**
      * Starts the UI store and spawns the main window.
      *
-     * @param primaryStage
-     *            The primary stage to be passed to the main window.
+     * @param primaryStage The primary stage to be passed to the main window.
      * @return true, if successful
      */
     public static boolean start(final Stage primaryStage) {
@@ -187,27 +183,26 @@ public final class UI implements ManagerInterface<UIComponent<? extends Pane>> {
     }
 
     public static final void bindSize(Node child, Node parent) {
-        if(!(child instanceof Region || child instanceof SubScene)) {
+        if (!(child instanceof Region || child instanceof SubScene)) {
             UI.LOG.info("Could not bind child, since it isn't an instance of Region or SubScene");
             return;
         }
 
-        if(!(parent instanceof Region || parent instanceof SubScene)) {
+        if (!(parent instanceof Region || parent instanceof SubScene)) {
             UI.LOG.info("Could not bind to parent, since it isn't an instance of Region or SubScene");
             return;
         }
 
         //karig²
-        if(child instanceof SubScene)
+        if (child instanceof SubScene)
             if (parent instanceof SubScene)
                 bindSize((SubScene) child, (SubScene) parent);
             else
                 bindSize((SubScene) child, (Region) parent);
+        else if (parent instanceof Region)
+            bindSize((Region) child, (Region) parent);
         else
-            if(parent instanceof Region)
-                bindSize((Region) child, (Region) parent);
-            else
-                bindSize((Region) child, (SubScene) parent);
+            bindSize((Region) child, (SubScene) parent);
     }
 
     private static final void bindSize(SubScene child, Region parent) {

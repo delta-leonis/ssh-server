@@ -24,22 +24,22 @@ import java.nio.file.Files;
  * automatically on close.
  *
  * @author Thomas Hakkers
- *         
  */
 public class ScriptEditor extends UIComponent {
-    private ScriptArea          codeArea;
-    private String              path;
-    private FileChooser         fileChooser;
+    private ScriptArea codeArea;
+    private String path;
+    private FileChooser fileChooser;
     @FXML
-    private VBox                root;
-                                
+    private VBox root;
+
     /**
      * Constructor for the {@link ScriptEditor}
+     *
      * @param name Name of the {@link ScriptEditor}
      */
     public ScriptEditor(final String name) {
         super(name, "bottomsection/scripteditor.fxml");
-        
+
         this.initializeMenu();
         this.initializeTextArea();
 
@@ -49,28 +49,28 @@ public class ScriptEditor extends UIComponent {
         this.fileChooser.getExtensionFilters().add(new ExtensionFilter("All Files", "*.*"));
         this.fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
     }
-    
+
     /**
      * @returns the path of what this {@link ScriptEditor} is currently editing.
      */
     public String getPath() {
         return this.path;
     }
-    
+
     /**
      * Initializes the {@link MenuBar} of the {@link ScriptEditor}, adding the right buttons
      */
     private void initializeMenu() {
         final MenuBar menubar = new MenuBar();
-        
+
         final Menu fileMenu = new Menu("File");
-        
+
         final MenuItem saveItem = new MenuItem("Save\t\t\t");
         saveItem.setOnAction(actionEvent -> this.saveFile());
-        
+
         final MenuItem saveAsItem = new MenuItem("Save as...\t\t\t");
         saveAsItem.setOnAction(actionEvent -> this.saveAsFile());
-        
+
         final MenuItem openItem = new MenuItem("Open\t\t\t");
         openItem.setOnAction(actionEvent -> this.openFile());
 
@@ -81,7 +81,7 @@ public class ScriptEditor extends UIComponent {
         menubar.getMenus().addAll(fileMenu);
         this.root.getChildren().add(menubar);
     }
-    
+
     /**
      * Initializes the {@link ColoredCodeArea}
      */
@@ -94,7 +94,7 @@ public class ScriptEditor extends UIComponent {
         this.codeArea.prefHeightProperty().bind(root.heightProperty());
         root.getChildren().add(this.codeArea);
     }
-    
+
     /**
      * Saves the file, and then reloads the given object.
      *
@@ -112,15 +112,14 @@ public class ScriptEditor extends UIComponent {
                 writer.write(this.codeArea.getText());
                 writer.close();
             }
-        }
-        catch (final IOException exception) {
+        } catch (final IOException exception) {
             LOG.exception(exception);
         }
     }
-    
+
     /**
      * Save the {@link File} at the location that can be chosen from the {@link DirectoryChooser}
-     * 
+     *
      * @see {@link #saveAsFile()}
      */
     private void saveAsFile() {
@@ -132,7 +131,7 @@ public class ScriptEditor extends UIComponent {
             saveFile();
         }
     }
-    
+
     /**
      * Opens the {@link File} found using the {@link FileChooser}
      */
@@ -143,12 +142,11 @@ public class ScriptEditor extends UIComponent {
         if (file != null)
             setTextFromFile(file.getAbsolutePath());
     }
-    
+
     /**
      * Puts the text from a certain file into the {@link ScriptEditor text area}
-     * 
-     * @param path
-     *            The path to the file that needs to be copied into the {@link ColoredCodeArea}
+     *
+     * @param path The path to the file that needs to be copied into the {@link ColoredCodeArea}
      */
     public void setTextFromFile(final String path) {
         this.path = path;
@@ -156,8 +154,7 @@ public class ScriptEditor extends UIComponent {
         try {
             Files.lines(FileSystems.getDefault().getPath(path)).forEach(line ->
                     this.codeArea.insertText(this.codeArea.getLength(), line + '\n'));
-        }
-        catch (final IOException exception) {
+        } catch (final IOException exception) {
             LOG.exception(exception);
         }
     }

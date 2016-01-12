@@ -50,8 +50,8 @@ public class Full3DExample extends Application {
 
 
         ball.update("x", 0,
-                    "y", 0,
-                    "z", 0);
+                "y", 0,
+                "z", 0);
 
         // Launch the program
         launch(args);

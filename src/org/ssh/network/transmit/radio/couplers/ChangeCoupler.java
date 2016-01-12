@@ -7,18 +7,17 @@ import org.ssh.services.AbstractService;
 
 /**
  * The Class ChangeCoupler.
- *
+ * <p>
  * An example implementation of a AbstractCoupler
  *
  * @author Rimon Oz
  */
 public class ChangeCoupler extends AbstractCoupler<RadioPacket> {
-    
+
     /**
      * Instantiates a new ChangeCoupler.
      *
-     * @param name
-     *            The name of the new AbstractCoupler
+     * @param name The name of the new AbstractCoupler
      */
     public ChangeCoupler() {
         super("changecoupler", packet -> {

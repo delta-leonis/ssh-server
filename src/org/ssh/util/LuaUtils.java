@@ -20,12 +20,12 @@ import java.util.stream.Collectors;
  * @author Thomas Hakkers
  */
 public class LuaUtils {
-    
+
     // A logger for errorhandling
-    private static final Logger       LOG              = Logger.getLogger();
-                                                       
-    private static final Globals      GLOBALS          = JsePlatform.standardGlobals();
-                                                       
+    private static final Logger LOG = Logger.getLogger();
+
+    private static final Globals GLOBALS = JsePlatform.standardGlobals();
+
     private static final List<Object> AVAILABLE_IN_LUA = LuaUtils.getAllAvailableInLua();
 
     /**
@@ -33,16 +33,16 @@ public class LuaUtils {
      */
     private LuaUtils() {
     }
-    
+
     /**
      * Function that collects every class that has the {@link AvailableInLua} annotation and returns
      * it as an ArrayList<Object>
      */
     public static List<Object> getAllAvailableInLua() {
         List<Class<?>> types = LuaUtils.getAllTypesAnnotatedWith(AvailableInLua.class, "org.ssh");
-        
+
         final ArrayList<Object> objectArrayList = new ArrayList<>();
-        
+
         // For each class
         types.forEach(clazz -> {
             // Find out whether it has a singleton
@@ -51,19 +51,17 @@ public class LuaUtils {
         });
         return objectArrayList;
     }
-    
+
     /**
      * Method used to find every class in the given package that is annotated with the given
      * {@link Annotation}
-     * 
-     * @param annotation
-     *            The class that uses this annotation
-     * @param packageName
-     *            The package we need to look in
+     *
+     * @param annotation  The class that uses this annotation
+     * @param packageName The package we need to look in
      * @return All classes in the package with the given annotation
      */
     private static <A extends Annotation> List<Class<?>> getAllTypesAnnotatedWith(Class<A> annotation,
-            String packageName) {
+                                                                                  String packageName) {
         try {
             // Get all classes in package
             return ClassPath.from(Thread.currentThread().getContextClassLoader())
@@ -72,21 +70,19 @@ public class LuaUtils {
                     .filter(classInfo -> classInfo.load().getAnnotation(annotation) != null)
                     // Load the required classes and collect them.
                     .map(ClassPath.ClassInfo::load).collect(Collectors.toList());
-        }
-        catch (IOException exception) {
+        } catch (IOException exception) {
             LuaUtils.LOG.exception(exception);
             return new ArrayList<>();
         }
     }
-    
+
     /**
      * Look for a singleton in the given class
-     * 
-     * @param clazz
-     *            The potential singleton class
+     *
+     * @param clazz The potential singleton class
      * @return A singleton of the object if it has one, else it just returns the Class.
      */
-    @SuppressWarnings ("rawtypes")
+    @SuppressWarnings("rawtypes")
     private static Object getSingleton(final Class clazz) {
         try {
             // Find any singletons
@@ -102,15 +98,14 @@ public class LuaUtils {
             else
                 // Use the class instead.
                 return Class.forName(clazz.getName());
-        }
-        catch (final Exception exception) {
+        } catch (final Exception exception) {
             LOG.exception(exception);
             LOG.finest(
                     "Exception found in LuaUtils.getAllAvailalbeInLua. Probably a method that was invoked the wrong way.");
             return null;
         }
     }
-    
+
     /**
      * Collects all Class names and puts them in an ArrayList<String>
      *
@@ -120,7 +115,7 @@ public class LuaUtils {
         // Turn everything into a stream
         return LuaUtils.AVAILABLE_IN_LUA.stream().map(LuaUtils::getSimpleName).collect(Collectors.toList());
     }
-    
+
     /**
      * Collects all Function names and puts them in an ArrayList<String>
      *
@@ -142,17 +137,16 @@ public class LuaUtils {
                 // Collect everything back into a List<String>
                 .collect(Collectors.toList());
     }
-    
+
     /**
-     * @param o
-     *            The object we need the simple name of
+     * @param o The object we need the simple name of
      * @return The simple name of the object. If an object has been turned into a {@link Class}, it
-     *         won't return Class as simpleName
+     * won't return Class as simpleName
      */
     public static String getSimpleName(final Object o) {
         return o instanceof Class ? ((Class<?>) o).getSimpleName() : o.getClass().getSimpleName();
     }
-    
+
     /**
      * Function used to get the {@link Class} of a certain object properly. Motivation: The classes
      * retrieved by LuaUtils are a mix of Class instances and normal instances. When you call
@@ -160,20 +154,18 @@ public class LuaUtils {
      * something that's a Class already. For example: You'd get Chicken.getClass().getClass() which
      * would return `Class` rather than `Chicken`.
      *
-     * @param o
-     *            The object to (maybe) call `getClass()` on
+     * @param o The object to (maybe) call `getClass()` on
      * @return The valid {@link Class} of o.
      */
-    @SuppressWarnings ("rawtypes")
+    @SuppressWarnings("rawtypes")
     public static Class getClass(final Object o) {
         return o instanceof Class ? (Class) o : o.getClass();
     }
-    
+
     /**
      * Finds out whether the given string is an object found in lua globals and returns the object
-     * 
-     * @param string
-     *            The name of the object
+     *
+     * @param string The name of the object
      * @return The {@link Object} this string belongs to
      */
     public static Object getObjectBasedOnString(String string) {
@@ -185,7 +177,7 @@ public class LuaUtils {
             return optionalObject.get();
         return null;
     }
-    
+
     /**
      * Function that returns all functions in the given object.
      */
@@ -197,17 +189,16 @@ public class LuaUtils {
                 // Collect into list and return it
                 .collect(Collectors.toList());
     }
-    
+
     /**
      * Generates a function description for the given Method. Example: If the method
      * getFunctionDescription we're used, it would return getFunctionDescription(Method)
-     * 
-     * @param method
-     *            The method we want a description of
+     *
+     * @param method The method we want a description of
      * @return A pretty representation of the function
      * @see {@link Console}
      */
-    @SuppressWarnings ("rawtypes")
+    @SuppressWarnings("rawtypes")
     private static String getFunctionDescription(Method method) {
         // Method + ( = foo(
         String currentString = method.getName() + "(";
@@ -223,7 +214,7 @@ public class LuaUtils {
         currentString += ")";
         return currentString;
     }
-    
+
     /**
      * Makes sure all classes annotated with @AvailableInLua are loaded into the global variables in
      * lua.
@@ -232,60 +223,53 @@ public class LuaUtils {
         LuaUtils.AVAILABLE_IN_LUA.forEach(o -> LuaUtils.GLOBALS
                 .load(o.getClass().getSimpleName() + // Name of global variable
                         " = luajava.bindClass('" + o.getClass().getName() + "')") // Class
-                                                                                  // name
+                // name
                 .call());
     }
-    
+
     /**
      * Run a lua function using one argument.
      *
-     * @param functionname
-     *            The name of the lua function without brackets.
+     * @param functionname The name of the lua function without brackets.
      * @return A LuaValue of what is returned.
      */
     public static LuaValue runFuction(final String functionname) {
         final LuaValue func = LuaUtils.GLOBALS.get(functionname);
         return func.call();
     }
-    
+
     /**
      * Run a lua function using one argument.
      *
-     * @param functionname
-     *            The name of the lua function without brackets.
-     * @param arg1
-     *            The argument. This can be anything.
+     * @param functionname The name of the lua function without brackets.
+     * @param arg1         The argument. This can be anything.
      * @return A LuaValue of what is returned.
      */
     public static LuaValue runFunction(final String functionname, final Object arg1) {
         final LuaValue func = LuaUtils.GLOBALS.get(functionname);
         return func.call(CoerceJavaToLua.coerce(arg1));
     }
-    
+
     /**
      * Run a lua function using one argument.
      *
-     * @param functionname
-     *            The name of the lua function without brackets.
-     * @param arg1
-     *            The argument. This can be anything.
-     * @param arg2
-     *            The argument. This can be anything.
+     * @param functionname The name of the lua function without brackets.
+     * @param arg1         The argument. This can be anything.
+     * @param arg2         The argument. This can be anything.
      * @return A LuaValue of what is returned. For example: ret = runFunction("add", 2, 3); int i =
-     *         ret.checkInt(); checkInt() returns the int LuaValue represented IF it was an int. If
-     *         you're unsure whether something is an int of a double, you can use the isDouble() and
-     *         isInt() functions.
+     * ret.checkInt(); checkInt() returns the int LuaValue represented IF it was an int. If
+     * you're unsure whether something is an int of a double, you can use the isDouble() and
+     * isInt() functions.
      */
     public static LuaValue runFunction(final String functionname, final Object arg1, final Object arg2) {
         final LuaValue func = LuaUtils.GLOBALS.get(functionname);
         return func.call(CoerceJavaToLua.coerce(arg1), CoerceJavaToLua.coerce(arg2));
     }
-    
+
     /**
      * Runs a lua script with the given path
      *
-     * @param path
-     *            The path that leads to the lua script.
+     * @param path The path that leads to the lua script.
      */
     public static void runScriptPath(final String path) {
         LuaUtils.GLOBALS.loadfile(path).call();
@@ -294,22 +278,18 @@ public class LuaUtils {
     /**
      * Runs a lua script
      *
-     * @param command
-     *            The script to run
+     * @param command The script to run
      */
     public static void runScript(final String command) {
         LuaUtils.GLOBALS.load(command).call();
     }
-    
+
     /**
      * Run a function from a specific script.
      *
-     * @param script
-     *            The path to the script.
-     * @param functionname
-     *            The name of the function without brackets.
-     * @param callingObject
-     *            The Object you're passing.
+     * @param script        The path to the script.
+     * @param functionname  The name of the function without brackets.
+     * @param callingObject The Object you're passing.
      */
     public static void runScriptFunction(final String script,
                                          final String functionname,

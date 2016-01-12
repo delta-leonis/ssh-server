@@ -19,79 +19,81 @@ import java.nio.ByteOrder;
  * IPaddress and port
  *
  * @author Thomas Hakkers
- *         
  */
 public class LegacyUDPSender implements SenderInterface {
-    
+
     // respective logger
     private static final Logger LOG = Logger.getLogger();
-                                    
-    /** IP address to send the packets to */
-    private InetAddress         ipAddress;
-    /** port that should be used for communication */
-    private int                 port;
-    /** Socket that maintains the open connection */
-    private DatagramSocket      socket;
-                                
+
+    /**
+     * IP address to send the packets to
+     */
+    private InetAddress ipAddress;
+    /**
+     * port that should be used for communication
+     */
+    private int port;
+    /**
+     * Socket that maintains the open connection
+     */
+    private DatagramSocket socket;
+
     /**
      * Creates a {@link DatagramSocket} to be used for {@link #send(Message)} method
-     * 
-     * @param ip
-     *            ip to send to
-     * @param port
-     *            port to send to
+     *
+     * @param ip   ip to send to
+     * @param port port to send to
      */
     public LegacyUDPSender(final String ip, final int port) {
         try {
             // set fields
             this.port = port;
             this.ipAddress = InetAddress.getByName(ip);
-            
+
             // create socket
             this.socket = new DatagramSocket();
-            
-        }
-        catch (final Exception exception) {
+
+        } catch (final Exception exception) {
             LegacyUDPSender.LOG.exception(exception);
             LegacyUDPSender.LOG.warning("Could not create DatagramSocket.");
         }
     }
-    
+
     /**
      * {@inheritDoc}<br />
-     * Creates a {@link DatagramPacket} from given {@link Message}, 
+     * Creates a {@link DatagramPacket} from given {@link Message},
      * converts it into the legacy protocol and sends it out.
      */
     @Override
     public boolean send(final Message genericMessage) {
         try {
-            if(!(genericMessage instanceof RadioProtocolWrapper)){
+            if (!(genericMessage instanceof RadioProtocolWrapper)) {
                 LegacyUDPSender.LOG.warning("Incoming message not of type RadioProtocolWrapper");
                 return false;
             }
             // Get the command we're converting
-            RadioProtocolCommand command = ((RadioProtocolWrapper)genericMessage).getCommand(1);
+            RadioProtocolCommand command = ((RadioProtocolWrapper) genericMessage).getCommand(1);
             // Save these variables for further use
             float x = command.getVelocityX();
             float y = command.getVelocityY();
             // Convert the values according to old protocol
             int messageType = 1;
             int robotID = command.getRobotId();
-            int direction = (int)Math.toDegrees(Math.atan(y/x));
-            
-            if(x < 0)
+            int direction = (int) Math.toDegrees(Math.atan(y / x));
+
+            if (x < 0)
                 direction += 180;
 
             direction *= -1;
             direction += 90;
-            
-            int directionSpeed = (int)Math.sqrt(x*x + y*y);
-            int rotationSpeed = (int)command.getVelocityR();
-            int shootKicker = (int)((command.getFlatKick() - command.getChipKick()) * 100);
+
+            int directionSpeed = (int) Math.sqrt(x * x + y * y);
+            int rotationSpeed = (int) command.getVelocityR();
+            int shootKicker = (int) ((command.getFlatKick() - command.getChipKick()) * 100);
             boolean dribble = Math.abs(command.getDribblerSpin()) > 0.0f;
-            
+
             // Put the values into a datagrampacket
-            byte[] dataPacket = LegacyUDPSender.createByteArray(messageType, robotID, direction, directionSpeed, rotationSpeed, (int)(shootKicker*0.7), dribble);
+            byte[] dataPacket = LegacyUDPSender.createByteArray(messageType, robotID, direction, directionSpeed, rotationSpeed, (int) (shootKicker * 0.7), dribble);
             final DatagramPacket udpPacket = new DatagramPacket(dataPacket,
                     dataPacket.length,
                     this.ipAddress,
@@ -100,15 +102,14 @@ public class LegacyUDPSender implements SenderInterface {
             this.socket.send(udpPacket);
             LegacyUDPSender.LOG.info("Message has been sent over UDP using the legacy protocol.");
             return true;
-            
-        }
-        catch (final IOException exception) {
+
+        } catch (final IOException exception) {
             LegacyUDPSender.LOG.exception(exception);
             LegacyUDPSender.LOG.warning("Could not send packet to %s:%d.", this.ipAddress, this.port);
             return false;
         }
     }
-    
+
     /**
      * {@inheritDoc} Closes the socket used for sending UDP packets
      */
@@ -116,25 +117,24 @@ public class LegacyUDPSender implements SenderInterface {
     public boolean unregister() {
         if (this.socket != null) {
             this.socket.close();
-            
+
             return this.socket.isClosed();
-        }
-        else
+        } else
             return true;
     }
-    
+
     /**
-     * @param messageType, MessageType 0 => robot instruction
-     * @param robotID The ID of the robot we want to send to.
-     * @param direction The direction we want our robot to move towards.
+     * @param messageType,   MessageType 0 => robot instruction
+     * @param robotID        The ID of the robot we want to send to.
+     * @param direction      The direction we want our robot to move towards.
      * @param directionSpeed The speed we want our robot to move at in mm/s
-     * @param rotationSpeed The speed we want our robot to turn at in mm/s
-     * @param kicker -1 to -100 for chipping, 1 to 100 for kicking.
-     * @param dribble true to start the dribbler, false otherwise
+     * @param rotationSpeed  The speed we want our robot to turn at in mm/s
+     * @param kicker         -1 to -100 for chipping, 1 to 100 for kicking.
+     * @param dribble        true to start the dribbler, false otherwise
      * @return bytearray to send to the Basestation
      */
     private static byte[] createByteArray(int messageType, int robotID, int direction, int directionSpeed,
-            int rotationSpeed, int shootKicker, boolean dribble) {
+                                          int rotationSpeed, int shootKicker, boolean dribble) {
         ByteBuffer dataBuffer = ByteBuffer.allocate(15);
         dataBuffer.order(ByteOrder.LITTLE_ENDIAN);
         dataBuffer.put((byte) messageType);
@@ -154,7 +154,7 @@ public class LegacyUDPSender implements SenderInterface {
 
     /**
      * Calculates checksum and appends it to the {@link ByteBuffer}
-     * 
+     *
      * @param bytebuffer array that will be modified
      */
     private static void addChecksum(ByteBuffer bytebuffer) {
@@ -165,5 +165,5 @@ public class LegacyUDPSender implements SenderInterface {
         checksum &= 0xff;
         bytebuffer.put((byte) checksum);
     }
-    
+
 }

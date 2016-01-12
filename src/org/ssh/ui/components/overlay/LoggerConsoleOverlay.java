@@ -11,11 +11,11 @@ import org.ssh.ui.components.Enroller;
 /**
  * Class containing the wrapper and {@link Enroller} for the {@link LoggerConsole}.
  *
- * @see LoggerConsole
  * @author Jeroen de Jong
  * @date 12/23/2015
+ * @see LoggerConsole
  */
-public class LoggerConsoleOverlay  extends UIComponent<GridPane> {
+public class LoggerConsoleOverlay extends UIComponent<GridPane> {
 
     @FXML
     private Pane loggingconsoleextendedWrapper;

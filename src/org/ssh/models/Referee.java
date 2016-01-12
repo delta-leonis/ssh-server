@@ -13,14 +13,13 @@ import java.util.List;
  * respective {@link Team teams}.
  *
  * @author Jeroen de Jong
- *         
  */
 public class Referee extends AbstractModel {
 
     /**
      * History of all the {@link Stage stages}, last index is last received {@link Stage stage}
      */
-    private List<Stage>          stageHistory;
+    private List<Stage> stageHistory;
     /**
      * History of all the {@link RefereeCommand commands}, last index is last received
      * {@link RefereeCommand command}
@@ -29,16 +28,16 @@ public class Referee extends AbstractModel {
     /**
      * Timestamp in ms of the last parsed {@link RefereeOuterClass.Referee referee message}
      */
-    private Long                       lastPacketTimestamp;
+    private Long lastPacketTimestamp;
     /**
      * Time until the current {@link Stage} is finished
      */
-    private Integer                    stageTimeLeft;
+    private Integer stageTimeLeft;
     /**
      * The amount of {@link RefereeCommand commands} we've currently received.
      */
-    private Integer                    commandCounter;
-                                       
+    private Integer commandCounter;
+
     /**
      * Instantiates a new Referee
      */
@@ -51,21 +50,21 @@ public class Referee extends AbstractModel {
         stageHistory = new ArrayList<Stage>();
         commandHistory = new ArrayList<RefereeCommand>();
     }
-    
+
     /**
      * @return return number of commands
      */
     public int getCommandCounter() {
         return this.commandCounter;
     }
-    
+
     /**
      * @return whole history of {@link RefereeCommand commands}
      */
     public List<RefereeCommand> getCommands() {
         return this.commandHistory;
     }
-    
+
     /**
      * @return last received {@link Stage stage}, may return null
      */
@@ -76,7 +75,7 @@ public class Referee extends AbstractModel {
         }
         return this.stageHistory.get(this.stageHistory.size() - 1);
     }
-    
+
     /**
      * @return last received {@link RefereeCommand command}, may return null
      */
@@ -87,50 +86,49 @@ public class Referee extends AbstractModel {
         }
         return this.commandHistory.get(this.commandHistory.size() - 1);
     }
-    
+
     /**
      * @return timestamp of last received packet in ms
      */
     public long getLastPacketTimestamp() {
         return this.lastPacketTimestamp;
     }
-    
+
     /**
      * @return whole history of {@link Stage stages}
      */
     public List<Stage> getStages() {
         return this.stageHistory;
     }
-    
+
     /**
      * @return time left in current stage
      */
     public int getStageTimeLeft() {
         return this.stageTimeLeft;
     }
-    
+
     /**
      * sets the number of commands
-     * 
-     * @param {@link
-     *            #commandCounter}
+     *
+     * @param {@link #commandCounter}
      */
     public void setCommandCounter(final int commandCounter) {
         this.commandCounter = commandCounter;
     }
-    
+
     /**
      * sets timestamp of last received packet in ms
-     * 
+     *
      * @param lastPacketTimestamp
      */
     public void setLastPacketTimestamp(final long lastPacketTimestamp) {
         this.lastPacketTimestamp = lastPacketTimestamp;
     }
-    
+
     /**
      * sets time left in current stage
-     * 
+     *
      * @param stageTimeLeft
      */
     public void setStageTimeLeft(final int stageTimeLeft) {

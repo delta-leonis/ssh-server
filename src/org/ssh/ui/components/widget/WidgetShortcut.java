@@ -19,7 +19,7 @@ public class WidgetShortcut extends UIComponent {
     public WidgetShortcut(String widgetName, AbstractWidget.WidgetCategory category) {
         super("shortcut " + widgetName, "widget/widgetshortcut.fxml");
         widgetname.setText(widgetName);
-        switch(category) {
+        switch (category) {
             case SETTINGS:
 //                root.getStyleClass().add("widget_setting");
                 break;

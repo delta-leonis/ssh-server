@@ -50,10 +50,8 @@ public class WidgetResizer extends UIComponent<GridPane> {
      * Constructor for {@link WidgetResizer}. Handles the needed initialization and binds
      * the width and height properties so that the root automatically resizes.
      *
-     * @param draggable
-     *              The {@link Draggable} that has the resizable content.
-     * @param content
-     *              The widget that where the resizing is about.
+     * @param draggable The {@link Draggable} that has the resizable content.
+     * @param content   The widget that where the resizing is about.
      */
     public WidgetResizer(Draggable draggable, Pane content) {
         super("widgetresizer", "widget/widgetresizer.fxml");
@@ -82,8 +80,8 @@ public class WidgetResizer extends UIComponent<GridPane> {
 
     /**
      * Function for handling the dragging, is sets the new size of the {@link #content}.
-     * @param event
-     *              The {@link MouseEvent} where the coordinates are retrieved from.
+     *
+     * @param event The {@link MouseEvent} where the coordinates are retrieved from.
      */
     @FXML
     private void drag(MouseEvent event) {
@@ -108,8 +106,8 @@ public class WidgetResizer extends UIComponent<GridPane> {
 
     /**
      * Sets the height of the {@link #content} with a minimum of 30.
-     * @param height
-     *              The height of the {@link #content} should get.
+     *
+     * @param height The height of the {@link #content} should get.
      */
     private void setWidgetHeight(double height) {
         // Check for small values and set it 30 if small
@@ -123,8 +121,8 @@ public class WidgetResizer extends UIComponent<GridPane> {
 
     /**
      * Sets the width of the {@link #content} with a minimum of 30.
-     * @param width
-     *              The width of the {@link #content} should get.
+     *
+     * @param width The width of the {@link #content} should get.
      */
     private void setWidgetWidth(double width) {
         // Check for small values and set it 30 if small

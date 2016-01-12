@@ -5,16 +5,15 @@ import org.ssh.field3d.core.game.Game;
 /**
  * Detection game object class. This class is used for every game object in the 3d field that needs detection data.
  *
- * @see VisionGameObject
  * @author Mark Lefering
+ * @see VisionGameObject
  */
 public abstract class DetectionGameObject extends VisionGameObject {
 
     /**
      * Constructor. This instantiates a new DetectionGameObject.
      *
-     * @param game
-     *              The {@link Game} of the {@link VisionGameObject}
+     * @param game The {@link Game} of the {@link VisionGameObject}
      */
     public DetectionGameObject(Game game) {
 

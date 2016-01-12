@@ -21,56 +21,63 @@ import java.io.IOException;
  * disabled so the texture is rendered on the inside to.
  *
  * @author marklef2
- *         
  * @see GameObject
  */
 
 public class SkyboxGO extends GameObject {
-    
-    /** The logger */
-    private static final Logger LOG                 = Logger.getLogger("SkyboxGO");
-                                                    
-    /** The texture file for the skybox */
+
+    /**
+     * The logger
+     */
+    private static final Logger LOG = Logger.getLogger("SkyboxGO");
+
+    /**
+     * The texture file for the skybox
+     */
     private static final String SKYBOX_TEXTURE_FILE = "./assets/textures/skybox.jpg";
-                                                    
-    /** The sphere size of the skybox */
-    private static final double SPHERE_SIZE         = 300000.0;
-                                                    
-    /** The model. */
-    private final Sphere        model;
-                                
-    /** The skybox material. */
+
+    /**
+     * The sphere size of the skybox
+     */
+    private static final double SPHERE_SIZE = 300000.0;
+
+    /**
+     * The model.
+     */
+    private final Sphere model;
+
+    /**
+     * The skybox material.
+     */
     private final PhongMaterial skyMaterial;
-                                
+
     /**
      * Constructor. This instantiates a new SkyboxGO object.
      *
-     * @param game
-     *            The {@link Game} of the {@link GameObject}.
+     * @param game The {@link Game} of the {@link GameObject}.
      */
     public SkyboxGO(final Game game) {
-        
+
         // Initialize super class
         super(game);
-        
+
         // Define file input stream as null
         FileInputStream fs = null;
-        
+
         // Create new sphere
         this.model = new Sphere(SPHERE_SIZE);
         // Create new material
         this.skyMaterial = new PhongMaterial(Color.WHITE);
-        
+
         // Try to load texture
         try {
-            
+
             // Open texture file
             fs = new FileInputStream("./assets/textures/skybox.jpg");
             // Setting diffuse color map
             this.skyMaterial.setDiffuseMap(new Image(fs));
-        }
-        catch (final FileNotFoundException fileNotFoundException) {
-            
+        } catch (final FileNotFoundException fileNotFoundException) {
+
             // Log error
             LOG.info("Could not load: " + SKYBOX_TEXTURE_FILE);
             LOG.exception(fileNotFoundException);
@@ -80,33 +87,32 @@ public class SkyboxGO extends GameObject {
         this.model.setMaterial(this.skyMaterial);
         // Setting face culling to none
         this.model.setCullFace(CullFace.NONE);
-        
+
         // Rotate 180 degrees around x-axis
         this.model.setRotationAxis(Rotate.X_AXIS);
         this.model.setRotate(180);
-        
+
         // Close file
         try {
             if (fs != null)
                 fs.close();
-        }
-        catch (IOException ioException) {
-            
+        } catch (IOException ioException) {
+
             // Log error
             LOG.exception(ioException);
         }
     }
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void onInitialize() {
-        
+
         // Execute on UI thread; add models to world group
         Platform.runLater(() -> this.getGame().getWorldGroup().getChildren().add(this.model));
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -114,16 +120,16 @@ public class SkyboxGO extends GameObject {
     public void onUpdate(final long timeDivNano) {
         // no update needed
     }
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void onDestroy() {
-        
+
         // Check if model is in the world group
         if (this.getGame().getWorldGroup().getChildren().contains(this.model)) {
-            
+
             // Remove from world
             this.getGame().getWorldGroup().getChildren().remove(this.model);
         }

@@ -4,29 +4,33 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<GridPane id="baseBottom" fx:id="baseBottom" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" GridPane.columnIndex="0" GridPane.rowIndex="2">
+<GridPane id="baseBottom" fx:id="baseBottom" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+          GridPane.columnIndex="0" GridPane.rowIndex="2">
     <columnConstraints>
-        <ColumnConstraints fillWidth="true" />
-        <ColumnConstraints fillWidth="true" />
-        <ColumnConstraints fillWidth="true" />
+        <ColumnConstraints fillWidth="true"/>
+        <ColumnConstraints fillWidth="true"/>
+        <ColumnConstraints fillWidth="true"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints percentHeight="100.0" />
+        <RowConstraints percentHeight="100.0"/>
     </rowConstraints>
 
     <children>
-        <Button id="enrollButton" maxHeight="Infinity" GridPane.columnIndex="0" GridPane.rowIndex="0" onAction="#enrollToolbox">
+        <Button id="enrollButton" maxHeight="Infinity" GridPane.columnIndex="0" GridPane.rowIndex="0"
+                onAction="#enrollToolbox">
             <graphic>
                 <ImageView fx:id="enrollToolboxImage">
-                        <Image url="@../../icon/enrollup32.png" />
+                    <Image url="@../../icon/enrollup32.png"/>
                 </ImageView>
             </graphic>
         </Button>
-        <Pane fx:id="timesliderWrapper" id="timesliderWrapper" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-        <Button id="secondscreenButton" maxHeight="Infinity" GridPane.columnIndex="2" GridPane.rowIndex="0" opacity="0.5" onAction="#toggleSecondScreen">
+        <Pane fx:id="timesliderWrapper" id="timesliderWrapper" maxHeight="Infinity" maxWidth="Infinity"
+              GridPane.hgrow="ALWAYS" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+        <Button id="secondscreenButton" maxHeight="Infinity" GridPane.columnIndex="2" GridPane.rowIndex="0"
+                opacity="0.5" onAction="#toggleSecondScreen">
             <graphic>
                 <ImageView>
-                        <Image url="@../../icon/secondscreen32.png" />
+                    <Image url="@../../icon/secondscreen32.png"/>
                 </ImageView>
             </graphic>
         </Button>

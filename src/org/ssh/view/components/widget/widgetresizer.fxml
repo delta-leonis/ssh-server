@@ -3,23 +3,24 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<GridPane fx:id="rootPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" pickOnBounds="false" minHeight="0.0">
-   <columnConstraints>
-      <ColumnConstraints fillWidth="true" hgrow="ALWAYS"/>
-      <ColumnConstraints minWidth="24" prefWidth="24" maxWidth="24" />
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints fillHeight="true" vgrow="ALWAYS"/>
-      <RowConstraints minHeight="24" prefHeight="24" maxHeight="24" />
-   </rowConstraints>
-   <children>
-      <Pane fx:id="resizer" GridPane.columnIndex="1" GridPane.rowIndex="1"
-            onMouseDragged="#drag" onMouseReleased="#resetStartPoints">
-         <ImageView>
-            <image>
-               <Image url="@../../icon/expand24.png" />
-            </image>
-         </ImageView>
-      </Pane>
-   </children>
+<GridPane fx:id="rootPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" pickOnBounds="false"
+          minHeight="0.0">
+    <columnConstraints>
+        <ColumnConstraints fillWidth="true" hgrow="ALWAYS"/>
+        <ColumnConstraints minWidth="24" prefWidth="24" maxWidth="24"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints fillHeight="true" vgrow="ALWAYS"/>
+        <RowConstraints minHeight="24" prefHeight="24" maxHeight="24"/>
+    </rowConstraints>
+    <children>
+        <Pane fx:id="resizer" GridPane.columnIndex="1" GridPane.rowIndex="1"
+              onMouseDragged="#drag" onMouseReleased="#resetStartPoints">
+            <ImageView>
+                <image>
+                    <Image url="@../../icon/expand24.png"/>
+                </image>
+            </ImageView>
+        </Pane>
+    </children>
 </GridPane>

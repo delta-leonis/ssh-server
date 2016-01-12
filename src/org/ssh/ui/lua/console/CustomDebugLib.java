@@ -8,8 +8,9 @@ import org.luaj.vm2.lib.DebugLib;
 
 /**
  * A custom class that extends {@link DebugLib} to be able to interrupt threads in lua
+ *
  * @author Thomas Hakkers
- * Credits go to this guy: http://stackoverflow.com/questions/17496868/lua-java-luaj-handling-or-interrupting-infinite-loops-and-threads
+ *         Credits go to this guy: http://stackoverflow.com/questions/17496868/lua-java-luaj-handling-or-interrupting-infinite-loops-and-threads
  */
 public class CustomDebugLib extends DebugLib {
     /**
@@ -34,31 +35,33 @@ public class CustomDebugLib extends DebugLib {
         }
         super.onInstruction(pc, v, top);
     }
-    
+
     /**
      * Overriding this to set running to true.
      * {@see {@link CustomDebugLib#running}}
      */
     @Override
-    public void onCall(LuaClosure c, Varargs varargs, LuaValue[] stack){
-        super.onCall(c,varargs, stack);
+    public void onCall(LuaClosure c, Varargs varargs, LuaValue[] stack) {
+        super.onCall(c, varargs, stack);
         this.running = true;
     }
+
     /**
      * Overriding this to set running to true.
      * {@see {@link CustomDebugLib#running}}
      */
     @Override
-    public void onCall(LuaFunction f){
+    public void onCall(LuaFunction f) {
         super.onCall(f);
         this.running = true;
     }
+
     /**
      * Overriding this to set running to false.
      * {@see {@link CustomDebugLib#running}}
      */
     @Override
-    public void onReturn(){
+    public void onReturn() {
         super.onReturn();
         this.running = false;
     }
@@ -66,8 +69,8 @@ public class CustomDebugLib extends DebugLib {
     /**
      * Interrupts the current thread
      */
-    public void setInterrupt(boolean interrupt){
-        if(running && interrupt)
+    public void setInterrupt(boolean interrupt) {
+        if (running && interrupt)
             interrupted = true;
         else
             interrupted = false;
@@ -76,8 +79,8 @@ public class CustomDebugLib extends DebugLib {
     /**
      * The exception that gets thrown when a lua thread is interrupted
      */
-    @SuppressWarnings ("serial")
+    @SuppressWarnings("serial")
     public static class ScriptInterruptException extends RuntimeException {
-        
+
     }
 }

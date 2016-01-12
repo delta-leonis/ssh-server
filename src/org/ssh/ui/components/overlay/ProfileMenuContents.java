@@ -20,16 +20,20 @@ import java.util.stream.Stream;
  */
 public class ProfileMenuContents extends UIComponent<GridPane> {
 
-    /** Settings containing information about profiles/workspaces */
+    /**
+     * Settings containing information about profiles/workspaces
+     */
     private Settings settings;
 
-    /** the Panes containing individual buttons */
+    /**
+     * the Panes containing individual buttons
+     */
     @FXML
     private VBox profiles, workspaces;
 
     @FXML
     private ScrollPane workspacesPane,
-                       profilesPane;
+            profilesPane;
 
     public ProfileMenuContents() {
         super("profilemenucontents", "topsection/profilemenucontents.fxml");
@@ -41,13 +45,13 @@ public class ProfileMenuContents extends UIComponent<GridPane> {
         buildMenu();
     }
 
-    private void buildMenu(){
+    private void buildMenu() {
         // if the settings aren't set yet, we should try to get them
-        if(settings == null)
+        if (settings == null)
             Models.<Settings>get("settings").ifPresent(set -> this.settings = set);
 
         // still not found? fuck it
-        if(settings == null)
+        if (settings == null)
             return;
 
         //clear previous profiles and workspaces
@@ -66,10 +70,10 @@ public class ProfileMenuContents extends UIComponent<GridPane> {
                     //when the button gets pressed
                     profilesButton.onMouseClickedProperty().setValue(event -> {
                         //retrieve the text from the clicked button
-                        String buttonText = ((Button)event.getSource()).getText();
+                        String buttonText = ((Button) event.getSource()).getText();
 
                         //if the value changed
-                        if(!(settings.getCurrentWorkspace().equals(buttonText))) {
+                        if (!(settings.getCurrentWorkspace().equals(buttonText))) {
 
                             //update the current profile
                             settings.update("currentProfile", buttonText);
@@ -103,15 +107,15 @@ public class ProfileMenuContents extends UIComponent<GridPane> {
                                     //create the button
                                     Button workspaceButton = new Button(workspace.getName());
                                     //if it is the current workspace is equal to the selected workspace
-                                    if(workspace.getName().equals(settings.getCurrentWorkspace()))
+                                    if (workspace.getName().equals(settings.getCurrentWorkspace()))
                                         //it should receive a special style
                                         workspaceButton.getStyleClass().add("selected");
 
                                     //when this button is clicked
                                     workspaceButton.onMouseClickedProperty().setValue(event -> {
-                                        String buttonText = ((Button)event.getSource()).getText();
+                                        String buttonText = ((Button) event.getSource()).getText();
                                         // if it is not the same workspace as before
-                                        if(!(settings.getCurrentWorkspace().equals(buttonText))){
+                                        if (!(settings.getCurrentWorkspace().equals(buttonText))) {
                                             // update the current workspace
                                             settings.update("currentWorkspace", buttonText);
                                             //rebuild to recolor menuentries

@@ -18,22 +18,21 @@ public enum BaudRate {
     BAUD_4800(4800),
     BAUD_2400(2400),
     BAUD_1200(1200);
-    
+
     /**
      * Intvalue linked to this baudvalue
      */
     private int rate;
-    
+
     /**
      * Construct a enum with a given rate
-     * 
-     * @param rate
-     *            rate linked to baudname
+     *
+     * @param rate rate linked to baudname
      */
     BaudRate(int rate) {
         this.rate = rate;
     }
-    
+
     /**
      * @return the value linked to the BaudRate
      */

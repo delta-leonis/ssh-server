@@ -35,7 +35,6 @@ public class WidgetWindow extends UIController<FlowPane> {
 
     /**
      * Instantiates a new WidgetWindow.
-     *
      */
     private WidgetWindow() {
         super("widgetwindow", "widgetwindow.fxml", 800, 600);
@@ -53,6 +52,7 @@ public class WidgetWindow extends UIController<FlowPane> {
 
     /**
      * Function to get the instance of the singleton {@link WidgetWindow}.
+     *
      * @return The singleton instance of {@link WidgetWindow}
      */
     public static WidgetWindow getInstance() {
@@ -74,8 +74,8 @@ public class WidgetWindow extends UIController<FlowPane> {
         // Find the biggest screen
         BinaryOperator<Screen> reduceBiggestScreen = (biggest,
                                                       iterator) -> (iterator.getBounds().getWidth()
-                        * iterator.getBounds().getHeight() > biggest.getBounds().getWidth()
-                                * biggest.getBounds().getHeight()) ? iterator : biggest;
+                * iterator.getBounds().getHeight() > biggest.getBounds().getWidth()
+                * biggest.getBounds().getHeight()) ? iterator : biggest;
         // The second screen is the should be the biggest without counting the one already used for the main window
         Screen secondscreen = Screen.getScreens().stream().filter(screen -> !screen.equals(applicationscreen))
                 .reduce(Screen.getPrimary(), reduceBiggestScreen);

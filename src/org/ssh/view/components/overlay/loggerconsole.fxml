@@ -3,16 +3,16 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.*?>
 <GridPane id="loggerconsole" fx:id="rootPane" xmlns="http://javafx.com/javafx/8"
-		  xmlns:fx="http://javafx.com/fxml/1" pickOnBounds="false">
-	<columnConstraints>
-		<ColumnConstraints percentWidth="100.0" />
-	</columnConstraints>
-	<rowConstraints>
-		<RowConstraints percentHeight="100.0" />
-	</rowConstraints>
-	<children>
-	<TabPane fx:id="tabPane" maxHeight="Infinity" maxWidth="Infinity"
-		GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0"
-		GridPane.vgrow="ALWAYS" />
-	</children>
+          xmlns:fx="http://javafx.com/fxml/1" pickOnBounds="false">
+    <columnConstraints>
+        <ColumnConstraints percentWidth="100.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="100.0"/>
+    </rowConstraints>
+    <children>
+        <TabPane fx:id="tabPane" maxHeight="Infinity" maxWidth="Infinity"
+                 GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0"
+                 GridPane.vgrow="ALWAYS"/>
+    </children>
 </GridPane>

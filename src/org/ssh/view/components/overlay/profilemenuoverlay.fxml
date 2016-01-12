@@ -4,21 +4,26 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<GridPane id="overlay" fx:id="overlay" pickOnBounds="false" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane id="overlay" fx:id="overlay" pickOnBounds="false" xmlns="http://javafx.com/javafx/8"
+          xmlns:fx="http://javafx.com/fxml/1">
     <columnConstraints>
-        <ColumnConstraints percentWidth="20.0" />
-        <ColumnConstraints percentWidth="80.0" />
+        <ColumnConstraints percentWidth="20.0"/>
+        <ColumnConstraints percentWidth="80.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints percentHeight="6.0" />
-        <RowConstraints percentHeight="30.0" />
-        <RowConstraints percentHeight="64.0" />
+        <RowConstraints percentHeight="6.0"/>
+        <RowConstraints percentHeight="30.0"/>
+        <RowConstraints percentHeight="64.0"/>
     </rowConstraints>
     <children>
-        <Button fx:id="profileButton" id="profileButton" maxHeight="Infinity" maxWidth="Infinity" text="Current User" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#enrollProfilemenu">
-            <graphic><ImageView>
-                <Image url="@../../icon/user24.png" />
-            </ImageView></graphic>
+        <Button fx:id="profileButton" id="profileButton" maxHeight="Infinity" maxWidth="Infinity" text="Current User"
+                GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS"
+                onAction="#enrollProfilemenu">
+            <graphic>
+                <ImageView>
+                    <Image url="@../../icon/user24.png"/>
+                </ImageView>
+            </graphic>
         </Button>
         <Pane fx:id="profilemenuWrapper" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
     </children>

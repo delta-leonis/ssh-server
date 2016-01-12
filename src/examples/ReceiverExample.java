@@ -14,7 +14,7 @@ import org.ssh.pipelines.packets.GeometryPacket;
 import org.ssh.pipelines.packets.WrapperPacket;
 
 public class ReceiverExample {
-    
+
     public ReceiverExample() {
         // make models available
         Models.start();
@@ -22,12 +22,12 @@ public class ReceiverExample {
         Services.start();
         //make network available
         Network.start();
-        
+
         //Create all pipa's
         new WrapperPipeline("wrapper pipeline");
         new DetectionPipeline("detection pipeline");
         new GeometryPipeline("geometry pipeline");
-        
+
         // create splitter (from wrapper to (detection|geometry) )
         new WrapperConsumer();
         // create consumer to update Field model
@@ -36,12 +36,12 @@ public class ReceiverExample {
         // verbose print both packets
         new ProtoConsumer("spuger", GeometryPacket.class).attachToCompatiblePipelines();
         new ProtoConsumer("spuger", DetectionPacket.class).attachToCompatiblePipelines();
-        
+
         //listen for wrapperpackets
         Network.listenFor(WrapperPacket.class);
-        
+
     }
-    
+
     public static void main(final String[] args) {
         new ReceiverExample();
     }

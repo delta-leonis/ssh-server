@@ -27,13 +27,12 @@ import java.util.stream.IntStream;
  * The Class Main.
  */
 public class Main extends Application {
-    private  static final Logger LOG = Logger.getLogger("org.ssh");
+    private static final Logger LOG = Logger.getLogger("org.ssh");
 
     /**
      * The main method.
      *
-     * @param arg
-     *            Command line arguments
+     * @param arg Command line arguments
      */
     public static void main(final String[] arg) {
         /** java fx start **/
@@ -54,10 +53,10 @@ public class Main extends Application {
         Field field = Models.create(Field.class);
 
         // Create some robots
-        IntStream.range(0, 8).forEach(id ->{
-                    Models.create(Robot.class, id, Allegiance.OPPONENT);
-                    Models.create(Robot.class, id, Allegiance.ALLY);
-                });
+        IntStream.range(0, 8).forEach(id -> {
+            Models.create(Robot.class, id, Allegiance.OPPONENT);
+            Models.create(Robot.class, id, Allegiance.ALLY);
+        });
 
         new WrapperPipeline("Wrappahrs");
         // make a pipeline
@@ -75,11 +74,14 @@ public class Main extends Application {
         Network.listenFor(WrapperPacket.class);
     }
 
-    /** Test method */
+    /**
+     * Test method
+     */
     private static void createWidgets() {
-        for(int i = 0; i < 25; i++)
-        UI.addWidget(new TestWidget("widget " + i));
+        for (int i = 0; i < 25; i++)
+            UI.addWidget(new TestWidget("widget " + i));
     }
+
     /*
      * (non-Javadoc)
      *

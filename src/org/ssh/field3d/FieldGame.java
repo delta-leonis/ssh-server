@@ -150,6 +150,7 @@ public class FieldGame extends Game {
         Platform.runLater(() ->
                 this.internalInitialize());
     }
+
     /**
      * {@inheritDoc}
      */
@@ -441,6 +442,7 @@ public class FieldGame extends Game {
 
     /**
      * Add to world if absent method. Adds a {@link Node} to the world group if absent.
+     *
      * @param node The {@link Node} to add.
      */
     private void addToWorldIfAbsent(Node node) {

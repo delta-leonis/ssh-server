@@ -17,25 +17,29 @@ import java.util.stream.Stream;
 
 /**
  * The Class AbstractPipeline.
- *
+ * <p>
  * A Pipeline processes data using {@link AbstractProducer}, {@link AbstractCoupler}, and {@link AbstractConsumer}.
  *
- * @param <P>
- *            A PipelinePacket this Pipeline can work with.
- *
+ * @param <P> A PipelinePacket this Pipeline can work with.
  * @author Rimon Oz
  */
 public abstract class AbstractPipeline<P extends AbstractPipelinePacket<?>> extends AbstractManageable {
 
-    /** The Consumers registered to this Pipeline. */
-    private final List<AbstractConsumer<P>>               consumers;
+    /**
+     * The Consumers registered to this Pipeline.
+     */
+    private final List<AbstractConsumer<P>> consumers;
 
-    /** The queue of PipelinePackets. */
-    private final Queue<P>                        queue       = new ConcurrentLinkedQueue<P>();
+    /**
+     * The queue of PipelinePackets.
+     */
+    private final Queue<P> queue = new ConcurrentLinkedQueue<P>();
 
-    /** The reflected TypeToken (o¬‿¬o ). */
-    @SuppressWarnings ("serial")
-    public TypeToken<P>                           genericType = new TypeToken<P>(this.getClass()) {
+    /**
+     * The reflected TypeToken (o¬‿¬o ).
+     */
+    @SuppressWarnings("serial")
+    public TypeToken<P> genericType = new TypeToken<P>(this.getClass()) {
     };
 
     /**
@@ -46,14 +50,13 @@ public abstract class AbstractPipeline<P extends AbstractPipelinePacket<?>> exte
     /**
      * Instantiates a new Pipeline.
      *
-     * @param name
-     *            The name of the new Pipeline.
+     * @param name The name of the new Pipeline.
      */
     public AbstractPipeline(final String name) {
         super(name);
         // set attributes
         this.consumers = new ArrayList<>();
-        this.routes    = new ArrayList<>();
+        this.routes = new ArrayList<>();
 
         Pipelines.add(this);
         AbstractPipeline.LOG.info("New pipeline created with name %s", name);
@@ -61,8 +64,9 @@ public abstract class AbstractPipeline<P extends AbstractPipelinePacket<?>> exte
 
     /**
      * Sets the route(s) symbolized by the pipeline.
+     *
      * @param pattern The route expressed as a PEPE pattern.
-     * @return        The Pipeline itself, to support method chaining.
+     * @return The Pipeline itself, to support method chaining.
      */
     public AbstractPipeline setRoute(String pattern) {
         this.routes = Pipelines.generateRoutes(pattern);
@@ -72,13 +76,11 @@ public abstract class AbstractPipeline<P extends AbstractPipelinePacket<?>> exte
     /**
      * Adds a {@link AbstractPipelinePacket} to the Pipeline.
      *
-     * @param <S>
-     *            The generic type of Pipeline requested by the user.
-     * @param pipelinePacket
-     *            The packet to be added to the Pipeline.
+     * @param <S>            The generic type of Pipeline requested by the user.
+     * @param pipelinePacket The packet to be added to the Pipeline.
      * @return The Pipeline itself.
      */
-    @SuppressWarnings ("unchecked")
+    @SuppressWarnings("unchecked")
     public <S extends AbstractPipeline<P>> S addPacket(final P pipelinePacket) {
         // add the packet
         this.queue.add(pipelinePacket);
@@ -125,13 +127,13 @@ public abstract class AbstractPipeline<P extends AbstractPipelinePacket<?>> exte
 
         // map the packet onto the compatible translators
         Pipelines.getCompatibleTranslators(this).forEach(translator -> resultant.forEach(resultPacket ->
-            Pipelines.getOfDataType(translator.getOutputType())
-                    .forEach(pipeline -> pipeline.addPacket(translator.translate(resultPacket)).processPacket())
+                Pipelines.getOfDataType(translator.getOutputType())
+                        .forEach(pipeline -> pipeline.addPacket(translator.translate(resultPacket)).processPacket())
         ));
 
         // map the results on the consumers
         return resultant.stream().parallel().map(resultPacket -> this.consumers.stream()
-                        .map(consumer -> consumer.consume((P)resultPacket)).collect(Collectors.toList()))
+                .map(consumer -> consumer.consume((P) resultPacket)).collect(Collectors.toList()))
                 .flatMap(Collection::stream)
                 // return true if everything succeeded, false otherwise
                 .reduce(true, (accumulator, success) -> accumulator && success);
@@ -141,15 +143,12 @@ public abstract class AbstractPipeline<P extends AbstractPipelinePacket<?>> exte
     /**
      * Registers a {@link AbstractConsumer} with the Pipeline.
      *
-     * @param <C>
-     *            The generic type of Consumer supplied by the user.
-     * @param <S>
-     *            The generic type of of Pipeline requested by the user.
-     * @param consumer
-     *            The Consumer to be registered with the Pipeline.
+     * @param <C>      The generic type of Consumer supplied by the user.
+     * @param <S>      The generic type of of Pipeline requested by the user.
+     * @param consumer The Consumer to be registered with the Pipeline.
      * @return The Pipeline itself.
      */
-    @SuppressWarnings ("unchecked")
+    @SuppressWarnings("unchecked")
     public <C extends AbstractConsumer<?>, S extends AbstractPipeline<P>> S registerConsumer(final C consumer) {
         AbstractPipeline.LOG.fine("Consumer named %s registered to pipeline %s.", consumer.getName(), this.getName());
         this.consumers.add((AbstractConsumer<P>) consumer);
@@ -159,15 +158,12 @@ public abstract class AbstractPipeline<P extends AbstractPipelinePacket<?>> exte
     /**
      * Register a list of {@link AbstractConsumer} registered with the Pipeline.
      *
-     * @param <C>
-     *            The generic type of Consumer supplied by the user.
-     * @param <S>
-     *            The generic type of Pipeline requested by the user.
-     * @param consumers
-     *            the consumers
+     * @param <C>       The generic type of Consumer supplied by the user.
+     * @param <S>       The generic type of Pipeline requested by the user.
+     * @param consumers the consumers
      * @return The Pipeline itself.
      */
-    @SuppressWarnings ("unchecked")
+    @SuppressWarnings("unchecked")
     public <C extends AbstractConsumer<?>, S extends AbstractPipeline<P>> S registerConsumers(final C... consumers) {
         Stream.of(consumers).forEach(consumer -> this.registerConsumer(consumer));
         return (S) this;

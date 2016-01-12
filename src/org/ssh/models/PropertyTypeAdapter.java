@@ -15,8 +15,10 @@ import java.util.ArrayList;
  *
  * @author Ryan
  */
-public class PropertyTypeAdapter <T extends WritableValue> implements JsonSerializer<T>, JsonDeserializer<T>{
-    /** Logger to log loggable logstuff */
+public class PropertyTypeAdapter<T extends WritableValue> implements JsonSerializer<T>, JsonDeserializer<T> {
+    /**
+     * Logger to log loggable logstuff
+     */
     private static final Logger LOG = Logger.getLogger();
 
     @Override
@@ -35,7 +37,7 @@ public class PropertyTypeAdapter <T extends WritableValue> implements JsonSerial
         PropertyTypeAdapter.LOG.info("Deserializing: " + type);
 
         // Primitive values always have type instance of "Class"
-        if(type instanceof Class) {
+        if (type instanceof Class) {
             // Some stupid shit because there does not appear to be a way to create a javafx.beans.property of a given type.
             if (type.equals(BooleanProperty.class))
                 return (T) new SimpleBooleanProperty(jsonElement.getAsBoolean());
@@ -49,8 +51,8 @@ public class PropertyTypeAdapter <T extends WritableValue> implements JsonSerial
                 return (T) new SimpleDoubleProperty(jsonElement.getAsDouble());
             else if (type.equals(StringProperty.class))
                 return (T) new SimpleStringProperty(jsonElement.getAsString());
-        // Generified values alwways have type instance of "ParameterizedType"
-        } else if(type instanceof ParameterizedType) {
+            // Generified values alwways have type instance of "ParameterizedType"
+        } else if (type instanceof ParameterizedType) {
             // Get the raw type to find if the type is object, or a list (rawtype = type - generic)
             final Type rawType = ((ParameterizedType) type).getRawType();
 
@@ -63,7 +65,7 @@ public class PropertyTypeAdapter <T extends WritableValue> implements JsonSerial
                 // return a new SimpleObjectProperty of the given generic type.
                 return (T) new SimpleObjectProperty<>(jsonDeserializationContext.deserialize(jsonElement, genericType));
 
-            // if the type is an ListProperty
+                // if the type is an ListProperty
             else if (rawType.equals(ListProperty.class)) {
                 // A new arraylist should be created.
                 final ArrayList<Object> list = new ArrayList<>();

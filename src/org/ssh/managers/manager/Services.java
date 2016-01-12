@@ -66,8 +66,8 @@ public final class Services implements ManagerInterface<AbstractService<? extend
      * @see org.ssh.managers.controllers.ServicesController#scheduleTask(String, Runnable, long)
      */
     public static ListenableScheduledFuture scheduleTask(final String taskName,
-                                                            final Runnable task,
-                                                            final long delay) {
+                                                         final Runnable task,
+                                                         final long delay) {
         Services.LOG.info("Scheduling a task named %s with an interval of %d us", taskName, delay);
         return Services.controller.scheduleTask(taskName, task, delay);
     }
@@ -192,11 +192,12 @@ public final class Services implements ManagerInterface<AbstractService<? extend
 
     /**
      * Finds all the Services whose true name matches the given pattern.
-     * @param pattern   The pattern to match on.
-     * @param <S>       The type of Service requested by the user.
-     * @return          The list of Services matching the given pattern.
+     *
+     * @param pattern The pattern to match on.
+     * @param <S>     The type of Service requested by the user.
+     * @return The list of Services matching the given pattern.
      */
-    public static <S extends AbstractService<? extends AbstractPipelinePacket<?>>>  List<S> find(final String pattern) {
+    public static <S extends AbstractService<? extends AbstractPipelinePacket<?>>> List<S> find(final String pattern) {
         return Services.controller.find(pattern);
     }
 }

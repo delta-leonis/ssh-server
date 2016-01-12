@@ -9,12 +9,11 @@ import org.ssh.pipelines.packets.RadioPacket;
  * @author Rimon Oz
  */
 public class RadioPipeline extends AbstractPipeline<RadioPacket> {
-    
+
     /**
      * Instantiates a new radio pipeline.
      *
-     * @param name
-     *            the name
+     * @param name the name
      */
     public RadioPipeline(final String name) {
         super(name);

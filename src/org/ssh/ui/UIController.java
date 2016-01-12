@@ -21,63 +21,70 @@ import java.util.stream.Stream;
 
 /**
  * The Class UIController.
- *
+ * <p>
  * This class represents a window.
  *
+ * @param <T> The generic genericType of Pane used as a root Node for this window
  * @author Rimon Oz
- * @param <T>
- *            The generic genericType of Pane used as a root Node for this window
  */
 public abstract class UIController<T extends Pane> {
-    
-    /** The main scene of the window. */
-    private Scene                   mainScene;
-                                    
-    /** The root node of the window. */
-    private Parent                  rootNode;
-                                    
-    /** The stage. */
-    private Stage                   stage;
-                                    
-    /** The title of the window. */
-    private String                  title;
-                                    
-    /** The name of the window object. */
-    private String                  name;
-                                    
-    /** The components used in the window. */
+
+    /**
+     * The main scene of the window.
+     */
+    private Scene mainScene;
+
+    /**
+     * The root node of the window.
+     */
+    private Parent rootNode;
+
+    /**
+     * The stage.
+     */
+    private Stage stage;
+
+    /**
+     * The title of the window.
+     */
+    private String title;
+
+    /**
+     * The name of the window object.
+     */
+    private String name;
+
+    /**
+     * The components used in the window.
+     */
     private final List<UIComponent> components;
-                                    
+
     /**
      * The parametrized genericType of the window (<T extends Pane>).
-     * 
+     *
      * @see <a href="https://github.com/google/guava/wiki/ReflectionExplained">https://github.com/google/guava/wiki/ReflectionExplained</a>
      */
-    @SuppressWarnings ("serial")
-    public TypeToken<T>             genericType = new TypeToken<T>(this.getClass()) {
-                                                };
-                                                
+    @SuppressWarnings("serial")
+    public TypeToken<T> genericType = new TypeToken<T>(this.getClass()) {
+    };
+
     // a logger for good measure
-    private static final Logger     LOG         = Logger.getLogger();
-                                                
+    private static final Logger LOG = Logger.getLogger();
+
     /**
      * Instantiates a new window/UI controller.
      *
-     * @param name
-     *            The name of the window.
-     * @param fxmlFile
-     *            The FXML file
-     * @param width
-     *            The width of the window.
-     * @param height
-     *            The height of the window.
+     * @param name     The name of the window.
+     * @param fxmlFile The FXML file
+     * @param width    The width of the window.
+     * @param height   The height of the window.
      */
     public UIController(final String name, final String fxmlFile, final int width, final int height) {
         // set attributes
         this.setName(name);
         this.setStage(new Stage());
         this.components = new ArrayList<>();
-        
+
         // load the template from file
         this.loadFXML(fxmlFile);
         this.setTitle(this.getName());
@@ -90,19 +97,16 @@ public abstract class UIController<T extends Pane> {
     /**
      * Instantiates a new window/UI controller.
      *
-     * @param name
-     *            The name of the window.
-     * @param fxmlFile
-     *            The FXML file
-     * @param stage
-     *            The primary stage.
+     * @param name     The name of the window.
+     * @param fxmlFile The FXML file
+     * @param stage    The primary stage.
      */
     public UIController(final String name, final String fxmlFile, final Stage stage) {
         // set attributes
         this.name = name;
         this.setStage(stage);
         this.components = new ArrayList<>();
-        
+
         // load the template from file
         this.loadFXML(fxmlFile);
         // set the title
@@ -113,17 +117,15 @@ public abstract class UIController<T extends Pane> {
         this.loadCSS("application.css");
     }
 
-    public List<Node> getAllNodes(){
+    public List<Node> getAllNodes() {
         return UI.getAllNodes(this.getRootNode());
     }
 
     /**
      * Adds a Node to the window's children.
      *
-     * @param <N>
-     *            The Node genericType
-     * @param node
-     *            The Node itself.
+     * @param <N>  The Node genericType
+     * @param node The Node itself.
      * @return true, if successful
      */
     public <N extends Node> boolean add(final N node) {
@@ -135,13 +137,13 @@ public abstract class UIController<T extends Pane> {
     /**
      * Add a component at a specific place identified by the identifier
      *
-     * @param component new component
+     * @param component  new component
      * @param identifier unique name of a node
-     * @param bind true if binding (max/min height/width) is required to the parent
+     * @param bind       true if binding (max/min height/width) is required to the parent
      */
-    public <C extends UIComponent<?>> void add(C component, String identifier, boolean bind){
+    public <C extends UIComponent<?>> void add(C component, String identifier, boolean bind) {
         UI.getByName(identifier, this.getRootNode()).ifPresent(node -> {
-            if(!(node instanceof Pane)) {
+            if (!(node instanceof Pane)) {
                 UIController.LOG.info("Could not add component at '%s' since it's not an instance of Pane.", identifier);
                 return;
             }
@@ -149,36 +151,34 @@ public abstract class UIController<T extends Pane> {
 
             pane.getChildren().add(component.getComponent());
 
-            if(bind)
+            if (bind)
                 UI.bindSize(component.getComponent(), pane);
 
         });
     }
-    
+
     /**
      * Adds a list of Nodes to the window's children.
      *
-     * @param <N>
-     *            The Node genericType
-     * @param nodes
-     *            The nodes as an array
+     * @param <N>   The Node genericType
+     * @param nodes The nodes as an array
      */
-    @SuppressWarnings ("unchecked")
+    @SuppressWarnings("unchecked")
     public <N extends Node> void add(final N... nodes) {
         Stream.of(nodes).forEach(node -> Platform.runLater(() -> this.add(node)));
     }
-    
+
     /**
      * Gets the children of this window.
      *
      * @return The children of this window.
      */
-    @SuppressWarnings ("unchecked")
+    @SuppressWarnings("unchecked")
     public ObservableList<Node> getChildren() {
         // cast the root Node from Parent to the correct genericType and return its children
         return ((T) this.getRootNode()).getChildren();
     }
-    
+
     /**
      * Gets the name of the window/UI controller.
      *
@@ -187,7 +187,7 @@ public abstract class UIController<T extends Pane> {
     public String getName() {
         return this.name;
     }
-    
+
     /**
      * Gets the root {@link Node} of the window as a {@link Parent}.
      *
@@ -196,7 +196,7 @@ public abstract class UIController<T extends Pane> {
     public Parent getRootNode() {
         return this.rootNode;
     }
-    
+
     /**
      * Gets the main {@link Scene} of the window.
      *
@@ -205,7 +205,7 @@ public abstract class UIController<T extends Pane> {
     public Scene getScene() {
         return this.mainScene;
     }
-    
+
     /**
      * Gets the {@link Stage}.
      *
@@ -214,7 +214,7 @@ public abstract class UIController<T extends Pane> {
     public Stage getStage() {
         return this.stage;
     }
-    
+
     /**
      * Gets the title of the window.
      *
@@ -223,7 +223,7 @@ public abstract class UIController<T extends Pane> {
     public String getTitle() {
         return this.title;
     }
-    
+
     /**
      * Gets the {@link Type} of the root {@link Node}.
      *
@@ -232,7 +232,7 @@ public abstract class UIController<T extends Pane> {
     public Type getType() {
         return this.genericType.getType();
     }
-    
+
     /**
      * Hides the window.
      */
@@ -240,12 +240,11 @@ public abstract class UIController<T extends Pane> {
         UIController.LOG.fine("Hiding the window for UIController %s", this.getName());
         this.getStage().hide();
     }
-    
+
     /**
      * Loads a CSS-file from /org/ssh/view/css/ into the window.
      *
-     * @param fileName
-     *            the name of the file (e.g. "application.css")
+     * @param fileName the name of the file (e.g. "application.css")
      */
     public void loadCSS(final String fileName) {
         UIController.LOG.fine("Loaded CSS file %s into UIController %s.", fileName, this.getName());
@@ -253,17 +252,16 @@ public abstract class UIController<T extends Pane> {
         this.getScene().getStylesheets()
                 .add(this.getClass().getResource("/org/ssh/view/css/" + fileName).toExternalForm());
     }
-    
+
     /**
      * Load an FXML template and injects it into the window.
      *
-     * @param fileName
-     *            The file name
+     * @param fileName The file name
      * @return true, if successful
      */
     public boolean loadFXML(final String fileName) {
         try {
-            
+
             // load the file
             final FXMLLoader fxmlLoader = new FXMLLoader(
                     this.getClass().getResource("/org/ssh/view/windows/" + fileName));
@@ -282,8 +280,7 @@ public abstract class UIController<T extends Pane> {
             }
             // put the nodes in the window
             this.setRootNode(documentRoot);
-        }
-        catch (final IOException exception) {
+        } catch (final IOException exception) {
             // show an error
             UIController.LOG.warning("Couldn't load FXML file: %s", fileName);
             // handle the exception
@@ -293,21 +290,19 @@ public abstract class UIController<T extends Pane> {
         UIController.LOG.fine("Loaded FXML file %s into UIController %s", fileName, this.getName());
         return true;
     }
-    
+
     /**
      * Sets the icon of the stage (the icon shown in the taskbar).
      */
     public void setIcon() {
         this.getStage().getIcons().add(new Image("/org/ssh/view/icon/icon32.png"));
     }
-    
+
     /**
      * Sets the minimum width and height of the window.
      *
-     * @param width
-     *            The width in pixels.
-     * @param height
-     *            The height in pixels.
+     * @param width  The width in pixels.
+     * @param height The height in pixels.
      */
     public void setMinimumDimensions(final int width, final int height) {
         UIController.LOG.fine("Setting the minimum dimensions of UIController %s to %d px by %d px (width x height).",
@@ -317,34 +312,31 @@ public abstract class UIController<T extends Pane> {
         this.getStage().setMinWidth(width);
         this.getStage().setMinHeight(height);
     }
-    
+
     /**
      * Sets the name of the window/UI controller.
      *
-     * @param name
-     *            The new name of the window/UI controller.
+     * @param name The new name of the window/UI controller.
      */
     public void setName(final String name) {
         UIController.LOG.info("Changing name of UIController %s to %s.", this.getName(), name);
         this.name = name;
     }
-    
+
     /**
      * Sets the root {@link Node} of the window.
      *
-     * @param rootNode
-     *            The new root {@link Node}.
+     * @param rootNode The new root {@link Node}.
      */
     public void setRootNode(final Parent rootNode) {
         UIController.LOG.info("Replacing the root Node for UIController %s.", this.getName());
         this.rootNode = rootNode;
     }
-    
+
     /**
      * Sets the main {@link Scene} of the window.
      *
-     * @param scene
-     *            The new {@link Scene}.
+     * @param scene The new {@link Scene}.
      */
     public void setScene(final Scene scene) {
         UIController.LOG.info("Replacing the root Scene for UIController %s.", this.getName());
@@ -352,23 +344,21 @@ public abstract class UIController<T extends Pane> {
         Platform.runLater(() -> this.getStage().setScene(scene));
         this.mainScene = scene;
     }
-    
+
     /**
      * Sets the {@link Stage} of the window.
      *
-     * @param stage
-     *            The new {@link Stage}.
+     * @param stage The new {@link Stage}.
      */
     public void setStage(final Stage stage) {
         UIController.LOG.info("Replacing the root Stage for UIController %s.", this.getName());
         this.stage = stage;
     }
-    
+
     /**
      * Sets the title of the window.
      *
-     * @param title
-     *            The new title of the window.
+     * @param title The new title of the window.
      */
     public void setTitle(final String title) {
         UIController.LOG.fine("Setting the title for window belonging to UIController %s to '%s'.",
@@ -377,7 +367,7 @@ public abstract class UIController<T extends Pane> {
         this.title = title;
         this.getStage().setTitle(this.getTitle());
     }
-    
+
     /**
      * Shows the window.
      */
@@ -385,7 +375,7 @@ public abstract class UIController<T extends Pane> {
         UIController.LOG.fine("Showing the window for UIController %s", this.getName());
         this.getStage().show();
     }
-    
+
     /**
      * Spawns the window by calling .show() on the {@link Stage}.
      */
@@ -393,10 +383,10 @@ public abstract class UIController<T extends Pane> {
         UIController.LOG.fine("Spawning a window for UIController %s", this.getName());
         Platform.runLater(this::show);
     }
-    
+
     /**
      * Returns the list of {@link UIComponent UIComponents} stored in this window.
-     * 
+     *
      * @return the components
      */
     public List<UIComponent> getComponents() {

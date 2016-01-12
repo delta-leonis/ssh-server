@@ -7,16 +7,17 @@ import protobuf.Radio;
 
 /**
  * The Class DetectionToStrategyTranslator
+ *
  * @author Rimon Oz
  */
 public class DetectionToStrategyTranslator extends AbstractTranslator<DetectionPacket, RadioPacket> {
     /**
      * Instantiates a new Translator.
      *
-     * @param name                The name of the new Translator.
+     * @param name The name of the new Translator.
      */
     public DetectionToStrategyTranslator(String name) {
         super(name, (DetectionPacket packet) ->
-            new RadioPacket(Radio.RadioProtocolWrapper.newBuilder()));
+                new RadioPacket(Radio.RadioProtocolWrapper.newBuilder()));
     }
 }

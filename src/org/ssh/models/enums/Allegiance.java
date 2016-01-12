@@ -11,7 +11,7 @@ public enum Allegiance {
     /**
      * @return the opposite {@link Allegiance}.
      */
-    public Allegiance opposite(){
+    public Allegiance opposite() {
         return this.equals(ALLY) ? OPPONENT : ALLY;
     }
 

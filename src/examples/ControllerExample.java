@@ -34,18 +34,16 @@ import java.util.stream.Stream;
  * @see ControllerHandler
  * @see ControllerLayout
  * @see ControllerListener
- *      
  */
 public class ControllerExample extends Application {
-    
+
     // respective logger
     private static final Logger LOG = Logger.getLogger();
     // Ip address of the basestation
     private static final String ADDRESS = "224.5.23.20";
-    
+
     /**
-     * @param controller
-     *            controller to check
+     * @param controller controller to check
      * @return whether a controller is available
      */
     private static boolean availableController(final Controller controller) {
@@ -54,7 +52,7 @@ public class ControllerExample extends Application {
                 // check if it contains the controller
                 .containsController(controller);
     }
-    
+
     /**
      * Find a controller that is not used in any ControllerHandler
      *
@@ -67,11 +65,11 @@ public class ControllerExample extends Application {
                 // find the first in the list
                 .findFirst();
     }
-    
-    private static boolean createDefaultLayout(ControllerLayout layout){
+
+    private static boolean createDefaultLayout(ControllerLayout layout) {
         // assign a bunch of buttons (note that the identifiernames are specific for Windows
         // since this is only a demo it shouldn't be much of a problem
-        if(layout.getController().getType() == Type.GAMEPAD){
+        if (layout.getController().getType() == Type.GAMEPAD) {
             layout.attach(layout.getComponent(Component.Identifier.Button._1), ButtonFunction.KICK);
             layout.attach(layout.getComponent(Component.Identifier.Button._0), ButtonFunction.CHIP);
             layout.attach(layout.getComponent(Component.Identifier.Button._3), ButtonFunction.DRIBBLE_TOGGLE);
@@ -86,8 +84,7 @@ public class ControllerExample extends Application {
             layout.attach(layout.getComponent(Component.Identifier.Button._6), ButtonFunction.SELECT_PREV_ROBOT);
             layout.attach(layout.getComponent(Component.Identifier.Button._8), ButtonFunction.STOP_ALL_ROBOTS);
             layout.attach(layout.getComponent(Component.Identifier.Axis.POV), ButtonFunction.DIRECTION_POV);
-        }
-        else if(layout.getController().getType() == Type.KEYBOARD){
+        } else if (layout.getController().getType() == Type.KEYBOARD) {
             layout.attach(layout.getComponent(Component.Identifier.Key.F), ButtonFunction.KICK);
             layout.attach(layout.getComponent(Component.Identifier.Key.G), ButtonFunction.CHIP);
             layout.attach(layout.getComponent(Component.Identifier.Key.H), ButtonFunction.DRIBBLE_TOGGLE);
@@ -100,19 +97,18 @@ public class ControllerExample extends Application {
             layout.attach(layout.getComponent(Component.Identifier.Key._2), ButtonFunction.SELECT_NEXT_ROBOT);
             layout.attach(layout.getComponent(Component.Identifier.Key._1), ButtonFunction.SELECT_PREV_ROBOT);
             layout.attach(layout.getComponent(Component.Identifier.Key.SPACE), ButtonFunction.STOP_ALL_ROBOTS);
-        }
-        else{
+        } else {
             return false;
         }
         layout.saveAsDefault();
         return true;
     }
-    
+
     public static void main(final String[] args) throws InterruptedException {
         Application.launch();
     }
 
-    @SuppressWarnings ("unchecked")
+    @SuppressWarnings("unchecked")
     @Override
     public void start(Stage primaryStage) throws Exception {
         // make models available

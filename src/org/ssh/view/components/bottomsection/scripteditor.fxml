@@ -2,8 +2,8 @@
 
 <?import javafx.scene.layout.VBox?>
 <VBox fx:id="root" xmlns:fx="http://javafx.com/fxml/1">
-	<children>
+    <children>
 
-	</children>
+    </children>
 </VBox>
 

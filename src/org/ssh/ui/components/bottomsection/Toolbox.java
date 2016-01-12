@@ -11,39 +11,38 @@ import org.ssh.ui.lua.editor.ScriptEditor;
 import java.util.Optional;
 
 /**
- * 
  * @author Joost Overeem
  */
 public class Toolbox extends UIComponent {
-    
+
     @FXML
     private GridPane toolboxcontainer;
-                     
+
     UIComponent widgetComponent = new WidgetShortcutContainer();
     UIComponent consoleComponent = new ConsoleManager("bottom-console");
     UIComponent luaComponent = new ScriptEditor("bottom-editor");
     UIComponent settingsComponent = new SettingsPane();
-                                  
+
     public Toolbox() {
         super("toolbox", "bottomsection/toolbox.fxml");
         this.toolboxcontainer.add(widgetComponent.getComponent(), 1, 0);
     }
-    
+
     @FXML
     private void enrollConsole(final ActionEvent e) {
         changeToolboxTab(consoleComponent);
     }
-    
+
     @FXML
     private void enrollLua(final ActionEvent e) {
         changeToolboxTab(luaComponent);
     }
-    
+
     @FXML
     private void enrollSettings(final ActionEvent e) {
         changeToolboxTab(settingsComponent);
     }
-    
+
     @FXML
     private void enrollWidgets(final ActionEvent e) {
         changeToolboxTab(widgetComponent);

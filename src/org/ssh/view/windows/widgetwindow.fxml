@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.FlowPane?>
-<FlowPane fx:id="widgetcontainer" minHeight="500" minWidth="600" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<FlowPane fx:id="widgetcontainer" minHeight="500" minWidth="600" xmlns:fx="http://javafx.com/fxml/1"
+          xmlns="http://javafx.com/javafx/8">
 
 </FlowPane>

@@ -9,7 +9,7 @@ import org.ssh.ui.UIComponent;
  * @author Jeroen de Jong
  * @date 12/20/2015
  */
-public class TopbarIcons  extends UIComponent<GridPane> {
+public class TopbarIcons extends UIComponent<GridPane> {
 
 
     public TopbarIcons() {

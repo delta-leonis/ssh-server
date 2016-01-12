@@ -297,9 +297,10 @@ public final class Pipelines implements ManagerInterface<AbstractPipeline<? exte
 
     /**
      * Finds all the Pipelines whose true name matches the given pattern.
-     * @param pattern   The pattern to match on.
-     * @param <P>       The type of Pipeline requested by the user.
-     * @return          The list of Pipelines matching the given pattern.
+     *
+     * @param pattern The pattern to match on.
+     * @param <P>     The type of Pipeline requested by the user.
+     * @return The list of Pipelines matching the given pattern.
      */
     public static <P extends AbstractPipeline<? extends AbstractPipelinePacket<?>>> List<P> find(final String pattern) {
         return Pipelines.controller.find(pattern);
@@ -308,8 +309,9 @@ public final class Pipelines implements ManagerInterface<AbstractPipeline<? exte
     /**
      * Generates the routes for a given pattern using PEPE. The routes are stored as lambda's generated
      * by currying the AbstractCoupler's transfer functions.
+     *
      * @param pattern The pattern which to generate routes from.
-     * @return        The list of resulting lambda(s) representing a single branch in the route.
+     * @return The list of resulting lambda(s) representing a single branch in the route.
      */
     public static List<Function<AbstractPipelinePacket<?>, AbstractPipelinePacket<?>>> generateRoutes(String pattern) {
         return Pipelines.pepeEngine.evaluate(pattern);

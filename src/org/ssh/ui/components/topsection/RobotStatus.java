@@ -25,30 +25,29 @@ import java.util.stream.Collectors;
  * ssh-server/src/org/ssh/view/css/application.css.
  *
  * @author Ryan Meulenkamp
- *
  */
 public class RobotStatus extends UIComponent {
 
     /**
      * the data model behind a robot.
      */
-    private Robot      model;
+    private Robot model;
     /**
      * the root pane containing all other panes and other UI stuff this should change color
      * according to the status
      */
     @FXML
-    private GridPane   robotstatusRoot;
+    private GridPane robotstatusRoot;
     /**
      * this pane will be used to color the robot-status-box: With no errors it will be green If a
      * warning is present, it will be yellow If an error is present, it will be red
      */
     @FXML
-    private Pane       robotIconBackground;
+    private Pane robotIconBackground;
     /**
      * this pane will be used to give the border a color: blue when the status-box is selected grey
      * when the status-box is unselected
-     *
+     * <p>
      * it is chosen to be an anchorpane because it contains an empty label which should be streched
      * over the full pane. This label is a control, so it can contain a tooltip.
      */
@@ -58,19 +57,19 @@ public class RobotStatus extends UIComponent {
      * these panes will be used to display icons representing connection and camera sight status.
      */
     @FXML
-    private Pane       connectionIcon, sightIcon;
+    private Pane connectionIcon, sightIcon;
     /**
      * An text-shape for displaying the id of this robot. It is chosen to be a text-shape instead of
      * a label to make resizing more easy.
      */
     @FXML
-    private Text       robotId;
+    private Text robotId;
     /**
      * The tooltip of the robot. It is used to diplay information of the robot, like malfunctions
      * and position, when the mouse is over this robot-status-box.
      */
     @FXML
-    private Tooltip    robotTooltip;
+    private Tooltip robotTooltip;
 
     public RobotStatus(Robot model) {
         super("Robot status", "topsection/robotstatus.fxml");
@@ -119,8 +118,7 @@ public class RobotStatus extends UIComponent {
     /**
      * This function returns the style of a styleable object. it also cleares it.
      *
-     * @param styleable
-     *            the object of which the style should be returned.
+     * @param styleable the object of which the style should be returned.
      * @return the style as a observable list of strings.
      */
     private static ObservableList<String> getStyle(Styleable styleable) {
@@ -147,18 +145,15 @@ public class RobotStatus extends UIComponent {
         /**
          * the two strings between which a choice has to be made.
          */
-        private String    trueString, falseString;
+        private String trueString, falseString;
 
         /**
          * The constructor of this handler. It has two strings and a object of a type implementing
          * the Styleable interface.
          *
-         * @param styleable
-         *            the object of which the styling should be modified
-         * @param trueString
-         *            the style in case of true
-         * @param falseString
-         *            the style in case of false
+         * @param styleable   the object of which the styling should be modified
+         * @param trueString  the style in case of true
+         * @param falseString the style in case of false
          */
         public BooleanStylePropertyHandler(Styleable styleable, String trueString, String falseString) {
             this.styleable = styleable;
@@ -182,7 +177,6 @@ public class RobotStatus extends UIComponent {
      * handler.
      *
      * @author Ryan Meulenkamp
-     *
      */
     public class StatusPropertyHandler implements InvalidationListener {
 
@@ -196,8 +190,7 @@ public class RobotStatus extends UIComponent {
         /**
          * When the property is invalidated, this function is called.
          *
-         * @param observable
-         *            the property raising this event.
+         * @param observable the property raising this event.
          */
         @Override
         public void invalidated(Observable observable) {
@@ -219,7 +212,6 @@ public class RobotStatus extends UIComponent {
      * seems to be the only way to do this.
      *
      * @author Ryan Meulenkamp
-     *
      */
     public class ResizePropertyHandler implements InvalidationListener {
 
@@ -240,19 +232,18 @@ public class RobotStatus extends UIComponent {
      * updated.
      *
      * @author Ryan Meulenkamp
-     *
      */
     public class TooltipPropertyHandler implements InvalidationListener {
         /**
          * the constructor is used to initialize the tooltip the first time
          */
-        public TooltipPropertyHandler(){
+        public TooltipPropertyHandler() {
             super();
             invalidated(null);
         }
 
         @Override
-        public void invalidated(Observable observable){
+        public void invalidated(Observable observable) {
             // turn a list of errors or warnings into its textual representation.
             String error = model.getErrors().stream().map(malfunction -> "   " + malfunction)
                     .collect(Collectors.joining("\n"));
@@ -262,7 +253,7 @@ public class RobotStatus extends UIComponent {
 
             //add the current position to this string
             String tooltip = String.format("X position: %.1f%nY position: %.1f",
-                    model.getXPosition(), model.getYPosition() )
+                    model.getXPosition(), model.getYPosition())
                     + (!error.isEmpty() ? "\nErrors:\n" + error : "")
                     + (!warning.isEmpty() ? "\nWarnings:\n" + warning : "");
 

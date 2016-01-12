@@ -3,17 +3,17 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.*?>
 <Pane fx:id="rootPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" pickOnBounds="false">
-	<ScrollPane fx:id="scrollPane">
-		<content>
-			<GridPane fx:id="shortcutPane" pickOnBounds="false">
-				<columnConstraints>
-					<ColumnConstraints percentWidth="20" />
-					<ColumnConstraints percentWidth="20" />
-					<ColumnConstraints percentWidth="20" />
-					<ColumnConstraints percentWidth="20" />
-					<ColumnConstraints percentWidth="20" />
-				</columnConstraints>
-			</GridPane>
-		</content>
-	</ScrollPane>
+    <ScrollPane fx:id="scrollPane">
+        <content>
+            <GridPane fx:id="shortcutPane" pickOnBounds="false">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="20"/>
+                    <ColumnConstraints percentWidth="20"/>
+                    <ColumnConstraints percentWidth="20"/>
+                    <ColumnConstraints percentWidth="20"/>
+                    <ColumnConstraints percentWidth="20"/>
+                </columnConstraints>
+            </GridPane>
+        </content>
+    </ScrollPane>
 </Pane>

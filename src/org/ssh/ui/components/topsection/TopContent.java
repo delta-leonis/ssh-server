@@ -27,31 +27,31 @@ public class TopContent extends UIComponent<GridPane> {
     }
 
     private void fillRobotContainer() {
-        Optional<Game> game = Models.<Game> get("game");
+        Optional<Game> game = Models.<Game>get("game");
 
-        if(!game.isPresent())
+        if (!game.isPresent())
             return;
 
         // Get all robot-models
         game.get()
                 .getRobots(Allegiance.ALLY).stream()
                 .sorted((r1, r2) ->
-                    Integer.compare(r1.getRobotId(),
-                                    r2.getRobotId()))
+                        Integer.compare(r1.getRobotId(),
+                                r2.getRobotId()))
                 .forEach(robot -> {
 
-            // A new robotstatus is made and added to the robotstatuscontainer
-            final RobotStatus robotStatus = new RobotStatus(robot);
-            this.robotStatusContainer.getChildren().add(robotStatus.getComponent());
+                    // A new robotstatus is made and added to the robotstatuscontainer
+                    final RobotStatus robotStatus = new RobotStatus(robot);
+                    this.robotStatusContainer.getChildren().add(robotStatus.getComponent());
 
-            // fix resizing
-            robotStatus.getRobotstatusRoot().prefHeightProperty()
-                    .bind(Bindings.divide(robotStatusContainer.heightProperty(), 2.05));
-            robotStatus.getRobotstatusRoot().prefWidthProperty()
-                    .bind(Bindings.divide(robotStatusContainer.heightProperty(), 2.75));
+                    // fix resizing
+                    robotStatus.getRobotstatusRoot().prefHeightProperty()
+                            .bind(Bindings.divide(robotStatusContainer.heightProperty(), 2.05));
+                    robotStatus.getRobotstatusRoot().prefWidthProperty()
+                            .bind(Bindings.divide(robotStatusContainer.heightProperty(), 2.75));
 
 
-        });
+                });
     }
 
 }

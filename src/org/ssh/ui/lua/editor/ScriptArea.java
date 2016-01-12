@@ -34,11 +34,11 @@ public class ScriptArea extends ColoredCodeArea {
     /**
      * All objects found with reflection that use the {@link AvailableInLua}
      */
-    private final List<Object>   functionClasses;
+    private final List<Object> functionClasses;
 
     private Globals globals;
 
-    public ScriptArea(){
+    public ScriptArea() {
         // Use reflection to obtain all classes annotated with AvailableInLua
         this.functionClasses = LuaUtils.getAllAvailableInLua();
 
@@ -51,8 +51,7 @@ public class ScriptArea extends ColoredCodeArea {
     /**
      * Runs a lua script
      *
-     * @param command
-     *            The script to run
+     * @param command The script to run
      */
     public void runScript(final String command) {
         this.globals.load(command).call();
@@ -77,16 +76,14 @@ public class ScriptArea extends ColoredCodeArea {
             Object object = LuaUtils.getObjectBasedOnString(stringObject);
             if (object != null) {
                 return "";
-            }
-            else {
+            } else {
                 // Map the available classes into Strings
                 List<String> options = functionClasses.stream().map(LuaUtils::getSimpleName)
                         .collect(Collectors.toList());
                 // Use those for autocompletion
                 return autocompleteBasedOnList(options, stringObject);
             }
-        }
-        else {
+        } else {
             // Autocomplete Function
             // Split into Object and function (prefix)
             final String object = splitObjectsAndFunctions[splitObjectsAndFunctions.length - 2];
@@ -156,8 +153,7 @@ public class ScriptArea extends ColoredCodeArea {
                     globals.set(LuaUtils.getSimpleName(o), CoerceJavaToLua.coerce(o));
 
             initialize();
-        }
-        catch (final Exception exception) {
+        } catch (final Exception exception) {
             ScriptArea.LOG.exception(exception);
         }
     }
@@ -185,8 +181,7 @@ public class ScriptArea extends ColoredCodeArea {
                             .forEach(lua -> {
                                 String path = lua.toAbsolutePath().toString();
                             });
-                }
-                catch (IOException exception) {
+                } catch (IOException exception) {
                     ScriptArea.LOG.exception(exception);
                 }
             }

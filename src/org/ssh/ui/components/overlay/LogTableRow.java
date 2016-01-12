@@ -27,7 +27,7 @@ public class LogTableRow {
      * The unique id (to be retrieved from the sequenceNumber of {@link LogRecord}).
      */
     @FXML
-    private int    id;
+    private int id;
     /**
      * {@link Level} name of the log.
      */
@@ -50,23 +50,16 @@ public class LogTableRow {
     private String description;
 
     /**
-     *
-     * @param id
-     *            Id as an int, from a {@link LogRecord} the
-     *            {@link LogRecord#getSequenceNumber()}.
-     * @param level
-     *            {@link Level} from a {@link LogRecord} the
-     *            {@link LogRecord#getLevel()}.
-     * @param location
-     *            Location, from a {@link LogRecord} the
-     *            {@link LogRecord#getSourceClassName()}.
-     * @param methodname
-     *            Last called method
-     * @param time
-     *            Time, from a {@link LogRecord} the {@link LogRecord#getMillis()}, but then
-     *            in a HH:mm:ss format.
-     * @param description
-     *            Description, from a {@link LogRecord} the {@link LogRecord#getMessage()}.
+     * @param id          Id as an int, from a {@link LogRecord} the
+     *                    {@link LogRecord#getSequenceNumber()}.
+     * @param level       {@link Level} from a {@link LogRecord} the
+     *                    {@link LogRecord#getLevel()}.
+     * @param location    Location, from a {@link LogRecord} the
+     *                    {@link LogRecord#getSourceClassName()}.
+     * @param methodname  Last called method
+     * @param time        Time, from a {@link LogRecord} the {@link LogRecord#getMillis()}, but then
+     *                    in a HH:mm:ss format.
+     * @param description Description, from a {@link LogRecord} the {@link LogRecord#getMessage()}.
      */
     public LogTableRow(int id, String level, String location, String methodname, String time, String description) {
         this.id = id;
@@ -82,7 +75,7 @@ public class LogTableRow {
      *
      * @param record record to parse
      */
-    public LogTableRow(LogRecord record){
+    public LogTableRow(LogRecord record) {
         this((int) record.getSequenceNumber(),
                 // name of the log level
                 record.getLevel().getName(),
@@ -96,7 +89,6 @@ public class LogTableRow {
     }
 
     /**
-     *
      * @return The unique id (to be retrieved from the sequenceNumber of {@link LogRecord}).
      */
     public int getId() {
@@ -104,7 +96,6 @@ public class LogTableRow {
     }
 
     /**
-     *
      * @return The name of the {@link Level} the log is.
      */
     public String getLevel() {
@@ -112,7 +103,6 @@ public class LogTableRow {
     }
 
     /**
-     *
      * @return The class name of the class that called the {@link Logger}.
      */
     public String getLocation() {
@@ -120,7 +110,6 @@ public class LogTableRow {
     }
 
     /**
-     *
      * @return The time in a HH:mm:ss format.
      */
     public String getTime() {
@@ -128,7 +117,6 @@ public class LogTableRow {
     }
 
     /**
-     *
      * @return The description (message in {@link LogRecord}).
      */
     public String getDescription() {

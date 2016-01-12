@@ -8,24 +8,25 @@ import java.util.stream.Collectors;
 
 /**
  * The Class AbstractManagerController.
- * 
+ * <p>
  * A ManagerController is used by a Manager to operate on Manageables. Since a Manager is static and
  * final another class is needed to operate on dynamic data.
  *
  * @param <M> The generic type of {@link AbstractManageable} this ManagerController operates on.
- *            
  * @author Rimon Oz
  */
 public abstract class AbstractManagerController<M extends AbstractManageable> {
-    
-    /** The manageables which are being managed by this controller. */
+
+    /**
+     * The manageables which are being managed by this controller.
+     */
     protected Map<String, M> manageables;
     /**
      * The manageable expression parser. This is used to lookup
      * manageables by their name in the manageables map.
      */
     protected static Meme memeEngine;
-    
+
     /**
      * Sets up the controller.
      */
@@ -40,9 +41,10 @@ public abstract class AbstractManagerController<M extends AbstractManageable> {
 
     /**
      * Finds all the Manageables whose true name matches the given pattern.
-     * @param pattern   The pattern to match on.
-     * @param <N>       The type of Manageable requested by the user.
-     * @return          The list of Manageables matching the given pattern.
+     *
+     * @param pattern The pattern to match on.
+     * @param <N>     The type of Manageable requested by the user.
+     * @return The list of Manageables matching the given pattern.
      */
     @SuppressWarnings("unchecked")
     public <N extends AbstractManageable> List<N> find(String pattern) {
@@ -50,28 +52,27 @@ public abstract class AbstractManagerController<M extends AbstractManageable> {
         List<String> possibilities = memeEngine.evaluate(pattern);
         // parallelize a search
         return (List<N>) possibilities.stream().parallel()
-            .map(possibility -> this.manageables.entrySet().stream().parallel()
-                // filter on a partial match of the string
-                .filter(entry -> entry.getKey().contains(possibility))
-                // map the match to the target object
-                .map(Map.Entry::getValue)
-                // collect the unique values in a list
-                .collect(Collectors.toList()))
-            .flatMap(Collection::stream).distinct().collect(Collectors.toList());
+                .map(possibility -> this.manageables.entrySet().stream().parallel()
+                        // filter on a partial match of the string
+                        .filter(entry -> entry.getKey().contains(possibility))
+                        // map the match to the target object
+                        .map(Map.Entry::getValue)
+                        // collect the unique values in a list
+                        .collect(Collectors.toList()))
+                .flatMap(Collection::stream).distinct().collect(Collectors.toList());
     }
 
     /**
      * Gets the Manageable with the specified name as an Optional<Manageable>.
      *
-     * @param name
-     *            the name of the manageable
+     * @param name the name of the manageable
      * @return An Optional representing the Manageable.
      */
     @SuppressWarnings("unchecked")
     public <N extends AbstractManageable> Optional<N> get(String name) {
         return (Optional<N>) Optional.ofNullable(this.manageables.get(name));
     }
-    
+
     /**
      * Gets all the Manageables as a List.
      *
@@ -84,8 +85,9 @@ public abstract class AbstractManagerController<M extends AbstractManageable> {
 
     /**
      * Adds a {@link AbstractManageable} to the Manager with the default name.
+     *
      * @param manageable The Manageable to be added.
-     * @return           true, if successful
+     * @return true, if successful
      */
     public boolean add(final M manageable) {
         return this.put(manageable.getName(), manageable);
@@ -94,8 +96,7 @@ public abstract class AbstractManagerController<M extends AbstractManageable> {
     /**
      * Adds a {@link AbstractManageable} to the Manager with the specified name.
      *
-     * @param manageable
-     *            the Manageable to be added
+     * @param manageable the Manageable to be added
      * @return true, if successful
      */
     public boolean put(final String name, final M manageable) {
@@ -108,9 +109,10 @@ public abstract class AbstractManagerController<M extends AbstractManageable> {
 
     /**
      * Removes a {@link AbstractManageable} with the specified key from the list of Manageables.
-     * @param name  The key belonging to the Manageable.
-     * @param <N>   The type of Manageable requested by the user.
-     * @return      The removed Manageable.
+     *
+     * @param name The key belonging to the Manageable.
+     * @param <N>  The type of Manageable requested by the user.
+     * @return The removed Manageable.
      */
     @SuppressWarnings("unchecked")
     public <N extends AbstractManageable> N remove(final String name) {
@@ -119,13 +121,14 @@ public abstract class AbstractManagerController<M extends AbstractManageable> {
 
     /**
      * Removes the supplied {@link AbstractManageable} from the list of Manageables if it is present in the list.
-     * @param manageable    The Manageable to be removed.
-     * @param <N>           The type of Manageable requested by the user.
-     * @return              The removed Manageable.
+     *
+     * @param manageable The Manageable to be removed.
+     * @param <N>        The type of Manageable requested by the user.
+     * @return The removed Manageable.
      */
-    public <N extends AbstractManageable> N remove(final N manageable){
+    public <N extends AbstractManageable> N remove(final N manageable) {
         // check to see if the Manageable is in the list, return null otherwise
-        if(!this.manageables.containsValue(manageable))
+        if (!this.manageables.containsValue(manageable))
             return null;
 
         // loop through the list and remove the manageable if it is present anywhere
@@ -136,14 +139,12 @@ public abstract class AbstractManagerController<M extends AbstractManageable> {
         // return the removed manageable
         return manageable;
     }
-    
+
     /**
      * Gets a list of manageables of the given type.
      *
-     * @param <N>
-     *            The generic type of Manageable
-     * @param type
-     *            The type of the requested manageables
+     * @param <N>  The generic type of Manageable
+     * @param type The type of the requested manageables
      * @return The list of manageables
      */
     @SuppressWarnings("unchecked")

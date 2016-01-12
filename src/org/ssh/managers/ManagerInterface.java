@@ -8,18 +8,16 @@ import org.ssh.util.Logger;
 
 /**
  * The Class ManagerInterface.
- * 
+ * <p>
  * A Manager is a DAO that handles a specific type of {@link AbstractManageable}. Examples of Managers are
  * {@link Services}, {@link Models}, and {@link UI}.
  *
- * @param <M>
- *            the generic type of {@link AbstractManageable} the Manager can handle.
- *            
+ * @param <M> the generic type of {@link AbstractManageable} the Manager can handle.
  * @author Rimon Oz
  */
 public interface ManagerInterface<M extends AbstractManageable> {
 
     // a logger for good measure
-    Logger  LOG = Logger.getLogger();
- 
+    Logger LOG = Logger.getLogger();
+
 }

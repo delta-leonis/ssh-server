@@ -3,80 +3,97 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane fx:id="timesliderRoot" id="timesliderRoot" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane fx:id="timesliderRoot" id="timesliderRoot" xmlns="http://javafx.com/javafx/8"
+          xmlns:fx="http://javafx.com/fxml/1">
 
-	<columnConstraints>
-		<ColumnConstraints percentWidth="10.0" />
-		<ColumnConstraints percentWidth="76.0" />
-		<ColumnConstraints percentWidth="14.0" />
-	</columnConstraints>
-	<rowConstraints>
-		<RowConstraints percentHeight="100.0" />
-	</rowConstraints>
-	<children>
-	<GridPane GridPane.columnIndex="0" GridPane.rowIndex="0">
-		<columnConstraints>
-			<ColumnConstraints percentWidth="33.33" />
-			<ColumnConstraints percentWidth="33.33" />
-			<ColumnConstraints percentWidth="33.33" />
-		</columnConstraints>
-		<rowConstraints>
-			<RowConstraints percentHeight="50.0" />
-			<RowConstraints percentHeight="50.0" />
-		</rowConstraints>
-		<children>
-		<Button fx:id="leftButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
-				GridPane.columnIndex="0" GridPane.rowIndex="0" onAction="#slowDown" styleClass="button-left"/>
-		<Button fx:id="selectFileButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
-				GridPane.columnIndex="0" GridPane.rowIndex="1" onAction="#openDialog" styleClass="button-select-file"/>
-		<Button fx:id="playButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
-				GridPane.columnIndex="1" GridPane.rowIndex="0" onAction="#start" styleClass="button-play"/>
-		<Button fx:id="reverseButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
-				GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#reverse" styleClass="button-reverse"/>
-		<Button fx:id="rightButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
-				GridPane.columnIndex="2" GridPane.rowIndex="0" onAction="#fastForward" styleClass="button-right"/>
-		<Button fx:id="recordButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
-				GridPane.columnIndex="2" GridPane.rowIndex="1" styleClass="button-record"/>
-		</children>
-	</GridPane>
-		
-	<StackPane id="root" GridPane.columnIndex="1" GridPane.rowIndex="0">
-		<children>
-		<ProgressBar fx:id="progressBar" maxWidth="Infinity" GridPane.hgrow="ALWAYS" maxHeight="15.0" minHeight="15.0" prefHeight="15.0" progress="0.0">
-			<padding>
-				<Insets left="9.0" right="9.0" />
-			</padding>
-		</ProgressBar>
-		<Pane fx:id="sliderPointsPane" maxWidth="Infinity" GridPane.hgrow="ALWAYS" maxHeight="44.0" minHeight="44.0" prefHeight="44.0" />
-		<Slider fx:id="slider" maxWidth="Infinity" GridPane.hgrow="ALWAYS" maxHeight="44.0" minHeight="44.0" prefHeight="44.0">
-			<padding>
-				<Insets fx:id="sliderpadding" left="6.0" right="6.0" />
-			</padding>
-		</Slider>
-		</children>
-	</StackPane>
-	
-	<GridPane GridPane.columnIndex="2" GridPane.rowIndex="0">
-		<columnConstraints>
-			<ColumnConstraints fillWidth="true" />
-			<ColumnConstraints fillWidth="true" />
-		</columnConstraints>
-		<rowConstraints>
-			<RowConstraints percentHeight="50.0" />
-			<RowConstraints percentHeight="50.0" />
-		</rowConstraints>
-		<children>
-			<Label fx:id="timeLabel" alignment="CENTER" prefWidth="100.0" text="00:00" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-			<HBox GridPane.columnIndex="0" GridPane.rowIndex="1">
-				<children>
-					<Label fx:id="blueScoreLabel" alignment="CENTER" prefWidth="45.0" text="0" styleClass="yellow-score-label"/>
-					<Label alignment="CENTER" prefWidth="10.0" text="_"/>
-					<Label fx:id="yellowScoreLabel" alignment="CENTER" prefWidth="45.0" text="0" styleClass="blue-score-label"/>
-				</children>
-			</HBox>
-			<CheckBox fx:id="goalCheckBox" mnemonicParsing="false" text="Goals" GridPane.columnIndex="1" GridPane.rowIndex="0" onAction="#updateSlider"/>
-			<CheckBox fx:id="timeoutCheckBox" mnemonicParsing="false" text="Timeouts" GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#updateSlider"/>
-		</children>
-	</GridPane>
-	</children>
+    <columnConstraints>
+        <ColumnConstraints percentWidth="10.0"/>
+        <ColumnConstraints percentWidth="76.0"/>
+        <ColumnConstraints percentWidth="14.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="100.0"/>
+    </rowConstraints>
+    <children>
+        <GridPane GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="33.33"/>
+                <ColumnConstraints percentWidth="33.33"/>
+                <ColumnConstraints percentWidth="33.33"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="50.0"/>
+                <RowConstraints percentHeight="50.0"/>
+            </rowConstraints>
+            <children>
+                <Button fx:id="leftButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS"
+                        GridPane.vgrow="ALWAYS"
+                        GridPane.columnIndex="0" GridPane.rowIndex="0" onAction="#slowDown" styleClass="button-left"/>
+                <Button fx:id="selectFileButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS"
+                        GridPane.vgrow="ALWAYS"
+                        GridPane.columnIndex="0" GridPane.rowIndex="1" onAction="#openDialog"
+                        styleClass="button-select-file"/>
+                <Button fx:id="playButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS"
+                        GridPane.vgrow="ALWAYS"
+                        GridPane.columnIndex="1" GridPane.rowIndex="0" onAction="#start" styleClass="button-play"/>
+                <Button fx:id="reverseButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS"
+                        GridPane.vgrow="ALWAYS"
+                        GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#reverse" styleClass="button-reverse"/>
+                <Button fx:id="rightButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS"
+                        GridPane.vgrow="ALWAYS"
+                        GridPane.columnIndex="2" GridPane.rowIndex="0" onAction="#fastForward"
+                        styleClass="button-right"/>
+                <Button fx:id="recordButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS"
+                        GridPane.vgrow="ALWAYS"
+                        GridPane.columnIndex="2" GridPane.rowIndex="1" styleClass="button-record"/>
+            </children>
+        </GridPane>
+
+        <StackPane id="root" GridPane.columnIndex="1" GridPane.rowIndex="0">
+            <children>
+                <ProgressBar fx:id="progressBar" maxWidth="Infinity" GridPane.hgrow="ALWAYS" maxHeight="15.0"
+                             minHeight="15.0" prefHeight="15.0" progress="0.0">
+                    <padding>
+                        <Insets left="9.0" right="9.0"/>
+                    </padding>
+                </ProgressBar>
+                <Pane fx:id="sliderPointsPane" maxWidth="Infinity" GridPane.hgrow="ALWAYS" maxHeight="44.0"
+                      minHeight="44.0" prefHeight="44.0"/>
+                <Slider fx:id="slider" maxWidth="Infinity" GridPane.hgrow="ALWAYS" maxHeight="44.0" minHeight="44.0"
+                        prefHeight="44.0">
+                    <padding>
+                        <Insets fx:id="sliderpadding" left="6.0" right="6.0"/>
+                    </padding>
+                </Slider>
+            </children>
+        </StackPane>
+
+        <GridPane GridPane.columnIndex="2" GridPane.rowIndex="0">
+            <columnConstraints>
+                <ColumnConstraints fillWidth="true"/>
+                <ColumnConstraints fillWidth="true"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="50.0"/>
+                <RowConstraints percentHeight="50.0"/>
+            </rowConstraints>
+            <children>
+                <Label fx:id="timeLabel" alignment="CENTER" prefWidth="100.0" text="00:00" GridPane.columnIndex="0"
+                       GridPane.rowIndex="0"/>
+                <HBox GridPane.columnIndex="0" GridPane.rowIndex="1">
+                    <children>
+                        <Label fx:id="blueScoreLabel" alignment="CENTER" prefWidth="45.0" text="0"
+                               styleClass="yellow-score-label"/>
+                        <Label alignment="CENTER" prefWidth="10.0" text="_"/>
+                        <Label fx:id="yellowScoreLabel" alignment="CENTER" prefWidth="45.0" text="0"
+                               styleClass="blue-score-label"/>
+                    </children>
+                </HBox>
+                <CheckBox fx:id="goalCheckBox" mnemonicParsing="false" text="Goals" GridPane.columnIndex="1"
+                          GridPane.rowIndex="0" onAction="#updateSlider"/>
+                <CheckBox fx:id="timeoutCheckBox" mnemonicParsing="false" text="Timeouts" GridPane.columnIndex="1"
+                          GridPane.rowIndex="1" onAction="#updateSlider"/>
+            </children>
+        </GridPane>
+    </children>
 </GridPane>

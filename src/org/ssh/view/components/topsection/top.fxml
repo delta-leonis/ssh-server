@@ -3,53 +3,60 @@
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" GridPane.columnIndex="0" GridPane.rowIndex="0" id="baseTop" fx:id="baseTop">
-        <columnConstraints>
-            <ColumnConstraints percentWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints percentHeight="30.0" />
-            <RowConstraints percentHeight="70.0" />
-        </rowConstraints>
-        <children>
-            <StackPane id="topbar" GridPane.columnIndex="0" GridPane.rowIndex="0" pickOnBounds="false">
-                <children>
-                    <GridPane id="scorebox" pickOnBounds="false">
-                        <columnConstraints>
-                            <ColumnConstraints fillWidth="true" />
-                            <ColumnConstraints prefWidth="13" />
-                            <ColumnConstraints fillWidth="true" />
-                            <ColumnConstraints fillWidth="true" />
-                            <ColumnConstraints fillWidth="true" />
-                            <ColumnConstraints prefWidth="13" />
-                            <ColumnConstraints fillWidth="true" />
-                        </columnConstraints>
-                        <rowConstraints>
-                            <RowConstraints percentHeight="50.0" />
-                            <RowConstraints percentHeight="50.0" />
-                        </rowConstraints>
-                        <children>
-                            <Pane id="leftScoreSpacer" pickOnBounds="false" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
-                            <StackPane fx:id="canvasfitHome" minHeight="0" minWidth="0" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                                <children>
-                                    <Canvas fx:id="ballcanvasHome" StackPane.alignment="CENTER" />
-                                </children>
-                            </StackPane>
-                            <Label id="hometeam" text="Home" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                            <Label text="-" GridPane.columnIndex="3" GridPane.rowIndex="0" />
-                            <Label id="awayteam" text="Away" GridPane.columnIndex="4" GridPane.rowIndex="0" />
-                            <StackPane fx:id="canvasfitAway" minHeight="0" minWidth="0" GridPane.columnIndex="5" GridPane.rowIndex="0">
-                                <children>
-                                    <Canvas fx:id="ballcanvasAway" StackPane.alignment="CENTER" />
-                                </children>
-                            </StackPane>
-                            <Pane id="rightScoreSpacer" pickOnBounds="false" GridPane.columnIndex="6" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
-                            <Label id="scorehome" alignment="BOTTOM_RIGHT" maxHeight="Infinity" maxWidth="Infinity" text="3" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                            <Label alignment="BOTTOM_CENTER" text=":" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                            <Label id="scoreaway" alignment="BOTTOM_LEFT" maxHeight="Infinity" maxWidth="Infinity" text="5" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                        </children>
-                    </GridPane>
-                </children>
-            </StackPane>
-        </children>
-    </GridPane>
+<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" GridPane.columnIndex="0"
+          GridPane.rowIndex="0" id="baseTop" fx:id="baseTop">
+    <columnConstraints>
+        <ColumnConstraints percentWidth="100.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="30.0"/>
+        <RowConstraints percentHeight="70.0"/>
+    </rowConstraints>
+    <children>
+        <StackPane id="topbar" GridPane.columnIndex="0" GridPane.rowIndex="0" pickOnBounds="false">
+            <children>
+                <GridPane id="scorebox" pickOnBounds="false">
+                    <columnConstraints>
+                        <ColumnConstraints fillWidth="true"/>
+                        <ColumnConstraints prefWidth="13"/>
+                        <ColumnConstraints fillWidth="true"/>
+                        <ColumnConstraints fillWidth="true"/>
+                        <ColumnConstraints fillWidth="true"/>
+                        <ColumnConstraints prefWidth="13"/>
+                        <ColumnConstraints fillWidth="true"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints percentHeight="50.0"/>
+                        <RowConstraints percentHeight="50.0"/>
+                    </rowConstraints>
+                    <children>
+                        <Pane id="leftScoreSpacer" pickOnBounds="false" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS"
+                              GridPane.rowIndex="0"/>
+                        <StackPane fx:id="canvasfitHome" minHeight="0" minWidth="0" GridPane.columnIndex="1"
+                                   GridPane.rowIndex="0">
+                            <children>
+                                <Canvas fx:id="ballcanvasHome" StackPane.alignment="CENTER"/>
+                            </children>
+                        </StackPane>
+                        <Label id="hometeam" text="Home" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                        <Label text="-" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+                        <Label id="awayteam" text="Away" GridPane.columnIndex="4" GridPane.rowIndex="0"/>
+                        <StackPane fx:id="canvasfitAway" minHeight="0" minWidth="0" GridPane.columnIndex="5"
+                                   GridPane.rowIndex="0">
+                            <children>
+                                <Canvas fx:id="ballcanvasAway" StackPane.alignment="CENTER"/>
+                            </children>
+                        </StackPane>
+                        <Pane id="rightScoreSpacer" pickOnBounds="false" GridPane.columnIndex="6"
+                              GridPane.hgrow="ALWAYS" GridPane.rowIndex="0"/>
+                        <Label id="scorehome" alignment="BOTTOM_RIGHT" maxHeight="Infinity" maxWidth="Infinity" text="3"
+                               GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                        <Label alignment="BOTTOM_CENTER" text=":" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                        <Label id="scoreaway" alignment="BOTTOM_LEFT" maxHeight="Infinity" maxWidth="Infinity" text="5"
+                               GridPane.columnIndex="4" GridPane.rowIndex="1"/>
+                    </children>
+                </GridPane>
+            </children>
+        </StackPane>
+    </children>
+</GridPane>

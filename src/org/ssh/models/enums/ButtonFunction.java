@@ -9,7 +9,6 @@ import org.ssh.controllers.ControllerLayout;
  * controller {@link Component}.
  *
  * @author Jeroen de jong
- *         
  */
 public enum ButtonFunction {
     KICK(ButtonType.DIGITAL,
@@ -54,20 +53,19 @@ public enum ButtonFunction {
             true),
     DIRECTION_POV(ButtonType.POV,
             true);
-            
+
     /**
      * Enum that describes a possible button type.<br>
      * which is either digital, or analog
-     * 
+     *
      * @author Jeroen de Jong
-     *         
      */
     public enum ButtonType {
         ANALOG,
         DIGITAL,
         POV // the 'hat'-switch (arrow keys) on a gamepad
     }
-    
+
     /**
      * Describes whether the Controller {@link Component} for this {@link ButtonFunction} should be
      * {@link ButtonType.ANALOG} or {@link ButtonType.DIGITAL}.
@@ -76,31 +74,29 @@ public enum ButtonFunction {
     /**
      * Whether this function should be read and updated every time the controller gets polled.
      */
-    private final boolean    persistent;
-                             
+    private final boolean persistent;
+
     /**
      * Constructs a buttonfunction
-     * 
-     * @param type
-     *            type of button (analog, digital, whatever).
-     * @param persistent
-     *            whether this buttonfunction should be {@link #persistent}.
+     *
+     * @param type       type of button (analog, digital, whatever).
+     * @param persistent whether this buttonfunction should be {@link #persistent}.
      */
     ButtonFunction(final ButtonType type, final boolean persistent) {
         this.buttonType = type;
         this.persistent = persistent;
     }
-    
+
     /**
      * @return Get the {@link ButtonType} for this ButtonFunction.
      */
     public ButtonType getButtonType() {
         return this.buttonType;
     }
-    
+
     /**
      * @return true if this button should be updated regardless of it's previous state, see
-     *         {@link #persistent}.
+     * {@link #persistent}.
      */
     public boolean isPersistent() {
         return this.persistent;

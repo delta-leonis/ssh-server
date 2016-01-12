@@ -6,6 +6,7 @@ import org.ssh.services.AbstractTranslator;
 
 /**
  * The Class StrategyToRadioTranslator
+ *
  * @author Rimon Oz
  */
 public class StrategyToRadioTranslator extends AbstractTranslator<StrategyPacket, RadioPacket> {

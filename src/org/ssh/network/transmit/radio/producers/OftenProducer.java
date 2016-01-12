@@ -9,18 +9,17 @@ import protobuf.Radio.RadioProtocolWrapper;
 
 /**
  * The Class OftenProducer.
- *
+ * <p>
  * This is an example implementation of a scheduled Producer
  *
  * @author Rimon Oz
  */
 public class OftenProducer extends AbstractProducer<RadioPacket> {
-    
+
     /**
      * Instantiates a new scheduled Producer
      *
-     * @param name
-     *            The name of the new Producer
+     * @param name The name of the new Producer
      */
     public OftenProducer(final String name) {
         // set the name and priority
@@ -29,7 +28,7 @@ public class OftenProducer extends AbstractProducer<RadioPacket> {
         this.setCallable(() -> {
             AbstractService.LOG.info("Produced a RadioPacket!");
             RadioProtocolCommand command = RadioProtocolCommand.newBuilder().setRobotId(4).setVelocityR(0.2f).setVelocityX(4.0f)
-            .setVelocityY(9293932.0f).build();
+                    .setVelocityY(9293932.0f).build();
             // create a new packet
             return new RadioPacket(RadioProtocolWrapper.newBuilder().addCommand(command));
         });

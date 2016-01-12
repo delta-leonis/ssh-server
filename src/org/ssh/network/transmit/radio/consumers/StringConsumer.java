@@ -8,31 +8,30 @@ import java.lang.reflect.Type;
 
 /**
  * The Class StringConsumer.
- *
+ * <p>
  * This is an example implementation of a AbstractConsumer.
  *
  * @author Rimon Oz
  */
 public class StringConsumer<P extends AbstractPipelinePacket<? extends Object>> extends AbstractConsumer<P> {
     private Type type;
-    
-    
+
+
     /**
      * Instantiates a new Consumer that consumes RadioPackets
      *
-     * @param name
-     *            The name of the StringConsumer
+     * @param name The name of the StringConsumer
      */
     public StringConsumer(final String name, Type type) {
         super(name);
         this.type = type;
     }
-    
+
     @Override
-    public Type getType(){
+    public Type getType() {
         return type;
     }
-    
+
     /*
      * (non-Javadoc)
      *
@@ -44,5 +43,5 @@ public class StringConsumer<P extends AbstractPipelinePacket<? extends Object>> 
                 pipelinePacket.read().toString());
         return true;
     }
-    
+
 }

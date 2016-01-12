@@ -6,30 +6,27 @@ import org.ssh.pipelines.AbstractPipelinePacket;
 
 /**
  * The Class AbstractConsumer.
- *
+ * <p>
  * A Consumer takes a PipelinePacket and consumes it.
  *
  * @param <P> A PipelinePacket this AbstractConsumer can work with.
- *            
  * @author Rimon Oz
  */
 public abstract class AbstractConsumer<P extends AbstractPipelinePacket<? extends Object>> extends AbstractService<P> {
-    
+
     /**
      * Instantiates a new Consumer.
      *
-     * @param name
-     *            The name of the new Consumer
+     * @param name The name of the new Consumer
      */
     public AbstractConsumer(final String name) {
         super(name);
     }
-    
+
     /**
      * Attaches to all compatible Pipelines.
      *
-     * @param <C>
-     *            The generic type of AbstractConsumer requested by the user.
+     * @param <C> The generic type of AbstractConsumer requested by the user.
      * @return The AbstractConsumer itself.
      */
     public <C extends AbstractConsumer<P>> C attachToCompatiblePipelines() {
@@ -38,15 +35,14 @@ public abstract class AbstractConsumer<P extends AbstractPipelinePacket<? extend
                 .map(pipeline -> ((AbstractPipeline<P>) pipeline).registerConsumer(this))
                 .count();
         AbstractConsumer.LOG.info("Attached %s to %d pipes.", getClass().getSimpleName(), noPipes);
-                
+
         return this.<C>getAsService();
     }
-    
+
     /**
      * Consumes a PipelinePacket.
      *
-     * @param pipelinePacket
-     *            The PipelinePacket to be consumed.
+     * @param pipelinePacket The PipelinePacket to be consumed.
      * @return true, if successful
      */
     public abstract boolean consume(P pipelinePacket);

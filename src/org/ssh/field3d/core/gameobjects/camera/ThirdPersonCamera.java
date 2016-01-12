@@ -17,78 +17,103 @@ import org.ssh.models.CameraSettings;
  * @see GameObject
  */
 public class ThirdPersonCamera extends GameObject {
-    
-    /** The Constant DEFAULT_NEAR_PANE. */
-    public static final double      DEFAULT_NEAR_PANE          = 10;
-                                                               
-    /** The Constant DEFAULT_FAR_PANE. */
-    public static final double      DEFAULT_FAR_PANE           = 30000.0;
-                                                               
-    /** The Constant INITIAL_CAMERA_DISTANCE. */
-    public static final double      INITIAL_CAMERA_DISTANCE    = -10000.0;
-                                                               
-    /** The Constant MOUSE_LOOK_SENSITIVITY. */
-    public static final double      MOUSE_LOOK_SENSITIVITY     = 0.35;
-                                                               
-    /** The Constant MOUSE_MOVEMENT_SENSITIVITY. */
-    public static final double      MOUSE_MOVEMENT_SENSITIVITY = 10.0;
-                                                               
-    /** The Constant MOUSE_ZOOM_SENSITIVITY. */
-    public static final double      MOUSE_ZOOM_SENSITIVITY     = 10.0;
-                                                               
-    /** The pivot which the camera "follows". */
-    private Point3D                 pivot;
-                                    
-    /** The camera settings model */
-    private CameraSettings          cameraSettingsModel;
-                                    
-    /** The perspective camera. */
+
+    /**
+     * The Constant DEFAULT_NEAR_PANE.
+     */
+    public static final double DEFAULT_NEAR_PANE = 10;
+
+    /**
+     * The Constant DEFAULT_FAR_PANE.
+     */
+    public static final double DEFAULT_FAR_PANE = 30000.0;
+
+    /**
+     * The Constant INITIAL_CAMERA_DISTANCE.
+     */
+    public static final double INITIAL_CAMERA_DISTANCE = -10000.0;
+
+    /**
+     * The Constant MOUSE_LOOK_SENSITIVITY.
+     */
+    public static final double MOUSE_LOOK_SENSITIVITY = 0.35;
+
+    /**
+     * The Constant MOUSE_MOVEMENT_SENSITIVITY.
+     */
+    public static final double MOUSE_MOVEMENT_SENSITIVITY = 10.0;
+
+    /**
+     * The Constant MOUSE_ZOOM_SENSITIVITY.
+     */
+    public static final double MOUSE_ZOOM_SENSITIVITY = 10.0;
+
+    /**
+     * The pivot which the camera "follows".
+     */
+    private Point3D pivot;
+
+    /**
+     * The camera settings model
+     */
+    private CameraSettings cameraSettingsModel;
+
+    /**
+     * The perspective camera.
+     */
     private final PerspectiveCamera perspectiveCamera;
-                                    
-    /** The transformations. */
-    private final Xform             xForm1, xForm2, xForm3;
-                                    
-    /** The clipping for the camera. */
-    private final double            nearClip, farClip;
-                                    
-    /** The zoom boundaries. */
-    private double                  zoomMax, zoomMin;
-                                    
-    /** The location boundaries. */
-    private double                  locXMin, locXMax, locZMin, locZMax;
-                                    
+
+    /**
+     * The transformations.
+     */
+    private final Xform xForm1, xForm2, xForm3;
+
+    /**
+     * The clipping for the camera.
+     */
+    private final double nearClip, farClip;
+
+    /**
+     * The zoom boundaries.
+     */
+    private double zoomMax, zoomMin;
+
+    /**
+     * The location boundaries.
+     */
+    private double locXMin, locXMax, locZMin, locZMax;
+
     /**
      * Constructor. This instantiates a new ThirdPersonCamera object.
      *
-     * @param game
-     *            The {@link Game} of the {@link GameObject}.
+     * @param game The {@link Game} of the {@link GameObject}.
      */
     public ThirdPersonCamera(final Game game) {
-        
+
         // Initialize super class
         super(game);
-        
+
         // Creating camera settings model
         this.cameraSettingsModel = (CameraSettings) Models.create(CameraSettings.class);
-        
+
         // Setting pivot
         this.pivot = new Point3D(this.cameraSettingsModel.getLocation().getX(),
                 this.cameraSettingsModel.getLocation().getY(),
                 this.cameraSettingsModel.getLocation().getZ());
-                
+
         // Create new perspective camera
         this.perspectiveCamera = new PerspectiveCamera(true);
-        
+
         // Create 3 transforms
         this.xForm1 = new Xform();
         this.xForm2 = new Xform();
         this.xForm3 = new Xform();
-        
+
         // Setting near clip
         this.nearClip = ThirdPersonCamera.DEFAULT_NEAR_PANE;
         // Setting far clip
         this.farClip = ThirdPersonCamera.DEFAULT_FAR_PANE;
-        
+
         // Setting default minimal & maximal values
         this.zoomMax = this.getGame().getMouseInputHandler().getScrollWheelMaxValue();
         this.zoomMin = this.getGame().getMouseInputHandler().getScrollWheelMinValue();
@@ -96,38 +121,38 @@ public class ThirdPersonCamera extends GameObject {
         this.locXMin = 0.0;
         this.locZMax = 0.0;
         this.locZMin = 0.0;
-        
+
         // Setup camera
         this.perspectiveCamera.setNearClip(this.nearClip);
         this.perspectiveCamera.setFarClip(this.farClip);
         this.perspectiveCamera.setDepthTest(DepthTest.ENABLE);
-        
+
         // Creating Xforms
         this.xForm1.getChildren().add(this.xForm2);
         this.xForm2.getChildren().add(this.xForm3);
         this.xForm3.getChildren().add(this.perspectiveCamera);
-        
+
         // Load angles from camera settings model
         this.xForm1.rotationX.setAngle(this.cameraSettingsModel.getPitch());
         this.xForm1.rotationY.setAngle(this.cameraSettingsModel.getYaw());
-        
+
         // Load zoom from camera settings model
         this.setZoom(this.cameraSettingsModel.getZoom());
-        
+
         // Flip y-axis so positive y is upwards
         this.xForm3.setRotateZ(180.0);
     }
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void onInitialize() {
-        
+
         // Add our camera Xform to the camera group
         Platform.runLater(() -> this.getGame().getCameraGroup().getChildren().add(this.xForm1));
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -214,31 +239,31 @@ public class ThirdPersonCamera extends GameObject {
             this.pivot = new Point3D(this.pivot.getX(), this.pivot.getY(), this.locZMax);
         }
     }
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void onDestroy() {
-        
+
         // Check if we need to remove the camera
         if (this.getGame().getCameraGroup().getChildren().contains(this.xForm1)) {
-            
+
             // Remove our camera Xform from the camera group
             Platform.runLater(() -> this.getGame().getCameraGroup().getChildren().remove(this.xForm1));
         }
-        
+
         // Update camera settings model
         this.cameraSettingsModel.update(
                 "position", this.pivot,
                 "zoom", this.getZoom(),
                 "yaw", this.getRotateY(),
                 "pitch", this.getRotateX());
-                
+
         // Save camera settings model
         this.cameraSettingsModel.save();
     }
-    
+
     /**
      * Gets the camera location.
      *
@@ -248,7 +273,7 @@ public class ThirdPersonCamera extends GameObject {
     public Point3D getCameraLoc() {
         return this.getPivot().add(this.getPivotOffsetLoc());
     }
-    
+
     /**
      * Gets the camera transformation.
      *
@@ -258,7 +283,7 @@ public class ThirdPersonCamera extends GameObject {
     public Xform getCameraXform() {
         return this.xForm1;
     }
-    
+
     /**
      * Gets the maximal location at the x-axis.
      *
@@ -268,7 +293,7 @@ public class ThirdPersonCamera extends GameObject {
     public double getMaxLocX() {
         return this.locXMax;
     }
-    
+
     /**
      * Gets the maximal location at the z-axis.
      *
@@ -278,7 +303,7 @@ public class ThirdPersonCamera extends GameObject {
     public double getMaxLocZ() {
         return this.locZMax;
     }
-    
+
     /**
      * Gets the maximal zoom value.
      *
@@ -288,7 +313,7 @@ public class ThirdPersonCamera extends GameObject {
     public double getMaxZoom() {
         return this.zoomMax;
     }
-    
+
     /**
      * Gets the minimal location on the x-axis.
      *
@@ -298,7 +323,7 @@ public class ThirdPersonCamera extends GameObject {
     public double getMinLocX() {
         return this.locXMin;
     }
-    
+
     /**
      * Gets the minimal location at the z-axis.
      *
@@ -308,7 +333,7 @@ public class ThirdPersonCamera extends GameObject {
     public double getMinLocZ() {
         return this.locZMin;
     }
-    
+
     /**
      * Gets the minimal zoom value.
      *
@@ -318,7 +343,7 @@ public class ThirdPersonCamera extends GameObject {
     public double getMinZoom() {
         return this.zoomMin;
     }
-    
+
     /**
      * Gets the perspective camera.
      *
@@ -327,7 +352,7 @@ public class ThirdPersonCamera extends GameObject {
     public PerspectiveCamera getPerspectiveCamera() {
         return this.perspectiveCamera;
     }
-    
+
     /**
      * Gets the pivot.
      *
@@ -336,7 +361,7 @@ public class ThirdPersonCamera extends GameObject {
     public Point3D getPivot() {
         return this.pivot;
     }
-    
+
     /**
      * Gets the zoom value.
      *
@@ -345,14 +370,14 @@ public class ThirdPersonCamera extends GameObject {
     public double getZoom() {
         return this.getGame().getMouseInputHandler().getScrollWheelYValue();
     }
-    
+
     /**
      * Gets the pivot offset location.
      *
      * @return The pivot offset {@link Point3D location}.
      */
     public Point3D getPivotOffsetLoc() {
-        
+
         // Getting translation of camera (from the pivot)
         Point3D tmpPoint = new Point3D(this.xForm2.getTranslateX(),
                 this.xForm2.getTranslateY(),
@@ -361,11 +386,11 @@ public class ThirdPersonCamera extends GameObject {
         tmpPoint = this.xForm1.rotationX.transform(tmpPoint);
         tmpPoint = this.xForm1.rotationY.transform(tmpPoint);
         tmpPoint = this.xForm1.rotationZ.transform(tmpPoint);
-        
+
         // Create new vector out of the rotated values
         return tmpPoint;
     }
-    
+
     /**
      * Gets the rotation around the x-axis.
      *
@@ -374,7 +399,7 @@ public class ThirdPersonCamera extends GameObject {
     public double getRotateX() {
         return this.xForm1.rotationX.getAngle();
     }
-    
+
     /**
      * Gets the rotation around the y-axis.
      *
@@ -383,7 +408,7 @@ public class ThirdPersonCamera extends GameObject {
     public double getRotateY() {
         return this.xForm1.rotationY.getAngle();
     }
-    
+
     /**
      * Gets the rotation around the z-axis.
      *
@@ -393,172 +418,161 @@ public class ThirdPersonCamera extends GameObject {
     public double getRotateZ() {
         return this.xForm1.rotationZ.getAngle();
     }
-    
+
     /**
      * Sets the maximal location on the x-axis.
      *
-     * @param locXMax
-     *            The new maximal location on the x-axis.
+     * @param locXMax The new maximal location on the x-axis.
      */
     public void setMaxLocX(final double locXMax) {
-        
+
         // Setting maximal location on the x-axis
         this.locXMax = locXMax;
-        
+
         // Check if we need to update the location on the x-axis
         if (this.pivot.getX() > locXMax) {
-            
+
             // Setting location on the x-axis
             this.pivot = new Point3D(locXMax, this.pivot.getY(), this.pivot.getZ());
         }
     }
-    
+
     /**
      * Sets the maximal location on the z-axis.
      *
-     * @param locZMax
-     *            The new maximal location on the z-axis.
+     * @param locZMax The new maximal location on the z-axis.
      */
     public void setMaxLocZ(final double locZMax) {
-        
+
         // Setting maximal location on the z-axis
         this.locZMax = locZMax;
-        
+
         // Check if we need to update the location on the z-axis.
         if (this.pivot.getZ() > locZMax) {
-            
+
             // Setting location on z-axis.
             this.pivot = new Point3D(this.pivot.getX(), this.pivot.getY(), locZMax);
         }
     }
-    
+
     /**
      * Sets the maximal zoom value.
      *
-     * @param zoomMax
-     *            The new maximal zoom value.
+     * @param zoomMax The new maximal zoom value.
      */
 
     public void setMaxZoom(final double zoomMax) {
-        
+
         // Setting maximal zoom
         this.zoomMax = zoomMax;
-        
+
         // Check if we need to update zoom
         if (this.getZoom() > zoomMax) {
-            
+
             // Setting max zoom
             this.setZoom(zoomMax);
         }
     }
-    
+
     /**
      * Sets the minimal location on the x-axis.
      *
-     * @param locXMin
-     *            The new minimal location on the x-axis.
+     * @param locXMin The new minimal location on the x-axis.
      */
     public void setMinLocX(final double locXMin) {
-        
+
         // Setting minimal location on the x-axis
         this.locXMin = locXMin;
-        
+
         // Check if we need to update the location on the x-axis
         if (this.pivot.getX() < locXMin) {
-            
+
             // Setting minimal location on the x-axis
             this.pivot = new Point3D(locXMin, this.pivot.getY(), this.pivot.getZ());
         }
     }
-    
+
     /**
      * Sets the minimal location on the z-axis.
      *
-     * @param locZMin
-     *            The new minimal location on the z-axis.
+     * @param locZMin The new minimal location on the z-axis.
      */
     public void setMinLocZ(final double locZMin) {
-        
+
         // Setting minimal location on the z-axis
         this.locZMin = locZMin;
-        
+
         // Check if we need to update the location on the z-axis
         if (this.pivot.getZ() < locZMin) {
-            
+
             // Setting minimal location on the z-axis
             this.pivot = new Point3D(this.pivot.getX(), this.pivot.getY(), locZMin);
         }
     }
-    
+
     /**
      * Sets the minimal zoom value.
      *
-     * @param zoomMin
-     *            The new minimal zoom value.
+     * @param zoomMin The new minimal zoom value.
      */
 
     public void setMinZoom(final double zoomMin) {
-        
+
         // Setting minimal zoom value
         this.zoomMin = zoomMin;
-        
+
         // Check if we need to update the zoom value
         if (this.getZoom() < zoomMin) {
-            
+
             // Setting minimal zoom
             this.setZoom(zoomMin);
         }
     }
-    
+
     /**
      * Sets the pivot.
      *
-     * @param pivot
-     *            The new {@link Point3D pivot}.
+     * @param pivot The new {@link Point3D pivot}.
      */
     public void setPivot(final Point3D pivot) {
         this.pivot = pivot;
     }
-    
+
     /**
      * Sets the rotation around the x-axis.
      *
-     * @param angleX
-     *            The new rotation around the x-axis.
+     * @param angleX The new rotation around the x-axis.
      */
     public void setRotateX(final double angleX) {
         this.xForm1.rotationX.setAngle(angleX);
     }
-    
+
     /**
      * Sets the rotation around the y-axis.
      *
-     * @param angleY
-     *            The new rotation around the y-axis.
+     * @param angleY The new rotation around the y-axis.
      */
     public void setRotateY(final double angleY) {
         this.xForm1.rotationY.setAngle(angleY);
     }
-    
+
     /**
      * Sets the rotation around the z-axis.
      *
-     * @param angleZ
-     *            The new rotation around the z-axis.
+     * @param angleZ The new rotation around the z-axis.
      */
 
     public void setRotateZ(final double angleZ) {
         this.xForm1.rotationZ.setAngle(angleZ);
     }
-    
+
     /**
      * Sets the zoom value of the camera.
      *
-     * @param zoom
-     *            The new zoom value (-1000 - 1000).
+     * @param zoom The new zoom value (-1000 - 1000).
      */
     public void setZoom(final double zoom) {
-        
+
         // Setting zoom (change the mouse wheel value)
         this.getGame().getMouseInputHandler().setMouseWheelYValue((long) zoom);
     }

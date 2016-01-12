@@ -6,18 +6,17 @@ import org.ssh.services.AbstractService;
 
 /**
  * The Class VerboseCoupler.
- *
+ * <p>
  * An example implemtation of a AbstractCoupler.
  *
  * @author Rimon Oz
  */
 public class VerboseCoupler extends AbstractCoupler<RadioPacket> {
-    
+
     /**
      * Instantiates a new VerboseCoupler.
      *
-     * @param name
-     *            The name of the new AbstractCoupler.
+     * @param name The name of the new AbstractCoupler.
      */
     public VerboseCoupler() {
         super("verbosecoupler", packet -> new RadioPacket(packet.apply(content -> {

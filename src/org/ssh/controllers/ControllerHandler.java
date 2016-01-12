@@ -21,14 +21,20 @@ import java.util.Map.Entry;
  * @author Jeroen de Jong
  * @author Thomas Hakkers
  */
-@SuppressWarnings ("rawtypes")
+@SuppressWarnings("rawtypes")
 public class ControllerHandler extends AbstractProducer {
 
-    /** Settings about the controllers */
+    /**
+     * Settings about the controllers
+     */
     private static ControllerSettings settings;
-    /** Controllerlayout that should be used for inputprocessing  */
+    /**
+     * Controllerlayout that should be used for inputprocessing
+     */
     private final ControllerLayout layout;
-    /** Map with previous buttonstates and respective values */
+    /**
+     * Map with previous buttonstates and respective values
+     */
     private Map<ButtonFunction, Float> previousButtonState = new EnumMap<>(ButtonFunction.class);
 
     /**
@@ -71,8 +77,7 @@ public class ControllerHandler extends AbstractProducer {
         if (ControllerHandler.isPressed(buttonValue) && settings != null) {
             packet.setVelocityX(buttonValue * settings.getMaxVelocity());
             return true;
-        }
-        else {
+        } else {
             AbstractService.LOG.warning("Settings in velocityX is null");
             return false;
         }
@@ -89,8 +94,7 @@ public class ControllerHandler extends AbstractProducer {
         if (ControllerHandler.isPressed(buttonValue) && settings != null) {
             packet.setVelocityY(buttonValue * settings.getMaxVelocity());
             return true;
-        }
-        else {
+        } else {
             AbstractService.LOG.warning("Settings in velocityY is null");
             return false;
         }
@@ -268,8 +272,7 @@ public class ControllerHandler extends AbstractProducer {
             if (duplicates.add(entry.getValue())) {
                 // if it doesn't exist yet, just put it into the list
                 currentButtonState.put(entry.getValue(), entry.getKey().getPollData());
-            }
-            else {
+            } else {
                 // if it already exists, add the value on top of the current value
                 currentButtonState
                         .put(entry.getValue(), currentButtonState.get(entry.getValue()) + entry.getKey().getPollData());
@@ -293,11 +296,12 @@ public class ControllerHandler extends AbstractProducer {
 
     /**
      * Processes the given buttonstate, and puts it into the given {@RadioProtocolCommand.Builder packet}
+     *
      * @param currentButtonState The polled values of the assigned buttons
-     * @param packet The packet the values will be put into
+     * @param packet             The packet the values will be put into
      */
     private void processInput(final Map<ButtonFunction, Float> currentButtonState,
-            final RadioProtocolCommand.Builder packet) {
+                              final RadioProtocolCommand.Builder packet) {
         // create a stream with current buttons
         if (!currentButtonState.entrySet().stream()
                 // process each button
@@ -316,8 +320,8 @@ public class ControllerHandler extends AbstractProducer {
      * @return true on success
      */
     private boolean processButtonEntry(final Entry<ButtonFunction, Float> button,
-            final RadioProtocolCommand.Builder packet,
-            final Map<ButtonFunction, Float> currentButtonState) {
+                                       final RadioProtocolCommand.Builder packet,
+                                       final Map<ButtonFunction, Float> currentButtonState) {
         final ButtonFunction function = button.getKey();
         final Float buttonValue = button.getValue();
         // switch to the right function handling
@@ -376,7 +380,7 @@ public class ControllerHandler extends AbstractProducer {
             case SELECT_NEXT_ROBOT:
             case SELECT_PREV_ROBOT:
                 if (ControllerHandler.isPressed(buttonValue))
-                    Services.<ControllerListener>get("ControllerListener").ifPresent(listener -> ((ControllerListener)listener)
+                    Services.<ControllerListener>get("ControllerListener").ifPresent(listener -> ((ControllerListener) listener)
                             .changeRobotId(this, function.equals(ButtonFunction.SELECT_NEXT_ROBOT)));
                 return true;
 
@@ -400,8 +404,8 @@ public class ControllerHandler extends AbstractProducer {
      * @return True if success (always)
      */
     private final boolean kick(final RadioProtocolCommand.Builder packet,
-            final float buttonValue,
-            final Map<ButtonFunction, Float> currentButtonState) {
+                               final float buttonValue,
+                               final Map<ButtonFunction, Float> currentButtonState) {
 
         if (ControllerHandler.isPressed(buttonValue)) {
             // Kickstrength is the value of the assigned trigger. If it doesn't exist, use MAX_STRENGTH
@@ -428,8 +432,8 @@ public class ControllerHandler extends AbstractProducer {
      * @return True if success (always)
      */
     private final boolean chip(final RadioProtocolCommand.Builder packet,
-            final float buttonValue,
-            final Map<ButtonFunction, Float> currentButtonState) {
+                               final float buttonValue,
+                               final Map<ButtonFunction, Float> currentButtonState) {
 
         if (ControllerHandler.isPressed(buttonValue)) {
             // Kickstrength is the value of the assigned trigger. If it doesn't exist, use MAX_STRENGTH
@@ -457,7 +461,7 @@ public class ControllerHandler extends AbstractProducer {
      * @see #getOrientation(float, protobuf.Radio.RadioProtocolCommand.Builder)
      */
     private final boolean orientationXY(final RadioProtocolCommand.Builder packet,
-            final Map<ButtonFunction, Float> currentButtonState) {
+                                        final Map<ButtonFunction, Float> currentButtonState) {
         // make sure both axis are bound
         if (!(this.layout.containsBinding(ButtonFunction.ORIENTATION_X) && this.layout
                 .containsBinding(ButtonFunction.ORIENTATION_Y))) {

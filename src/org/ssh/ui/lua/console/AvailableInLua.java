@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  *
  * @author Thomas Hakkers
  */
-@Target (value = ElementType.TYPE)
-@Retention (value = RetentionPolicy.RUNTIME)
+@Target(value = ElementType.TYPE)
+@Retention(value = RetentionPolicy.RUNTIME)
 public @interface AvailableInLua {
 }

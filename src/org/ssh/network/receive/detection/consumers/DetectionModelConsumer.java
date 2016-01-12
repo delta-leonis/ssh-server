@@ -19,23 +19,25 @@ import java.util.stream.Stream;
 
 /**
  * Class for parsing all {@link DetectionPacket}s to their models.
- * 
+ *
  * @author Jeroen de Jong
- *        
  */
 public class DetectionModelConsumer extends AbstractConsumer<DetectionPacket> {
-    
-    /** Reference to FieldGame in GUI, used for updating */
-    private FieldGame     fieldGame;
 
-    /** helperclass containing information about the game */
+    /**
+     * Reference to FieldGame in GUI, used for updating
+     */
+    private FieldGame fieldGame;
+
+    /**
+     * helperclass containing information about the game
+     */
     private Game game;
-                          
+
     /**
      * Create a new consumer for {@link DetectionPacket}s.
-     * 
-     * @param name
-     *            name for this service
+     *
+     * @param name name for this service
      */
     public DetectionModelConsumer(String name) {
         super(name);
@@ -44,10 +46,10 @@ public class DetectionModelConsumer extends AbstractConsumer<DetectionPacket> {
     @Override
     public boolean consume(DetectionPacket pipelinePacket) {
 
-        if(fieldGame == null) {
+        if (fieldGame == null) {
 
             // Getting reference to the main window
-            UI.<MainWindow> get("main").ifPresent(main ->
+            UI.<MainWindow>get("main").ifPresent(main ->
                     fieldGame = main.getFieldGame());
         }
 
@@ -58,18 +60,18 @@ public class DetectionModelConsumer extends AbstractConsumer<DetectionPacket> {
 
         // merge both list
         Stream.concat(yellowTeam.stream(), frame.getRobotsBlueList().stream()).forEach(robot ->
-                        //return the updated robot model
-                        Models.<Robot> get(getModelName(robot, yellowTeam))
-                                // try to get the existing model, if that doesnt work (orElse) create a new one
-                                .orElseGet(() ->
-                                    //create robotclass
-                                    Models.<Robot> create(Robot.class, robot.getRobotId(), getAllegiance(robot, yellowTeam))
-                                ).update(robot)
+                //return the updated robot model
+                Models.<Robot>get(getModelName(robot, yellowTeam))
+                        // try to get the existing model, if that doesnt work (orElse) create a new one
+                        .orElseGet(() ->
+                                //create robotclass
+                                Models.<Robot>create(Robot.class, robot.getRobotId(), getAllegiance(robot, yellowTeam))
+                        ).update(robot)
         );
 
         // loop all robots that haven't been processjavaed
-        Models.<Robot> getAll("robot").forEach(robot -> {
-            if(frame.getTSent() - robot.lastUpdated() > 500){
+        Models.<Robot>getAll("robot").forEach(robot -> {
+            if (frame.getTSent() - robot.lastUpdated() > 500) {
                 // remove models that aren't on the field
                 Models.remove(robot);
             }
@@ -84,7 +86,7 @@ public class DetectionModelConsumer extends AbstractConsumer<DetectionPacket> {
     /**
      * Returns the {@link Allegiance} of a robot (either {@link Allegiance#ALLY} or {@link Allegiance#OPPONENT}.
      *
-     * @param robot robot to get {@link Allegiance} for
+     * @param robot      robot to get {@link Allegiance} for
      * @param yellowTeam list of all detected yellow robots
      * @return
      */
@@ -94,12 +96,11 @@ public class DetectionModelConsumer extends AbstractConsumer<DetectionPacket> {
 
     /**
      * Get the teamcolor based on the presents of the robot in the provided list. <br /><br />
-     *
+     * <p>
      * NOTE: list should be of the yellow team.
      *
-     * @param robot robot to get {@link TeamColor} for.
-     * @param yellowTeam
-     *          list of all detected yellow robots
+     * @param robot      robot to get {@link TeamColor} for.
+     * @param yellowTeam list of all detected yellow robots
      * @return {@link TeamColor} of given robot
      */
     private static TeamColor getTeamColor(DetectionRobot robot, List<DetectionRobot> yellowTeam) {
@@ -108,17 +109,16 @@ public class DetectionModelConsumer extends AbstractConsumer<DetectionPacket> {
 
     /**
      * Get the proposed name of {@link DetectionRobot} based on it's present in the given list. <br /><br />
-     *
+     * <p>
      * NOTE: list should be of the yellow team.
      *
-     * @param robot         robot to generate modelname for
-     * @param yellowTeam
-     *          list of all detected yellow robots
+     * @param robot      robot to generate modelname for
+     * @param yellowTeam list of all detected yellow robots
      * @return proposed robotname (i.e. "robot A3")
      */
     private String getModelName(DetectionRobot robot, List<DetectionRobot> yellowTeam) {
         Optional<Game> oGame = Models.<Game>get("game");
-        if(oGame.isPresent()) {
+        if (oGame.isPresent()) {
             this.game = oGame.get();
             return String.format("robot %s%d", game.getAllegiance(getTeamColor(robot, yellowTeam)).identifier(), robot.getRobotId());
         }

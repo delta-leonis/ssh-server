@@ -45,9 +45,10 @@ public class LogReader extends AbstractService<ProtoPacket<?>> {
 
     /**
      * Constructor of the {@link LogReader}.
+     *
      * @param path The path to the log this class will load
      */
-    public LogReader(String path){
+    public LogReader(String path) {
         super("logreader");
         try {
             fileStream = new FileInputStream(path);
@@ -56,7 +57,7 @@ public class LogReader extends AbstractService<ProtoPacket<?>> {
             timeouts = new ArrayList<>();
             blueGoals = new ArrayList<>();
             yellowGoals = new ArrayList<>();
-        }catch(IOException exception){
+        } catch (IOException exception) {
             LOG.exception(exception);
         }
     }
@@ -64,34 +65,36 @@ public class LogReader extends AbstractService<ProtoPacket<?>> {
     /**
      * Loads the file into the {@link LogReader}
      */
-    public void load(){
-            try {
-                if(prepareLog())
-                    loadFile();
-            } catch (IOException exception) {
-                LOG.exception(exception);
-            }
+    public void load() {
+        try {
+            if (prepareLog())
+                loadFile();
+        } catch (IOException exception) {
+            LOG.exception(exception);
+        }
     }
 
     /**
      * Sends a {@link WrapperPacket} that belongs to the given time in ms
+     *
      * @param time in ms
      */
-    public void sendDetectionMessage(Long time){
+    public void sendDetectionMessage(Long time) {
         Services.submitTask("Log Reader", () -> {
             GeneratedMessage message = parseMessage(detectionMessages.get(time));
-                Pipelines.getOfDataType(WrapperPacket.class).forEach(pipe ->
+            Pipelines.getOfDataType(WrapperPacket.class).forEach(pipe ->
                     pipe.addPacket(new WrapperPacket((Wrapper.WrapperPacket) message)).processPacket()
-                );
+            );
 
         });
     }
 
     /**
      * Sends a {@link RefereePacket} that belongs to the given time in ms
+     *
      * @param time in ms
      */
-    public void sendRefereeMessage(Long time){
+    public void sendRefereeMessage(Long time) {
         Services.submitTask("Log Reader", () -> {
             GeneratedMessage message = parseMessage(refereeMessages.get(time));
             Pipelines.getOfDataType(WrapperPacket.class).forEach(pipe ->
@@ -104,19 +107,20 @@ public class LogReader extends AbstractService<ProtoPacket<?>> {
     /**
      * Prepares the class for logging.
      * The function basically checks whether it's a valid log file.
+     *
      * @throws IOException
      */
-    private boolean prepareLog() throws IOException{
+    private boolean prepareLog() throws IOException {
         //The first 12 bytes of the file must be a String with value "SSL_LOG_FILE"
         byte[] byteArray = new byte[12];
-        if(fileStream.read(byteArray) < 12 && !new String(byteArray).equals("SSL_LOG_FILE")) {
+        if (fileStream.read(byteArray) < 12 && !"SSL_LOG_FILE".equals(new String(byteArray))) {
             LOG.warning("Log file doesn't begin with \"SSL_LOG_FILE\"");
             return false;
         }
 
         //The next 4 bytes must be a int. This int is a version number, we can only read version 1
         byteArray = new byte[4];
-        if(fileStream.read(byteArray) < 4 && ByteBuffer.wrap(byteArray).getInt() != 1) {
+        if (fileStream.read(byteArray) < 4 && ByteBuffer.wrap(byteArray).getInt() != 1) {
             LOG.warning("Log file isn't version 1");
             return false;
         }
@@ -128,7 +132,7 @@ public class LogReader extends AbstractService<ProtoPacket<?>> {
      *
      * @throws IOException
      */
-    private void loadFile() throws IOException{
+    private void loadFile() throws IOException {
         byte[] type;
         byte[] length;
         byte[] message;
@@ -165,32 +169,35 @@ public class LogReader extends AbstractService<ProtoPacket<?>> {
 
             GeneratedMessage parsedMessage = parseMessage(result.array());
 
-            long timeDiff = (time - startTime)/1000000;
+            long timeDiff = (time - startTime) / 1000000;
 
-            if (parsedMessage != null) {
-                if (parsedMessage instanceof Wrapper.WrapperPacket)
-                    detectionMessages.put(timeDiff, result.array());
-                else {
-                    RefereeOuterClass.Referee refereeMessage = (RefereeOuterClass.Referee) parsedMessage;
-                    if (refereeMessage.getBlue().getScore() > blueGoals.size()) {
-                        blueGoals.add(timeDiff);
-                    }
-                    if (refereeMessage.getYellow().getScore() > yellowGoals.size()) {
-                        yellowGoals.add(timeDiff);
-                    }
-                    if(refereeMessage.getYellow().getTimeouts() + refereeMessage.getBlue().getTimeouts() > timeouts.size())
-                        timeouts.add(timeDiff);
+            //make sure it isn't null
+            if (parsedMessage == null)
+                return;
 
-                    refereeMessages.put(timeDiff, result.array());
+            if (parsedMessage instanceof Wrapper.WrapperPacket)
+                detectionMessages.put(timeDiff, result.array());
+            else {
+                RefereeOuterClass.Referee refereeMessage = (RefereeOuterClass.Referee) parsedMessage;
+                if (refereeMessage.getBlue().getScore() > blueGoals.size()) {
+                    blueGoals.add(timeDiff);
                 }
+                if (refereeMessage.getYellow().getScore() > yellowGoals.size()) {
+                    yellowGoals.add(timeDiff);
+                }
+                if (refereeMessage.getYellow().getTimeouts() + refereeMessage.getBlue().getTimeouts() > timeouts.size())
+                    timeouts.add(timeDiff);
+
+                refereeMessages.put(timeDiff, result.array());
             }
         }
-        duration = ((TreeMap<Long, byte[]>)detectionMessages).lastKey();
+        duration = ((TreeMap<Long, byte[]>) detectionMessages).lastKey();
     }
 
     /**
      * Parses the given byte array to a {@link GeneratedMessage}.
      * This message can be either a {@link protobuf.Wrapper.WrapperPacket} or a {@link protobuf.RefereeOuterClass.Referee}
+     *
      * @param rawData Data in a byte array form. Generated by {@link #load()}
      * @return The {@link GeneratedMessage} parse from the raw byte data
      */
@@ -211,7 +218,7 @@ public class LogReader extends AbstractService<ProtoPacket<?>> {
                     LogReader.LOG.info("Could not decode messagetype %s" + messageType);
                     break;
             }
-        } catch(InvalidProtocolBufferException exception){
+        } catch (InvalidProtocolBufferException exception) {
             LOG.exception(exception);
         }
         return null;
@@ -220,46 +227,48 @@ public class LogReader extends AbstractService<ProtoPacket<?>> {
     /**
      * @return a list of times (in ms) the blue team has scored.
      */
-    public List<Long> getBlueGoalTimes(){
+    public List<Long> getBlueGoalTimes() {
         return blueGoals;
     }
 
     /**
      * @return a list of times (in ms) the yellow team has scored.
      */
-    public List<Long> getYellowGoalTimes(){
+    public List<Long> getYellowGoalTimes() {
         return yellowGoals;
     }
 
     /**
      * @return a list of times (in ms) the a timeout has occurred.
      */
-    public List<Long> getTimeouts(){
+    public List<Long> getTimeouts() {
         return timeouts;
     }
 
     /**
      * @return the duration of the game.
      */
-    public long getDuration(){
+    public long getDuration() {
         return duration;
     }
 
     /**
      * Returns the score blue team had at the given time in milliseconds
+     *
      * @param millis Time in milliseconds
      * @return the score blue team had at the given time in milliseconds
      */
-    public int getBlueScoreAtTimeMillis(long millis){
+    public int getBlueScoreAtTimeMillis(long millis) {
         return blueGoals.stream().filter(time -> time <= millis).collect(Collectors.toList()).size();
     }
 
     /**
      * Returns the score yellow team had at the given time in milliseconds
+     *
      * @param millis Time in milliseconds
      * @return the score yellow team had at the given time in milliseconds
      */
-    public int getYellowScoreAtTimeMillis(long millis){
+    public int getYellowScoreAtTimeMillis(long millis) {
         return yellowGoals.stream().filter(time -> time <= millis).collect(Collectors.toList()).size();
     }
 }

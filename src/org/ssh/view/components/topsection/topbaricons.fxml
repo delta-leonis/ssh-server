@@ -3,37 +3,41 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<GridPane id="TopBarIcons" pickOnBounds="false" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
+<GridPane id="TopBarIcons" pickOnBounds="false" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <columnConstraints>
-        <ColumnConstraints percentWidth="20.0" />
-        <ColumnConstraints fillWidth="true" />
-        <ColumnConstraints maxWidth="35.0" />
-        <ColumnConstraints maxWidth="35.0" />
-        <ColumnConstraints maxWidth="35.0" />
+        <ColumnConstraints percentWidth="20.0"/>
+        <ColumnConstraints fillWidth="true"/>
+        <ColumnConstraints maxWidth="35.0"/>
+        <ColumnConstraints maxWidth="35.0"/>
+        <ColumnConstraints maxWidth="35.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints percentHeight="100.0" />
+        <RowConstraints percentHeight="100.0"/>
     </rowConstraints>
     <children>
-        <Pane id="topButtonsSpacer" maxHeight="Infinity" pickOnBounds="false" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" />
-        <Button id="iconizeButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#iconize">
+        <Pane id="topButtonsSpacer" maxHeight="Infinity" pickOnBounds="false" GridPane.columnIndex="1"
+              GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS"/>
+        <Button id="iconizeButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.columnIndex="2"
+                GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#iconize">
             <graphic>
                 <ImageView>
-                        <Image url="@../../icon/iconize16.png" />
+                    <Image url="@../../icon/iconize16.png"/>
                 </ImageView>
             </graphic>
         </Button>
-        <Button id="minimizeButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#minimize">
+        <Button id="minimizeButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.columnIndex="3"
+                GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#minimize">
             <graphic>
                 <ImageView>
-                        <Image url="@../../icon/minimize16.png" />
+                    <Image url="@../../icon/minimize16.png"/>
                 </ImageView>
             </graphic>
         </Button>
-        <Button id="exitButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.columnIndex="4" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#exit">
+        <Button id="exitButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.columnIndex="4"
+                GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" onAction="#exit">
             <graphic>
                 <ImageView>
-                    <Image url="@../../icon/exit16.png" />
+                    <Image url="@../../icon/exit16.png"/>
                 </ImageView>
             </graphic>
         </Button>

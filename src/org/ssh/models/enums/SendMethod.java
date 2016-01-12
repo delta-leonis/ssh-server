@@ -7,7 +7,6 @@ import org.ssh.ui.lua.console.AvailableInLua;
  * not final.
  *
  * @author Jeroen
- *         
  */
 @AvailableInLua
 public enum SendMethod {

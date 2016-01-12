@@ -27,25 +27,24 @@ import java.util.stream.Stream;
  * Class for displaying data of the {@link Logger}. It consists of a {@link TabPane} where several
  * {@link LoggingTab}s are added to (for every package in org.ssh one and one for showing everything
  * together).
- * 
+ *
  * @author Joost Overeem
  * @author Jeroen de Jong
- *         
  */
 public class LoggerConsole extends UIComponent {
-    
+
     /**
      * {@link GridPane} that is the rowTableView in the fxml file, is used for binding the height and width
      * properties.
      */
     @FXML
     private GridPane rootPane;
-                     
+
     /**
      * {@link TabPane} to place all the logging tabs in.
      */
     @FXML
-    private TabPane  tabPane;
+    private TabPane tabPane;
 
     /**
      * Constructor for {@link LoggerConsole}. Search for all packages in org.ssh and makes a
@@ -82,18 +81,16 @@ public class LoggerConsole extends UIComponent {
         for (String tabName : tabNames)
             tabPane.getTabs().add(new Tab(tabName, new LoggingTab(tabName, Logger.getLogger("org.ssh." + tabName)).getComponent()));
     }
-    
+
     /**
      * Class that describes a {@link Tab} in the {@link TabPane} of {@link LoggerConsole}. It
      * consists of a {@link TableView} where for every line of log data a {@link LogTableRow} can be
      * added.<br/>
      * Managing what log data is displayed is done by a {@link LoggerMemoryHandler}.
-     * 
-     * @see {@link LoggerMemoryHandler}.
-     *      
+     *
      * @author Joost Overeem
      * @author Jeroen de Jong
-     *         
+     * @see {@link LoggerMemoryHandler}.
      */
     protected class LoggingTab extends UIComponent<Pane> {
 
@@ -105,20 +102,19 @@ public class LoggerConsole extends UIComponent {
          */
         @FXML
         private TableView<LogTableRow> rowTableView;
-                                    
+
         /**
          * {@link ChoiceBox} to choose the {@link Level} with that should be displayed.
          */
         @FXML
-        private ChoiceBox<String>   levelDropdown;
+        private ChoiceBox<String> levelDropdown;
 
         /**
          * Constructor for {@link LoggingTab}. Makes the tab existing of a {@link TableView} with
          * {@link LogTableRow}s and adds a {@link LoggerMemoryHandler} to the {@link Logger} that
          * provides the {@link LogTableRow}s to be displayed.
-         * 
-         * @param logger
-         *            {@link Logger} whose data is displayed.
+         *
+         * @param logger {@link Logger} whose data is displayed.
          */
         public LoggingTab(String name, Logger logger) {
             // Call super constructor with right fxml file
@@ -134,20 +130,20 @@ public class LoggerConsole extends UIComponent {
                     .findAny();
 
             //make sure it has been found
-            if(!oHandler.isPresent()) {
+            if (!oHandler.isPresent()) {
                 UIComponent.LOG.warning("Could not find LoggerMemoryHandler to bind to LoggerConsole for %s", logger.getName());
                 return;
             }
 
             //filter data to contain everything
-            FilteredList<LogTableRow> filteredData = new FilteredList<>(((LoggerMemoryHandler)oHandler.get()).getLogrecords(),
+            FilteredList<LogTableRow> filteredData = new FilteredList<>(((LoggerMemoryHandler) oHandler.get()).getLogrecords(),
                     row -> Level.parse(row.getLevel()).intValue() >= Level.parse(levelDropdown.getValue()).intValue());
 
             // create a handler which will filter based on selected LEVEL in table
             levelDropdown.getSelectionModel().selectedItemProperty()
                     .addListener((observable, oldValue, newValue) ->
-                filteredData.setPredicate(row -> Level.parse(row.getLevel()).intValue() >= Level.parse(newValue).intValue())
-            );
+                            filteredData.setPredicate(row -> Level.parse(row.getLevel()).intValue() >= Level.parse(newValue).intValue())
+                    );
 
             // wrap in a sortedlist
             SortedList<LogTableRow> sortedData = new SortedList<>(filteredData);

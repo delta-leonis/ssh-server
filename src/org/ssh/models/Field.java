@@ -10,15 +10,14 @@ import java.util.List;
  * Describes a fieldSize with {@link Goal goals} and a {@link GeometryFieldSize fieldSize size}.
  *
  * @author Jeroen de Jong
- *         
  */
 public class Field extends AbstractModel {
-    
+
     /**
      * Field object from protobuf packet
      */
     private GeometryFieldSize fieldSize;
-                              
+
     /**
      * Instantiates a fieldSize.
      */
@@ -27,47 +26,45 @@ public class Field extends AbstractModel {
     }
 
     @Override
-    public void initialize(){
+    public void initialize() {
         //no default values
     }
-    
+
     /**
      * @return Width of the boundary around the fieldSize.
      */
     public int getBoundaryWidth() {
         return this.fieldSize.getBoundaryWidth();
     }
-    
+
     /**
      * Get a specific {@link FieldCicularArc arc segment}.
-     * 
-     * @param index
-     *            index of the {@link FieldCicularArc arc segment}
+     *
+     * @param index index of the {@link FieldCicularArc arc segment}
      * @return a specific {@link FieldCicularArc arc segment}.
      */
     public FieldCicularArc getFieldArc(final int index) {
         return this.fieldSize.getFieldArcs(index);
     }
-    
+
     /**
      * @return all {@link FieldCicularArc arc segments} on the fieldSize.
      */
     public List<FieldCicularArc> getFieldArcs() {
         return this.fieldSize.getFieldArcsList();
     }
-    
+
     /**
      * @return Length of the fieldSize.
      */
     public int getFieldLength() {
         return this.fieldSize.getFieldLength();
     }
-    
+
     /**
      * Get a specific {@link protobuf.Geometry.FieldLineSegment line segment}.
-     * 
-     * @param index
-     *            index of the {@link protobuf.Geometry.FieldLineSegment line segment}
+     *
+     * @param index index of the {@link protobuf.Geometry.FieldLineSegment line segment}
      * @return a specific {@link protobuf.Geometry.FieldLineSegment line segment}.
      */
     public FieldLineSegment getFieldLine(final int index) {
@@ -87,11 +84,11 @@ public class Field extends AbstractModel {
     public int getFieldWidth() {
         return this.fieldSize.getFieldWidth();
     }
-    
+
     /**
      * @return Protobuf object containing latest information about fieldSize/goals.
      */
-    public GeometryFieldSize getFieldSize(){
+    public GeometryFieldSize getFieldSize() {
         return fieldSize;
     }
 }

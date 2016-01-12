@@ -13,29 +13,35 @@ import java.util.List;
  *
  * @author Jeroen de Jong
  * @see Models
- *
  */
 public class Team extends AbstractModel {
 
-    /** Whether this is an {@link Allegiance#ALLY} or  {@link Allegiance#OPPONENT}*/
+    /**
+     * Whether this is an {@link Allegiance#ALLY} or  {@link Allegiance#OPPONENT}
+     */
     private transient Allegiance allegiance;
 
-    /** teamname given by {@link Referee} */
-    private String           teamName;
+    /**
+     * teamname given by {@link Referee}
+     */
+    private String teamName;
 
-    /** log with received cards and score, index is the count-value and Object is the timestamp. */
+    /**
+     * log with received cards and score, index is the count-value and Object is the timestamp.
+     */
     private List<Long> yellowCards,
             redCards,
             scores;
 
-    /** team properties as time left for timeouts, number of timeouts and the goalie ID. */
-    private Integer          goalieId, timeoutLeft, timeouts;
+    /**
+     * team properties as time left for timeouts, number of timeouts and the goalie ID.
+     */
+    private Integer goalieId, timeoutLeft, timeouts;
 
     /**
      * Instantiates a new team that plays on a specified field half.
      *
-     * @param allegiance
-     *            whether this team is {@link Allegiance#ALLY} or {@link Allegiance#OPPONENT}.
+     * @param allegiance whether this team is {@link Allegiance#ALLY} or {@link Allegiance#OPPONENT}.
      */
     public Team(final Allegiance allegiance) {
         super("team", allegiance.name());
@@ -51,7 +57,7 @@ public class Team extends AbstractModel {
     }
 
     @Override
-    public String getConfigName(){
+    public String getConfigName() {
         return String.format("%s %s.json", this.getClass().getSimpleName(), allegiance.name()).replace(" ", "_");
     }
 

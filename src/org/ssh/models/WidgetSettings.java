@@ -9,10 +9,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- *
  * cols = shortcuts
  * rows = window
- *
  */
 public class WidgetSettings extends AbstractModel {
 
@@ -25,7 +23,8 @@ public class WidgetSettings extends AbstractModel {
     /**
      * Should contains all initial values as declared normally in the constructor
      */
-    @Override public void initialize() {
+    @Override
+    public void initialize() {
         widgets = HashBasedTable.create();
     }
 

@@ -9,17 +9,18 @@ import org.ssh.field3d.core.game.Game;
  */
 public abstract class VisionGameObject {
 
-    /** The {@link Game} of the vision game object */
+    /**
+     * The {@link Game} of the vision game object
+     */
     private final Game game;
 
     /**
      * Constructor. This instantiates a new {@link VisionGameObject} object.
      *
-     * @param game
-     *              The {@link Game} of the {@link VisionGameObject}.
+     * @param game The {@link Game} of the {@link VisionGameObject}.
      */
     public VisionGameObject(Game game) {
-        
+
         // Setting game
         this.game = game;
     }
@@ -33,10 +34,10 @@ public abstract class VisionGameObject {
      * On destroy method. This method should be called when the {@link VisionGameObject} is removed from the game.
      */
     public abstract void onDestroy();
-    
+
     /**
      * Gets the game of the {@link VisionGameObject}.
-     * 
+     *
      * @return The {@link Game} of the {@link VisionGameObject}.
      */
     protected Game getGame() {

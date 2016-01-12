@@ -33,15 +33,15 @@ public class Pepe {
 
         // create the language with the following lookup function
         this.regularLanguage = new RegularLanguage<>(resolvingOperation)
-        // add the concatenation operator
-        .addConcatenator(">",
-                (leftMember, rightMember) ->
-                    new ArrayList<>(Collections.singletonList(input -> rightMember.apply(leftMember.apply(input)))))
-        // add the parallel operator
-        .addOperator("|", true, 2,
-                (leftMember, rightMember) -> new ArrayList<>(Arrays.asList(leftMember::apply, rightMember::apply)))
-        // build the language
-        .build();
+                // add the concatenation operator
+                .addConcatenator(">",
+                        (leftMember, rightMember) ->
+                                new ArrayList<>(Collections.singletonList(input -> rightMember.apply(leftMember.apply(input)))))
+                // add the parallel operator
+                .addOperator("|", true, 2,
+                        (leftMember, rightMember) -> new ArrayList<>(Arrays.asList(leftMember::apply, rightMember::apply)))
+                // build the language
+                .build();
     }
 
     /**

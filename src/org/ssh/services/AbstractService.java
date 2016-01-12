@@ -12,52 +12,53 @@ import java.util.stream.Collectors;
 
 /**
  * The Class Service.
- *
+ * <p>
  * AbstractService<P extends AbstractPipelinePacket> is an abstract class representing a component of the framework
  * that handles Pipeline data. It remembers its parameterized genericType through reflection.
  *
- * @param <P>
- *            A PipelinePacket this Service can work with.
- *           
+ * @param <P> A PipelinePacket this Service can work with.
  * @author Rimon Oz
  */
 public abstract class AbstractService<P extends AbstractPipelinePacket<? extends Object>> extends AbstractManageable {
-    
-    /** Whether the service is enabled. */
-    private boolean               enabled     = false;
-                                              
-    /** The reflected TypeToken (o¬‿¬o ). */
-    @SuppressWarnings ("serial")
-    public TypeToken<P>           genericType = new TypeToken<P>(this.getClass()) { };
-                                              
+
+    /**
+     * Whether the service is enabled.
+     */
+    private boolean enabled = false;
+
+    /**
+     * The reflected TypeToken (o¬‿¬o ).
+     */
+    @SuppressWarnings("serial")
+    public TypeToken<P> genericType = new TypeToken<P>(this.getClass()) {
+    };
+
     // a logger for good measure
-    protected static final Logger LOG         = Logger.getLogger();
-                                              
+    protected static final Logger LOG = Logger.getLogger();
+
     /**
      * Instantiates a new Service.
      *
-     * @param name
-     *            The name of the Service.
+     * @param name The name of the Service.
      */
     public AbstractService(final String name) {
         super(name);
         this.enabled = false;
-        AbstractService.LOG.info("New Service instantiated named %s",  name);
+        AbstractService.LOG.info("New Service instantiated named %s", name);
         Services.add(this);
     }
-    
+
     /**
      * Gets the service as a Service.
      *
-     * @param <S>
-     *            The generic type of Service requested by the user.
+     * @param <S> The generic type of Service requested by the user.
      * @return The Service itself.
      */
-    @SuppressWarnings ("unchecked")
+    @SuppressWarnings("unchecked")
     public <S extends AbstractService<?>> S getAsService() {
         return (S) this;
     }
-    
+
     /**
      * Gets the type of {@link AbstractPipelinePacket} on which this Service operates.
      *
@@ -75,12 +76,11 @@ public abstract class AbstractService<P extends AbstractPipelinePacket<? extends
     public List<Type> getTypes() {
         return this.genericType.getTypes().stream().map(TypeToken::getType).collect(Collectors.toList());
     }
-    
+
     /**
      * Start the Service.
-     * 
-     * @param <S>
-     *            The generic type of Service requested by the user.
+     *
+     * @param <S> The generic type of Service requested by the user.
      * @return The Service itself.
      */
     public <S extends AbstractService<?>> S start() {
@@ -88,12 +88,11 @@ public abstract class AbstractService<P extends AbstractPipelinePacket<? extends
         this.setEnabled(true);
         return this.<S>getAsService();
     }
-    
+
     /**
      * Stops the Service.
-     * 
-     * @param <S>
-     *            The generic type of Service requested by the user.
+     *
+     * @param <S> The generic type of Service requested by the user.
      * @return The Service itself.
      */
     public <S extends AbstractService<?>> S stop() {
@@ -101,7 +100,7 @@ public abstract class AbstractService<P extends AbstractPipelinePacket<? extends
         this.setEnabled(false);
         return this.<S>getAsService();
     }
-    
+
     /**
      * Checks if the Service is enabled.
      *
@@ -110,12 +109,11 @@ public abstract class AbstractService<P extends AbstractPipelinePacket<? extends
     public boolean isEnabled() {
         return enabled;
     }
-    
+
     /**
      * Enables/disables the service.
      *
-     * @param enabled
-     *            true to enable, false to disable
+     * @param enabled true to enable, false to disable
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;

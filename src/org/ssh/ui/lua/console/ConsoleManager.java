@@ -13,7 +13,7 @@ import org.ssh.ui.UIComponent;
 
 /**
  * Class that manages all {@link Console Consoles} by placing them in different {@link Tab tabs}
- * 
+ *
  * @author Thomas Hakkers
  */
 public class ConsoleManager extends UIComponent<Pane> {
@@ -21,17 +21,18 @@ public class ConsoleManager extends UIComponent<Pane> {
     @FXML
     private Pane rootPane;
 
-    /** The {@link TabPane} that holds all tabs */
+    /**
+     * The {@link TabPane} that holds all tabs
+     */
     @FXML
     private TabPane tabPane;
     /* number of latest created tab (current tabIndex) */
     private int currentTab = 0;
-    
+
     /**
      * Constructor that manages a bunch of {@link Console consoles}.
-     * 
-     * @param name
-     *            The name of the {@link UIComponent}
+     *
+     * @param name The name of the {@link UIComponent}
      */
     public ConsoleManager(String name) {
         super(name, "bottomsection/consolemanager.fxml");
@@ -54,7 +55,7 @@ public class ConsoleManager extends UIComponent<Pane> {
                         .act(event -> ConsoleManager.cancelTab((Console) tabPane.getSelectionModel().getSelectedItem()))
                         .create());
     }
-    
+
     /**
      * Opens a new tab and gives it a fitting name
      */
@@ -70,35 +71,33 @@ public class ConsoleManager extends UIComponent<Pane> {
         console.requestFocus();
 
         // Make closing unavailable if only one tab is open
-        tabPane.setTabClosingPolicy( tabPane.getTabs().size() > 1 ? TabPane.TabClosingPolicy.ALL_TABS : TabPane.TabClosingPolicy.UNAVAILABLE);
+        tabPane.setTabClosingPolicy(tabPane.getTabs().size() > 1 ? TabPane.TabClosingPolicy.ALL_TABS : TabPane.TabClosingPolicy.UNAVAILABLE);
     }
-    
+
     /**
      * Close the given tab and stop any {@link Thread threads} still running in {@link Console}
-     * 
-     * @param selectedTab
-     *            The {@link Tab} to close
+     *
+     * @param selectedTab The {@link Tab} to close
      */
     private void closeTab(Console selectedTab) {
-         selectedTab.cancelTask();
+        selectedTab.cancelTask();
         // Remove the selected tab
         this.tabPane.getTabs().remove(selectedTab);
         // Make closing unavailable if only one tab is open
-        tabPane.setTabClosingPolicy( tabPane.getTabs().size() > 1 ? TabPane.TabClosingPolicy.ALL_TABS : TabPane.TabClosingPolicy.UNAVAILABLE);
+        tabPane.setTabClosingPolicy(tabPane.getTabs().size() > 1 ? TabPane.TabClosingPolicy.ALL_TABS : TabPane.TabClosingPolicy.UNAVAILABLE);
         this.switchFocusToCurrentTab();
     }
-    
+
     /**
      * Cancels the command running in the given {@link Tab}
-     * 
-     * @param selectedTab
-     *            The {@link Tab} to cancel
+     *
+     * @param selectedTab The {@link Tab} to cancel
      * @return true on success
      */
     private static boolean cancelTab(Console selectedTab) {
         return selectedTab.cancelTask();
     }
-    
+
     /**
      * Requests focus on the {@link ConsoleArea} contained by the {@link Tab}
      */

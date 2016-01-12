@@ -24,73 +24,73 @@ import org.ssh.ui.components.topsection.TopSection;
  */
 public class MainWindow extends UIController<StackPane> {
 
-	@FXML
-	private Pane profilemenuWrapper;
+    @FXML
+    private Pane profilemenuWrapper;
 
-	private CenterSection center;
-	/**
-	 * Instantiates the main window.
-	 *
-	 * @param name
-	 *            The name of the window
-	 * @param primaryStage
-	 *            The primary stage
-	 */
-	public MainWindow(final String name, final Stage primaryStage) {
-		super(name, "main.fxml", primaryStage);
+    private CenterSection center;
 
-		setRootNode((Pane)getRootNode().lookup("#basePane"));
+    /**
+     * Instantiates the main window.
+     *
+     * @param name         The name of the window
+     * @param primaryStage The primary stage
+     */
+    public MainWindow(final String name, final Stage primaryStage) {
+        super(name, "main.fxml", primaryStage);
 
-		// If your screen has a lower resolution than this, you are too inferior
-		// to use the software
-		this.setMinimumDimensions(900, 680);
+        setRootNode((Pane) getRootNode().lookup("#basePane"));
 
-		// When one screen is connected the stage should be displayed
-		// on fullscreen, otherwise it should be maximized and set op TopSection (when not
-		// set on TopSection, the stage disappears on undesirable moments when using
-		// utilities)
-		if (Screen.getScreens().size() <= 1) {
-			primaryStage.setFullScreen(true);
-		} else {
-			primaryStage.setAlwaysOnTop(true);
-			primaryStage.setMaximized(true);
-		}
+        // If your screen has a lower resolution than this, you are too inferior
+        // to use the software
+        this.setMinimumDimensions(900, 680);
 
-		//add top section
-		this.add(new TopSection(), "topSection", true);
-		//add center section
-		center = new CenterSection();
-		this.add(center, "centerSection", true);
-		// add bottom section
+        // When one screen is connected the stage should be displayed
+        // on fullscreen, otherwise it should be maximized and set op TopSection (when not
+        // set on TopSection, the stage disappears on undesirable moments when using
+        // utilities)
+        if (Screen.getScreens().size() <= 1) {
+            primaryStage.setFullScreen(true);
+        } else {
+            primaryStage.setAlwaysOnTop(true);
+            primaryStage.setMaximized(true);
+        }
+
+        //add top section
+        this.add(new TopSection(), "topSection", true);
+        //add center section
+        center = new CenterSection();
+        this.add(center, "centerSection", true);
+        // add bottom section
         this.add(new BottomSection(), "bottomSection", true);
 
-		// add overlay for profile menu
+        // add overlay for profile menu
         this.addOverlay(new ProfilemenuOverlay());
-		// add overlay for Matchlogmenu
+        // add overlay for Matchlogmenu
         this.addOverlay(new LoggerConsoleOverlay());
 
-		//Building is finished, lets spawn the window
-		this.spawnWindow();
+        //Building is finished, lets spawn the window
+        this.spawnWindow();
 
-		// this handler makes sure the stage shuts down when the main window closes
-		primaryStage.setOnCloseRequest(windowEvent -> {
-			// Shut down javafx platform
-			Platform.exit();
-			// Shut down program
-			System.exit(0);
-		});
-	}
+        // this handler makes sure the stage shuts down when the main window closes
+        primaryStage.setOnCloseRequest(windowEvent -> {
+            // Shut down javafx platform
+            Platform.exit();
+            // Shut down program
+            System.exit(0);
+        });
+    }
 
-    public <C extends UIComponent<?>> void addOverlay(C component){
-        ((StackPane)getRootNode().getParent())
+    public <C extends UIComponent<?>> void addOverlay(C component) {
+        ((StackPane) getRootNode().getParent())
                 .getChildren().add(component.getComponent());
     }
 
-	/**
-	 * ultra mega beun, but it will disappear
-	 * @return
+    /**
+     * ultra mega beun, but it will disappear
+     *
+     * @return
      */
-	public FieldGame getFieldGame() {
-		return center.getFieldGame();
-	}
+    public FieldGame getFieldGame() {
+        return center.getFieldGame();
+    }
 }

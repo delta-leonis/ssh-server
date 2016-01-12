@@ -59,7 +59,7 @@ public class Console extends Tab {
     /**
      * The cursor used by the console
      */
-    private static final String CURSOR          = "> ";
+    private static final String CURSOR = "> ";
     /**
      * Warning for the users
      */
@@ -69,11 +69,11 @@ public class Console extends Tab {
     /**
      * The title that shows when starting up the console
      */
-    private              String title           = "Lua Console: ";
+    private String title = "Lua Console: ";
     /**
      * The actual area we type in
      */
-    private final ConsoleArea   consoleArea;
+    private final ConsoleArea consoleArea;
     /**
      * Custom outputstream
      */
@@ -85,20 +85,20 @@ public class Console extends Tab {
     /**
      * All objects found with reflection that use the {@link AvailableInLua}
      */
-    private final List<Object>   functionClasses;
+    private final List<Object> functionClasses;
     /**
      * Lua globals used by this {@link Console}
      */
-    private       Globals        globals;
+    private Globals globals;
     /**
      * Magic debuglibrary that is used to interrupt functions
      */
-    private       CustomDebugLib customDebug;
+    private CustomDebugLib customDebug;
     /* Variables for handling command history */
     /**
      * A list containing all previous commands
      */
-    private final List<String>   recentCommands;
+    private final List<String> recentCommands;
     /**
      * selecting = true when the user is selecting commands using the up and down keys
      */
@@ -110,11 +110,11 @@ public class Console extends Tab {
     /**
      * Get created whenever a command is executed. Can be cancelled by calling close()
      */
-    private ListenableFuture<?>  currentFuture;
+    private ListenableFuture<?> currentFuture;
     /**
      * Button that cancels the command
      */
-    private Button               terminateButton;
+    private Button terminateButton;
 
     /**
      * The constructor of the {@link Console}. After that it looks for all classes for auto complete
@@ -232,16 +232,14 @@ public class Console extends Tab {
                         .forEach(this::println);
                 printCursor();
                 return "";
-            }
-            else {
+            } else {
                 // Map the available classes into Strings
                 List<String> options = functionClasses.stream().map(LuaUtils::getSimpleName)
                         .collect(Collectors.toList());
                 // Use those for autocompletion
                 return autocompleteBasedOnList(options, stringObject);
             }
-        }
-        else {
+        } else {
             // Autocomplete Function
             // Split into Object and function (prefix)
             final String object = splitObjectsAndFunctions[splitObjectsAndFunctions.length - 2];
@@ -314,8 +312,7 @@ public class Console extends Tab {
             this.addCommand(command);
             // Execute the command
             this.globals.load(command).call();
-        }
-        catch (LuaError exception) {
+        } catch (LuaError exception) {
             // If the command is cancelled (Yes, this is slightly skeer)
             if (exception.getMessage().contains("InterruptedException") || exception.getMessage()
                     .contains("InterruptException"))
@@ -451,8 +448,7 @@ public class Console extends Tab {
             // Set the line from where we need to start reading commands.
             this.currentLine = this.consoleArea.getText().length();
             consoleArea.setCurrentLine(currentLine);
-        }
-        catch (final Exception exception) {
+        } catch (final Exception exception) {
             LOG.exception(exception);
             this.println("Exception occurred whilst setting up console.\n" + exception.getMessage());
         }
@@ -477,8 +473,7 @@ public class Console extends Tab {
                                 this.println("-- Loading: " + path);
                                 this.globals.get("dofile").call(LuaValue.valueOf(path));
                             });
-                }
-                catch (IOException exception) {
+                } catch (IOException exception) {
                     Console.LOG.exception(exception);
                     this.println("-- IOException whilst looking for lua.d\n\t" + exception.getMessage());
                 }

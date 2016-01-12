@@ -22,22 +22,25 @@ import java.util.List;
 /**
  * Manages all networkconnections. Controls all {@link UDPReceiver UPDReceivers}. This class also acts as a
  * interface for a {@link RadioPacketSender}.
- * 
+ *
  * @author Jeroen de Jong
- *         
  */
 @AvailableInLua
 public class Network implements ManagerInterface<AbstractService<? extends ProtoPacket<? extends GeneratedMessage>>> {
-    
+
     /**
      * The network store has a controller that runs the store.
      */
     private static NetworkController networkController;
-    /** The Constant LOG. */
+    /**
+     * The Constant LOG.
+     */
     // respective logger
-    private static final Logger      LOG      = Logger.getLogger();
-    /** The instance. */
-    private static final Object      instance = new Object();
+    private static final Logger LOG = Logger.getLogger();
+    /**
+     * The instance.
+     */
+    private static final Object instance = new Object();
 
 
     /**
@@ -48,15 +51,14 @@ public class Network implements ManagerInterface<AbstractService<? extends Proto
 
     /**
      * Add one or multiple sendmethods as default in the {@link RadioPacketSender}
-     * 
-     * @param newSendMethods
-     *            new sendmethod(s)
+     *
+     * @param newSendMethods new sendmethod(s)
      * @return succes value
      */
     public static boolean addDefault(final SendMethod... newSendMethods) {
         return networkController.addDefault(newSendMethods);
     }
-    
+
     /**
      * Gets the Singleton instance of Models.
      *
@@ -65,78 +67,72 @@ public class Network implements ManagerInterface<AbstractService<? extends Proto
     public static Object getInstance() {
         return Network.instance;
     }
-    
+
     /**
      * Listen for a specific {@link ProtoPacket<?> ProtoPacket}. Note that all networksettings are
      * dynamically loaded by the {@link UDPReceiver} upon initialization based on the parameter
      * type.
-     * 
-     * @param type
-     *            type to listen for
+     *
+     * @param type type to listen for
      */
     public static <M extends GeneratedMessage, P extends ProtoPacket<M>> void listenFor(Class<P> type) {
         networkController.listenFor(type);
     }
-    
+
     /**
      * Register a new handler for a given SendMethod. Note that only one {@link SenderInterface} per
      * {@link SendMethod} is allowed. New handlers will overwrite older ones.<br />
      * The first registered {@link SendMethod} will be set as default sendmethod.
-     * 
-     * @param key
-     *            sendMethod to use
-     * @param communicator
-     *            communicator that implements given sendmethod
+     *
+     * @param key          sendMethod to use
+     * @param communicator communicator that implements given sendmethod
      */
     public static boolean register(final SendMethod key, final SenderInterface communicator) {
         return networkController.register(key, communicator);
     }
-    
+
     /**
      * Removes this sendmethod as a default in {@link RadioPacketSender}
-     * 
-     * @param method
-     *            SendMethod to remove as default
+     *
+     * @param method SendMethod to remove as default
      * @return succes value
      */
     public static boolean removeDefault(final SendMethod method) {
         return networkController.removeDefault(method);
     }
-    
+
     /**
      * Start a {@link RadioPipeline}, {@link RadiopacketSender} and instantiates a
      * {@link NetworkController}
      */
     public static void start() {
         Network.LOG.info("Starting Network...");
-        
+
         // create pipeline
         new RadioPipeline("communication");
-        
+
         // create 'the' sender
         new RadioPacketSender();
-        
+
         // create networkController
         Network.networkController = new NetworkController();
-        
+
     }
-    
+
     /**
      * Kills the {@link UDPReceiver} for given type
-     * 
-     * @param type
-     *            type to stop listening for
+     *
+     * @param type type to stop listening for
      */
     public static <M extends GeneratedMessage, P extends ProtoPacket<M>> void stopListening(Class<P> type) {
         networkController.stopListening(type);
     }
-    
+
     /**
      * Builds a {@link RadioProtocolWrapper} from all commands supplied and tries to send through
      * {@link #send(com.google.protobuf.GeneratedMessage.Builder)}
-     * 
-     * @param commands
-     *            Array with {@link RadioProtocolCommand} to send
+     *
+     * @param commands Array with {@link RadioProtocolCommand} to send
      * @return success value
      */
     public static boolean transmit(final List<RadioProtocolCommand.Builder> commands) {
@@ -146,40 +142,35 @@ public class Network implements ManagerInterface<AbstractService<? extends Proto
         commands.stream().forEach(command -> wrapperBuilder.addCommand(command));
         return transmit(wrapperBuilder);
     }
-    
+
     /**
      * Send a packet alternatively through specified sendmethods
-     * 
-     * @param genericBuilder
-     *            Packet to send
-     * @param sendMethods
-     *            sendmethods that should be used instead of the default ones
+     *
+     * @param genericBuilder Packet to send
+     * @param sendMethods    sendmethods that should be used instead of the default ones
      * @return success value
      */
     public static boolean transmit(final protobuf.Radio.RadioProtocolWrapper.Builder genericBuilder,
-            final SendMethod... sendMethods) {
+                                   final SendMethod... sendMethods) {
         return networkController.transmit(genericBuilder, sendMethods);
     }
-    
+
     /**
      * Wraps the command and sends it trough
      * {@link #transmit(protobuf.Radio.RadioProtocolWrapper.Builder, SendMethod...)}
-     * 
-     * @param command
-     *            {@link RadioProtocolCommand} to send
-     * @param methods
-     *            sendmethods that should be used instead of the default ones
+     *
+     * @param command {@link RadioProtocolCommand} to send
+     * @param methods sendmethods that should be used instead of the default ones
      * @return success value
      */
     public static boolean transmit(final RadioProtocolCommand.Builder command, final SendMethod... methods) {
         return transmit(RadioProtocolWrapper.newBuilder().addCommand(command), methods);
     }
-    
+
     /**
      * Unregisters a hook to a {@link SendMethod}
-     * 
-     * @param sendmethod
-     *            method to unhook
+     *
+     * @param sendmethod method to unhook
      * @return succes value
      */
     public static boolean unregister(final SendMethod sendmethod) {

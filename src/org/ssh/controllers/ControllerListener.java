@@ -18,11 +18,10 @@ import java.util.stream.Collectors;
  *
  * @author Jeroen de Jong
  * @author Thomas Hakkers
- *         
  */
-@SuppressWarnings ("rawtypes")
+@SuppressWarnings("rawtypes")
 public class ControllerListener extends AbstractService {
-    
+
     /**
      * List of handlers<br/>
      * - Integer describes robotId<br/>
@@ -34,24 +33,23 @@ public class ControllerListener extends AbstractService {
      * {@link #processControllers()} call. Whenever handlers should be updated, tmpHandlers != null.
      */
     private BiMap<Integer, ControllerHandler> tmpHandlers;
-                                                       
+
     /**
      * Create a controllerlistener
      */
     public ControllerListener() {
         super("ControllerListener");
     }
-    
+
     /**
      * give the next or previous available robotid
-     * 
-     * @param forward
-     *            give next available id on true, give previous on false
+     *
+     * @param forward give next available id on true, give previous on false
      */
     public void changeRobotId(final ControllerHandler handler, final boolean forward) {
         final int currentIndex = this.handlers.inverse().get(handler);
         this.tmpHandlers = HashBiMap.create(handlers);
-        
+
         // free the id
         this.tmpHandlers.put(currentIndex, null);
 
@@ -59,7 +57,7 @@ public class ControllerListener extends AbstractService {
                 .map(entry -> entry.getKey()).collect(Collectors.toList());
 
         final ListIterator<Integer> it = list.listIterator(list.indexOf(currentIndex));
-        
+
         int robotId;
         if (forward)
             robotId = it.hasNext() ? it.next() : list.get(0);
@@ -70,17 +68,16 @@ public class ControllerListener extends AbstractService {
             it.previous();
             robotId = it.hasPrevious() ? it.previous() : list.get(list.size() - 1);
         }
-        
+
         if (this.tmpHandlers.get(robotId) != null) {
             ControllerListener.LOG.fine("Could not find a available robotid.");
             return;
         }
         this.tmpHandlers.put(robotId, handler);
     }
-    
+
     /**
-     * @param controller
-     *            controller to check
+     * @param controller controller to check
      * @return whether given controller is in use
      */
     public boolean containsController(final Controller controller) {
@@ -92,44 +89,41 @@ public class ControllerListener extends AbstractService {
                 // found any? Then it is in use
                 .count() > 0;
     }
-    
+
     /**
-     * @param robotId
-     *            robotId to check
+     * @param robotId robotId to check
      * @return whether given id has a handler (thus a controller) assigned
      */
     private boolean isAssigned(final int robotId) {
         return this.handlers.get(robotId) != null;
     }
-    
+
     /**
      * Process every controller and its input
-     * 
+     *
      * @return succes value
      */
     public boolean processControllers() {
         // check if the list should change
         this.handlers = this.tmpHandlers == null ? this.handlers : this.tmpHandlers;
         this.tmpHandlers = null;
-                
+
         return Network.transmit((ArrayList<RadioProtocolCommand.Builder>)
-        // get all handlers
-        this.handlers.entrySet().stream()
-                // only process handlers with a ControllerHandler assigned
-                .filter(entry -> this.isAssigned(entry.getKey()))
-                // process every ControllerHandler
-                .map(entry -> entry.getValue().process(entry.getKey()))
-                // collect the packets to a list
-                .collect(Collectors.toList()));
+                // get all handlers
+                this.handlers.entrySet().stream()
+                        // only process handlers with a ControllerHandler assigned
+                        .filter(entry -> this.isAssigned(entry.getKey()))
+                        // process every ControllerHandler
+                        .map(entry -> entry.getValue().process(entry.getKey()))
+                        // collect the packets to a list
+                        .collect(Collectors.toList()));
     }
-    
+
     /**
      * Register a specific {@link ControllerLayout} to a robotId
-     * 
-     * @param robotId
-     *            robotid to bound to the given {@link ControllerLayout}
-     * @param controller
-     *            Controllerlayout to bind
+     *
+     * @param robotId    robotid to bound to the given {@link ControllerLayout}
+     * @param controller Controllerlayout to bind
      * @return succes value
      */
     public boolean register(final int robotId, final ControllerLayout controller) {
@@ -138,16 +132,15 @@ public class ControllerListener extends AbstractService {
             ControllerListener.LOG.warning("Handler for %d is not empty, and will be overwriten.\n", robotId);
             this.unregister(robotId);
         }
-        
+
         this.handlers.put(robotId, new ControllerHandler(controller));
         return true;
     }
-    
+
     /**
      * unregister the handler for a specific robotId
-     * 
-     * @param robotId
-     *            robotId to unregister a handler for
+     *
+     * @param robotId robotId to unregister a handler for
      * @return succes value
      */
     public boolean unregister(final int robotId) {
@@ -156,10 +149,10 @@ public class ControllerListener extends AbstractService {
             ControllerListener.LOG.warning("Could not unregister controllerHandler for robot %d.\n", robotId);
             return false;
         }
-        
+
         // replace the handler with null, let the garbage collector pick up te pieces
         this.handlers.put(robotId, null);
         return true;
     }
-    
+
 }

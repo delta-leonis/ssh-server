@@ -1,35 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.*?>
-<StackPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:id="baseCenter" GridPane.columnIndex="0" GridPane.rowIndex="1">
+<StackPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:id="baseCenter"
+           GridPane.columnIndex="0" GridPane.rowIndex="1">
     <children>
         <Pane fx:id="fieldBase"></Pane>
         <GridPane pickOnBounds="false">
             <columnConstraints>
-                <ColumnConstraints percentWidth="20.0" />
-                <ColumnConstraints minWidth="30.0" maxWidth="30.0" prefWidth="30.0" />
-                <ColumnConstraints fillWidth="true" />
+                <ColumnConstraints percentWidth="20.0"/>
+                <ColumnConstraints minWidth="30.0" maxWidth="30.0" prefWidth="30.0"/>
+                <ColumnConstraints fillWidth="true"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints percentHeight="8.0" />
-                <RowConstraints percentHeight="84.0" />
-                <RowConstraints percentHeight="8.0" />
+                <RowConstraints percentHeight="8.0"/>
+                <RowConstraints percentHeight="84.0"/>
+                <RowConstraints percentHeight="8.0"/>
             </rowConstraints>
             <children>
-                <Pane fx:id="matchlogWrapper" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="1" minWidth="0.0"/>
-                <Pane fx:id="matchlogButtonSizer" pickOnBounds="false" GridPane.columnIndex="1" GridPane.rowIndex="1" minWidth="0.0"/>
+                <Pane fx:id="matchlogWrapper" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="1"
+                      minWidth="0.0"/>
+                <Pane fx:id="matchlogButtonSizer" pickOnBounds="false" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                      minWidth="0.0"/>
             </children>
         </GridPane>
         <GridPane pickOnBounds="false">
             <columnConstraints>
-                <ColumnConstraints percentWidth="100.0" />
+                <ColumnConstraints percentWidth="100.0"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints percentHeight="50.0" />
-                <RowConstraints percentHeight="50.0" />
+                <RowConstraints percentHeight="50.0"/>
+                <RowConstraints percentHeight="50.0"/>
             </rowConstraints>
             <children>
-                <Pane fx:id="toolboxWrapper" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="1" minHeight="0.0"/>
+                <Pane fx:id="toolboxWrapper" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="1"
+                      minHeight="0.0"/>
             </children>
         </GridPane>
     </children>

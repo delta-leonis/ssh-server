@@ -2,21 +2,21 @@
 
 <?import javafx.scene.layout.*?>
 <StackPane fx:id="rootNode" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-	<children>
-	<GridPane id="basePane" fx:id="basePane">
-		<columnConstraints>
-			<ColumnConstraints percentWidth="100.0" />
-		</columnConstraints>
-		<rowConstraints>
-			<RowConstraints percentHeight="20.0" />
-			<RowConstraints percentHeight="73.0" />
-			<RowConstraints percentHeight="7.0" />
-		</rowConstraints>
-		<children>
-			<Pane fx:id="topSection" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-			<Pane fx:id="centerSection" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-			<Pane fx:id="bottomSection" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-		</children>
-	</GridPane>
-	</children>
+    <children>
+        <GridPane id="basePane" fx:id="basePane">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="100.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="20.0"/>
+                <RowConstraints percentHeight="73.0"/>
+                <RowConstraints percentHeight="7.0"/>
+            </rowConstraints>
+            <children>
+                <Pane fx:id="topSection" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <Pane fx:id="centerSection" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <Pane fx:id="bottomSection" pickOnBounds="false" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            </children>
+        </GridPane>
+    </children>
 </StackPane>

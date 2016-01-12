@@ -25,14 +25,14 @@ public class Reflect {
     /**
      * This class should merely act as a toolkit, so it shouldn't be be instantiated.
      */
-    private Reflect(){
+    private Reflect() {
     }
 
     /**
      * Checks whether a Class or it's parents contain a field with given name or {@link Alias}.
      *
      * @param fieldName name or {@link Alias} of a field to check for
-     * @param clazz class object to check for the field
+     * @param clazz     class object to check for the field
      * @return true if class or parent contains a field by this name
      */
     public static boolean hasField(final String fieldName, final Class<?> clazz) {
@@ -43,7 +43,7 @@ public class Reflect {
      * Gets a {@link Field} of a Class or it's parents with given name or {@link Alias}.
      *
      * @param fieldName name or {@link Alias} of a field to check for
-     * @param clazz class object to check for the field
+     * @param clazz     class object to check for the field
      * @return {@link Field} if found, or else an empty optional
      */
     public static Optional<java.lang.reflect.Field> getField(final String fieldName, Class<?> clazz) {
@@ -86,10 +86,10 @@ public class Reflect {
     /**
      * Create a list of all fieldnames that aren't Transient
      *
-     * @param clazz  Class to create list for
+     * @param clazz Class to create list for
      * @return list of all fieldnames that aren't Transient
      */
-    public static List<String> fieldList(final Class<?> clazz){
+    public static List<String> fieldList(final Class<?> clazz) {
         List<String> fieldNames = new ArrayList<String>();
 
         // local class Iterator
@@ -99,7 +99,7 @@ public class Reflect {
             //get all fieldnames for this class
             fieldNames.addAll(Stream.of(clazzI.getDeclaredFields())
                     // it should not be transient, final or static
-                    .filter(field ->  !Modifier.isTransient(field.getModifiers())
+                    .filter(field -> !Modifier.isTransient(field.getModifiers())
                             && !Modifier.isFinal(field.getModifiers())
                             && !Modifier.isStatic(field.getModifiers()))
                     //field -> fieldname

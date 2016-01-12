@@ -37,7 +37,7 @@ public class WidgetShortcutContainer extends UIComponent<Pane> {
     private void displayWidgets() {
         List<AbstractWidget> widgets = UI.getOrderedWidgetsForShortcuts();
 
-        for(int i = 0; i < (widgets.size() / 5); i++) {
+        for (int i = 0; i < (widgets.size() / 5); i++) {
             RowConstraints newRow = new RowConstraints();
             newRow.setMinHeight(70);
             shortcutPane.getRowConstraints().add(newRow);
@@ -45,7 +45,7 @@ public class WidgetShortcutContainer extends UIComponent<Pane> {
 
         int counter = 0;
 
-        for(AbstractWidget widget : widgets) {
+        for (AbstractWidget widget : widgets) {
             int row = counter / 5;
             int col = counter % 5;
             shortcutPane.add(new WidgetShortcut(widget.getName(), widget.getCategory()).getComponent(), col, row);

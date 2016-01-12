@@ -14,7 +14,7 @@ import org.ssh.util.Logger;
  * @author Jeroen de Jong
  */
 public class USBSender implements SenderInterface {
-    
+
     /**
      * Logger for this specific class
      */
@@ -22,13 +22,12 @@ public class USBSender implements SenderInterface {
     /**
      * Serialport that will be written to
      */
-    private SerialPort          serialPort;
-                                
+    private SerialPort serialPort;
+
     /**
      * Instansiates USBSender and opens the serial connection to the COM-port
-     * 
-     * @param portName
-     *            name of the port (i.e. on windows: COM1, linux: /dev/ttyacm0)
+     *
+     * @param portName name of the port (i.e. on windows: COM1, linux: /dev/ttyacm0)
      * @param baudRate
      */
     public USBSender(final String portName, final BaudRate baudRate) {
@@ -42,39 +41,37 @@ public class USBSender implements SenderInterface {
                     SerialPort.DATABITS_8,
                     SerialPort.STOPBITS_1,
                     SerialPort.PARITY_NONE);
-        }
-        catch (final SerialPortException spe) {
+        } catch (final SerialPortException spe) {
             // something broke, go fix it
             USBSender.LOG.severe(String.format("Could not open port %s", portName));
             USBSender.LOG.exception(spe);
         }
     }
-    
+
     @Override
     public boolean send(final Message genericMessage) {
         try {
-            
+
             // check if the port is open at all
             if (!this.serialPort.isOpened()) {
                 USBSender.LOG.warning("USB port is closed, can't send message");
                 return false;
             }
-            
+
             // write bytes to serialport
             this.serialPort.writeBytes(genericMessage.toByteArray());
-            
-        }
-        catch (final SerialPortException spe) {
+
+        } catch (final SerialPortException spe) {
             USBSender.LOG.warning("Could not send message over USB");
             USBSender.LOG.exception(spe);
             return false;
         }
-        
+
         // here it is safe to assume everything went fine
         USBSender.LOG.info("Send message over USB");
         return true;
     }
-    
+
     /**
      * {@inheritDoc} Close the used com-port.
      */
@@ -86,15 +83,14 @@ public class USBSender implements SenderInterface {
                 USBSender.LOG.info("Serialport was closed before");
                 return true;
             }
-            
+
             return this.serialPort.closePort();
-            
-        }
-        catch (final SerialPortException e) {
+
+        } catch (final SerialPortException e) {
             USBSender.LOG.warning("Can't close serial connection");
             USBSender.LOG.exception(e);
             return false;
         }
     }
-    
+
 }

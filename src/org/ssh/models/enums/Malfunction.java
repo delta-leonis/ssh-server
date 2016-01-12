@@ -5,7 +5,6 @@ package org.ssh.models.enums;
  * description, type )
  *
  * @author Ryan Meulenkamp
- *
  */
 public enum Malfunction {
 
@@ -36,13 +35,12 @@ public enum Malfunction {
     /**
      * This string will contain a little information about this malfunction.
      */
-    private final String          description;
+    private final String description;
 
     /**
      * the two different malfunction types.
      *
      * @author Ryan Meulenkamp
-     *
      */
     public enum MalfunctionType {
         ERROR,
@@ -53,7 +51,7 @@ public enum Malfunction {
      * constructor of malfunction
      *
      * @param malfunctionType the type of malfunction
-     * @param description a little description of the malfunction
+     * @param description     a little description of the malfunction
      */
     Malfunction(MalfunctionType malfunctionType, String description) {
         this.malfunctionType = malfunctionType;
@@ -62,6 +60,7 @@ public enum Malfunction {
 
     /**
      * a function to get the malfunctiontype from this enum
+     *
      * @return the malfunctiontype
      */
     public MalfunctionType getMalfunctionType() {
@@ -70,6 +69,7 @@ public enum Malfunction {
 
     /**
      * a function to get a little description of this malfunction
+     *
      * @return description of this malfunction.
      */
     public String getDescription() {

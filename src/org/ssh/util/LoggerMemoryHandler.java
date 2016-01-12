@@ -16,7 +16,6 @@ import java.util.logging.LogRecord;
  *
  * @author Joost Overeem
  * @author Jeroen de Jong
- *
  */
 public class LoggerMemoryHandler extends Handler {
 
@@ -25,7 +24,9 @@ public class LoggerMemoryHandler extends Handler {
      */
     private ObservableList<LogTableRow> records;
 
-    /** max number of rows that will be stored */
+    /**
+     * max number of rows that will be stored
+     */
     private int maxSize;
 
     /**
@@ -40,12 +41,12 @@ public class LoggerMemoryHandler extends Handler {
      * Converts the {@link LogRecord} to a {@link LogTableRow} and stores it in a list
      *
      * @param record description of the log event. A null record is
-     *                 silently ignored and is not published
+     *               silently ignored and is not published
      */
     @Override
     public void publish(LogRecord record) {
         Platform.runLater(() -> {
-            if(records.size() > maxSize)
+            if (records.size() > maxSize)
                 records.remove(0);
             records.add(new LogTableRow(record));
         });
@@ -67,7 +68,7 @@ public class LoggerMemoryHandler extends Handler {
     /**
      * @return reference to observable list containing all {@link LogTableRow}s.
      */
-    public ObservableList<LogTableRow> getLogrecords(){
+    public ObservableList<LogTableRow> getLogrecords() {
         return records;
     }
 }

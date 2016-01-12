@@ -18,32 +18,35 @@ import java.util.concurrent.Callable;
 
 /**
  * The Class AbstractProducer.
- *
+ * <p>
  * A Producer generates packets of the type (or subtype of) {@link AbstractPipelinePacket}. It does this by
  * running single or scheduled tasks.
  *
  * @param <P> A PipelinePacket this Producer can work with.
- *
  * @author Rimon Oz
  */
 public abstract class AbstractProducer<P extends AbstractPipelinePacket<?>> extends AbstractService<P> {
 
-    /** The work function which generates PipelinePackets. */
-    private Callable<P>             workerLambda;
+    /**
+     * The work function which generates PipelinePackets.
+     */
+    private Callable<P> workerLambda;
 
-    /** The type of packets made by the Producer. */
-    private ProducerType            producerType;
+    /**
+     * The type of packets made by the Producer.
+     */
+    private ProducerType producerType;
 
-    /** The pipelines subscribed to this Producer . */
+    /**
+     * The pipelines subscribed to this Producer .
+     */
     private final List<AbstractPipeline<P>> registeredPipelines;
 
     /**
      * Instantiates a new Producer.
      *
-     * @param name
-     *            The name of the new Producer.
-     * @param producerType
-     *            The type of packets made by the Producer
+     * @param name         The name of the new Producer.
+     * @param producerType The type of packets made by the Producer
      */
     public AbstractProducer(final String name, final ProducerType producerType) {
         super(name);
@@ -51,22 +54,21 @@ public abstract class AbstractProducer<P extends AbstractPipelinePacket<?>> exte
         this.producerType = producerType;
         this.registeredPipelines = new ArrayList<>();
     }
-    
+
     /**
      * Attach to compatible pipelines.
-     * 
-     * @param <S>
-     *            The generic type of Producer requested by the user.
+     *
+     * @param <S> The generic type of Producer requested by the user.
      * @return The Producer itself.
      */
     public <S extends AbstractProducer<P>> S attachToCompatiblePipelines() {
         // find compatible pipelines and attach
         Pipelines.getOfDataType(this.getType()).stream()
-            .forEach(this::registerPipeline);
-        
+                .forEach(this::registerPipeline);
+
         return this.<S>getAsService();
     }
-    
+
     /**
      * Gets the work function as a Callable<T>.
      *
@@ -75,7 +77,7 @@ public abstract class AbstractProducer<P extends AbstractPipelinePacket<?>> exte
     public Callable<P> getCallable() {
         return this.workerLambda;
     }
-    
+
     /**
      * Gets the work function as a Runnable.
      *
@@ -85,18 +87,16 @@ public abstract class AbstractProducer<P extends AbstractPipelinePacket<?>> exte
         return () -> {
             try {
                 AbstractProducer.this.getCallable().call();
-            }
-            catch (final Exception exception) {
+            } catch (final Exception exception) {
                 AbstractProducer.LOG.exception(exception);
             }
         };
     }
-    
+
     /**
      * Produce a single PipelinePacket with the work function.
      *
-     * @param taskName
-     *            The name of the task.
+     * @param taskName The name of the task.
      * @return The ListenableFuture representing the result of the work function.
      */
     public ListenableFuture<P> produceOnce(final String taskName) {
@@ -109,77 +109,68 @@ public abstract class AbstractProducer<P extends AbstractPipelinePacket<?>> exte
         // return the future so the user can use it
         return producerFuture;
     }
-    
+
     /**
      * Produces PipelinePackets on an interval with the supplied length using the work function.
      *
-     * @param taskName
-     *            The name of the task.
-     * @param taskInterval
-     *            The length of the interval between task completion and execution.
+     * @param taskName     The name of the task.
+     * @param taskInterval The length of the interval between task completion and execution.
      * @return A ListenableFuture representing the result of the work function.
      */
-    @SuppressWarnings ("unchecked")
+    @SuppressWarnings("unchecked")
     public ListenableFuture<P> produceSchedule(final String taskName, final long taskInterval) {
         // add the task to the scheduled worker pool
-        
+
         Runnable runnable = () -> this.produceOnce(taskName + "-schedule-partial");
-        
+
         final ListenableScheduledFuture<P> scheduleFuture = (ListenableScheduledFuture<P>) Services
                 .scheduleTask(this.getName() + "-" + taskName + "-schedule", runnable, taskInterval);
-                
+
         FutureCallback<P> scheduleCallback = new PacketProductionCallback<>(this.getName());
         Futures.addCallback(scheduleFuture, scheduleCallback);
         // return the future so the user can use it
         return scheduleFuture;
     }
-    
+
     /**
      * Registers a {@link AbstractPipeline} with the Producer.
      *
-     * @param <C>
-     *            The generic type of Producer supplied by the user.
-     * @param <S>
-     *            The generic type of Pipeline requested by the user.
-     * @param pipeline
-     *            the pipeline
+     * @param <C>      The generic type of Producer supplied by the user.
+     * @param <S>      The generic type of Pipeline requested by the user.
+     * @param pipeline the pipeline
      * @return The Producer itself.
      */
-    @SuppressWarnings ("unchecked")
+    @SuppressWarnings("unchecked")
     public <C extends AbstractProducer<P>, S extends AbstractPipeline<?>> C registerPipeline(final S pipeline) {
         AbstractProducer.LOG.info("Producer %s registered to Pipeline %s", this.getName(), pipeline.getName());
         this.registeredPipelines.add((AbstractPipeline<P>) pipeline);
         return this.<C>getAsService();
     }
-    
+
     /**
      * Sets the work function.
      *
-     * @param <S>
-     *            The generic type of Producer requested by the user.
-     * @param workFunction
-     *            The new work function.
+     * @param <S>          The generic type of Producer requested by the user.
+     * @param workFunction The new work function.
      * @return The Producer itself.
      */
     public <S extends AbstractProducer<P>> S setCallable(final Callable<P> workFunction) {
         this.workerLambda = workFunction;
         return this.<S>getAsService();
     }
-    
+
     /**
      * Sets the The type of packets made by the Producer.
      *
-     * @param <S>
-     *            The generic type of Producer requested by the user.
-     * @param producerType
-     *            The new type of packets made by the Producer
+     * @param <S>          The generic type of Producer requested by the user.
+     * @param producerType The new type of packets made by the Producer
      * @return The Producer itself.
      */
     public <S extends AbstractProducer<P>> S setType(final ProducerType producerType) {
         this.producerType = producerType;
         return this.<S>getAsService();
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -193,8 +184,7 @@ public abstract class AbstractProducer<P extends AbstractPipelinePacket<?>> exte
             AbstractProducer.LOG.fine("Producer %s is starting a single production ...", this.getName());
             // start a single production
             this.produceOnce(this.getName());
-        }
-        else if (this.producerType.equals(ProducerType.SCHEDULED)) {
+        } else if (this.producerType.equals(ProducerType.SCHEDULED)) {
             // start a scheduled production with a default interval (of 1s)
             this.start(1000000);
         }
@@ -203,16 +193,16 @@ public abstract class AbstractProducer<P extends AbstractPipelinePacket<?>> exte
 
     /**
      * Starts production with the supplied execution interval (in us).
+     *
      * @param interval The requested interval between execution start-times (in us).
      * @param <S>      The generic type of AbstractService this object represents.
-     * @return         The class itself for method chaining.
+     * @return The class itself for method chaining.
      */
     public <S extends AbstractService<?>> S start(int interval) {
         if (this.producerType.equals(ProducerType.SCHEDULED)) {
             AbstractProducer.LOG.fine("Producer %s is starting scheduled production ...", this.getName());
             this.produceSchedule(this.getName(), interval);
-        }
-        else {
+        } else {
             AbstractProducer.LOG.fine("Producer %s is not a scheduled producer, aborting scheduled production ...", this.getName());
         }
         return this.<S>getAsService();

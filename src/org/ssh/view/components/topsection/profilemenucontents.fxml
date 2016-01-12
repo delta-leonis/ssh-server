@@ -6,7 +6,8 @@
           xmlns:fx="http://javafx.com/fxml/1" pickOnBounds="false">
     <children>
         <VBox id="profiles" fx:id="profiles" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0"/>
-        <Label text="WORKSPACES" textAlignment="CENTER" alignment="CENTER" maxWidth="Infinity" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS"/>
+        <Label text="WORKSPACES" textAlignment="CENTER" alignment="CENTER" maxWidth="Infinity" GridPane.rowIndex="1"
+               GridPane.hgrow="ALWAYS"/>
         <VBox id="workspaces" fx:id="workspaces" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2"/>
     </children>
 </GridPane>

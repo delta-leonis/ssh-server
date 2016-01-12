@@ -2,21 +2,22 @@ package org.ssh.models;
 
 /**
  * Describes a ball {@link FieldObject object}.
- * 
+ *
  * @author Jeroen de Jong
- *         
  */
 public class Ball extends FieldObject {
-    
-    /** The diameter of the ball */
+
+    /**
+     * The diameter of the ball
+     */
     public static final int BALL_DIAMETER = 43;
-    
+
     /**
      * Height of the ball as provided by ssl-vision
      */
-    @Alias ("z")
+    @Alias("z")
     private Float zPosition;
-    
+
     /**
      * Instantiates a ball
      */
@@ -30,5 +31,5 @@ public class Ball extends FieldObject {
     public Float getZPos() {
         return zPosition;
     }
-    
+
 }

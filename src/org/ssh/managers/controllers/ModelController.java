@@ -28,18 +28,19 @@ import java.util.Optional;
 /**
  * The Class ModelController. manages all {@link AbstractModel Models}.
  *
- *       
  * @author Jeroen de Jong
  */
 public class ModelController extends AbstractManagerController<AbstractModel> {
-    
-    /** Builder for reading and writing Objects to Json **/
-    private final Gson          gson;
-                                
+
+    /**
+     * Builder for reading and writing Objects to Json
+     **/
+    private final Gson gson;
+
     /**
      * Settings for this specific controller ({@link #add(AbstractManageable)} adds the settings)
      **/
-    private Settings            settings;
+    private Settings settings;
 
     // Respective logger
     private static final Logger LOG = Logger.getLogger();
@@ -64,7 +65,7 @@ public class ModelController extends AbstractManagerController<AbstractModel> {
 
     /**
      * {@inheritDoc}
-     * 
+     * <p>
      * When a {@link Settings} model is added, it is being set as default settings for this
      * controller
      */
@@ -72,61 +73,59 @@ public class ModelController extends AbstractManagerController<AbstractModel> {
     public boolean put(final String name, final AbstractModel manageable) {
         if (manageable instanceof Settings)
             this.settings = (Settings) manageable;
-        
+
         return super.put(name, manageable);
     }
-    
+
     /**
      * Try to find the path for the configfile. Will search in the profilePath first, and
      * defaultPath second as defined in Settings
-     * 
-     * @param filename
-     *            filename to find
+     *
+     * @param filename filename to find
      * @return filename if found, otherwise Optional.empty()
      */
     private Optional<Path> findValidPath(final String filename) {
         ModelController.LOG.info("Searching for configfile %s", filename);
-        
+
         // for the settings.json
         File config = new File(this.settings.getProfilesPath() + filename);
         if (config.exists() && !config.isDirectory())
             return Optional.of(config.toPath());
-        
+
         // check for a custom file
         config = new File(this.settings.getCurrentWorkspacePath() + filename);
         if (config.exists() && !config.isDirectory())
             return Optional.of(config.toPath());
-        
+
         // check for a default one
         config = new File(this.settings.getDefaultPath() + filename);
         if (config.exists() && !config.isDirectory())
             return Optional.of(config.toPath());
-        
+
         // none found
         return Optional.empty();
     }
 
     /**
      * Initialize all values in the configfile for each models
-     * 
+     *
      * @return success value
      */
     public boolean initializeAll() {
         return this.manageables.values().stream().map(model -> this.load(model)).reduce(true,
                 (accumulator, success) -> success && accumulator);
     }
-    
+
     /**
      * loads all values in the configfile for given model
-     * 
-     * @param model
-     *            model to initialize
+     *
+     * @param model model to initialize
      * @return success value
      */
     public boolean load(final AbstractModel model) {
         // try to find a configfile
         final Optional<Path> configFile = this.findValidPath(model.getConfigName());
-        
+
         // check whether a config has been found
         if (!configFile.isPresent()) {
             ModelController.LOG.info("No configfile found for %s", model.getConfigName());
@@ -135,14 +134,12 @@ public class ModelController extends AbstractManagerController<AbstractModel> {
 
         return load(model, configFile.get());
     }
-    
+
     /**
      * Loads a certain configfile to a model
-     * 
-     * @param model
-     *            model to use
-     * @param configFile
-     *            configfile to read
+     *
+     * @param model      model to use
+     * @param configFile configfile to read
      * @return succes value
      */
     public boolean load(final AbstractModel model, Path configFile) {
@@ -158,34 +155,30 @@ public class ModelController extends AbstractManagerController<AbstractModel> {
             // changes.
             // !!! This way all transient fields will be untouched, as is preferable
             return model.update(newModel.toMap());
-        }
-        catch (JsonSyntaxException exception) {
+        } catch (JsonSyntaxException exception) {
             ModelController.LOG.exception(exception);
             ModelController.LOG.warning(
                     "Could not parse gson in '%s' for model '%s'.%nPlease check that no primitives fields are being used.",
                     configFile,
                     model.getName());
             return false;
-        }
-        catch (IOException exception) {
+        } catch (IOException exception) {
             ModelController.LOG.exception(exception);
             ModelController.LOG.warning("Could not read '%s' for model '%s'.", configFile, model.getName());
             return false;
-        }
-        catch(Exception exception) {
+        } catch (Exception exception) {
             ModelController.LOG.exception(exception);
             ModelController.LOG.warning("Could not read '%s' for model '%s', Generic exception occured", configFile, model.getName());
             return false;
         }
     }
 
-    
+
     /**
      * Set all non-{@link Modifier#TRANSIENT transient} fields of given models to null, and reload
      * values from configfile.
-     * 
-     * @param model
-     *            to reinitialize
+     *
+     * @param model to reinitialize
      * @return success value
      */
     public boolean reinitialize(final AbstractModel model) {
@@ -193,36 +186,33 @@ public class ModelController extends AbstractManagerController<AbstractModel> {
         model.initialize();
         return this.load(model);
     }
-    
+
     /**
      * Set all non-{@link Modifier#TRANSIENT transient} fields for all models to null, and reload
      * values from configfile for every models.
-     * 
+     *
      * @return success value
      */
     public boolean reinitializeAll() {
         return this.manageables.values().stream().map(model -> this.reinitialize(model)).reduce(true,
                 (accumulator, success) -> success && accumulator);
     }
-    
+
     /**
      * Save the current state of the models in profiles path.
-     * 
-     * @param model
-     *            models to save
+     *
+     * @param model models to save
      * @return success value
      */
     public boolean save(final AbstractModel model) {
         return this.saveAs(this.settings.getCurrentWorkspacePath() + model.getConfigName(), model);
     }
-    
+
     /**
      * Save given models to a specific filepath.
-     * 
-     * @param filePath
-     *            filepath to save to
-     * @param model
-     *            models to save
+     *
+     * @param filePath filepath to save to
+     * @param model    models to save
      * @return succes value
      */
     public boolean saveAs(final String filePath, final AbstractModel model) {
@@ -232,17 +222,16 @@ public class ModelController extends AbstractManagerController<AbstractModel> {
             final File configFile = new File(filePath);
             // make dirs recursively
             if (!configFile.getParentFile().isDirectory()
-                && !configFile.getParentFile().mkdirs())
-                    throw new IOException("Could not create (parent) dirs.");
+                    && !configFile.getParentFile().mkdirs())
+                throw new IOException("Could not create (parent) dirs.");
             // create file if it doesn't already
             if (!configFile.exists()
-                && !configFile.createNewFile())
-                    throw new IOException("Could not create configfile.");
+                    && !configFile.createNewFile())
+                throw new IOException("Could not create configfile.");
             // write gson-object of all data in models to configFile
             Files.write(this.gson.toJson(model), configFile, Charset.defaultCharset());
             return true;
-        }
-        catch (final IOException exception) {
+        } catch (final IOException exception) {
             // either the creation of the dir(s) failed, or the writing
             // to a file failed.
             ModelController.LOG.exception(exception);
@@ -250,12 +239,11 @@ public class ModelController extends AbstractManagerController<AbstractModel> {
             return false;
         }
     }
-    
+
     /**
      * Save given models as default for this models type.
-     * 
-     * @param model
-     *            to save
+     *
+     * @param model to save
      * @return succes value
      */
     public boolean saveAsDefault(final AbstractModel model) {

@@ -7,7 +7,7 @@ import org.ssh.pipelines.AbstractPipelinePacket;
 
 /**
  * The Class PipelineController.
- *
+ * <p>
  * PipelineController is responsible for maintaining {@link Pipelines}. It holds
  * references to the Pipelines.
  *
@@ -15,6 +15,5 @@ import org.ssh.pipelines.AbstractPipelinePacket;
  */
 public class PipelineController extends AbstractManagerController<AbstractPipeline<? extends AbstractPipelinePacket<? extends Object>>> {
 
-    
 
 }

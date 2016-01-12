@@ -4,17 +4,17 @@ import org.ssh.models.AbstractModel;
 
 /**
  * Contains all settings used by the {@link ControllerHandler}
- * 
+ *
  * @author Thomas Hakkers
  */
 public class ControllerSettings extends AbstractModel {
-    
+
     /**
-     * The speed at which the robot is allowed to kick in percent 0 - 100% 
+     * The speed at which the robot is allowed to kick in percent 0 - 100%
      */
     private Float maxFlatKickSpeed;
     /**
-     * The speed at which the robot is allowed to chip in percent 0 - 100% 
+     * The speed at which the robot is allowed to chip in percent 0 - 100%
      */
     private Float maxChipKickSpeed;
     /**
@@ -29,44 +29,44 @@ public class ControllerSettings extends AbstractModel {
      * The speed the robot is allowed to dribble at
      */
     private Float maxDribbleSpeed;
-    
+
     public ControllerSettings() {
         super("controllersettings", "");
     }
 
     @Override
-    public void initialize(){
+    public void initialize() {
         // no default values
     }
-    
+
     /**
-     * @return The speed at which the robot is allowed to kick in percent 0 - 100% 
+     * @return The speed at which the robot is allowed to kick in percent 0 - 100%
      */
-    public float getMaxFlatKickSpeed(){
+    public float getMaxFlatKickSpeed() {
         return maxFlatKickSpeed;
     }
-    
+
     /**
-     * @return The speed at which the robot is allowed to chip in percent 0 - 100% 
+     * @return The speed at which the robot is allowed to chip in percent 0 - 100%
      */
-    public float getMaxChipKickSpeed(){
+    public float getMaxChipKickSpeed() {
         return maxChipKickSpeed;
     }
-    
+
     /**
      * @return The speed the robot is allowed to rotate
      */
-    public float getMaxRotationSpeed(){
+    public float getMaxRotationSpeed() {
         return maxRotationSpeed;
     }
-    
+
     /**
      * @return The speed the robot is allowed to move in mm/s
      */
-    public float getMaxVelocity(){
+    public float getMaxVelocity() {
         return maxVelocity;
     }
-    
+
     /**
      * @return The speed the robot is allowed to dribble at
      */
