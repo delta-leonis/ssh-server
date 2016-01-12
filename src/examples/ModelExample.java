@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class ModelExample {
 
-    private static Logger LOG = Logger.getLogger();
+    private static final Logger LOG = Logger.getLogger();
 
     private ModelExample() {
     }
