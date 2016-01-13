@@ -168,7 +168,7 @@ public class ModelController extends AbstractManagerController<AbstractModel> {
             return false;
         } catch (Exception exception) {
             ModelController.LOG.exception(exception);
-            ModelController.LOG.warning("Could not read '%s' for model '%s', Generic exception occured", configFile, model.getName());
+            ModelController.LOG.warning("Could not read '%s' for model '%s', Generic exception occurred", configFile, model.getName());
             return false;
         }
     }

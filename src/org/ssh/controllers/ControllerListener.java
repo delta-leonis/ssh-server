@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * A {@link AbstractService} that manages all {@link ControllerHandler controllers} for every
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("rawtypes")
 public class ControllerListener extends AbstractService {
 
+    private static final int MAX_ROBOT_ID = 12;
     /**
      * List of handlers<br/>
      * - Integer describes robotId<br/>
@@ -47,26 +49,25 @@ public class ControllerListener extends AbstractService {
      * @param forward give next available id on true, give previous on false
      */
     public void changeRobotId(final ControllerHandler handler, final boolean forward) {
-        final int currentIndex = this.handlers.inverse().get(handler);
+        int currentIndex = this.handlers.inverse().get(handler);
         this.tmpHandlers = HashBiMap.create(handlers);
 
         // free the id
-        this.tmpHandlers.put(currentIndex, null);
+        this.tmpHandlers.remove(currentIndex);
 
-        final List<Integer> list = this.tmpHandlers.entrySet().stream().filter(entry -> entry.getValue() == null)
-                .map(entry -> entry.getKey()).collect(Collectors.toList());
-
-        final ListIterator<Integer> it = list.listIterator(list.indexOf(currentIndex));
-
-        int robotId;
-        if (forward)
-            robotId = it.hasNext() ? it.next() : list.get(0);
-        else {
-            // since it currently between the current, and the next possible id,
-            // it should go to the previous value: between the previous possible id, and the current
-            // id
-            it.previous();
-            robotId = it.hasPrevious() ? it.previous() : list.get(list.size() - 1);
+        int robotId = currentIndex;
+        if (forward){
+            for (int newIndex = currentIndex+1; newIndex <= MAX_ROBOT_ID; newIndex++)
+                if (!tmpHandlers.containsKey(newIndex)) {
+                    robotId = newIndex;
+                    break;
+                }
+        }else {
+            for (int newIndex = currentIndex-1; newIndex >= 0; newIndex--)
+                if (!tmpHandlers.containsKey(newIndex)) {
+                    robotId = newIndex;
+                    break;
+                }
         }
 
         if (this.tmpHandlers.get(robotId) != null) {
@@ -95,7 +96,7 @@ public class ControllerListener extends AbstractService {
      * @return whether given id has a handler (thus a controller) assigned
      */
     private boolean isAssigned(final int robotId) {
-        return this.handlers.get(robotId) != null;
+        return this.handlers.containsKey(robotId);
     }
 
     /**
@@ -108,7 +109,7 @@ public class ControllerListener extends AbstractService {
         this.handlers = this.tmpHandlers == null ? this.handlers : this.tmpHandlers;
         this.tmpHandlers = null;
 
-        return Network.transmit((ArrayList<RadioProtocolCommand.Builder>)
+        return Network.transmit(
                 // get all handlers
                 this.handlers.entrySet().stream()
                         // only process handlers with a ControllerHandler assigned

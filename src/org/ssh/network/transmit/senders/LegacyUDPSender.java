@@ -3,7 +3,6 @@ package org.ssh.network.transmit.senders;
 import com.google.protobuf.Message;
 import org.ssh.models.enums.SendMethod;
 import org.ssh.util.Logger;
-import protobuf.Radio.RadioProtocolCommand;
 import protobuf.Radio.RadioProtocolWrapper;
 
 import java.io.IOException;
@@ -66,48 +65,53 @@ public class LegacyUDPSender implements SenderInterface {
      */
     @Override
     public boolean send(final Message genericMessage) {
-        try {
             if (!(genericMessage instanceof RadioProtocolWrapper)) {
                 LegacyUDPSender.LOG.warning("Incoming message not of type RadioProtocolWrapper");
                 return false;
             }
             // Get the command we're converting
-            RadioProtocolCommand command = ((RadioProtocolWrapper) genericMessage).getCommand(1);
-            // Save these variables for further use
-            float x = command.getVelocityX();
-            float y = command.getVelocityY();
-            // Convert the values according to old protocol
-            int messageType = 1;
-            int robotID = command.getRobotId();
-            int direction = (int) Math.toDegrees(Math.atan(y / x));
+            return ((RadioProtocolWrapper) genericMessage).getCommandList().stream().map(command -> {
+                try {
+                    // Save these variables for further use
+                    float x = command.getVelocityX();
+                    float y = command.getVelocityY();
+                    // Convert the values according to old protocol
+                    int messageType = 1;
+                    int robotID = command.getRobotId();
+                    int direction = (int) Math.toDegrees(Math.atan(y / x));
 
-            if (x < 0)
-                direction += 180;
+                    if (x < 0)
+                        direction += 180;
 
-            direction *= -1;
-            direction += 90;
+                    direction *= -1;
+                    direction += 90;
 
-            int directionSpeed = (int) Math.sqrt(x * x + y * y);
-            int rotationSpeed = (int) command.getVelocityR();
-            int shootKicker = (int) ((command.getFlatKick() - command.getChipKick()) * 100);
-            boolean dribble = Math.abs(command.getDribblerSpin()) > 0.0f;
+                    int directionSpeed = (int) Math.sqrt(x * x + y * y);
+                    int rotationSpeed = (int) command.getVelocityR();
+                    System.out.println(command.getFlatKick());
+                    int shootKicker;
+                    shootKicker = (int) (command.getFlatKick() * 1);
+                    if(command.getChipKick() > 0f)
+                        shootKicker = (int) (command.getChipKick() * -1);
 
-            // Put the values into a datagrampacket
-            byte[] dataPacket = LegacyUDPSender.createByteArray(messageType, robotID, direction, directionSpeed, rotationSpeed, (int) (shootKicker * 0.7), dribble);
-            final DatagramPacket udpPacket = new DatagramPacket(dataPacket,
-                    dataPacket.length,
-                    this.ipAddress,
-                    this.port);
-            // And send it
-            this.socket.send(udpPacket);
-            LegacyUDPSender.LOG.info("Message has been sent over UDP using the legacy protocol.");
-            return true;
+                    boolean dribble = Math.abs(command.getDribblerSpin()) > 0.0f;
 
-        } catch (final IOException exception) {
-            LegacyUDPSender.LOG.exception(exception);
-            LegacyUDPSender.LOG.warning("Could not send packet to %s:%d.", this.ipAddress, this.port);
-            return false;
-        }
+                    // Put the values into a datagrampacket
+                    byte[] dataPacket = LegacyUDPSender.createByteArray(messageType, robotID, direction, directionSpeed, rotationSpeed, (int) (shootKicker * 0.7), dribble);
+                    final DatagramPacket udpPacket = new DatagramPacket(dataPacket,
+                            dataPacket.length,
+                            this.ipAddress,
+                            this.port);
+                    // And send it
+                    this.socket.send(udpPacket);
+                    LegacyUDPSender.LOG.info("Message has been sent over UDP using the legacy protocol.");
+                    return true;
+                } catch (final IOException exception) {
+                    LegacyUDPSender.LOG.exception(exception);
+                    LegacyUDPSender.LOG.warning("Could not send packet to %s:%d.", this.ipAddress, this.port);
+                return false;
+               }
+            }).reduce(true, (accumulator, success) -> success & accumulator);
     }
 
     /**
@@ -129,7 +133,7 @@ public class LegacyUDPSender implements SenderInterface {
      * @param direction      The direction we want our robot to move towards.
      * @param directionSpeed The speed we want our robot to move at in mm/s
      * @param rotationSpeed  The speed we want our robot to turn at in mm/s
-     * @param kicker         -1 to -100 for chipping, 1 to 100 for kicking.
+     * @param shootKicker         -1 to -100 for chipping, 1 to 100 for kicking.
      * @param dribble        true to start the dribbler, false otherwise
      * @return bytearray to send to the Basestation
      */

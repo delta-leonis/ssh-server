@@ -16,15 +16,14 @@ public class VerboseCoupler extends AbstractCoupler<RadioPacket> {
     /**
      * Instantiates a new VerboseCoupler.
      *
-     * @param name The name of the new AbstractCoupler.
      */
     public VerboseCoupler() {
-        super("verbosecoupler", packet -> new RadioPacket(packet.apply(content -> {
-            // print the data
-            AbstractService.LOG.info("The VerboseCoupler ate a packet that looked like: \n%s",
-                    packet.read().toString());
-            // and return it
-            return content;
-        })));
+        super("verbosecoupler", packet -> {
+                // print the data
+                AbstractService.LOG.info("The VerboseCoupler ate a packet that looked like: \n%s",
+                        packet.read().toString());
+                // and return it
+                return packet;
+            });
     }
 }

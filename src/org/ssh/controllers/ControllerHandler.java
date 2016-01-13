@@ -47,9 +47,9 @@ public class ControllerHandler extends AbstractProducer {
 
         this.layout = layout;
 
-        Optional<AbstractModel> model = Models.get("controllersettings");
+        Optional<ControllerSettings> model = Models.<ControllerSettings>get("controllersettings");
         if (model.isPresent())
-            settings = (ControllerSettings) model.get();
+            settings = model.get();
 
         // fill previousButtonState array
         resetPreviousState();
@@ -73,14 +73,14 @@ public class ControllerHandler extends AbstractProducer {
      * @param packet      The packet the velocity will be added to
      * @return true if successful (always)
      */
-    private static final boolean velocityX(final Float buttonValue, final RadioProtocolCommand.Builder packet) {
-        if (ControllerHandler.isPressed(buttonValue) && settings != null) {
-            packet.setVelocityX(buttonValue * settings.getMaxVelocity());
-            return true;
-        } else {
+    private static boolean velocityX(final Float buttonValue, final RadioProtocolCommand.Builder packet) {
+        if(settings == null){
             AbstractService.LOG.warning("Settings in velocityX is null");
             return false;
         }
+        if (ControllerHandler.isPressed(buttonValue))
+            packet.setVelocityX(buttonValue * settings.getMaxVelocity());
+        return true;
     }
 
     /**
@@ -90,14 +90,14 @@ public class ControllerHandler extends AbstractProducer {
      * @param packet      The packet the velocity will be added to
      * @return true if successful (always)
      */
-    private static final boolean velocityY(final Float buttonValue, final RadioProtocolCommand.Builder packet) {
-        if (ControllerHandler.isPressed(buttonValue) && settings != null) {
-            packet.setVelocityY(buttonValue * settings.getMaxVelocity());
-            return true;
-        } else {
+    private static boolean velocityY(final Float buttonValue, final RadioProtocolCommand.Builder packet) {
+        if(settings == null){
             AbstractService.LOG.warning("Settings in velocityY is null");
             return false;
         }
+        if (ControllerHandler.isPressed(buttonValue))
+            packet.setVelocityY(buttonValue * settings.getMaxVelocity());
+        return true;
     }
 
     /**
@@ -108,7 +108,7 @@ public class ControllerHandler extends AbstractProducer {
      * @param buttonValue The speed, which is always 1.0f since it's a digital button
      * @return true if success (always)
      */
-    private static final boolean dribblePersistent(final RadioProtocolCommand.Builder packet, final float buttonValue) {
+    private static boolean dribblePersistent(final RadioProtocolCommand.Builder packet, final float buttonValue) {
         float dribbleSpeed = buttonValue;
         if (settings != null)
             dribbleSpeed *= settings.getMaxDribbleSpeed();
@@ -127,7 +127,7 @@ public class ControllerHandler extends AbstractProducer {
      * @param buttonValue The value the controller registered
      * @return True if success (always)
      */
-    private static final boolean directionY(final RadioProtocolCommand.Builder packet, final float buttonValue) {
+    private static boolean directionY(final RadioProtocolCommand.Builder packet, final float buttonValue) {
         float velocity = -buttonValue;
         if (settings != null)
             velocity *= settings.getMaxVelocity();
@@ -143,7 +143,7 @@ public class ControllerHandler extends AbstractProducer {
      * @param buttonValue The value the controller registered
      * @return True if success (always)
      */
-    private static final boolean directionX(final RadioProtocolCommand.Builder packet, final float buttonValue) {
+    private static boolean directionX(final RadioProtocolCommand.Builder packet, final float buttonValue) {
         float velocity = buttonValue;
         if (settings != null)
             velocity *= settings.getMaxVelocity();
@@ -160,9 +160,9 @@ public class ControllerHandler extends AbstractProducer {
      * @return true if successful (always)
      * @see #dribbleSpeed(protobuf.Radio.RadioProtocolCommand.Builder, float)
      */
-    private static final boolean dribbleToggle(final RadioProtocolCommand.Builder packet, final float buttonValue) {
+    private static boolean dribbleToggle(final RadioProtocolCommand.Builder packet, final float buttonValue) {
         if (ControllerHandler.isPressed(buttonValue))
-            Models.<Robot>get("robot B" + packet.getRobotId())
+            Models.<Robot>get("robot A" + packet.getRobotId())
                     .ifPresent(robot -> packet.setDribblerSpin(robot.getDribbleSpeed() > 0f ? 0f : 1f));
         return true;
     }
@@ -175,7 +175,7 @@ public class ControllerHandler extends AbstractProducer {
      * @return true if successful (always)
      * @see #dribbleToggle(protobuf.Radio.RadioProtocolCommand.Builder, float)
      */
-    private static final boolean dribbleSpeed(final RadioProtocolCommand.Builder packet, final float buttonValue) {
+    private static boolean dribbleSpeed(final RadioProtocolCommand.Builder packet, final float buttonValue) {
         float dribbleSpin = buttonValue;
         if (settings != null)
             dribbleSpin *= settings.getMaxDribbleSpeed();
@@ -191,23 +191,33 @@ public class ControllerHandler extends AbstractProducer {
      * @param packet    The packet this'll be added to
      * @return True if successful (always)
      */
-    private static final boolean getOrientation(final float goalAngle, final RadioProtocolCommand.Builder packet) {
+    private static boolean getOrientation(final float goalAngle, final RadioProtocolCommand.Builder packet) {
         float rotationSpeed = goalAngle;
-        final Optional<Robot> oRobot = Models.<Robot>get("robot B" + packet.getRobotId());
+        final Optional<Robot> oRobot = Models.<Robot>get("robot A" + packet.getRobotId());
         // If the robot isn't present
         if (!oRobot.isPresent()) {
             // Give a warning (It'll get sent anyway)
             AbstractService.LOG.info("Could not find robot %d", packet.getRobotId());
+
+            // Divide by pi, so that at max turn rate (Pi or -Pi) the robot reaches max rotationspeed
+            if (settings != null) {
+                if(goalAngle > 0)
+                    rotationSpeed = settings.getMaxRotationSpeed();
+                else
+                    rotationSpeed = -settings.getMaxRotationSpeed();
+            }
+
+            packet.setVelocityR(rotationSpeed);
+            return true;
         }
         // If it is present, however
         else {
             // Goal angle - currentAngle = angle we still have to turn
             rotationSpeed = rotationSpeed - oRobot.get().getOrientation();
         }
-
         // Edit the angle a little, so that X+ => turn right, X- => turn left.
         rotationSpeed *= -1;
-        rotationSpeed += Math.PI / 2;
+        rotationSpeed += Math.PI ;
 
         // Divide by pi, so that at max turn rate (Pi or -Pi) the robot reaches max rotationspeed
         if (settings != null)
@@ -225,7 +235,7 @@ public class ControllerHandler extends AbstractProducer {
      * @param buttonValue The POV value that'll be used
      * @return true if success (always)
      */
-    private static final boolean directionPOV(final RadioProtocolCommand.Builder packet, final float buttonValue) {
+    private static boolean directionPOV(final RadioProtocolCommand.Builder packet, final float buttonValue) {
         if (ControllerHandler.isPressed(buttonValue) && settings != null) {
             packet.setVelocityY((float) Math.sin(buttonValue * 2 * Math.PI) * settings.getMaxVelocity());
             packet.setVelocityX((float) Math.cos(buttonValue * 2 * Math.PI) * -settings.getMaxVelocity());
@@ -295,7 +305,7 @@ public class ControllerHandler extends AbstractProducer {
     }
 
     /**
-     * Processes the given buttonstate, and puts it into the given {@RadioProtocolCommand.Builder packet}
+     * Processes the given button state, and puts it into the given {@link RadioProtocolCommand.Builder packet}
      *
      * @param currentButtonState The polled values of the assigned buttons
      * @param packet             The packet the values will be put into
@@ -306,9 +316,9 @@ public class ControllerHandler extends AbstractProducer {
         if (!currentButtonState.entrySet().stream()
                 // process each button
                 .map(entry -> this.processButtonEntry(entry, packet, currentButtonState))
-                // check for false succes values
-                .reduce(true, (accumulator, succes) -> accumulator && succes))
-            AbstractService.LOG.warning("Not every button-press was processed succesfully (controller: %s).\n",
+                // check for false success values
+                .reduce(true, (accumulator, success) -> accumulator && success))
+            AbstractService.LOG.warning("Not every button-press was processed successfully (controller: %s).\n",
                     this.layout.getController().getName());
     }
 
@@ -403,9 +413,9 @@ public class ControllerHandler extends AbstractProducer {
      * @param currentButtonState The current state of all buttons. Used to retrieve CHIP_STRENGTH
      * @return True if success (always)
      */
-    private final boolean kick(final RadioProtocolCommand.Builder packet,
-                               final float buttonValue,
-                               final Map<ButtonFunction, Float> currentButtonState) {
+    private boolean kick(final RadioProtocolCommand.Builder packet,
+                         final float buttonValue,
+                         final Map<ButtonFunction, Float> currentButtonState) {
 
         if (ControllerHandler.isPressed(buttonValue)) {
             // Kickstrength is the value of the assigned trigger. If it doesn't exist, use MAX_STRENGTH
@@ -413,10 +423,13 @@ public class ControllerHandler extends AbstractProducer {
                     currentButtonState.get(ButtonFunction.KICK_STRENGTH) :
                     1;
 
-            if (settings != null)
-                kickStrength *= settings.getMaxFlatKickSpeed();
-            else
-                AbstractService.LOG.warning("ControllerSettings not initialized. Could not read MaxFlatKickSpeed");
+            if (settings == null){
+                AbstractService.LOG.warning("ControllerSettings not initialized. Could not read MaxChipKickSpeed");
+                return false;
+            }
+
+            kickStrength *= settings.getMaxFlatKickSpeed();
+
             // Make sure it's never below 0
             packet.setFlatKick(Math.abs(kickStrength));
         }
@@ -431,20 +444,22 @@ public class ControllerHandler extends AbstractProducer {
      * @param currentButtonState The current state of all buttons. Used to retrieve KICK_STRENGTH
      * @return True if success (always)
      */
-    private final boolean chip(final RadioProtocolCommand.Builder packet,
-                               final float buttonValue,
-                               final Map<ButtonFunction, Float> currentButtonState) {
+    private boolean chip(final RadioProtocolCommand.Builder packet,
+                         final float buttonValue,
+                         final Map<ButtonFunction, Float> currentButtonState) {
 
         if (ControllerHandler.isPressed(buttonValue)) {
-            // Kickstrength is the value of the assigned trigger. If it doesn't exist, use MAX_STRENGTH
+            // chipstrength is the value of the assigned trigger. If it doesn't exist, use MAX_STRENGTH
             float chipStrength = this.layout.containsBinding(ButtonFunction.CHIP_STRENGTH) ?
                     currentButtonState.get(ButtonFunction.CHIP_STRENGTH) :
                     1;
 
-            if (settings != null)
-                chipStrength *= settings.getMaxChipKickSpeed();
-            else
+            if (settings == null){
                 AbstractService.LOG.warning("ControllerSettings not initialized. Could not read MaxChipKickSpeed");
+                return false;
+            }
+
+            chipStrength *= settings.getMaxChipKickSpeed();
             // Make sure it's never below 0
             packet.setChipKick(Math.abs(chipStrength));
         }
@@ -460,8 +475,8 @@ public class ControllerHandler extends AbstractProducer {
      * @return true if succes, false if failed (like when 1 orientation isn't bound)
      * @see #getOrientation(float, protobuf.Radio.RadioProtocolCommand.Builder)
      */
-    private final boolean orientationXY(final RadioProtocolCommand.Builder packet,
-                                        final Map<ButtonFunction, Float> currentButtonState) {
+    private boolean orientationXY(final RadioProtocolCommand.Builder packet,
+                                  final Map<ButtonFunction, Float> currentButtonState) {
         // make sure both axis are bound
         if (!(this.layout.containsBinding(ButtonFunction.ORIENTATION_X) && this.layout
                 .containsBinding(ButtonFunction.ORIENTATION_Y))) {

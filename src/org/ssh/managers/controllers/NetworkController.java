@@ -49,20 +49,18 @@ public class NetworkController extends AbstractManagerController<AbstractService
      * registered} before setting new send method
      *
      * @param newSendMethods new methods to use add default
-     * @return succes value
+     * @return success value
      */
     public boolean addDefault(final SendMethod... newSendMethods) {
-        if (hasSender())
-            return sender.addDefault(newSendMethods);
-        return false;
+        return hasSender() && sender.addDefault(newSendMethods);
     }
 
     /**
      * @return Pipeline if found
      */
     private boolean hasPipeline() {
-        if (pipeline == null
-                ) pipeline = Pipelines.<RadioPipeline>get("communication").orElse(null);
+        if (pipeline == null)
+            pipeline = Pipelines.<RadioPipeline>get("communication").orElse(null);
         return pipeline != null;
     }
 
@@ -76,8 +74,8 @@ public class NetworkController extends AbstractManagerController<AbstractService
     }
 
     /**
-     * Listen for a specific {@link ProtoPacket<?> ProtoPacket}. Note that all networksettings are
-     * dynamcly loaded by the {@link UDPReceiver} upon initialisation based on the parameter type.
+     * Listen for a specific {@link ProtoPacket ProtoPacket}. Note that all networksettings are
+     * dynamically loaded by the {@link UDPReceiver} upon initialisation based on the parameter type.
      *
      * @param type type to listen for
      */
@@ -88,10 +86,10 @@ public class NetworkController extends AbstractManagerController<AbstractService
     /**
      * Register a new handler for a given SendMethod. Note that only one {@link SenderInterface} per
      * {@link SendMethod} is allowed. New handlers will overwrite older ones.<br />
-     * The first registered {@link SendMethod} will be set as default sendmethod.
+     * The first registered {@link SendMethod} will be set as default send method.
      *
      * @param key          sendMethod to use
-     * @param communicator communicator that implements given sendmethod
+     * @param communicator communicator that implements given send method
      */
     public boolean register(final SendMethod key, final SenderInterface communicator) {
         if (hasSender())
@@ -106,9 +104,7 @@ public class NetworkController extends AbstractManagerController<AbstractService
      * @return succes value
      */
     public boolean removeDefault(final SendMethod method) {
-        if (hasSender())
-            return sender.removeDefault(method);
-        return false;
+        return hasSender() && sender.removeDefault(method);
     }
 
     /**
@@ -128,9 +124,7 @@ public class NetworkController extends AbstractManagerController<AbstractService
      */
     public boolean transmit(final protobuf.Radio.RadioProtocolWrapper.Builder genericBuilder,
                             final SendMethod... sendMethods) {
-        if (hasPipeline())
-            return pipeline.addPacket(new RadioPacket(genericBuilder.build(), sendMethods)).processPacket();
-        return false;
+        return hasPipeline() && pipeline.addPacket(new RadioPacket(genericBuilder.build(), sendMethods)).processPacket();
     }
 
     /**

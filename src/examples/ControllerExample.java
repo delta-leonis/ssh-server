@@ -19,6 +19,7 @@ import org.ssh.managers.manager.Services;
 import org.ssh.models.enums.ButtonFunction;
 import org.ssh.models.enums.SendMethod;
 import org.ssh.network.transmit.radio.RadioPipeline;
+import org.ssh.network.transmit.radio.couplers.VerboseCoupler;
 import org.ssh.network.transmit.senders.LegacyUDPSender;
 import org.ssh.util.Logger;
 
@@ -62,6 +63,7 @@ public class ControllerExample extends Application {
         return Stream.of(ControllerEnvironment.getDefaultEnvironment().getControllers())
                 // filter controllers that are available
                 .filter(ControllerExample::availableController)
+                //.filter(contr -> contr.getName().contains("360"))
                 // find the first in the list
                 .findFirst();
     }
@@ -100,7 +102,7 @@ public class ControllerExample extends Application {
         } else {
             return false;
         }
-        layout.saveAsDefault();
+        //layout.saveAsDefault();
         return true;
     }
 
@@ -111,6 +113,8 @@ public class ControllerExample extends Application {
     @SuppressWarnings("unchecked")
     @Override
     public void start(Stage primaryStage) throws Exception {
+        //Logger.getLogger("org.ssh").setUseParentHandlers(false);
+        Logger.getLogger("org.ssh.network").setUseParentHandlers(true);
         // make models available
         Models.start();
         // Create the settings for the Controller.
@@ -119,8 +123,10 @@ public class ControllerExample extends Application {
         Network.start();
         // make services available
         Services.start();
+        Pipelines.start();
+        new VerboseCoupler();
         // create a comminucation pipeline
-        Pipelines.add(new RadioPipeline("communication pipeline"));
+        new RadioPipeline("communication pipeline").setRoute("verbosecoupler");
 
         Network.register(SendMethod.UDP, new LegacyUDPSender(ADDRESS, 1337));
 
@@ -130,7 +136,7 @@ public class ControllerExample extends Application {
         Services.add(listener);
 
         // create 3 controller handlers
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 3; i++) {
             // maybe find a controller that is available
             final Optional<Controller> controller = ControllerExample.findAvailableController();
 
@@ -159,8 +165,7 @@ public class ControllerExample extends Application {
                 listener.processControllers();
                 try {
                     Thread.sleep(100);
-                } catch (InterruptedException ignored) {
-                }
+                } catch (InterruptedException ignored) { }
             }
         });
     }

@@ -105,7 +105,8 @@ public class RadioPacketSender extends AbstractConsumer<RadioPacket> {
         RadioPacketSender.LOG.info("registered hook for %s.", key);
 
         // set a default communicator when we have communicators, but no send method
-        if ((this.senders.size() == 1) && this.sendMethods.isEmpty()) this.addDefault(key);
+        if ((this.senders.size() == 1) && this.sendMethods.isEmpty())
+            this.addDefault(key);
     }
 
     /**
