@@ -22,7 +22,7 @@ public class Field extends AbstractModel {
      * Instantiates a fieldSize.
      */
     public Field() {
-        super("fieldSize", "");
+        super("field", "");
     }
 
     @Override

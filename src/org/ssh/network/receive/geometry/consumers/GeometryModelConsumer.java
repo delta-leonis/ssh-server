@@ -61,7 +61,7 @@ public class GeometryModelConsumer extends AbstractConsumer<GeometryPacket> {
             // Check if there is new data
             if (!field.getFieldSize().equals(fieldData)) {
                 // Update field
-                field.update("field", fieldData);
+                field.update("fieldSize", fieldData);
 
                 Models.<Goal>getAll("goal").forEach(goal -> {
                     // get position modifier (+1 or -1 according to field position

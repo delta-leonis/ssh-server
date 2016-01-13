@@ -84,7 +84,7 @@ public class Field3DGeometryProducerExample extends AbstractProducer<GeometryPac
         goals.add(goalEast);
 
         // Update field, create field geometry field size
-        fieldVisionModel.update("field", Field3DGeometryProducerExample.createGeometryFieldSize());
+        fieldVisionModel.update("fieldSize", Field3DGeometryProducerExample.createGeometryFieldSize());
         fieldVisionModel.update("goals", goals);
 
         // Save goals
