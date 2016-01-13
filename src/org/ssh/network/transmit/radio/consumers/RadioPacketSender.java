@@ -25,6 +25,10 @@ public class RadioPacketSender extends AbstractConsumer<RadioPacket> {
      */
     private final List<SendMethod> sendMethods = new ArrayList<SendMethod>();
 
+    /**
+     * Creates a new sender.<br />
+     * <em>Note: </em>The instance will automatically attach to all compatible pipelines
+     */
     public RadioPacketSender() {
         super("RadioPacketSender");
         attachToCompatiblePipelines();
@@ -43,6 +47,11 @@ public class RadioPacketSender extends AbstractConsumer<RadioPacket> {
                 (accumulator, result) -> accumulator && result);
     }
 
+    /**
+     * add a default method to the list of default send methods
+     * @param method send method to add
+     * @return success value, true if added
+     */
     public boolean addDefault(final SendMethod method) {
         // making sure sendMethod has a registered handler
         if (!this.senders.containsKey(method)) {
@@ -50,12 +59,13 @@ public class RadioPacketSender extends AbstractConsumer<RadioPacket> {
             return false;
         }
 
-        //
+        //it should be unique
         if (this.sendMethods.contains(method)) {
             RadioPacketSender.LOG.info("%s allready is a default sendMethod");
             return false;
         }
 
+        //add to the list
         this.sendMethods.add(method);
         RadioPacketSender.LOG.info("SendMethod %s has been set as a default sendmethod.\n", method);
         return true;
@@ -98,15 +108,29 @@ public class RadioPacketSender extends AbstractConsumer<RadioPacket> {
         if ((this.senders.size() == 1) && this.sendMethods.isEmpty()) this.addDefault(key);
     }
 
+    /**
+     * Remove a send method from the list of default send methods
+     * @param method method to remove as default
+     * @return success value
+     */
     public boolean removeDefault(final SendMethod method) {
+        // it can only be removed if it exists in the first place
         if (!this.sendMethods.contains(method)) {
             RadioPacketSender.LOG.info("%s isn't a default sendMethod");
             return false;
         }
 
+        //remove from the list
         return this.sendMethods.remove(method);
     }
 
+    /**
+     * Send a message with provided send methods. If no send methods are provided,
+     * the default send methods will be used
+     * @param genericMessage message to send
+     * @param sendMethods send methods to use instead of default (leave empty for defaults)
+     * @return true if all succeeded
+     */
     private boolean send(final Message genericMessage, final SendMethod... sendMethods) {
         // check if sendMethod is set
         if ((sendMethods == null) || (sendMethods.length == 0)) {

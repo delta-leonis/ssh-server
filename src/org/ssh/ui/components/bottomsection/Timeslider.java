@@ -62,6 +62,9 @@ public class Timeslider extends UIComponent {
 
     private static final int STEP_SIZE = 10;
 
+    /**
+     * Instantiates a new TimeSlider based on "bottomsection/timeslider.fxml"
+     */
     public Timeslider() {
         super("timeslider", "bottomsection/timeslider.fxml");
 

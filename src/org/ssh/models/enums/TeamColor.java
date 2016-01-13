@@ -18,10 +18,16 @@ public enum TeamColor {
         return this.equals(TeamColor.BLUE) ? Color.BLUE : Color.YELLOW;
     }
 
+    /**
+     * @return not this teamcolor
+     */
     public TeamColor getOpposite() {
         return this.equals(TeamColor.BLUE) ? TeamColor.YELLOW : TeamColor.BLUE;
     }
 
+    /**
+     * @return first character of the name of this color
+     */
     public String identifier() {
         return name().substring(0, 1);
     }
