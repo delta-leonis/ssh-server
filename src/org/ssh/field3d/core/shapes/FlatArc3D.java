@@ -55,14 +55,14 @@ public class FlatArc3D {
         this.triangleMesh = new TriangleMesh(VertexFormat.POINT_TEXCOORD);
 
         // Calculate vertices
-        final float[] vertices = this.calculateVertices(startAngleRad, endAngleRad, diameter, thickness, numDivisions);
+        final float[] vertices = FlatArc3D.calculateVertices(startAngleRad, endAngleRad, diameter, thickness, numDivisions);
         // Add vertices to the point list of the triangle mesh
         this.triangleMesh.getPoints().addAll(vertices);
         // Add texture coordinates to the triangle mesh
         this.triangleMesh.getTexCoords().addAll(TEXTURE_COORDINATES);
 
         // Calculate the faces of the mesh
-        final int[] faces = this.calculateFaces(numDivisions);
+        final int[] faces = FlatArc3D.calculateFaces(numDivisions);
         // Add faces to the mesh
         this.triangleMesh.getFaces().addAll(faces);
 
@@ -76,7 +76,7 @@ public class FlatArc3D {
      * @param numDivisions The number of divisions of the arc.
      * @return Returns an array of faces.
      */
-    private int[] calculateFaces(final int numDivisions) {
+    private static int[] calculateFaces(final int numDivisions) {
 
         final int[] indices = new int[(numDivisions * 2) * 6];
         int triangleCounter = 0;

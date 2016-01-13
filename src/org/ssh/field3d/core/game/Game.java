@@ -342,10 +342,6 @@ public abstract class Game extends SubScene {
                             final double height,
                             final boolean depthBuffer,
                             final SceneAntialiasing antiAliasing) {
-
-        // Create frame durations
-        final Duration duration = Duration.millis(Game.FRAME_TIME_MS);
-
         // Creating groups
         this.cameraGroup = new Group();
         this.worldGroup = new Group();

@@ -83,19 +83,15 @@ public class ContextOverlayGO extends OverlayGO {
         }
 
         // If the middle mouse button is being pressed
-        if (this.getGame().getMouseInputHandler().isMidButtonPressing()) {
-
-            // Hide context menu if needed
-            if (this.isVisible())
+        if (this.getGame().getMouseInputHandler().isMidButtonPressing()
+            || this.isVisible()) {
                 this.hide();
         }
 
         // Check if the any of the mouse wheel values has changed
         if (this.getGame().getMouseInputHandler().isMouseWheelXChanged()
-                || this.getGame().getMouseInputHandler().isMouseWheelYChanged()) {
-
-            // Hide context menu if needed
-            if (this.isVisible())
+                || this.getGame().getMouseInputHandler().isMouseWheelYChanged()
+                || this.isVisible()) {
                 this.hide();
         }
     }

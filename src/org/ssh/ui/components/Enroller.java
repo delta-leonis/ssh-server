@@ -116,8 +116,6 @@ public class Enroller<N extends Region> extends BorderPane {
         }
     }
 
-    ;
-
     /**
      * State represents if the enroller is collapsed or extended
      *

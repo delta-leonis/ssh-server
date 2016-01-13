@@ -33,9 +33,6 @@ public abstract class AbstractService<P extends AbstractPipelinePacket<? extends
     public TypeToken<P> genericType = new TypeToken<P>(this.getClass()) {
     };
 
-    // a logger for good measure
-    protected static final Logger LOG = Logger.getLogger();
-
     /**
      * Instantiates a new Service.
      *

@@ -44,8 +44,6 @@ public class WidgetWindow extends UIController<FlowPane> {
         this.getStage().setAlwaysOnTop(true);
         widgetcontainer.setRowValignment(VPos.TOP);
 
-//        UI.getInstance().getWidget(widgetOrder.get(15));
-
         // spawn the window
         this.spawnWindow();
     }
@@ -56,7 +54,8 @@ public class WidgetWindow extends UIController<FlowPane> {
      * @return The singleton instance of {@link WidgetWindow}
      */
     public static WidgetWindow getInstance() {
-        if (instance == null) instance = new WidgetWindow();
+        if (instance == null)
+            instance = new WidgetWindow();
         return instance;
     }
 

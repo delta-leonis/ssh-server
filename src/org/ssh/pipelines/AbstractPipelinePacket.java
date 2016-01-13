@@ -19,7 +19,7 @@ import java.util.stream.Stream;
  *
  * @author Rimon Oz
  */
-public abstract class AbstractPipelinePacket<O extends Object> {
+public abstract class AbstractPipelinePacket<O> {
 
     /**
      * The mutability setting.
@@ -33,6 +33,15 @@ public abstract class AbstractPipelinePacket<O extends Object> {
     public TypeToken<O> genericType = new TypeToken<O>(this.getClass()) {
     };
 
+    // a logger for good measure
+    protected static final Logger LOG = Logger.getLogger();
+
+    /**
+     * The data contained by this package.
+     */
+    private O data;
+
+
     /**
      * Gets the type of {@link AbstractPipelinePacket} on which this Service operates.
      *
@@ -41,15 +50,6 @@ public abstract class AbstractPipelinePacket<O extends Object> {
     public Type getType() {
         return this.genericType.getType();
     }
-
-
-    // a logger for good measure
-    protected final static Logger LOG = Logger.getLogger();
-
-    /**
-     * The data contained by this package.
-     */
-    private O data;
 
     /**
      * Applies a lambda to the packet.

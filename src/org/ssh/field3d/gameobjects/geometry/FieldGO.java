@@ -446,7 +446,6 @@ public class FieldGO extends GeometryGameObject {
 
         // Hook on mouse clicked event
         tile.setOnMouseClicked(event -> {
-
             // Check if the right mouse button was clicked
             if (event.getButton() == MouseButton.SECONDARY) {
 
@@ -580,7 +579,7 @@ public class FieldGO extends GeometryGameObject {
         if (fieldLineSegments != null) {
 
             // Loop through line segments
-            fieldLineSegments.forEach((lineSegment) -> {
+            fieldLineSegments.forEach(lineSegment -> {
 
                 // Getting start & end point of the line
                 Point2D lineStart = new Point2D(lineSegment.getP1().getX(), lineSegment.getP1().getY());
