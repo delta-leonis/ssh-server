@@ -13,7 +13,7 @@
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
             </columnResizePolicy>
             <columns>
-                <TableColumn fx:id="id" text="ID" maxWidth="45" minWidth="45">
+                <TableColumn fx:id="id" text="ID" maxWidth="45" minWidth="45" sortType="DESCENDING">
                     <cellValueFactory>
                         <PropertyValueFactory property="id"/>
                     </cellValueFactory>

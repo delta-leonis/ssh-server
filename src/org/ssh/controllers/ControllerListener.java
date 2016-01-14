@@ -11,6 +11,7 @@ import org.ssh.models.Robot;
 import org.ssh.services.AbstractService;
 import protobuf.Radio.RadioProtocolCommand;
 
+import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -53,7 +54,7 @@ public class ControllerListener extends AbstractService {
      * @return maybe a controller
      */
     public Optional<Controller> findAvailableController(String pattern) {
-        return Stream.of(ControllerEnvironment.getDefaultEnvironment().getControllers())
+        return Stream.of(ControllerListener.createDefaultEnvironment().getControllers())
                 // filter controllers that are available
                 .filter(this::availableController)
                 .filter(contr -> contr.getName().contains(pattern))
@@ -66,7 +67,7 @@ public class ControllerListener extends AbstractService {
      * @return whether a controller is available
      */
     private boolean availableController(final Controller controller) {
-        return !this.containsController(controller);
+        return !this.handlers.containsValue(controller);
     }
 
     /**
@@ -106,20 +107,6 @@ public class ControllerListener extends AbstractService {
     }
 
     /**
-     * @param controller controller to check
-     * @return whether given controller is in use
-     */
-    public boolean containsController(final Controller controller) {
-        return this.handlers.entrySet().stream()
-                // Only check handlers that actually have a handler assigned to a id
-                .filter(entry -> entry.getValue() != null)
-                // filter controllers that equal to a assigned controller
-                .filter(entry -> entry.getValue().getLayout().getController().equals(controller))
-                // found any? Then it is in use
-                .count() > 0;
-    }
-
-    /**
      * @param robotId robotId to check
      * @return whether given id has a handler (thus a controller) assigned
      */
@@ -146,6 +133,29 @@ public class ControllerListener extends AbstractService {
                         .map(entry -> entry.getValue().process(entry.getKey()))
                         // collect the packets to a list
                         .collect(Collectors.toList()));
+    }
+
+    /**
+     * Extends the current controller library (jinput) to be able to search multiple times for controllers
+     *
+     * @return new rescanned ControllerEnvironment
+     */
+    private static ControllerEnvironment createDefaultEnvironment() {
+        try {
+            // Find constructor (class is package private, so we can't access it directly)
+            Constructor<ControllerEnvironment> constructor = (Constructor<ControllerEnvironment>)
+                    Class.forName("net.java.games.input.DefaultControllerEnvironment").getDeclaredConstructors()[0];
+
+            // Constructor is package private, so we have to deactivate access control checks
+            constructor.setAccessible(true);
+
+            // Create object with default constructor
+            return constructor.newInstance();
+        }catch (Exception exception){
+            ControllerListener.LOG.warning("Could not create new ControllerEnvironment");
+            ControllerListener.LOG.exception(exception);
+        }
+        return null;
     }
 
     /**

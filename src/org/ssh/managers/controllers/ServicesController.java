@@ -59,10 +59,16 @@ public class ServicesController extends AbstractManagerController<AbstractServic
     @SuppressWarnings("unchecked")
     public <L> ListenableScheduledFuture<L> scheduleTask(final String taskName, final Runnable task, final long delay) {
         // schedule the task
-        final ListenableScheduledFuture<?> scheduledFuture = this.scheduler.scheduleWithFixedDelay(task,
-                0,
-                delay,
-                TimeUnit.MICROSECONDS);
+        final ListenableScheduledFuture<?> scheduledFuture = this.scheduler.scheduleWithFixedDelay((()-> {
+                try {
+                    task.run();
+                }catch(Exception e) {
+                    e.printStackTrace();
+                }}),
+                    0,
+                    delay,
+                    TimeUnit.MICROSECONDS
+        );
         // save the ListenableFuture for future use
         this.scheduledTasks.put(taskName, (ScheduledFuture<? extends AbstractPipelinePacket<?>>) scheduledFuture);
 
