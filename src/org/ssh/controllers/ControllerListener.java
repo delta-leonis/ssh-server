@@ -158,7 +158,7 @@ public class ControllerListener extends AbstractService {
     public boolean register(final int robotId, final ControllerLayout controller) {
         // check if the robotId is allready bound
         if (this.isAssigned(robotId)) {
-            ControllerListener.LOG.warning("Handler for %d is not empty, and will be overwriten.\n", robotId);
+            ControllerListener.LOG.warning("Handler for %d is not empty, and will be overwritten.\n", robotId);
             this.unregister(robotId);
         }
 

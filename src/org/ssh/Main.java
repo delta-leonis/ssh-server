@@ -2,6 +2,10 @@ package org.ssh;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import net.java.games.input.Controller;
+import org.ssh.controllers.ControllerLayout;
+import org.ssh.controllers.ControllerListener;
+import org.ssh.controllers.ControllerSettings;
 import org.ssh.managers.manager.*;
 import org.ssh.models.*;
 import org.ssh.models.enums.Allegiance;
@@ -13,12 +17,15 @@ import org.ssh.network.receive.geometry.consumers.GeometryModelConsumer;
 import org.ssh.network.receive.wrapper.WrapperPipeline;
 import org.ssh.network.receive.wrapper.consumers.WrapperConsumer;
 import org.ssh.network.transmit.radio.RadioPipeline;
+import org.ssh.network.transmit.radio.couplers.VerboseCoupler;
 import org.ssh.network.transmit.senders.DebugSender;
+import org.ssh.network.transmit.senders.LegacyUDPSender;
 import org.ssh.pipelines.AbstractPipeline;
 import org.ssh.pipelines.packets.WrapperPacket;
 import org.ssh.ui.components.widget.TestWidget;
 import org.ssh.util.Logger;
 
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.stream.IntStream;
 
@@ -27,6 +34,8 @@ import java.util.stream.IntStream;
  */
 public class Main extends Application {
     private static final Logger LOG = Logger.getLogger("org.ssh");
+    // Ip address of the basestation
+    private static final String ADDRESS = "224.5.23.20";
 
     /**
      * The main method.
@@ -42,6 +51,9 @@ public class Main extends Application {
      * Create essential {@link AbstractModel models}, {@link AbstractPipeline pipelines} and {@link org.ssh.services.AbstractService services}
      */
     private void build() {
+
+        // Create the settings for the Controller.
+        Models.create(ControllerSettings.class);
 
         // Creating models
         Models.create(Game.class);
@@ -62,8 +74,6 @@ public class Main extends Application {
         new GeometryPipeline("fieldbuilder");
         // Create new detection pipeline
         new DetectionPipeline("detection");
-        // make another pipeline
-        new RadioPipeline("controller");
 
         // make splitter from wrapper -> geometry / detection
         new WrapperConsumer().attachToCompatiblePipelines();
@@ -88,14 +98,20 @@ public class Main extends Application {
      */
     @Override
     public void start(final Stage primaryStage) throws Exception {
+        Main.LOG.setUseParentHandlers(false);
         Main.LOG.info("Starting software");
 
         // start the managers
         Services.start();
         Models.start();
         Pipelines.start();
+        new VerboseCoupler();
         Network.start();
+        Network.register(SendMethod.UDP, new LegacyUDPSender(ADDRESS, 1337));
         Network.register(SendMethod.DEBUG, new DebugSender(Level.INFO));
+
+        // create the service for the controller
+        ControllerListener listener = new ControllerListener();
 
         build();
 
@@ -105,5 +121,25 @@ public class Main extends Application {
         /* Below is just for testing!!! */
         /********************************/
         createWidgets();
+
+        Services.scheduleTask("USB watcher", () -> {
+            final Optional<Controller> controller = listener.findAvailableController("360");
+
+            // check if we found one
+            if (!controller.isPresent())
+                return;
+            // create a layout for this specific controller
+            final ControllerLayout layout = new ControllerLayout(controller.get());
+            if (!Models.initialize(layout))
+                ControllerLayout.createDefaultLayout(layout);
+
+            if(listener.findAvailableRobotid().isPresent()) {
+                listener.register(listener.findAvailableRobotid().getAsInt(), layout); // i = robotid
+                if (!Services.get("ControllerExample poller").isPresent())
+                    Services.scheduleTask("ControllerExample poller", listener::processControllers, 20000);
+            }
+        }, 5000000);
     }
+
+
 }

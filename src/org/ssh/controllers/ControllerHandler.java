@@ -195,7 +195,7 @@ public class ControllerHandler extends AbstractProducer {
         float rotationSpeed = goalAngle;
         final Optional<Robot> oRobot = Models.<Robot>get("robot A" + packet.getRobotId());
         // If the robot isn't present
-        if (!oRobot.isPresent()) {
+        //if (!oRobot.isPresent()) {
             // Give a warning (It'll get sent anyway)
             AbstractService.LOG.info("Could not find robot %d", packet.getRobotId());
 
@@ -209,7 +209,7 @@ public class ControllerHandler extends AbstractProducer {
 
             packet.setVelocityR(rotationSpeed);
             return true;
-        }
+        /*}
         // If it is present, however
         else {
             // Goal angle - currentAngle = angle we still have to turn
@@ -224,7 +224,7 @@ public class ControllerHandler extends AbstractProducer {
             rotationSpeed *= settings.getMaxRotationSpeed() / Math.PI;
 
         packet.setVelocityR(rotationSpeed);
-        return true;
+        return true;*/
     }
 
     /**

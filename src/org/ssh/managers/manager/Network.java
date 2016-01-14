@@ -68,7 +68,7 @@ public class Network implements ManagerInterface<AbstractService<? extends Proto
     }
 
     /**
-     * Listen for a specific {@link ProtoPacket<?> ProtoPacket}. Note that all networksettings are
+     * Listen for a specific {@link ProtoPacket ProtoPacket}. Note that all networksettings are
      * dynamically loaded by the {@link UDPReceiver} upon initialization based on the parameter
      * type.
      *
@@ -108,7 +108,7 @@ public class Network implements ManagerInterface<AbstractService<? extends Proto
         Network.LOG.info("Starting Network...");
 
         // create pipeline
-        new RadioPipeline("communication");
+        new RadioPipeline("communication").setRoute("verbosecoupler");
 
         // create 'the' sender
         new RadioPacketSender();
