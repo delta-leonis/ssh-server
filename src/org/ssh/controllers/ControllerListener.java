@@ -3,15 +3,18 @@ package org.ssh.controllers;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.java.games.input.Controller;
+import net.java.games.input.ControllerEnvironment;
+import org.ssh.managers.manager.Models;
 import org.ssh.managers.manager.Network;
+import org.ssh.managers.manager.Services;
+import org.ssh.models.Robot;
 import org.ssh.services.AbstractService;
 import protobuf.Radio.RadioProtocolCommand;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * A {@link AbstractService} that manages all {@link ControllerHandler controllers} for every
@@ -41,6 +44,29 @@ public class ControllerListener extends AbstractService {
      */
     public ControllerListener() {
         super("ControllerListener");
+    }
+
+    /**
+     * Find a controller that is not used in any ControllerHandler
+     *
+     * @param pattern the pattern to search a controller for
+     * @return maybe a controller
+     */
+    public Optional<Controller> findAvailableController(String pattern) {
+        return Stream.of(ControllerEnvironment.getDefaultEnvironment().getControllers())
+                // filter controllers that are available
+                .filter(this::availableController)
+                .filter(contr -> contr.getName().contains(pattern))
+                // find the first in the list
+                .findFirst();
+    }
+
+    /**
+     * @param controller controller to check
+     * @return whether a controller is available
+     */
+    private boolean availableController(final Controller controller) {
+        return !this.containsController(controller);
     }
 
     /**
@@ -74,6 +100,8 @@ public class ControllerListener extends AbstractService {
             ControllerListener.LOG.fine("Could not find a available robotid.");
             return;
         }
+        Models.<Robot>get("robot A" + currentIndex).ifPresent(robot -> robot.update("hasController", false));
+        Models.<Robot>get("robot A" + robotId).ifPresent(robot -> robot.update("hasController", true));
         this.tmpHandlers.put(robotId, handler);
     }
 
@@ -134,6 +162,7 @@ public class ControllerListener extends AbstractService {
             this.unregister(robotId);
         }
 
+        Models.<Robot>get("robot A" + robotId).ifPresent(robot -> robot.update("hasController", true));
         this.handlers.put(robotId, new ControllerHandler(controller));
         return true;
     }
@@ -151,9 +180,14 @@ public class ControllerListener extends AbstractService {
             return false;
         }
 
-        // replace the handler with null, let the garbage collector pick up te pieces
-        this.handlers.put(robotId, null);
+        this.handlers.remove(robotId);
         return true;
     }
 
+    /**
+     * @return a robot id that doesn't have a controller yet. Optional.empty if no ID has been found
+     */
+    public OptionalInt findAvailableRobotid() {
+        return IntStream.range(0, MAX_ROBOT_ID).filter(id -> !handlers.containsKey(id)).findAny();
+    }
 }

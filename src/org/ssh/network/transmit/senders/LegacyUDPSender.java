@@ -88,9 +88,7 @@ public class LegacyUDPSender implements SenderInterface {
 
                     int directionSpeed = (int) Math.sqrt(x * x + y * y);
                     int rotationSpeed = (int) command.getVelocityR();
-                    System.out.println(command.getFlatKick());
-                    int shootKicker;
-                    shootKicker = (int) (command.getFlatKick() * 1);
+                    int shootKicker = (int) command.getFlatKick();
                     if(command.getChipKick() > 0f)
                         shootKicker = (int) (command.getChipKick() * -1);
 

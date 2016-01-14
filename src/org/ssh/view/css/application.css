@@ -200,6 +200,13 @@
 	-fx-background-size: cover;
 }
 
+.no-controller {
+	-fx-background-image: url("../icon/nocontroller.png");
+}
+.controller {
+	-fx-background-image: url("../icon/controller.png");
+}
+
 #connectionIcon {
 	-fx-background-size: cover;
 }

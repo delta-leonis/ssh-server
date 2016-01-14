@@ -14,6 +14,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.ssh.controllers.ControllerListener;
+import org.ssh.managers.manager.Services;
 import org.ssh.models.Robot;
 import org.ssh.ui.UIComponent;
 
@@ -57,7 +59,7 @@ public class RobotStatus extends UIComponent {
      * these panes will be used to display icons representing connection and camera sight status.
      */
     @FXML
-    private Pane connectionIcon, sightIcon;
+    private Pane connectionIcon, sightIcon, controllerIcon;
     /**
      * An text-shape for displaying the id of this robot. It is chosen to be a text-shape instead of
      * a label to make resizing more easy.
@@ -88,6 +90,8 @@ public class RobotStatus extends UIComponent {
                 new BooleanStylePropertyHandler(robotIconBorder, "statusbox-selected", "statusbox-unselected"));
         model.isConnectedProperty()
                 .addListener(new BooleanStylePropertyHandler(connectionIcon, "connection-icon", "noconnection-icon"));
+        model.hasControllerProperty()
+                .addListener(new BooleanStylePropertyHandler(controllerIcon, "controller", "no-controller"));
         model.isOnSightProperty().addListener(new BooleanStylePropertyHandler(sightIcon, "sight-icon", "nosight-icon"));
         model.malfunctionsProperty().addListener(new StatusPropertyHandler());
 

@@ -1,5 +1,6 @@
 package org.ssh.models;
 
+import com.google.common.util.concurrent.Service;
 import javafx.beans.property.*;
 import org.ssh.models.enums.Allegiance;
 import org.ssh.models.enums.Malfunction;
@@ -72,6 +73,8 @@ public class Robot extends FieldObject {
      * If the robot is on sight
      */
     private transient BooleanProperty isOnSight;
+
+    private transient ReadOnlyBooleanProperty hasController;
     /**
      * The boolean for the selected state
      */
@@ -95,6 +98,7 @@ public class Robot extends FieldObject {
         this.isSelected = new SimpleBooleanProperty(false);
         this.isConnected = new SimpleBooleanProperty(false);
         this.isOnSight = new SimpleBooleanProperty(false);
+        this.hasController = new SimpleBooleanProperty(false);
         this.orientation = new SimpleFloatProperty(0.0f);
         this.malfunctions = new SimpleListProperty<>(
                 javafx.collections.FXCollections.observableList(new ArrayList<>()));
@@ -192,6 +196,20 @@ public class Robot extends FieldObject {
         return this.isOnSight;
     }
 
+
+    /**
+     * @return whether the robot is has a controller assigned or not
+     */
+    public boolean hasController(){
+        return this.hasController.get();
+    }
+
+    /**
+     * @return Property containing boolean which describes whether the robot is has a controller assigned or not
+     */
+    public ReadOnlyBooleanProperty hasControllerProperty() {
+        return this.hasController;
+    }
     /**
      * @return A list of all the malfunctions in this robot
      */

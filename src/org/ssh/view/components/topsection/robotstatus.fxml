@@ -15,8 +15,8 @@
         <ColumnConstraints percentWidth="100.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints percentHeight="73.0"/>
-        <RowConstraints percentHeight="27.0"/>
+        <RowConstraints percentHeight="80.0"/>
+        <RowConstraints percentHeight="20.0"/>
     </rowConstraints>
     <children>
         <StackPane fx:id="stackPane" onMouseClicked="#selectRobot">
@@ -36,10 +36,10 @@
         </StackPane>
         <GridPane fx:id="iconPane" GridPane.rowIndex="1" hgap="2.0">
             <columnConstraints>
-                <ColumnConstraints percentWidth="33.0"/>
-                <ColumnConstraints percentWidth="33.0"/>
-                <ColumnConstraints percentWidth="7.0"/>
-                <ColumnConstraints percentWidth="26.0"/>
+                <ColumnConstraints percentWidth="25.0"/>
+                <ColumnConstraints percentWidth="25.0"/>
+                <ColumnConstraints percentWidth="25.0"/>
+                <ColumnConstraints percentWidth="25.0"/>
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints percentHeight="100.0"/>
@@ -48,6 +48,7 @@
                 <Pane fx:id="connectionIcon" id="connectionIcon"
                       GridPane.columnIndex="0"/>
                 <Pane fx:id="sightIcon" id="sightIcon" GridPane.columnIndex="1"/>
+                <Pane fx:id="controllerIcon" id="controllerIcon" GridPane.columnIndex="2"/>
                 <Text fx:id="robotId" id="robotId" GridPane.columnIndex="3" boundsType="VISUAL"/>
             </children>
         </GridPane>
