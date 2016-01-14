@@ -24,6 +24,9 @@ public class LegacyUDPSender implements SenderInterface {
     // respective logger
     private static final Logger LOG = Logger.getLogger();
 
+    /** max kickspeed in percent/100 */
+    private static final double MAX_KICKSPEED = 0.7;
+
     /**
      * IP address to send the packets to
      */
@@ -95,7 +98,7 @@ public class LegacyUDPSender implements SenderInterface {
                     boolean dribble = Math.abs(command.getDribblerSpin()) > 0.0f;
 
                     // Put the values into a datagrampacket
-                    byte[] dataPacket = LegacyUDPSender.createByteArray(messageType, robotID, direction, directionSpeed, rotationSpeed, (int) (shootKicker * 0.7), dribble);
+                    byte[] dataPacket = LegacyUDPSender.createByteArray(messageType, robotID, direction, directionSpeed, rotationSpeed, (int) (shootKicker * MAX_KICKSPEED), dribble);
                     final DatagramPacket udpPacket = new DatagramPacket(dataPacket,
                             dataPacket.length,
                             this.ipAddress,

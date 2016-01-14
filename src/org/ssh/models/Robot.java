@@ -48,7 +48,7 @@ public class Robot extends FieldObject {
     /**
      * current dribble speed (-1 is max backward, 1 is max forward)
      */
-    private Float dribbleSpeed;
+    private transient Float dribbleSpeed;
 
     /**
      * The boolean for the selected state
@@ -95,6 +95,7 @@ public class Robot extends FieldObject {
     @Override
     public void initialize() {
         super.initialize();
+        this.dribbleSpeed = 0.0f;
         this.isSelected = new SimpleBooleanProperty(false);
         this.isConnected = new SimpleBooleanProperty(false);
         this.isOnSight = new SimpleBooleanProperty(false);

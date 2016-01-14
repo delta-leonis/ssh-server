@@ -92,7 +92,7 @@ public class ControllerHandler extends AbstractProducer {
      */
     private static boolean velocityY(final Float buttonValue, final RadioProtocolCommand.Builder packet) {
         if(settings == null){
-            AbstractService.LOG.warning("Settings in velocityY is null");
+            AbstractService.LOG.warning("Settings for velocityY is null");
             return false;
         }
         if (ControllerHandler.isPressed(buttonValue))
@@ -163,7 +163,7 @@ public class ControllerHandler extends AbstractProducer {
     private static boolean dribbleToggle(final RadioProtocolCommand.Builder packet, final float buttonValue) {
         if (ControllerHandler.isPressed(buttonValue))
             Models.<Robot>get("robot A" + packet.getRobotId())
-                    .ifPresent(robot -> packet.setDribblerSpin(robot.getDribbleSpeed() > 0f ? 0f : 1f));
+                    .ifPresent(robot -> packet.setDribblerSpin(Math.abs(robot.getDribbleSpeed()) > 0.1f ? 0f : 1f));
         return true;
     }
 
@@ -179,6 +179,9 @@ public class ControllerHandler extends AbstractProducer {
         float dribbleSpin = buttonValue;
         if (settings != null)
             dribbleSpin *= settings.getMaxDribbleSpeed();
+
+        if(Math.abs(dribbleSpin) < 0.1f)
+            dribbleSpin = 0.0f;
 
         packet.setDribblerSpin(dribbleSpin);
         return true;
@@ -290,6 +293,10 @@ public class ControllerHandler extends AbstractProducer {
         });
 
         processInput(currentButtonState, packet);
+
+        //make sure the dribbler spins when it should
+        Models.<Robot>get("robot A" + packet.getRobotId())
+                .ifPresent(robot -> packet.setDribblerSpin(Math.abs(robot.getDribbleSpeed()) > 0.1f ? robot.getDribbleSpeed() : 0f));
 
         // Save the previous button state to avoid duplication
         // For each entry

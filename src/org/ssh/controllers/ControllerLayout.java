@@ -56,7 +56,7 @@ public class ControllerLayout extends AbstractModel {
             layout.attach(layout.getComponent(Component.Identifier.Button._3), ButtonFunction.DRIBBLE_TOGGLE);
             layout.attach(layout.getComponent(Component.Identifier.Axis.X), ButtonFunction.DIRECTION_X);
             layout.attach(layout.getComponent(Component.Identifier.Axis.Y), ButtonFunction.DIRECTION_Y);
-            layout.attach(layout.getComponent(Component.Identifier.Axis.Z), ButtonFunction.DIRECTION_Y);
+            //layout.attach(layout.getComponent(Component.Identifier.Axis.Z), ButtonFunction.DIRECTION_Y);
             layout.attach(layout.getComponent(Component.Identifier.Axis.RY), ButtonFunction.ORIENTATION_X);
             layout.attach(layout.getComponent(Component.Identifier.Axis.RX), ButtonFunction.ORIENTATION_Y);
             layout.attach(layout.getComponent(Component.Identifier.Axis.Z), ButtonFunction.CHIP_STRENGTH);
