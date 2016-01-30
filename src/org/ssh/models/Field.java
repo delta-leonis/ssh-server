@@ -1,26 +1,21 @@
 package org.ssh.models;
 
-import javafx.geometry.Point2D;
-import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.MeshView;
 import org.ssh.field3d.core.shapes.FlatArc3D;
 import org.ssh.field3d.core.shapes.FlatLine3D;
-import org.ssh.ui.components.centersection.gamescene.ArcLine3D;
-import org.ssh.ui.components.centersection.gamescene.PolyLine3D;
-import org.ssh.ui.components.centersection.gamescene.SimpleLine3D;
+import org.ssh.ui.components.centersection.gamescene.shapes.ArcLine3D;
+import org.ssh.ui.components.centersection.gamescene.shapes.SimpleLine3D;
 import protobuf.Geometry.FieldCicularArc;
 import protobuf.Geometry.FieldLineSegment;
 import protobuf.Geometry.GeometryFieldSize;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**

@@ -1,6 +1,5 @@
-package org.ssh.ui.components.centersection.gamescene;
+package org.ssh.ui.components.centersection.gamescene.shapes;
 
-import javafx.geometry.Point2D;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 

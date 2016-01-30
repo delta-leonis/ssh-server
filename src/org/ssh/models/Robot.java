@@ -12,7 +12,7 @@ import org.ssh.managers.manager.Models;
 import org.ssh.models.enums.Allegiance;
 import org.ssh.models.enums.Malfunction;
 import org.ssh.models.enums.Malfunction.MalfunctionType;
-import org.ssh.ui.components.centersection.gamescene.ArcLine3D;
+import org.ssh.ui.components.centersection.gamescene.shapes.ArcLine3D;
 import protobuf.Detection;
 
 import java.io.InputStream;

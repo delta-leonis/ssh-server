@@ -1,4 +1,4 @@
-package org.ssh.ui.components.centersection.gamescene;
+package org.ssh.ui.components.centersection.gamescene.shapes;
 
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
