@@ -10,7 +10,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import org.ssh.field3d.FieldGame;
 import org.ssh.ui.UIComponent;
 import org.ssh.ui.components.Enroller;
 
@@ -26,14 +25,11 @@ public class CenterSection extends UIComponent<StackPane> {
     @FXML
     private Pane matchlogButtonSizer;
 
-    private FieldGame fieldGame;
-
 
     private Label FPSLabel;
 
     public CenterSection() {
         super("center", "centersection/center.fxml");
-        fieldGame = new FieldGame(new Group(), 500, 500, SceneAntialiasing.BALANCED);
         add(new GameScene(500, 500), "#fieldBase", true);
 
         MatchlogSelector matchlogSelector = new MatchlogSelector();
@@ -67,9 +63,5 @@ public class CenterSection extends UIComponent<StackPane> {
         };
         frameRateMeter.start();
         this.matchlogWrapper.getChildren().add(matchlogEnroller);
-    }
-
-    public FieldGame getFieldGame() {
-        return fieldGame;
     }
 }

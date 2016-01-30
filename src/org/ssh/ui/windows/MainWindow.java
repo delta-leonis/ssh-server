@@ -6,7 +6,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.ssh.field3d.FieldGame;
 import org.ssh.ui.UIComponent;
 import org.ssh.ui.UIController;
 import org.ssh.ui.components.bottomsection.BottomSection;
@@ -83,14 +82,5 @@ public class MainWindow extends UIController<StackPane> {
     public <C extends UIComponent<?>> void addOverlay(C component) {
         ((StackPane) getRootNode().getParent())
                 .getChildren().add(component.getComponent());
-    }
-
-    /**
-     * ultra mega beun, but it will disappear
-     *
-     * @return
-     */
-    public FieldGame getFieldGame() {
-        return center.getFieldGame();
     }
 }

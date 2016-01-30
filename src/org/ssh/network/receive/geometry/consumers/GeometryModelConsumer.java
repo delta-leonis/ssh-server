@@ -1,29 +1,21 @@
 package org.ssh.network.receive.geometry.consumers;
 
-import org.ssh.field3d.FieldGame;
 import org.ssh.managers.manager.Models;
-import org.ssh.managers.manager.UI;
 import org.ssh.models.Field;
 import org.ssh.models.Game;
 import org.ssh.models.Goal;
 import org.ssh.models.enums.Direction;
 import org.ssh.pipelines.packets.GeometryPacket;
 import org.ssh.services.AbstractConsumer;
-import org.ssh.ui.windows.MainWindow;
 import protobuf.Geometry.GeometryFieldSize;
 
 /**
  * Class that consumes the parsed {@link GeometryPacket}s and updates the {@link Field} and all
- * {@link Goal}s. Also calls {@link FieldGame#updateGeometry()}
+ * {@link Goal}s.
  *
  * @author Jeroen de Jong
  */
 public class GeometryModelConsumer extends AbstractConsumer<GeometryPacket> {
-
-    /**
-     * Reference to FieldGame in GUI, used for updating
-     */
-    private FieldGame fieldGame;
 
     private Game game;
 
@@ -38,14 +30,6 @@ public class GeometryModelConsumer extends AbstractConsumer<GeometryPacket> {
 
     @Override
     public boolean consume(GeometryPacket pipelinePacket) {
-        if (fieldGame == null)
-            // Getting reference to the main window
-            UI.<MainWindow>get("main").ifPresent(main ->
-                    fieldGame = main.getFieldGame());
-
-        if (fieldGame == null)
-            return false;
-
         if (game == null)
             // Getting reference to the main window
             Models.<Game>get("game").ifPresent(gameModel ->
@@ -77,9 +61,6 @@ public class GeometryModelConsumer extends AbstractConsumer<GeometryPacket> {
                 });
             }
         });
-
-        // Update geometry
-        fieldGame.updateGeometry();
         return true;
     }
 

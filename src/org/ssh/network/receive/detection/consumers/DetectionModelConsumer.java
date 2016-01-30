@@ -1,15 +1,12 @@
 package org.ssh.network.receive.detection.consumers;
 
-import org.ssh.field3d.FieldGame;
 import org.ssh.managers.manager.Models;
-import org.ssh.managers.manager.UI;
 import org.ssh.models.Game;
 import org.ssh.models.Robot;
 import org.ssh.models.enums.Allegiance;
 import org.ssh.models.enums.TeamColor;
 import org.ssh.pipelines.packets.DetectionPacket;
 import org.ssh.services.AbstractConsumer;
-import org.ssh.ui.windows.MainWindow;
 import protobuf.Detection.DetectionFrame;
 import protobuf.Detection.DetectionRobot;
 
@@ -23,11 +20,6 @@ import java.util.stream.Stream;
  * @author Jeroen de Jong
  */
 public class DetectionModelConsumer extends AbstractConsumer<DetectionPacket> {
-
-    /**
-     * Reference to FieldGame in GUI, used for updating
-     */
-    private FieldGame fieldGame;
 
     /**
      * helperclass containing information about the game
@@ -45,13 +37,6 @@ public class DetectionModelConsumer extends AbstractConsumer<DetectionPacket> {
 
     @Override
     public boolean consume(DetectionPacket pipelinePacket) {
-
-        if (fieldGame == null) {
-
-            // Getting reference to the main window
-            UI.<MainWindow>get("main").ifPresent(main ->
-                    fieldGame = main.getFieldGame());
-        }
 
         // read the packet
         DetectionFrame frame = pipelinePacket.read();
@@ -76,9 +61,6 @@ public class DetectionModelConsumer extends AbstractConsumer<DetectionPacket> {
                 robot.setVisible(false);
             }
         });
-
-        if (fieldGame != null)
-            fieldGame.updateDetection();
 
         return true;
     }

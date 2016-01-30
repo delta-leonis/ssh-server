@@ -8,7 +8,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
-import org.ssh.field3d.core.shapes.FlatArc3D;
 import org.ssh.managers.manager.Models;
 import org.ssh.models.enums.Allegiance;
 import org.ssh.models.enums.Malfunction;
