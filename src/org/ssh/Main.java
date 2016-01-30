@@ -9,6 +9,7 @@ import org.ssh.controllers.ControllerSettings;
 import org.ssh.managers.manager.*;
 import org.ssh.models.*;
 import org.ssh.models.enums.Allegiance;
+import org.ssh.models.enums.ManagerEvent;
 import org.ssh.models.enums.SendMethod;
 import org.ssh.network.receive.detection.DetectionPipeline;
 import org.ssh.network.receive.detection.consumers.DetectionModelConsumer;
@@ -61,7 +62,7 @@ public class Main extends Application {
         Models.create(Goal.class, Allegiance.OPPONENT);
         Models.create(Team.class, Allegiance.ALLY);
         Models.create(Team.class, Allegiance.OPPONENT);
-        Field field = Models.create(Field.class);
+        Models.create(Field.class);
 
         // Create some robots
         IntStream.range(0, 8).forEach(id -> {
@@ -98,7 +99,7 @@ public class Main extends Application {
      */
     @Override
     public void start(final Stage primaryStage) throws Exception {
-        Main.LOG.setUseParentHandlers(false);
+        //Main.LOG.setUseParentHandlers(false);
         Main.LOG.info("Starting software");
 
         // start the managers
@@ -110,6 +111,7 @@ public class Main extends Application {
         Network.register(SendMethod.UDP, new LegacyUDPSender(ADDRESS, 1337));
         Network.register(SendMethod.DEBUG, new DebugSender(Level.INFO));
 
+        Models.addSubscription(ManagerEvent.CREATE, (robot) -> System.out.println("CREATED ROBOT #"+ ((Robot) robot).getRobotId() + ":D"), Robot.class);
         // create the service for the controller
         ControllerListener listener = new ControllerListener();
 
@@ -122,24 +124,24 @@ public class Main extends Application {
         /********************************/
         createWidgets();
 
-        Services.scheduleTask("USB watcher", () -> {
-            System.out.println("Searching for new USB controllers");
-            final Optional<Controller> controller = listener.findAvailableController("360");
-
-            // check if we found one
-            if (!controller.isPresent())
-                return;
-            // create a layout for this specific controller
-            final ControllerLayout layout = new ControllerLayout(controller.get());
-            if (!Models.initialize(layout))
-                ControllerLayout.createDefaultLayout(layout);
-
-            if(listener.findAvailableRobotid().isPresent()) {
-                listener.register(listener.findAvailableRobotid().getAsInt(), layout); // i = robotid
-                if (!Services.get("ControllerExample poller").isPresent())
-                    Services.scheduleTask("ControllerExample poller", listener::processControllers, 20000);
-            }
-        }, 5000000);
+//        Services.scheduleTask("USB watcher", () -> {
+//            System.out.println("Searching for new USB controllers");
+//            final Optional<Controller> controller = listener.findAvailableController("360");
+//
+//            // check if we found one
+//            if (!controller.isPresent())
+//                return;
+//            // create a layout for this specific controller
+//            final ControllerLayout layout = new ControllerLayout(controller.get());
+//            if (!Models.initialize(layout))
+//                ControllerLayout.createDefaultLayout(layout);
+//
+//            if(listener.findAvailableRobotid().isPresent()) {
+//                listener.register(listener.findAvailableRobotid().getAsInt(), layout); // i = robotid
+//                if (!Services.get("ControllerExample poller").isPresent())
+//                    Services.scheduleTask("ControllerExample poller", listener::processControllers, 20000);
+//            }
+//        }, 5000000);
     }
 
 

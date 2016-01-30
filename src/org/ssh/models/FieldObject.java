@@ -4,6 +4,9 @@ import javafx.beans.property.FloatProperty;
 import javafx.beans.property.ReadOnlyFloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
+import javafx.scene.shape.Box;
+import javafx.scene.shape.Shape3D;
 
 /**
  * Describes an object on the {@link Field}. Such as a {@link Robot}, or a {@link Ball}
@@ -16,6 +19,8 @@ public class FieldObject extends AbstractModel {
      * certainty of detection by ssl-vision
      */
     private Float confidence;
+
+    private transient Node model3D;
 
     /**
      * X Position of this object on the {@link Field} in mm, according to the Cartesian system with
@@ -87,5 +92,19 @@ public class FieldObject extends AbstractModel {
      */
     public Point2D getPosition() {
         return new Point2D(xPosition.get(), yPosition.get());
+    }
+
+    public Node getMeshView(){
+        if(model3D == null) {
+            model3D = createMeshView();
+            model3D.translateXProperty().bind(this.xPositionProperty().multiply(-1f));
+            model3D.translateZProperty().bind(this.yPositionProperty());
+        }
+
+        return model3D;
+    }
+
+    public Node createMeshView(){
+        return new Box(50, 50, 50);
     }
 }

@@ -1,9 +1,26 @@
 package org.ssh.models;
 
+import javafx.geometry.Point2D;
+import javafx.geometry.Point3D;
+import javafx.scene.AmbientLight;
+import javafx.scene.Group;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
+import javafx.scene.shape.MeshView;
+import org.ssh.field3d.core.shapes.FlatArc3D;
+import org.ssh.field3d.core.shapes.FlatLine3D;
+import org.ssh.ui.components.centersection.gamescene.ArcLine3D;
+import org.ssh.ui.components.centersection.gamescene.PolyLine3D;
+import org.ssh.ui.components.centersection.gamescene.SimpleLine3D;
 import protobuf.Geometry.FieldCicularArc;
 import protobuf.Geometry.FieldLineSegment;
 import protobuf.Geometry.GeometryFieldSize;
 
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -11,12 +28,18 @@ import java.util.List;
  *
  * @author Jeroen de Jong
  */
-public class Field extends AbstractModel {
+public class Field extends FieldObject {
+
+    /**
+     * The file path for the grass texture.
+     */
+    private static final String GRASS_TEXTURE_FILE = "/org/ssh/view/textures/field/grass.png";
 
     /**
      * Field object from protobuf packet
      */
     private GeometryFieldSize fieldSize;
+    private static final double TILE_WIDTH = 500d;
 
     /**
      * Instantiates a fieldSize.
@@ -75,7 +98,7 @@ public class Field extends AbstractModel {
      * @return all {@link protobuf.Geometry.FieldLineSegment line segments} on the fieldSize.
      */
     public List<FieldLineSegment> getFieldLines() {
-        return this.fieldSize.getFieldLinesList();
+        return this.fieldSize.getFieldLinesList() == null ? new ArrayList<>(): this.fieldSize.getFieldLinesList();
     }
 
     /**
@@ -90,5 +113,77 @@ public class Field extends AbstractModel {
      */
     public GeometryFieldSize getFieldSize() {
         return fieldSize;
+    }
+
+
+    /**
+     * Generate tiles method. This method generates the field tiles.
+     *
+     * @author Mark Leferink
+     */
+    private Group generateTiles(Group fieldGroup) {
+        PhongMaterial grassMaterial = loadTexture();
+
+        fieldGroup.getChildren().add(new AmbientLight(Color.WHITE));
+
+        for (int i = -1; i < (this.getFieldLength() / this.TILE_WIDTH) + 1; i++)
+            for (int j = -1; j < (this.getFieldWidth() / this.TILE_WIDTH) + 1; j++) {
+
+                // Create new box
+                final Box tmpBox = new Box(this.TILE_WIDTH, 1, this.TILE_WIDTH);
+
+                // Translate tile into position
+                tmpBox.setTranslateX(-(this.getFieldLength() / 2.0)
+                        + ((i * this.TILE_WIDTH) + (this.TILE_WIDTH / 2.0)));
+                tmpBox.setTranslateZ(-(this.getFieldWidth() / 2.0)
+                        + ((j * this.TILE_WIDTH) + (this.TILE_WIDTH / 2.0)));
+
+                // Set box material
+                tmpBox.setMaterial(grassMaterial);
+
+                // Add box to field
+                fieldGroup.getChildren().add(tmpBox);
+            }
+        return fieldGroup;
+    }
+
+    /**
+     * Generate lines method. This method generates the lines on the field.
+     */
+    private Group generateLines(Group field) {
+        Group lines = new Group();
+        // Getting line segments
+        getFieldArcs().forEach(arcSegment ->
+            lines.getChildren().add(new ArcLine3D(arcSegment.getA1(), arcSegment.getA2(), arcSegment.getRadius()*2, arcSegment.getCenter().getX(), arcSegment.getCenter().getY(), arcSegment.getThickness())));
+        getFieldLines().forEach(lineSegment ->
+                lines.getChildren().add(new SimpleLine3D(lineSegment.getP1().getX(), lineSegment.getP1().getY(),
+                        lineSegment.getP2().getX(), lineSegment.getP2().getY(),
+                        lineSegment.getThickness())));
+
+        lines.setTranslateY(1);
+        field.getChildren().add(lines);
+        return field;
+    }
+
+    private PhongMaterial loadTexture(){
+        // Getting resource
+        InputStream textureInputStream = this.getClass().getResourceAsStream(GRASS_TEXTURE_FILE);
+        PhongMaterial grassMaterial = new PhongMaterial(Color.LAWNGREEN);
+
+        // Check if the texture file exists
+        if (textureInputStream != null) {
+            // Setting diffuse map
+            grassMaterial.setDiffuseMap(new Image(textureInputStream));
+        } else {
+            // Log error
+            Field.LOG.info("Could not load " + GRASS_TEXTURE_FILE);
+        }
+
+        return grassMaterial;
+    }
+
+    @Override
+    public Group createMeshView() {
+        return generateLines(generateTiles(new Group()));
     }
 }

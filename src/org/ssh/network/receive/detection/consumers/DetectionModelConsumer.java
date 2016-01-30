@@ -60,20 +60,20 @@ public class DetectionModelConsumer extends AbstractConsumer<DetectionPacket> {
 
         // merge both list
         Stream.concat(yellowTeam.stream(), frame.getRobotsBlueList().stream()).forEach(robot ->
-                //return the updated robot model
-                Models.<Robot>get(getModelName(robot, yellowTeam))
-                        // try to get the existing model, if that doesnt work (orElse) create a new one
-                        .orElseGet(() ->
-                                //create robotclass
-                                Models.<Robot>create(Robot.class, robot.getRobotId(), getAllegiance(robot, yellowTeam))
-                        ).update(robot)
+                    //return the updated robot model
+                    Models.<Robot>get(getModelName(robot, yellowTeam))
+                            // try to get the existing model, if that doesnt work (orElse) create a new one
+                            .orElseGet(() ->
+                                    //create robotclass
+                                    Models.<Robot>create(Robot.class, robot.getRobotId(), getAllegiance(robot, yellowTeam))
+                            ).update(robot)
         );
 
-        // loop all robots that haven't been processjavaed
+        // loop all robots that haven't been processed
         Models.<Robot>getAll("robot").forEach(robot -> {
             if (frame.getTSent() - robot.lastUpdated() > 500) {
                 // remove models that aren't on the field
-                Models.remove(robot);
+                robot.setVisible(false);
             }
         });
 
@@ -84,11 +84,9 @@ public class DetectionModelConsumer extends AbstractConsumer<DetectionPacket> {
     }
 
     /**
-     * Returns the {@link Allegiance} of a robot (either {@link Allegiance#ALLY} or {@link Allegiance#OPPONENT}.
-     *
      * @param robot      robot to get {@link Allegiance} for
      * @param yellowTeam list of all detected yellow robots
-     * @return
+     * @return the {@link Allegiance} of a robot (either {@link Allegiance#ALLY} or {@link Allegiance#OPPONENT}.
      */
     private Allegiance getAllegiance(DetectionRobot robot, List<DetectionRobot> yellowTeam) {
         return game.getAllegiance(DetectionModelConsumer.getTeamColor(robot, yellowTeam));

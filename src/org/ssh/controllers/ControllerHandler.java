@@ -273,7 +273,10 @@ public class ControllerHandler extends AbstractProducer {
         packet.setRobotId(robotID);
 
         // update controller values
-        this.layout.getController().poll();
+        if(!this.layout.getController().poll()){
+            Services.<ControllerListener>get("ControllerListener").ifPresent(controllerListener -> ((ControllerListener)controllerListener).unregister(robotID));
+            return packet;
+        }
         final Set<ButtonFunction> duplicates = new HashSet<>();
         final Map<ButtonFunction, Float> currentButtonState = new EnumMap<>(ButtonFunction.class);
         // Make a list with all buttons that changed values

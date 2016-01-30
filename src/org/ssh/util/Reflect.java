@@ -55,7 +55,6 @@ public class Reflect {
             }
             // gets thrown by #getDeclaredField(String) when a field is not found
             catch (final NoSuchFieldException exception) {
-                Reflect.LOG.exception(exception);
                 //try to find the field based on an Model.Alias
                 Optional<Field> oField = Stream.of(clazzI.getDeclaredFields())
                         //stream all fields, and filter the fields based on their equality in name

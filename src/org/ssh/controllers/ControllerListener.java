@@ -2,14 +2,13 @@ package org.ssh.controllers;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.google.common.collect.Maps;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
 import org.ssh.managers.manager.Models;
 import org.ssh.managers.manager.Network;
-import org.ssh.managers.manager.Services;
 import org.ssh.models.Robot;
 import org.ssh.services.AbstractService;
-import protobuf.Radio.RadioProtocolCommand;
 
 import java.lang.reflect.Constructor;
 import java.util.*;
@@ -33,7 +32,7 @@ public class ControllerListener extends AbstractService {
      * - Integer describes robotId<br/>
      * - ControllerHandler is the associated handler for that id, null if not bound<br/>
      */
-    private BiMap<Integer, ControllerHandler> handlers = HashBiMap.create();
+    private BiMap<Integer, ControllerHandler> handlers = Maps.synchronizedBiMap(HashBiMap.<Integer, ControllerHandler>create());
     /**
      * List to temporarily store any changes in the handlers list. Is processed every
      * {@link #processControllers()} call. Whenever handlers should be updated, tmpHandlers != null.
@@ -61,7 +60,6 @@ public class ControllerListener extends AbstractService {
                 // find the first in the list
                 .findFirst();
     }
-
     /**
      * @param controller controller to check
      * @return whether a controller is available
@@ -183,15 +181,15 @@ public class ControllerListener extends AbstractService {
      * @param robotId robotId to unregister a handler for
      * @return succes value
      */
-    public boolean unregister(final int robotId) {
+    public ControllerHandler unregister(final int robotId) {
         // check if it is assigned at all
         if (!this.isAssigned(robotId)) {
             ControllerListener.LOG.warning("Could not unregister controllerHandler for robot %d.\n", robotId);
-            return false;
+            return null;
         }
-
-        this.handlers.remove(robotId);
-        return true;
+        this.tmpHandlers = HashBiMap.create(handlers);
+        this.tmpHandlers.remove(robotId);
+        return null;
     }
 
     /**

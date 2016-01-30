@@ -1,15 +1,26 @@
 package org.ssh.models;
 
-import com.google.common.util.concurrent.Service;
+import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import javafx.beans.property.*;
+import javafx.scene.Group;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.MeshView;
+import javafx.scene.transform.Rotate;
+import org.ssh.field3d.core.shapes.FlatArc3D;
+import org.ssh.managers.manager.Models;
 import org.ssh.models.enums.Allegiance;
 import org.ssh.models.enums.Malfunction;
 import org.ssh.models.enums.Malfunction.MalfunctionType;
+import org.ssh.ui.components.centersection.gamescene.ArcLine3D;
 import protobuf.Detection;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -20,6 +31,16 @@ import java.util.stream.Collectors;
 public class Robot extends FieldObject {
 
     /**
+     * The file for the robot model.
+     */
+    private static final String ROBOT_MODEL_FILE = "/org/ssh/view/3dmodels/robot_model.obj";
+
+    /**
+     * The directory for the robot texture.
+     */
+    private static final String ROBOT_TEXTURE_DIR = "/org/ssh/view/textures/robots/";
+
+    /**
      * The robot height.
      */
     public static final transient float ROBOT_HEIGHT = 150.0f;
@@ -27,7 +48,13 @@ public class Robot extends FieldObject {
     /**
      * The robot radius
      */
-    public static final transient float ROBOT_DIAMETER = 180.0f;
+    public static final transient float DIAMETER = 180.0f;
+    /**
+     * The conversion from radians to degrees
+     */
+    private static final double RAD_TO_DEG = 180.0 / Math.PI;
+    private static final float SELECTION_CIRCLE_THICKNESS = 50f;
+    private static final float SELECTION_CIRCLE_OFFSET = SELECTION_CIRCLE_THICKNESS * 1.8f;
 
     /**
      * allegiance of this robot
@@ -80,6 +107,8 @@ public class Robot extends FieldObject {
      */
     private transient ListProperty<Malfunction> malfunctions;
 
+    private BooleanProperty visible;
+
     /**
      * Instantiates a new robot with specified properties
      *
@@ -100,6 +129,7 @@ public class Robot extends FieldObject {
         this.isConnected = new SimpleBooleanProperty(false);
         this.isOnSight = new SimpleBooleanProperty(false);
         this.hasController = new SimpleBooleanProperty(false);
+        this.visible = new SimpleBooleanProperty(true);
         this.orientation = new SimpleFloatProperty(0.0f);
         this.malfunctions = new SimpleListProperty<>(
                 javafx.collections.FXCollections.observableList(new ArrayList<>()));
@@ -272,15 +302,106 @@ public class Robot extends FieldObject {
     }
 
     /**
-     * Update this Robot-model based on a {@link Detection.DetectionRobot} protobuf message
+     * Update this Robot-model based on a {@link Detection.DetectionRobot} protobuf message.
+     * <em>Note: </em> the visibility of this robot will also be set to true
      *
      * @param protobufRobot protobuf message with new information
      * @return succesvalue of the update
      */
     public boolean update(final Detection.DetectionRobot protobufRobot) {
+        this.setVisible(true);
         return update(protobufRobot.getAllFields().entrySet().stream().collect(Collectors.toMap(
                 entry -> entry.getKey().getName(),
                 Map.Entry::getValue
         )));
+    }
+
+    /**
+     * Load texture method. This method loads the correct texture according to the vision model.
+     */
+    private PhongMaterial loadTexture() {
+
+        PhongMaterial material = new PhongMaterial(Color.GRAY);
+
+        Optional<Game> oGame = Models.<Game>get("game");
+        if(!oGame.isPresent())
+            return material;
+
+        String textureFilename = ROBOT_TEXTURE_DIR
+                + getIdentifier()
+                .replaceFirst("(A|O)", oGame.get().getTeamColor(getAllegiance()).identifier())
+                .replace(" ", "")
+                + ".png";
+
+        // Getting texture as input stream
+        InputStream textureInputStream = this.getClass().getResourceAsStream(textureFilename);
+
+
+        // If the texture input stream is not null
+        if (textureInputStream != null) {
+            // Loading texture & setting diffuse map of the model material
+            material.setDiffuseMap(new Image(textureInputStream));
+        } else {
+            // Log error
+            LOG.warning("Could not load texture: " + textureFilename);
+        }
+
+        return material;
+    }
+
+    private ArcLine3D createSelectionCircle(Color color){
+        // between the robot and the circle should be about 80% of the width of the circle as offset
+        ArcLine3D selectionCircle = new ArcLine3D( 0f, (float) (2*Math.PI),
+                Robot.DIAMETER + Robot.SELECTION_CIRCLE_THICKNESS + Robot.SELECTION_CIRCLE_OFFSET,
+                0, 0,
+                Robot.SELECTION_CIRCLE_THICKNESS);
+        selectionCircle.setMaterial( new PhongMaterial(color) );
+        return selectionCircle;
+    }
+
+    @Override
+    public Group createMeshView() {
+        Group robotGroup = new Group();
+
+        // Creating model importer
+        final ObjModelImporter modelImporter = new ObjModelImporter();
+
+        // Read model into model importer
+        modelImporter.read(this.getClass().getResource(ROBOT_MODEL_FILE));
+
+        // Check if we have loaded something
+        if (modelImporter.getImport().length > 0) {
+
+            // Getting model from the model importer
+            MeshView model = modelImporter.getImport()[0];
+
+            model.setTranslateY(Robot.ROBOT_HEIGHT/2d);
+            model.setRotationAxis(Rotate.Y_AXIS);
+            model.rotateProperty().bind(orientationProperty().multiply(Robot.RAD_TO_DEG));
+
+            model.setMaterial(loadTexture());
+
+            ArcLine3D selectionCircle = createSelectionCircle(Color.BLUE);
+            selectionCircle.visibleProperty().bind(isSelectedProperty());
+            selectionCircle.setTranslateY(10);
+            robotGroup.getChildren().add(selectionCircle);
+
+            //robotGroup.visibleProperty().bind(visibleProperty());
+            robotGroup.getChildren().add(model);
+        }
+
+        return robotGroup;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible.setValue(visible);
+    }
+
+    public BooleanProperty visibleProperty(){
+        return visible;
+    }
+
+    public boolean isVisible(){
+        return visible.getValue();
     }
 }

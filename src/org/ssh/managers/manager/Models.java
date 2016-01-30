@@ -4,6 +4,7 @@ import org.ssh.managers.ManagerInterface;
 import org.ssh.managers.controllers.ModelController;
 import org.ssh.models.AbstractModel;
 import org.ssh.models.Settings;
+import org.ssh.models.enums.ManagerEvent;
 import org.ssh.ui.lua.console.AvailableInLua;
 import org.ssh.util.Logger;
 
@@ -11,6 +12,7 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -231,5 +233,13 @@ public final class Models implements ManagerInterface<AbstractModel> {
      */
     public static <M extends AbstractModel> List<M> find(final String pattern) {
         return Models.controller.find(pattern);
+    }
+
+    public static boolean addSubscription(ManagerEvent event, Consumer consumer, Class<?>... classes){
+        return Models.controller.addSubscription(event, consumer, classes);
+    }
+
+    public static boolean removeSubscription(ManagerEvent event, Consumer consumer, Class<?>... classes){
+        return Models.controller.removeSubscription(event, consumer, classes);
     }
 }

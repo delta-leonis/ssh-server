@@ -15,6 +15,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.stream.Stream;
 
 /**
@@ -37,6 +38,8 @@ public abstract class AbstractModel extends AbstractManageable {
      */
     private transient String identifier;
 
+    private transient List<Runnable> callbacks;
+
     /**
      * Instantiates a new models.
      *
@@ -45,6 +48,7 @@ public abstract class AbstractModel extends AbstractManageable {
     public AbstractModel(final String name, final String identifier) {
         super(name);
         this.identifier = identifier;
+        this.callbacks = new ArrayList<>();
     }
 
     /**
@@ -57,6 +61,14 @@ public abstract class AbstractModel extends AbstractManageable {
      */
     public String getConfigName() {
         return this.getIdentifier().replace(" ", "_") + ".json";
+    }
+
+    public boolean addUpdateCallback(Runnable callback){
+        return callbacks.add(callback);
+    }
+
+    public boolean removeUpdateCallback(Callable<?> callback){
+        return callbacks.remove(callback);
     }
 
     /**
@@ -183,13 +195,24 @@ public abstract class AbstractModel extends AbstractManageable {
     public boolean update(final Map<String, ?> changes) {
         AbstractModel.LOG.fine("Updating model %s", getClass());
         // loop all changes
-        return changes.entrySet().stream()
+        boolean returnValue = changes.entrySet().stream()
                 // check whether this field exists
                 .filter(entry -> Reflect.hasField(entry.getKey(), this.getClass()))
                 // set this value
                 .map(entry -> this.set(entry.getKey(), entry.getValue()))
                 // reduce success value
                 .reduce(true, (accumulator, success) -> accumulator && success);
+
+        callbacks.forEach(callback -> {
+            try {
+                new Thread(callback).run();
+            } catch(Exception e){
+                AbstractModel.LOG.info("Callback failed for %s.", this.getClass().getSimpleName());
+                AbstractModel.LOG.exception(e);
+            }
+        });
+
+        return returnValue;
     }
 
     /**

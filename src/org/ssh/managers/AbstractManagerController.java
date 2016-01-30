@@ -1,10 +1,16 @@
 package org.ssh.managers;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import org.ssh.expressions.languages.Meme;
+import org.ssh.models.enums.ManagerEvent;
+import org.ssh.util.Logger;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * The Class AbstractManagerController.
@@ -27,16 +33,40 @@ public abstract class AbstractManagerController<M extends AbstractManageable> {
      */
     protected static Meme memeEngine;
 
+    // unique logger
+    protected static final Logger LOG = Logger.getLogger();
+
+    protected Multimap<ManagerEvent, Map.Entry<Class<?>, Consumer>> subscribers;
+
+    public boolean addSubscription(ManagerEvent event, Consumer function, Class<?>... classes){
+        return Stream.of(classes).map(clazz ->
+                subscribers.put(event,
+                        new AbstractMap.SimpleEntry<>(clazz, function)))
+                .reduce(true, (accumulator, success) -> accumulator && success);
+    }
+
+    public boolean removeSubscription(ManagerEvent event, Consumer function, Class<?>... classes) {
+        List<Class<?>> classList = Arrays.asList(classes);
+        return subscribers.get(event).stream()
+                .filter(set -> classList.contains(set.getKey()) &&
+                                function.equals(set.getValue()))
+                .map(set ->
+                        subscribers.remove(set.getKey(), set.getValue()))
+                .reduce(true, (accumulator, success) -> accumulator && success);
+    }
+
     /**
      * Sets up the controller.
      */
     public AbstractManagerController() {
         // set attributes
         this.manageables = new ConcurrentHashMap<>();
+
         // build the engine if it doesn't exist yet
         if (memeEngine == null) {
             memeEngine = new Meme(name -> name);
         }
+        subscribers = HashMultimap.create();
     }
 
     /**
@@ -102,6 +132,7 @@ public abstract class AbstractManagerController<M extends AbstractManageable> {
     public boolean put(final String name, final M manageable) {
         if (!this.manageables.containsValue(manageable)) {
             this.manageables.put(name, manageable);
+            this.triggerEvent(ManagerEvent.CREATE, manageable);
             return true;
         }
         return false;
@@ -133,8 +164,10 @@ public abstract class AbstractManagerController<M extends AbstractManageable> {
 
         // loop through the list and remove the manageable if it is present anywhere
         this.manageables.forEach((key, value) -> {
-            if (manageable.equals(value))
+            if (manageable.equals(value)) {
                 this.manageables.remove(key);
+                this.triggerEvent(ManagerEvent.DELETE, manageable);
+            }
         });
         // return the removed manageable
         return manageable;
@@ -155,5 +188,20 @@ public abstract class AbstractManagerController<M extends AbstractManageable> {
                 .filter(manageable -> type.isAssignableFrom(manageable.getClass()))
                 // and stick them in a list
                 .collect(Collectors.toList());
+    }
+
+    private void triggerEvent(ManagerEvent event, Object object){
+        if(event == null || object == null || !subscribers.containsKey(event))
+            return;
+
+        subscribers.get(event).forEach(set -> {
+            if( set.getKey().isInstance(object))
+                try{
+                    set.getValue().accept(object);
+                }catch(Exception e){
+                    AbstractManagerController.LOG.exception(e);
+                    e.printStackTrace();
+                }
+        });
     }
 }
