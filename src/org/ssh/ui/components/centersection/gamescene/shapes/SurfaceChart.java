@@ -16,11 +16,24 @@ import javafx.scene.shape.TriangleMesh;
  * @date 31-1-2016
  */
 public class SurfaceChart extends MeshView {
-    private int size = 100;
+    private int sizeY = 100;
+    private int sizeX = 100;
 
     public SurfaceChart() {
-        // perlin noise
-        float[][] noiseArray = createNoise(size);
+
+        drawChart(createNoise(sizeX, sizeY));
+
+        // mesh view
+        setTranslateX(-0.5 * sizeX);
+        setTranslateZ(-0.5 * sizeY);
+        setCullFace(CullFace.NONE);
+        setDrawMode(DrawMode.FILL);
+        setDepthTest(DepthTest.ENABLE);
+        setScaleX(6000/sizeX);
+        setScaleZ(4000/sizeY);
+    }
+
+    public void drawChart(float[][] noiseArray){
 
         // mesh
         TriangleMesh mesh = new TriangleMesh();
@@ -28,23 +41,20 @@ public class SurfaceChart extends MeshView {
         // create points for x/z
         float amplification = 400; // amplification of noise
 
-        for (int x = 0; x < size; x++) {
-            for (int z = 0; z < size; z++) {
+        for (int x = 0; x < sizeX; x++) {
+            for (int z = 0; z < sizeY; z++) {
                 mesh.getPoints().addAll(x, noiseArray[x][z] * amplification, z);
             }
         }
 
         // texture
-        int length = size;
-        float total = length;
+        for (float x = 0; x < sizeX - 1; x++) {
+            for (float y = 0; y < sizeY - 1; y++) {
 
-        for (float x = 0; x < length - 1; x++) {
-            for (float y = 0; y < length - 1; y++) {
-
-                float x0 = x / total;
-                float y0 = y / total;
-                float x1 = (x + 1) / total;
-                float y1 = (y + 1) / total;
+                float x0 = x / sizeX;
+                float y0 = y / sizeY;
+                float x1 = (x + 1) / sizeX;
+                float y1 = (y + 1) / sizeY;
 
                 mesh.getTexCoords().addAll( //
                         x0, y0, // 0, top-left
@@ -58,41 +68,32 @@ public class SurfaceChart extends MeshView {
         }
 
         // faces
-        for (int x = 0; x < length - 1; x++) {
-            for (int z = 0; z < length - 1; z++) {
+        for (int x = 0; x < sizeX - 1; x++) {
+            for (int z = 0; z < sizeY - 1; z++) {
 
-                int tl = x * length + z; // top-left
-                int bl = x * length + z + 1; // bottom-left
-                int tr = (x + 1) * length + z; // top-right
-                int br = (x + 1) * length + z + 1; // bottom-right
+                int tl = x * sizeX + z; // top-left
+                int bl = x * sizeX + z + 1; // bottom-left
+                int tr = (x + 1) * sizeX + z; // top-right
+                int br = (x + 1) * sizeX + z + 1; // bottom-right
 
-                int offset = (x * (length - 1) + z) * 8 / 2; // div 2 because we have u AND v in the list
+                int offsetX = (x * (sizeX - 1) + z) * 8 / 2; // div 2 because we have u AND v in the list
 
                 // working
-                mesh.getFaces().addAll(bl, offset + 1, tl, offset + 0, tr, offset + 2);
-                mesh.getFaces().addAll(tr, offset + 2, br, offset + 3, bl, offset + 1);
+                mesh.getFaces().addAll(bl, offsetX + 1, tl, offsetX + 0, tr, offsetX + 2);
+                mesh.getFaces().addAll(tr, offsetX + 2, br, offsetX + 3, bl, offsetX + 1);
 
             }
         }
 
-
         // material
-        Image diffuseMap = createImage(size, noiseArray);
+        Image diffuseMap = createImage(sizeX, sizeY, noiseArray);
 
         PhongMaterial material = new PhongMaterial();
         material.setDiffuseMap(diffuseMap);
         material.setSpecularColor(Color.WHITE);
 
         setMesh(mesh);
-        // mesh view
-        setTranslateX(-0.5 * size);
-        setTranslateZ(-0.5 * size);
         setMaterial(material);
-        setCullFace(CullFace.NONE);
-        setDrawMode(DrawMode.FILL);
-        setDepthTest(DepthTest.ENABLE);
-        setScaleX(6000/100);
-        setScaleZ(4000/100);
     }
 
     /**
@@ -101,10 +102,10 @@ public class SurfaceChart extends MeshView {
      * @param noise
      * @return
      */
-    public Image createImage(double size, float[][] noise) {
+    public Image createImage(double sizeX, double sizeY, float[][] noise) {
 
-        int width = (int) size;
-        int height = (int) size;
+        int width = (int) sizeX;
+        int height = (int) sizeY;
 
         WritableImage wr = new WritableImage(width, height);
         PixelWriter pw = wr.getPixelWriter();
@@ -117,7 +118,7 @@ public class SurfaceChart extends MeshView {
 
                 gray = clamp(gray, 0, 1);
 
-                Color color = Color.RED.interpolate(Color.YELLOW, gray);
+                Color color = Color.BLUE.interpolate(Color.RED, gray);
 
                 pw.setColor(x, y, color);
 
@@ -134,17 +135,19 @@ public class SurfaceChart extends MeshView {
      * @param size
      * @return
      */
-    private float[][] createNoise( int size) {
+    public float[][] createNoise( int sizeX, int sizeY) {
         long startTime = System.currentTimeMillis();
 
-        float[][] noiseArray = new float[(int) size][(int) size];
+        float[][] noiseArray = new float[(int) sizeX][(int) sizeY];
 
-        for (int x = 0; x < size; x++) {
-            for (int y = 0; y < size; y++) {
+        double rdmY = Math.random();
+        double rdmX = Math.random();
+        for (int x = 0; x < sizeX; x++) {
+            for (int y = 0; y < sizeY; y++) {
 
-                double frequency = 10.0 / (double) size;
+                double frequency = 10.0 / (double) sizeX;
 
-                double noise = ImprovedNoise.noise(x * frequency, y * frequency, 0);
+                double noise = ImprovedNoise.noise(x * frequency * rdmX, y * frequency * rdmY, 0);
 
                 noiseArray[x][y] = (float) noise;
             }

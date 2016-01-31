@@ -9,6 +9,7 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import org.ssh.managers.manager.Models;
+import org.ssh.managers.manager.Services;
 import org.ssh.models.Field;
 import org.ssh.models.FieldObject;
 import org.ssh.models.Game;
@@ -142,9 +143,7 @@ public class GameScene extends SubScene {
 
     private void createSurfaceChart() {
         SurfaceChart chart = new SurfaceChart();
-        chart.setTranslateY(400);
         chart.translateYProperty().bind(chartTranslateY);
-        chart.setOpacity(0.7);
 
         world.getChildren().add(chart);
     }
