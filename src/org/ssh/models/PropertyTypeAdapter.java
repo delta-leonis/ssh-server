@@ -24,7 +24,7 @@ public class PropertyTypeAdapter<T extends WritableValue> implements JsonSeriali
     @Override
     public JsonElement serialize(T property, Type type, JsonSerializationContext jsonSerializationContext) {
         // Log the loggable logstuff discussed earlier on
-        PropertyTypeAdapter.LOG.info("Serializing: " + type);
+        PropertyTypeAdapter.LOG.fine("Serializing: " + type);
 
         // Every property implements the WritableValue inteface, so all of them have a method "getValue". The value
         // returned by this function should be serialized.
@@ -34,7 +34,7 @@ public class PropertyTypeAdapter<T extends WritableValue> implements JsonSeriali
     @Override
     public T deserialize(final JsonElement jsonElement, final Type type, final JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         // Log some more garbage
-        PropertyTypeAdapter.LOG.info("Deserializing: " + type);
+        PropertyTypeAdapter.LOG.fine("Deserializing: " + type);
 
         // Primitive values always have type instance of "Class"
         if (type instanceof Class) {

@@ -75,10 +75,10 @@ public class ProfileMenuContents extends UIComponent<GridPane> {
                         //if the value changed
                         if (!(settings.getCurrentWorkspace().equals(buttonText))) {
 
-                            //update the current profile
-                            settings.update("currentProfile", buttonText);
                             //reset the workspace for the new profile
                             settings.resetWorkspace();
+                            //update the current profile
+                            settings.update("currentProfile", buttonText);
                             // rebuild the menu since workspaces are most likely to be changed
                             buildMenu();
 

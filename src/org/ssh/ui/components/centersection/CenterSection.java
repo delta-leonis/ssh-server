@@ -2,10 +2,12 @@ package org.ssh.ui.components.centersection;
 
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -30,12 +32,8 @@ public class CenterSection extends UIComponent<StackPane> {
 
     public CenterSection() {
         super("center", "centersection/center.fxml");
-        add(new GameScene(500, 500), "#fieldBase", true);
-
-        MatchlogSelector matchlogSelector = new MatchlogSelector();
-        // MatchlogSelector wrapped in an Enroller for fancy up and down sliding
-        Enroller matchlogEnroller = new Enroller(matchlogSelector.getComponent(), Enroller.ExtendDirection.RIGHT, matchlogWrapper.heightProperty(),
-                matchlogButtonSizer.widthProperty(), matchlogWrapper.widthProperty(), true);
+        GameScene gameScene = new GameScene(500, 500);
+        add(gameScene, "#fieldBase", true);
 
         FPSLabel = new Label();
         FPSLabel.setTextFill(Color.YELLOW);
@@ -62,6 +60,23 @@ public class CenterSection extends UIComponent<StackPane> {
             }
         };
         frameRateMeter.start();
-        this.matchlogWrapper.getChildren().add(matchlogEnroller);
+
+        Slider heightSlider = new Slider(100, 1500, 500);
+        heightSlider.setMinorTickCount(10);
+        heightSlider.setMajorTickUnit(50);
+        heightSlider.setShowTickLabels(true);
+        heightSlider.setShowTickMarks(true);
+
+        heightSlider.setOrientation(Orientation.VERTICAL);
+
+        gameScene.chartTranslateY().bind(heightSlider.valueProperty());
+
+        StackPane.setAlignment(heightSlider, Pos.CENTER_RIGHT);
+        getComponent().getChildren().add(heightSlider);
+
+        MatchlogSelector matchlogSelector = new MatchlogSelector();
+        // MatchlogSelector wrapped in an Enroller for fancy up and down sliding
+        this.matchlogWrapper.getChildren().add(new Enroller(matchlogSelector.getComponent(), Enroller.ExtendDirection.RIGHT, matchlogWrapper.heightProperty(),
+                matchlogButtonSizer.widthProperty(), matchlogWrapper.widthProperty(), true));
     }
 }

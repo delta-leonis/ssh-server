@@ -104,6 +104,14 @@ public class FieldObject extends AbstractModel {
         return model3D;
     }
 
+    public Node recreateMeshView(){
+        Node oldModel = getMeshView();
+        Node newModel = createMeshView();
+        if( !(oldModel.equals(newModel)))
+            model3D = newModel;
+        return getMeshView();
+    }
+
     public Node createMeshView(){
         return new Box(50, 50, 50);
     }

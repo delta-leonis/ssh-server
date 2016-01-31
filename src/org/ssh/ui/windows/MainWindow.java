@@ -26,8 +26,6 @@ public class MainWindow extends UIController<StackPane> {
     @FXML
     private Pane profilemenuWrapper;
 
-    private CenterSection center;
-
     /**
      * Instantiates the main window.
      *
@@ -57,8 +55,7 @@ public class MainWindow extends UIController<StackPane> {
         //add top section
         this.add(new TopSection(), "topSection", true);
         //add center section
-        center = new CenterSection();
-        this.add(center, "centerSection", true);
+        this.add( new CenterSection(), "centerSection", true);
         // add bottom section
         this.add(new BottomSection(), "bottomSection", true);
 

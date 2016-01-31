@@ -10,9 +10,11 @@ import org.ssh.controllers.ControllerLayout;
 import org.ssh.controllers.ControllerLayoutSerializer;
 import org.ssh.managers.AbstractManageable;
 import org.ssh.managers.AbstractManagerController;
+import org.ssh.managers.manager.Models;
 import org.ssh.models.AbstractModel;
 import org.ssh.models.PropertyTypeAdapter;
 import org.ssh.models.Settings;
+import org.ssh.models.enums.ManagerEvent;
 import org.ssh.util.Logger;
 import org.ssh.util.Reflect;
 
@@ -84,7 +86,7 @@ public class ModelController extends AbstractManagerController<AbstractModel> {
      * @param filename filename to find
      * @return filename if found, otherwise Optional.empty()
      */
-    private Optional<Path> findValidPath(final String filename) {
+    public Optional<Path> findValidPath(final String filename) {
         ModelController.LOG.info("Searching for configfile %s", filename);
 
         // for the settings.json
@@ -94,6 +96,7 @@ public class ModelController extends AbstractManagerController<AbstractModel> {
 
         // check for a custom file
         config = new File(this.settings.getCurrentWorkspacePath() + filename);
+        System.out.println(config);
         if (config.exists() && !config.isDirectory())
             return Optional.of(config.toPath());
 
@@ -173,20 +176,6 @@ public class ModelController extends AbstractManagerController<AbstractModel> {
         }
     }
 
-
-    /**
-     * Set all non-{@link Modifier#TRANSIENT transient} fields of given models to null, and reload
-     * values from configfile.
-     *
-     * @param model to reinitialize
-     * @return success value
-     */
-    public boolean reinitialize(final AbstractModel model) {
-        model.reset(Reflect.fieldList(model.getClass()));
-        model.initialize();
-        return this.load(model);
-    }
-
     /**
      * Set all non-{@link Modifier#TRANSIENT transient} fields for all models to null, and reload
      * values from configfile for every models.
@@ -194,7 +183,7 @@ public class ModelController extends AbstractManagerController<AbstractModel> {
      * @return success value
      */
     public boolean reinitializeAll() {
-        return this.manageables.values().stream().map(model -> this.reinitialize(model)).reduce(true,
+        return this.manageables.values().stream().map(model -> Models.reinitialize(model)).reduce(true,
                 (accumulator, success) -> success && accumulator);
     }
 

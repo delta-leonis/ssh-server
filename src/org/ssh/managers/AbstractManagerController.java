@@ -190,7 +190,7 @@ public abstract class AbstractManagerController<M extends AbstractManageable> {
                 .collect(Collectors.toList());
     }
 
-    private void triggerEvent(ManagerEvent event, Object object){
+    public void triggerEvent(ManagerEvent event, Object object){
         if(event == null || object == null || !subscribers.containsKey(event))
             return;
 

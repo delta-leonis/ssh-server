@@ -16,7 +16,5 @@ public class GameSceneCamera extends PerspectiveCamera {
         super(true);
         setNearClip(10.0);
         setFarClip(30000.0);
-        setDepthTest(DepthTest.ENABLE);
-        //setFieldOfView(42);
     }
 }

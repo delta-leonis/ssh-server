@@ -1,16 +1,22 @@
 package org.ssh.ui.components.centersection;
 
 import javafx.application.Platform;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import org.ssh.managers.manager.Models;
+import org.ssh.models.Field;
 import org.ssh.models.FieldObject;
 import org.ssh.models.Game;
 import org.ssh.models.enums.ManagerEvent;
 import org.ssh.ui.components.centersection.gamescene.GameSceneCamera;
+import org.ssh.ui.components.centersection.gamescene.GameSceneCameraController;
+import org.ssh.ui.components.centersection.gamescene.shapes.SurfaceChart;
+import sun.java2d.Surface;
 
 import java.util.function.Consumer;
 
@@ -21,20 +27,23 @@ import java.util.function.Consumer;
 public class GameScene extends SubScene {
     private Group root;
     private Group world;
-    private Game gameModel;
 
     private Camera camera;
     private double mouseOldX, mouseOldY, mousePosX = 0, mousePosY = 0, mouseDeltaX, mouseDeltaY;
-    private Cam controller2;
+    private GameSceneCameraController controller2;
     private double zoomlevel = -1000;
     private double pitch = Math.PI/2;
     private double yaw   = Math.PI/2;
     private double divider = 100;
     private double scale = 100;
-    private Consumer<FieldObject> addIfAbsent = (fieldobject) -> {
-        if (!world.getChildren().contains(fieldobject.getMeshView()))
+    private FloatProperty chartTranslateY;
+
+    private Consumer<FieldObject> removeObject = fieldObject ->
+            world.getChildren().remove(fieldObject.getMeshView());
+    private Consumer<FieldObject> addIfAbsent = fieldObject -> {
+        if (!world.getChildren().contains(fieldObject.getMeshView()))
             Platform.runLater(() ->
-            world.getChildren().add(fieldobject.getMeshView()));
+            world.getChildren().add(fieldObject.getMeshView()));
     };
 
 
@@ -42,16 +51,10 @@ public class GameScene extends SubScene {
         super(new Group(), width, height, true, SceneAntialiasing.BALANCED);
         world = new Group();
         root = (Group)getRoot();
+        chartTranslateY = new SimpleFloatProperty(200f);
 
         this.setFill(Color.BLACK);
         this.setManaged(false);
-
-        Models.<Game>get("game").ifPresent(game -> gameModel = game);
-//        if(gameModel == null)
-//            Models.addSubscription(ManagerEvent.CREATE, (model) -> {
-//                this.gameModel = (Game)model;
-//                Models.removeSubscription(ManagerEvent.CREATE, this, Game.class);
-//            }, Game.class);
 
         root.getChildren().add(world);
 
@@ -95,11 +98,7 @@ public class GameScene extends SubScene {
                         controller2.p.setY(this.scale * Math.cos(this.pitch) * Math.sin(this.yaw));
                     });
                 } else {
-                    Platform.runLater(() -> {
-                        controller2.ry.setAngle(-Math.toDegrees(yaw));
-                        controller2.rz.setAngle(-Math.toDegrees(-pitch * Math.sin(yaw + Math.PI)));
-                        controller2.rx.setAngle(-Math.toDegrees(-pitch * Math.cos(-yaw + Math.PI)));
-                    });
+                    Platform.runLater(() -> controller2.setEuler(pitch, yaw, 0));
                 }
             }
         });
@@ -116,15 +115,38 @@ public class GameScene extends SubScene {
                 .map(model -> (FieldObject)model)
                 .forEach(addIfAbsent);
         Models.addSubscription(ManagerEvent.CREATE, addIfAbsent, FieldObject.class);
+        Models.addSubscription(ManagerEvent.DELETE, removeObject, FieldObject.class);
+        Models.addSubscription(ManagerEvent.UPDATE, field -> {
+            Group newModel = ((Field)field).createMeshView();
+            Node oldModel = ((Field)field).getMeshView();
+            if(newModel.equals(oldModel))
+                return;
 
-        createLights();
+            Platform.runLater(() -> {
+                world.getChildren().add(newModel);
+                Platform.runLater(() -> {
+                    world.getChildren().remove(oldModel);
+                });
+            });
+        }, Field.class);
+
+        createSurfaceChart();
         createCamera();
         camera.setRotate(180);
         camera.setTranslateZ(-7000);
     }
 
-    private void createLights(){
+    public FloatProperty chartTranslateY(){
+        return chartTranslateY;
+    }
 
+    private void createSurfaceChart() {
+        SurfaceChart chart = new SurfaceChart();
+        chart.setTranslateY(400);
+        chart.translateYProperty().bind(chartTranslateY);
+        chart.setOpacity(0.7);
+
+        world.getChildren().add(chart);
     }
 
     private double getYaw(){
@@ -135,52 +157,13 @@ public class GameScene extends SubScene {
         return this.pitch + mouseDeltaY/this.divider;
     }
 
-
     private void createCamera(){
         camera = new GameSceneCamera();
-        controller2 = new Cam();
+        controller2 = new GameSceneCameraController();
 
         this.setCamera(camera);
 
         controller2.getChildren().add(camera);
         root.getChildren().add(controller2);
-    }
-
-    class Cam extends Group {
-        Translate t  = new Translate();
-        Translate p  = new Translate();
-        Translate ip = new Translate();
-        Rotate rx = new Rotate();
-        { rx.setAxis(Rotate.X_AXIS); }
-        Rotate ry = new Rotate();
-        { ry.setAxis(Rotate.Y_AXIS); }
-        Rotate rz = new Rotate();
-        { rz.setAxis(Rotate.Z_AXIS); }
-        Scale s = new Scale();
-        public Cam() { super(); getTransforms().addAll(t, p, rx, rz, ry, s, ip); }
-
-
-        public void debug() {
-            System.out.println("t = (" +
-                    t.getX() + ", " +
-                    t.getY() + ", " +
-                    t.getZ() + ")  " +
-                    "r = (" +
-                    rx.getAngle() + ", " +
-                    ry.getAngle() + ", " +
-                    rz.getAngle() + ")  " +
-                    "s = (" +
-                    s.getX() + ", " +
-                    s.getY() + ", " +
-                    s.getZ() + ")  " +
-                    "p = (" +
-                    p.getX() + ", " +
-                    p.getY() + ", " +
-                    p.getZ() + ")  " +
-                    "ip = (" +
-                    ip.getX() + ", " +
-                    ip.getY() + ", " +
-                    ip.getZ() + ")");
-        }
     }
 }

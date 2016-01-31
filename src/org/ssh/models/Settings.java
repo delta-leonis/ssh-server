@@ -13,11 +13,11 @@ import java.net.URI;
  * <pre>
  *  .
  *  └─ config/                This folder contains configuration files for the project
- * ├─ default/            This folder contains all default settings
- * └─ customProfile/      This folder contains settings for profile 'customProfile', usually this is a username
- * ├─  workspace1/     This folder contains specific settings for this specific workspace
- * ├─  workspace2/     This folder contains specific settings for this specific workspace
- * └─  temp/           This folder contains settings saved when no workspace was selected
+ *     ├─ default/            This folder contains all default settings
+ *     └─ customProfile/      This folder contains settings for profile 'customProfile', usually this is a username
+ *        ├─  workspace1/     This folder contains specific settings for this specific workspace
+ *        ├─  workspace2/     This folder contains specific settings for this specific workspace
+ *        └─  temp/           This folder contains settings saved when no workspace was selected
  * </pre>
  *
  * @author Jeroen de Jong
@@ -84,7 +84,7 @@ public class Settings extends AbstractModel {
         luaScriptFolder = "";
         applicationCss = "";
         defaultWorkspace = "";
-        resetWorkspace();
+        //resetWorkspace();
     }
 
     /**

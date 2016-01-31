@@ -5,6 +5,7 @@ import org.jooq.lambda.Unchecked;
 import org.ssh.managers.AbstractManageable;
 import org.ssh.managers.controllers.ModelController;
 import org.ssh.managers.manager.Models;
+import org.ssh.models.enums.ManagerEvent;
 import org.ssh.util.Reflect;
 
 import java.io.StringWriter;
@@ -15,7 +16,6 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
-import java.util.concurrent.Callable;
 import java.util.stream.Stream;
 
 /**
@@ -38,8 +38,6 @@ public abstract class AbstractModel extends AbstractManageable {
      */
     private transient String identifier;
 
-    private transient List<Runnable> callbacks;
-
     /**
      * Instantiates a new models.
      *
@@ -48,7 +46,6 @@ public abstract class AbstractModel extends AbstractManageable {
     public AbstractModel(final String name, final String identifier) {
         super(name);
         this.identifier = identifier;
-        this.callbacks = new ArrayList<>();
     }
 
     /**
@@ -61,14 +58,6 @@ public abstract class AbstractModel extends AbstractManageable {
      */
     public String getConfigName() {
         return this.getIdentifier().replace(" ", "_") + ".json";
-    }
-
-    public boolean addUpdateCallback(Runnable callback){
-        return callbacks.add(callback);
-    }
-
-    public boolean removeUpdateCallback(Callable<?> callback){
-        return callbacks.remove(callback);
     }
 
     /**
@@ -194,25 +183,17 @@ public abstract class AbstractModel extends AbstractManageable {
      */
     public boolean update(final Map<String, ?> changes) {
         AbstractModel.LOG.fine("Updating model %s", getClass());
+
         // loop all changes
-        boolean returnValue = changes.entrySet().stream()
+        boolean returnvalue = changes.entrySet().stream()
                 // check whether this field exists
                 .filter(entry -> Reflect.hasField(entry.getKey(), this.getClass()))
                 // set this value
                 .map(entry -> this.set(entry.getKey(), entry.getValue()))
                 // reduce success value
                 .reduce(true, (accumulator, success) -> accumulator && success);
-
-        callbacks.forEach(callback -> {
-            try {
-                new Thread(callback).run();
-            } catch(Exception e){
-                AbstractModel.LOG.info("Callback failed for %s.", this.getClass().getSimpleName());
-                AbstractModel.LOG.exception(e);
-            }
-        });
-
-        return returnValue;
+        Models.triggerEvent(ManagerEvent.UPDATE, this);
+        return returnvalue;
     }
 
     /**
@@ -256,7 +237,7 @@ public abstract class AbstractModel extends AbstractManageable {
      *                contents.
      * @return success value
      * @example          <pre>
-     *          Model.update("position", new Point2D(123, 123), "robotId", 12);
+     *          Model.update("x", 123, "robotId", 12);
      *          </pre>
      * @see {@link AbstractModel#update(Map)}
      */
@@ -290,8 +271,15 @@ public abstract class AbstractModel extends AbstractManageable {
      * @param fields field to reset to null
      */
     public void reset(List<String> fields) {
-        fields.forEach(field ->
-                set(field, null));
+        fields.forEach(field -> {
+            try {
+                if (Reflect.getField(field, this.getClass()).get().get(this) instanceof WritableValue) {
+                    System.out.println("Did not reset");
+                    return;
+                }
+            } catch(Exception ignored){}
+            set(field, null);
+        });
     }
 
     @Target(value = ElementType.FIELD)

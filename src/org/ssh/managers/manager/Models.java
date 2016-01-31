@@ -7,6 +7,7 @@ import org.ssh.models.Settings;
 import org.ssh.models.enums.ManagerEvent;
 import org.ssh.ui.lua.console.AvailableInLua;
 import org.ssh.util.Logger;
+import org.ssh.util.Reflect;
 
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -170,7 +171,9 @@ public final class Models implements ManagerInterface<AbstractModel> {
      * @return success value
      */
     public static boolean reinitialize(final AbstractModel model) {
-        return Models.controller.reinitialize(model);
+        model.reset(Reflect.fieldList(model.getClass()));
+        System.out.println(controller.findValidPath(model.getConfigName()));
+        return Models.initialize(model);
     }
 
     /**
@@ -241,5 +244,10 @@ public final class Models implements ManagerInterface<AbstractModel> {
 
     public static boolean removeSubscription(ManagerEvent event, Consumer consumer, Class<?>... classes){
         return Models.controller.removeSubscription(event, consumer, classes);
+    }
+
+
+    public static void triggerEvent(ManagerEvent event, Object object){
+        Models.controller.triggerEvent(event, object);
     }
 }

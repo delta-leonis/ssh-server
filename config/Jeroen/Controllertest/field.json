@@ -1,0 +1,377 @@
+{
+  "fieldSize": {
+    "bitField0_": 0,
+    "fieldLength_": 4000,
+    "fieldWidth_": 4000,
+    "goalWidth_": 1000,
+    "goalDepth_": 200,
+    "boundaryWidth_": 500,
+    "fieldLines_": [
+      {
+        "name_": "TopTouchLine",
+        "p1_": {
+          "x_": -2990.0,
+          "y_": 1995.0,
+          "memoizedIsInitialized": -1,
+          "unknownFields": {
+            "fields": {}
+          },
+          "memoizedSize": -1,
+          "memoizedHashCode": 0
+        },
+        "p2_": {
+          "x_": 2990.0,
+          "y_": 1995.0,
+          "memoizedIsInitialized": -1,
+          "unknownFields": {
+            "fields": {}
+          },
+          "memoizedSize": -1,
+          "memoizedHashCode": 0
+        },
+        "thickness_": 10.0,
+        "memoizedIsInitialized": -1,
+        "unknownFields": {
+          "fields": {}
+        },
+        "memoizedSize": -1,
+        "memoizedHashCode": 0
+      },
+      {
+        "name_": "BottomTouchLine",
+        "p1_": {
+          "x_": -2990.0,
+          "y_": -1995.0,
+          "memoizedIsInitialized": -1,
+          "unknownFields": {
+            "fields": {}
+          },
+          "memoizedSize": -1,
+          "memoizedHashCode": 0
+        },
+        "p2_": {
+          "x_": 2990.0,
+          "y_": -1995.0,
+          "memoizedIsInitialized": -1,
+          "unknownFields": {
+            "fields": {}
+          },
+          "memoizedSize": -1,
+          "memoizedHashCode": 0
+        },
+        "thickness_": 10.0,
+        "memoizedIsInitialized": -1,
+        "unknownFields": {
+          "fields": {}
+        },
+        "memoizedSize": -1,
+        "memoizedHashCode": 0
+      },
+      {
+        "name_": "LeftGoalLine",
+        "p1_": {
+          "x_": -2990.0,
+          "y_": -1995.0,
+          "memoizedIsInitialized": -1,
+          "unknownFields": {
+            "fields": {}
+          },
+          "memoizedSize": -1,
+          "memoizedHashCode": 0
+        },
+        "p2_": {
+          "x_": -2990.0,
+          "y_": 1995.0,
+          "memoizedIsInitialized": -1,
+          "unknownFields": {
+            "fields": {}
+          },
+          "memoizedSize": -1,
+          "memoizedHashCode": 0
+        },
+        "thickness_": 10.0,
+        "memoizedIsInitialized": -1,
+        "unknownFields": {
+          "fields": {}
+        },
+        "memoizedSize": -1,
+        "memoizedHashCode": 0
+      },
+      {
+        "name_": "RightGoalLine",
+        "p1_": {
+          "x_": 2990.0,
+          "y_": -1995.0,
+          "memoizedIsInitialized": -1,
+          "unknownFields": {
+            "fields": {}
+          },
+          "memoizedSize": -1,
+          "memoizedHashCode": 0
+        },
+        "p2_": {
+          "x_": 2990.0,
+          "y_": 1995.0,
+          "memoizedIsInitialized": -1,
+          "unknownFields": {
+            "fields": {}
+          },
+          "memoizedSize": -1,
+          "memoizedHashCode": 0
+        },
+        "thickness_": 10.0,
+        "memoizedIsInitialized": -1,
+        "unknownFields": {
+          "fields": {}
+        },
+        "memoizedSize": -1,
+        "memoizedHashCode": 0
+      },
+      {
+        "name_": "HalfwayLine",
+        "p1_": {
+          "x_": 0.0,
+          "y_": -1995.0,
+          "memoizedIsInitialized": -1,
+          "unknownFields": {
+            "fields": {}
+          },
+          "memoizedSize": -1,
+          "memoizedHashCode": 0
+        },
+        "p2_": {
+          "x_": 0.0,
+          "y_": 1995.0,
+          "memoizedIsInitialized": -1,
+          "unknownFields": {
+            "fields": {}
+          },
+          "memoizedSize": -1,
+          "memoizedHashCode": 0
+        },
+        "thickness_": 10.0,
+        "memoizedIsInitialized": -1,
+        "unknownFields": {
+          "fields": {}
+        },
+        "memoizedSize": -1,
+        "memoizedHashCode": 0
+      },
+      {
+        "name_": "CenterLine",
+        "p1_": {
+          "x_": -2990.0,
+          "y_": 0.0,
+          "memoizedIsInitialized": -1,
+          "unknownFields": {
+            "fields": {}
+          },
+          "memoizedSize": -1,
+          "memoizedHashCode": 0
+        },
+        "p2_": {
+          "x_": 2990.0,
+          "y_": 0.0,
+          "memoizedIsInitialized": -1,
+          "unknownFields": {
+            "fields": {}
+          },
+          "memoizedSize": -1,
+          "memoizedHashCode": 0
+        },
+        "thickness_": 10.0,
+        "memoizedIsInitialized": -1,
+        "unknownFields": {
+          "fields": {}
+        },
+        "memoizedSize": -1,
+        "memoizedHashCode": 0
+      },
+      {
+        "name_": "LeftPenaltyStretch",
+        "p1_": {
+          "x_": -2000.0,
+          "y_": -250.0,
+          "memoizedIsInitialized": -1,
+          "unknownFields": {
+            "fields": {}
+          },
+          "memoizedSize": -1,
+          "memoizedHashCode": 0
+        },
+        "p2_": {
+          "x_": -2000.0,
+          "y_": 250.0,
+          "memoizedIsInitialized": -1,
+          "unknownFields": {
+            "fields": {}
+          },
+          "memoizedSize": -1,
+          "memoizedHashCode": 0
+        },
+        "thickness_": 10.0,
+        "memoizedIsInitialized": -1,
+        "unknownFields": {
+          "fields": {}
+        },
+        "memoizedSize": -1,
+        "memoizedHashCode": 0
+      },
+      {
+        "name_": "RightPenaltyStretch",
+        "p1_": {
+          "x_": 2000.0,
+          "y_": -250.0,
+          "memoizedIsInitialized": -1,
+          "unknownFields": {
+            "fields": {}
+          },
+          "memoizedSize": -1,
+          "memoizedHashCode": 0
+        },
+        "p2_": {
+          "x_": 2000.0,
+          "y_": 250.0,
+          "memoizedIsInitialized": -1,
+          "unknownFields": {
+            "fields": {}
+          },
+          "memoizedSize": -1,
+          "memoizedHashCode": 0
+        },
+        "thickness_": 10.0,
+        "memoizedIsInitialized": -1,
+        "unknownFields": {
+          "fields": {}
+        },
+        "memoizedSize": -1,
+        "memoizedHashCode": 0
+      }
+    ],
+    "fieldArcs_": [
+      {
+        "name_": "LeftFieldLeftPenaltyArc",
+        "center_": {
+          "x_": -2995.0,
+          "y_": 250.0,
+          "memoizedIsInitialized": -1,
+          "unknownFields": {
+            "fields": {}
+          },
+          "memoizedSize": -1,
+          "memoizedHashCode": 0
+        },
+        "radius_": 995.0,
+        "a1_": 0.0,
+        "a2_": 1.570796,
+        "thickness_": 10.0,
+        "memoizedIsInitialized": -1,
+        "unknownFields": {
+          "fields": {}
+        },
+        "memoizedSize": -1,
+        "memoizedHashCode": 0
+      },
+      {
+        "name_": "LeftFieldRightPenaltyArc",
+        "center_": {
+          "x_": -2995.0,
+          "y_": -250.0,
+          "memoizedIsInitialized": -1,
+          "unknownFields": {
+            "fields": {}
+          },
+          "memoizedSize": -1,
+          "memoizedHashCode": 0
+        },
+        "radius_": 995.0,
+        "a1_": 4.712389,
+        "a2_": 6.283185,
+        "thickness_": 10.0,
+        "memoizedIsInitialized": -1,
+        "unknownFields": {
+          "fields": {}
+        },
+        "memoizedSize": -1,
+        "memoizedHashCode": 0
+      },
+      {
+        "name_": "RightFieldLeftPenaltyArc",
+        "center_": {
+          "x_": 2995.0,
+          "y_": -250.0,
+          "memoizedIsInitialized": -1,
+          "unknownFields": {
+            "fields": {}
+          },
+          "memoizedSize": -1,
+          "memoizedHashCode": 0
+        },
+        "radius_": 995.0,
+        "a1_": 3.141593,
+        "a2_": 4.712389,
+        "thickness_": 10.0,
+        "memoizedIsInitialized": -1,
+        "unknownFields": {
+          "fields": {}
+        },
+        "memoizedSize": -1,
+        "memoizedHashCode": 0
+      },
+      {
+        "name_": "RightFieldRightPenaltyArc",
+        "center_": {
+          "x_": 2995.0,
+          "y_": 250.0,
+          "memoizedIsInitialized": -1,
+          "unknownFields": {
+            "fields": {}
+          },
+          "memoizedSize": -1,
+          "memoizedHashCode": 0
+        },
+        "radius_": 995.0,
+        "a1_": 1.570796,
+        "a2_": 3.141593,
+        "thickness_": 10.0,
+        "memoizedIsInitialized": -1,
+        "unknownFields": {
+          "fields": {}
+        },
+        "memoizedSize": -1,
+        "memoizedHashCode": 0
+      },
+      {
+        "name_": "CenterCircle",
+        "center_": {
+          "x_": 0.0,
+          "y_": 0.0,
+          "memoizedIsInitialized": -1,
+          "unknownFields": {
+            "fields": {}
+          },
+          "memoizedSize": -1,
+          "memoizedHashCode": 0
+        },
+        "radius_": 495.0,
+        "a1_": 0.0,
+        "a2_": 6.283185,
+        "thickness_": 10.0,
+        "memoizedIsInitialized": -1,
+        "unknownFields": {
+          "fields": {}
+        },
+        "memoizedSize": -1,
+        "memoizedHashCode": 0
+      }
+    ],
+    "memoizedIsInitialized": -1,
+    "unknownFields": {
+      "fields": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": 0
+  },
+  "xPosition": 0.0,
+  "yPosition": 0.0
+}
