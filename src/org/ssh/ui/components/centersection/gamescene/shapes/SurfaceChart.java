@@ -27,7 +27,7 @@ public class SurfaceChart extends MeshView {
         setTranslateX(-0.5 * sizeX);
         setTranslateZ(-0.5 * sizeY);
         setCullFace(CullFace.NONE);
-        setDrawMode(DrawMode.FILL);
+        setDrawMode(DrawMode.LINE);
         setDepthTest(DepthTest.ENABLE);
         setScaleX(6000/sizeX);
         setScaleZ(4000/sizeY);
