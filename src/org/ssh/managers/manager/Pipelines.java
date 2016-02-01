@@ -88,7 +88,7 @@ public final class Pipelines implements ManagerInterface<AbstractPipeline<? exte
      */
     public static <P extends AbstractPipelinePacket<?>, C extends AbstractConsumer<P>> List<C> getCompatibleConsumers(
             final AbstractPipeline<P> pipeline) {
-        Pipelines.LOG.info("Getting compatible Consumer(s) for type: %s", pipeline.getType().toString());
+        Pipelines.LOG.fine("Getting compatible Consumer(s) for type: %s", pipeline.getType().toString());
 
         @SuppressWarnings("unchecked")
         // get the list of services
@@ -116,7 +116,7 @@ public final class Pipelines implements ManagerInterface<AbstractPipeline<? exte
      */
     public static <P extends AbstractPipelinePacket<?>, C extends AbstractCoupler<P>> List<C> getCompatibleCouplers(
             final AbstractPipeline<P> pipeline) {
-        Pipelines.LOG.info("Getting compatible Coupler(s) for type: %s", pipeline.getType().toString());
+        Pipelines.LOG.fine("Getting compatible Coupler(s) for type: %s", pipeline.getType().toString());
 
         @SuppressWarnings("unchecked")
         // get the list of services
@@ -144,7 +144,7 @@ public final class Pipelines implements ManagerInterface<AbstractPipeline<? exte
      */
     public static <P extends AbstractPipelinePacket<?>, Q extends AbstractPipelinePacket<?>, C extends AbstractTranslator<P, Q>> List<C> getCompatibleTranslators(
             final AbstractPipeline<P> pipeline) {
-        Pipelines.LOG.info("Getting compatible Translator(s) for input type: %s", pipeline.getType().toString());
+        Pipelines.LOG.fine("Getting compatible Translator(s) for input type: %s", pipeline.getType().toString());
 
         @SuppressWarnings("unchecked")
         // get the list of services
@@ -155,7 +155,7 @@ public final class Pipelines implements ManagerInterface<AbstractPipeline<? exte
                 .map(service -> (C) service)
                 .collect(Collectors.toList());
 
-        Pipelines.LOG.info("%d Translator(s) found to be compatible with input type %s",
+        Pipelines.LOG.fine("%d Translator(s) found to be compatible with input type %s",
                 collect.size(),
                 pipeline.getType().toString());
 
@@ -172,7 +172,7 @@ public final class Pipelines implements ManagerInterface<AbstractPipeline<? exte
      */
     public static <P extends AbstractPipelinePacket<?>, C extends AbstractProducer<P>> List<C> getCompatibleProducers(
             final AbstractPipeline<P> pipeline) {
-        Pipelines.LOG.info("Getting compatible Producers for genericType: %s", pipeline.getType().toString());
+        Pipelines.LOG.fine("Getting compatible Producers for genericType: %s", pipeline.getType().toString());
 
         @SuppressWarnings("unchecked")
         // get the list of services

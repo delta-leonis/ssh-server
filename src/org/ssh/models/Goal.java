@@ -75,7 +75,7 @@ public class Goal extends FieldObject {
     }
 
     @Override
-    public Group createMeshView(){
+    public Group createNode(){
         if(game == null)
             return null;
 

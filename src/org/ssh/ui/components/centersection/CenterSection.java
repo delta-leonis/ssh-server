@@ -12,6 +12,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.reactfx.EventStreams;
 import org.ssh.ui.UIComponent;
 import org.ssh.ui.components.Enroller;
 
@@ -42,24 +43,14 @@ public class CenterSection extends UIComponent<StackPane> {
         StackPane.setAlignment(FPSLabel, Pos.TOP_RIGHT);
         getComponent().getChildren().add(FPSLabel);
 
-        AnimationTimer frameRateMeter = new AnimationTimer() {
-            private final long[] frameTimes = new long[100];
-            private int frameTimeIndex = 0 ;
-
-            @Override
-            public void handle(long now) {
-                long oldFrameTime = frameTimes[frameTimeIndex];
-                frameTimes[frameTimeIndex] = now;
-                frameTimeIndex = (frameTimeIndex + 1) % frameTimes.length;
-                if (frameTimeIndex == 0) {
-                    long elapsedNanos = now - oldFrameTime;
-                    long elapsedNanosPerFrame = elapsedNanos / frameTimes.length;
-                    double frameRate = 1_000_000_000.0 / elapsedNanosPerFrame;
-                    FPSLabel.setText(String.format("FPS: %.0f", frameRate));
-                }
-            }
-        };
-        frameRateMeter.start();
+        EventStreams.animationTicks()
+                .latestN(100)
+                .map(ticks -> {
+                    int n = ticks.size() - 1;
+                    return n * 1_000_000_000.0 / (ticks.get(n) - ticks.get(0));
+                })
+                .map(d -> String.format("FPS: %.0f", d))
+                .feedTo(FPSLabel.textProperty());
 
         Slider heightSlider = new Slider(100, 1500, 500);
         heightSlider.setMinorTickCount(10);

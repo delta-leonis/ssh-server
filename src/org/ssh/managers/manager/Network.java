@@ -1,6 +1,7 @@
 package org.ssh.managers.manager;
 
 import com.google.protobuf.GeneratedMessage;
+import javafx.application.Platform;
 import org.ssh.managers.ManagerInterface;
 import org.ssh.managers.controllers.NetworkController;
 import org.ssh.models.enums.SendMethod;
@@ -75,7 +76,8 @@ public class Network implements ManagerInterface<AbstractService<? extends Proto
      * @param type type to listen for
      */
     public static <M extends GeneratedMessage, P extends ProtoPacket<M>> void listenFor(Class<P> type) {
-        networkController.listenFor(type);
+        Platform.runLater(() ->
+                networkController.listenFor(type));
     }
 
     /**

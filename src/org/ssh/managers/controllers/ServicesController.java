@@ -42,7 +42,7 @@ public class ServicesController extends AbstractManagerController<AbstractServic
      * Instantiates a new Services controller.
      */
     public ServicesController() {
-        this.scheduler = MoreExecutors.listeningDecorator(Executors.newScheduledThreadPool(1));
+        this.scheduler = MoreExecutors.listeningDecorator(Executors.newScheduledThreadPool(5));
         this.taskService = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
         this.scheduledTasks = new HashMap<>();
     }

@@ -51,7 +51,7 @@ public class Ball extends FieldObject {
     }
 
     @Override
-    public Sphere createMeshView(){
+    public Sphere createNode(){
         Sphere ball = new Sphere(Ball.RADIUS);
         ball.setMaterial(new PhongMaterial(Color.ORANGE));
         ball.translateYProperty().bind(zPositionProperty().add(Ball.RADIUS));

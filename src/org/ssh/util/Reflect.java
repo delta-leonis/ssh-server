@@ -76,7 +76,7 @@ public class Reflect {
         }
 
         // could not find the field
-        Reflect.LOG.info("Could not find %s in %s (or a parent).", fieldName, clazz.getName());
+        Reflect.LOG.fine("Could not find %s in %s (or a parent).", fieldName, clazz.getName());
         return Optional.empty();
     }
 

@@ -359,7 +359,7 @@ public class Robot extends FieldObject {
     }
 
     @Override
-    public Group createMeshView() {
+    public Group createNode() {
         Group robotGroup = new Group();
 
         // Creating model importer

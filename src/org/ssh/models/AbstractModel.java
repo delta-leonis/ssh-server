@@ -94,7 +94,7 @@ public abstract class AbstractModel extends AbstractManageable {
                 // get it and set it accessible
                 final Field field = oField.get();
                 if (Modifier.isFinal(field.getModifiers()) || Modifier.isStatic(field.getModifiers())) {
-                    AbstractModel.LOG.info("%s in is not a modifiable field", field.getName(), this.getClass().getSimpleName());
+                    AbstractModel.LOG.fine("%s in is not a modifiable field", field.getName(), this.getClass().getSimpleName());
                     return false;
                 }
                 if (!field.isAccessible())

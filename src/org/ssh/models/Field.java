@@ -1,5 +1,6 @@
 package org.ssh.models;
 
+import javafx.application.Platform;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -94,7 +95,7 @@ public class Field extends FieldObject {
      * @return all {@link protobuf.Geometry.FieldLineSegment line segments} on the fieldSize.
      */
     public List<FieldLineSegment> getFieldLines() {
-        return this.fieldSize.getFieldLinesList() == null ? new ArrayList<>(): this.fieldSize.getFieldLinesList();
+        return this.fieldSize.getFieldLinesList() == null ? new ArrayList<>() : this.fieldSize.getFieldLinesList();
     }
 
     /**
@@ -114,25 +115,26 @@ public class Field extends FieldObject {
 
     /**
      * Generate tiles method. This method generates the field tiles.
-     *
-     * @author Mark Leferink
      */
     private Group generateTiles(Group fieldGroup) {
         PhongMaterial grassMaterial = loadTexture();
 
+        // create a light so the field is visible and bright
         fieldGroup.getChildren().add(new AmbientLight(Color.WHITE));
 
-        for (int i = -1; i < (this.getFieldLength() / this.TILE_WIDTH) + 1; i++)
-            for (int j = -1; j < (this.getFieldWidth() / this.TILE_WIDTH) + 1; j++) {
+        //loop over the x axis
+        for (int x = -1; x < (this.getFieldLength() / this.TILE_WIDTH) + 1; x++)
+            //loop over the y axis
+            for (int y = -1; y < (this.getFieldWidth() / this.TILE_WIDTH) + 1; y++) {
 
                 // Create new box
                 final Box tmpBox = new Box(this.TILE_WIDTH, 1, this.TILE_WIDTH);
 
                 // Translate tile into position
                 tmpBox.setTranslateX(-(this.getFieldLength() / 2.0)
-                        + ((i * this.TILE_WIDTH) + (this.TILE_WIDTH / 2.0)));
+                        + ((x * this.TILE_WIDTH) + (this.TILE_WIDTH / 2.0)));
                 tmpBox.setTranslateZ(-(this.getFieldWidth() / 2.0)
-                        + ((j * this.TILE_WIDTH) + (this.TILE_WIDTH / 2.0)));
+                        + ((y * this.TILE_WIDTH) + (this.TILE_WIDTH / 2.0)));
 
                 // Set box material
                 tmpBox.setMaterial(grassMaterial);
@@ -145,25 +147,39 @@ public class Field extends FieldObject {
 
     /**
      * Generate lines method. This method generates the lines on the field.
+     * @param field the group the lines should be added to
+     * @return group with added lines
      */
     private Group generateLines(Group field) {
         Group lines = new Group();
-        // Getting line segments
+        //looping all arced segments
         getFieldArcs().forEach(arcSegment ->
-            lines.getChildren().add(new ArcLine3D(arcSegment.getA1(), arcSegment.getA2(), arcSegment.getRadius()*2, arcSegment.getCenter().getX(), arcSegment.getCenter().getY(), arcSegment.getThickness())));
+                // create new arc line
+                lines.getChildren().add(new ArcLine3D(arcSegment.getA1(), arcSegment.getA2(),
+                        arcSegment.getRadius() * 2, arcSegment.getCenter().getX(),
+                        arcSegment.getCenter().getY(), arcSegment.getThickness())));
+        //looping all straight lines
         getFieldLines().forEach(lineSegment ->
+                // create new straight line
                 lines.getChildren().add(new SimpleLine3D(lineSegment.getP1().getX(), lineSegment.getP1().getY(),
                         lineSegment.getP2().getX(), lineSegment.getP2().getY(),
                         lineSegment.getThickness())));
 
+        // make sure the lines don't clip with the field
         lines.setTranslateY(1);
+
+        //add lines to field
         field.getChildren().add(lines);
         return field;
     }
 
-    private PhongMaterial loadTexture(){
+    /**
+     * @return Texture for a single tile on the field
+     */
+    private PhongMaterial loadTexture() {
         // Getting resource
         InputStream textureInputStream = this.getClass().getResourceAsStream(GRASS_TEXTURE_FILE);
+        // setting base color
         PhongMaterial grassMaterial = new PhongMaterial(Color.LAWNGREEN);
 
         // Check if the texture file exists
@@ -180,13 +196,14 @@ public class Field extends FieldObject {
 
     @Override
     public boolean update(final Map<String, ?> changes) {
-        boolean returnvalue = super.update(changes);
-        recreateMeshView();
-        return returnvalue;
+        // the meshview should be recreated when the field has been updated
+        Platform.runLater(() -> model3D = createNode());
+        return super.update(changes);
     }
 
     @Override
-    public Group createMeshView() {
+    public Group createNode() {
+        //create tiles and add the lines on top
         return generateLines(generateTiles(new Group()));
     }
 }

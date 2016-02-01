@@ -47,7 +47,7 @@ public class DetectionModelConsumer extends AbstractConsumer<DetectionPacket> {
         Stream.concat(yellowTeam.stream(), frame.getRobotsBlueList().stream()).forEach(robot ->
                     //return the updated robot model
                     Models.<Robot>get(getModelName(robot, yellowTeam))
-                            // try to get the existing model, if that doesnt work (orElse) create a new one
+                            // try to get the existing model, if that doesn't work (orElse) create a new one
                             .orElseGet(() ->
                                     //create robotclass
                                     Models.<Robot>create(Robot.class, robot.getRobotId(), getAllegiance(robot, yellowTeam))
@@ -55,12 +55,9 @@ public class DetectionModelConsumer extends AbstractConsumer<DetectionPacket> {
         );
 
         // loop all robots that haven't been processed
-        Models.<Robot>getAll("robot").forEach(robot -> {
-            if (frame.getTSent() - robot.lastUpdated() > 500) {
-                // remove models that aren't on the field
-                robot.setVisible(false);
-            }
-        });
+        Models.<Robot>getAll("robot").forEach(robot ->
+            robot.setVisible((frame.getTSent() - robot.lastUpdated() < 500))
+        );
 
         return true;
     }

@@ -52,9 +52,9 @@ public class SurfaceChart extends MeshView {
             for (float y = 0; y < sizeY - 1; y++) {
 
                 float x0 = x / sizeX;
-                float y0 = y / sizeY;
+                float y0 = y / sizeX;
                 float x1 = (x + 1) / sizeX;
-                float y1 = (y + 1) / sizeY;
+                float y1 = (y + 1) / sizeX;
 
                 mesh.getTexCoords().addAll( //
                         x0, y0, // 0, top-left
@@ -72,9 +72,9 @@ public class SurfaceChart extends MeshView {
             for (int z = 0; z < sizeY - 1; z++) {
 
                 int tl = x * sizeX + z; // top-left
-                int bl = x * sizeX + z + 1; // bottom-left
+                int bl = x * sizeY + z + 1; // bottom-left
                 int tr = (x + 1) * sizeX + z; // top-right
-                int br = (x + 1) * sizeX + z + 1; // bottom-right
+                int br = (x + 1) * sizeY + z + 1; // bottom-right
 
                 int offsetX = (x * (sizeX - 1) + z) * 8 / 2; // div 2 because we have u AND v in the list
 

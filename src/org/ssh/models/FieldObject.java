@@ -6,7 +6,6 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Shape3D;
 
 /**
  * Describes an object on the {@link Field}. Such as a {@link Robot}, or a {@link Ball}
@@ -20,7 +19,7 @@ public class FieldObject extends AbstractModel {
      */
     private Float confidence;
 
-    private transient Node model3D;
+    protected transient Node model3D;
 
     /**
      * X Position of this object on the {@link Field} in mm, according to the Cartesian system with
@@ -94,25 +93,26 @@ public class FieldObject extends AbstractModel {
         return new Point2D(xPosition.get(), yPosition.get());
     }
 
-    public Node getMeshView(){
+    /**
+     * Method to get the {@link Node} for this object. Calls {@link #createNode()} if no model has been set yet.
+     * @return {@link Node} representing this object
+     */
+    public Node getNode(){
         if(model3D == null) {
-            model3D = createMeshView();
+            // create a new node
+            model3D = createNode();
+            // bind the x an y
             model3D.translateXProperty().bind(this.xPositionProperty().multiply(-1f));
             model3D.translateZProperty().bind(this.yPositionProperty());
         }
-
+        // return the model
         return model3D;
     }
 
-    public Node recreateMeshView(){
-        Node oldModel = getMeshView();
-        Node newModel = createMeshView();
-        if( !(oldModel.equals(newModel)))
-            model3D = newModel;
-        return getMeshView();
-    }
-
-    public Node createMeshView(){
+    /**
+     * @return Creates a new node representing this field object
+     */
+    public Node createNode(){
         return new Box(50, 50, 50);
     }
 }

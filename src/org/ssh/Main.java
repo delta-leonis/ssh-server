@@ -1,9 +1,8 @@
 package org.ssh;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
-import net.java.games.input.Controller;
-import org.ssh.controllers.ControllerLayout;
 import org.ssh.controllers.ControllerListener;
 import org.ssh.controllers.ControllerSettings;
 import org.ssh.managers.manager.*;
@@ -17,7 +16,6 @@ import org.ssh.network.receive.geometry.GeometryPipeline;
 import org.ssh.network.receive.geometry.consumers.GeometryModelConsumer;
 import org.ssh.network.receive.wrapper.WrapperPipeline;
 import org.ssh.network.receive.wrapper.consumers.WrapperConsumer;
-import org.ssh.network.transmit.radio.RadioPipeline;
 import org.ssh.network.transmit.radio.couplers.VerboseCoupler;
 import org.ssh.network.transmit.senders.DebugSender;
 import org.ssh.network.transmit.senders.LegacyUDPSender;
@@ -26,7 +24,6 @@ import org.ssh.pipelines.packets.WrapperPacket;
 import org.ssh.ui.components.widget.TestWidget;
 import org.ssh.util.Logger;
 
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.stream.IntStream;
 
@@ -80,8 +77,6 @@ public class Main extends Application {
         new WrapperConsumer().attachToCompatiblePipelines();
         new GeometryModelConsumer("oome geo").attachToCompatiblePipelines();
         new DetectionModelConsumer("oome decto").attachToCompatiblePipelines();
-
-        Network.listenFor(WrapperPacket.class);
     }
 
     /**
@@ -108,10 +103,7 @@ public class Main extends Application {
         Pipelines.start();
         new VerboseCoupler();
         Network.start();
-        Network.register(SendMethod.UDP, new LegacyUDPSender(ADDRESS, 1337));
-        Network.register(SendMethod.DEBUG, new DebugSender(Level.INFO));
 
-        Models.addSubscription(ManagerEvent.CREATE, (robot) -> System.out.println("CREATED ROBOT #"+ ((Robot) robot).getRobotId() + ":D"), Robot.class);
         // create the service for the controller
         ControllerListener listener = new ControllerListener();
 
@@ -142,6 +134,10 @@ public class Main extends Application {
 //                    Services.scheduleTask("ControllerExample poller", listener::processControllers, 20000);
 //            }
 //        }, 5000000);
+
+        Network.register(SendMethod.UDP, new LegacyUDPSender(ADDRESS, 1337));
+        Network.register(SendMethod.DEBUG, new DebugSender(Level.INFO));
+        Network.listenFor(WrapperPacket.class);
     }
 
 
