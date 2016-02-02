@@ -199,6 +199,14 @@ public class Robot extends FieldObject {
     }
 
     /**
+     * Set a new value for selection
+     * @param value new value
+     */
+    public void setSelected(boolean value){
+        this.isSelected.setValue(value);
+    }
+
+    /**
      * @return True, if the software had connection to this robot
      */
     public boolean isConnected() {
@@ -358,7 +366,7 @@ public class Robot extends FieldObject {
     }
 
     @Override
-    public Group createNode() {
+    protected Group createNode() {
         Group robotGroup = new Group();
 
         // Creating model importer
@@ -373,9 +381,14 @@ public class Robot extends FieldObject {
             // Getting model from the model importer
             MeshView model = modelImporter.getImport()[0];
 
+            // move the robot up
             model.setTranslateY(Robot.ROBOT_HEIGHT/2d);
+            // make sure we rotate the right axis
             model.setRotationAxis(Rotate.Y_AXIS);
+            // bind
             model.rotateProperty().bind(orientationProperty().multiply(Robot.RAD_TO_DEG));
+
+            model.setOnMousePressed(se -> this.setSelected(!isSelected()));
 
             model.setMaterial(loadTexture());
 
@@ -391,6 +404,10 @@ public class Robot extends FieldObject {
         return robotGroup;
     }
 
+    /**
+     * Set whether the robot should be visible in the
+     * @param visible
+     */
     public void setVisible(boolean visible) {
         this.visible.setValue(visible);
     }

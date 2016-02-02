@@ -112,7 +112,7 @@ public class FieldObject extends AbstractModel {
     /**
      * @return Creates a new node representing this field object
      */
-    public Node createNode(){
+    protected Node createNode(){
         return new Box(50, 50, 50);
     }
 }

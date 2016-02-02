@@ -202,7 +202,7 @@ public class Field extends FieldObject {
     }
 
     @Override
-    public Group createNode() {
+    protected Group createNode() {
         //create tiles and add the lines on top
         return generateLines(generateTiles(new Group()));
     }

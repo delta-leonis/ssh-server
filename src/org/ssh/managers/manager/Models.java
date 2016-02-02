@@ -246,7 +246,6 @@ public final class Models implements ManagerInterface<AbstractModel> {
         return Models.controller.removeSubscription(event, consumer, classes);
     }
 
-
     public static void triggerEvent(ManagerEvent event, Object object){
         Models.controller.triggerEvent(event, object);
     }
