@@ -69,6 +69,15 @@ public class Settings extends AbstractModel {
      * The path to application.css
      */
     private String applicationCss;
+    /**
+     * The path to log folder
+     */
+    private String logFolder;
+    /**
+     * The path to the recorded log files
+     */
+    private String recordingsFolder;
+
 
     /**
      * Create a settings model
@@ -84,6 +93,8 @@ public class Settings extends AbstractModel {
         luaScriptFolder = "";
         applicationCss = "";
         defaultWorkspace = "";
+        logFolder = "";
+        recordingsFolder = "";
         //resetWorkspace();
     }
 
@@ -173,4 +184,14 @@ public class Settings extends AbstractModel {
     public String getApplicationCss() {
         return applicationCss;
     }
+
+    /**
+     * @return The path leading to the folder where all logs are contained
+     */
+    public String getLogFolder() { return logFolder; }
+
+    /**
+     * @return The path leading to the folder where all recordings are contained
+     */
+    public String getRecordingsFolder() { return recordingsFolder; }
 }

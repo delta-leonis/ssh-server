@@ -45,7 +45,7 @@
                         styleClass="button-right"/>
                 <Button fx:id="recordButton" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="ALWAYS"
                         GridPane.vgrow="ALWAYS"
-                        GridPane.columnIndex="2" GridPane.rowIndex="1" styleClass="button-record"/>
+                        GridPane.columnIndex="2" GridPane.rowIndex="1" onAction="#record" styleClass="button-record"/>
             </children>
         </GridPane>
 

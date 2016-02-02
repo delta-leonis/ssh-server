@@ -1,5 +1,7 @@
 {
-  "luaInitFolder" : "lua.d/",
+  "luaInitFolder" : "./lua.d/",
   "luaScriptFolder" : "./scripts/",
-  "applicationCss" : "./org/ssh/view/css/application.css"
+  "applicationCss" : "./org/ssh/view/css/application.css",
+  "logFolder" : "./logs/",
+  "recordingsFolder" : "./logs/recordings"
 }
