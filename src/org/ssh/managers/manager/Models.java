@@ -238,14 +238,34 @@ public final class Models implements ManagerInterface<AbstractModel> {
         return Models.controller.find(pattern);
     }
 
+    /**
+     * Start listening for a specific event
+     * @param event       event to listen for
+     * @param consumer    consumer to call when event happens
+     * @param classes     class(es) that should trigger the event
+     * @return true if listener has been added successful
+     */
     public static boolean addSubscription(ManagerEvent event, Consumer consumer, Class<?>... classes){
         return Models.controller.addSubscription(event, consumer, classes);
     }
 
+    /**
+     * Stop listening for a specific event for a specific (set of) class(es)
+     * @param event     event to stop listening for
+     * @param consumer  consumer to unsubscribe
+     * @param classes   class to remove listener from
+     * @return true if successful
+     */
     public static boolean removeSubscription(ManagerEvent event, Consumer consumer, Class<?>... classes){
         return Models.controller.removeSubscription(event, consumer, classes);
     }
 
+    /**
+     * Manually trigger a specific event (such as {@link ManagerEvent#UPDATE}).
+     *
+     * @param event     event to trigger
+     * @param object    instance that triggered the event
+     */
     public static void triggerEvent(ManagerEvent event, Object object){
         Models.controller.triggerEvent(event, object);
     }

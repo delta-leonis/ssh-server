@@ -20,6 +20,7 @@ import java.util.stream.Stream;
  *
  * @param <M> The generic type of {@link AbstractManageable} this ManagerController operates on.
  * @author Rimon Oz
+ * @author Jeroen de Jong
  */
 public abstract class AbstractManagerController<M extends AbstractManageable> {
 
@@ -36,22 +37,47 @@ public abstract class AbstractManagerController<M extends AbstractManageable> {
     // unique logger
     protected static final Logger LOG = Logger.getLogger();
 
+    /**
+     * map containing all subscribers for elements
+     */
     protected Multimap<ManagerEvent, Map.Entry<Class<?>, Consumer>> subscribers;
 
-    public boolean addSubscription(ManagerEvent event, Consumer function, Class<?>... classes){
+    /**
+     * Start listening for a specific event
+     * @param event       event to listen for
+     * @param consumer    consumer to call when event happens
+     * @param classes     class(es) that should trigger the event
+     * @return true if listener has been added successful
+     */
+    public boolean addSubscription(ManagerEvent event, Consumer consumer, Class<?>... classes){
+        // stream all classes
         return Stream.of(classes).map(clazz ->
+                // add it to the map
                 subscribers.put(event,
-                        new AbstractMap.SimpleEntry<>(clazz, function)))
+                        new AbstractMap.SimpleEntry<>(clazz, consumer)))
+                // check if all went well
                 .reduce(true, (accumulator, success) -> accumulator && success);
     }
 
-    public boolean removeSubscription(ManagerEvent event, Consumer function, Class<?>... classes) {
+    /**
+     * Stop listening for a specific event for a specific (set of) class(es)
+     * @param event     event to stop listening for
+     * @param consumer  consumer to unsubscribe
+     * @param classes   class to remove listener from
+     * @return true if successful
+     */
+    public boolean removeSubscription(ManagerEvent event, Consumer consumer, Class<?>... classes) {
+        // primitive array to list
         List<Class<?>> classList = Arrays.asList(classes);
+        // stream all subscribers to this ManagerEvent
         return subscribers.get(event).stream()
+                // filter the classes that has been provided in #classes
                 .filter(set -> classList.contains(set.getKey()) &&
-                                function.equals(set.getValue()))
+                        consumer.equals(set.getValue()))
+                // remove the subscription
                 .map(set ->
                         subscribers.remove(set.getKey(), set.getValue()))
+                // make sure everything worked
                 .reduce(true, (accumulator, success) -> accumulator && success);
     }
 
@@ -63,9 +89,10 @@ public abstract class AbstractManagerController<M extends AbstractManageable> {
         this.manageables = new ConcurrentHashMap<>();
 
         // build the engine if it doesn't exist yet
-        if (memeEngine == null) {
+        if (memeEngine == null)
             memeEngine = new Meme(name -> name);
-        }
+
+        // create new HashMultiMap
         subscribers = HashMultimap.create();
     }
 
@@ -190,17 +217,25 @@ public abstract class AbstractManagerController<M extends AbstractManageable> {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Manually trigger a specific event (such as {@link ManagerEvent#UPDATE}).
+     *
+     * @param event     event to trigger
+     * @param object    instance that triggered the event
+     */
     public void triggerEvent(ManagerEvent event, Object object){
         if(event == null || object == null || !subscribers.containsKey(event))
             return;
 
+        //loop all subscribers that subscribed to this event
         subscribers.get(event).forEach(set -> {
+            //check if they subscribed for this class
             if( set.getKey().isInstance(object))
                 try{
+                    // if so, start the consumer on the object
                     set.getValue().accept(object);
                 }catch(Exception e){
                     AbstractManagerController.LOG.exception(e);
-                    e.printStackTrace();
                 }
         });
     }

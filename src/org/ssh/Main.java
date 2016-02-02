@@ -122,6 +122,9 @@ public class Main extends Application {
         Network.listenFor(WrapperPacket.class);
     }
 
+    /**
+     * Start listening for new usb controllers
+     */
     private void startControllers(){
         // create the service for the controller
         ControllerListener listener = new ControllerListener();
