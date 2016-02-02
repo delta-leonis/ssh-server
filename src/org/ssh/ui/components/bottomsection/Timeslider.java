@@ -67,7 +67,7 @@ public class Timeslider extends UIComponent {
     private FileChooser fileChooser;
     private boolean recording = false;
 
-    private static final int STEP_SIZE = 100;
+    private static final int STEP_SIZE = 50;
 
     /**
      * Instantiates a new TimeSlider based on "bottomsection/timeslider.fxml"
@@ -161,12 +161,12 @@ public class Timeslider extends UIComponent {
 
     @FXML
     private void fastForward(ActionEvent event){
-        this.speedPerTick = this.speedPerTick / 2;
+        this.speedPerTick = this.speedPerTick * 2;
     }
 
     @FXML
     private void slowDown(ActionEvent event){
-        this.speedPerTick = this.speedPerTick * 2;
+        this.speedPerTick = this.speedPerTick / 2;
     }
 
     /**

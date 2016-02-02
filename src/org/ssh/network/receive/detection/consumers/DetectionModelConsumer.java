@@ -1,6 +1,7 @@
 package org.ssh.network.receive.detection.consumers;
 
 import org.ssh.managers.manager.Models;
+import org.ssh.models.Ball;
 import org.ssh.models.Game;
 import org.ssh.models.Robot;
 import org.ssh.models.enums.Allegiance;
@@ -54,6 +55,15 @@ public class DetectionModelConsumer extends AbstractConsumer<DetectionPacket> {
                             ).update(robot)
         );
 
+        List<Ball> balls = Models.<Ball> getAll("ball");
+
+        for(int i = 0; i < frame.getBallsCount(); ++i){
+            if(i == balls.size())
+                balls.add(Models.create(Ball.class));
+
+            balls.get(i).update(frame.getBalls(i));
+        }
+        
         // loop all robots that haven't been processed
         Models.<Robot>getAll("robot").forEach(robot ->
             robot.setVisible((frame.getTSent() - robot.lastUpdated() < 500))

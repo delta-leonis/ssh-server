@@ -7,6 +7,10 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
+import protobuf.Detection;
+
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -36,6 +40,7 @@ public class Ball extends FieldObject {
 
     @Override
     public void initialize(){
+        super.initialize();
         zPosition = new SimpleFloatProperty(0);
     }
 
@@ -58,5 +63,15 @@ public class Ball extends FieldObject {
         return ball;
     }
 
-
+    /**
+     * Updates a {@link Ball} using all the contents of a {@link Detection.DetectionBall}
+     * @param detectionBall The {@link Detection.DetectionBall} used to update this class
+     * @return success value
+     */
+    public boolean update(Detection.DetectionBall detectionBall){
+        return update(detectionBall.getAllFields().entrySet().stream().collect(Collectors.toMap(
+                entry -> entry.getKey().getName(),
+                Map.Entry::getValue
+        )));
+    }
 }

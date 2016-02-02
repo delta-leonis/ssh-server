@@ -2,9 +2,12 @@ package org.ssh.models;
 
 import org.ssh.managers.manager.Models;
 import org.ssh.models.enums.Allegiance;
+import protobuf.RefereeOuterClass;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Describes a team<br />
@@ -24,6 +27,7 @@ public class Team extends AbstractModel {
     /**
      * teamname given by {@link Referee}
      */
+    @Alias("name")
     private String teamName;
 
     /**
@@ -34,9 +38,19 @@ public class Team extends AbstractModel {
             scores;
 
     /**
-     * team properties as time left for timeouts, number of timeouts and the goalie ID.
+     * The ID of the goalie of this {@link Team}.
      */
-    private Integer goalieId, timeoutLeft, timeouts;
+    @Alias("goalie")
+    private Integer goalieId;
+    /**
+     * The amount of timeouts this team has had.
+     */
+    private Integer timeouts;
+    /**
+     * Time left until this {@link Team}'s timeout is over.
+     */
+    @Alias("timeout_time")
+    private Integer timeoutLeft;
 
     /**
      * Instantiates a new team that plays on a specified field half.
@@ -136,5 +150,19 @@ public class Team extends AbstractModel {
      */
     public List<Long> getYellowCards() {
         return this.yellowCards;
+    }
+
+    /**
+     * Update this Team-model based on a {@link protobuf.RefereeOuterClass.Referee.TeamInfo} protobuf message
+     *
+     * @param team protobuf message with new information
+     * @return successvalue of the update
+     */
+    public boolean update(final RefereeOuterClass.Referee.TeamInfo team){
+        return update(team.getAllFields().entrySet().stream()
+                .collect(Collectors.toMap(
+                        entry -> entry.getKey().getName(),
+                        Map.Entry::getValue
+                )));
     }
 }

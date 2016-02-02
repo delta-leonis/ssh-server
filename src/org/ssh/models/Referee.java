@@ -18,12 +18,12 @@ public class Referee extends AbstractModel {
     /**
      * History of all the {@link Stage stages}, last index is last received {@link Stage stage}
      */
-    private List<Stage> stageHistory;
+    private List<RefereeOuterClass.Referee.Stage>          stageHistory;
     /**
-     * History of all the {@link RefereeCommand commands}, last index is last received
-     * {@link RefereeCommand command}
+     * History of all the {@link RefereeOuterClass.Referee.Command commands}, last index is last received
+     * {@link RefereeOuterClass.Referee.Command command}
      */
-    private List<RefereeCommand> commandHistory;
+    private List<RefereeOuterClass.Referee.Command> commandHistory;
     /**
      * Timestamp in ms of the last parsed {@link RefereeOuterClass.Referee referee message}
      */
@@ -46,8 +46,8 @@ public class Referee extends AbstractModel {
 
     @Override
     public void initialize() {
-        stageHistory = new ArrayList<Stage>();
-        commandHistory = new ArrayList<RefereeCommand>();
+        stageHistory = new ArrayList<>();
+        commandHistory = new ArrayList<>();
     }
 
     /**
@@ -58,16 +58,15 @@ public class Referee extends AbstractModel {
     }
 
     /**
-     * @return whole history of {@link RefereeCommand commands}
+     * @return whole history of {@link RefereeOuterClass.Referee.Command commands}
      */
-    public List<RefereeCommand> getCommands() {
+    public List<RefereeOuterClass.Referee.Command> getCommands() {
         return this.commandHistory;
     }
-
     /**
      * @return last received {@link Stage stage}, may return null
      */
-    public Stage getCurrentStage() {
+    public RefereeOuterClass.Referee.Stage getCurrentStage() {
         if (this.stageHistory.isEmpty()) {
             Referee.LOG.warning("There are no previous commands");
             return null;
@@ -76,14 +75,30 @@ public class Referee extends AbstractModel {
     }
 
     /**
+     * Updates the {@link List} containing all recent {@link Stage stage}
+     * @param stage The stage to be added to the list
+     */
+    public void updateCurrentStage(RefereeOuterClass.Referee.Stage stage){
+        this.stageHistory.add(stage);
+    }
+
+    /**
      * @return last received {@link RefereeCommand command}, may return null
      */
-    public RefereeCommand getLastCommand() {
+    public RefereeOuterClass.Referee.Command getLastCommand() {
         if (this.commandHistory.isEmpty()) {
             Referee.LOG.warning("There are no previous commands");
             return null;
         }
         return this.commandHistory.get(this.commandHistory.size() - 1);
+    }
+
+    /**
+     * Updates the {@link List} containing all recent {@link RefereeCommand commands}
+     * @param command The command to be added to the list
+     */
+    public void updateCommand(RefereeOuterClass.Referee.Command command){
+        this.commandHistory.add(command);
     }
 
     /**
@@ -96,7 +111,7 @@ public class Referee extends AbstractModel {
     /**
      * @return whole history of {@link Stage stages}
      */
-    public List<Stage> getStages() {
+    public List<RefereeOuterClass.Referee.Stage> getStages() {
         return this.stageHistory;
     }
 

@@ -16,6 +16,8 @@ import org.ssh.network.receive.detection.DetectionPipeline;
 import org.ssh.network.receive.detection.consumers.DetectionModelConsumer;
 import org.ssh.network.receive.geometry.GeometryPipeline;
 import org.ssh.network.receive.geometry.consumers.GeometryModelConsumer;
+import org.ssh.network.receive.referee.RefereePipeline;
+import org.ssh.network.receive.referee.consumers.RefereeModelConsumer;
 import org.ssh.network.receive.wrapper.WrapperPipeline;
 import org.ssh.network.receive.wrapper.consumers.WrapperConsumer;
 import org.ssh.network.transmit.radio.couplers.VerboseCoupler;
@@ -63,6 +65,7 @@ public class Main extends Application {
         Models.create(Goal.class, Allegiance.OPPONENT);
         Models.create(Team.class, Allegiance.ALLY);
         Models.create(Team.class, Allegiance.OPPONENT);
+        Models.create(Referee.class);
         Models.create(Field.class);
 
         // Create some robots
@@ -76,11 +79,14 @@ public class Main extends Application {
         new GeometryPipeline("fieldbuilder");
         // Create new detection pipeline
         new DetectionPipeline("detection");
+        // Create a new Referee pipeline
+        new RefereePipeline("referee");
 
         // make splitter from wrapper -> geometry / detection
         new WrapperConsumer().attachToCompatiblePipelines();
         new GeometryModelConsumer("oome geo").attachToCompatiblePipelines();
         new DetectionModelConsumer("oome decto").attachToCompatiblePipelines();
+        new RefereeModelConsumer("oome ronald").attachToCompatiblePipelines();
     }
 
     /**
