@@ -2,6 +2,7 @@ package org.ssh.ui.components.centersection;
 
 import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
+import javafx.beans.property.ReadOnlyFloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.*;
 import javafx.scene.paint.Color;

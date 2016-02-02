@@ -1,6 +1,7 @@
 package org.ssh.models;
 
 import javafx.beans.value.WritableValue;
+import javafx.util.Pair;
 import org.jooq.lambda.Unchecked;
 import org.ssh.managers.AbstractManageable;
 import org.ssh.managers.controllers.ModelController;
@@ -16,6 +17,8 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -248,14 +251,10 @@ public abstract class AbstractModel extends AbstractManageable {
             return false;
         }
 
-        // new map for update(map) method
-        final Map<String, Object> changeMap = new HashMap<>();
-
-        // map every odd Object as String, and every even Object as Object
-        for (int i = 0; i < (changes.length - 1); i++)
-            changeMap.put((String) changes[i], changes[++i]);
-
-        return this.update(changeMap);
+        return this.update(IntStream.range(0, changes.length)
+                .filter(i -> i %2 == 0) // only even numbers
+                .mapToObj(index -> new Pair<>((String) changes[index], changes[index+1]))
+                .collect(Collectors.toMap(Pair::getKey, Pair::getValue)));
     }
 
     /**

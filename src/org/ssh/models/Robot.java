@@ -308,7 +308,6 @@ public class Robot extends FieldObject {
      * @return succesvalue of the update
      */
     public boolean update(final Detection.DetectionRobot protobufRobot) {
-        this.setVisible(true);
         return update(protobufRobot.getAllFields().entrySet().stream().collect(Collectors.toMap(
                 entry -> entry.getKey().getName(),
                 Map.Entry::getValue
@@ -396,7 +395,7 @@ public class Robot extends FieldObject {
         this.visible.setValue(visible);
     }
 
-    public BooleanProperty visibleProperty(){
+    public ReadOnlyBooleanProperty visibleProperty(){
         return visible;
     }
 

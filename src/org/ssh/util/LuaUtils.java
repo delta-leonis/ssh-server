@@ -295,7 +295,7 @@ public class LuaUtils {
                                          final String functionname,
                                          final Object callingObject) {
         // Load a script into globals
-        LuaUtils.GLOBALS.get("dofile").call(LuaValue.valueOf(script));
+        LuaUtils .GLOBALS.get("dofile").call(LuaValue.valueOf(script));
         // Turn Java object into LuaValue
         final LuaValue luaobj = CoerceJavaToLua.coerce(callingObject);
         // Get functions from globals

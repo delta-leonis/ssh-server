@@ -23,6 +23,7 @@ import org.ssh.pipelines.AbstractPipeline;
 import org.ssh.pipelines.packets.WrapperPacket;
 import org.ssh.ui.components.widget.TestWidget;
 import org.ssh.util.Logger;
+import protobuf.Detection;
 
 import java.util.logging.Level;
 import java.util.stream.IntStream;
@@ -138,6 +139,34 @@ public class Main extends Application {
         Network.register(SendMethod.UDP, new LegacyUDPSender(ADDRESS, 1337));
         Network.register(SendMethod.DEBUG, new DebugSender(Level.INFO));
         Network.listenFor(WrapperPacket.class);
+
+        Platform.runLater(() ->
+            new Thread(() -> {
+                    Robot r0 = Models.<Robot>get("robot A0").get();
+                    Robot r1 = Models.<Robot>get("robot A1").get();
+                    Robot r2 = Models.<Robot>get("robot A2").get();
+                    Robot r3 = Models.<Robot>get("robot A3").get();
+                    while (true)
+                        for (double i = 0; i < Math.PI * 2; i = i + 0.01) {
+                            r0.update(Detection.DetectionRobot.newBuilder().setX((float) Math.sin(i) * 500)
+                                    .setY((float) Math.cos(i) * 1000)
+                                    .build());
+                            r1.update(Detection.DetectionRobot.newBuilder().setX((float) Math.sin(-i - 1) * 1000)
+                                    .setY((float) Math.cos(-i-1) * 1500)
+                                    .build());
+                            r2.update(Detection.DetectionRobot.newBuilder().setX((float) Math.sin(i - 2) * 2000)
+                                    .setY((float)  Math.cos(i - 2) * 1500)
+                                    .build());
+                            r3.update(Detection.DetectionRobot.newBuilder().setX((float) Math.sin(-i -3) * 2000)
+                                    .setY((float) Math.cos(-i-3) * 2500)
+                                    .build());
+                            try {
+                                Thread.sleep(3);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                }).start());
     }
 
 
