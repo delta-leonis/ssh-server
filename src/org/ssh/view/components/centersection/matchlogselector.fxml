@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.GridPane?>
-<GridPane id="matchlogselector" fx:id="rootPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-          pickOnBounds="false" minWidth="0.0">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<VBox id="matchlogselector" fx:id="rootPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" minWidth="0.0">
     <children>
-        <Label text="Select match log" minWidth="0.0"></Label>
+        <Button fx:id="selectLog" text="Select match log" minWidth="0.0"></Button>
+        <TableView fx:id="tableView">
+            <columns>
+                <TableColumn fx:id="matchColumn" text="Match">
+                </TableColumn>
+                <TableColumn fx:id="dateColumn" text="Date">
+                </TableColumn>
+                <TableColumn fx:id="timeColumn" text="Time">
+                </TableColumn>
+                <TableColumn fx:id="rawColumn" text="Raw">
+                </TableColumn>
+            </columns>
+        </TableView>
     </children>
-</GridPane>
+</VBox>
+

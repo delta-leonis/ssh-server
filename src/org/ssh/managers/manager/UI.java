@@ -24,8 +24,8 @@ import java.util.Optional;
  * The Class UI.
  * <p>
  * This class is one of the main components of the framework. UI.java gets instantiated as
- * lazy-loaded Singleton {@link https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom}
- * . This class holds references to all the windows and makes instantiating windows easier.
+ * lazy-loaded Singleton <a href=https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom></a>
+ * This class holds references to all the windows and makes instantiating windows easier.
  *
  * @author Rimon Oz
  * @author Jeroen de Jong
@@ -116,7 +116,7 @@ public final class UI implements ManagerInterface<UIComponent<? extends Pane>> {
      * @param <N> return type
      * @return list of found components
      */
-    public <N extends UIComponent<?>> List<N> find(String pattern) {
+    public static <N extends UIComponent<?>> List<N> find(String pattern) {
         return controller.find(pattern);
     }
 
