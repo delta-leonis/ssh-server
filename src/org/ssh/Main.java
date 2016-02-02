@@ -25,6 +25,7 @@ import org.ssh.network.transmit.senders.DebugSender;
 import org.ssh.network.transmit.senders.LegacyUDPSender;
 import org.ssh.pipelines.AbstractPipeline;
 import org.ssh.pipelines.packets.WrapperPacket;
+import org.ssh.strategy.kmeans.KMeansConsumer;
 import org.ssh.ui.components.widget.TestWidget;
 import org.ssh.util.Logger;
 import protobuf.Detection;
@@ -126,6 +127,8 @@ public class Main extends Application {
         Network.register(SendMethod.UDP, new LegacyUDPSender(ADDRESS, 1337));
         Network.register(SendMethod.DEBUG, new DebugSender(Level.INFO));
         Network.listenFor(WrapperPacket.class);
+
+//        new KMeansConsumer("oome karel", Allegiance.ALLY).attachToCompatiblePipelines();
     }
 
     /**

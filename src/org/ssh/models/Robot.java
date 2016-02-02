@@ -109,6 +109,9 @@ public class Robot extends FieldObject {
 
     private BooleanProperty visible;
 
+    /** Shows to which cluster groups this robots belongs to like so: {0.55, 0.23, 0.22} */
+    private transient double[] clusterGroup;
+
     /**
      * Instantiates a new robot with specified properties
      *
@@ -134,6 +137,7 @@ public class Robot extends FieldObject {
         this.malfunctions = new SimpleListProperty<>(
                 javafx.collections.FXCollections.observableList(new ArrayList<>()));
         this.lastUpdated = System.currentTimeMillis();
+        clusterGroup = new double[]{};
     }
 
     /**
@@ -425,5 +429,27 @@ public class Robot extends FieldObject {
      */
     public boolean isVisible(){
         return visible.getValue();
+    }
+
+    /**
+     * @return The cluster group this {@link Robot} belongs to
+     */
+    public double[] getClusterGroup(){
+        return this.clusterGroup;
+    }
+
+    /**
+     * Sets the cluster group this {@link Robot} is assigned to
+     * @param cluster the cluster to set
+     */
+    public void setClusterGroup(double[] cluster){
+        this.clusterGroup = cluster;
+    }
+
+    /**
+     * @return A {@link Color} representation of the cluster group.
+     */
+    public Color getClusterColor(){
+        return Color.rgb((int)(clusterGroup[0]*255), (int)(clusterGroup[1]*255), (int)(clusterGroup[2]*255));
     }
 }
