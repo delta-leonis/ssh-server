@@ -12,6 +12,8 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
 /**
+ * 3D chart plotter for use in {@link org.ssh.ui.components.centersection.GameScene} to represent the shrouds of the Robots
+ *
  * @author Jeroen
  * @date 31-1-2016
  */
@@ -21,33 +23,39 @@ public class SurfaceChart extends MeshView {
 
     public SurfaceChart() {
 
+        // Create new data, and draw a new chart based on that
         drawChart(createNoise(sizeX, sizeY));
 
-        // mesh view
-        setTranslateX(-0.5 * sizeX);
-        setTranslateZ(-0.5 * sizeY);
+        //make sure it is visible from everywhere
         setCullFace(CullFace.NONE);
+        // make it a wireframe until opacity is accepted
         setDrawMode(DrawMode.LINE);
+        // enable collision with the other objects
         setDepthTest(DepthTest.ENABLE);
+        // scale to the field size
         setScaleX(6000/sizeX);
         setScaleZ(4000/sizeY);
     }
 
+    /**
+     * Draw a chart based on given array
+     * @param noiseArray array to represent
+     */
     public void drawChart(float[][] noiseArray){
-
-        // mesh
+        // new mesh
         TriangleMesh mesh = new TriangleMesh();
 
         // create points for x/z
         float amplification = 400; // amplification of noise
 
+        // create a 3d point based on given array
         for (int x = 0; x < sizeX; x++) {
             for (int z = 0; z < sizeY; z++) {
                 mesh.getPoints().addAll(x, noiseArray[x][z] * amplification, z);
             }
         }
 
-        // texture
+        // give texture coordinates
         for (float x = 0; x < sizeX - 1; x++) {
             for (float y = 0; y < sizeY - 1; y++) {
 
@@ -85,52 +93,66 @@ public class SurfaceChart extends MeshView {
             }
         }
 
-        // material
-        Image diffuseMap = createImage(sizeX, sizeY, noiseArray);
+        // create a colored map for the texture
+        Image diffuseMap = createImage(noiseArray);
 
+        // create a textrure containing the map
         PhongMaterial material = new PhongMaterial();
         material.setDiffuseMap(diffuseMap);
         material.setSpecularColor(Color.WHITE);
 
+        // set the mesh
         setMesh(mesh);
+        // set the new material
         setMaterial(material);
     }
 
     /**
      * Create texture for uv mapping
-     * @param size
-     * @param noise
-     * @return
+     *
+     * @param noise     array containing all values in the SurfaceChart
+     * @return texture image
      */
-    public Image createImage(double sizeX, double sizeY, float[][] noise) {
+    public Image createImage(float[][] noise) {
+        int width = noise.length;
+        int height = noise[0].length;
 
-        int width = (int) sizeX;
-        int height = (int) sizeY;
 
+        // create a new buffer
         WritableImage wr = new WritableImage(width, height);
+        // and a writer
         PixelWriter pw = wr.getPixelWriter();
+        // loop all coordinates
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
 
+                // get the value for this coord
                 float value = noise[x][y];
 
+                // get a gray value based on the normalized value
                 double gray = normalizeValue(value, -.5, .5, 0., 1.);
 
+                // make sure it is between 0 an 1
                 gray = clamp(gray, 0, 1);
 
+                // interpolate BLUE and RED based on the gray value
                 Color color = Color.BLUE.interpolate(Color.RED, gray);
 
+                //set the new pixel
                 pw.setColor(x, y, color);
 
             }
         }
 
+        //return the image
         return wr;
 
     }
 
 
     /**
+     * TODO replace with shrouds
+     *
      * Create an array of the given size with values of perlin noise
      * @param size
      * @return
@@ -158,12 +180,26 @@ public class SurfaceChart extends MeshView {
 
     }
 
+    /**
+     * Normalize a value based on point around it
+     * @param value current value
+     * @param min minimum value of previous the return value
+     * @param max maximum value of previous the return value
+     * @param newMin minimum value of the return value
+     * @param newMax maximum value of the return value
+     * @return value normalized based on new and previous values
+     */
     public static double normalizeValue(double value, double min, double max, double newMin, double newMax) {
-
         return (value - min) * (newMax - newMin) / (max - min) + newMin;
-
     }
 
+    /**
+     * Clamp the given value between a min and a max
+     * @param value value to clamp
+     * @param min minimum value of the return value
+     * @param max maximum value of the return value
+     * @return min if value < min, max if value > max, else just value
+     */
     public static double clamp(double value, double min, double max) {
 
         if (Double.compare(value, min) < 0)
@@ -177,6 +213,8 @@ public class SurfaceChart extends MeshView {
 
 
     /**
+     * TODO replace with shrouds
+     *
      * Perlin noise generator
      *
      * // JAVA REFERENCE IMPLEMENTATION OF IMPROVED NOISE - COPYRIGHT 2002 KEN PERLIN.

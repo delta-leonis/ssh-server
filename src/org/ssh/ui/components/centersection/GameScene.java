@@ -31,11 +31,6 @@ public class GameScene extends SubScene {
      * Group containing all elements for of the game (robots, field, balls etc.)
      */
     private Group gameGroup;
-
-    /**
-     * Controller for changing the position of a camera based on mouse movement
-     */
-    private GameSceneCameraController cameraController;
     /**
      * The Y position of the chart, as modifiable by a slider found in {@link CenterSection}
      */
@@ -57,6 +52,11 @@ public class GameScene extends SubScene {
         });
 
 
+    /**
+     * Create a new 3D representation of the game. This method retrieves all FieldObjects, and adds a listener to the creation and deletion of FieldObjects.
+     * @param width     initial width for the node
+     * @param height    initial height for the node
+     */
     public GameScene(double width, double height) {
         //create a new SubScene based on a new group
         super(new Group(), width, height, true, SceneAntialiasing.BALANCED);
@@ -77,33 +77,50 @@ public class GameScene extends SubScene {
         Platform.runLater(() ->
         world.getChildren().add(gameGroup));
 
+        // add all existing FieldObjects
         Models.getAll().stream()
                 .filter(model -> model instanceof FieldObject)
                 .map(model -> (FieldObject)model)
                 .forEach(addIfAbsent);
+        // add all new FieldObjects
         Models.addSubscription(ManagerEvent.CREATE, addIfAbsent, FieldObject.class);
+        // remove FieldObject from view when it shouldn't show
         Models.addSubscription(ManagerEvent.DELETE, removeObject, FieldObject.class);
 
+        // create the surface chart
         createSurfaceChart();
+        // create a camera for this spul
         createCamera();
     }
 
+    /**
+     * @return Property containing the Y translation for the {@link SurfaceChart}
+     */
     public FloatProperty chartTranslateY(){
         return chartTranslateY;
     }
 
+    /**
+     * Create a new chart representing the shrouds
+     */
     private void createSurfaceChart() {
+        // new chart
         SurfaceChart chart = new SurfaceChart();
+        // bind Y property
         chart.translateYProperty().bind(chartTranslateY);
+        // add it to the world on the next tick
         Platform.runLater(() ->
-            gameGroup.getChildren().add(chart));
+            world.getChildren().add(chart));
     }
 
+    /**
+     * Creates a new {@link GameSceneCamera} and a {@link GameSceneCameraController} to control it
+     */
     private void createCamera(){
+        // set the new camera
         this.setCamera(new GameSceneCamera());
-        cameraController = new GameSceneCameraController(this);
-
+        //create the new controller and add it to the world
         Platform.runLater(() ->
-            world.getChildren().add(cameraController));
+            world.getChildren().add(new GameSceneCameraController(this)));
     }
 }

@@ -405,17 +405,23 @@ public class Robot extends FieldObject {
     }
 
     /**
-     * Set whether the robot should be visible in the
-     * @param visible
+     * Set whether the robot should be visible in the GUI
+     * @param visible new visibility
      */
     public void setVisible(boolean visible) {
         this.visible.setValue(visible);
     }
 
+    /**
+     * @return Property describing whether the robot should be visible in the GUI
+     */
     public ReadOnlyBooleanProperty visibleProperty(){
         return visible;
     }
 
+    /**
+     * @return true if the robot should be visible in the GUI
+     */
     public boolean isVisible(){
         return visible.getValue();
     }

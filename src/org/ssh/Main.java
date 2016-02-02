@@ -3,6 +3,8 @@ package org.ssh;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import net.java.games.input.Controller;
+import org.ssh.controllers.ControllerLayout;
 import org.ssh.controllers.ControllerListener;
 import org.ssh.controllers.ControllerSettings;
 import org.ssh.managers.manager.*;
@@ -25,6 +27,7 @@ import org.ssh.ui.components.widget.TestWidget;
 import org.ssh.util.Logger;
 import protobuf.Detection;
 
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.stream.IntStream;
 
@@ -105,9 +108,6 @@ public class Main extends Application {
         new VerboseCoupler();
         Network.start();
 
-        // create the service for the controller
-        ControllerListener listener = new ControllerListener();
-
         build();
 
         UI.start(primaryStage);
@@ -117,56 +117,33 @@ public class Main extends Application {
         /********************************/
         createWidgets();
 
-//        Services.scheduleTask("USB watcher", () -> {
-//            System.out.println("Searching for new USB controllers");
-//            final Optional<Controller> controller = listener.findAvailableController("360");
-//
-//            // check if we found one
-//            if (!controller.isPresent())
-//                return;
-//            // create a layout for this specific controller
-//            final ControllerLayout layout = new ControllerLayout(controller.get());
-//            if (!Models.initialize(layout))
-//                ControllerLayout.createDefaultLayout(layout);
-//
-//            if(listener.findAvailableRobotid().isPresent()) {
-//                listener.register(listener.findAvailableRobotid().getAsInt(), layout); // i = robotid
-//                if (!Services.get("ControllerExample poller").isPresent())
-//                    Services.scheduleTask("ControllerExample poller", listener::processControllers, 20000);
-//            }
-//        }, 5000000);
-
         Network.register(SendMethod.UDP, new LegacyUDPSender(ADDRESS, 1337));
         Network.register(SendMethod.DEBUG, new DebugSender(Level.INFO));
         Network.listenFor(WrapperPacket.class);
+    }
 
-        Platform.runLater(() ->
-            new Thread(() -> {
-                    Robot r0 = Models.<Robot>get("robot A0").get();
-                    Robot r1 = Models.<Robot>get("robot A1").get();
-                    Robot r2 = Models.<Robot>get("robot A2").get();
-                    Robot r3 = Models.<Robot>get("robot A3").get();
-                    while (true)
-                        for (double i = 0; i < Math.PI * 2; i = i + 0.01) {
-                            r0.update(Detection.DetectionRobot.newBuilder().setX((float) Math.sin(i) * 500)
-                                    .setY((float) Math.cos(i) * 1000)
-                                    .build());
-                            r1.update(Detection.DetectionRobot.newBuilder().setX((float) Math.sin(-i - 1) * 1000)
-                                    .setY((float) Math.cos(-i-1) * 1500)
-                                    .build());
-                            r2.update(Detection.DetectionRobot.newBuilder().setX((float) Math.sin(i - 2) * 2000)
-                                    .setY((float)  Math.cos(i - 2) * 1500)
-                                    .build());
-                            r3.update(Detection.DetectionRobot.newBuilder().setX((float) Math.sin(-i -3) * 2000)
-                                    .setY((float) Math.cos(-i-3) * 2500)
-                                    .build());
-                            try {
-                                Thread.sleep(3);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                }).start());
+    private void startControllers(){
+        // create the service for the controller
+        ControllerListener listener = new ControllerListener();
+
+        Services.scheduleTask("USB watcher", () -> {
+            System.out.println("Searching for new USB controllers");
+            final Optional<Controller> controller = listener.findAvailableController("360");
+
+            // check if we found one
+            if (!controller.isPresent())
+                return;
+            // create a layout for this specific controller
+            final ControllerLayout layout = new ControllerLayout(controller.get());
+            if (!Models.initialize(layout))
+                ControllerLayout.createDefaultLayout(layout);
+
+            if(listener.findAvailableRobotid().isPresent()) {
+                listener.register(listener.findAvailableRobotid().getAsInt(), layout); // i = robotid
+                if (!Services.get("ControllerExample poller").isPresent())
+                    Services.scheduleTask("ControllerExample poller", listener::processControllers, 20000);
+            }
+        }, 5000000);
     }
 
 
