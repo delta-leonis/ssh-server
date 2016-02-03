@@ -8,7 +8,6 @@ import org.ssh.pipelines.packets.ProtoPacket;
 import org.ssh.pipelines.packets.RefereePacket;
 import org.ssh.pipelines.packets.WrapperPacket;
 import org.ssh.services.AbstractService;
-import org.ssh.ui.components.bottomsection.Timeslider;
 import protobuf.RefereeOuterClass;
 import protobuf.Wrapper;
 
@@ -21,19 +20,15 @@ import java.util.stream.Collectors;
  * Loads a proto log file. (takes a while) after the log file is loaded, log files can be retrieved using an index.
  *
  * @author Thomas Hakkers
- * Variation on the code of RoboSim
  */
 public class LogReader extends AbstractService<ProtoPacket<?>> {
-    // a logger for good measure
-//    protected static final Logger LOG         = Logger.getLogger();
+
     private FileInputStream fileStream;
     private TreeMap<Long, byte[]> detectionMessages;
     private TreeMap<Long, byte[]> refereeMessages;
     private List<Long> timeouts;
     private List<Long> blueGoals;
     private List<Long> yellowGoals;
-
-    private double averageDelay = 0;
 
     private long duration = 0;
     // Variables that keep track of the last packet sent. They're used to avoid duplicate package being sent.
@@ -173,12 +168,8 @@ public class LogReader extends AbstractService<ProtoPacket<?>> {
         boolean firstTime = true;
         // The exact time at which the game started
         long startTime = 0;
-        long count = 0;
-        // The time of the previous log record. Used to calculate the average time in between records.
-        long lastTime = 0;
 
         while (fileStream.available() != 0) {
-            count++;
             //Read new time
             byte[] type = new byte[8]; // Reuse type
             fileStream.read(type);
@@ -207,9 +198,6 @@ public class LogReader extends AbstractService<ProtoPacket<?>> {
             GeneratedMessage parsedMessage = parseMessage(result.array());
 
             long timeDiff = (time - startTime)/1000000;
-            // Calculate average delay
-            averageDelay = ((timeDiff - lastTime) + averageDelay*count) / count;
-            lastTime = timeDiff;
 
             if (parsedMessage != null) {
                 // If the current message is a wrapper
@@ -314,12 +302,5 @@ public class LogReader extends AbstractService<ProtoPacket<?>> {
             return yellowGoals.stream().filter(time -> time <= millis).collect(Collectors.toList()).size();
         LOG.fine("Filestream not initialized.");
         return 0;
-    }
-
-    /**
-     * @return the average delay between frames. Used for {@link Timeslider#updateKeyFrame()}
-     */
-    public double getAverageDelay(){
-        return averageDelay;
     }
 }
