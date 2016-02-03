@@ -102,8 +102,8 @@ public class FieldObject extends AbstractModel {
             // create a new node
             model3D = createNode();
             // bind the x an y
-//            model3D.translateXProperty().bind(this.xPositionProperty().multiply(-1f));
-//            model3D.translateZProperty().bind(this.yPositionProperty());
+            model3D.translateXProperty().bind(this.xPositionProperty().multiply(-1f));
+            model3D.translateZProperty().bind(this.yPositionProperty());
         }
         // return the model
         return model3D;

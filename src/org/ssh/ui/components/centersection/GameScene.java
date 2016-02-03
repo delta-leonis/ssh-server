@@ -105,7 +105,7 @@ public class GameScene extends SubScene {
      */
     private void createSurfaceChart() {
         // new chart
-        SurfaceChart chart = new SurfaceChart();
+        SurfaceChart chart = new SurfaceChart(4000, 6000);
         // bind Y property
         chart.translateYProperty().bind(chartTranslateY);
         // add it to the world on the next tick

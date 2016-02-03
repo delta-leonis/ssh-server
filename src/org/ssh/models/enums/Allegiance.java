@@ -1,5 +1,7 @@
 package org.ssh.models.enums;
 
+import org.ssh.ui.lua.console.AvailableInLua;
+
 /**
  * Enum which describes wheter a team is {@link #ALLY} or {@link #OPPONENT}
  *

@@ -15,13 +15,20 @@ import javafx.scene.shape.TriangleMesh;
  * 3D chart plotter for use in {@link org.ssh.ui.components.centersection.GameScene} to represent the shrouds of the Robots
  *
  * @author Jeroen
+ * @author Roland
+ * @see <a href="https://stackoverflow.com/questions/31073007/how-to-create-a-3d-surface-chart-with-javafx">https://stackoverflow.com/questions/31073007/how-to-create-a-3d-surface-chart-with-javafx</a>.
  * @date 31-1-2016
  */
 public class SurfaceChart extends MeshView {
     private int sizeY = 100;
-    private int sizeX = 100;
+    private int sizeX = 150;
 
-    public SurfaceChart() {
+    private int STEP_SIZE_Y ;
+    private int STEP_SIZE_X ;
+
+    public SurfaceChart(int width, int depth) {
+        STEP_SIZE_X = depth / sizeX;
+        STEP_SIZE_Y = width / sizeY;
 
         // Create new data, and draw a new chart based on that
         drawChart(createNoise(sizeX, sizeY));
@@ -33,8 +40,9 @@ public class SurfaceChart extends MeshView {
         // enable collision with the other objects
         setDepthTest(DepthTest.ENABLE);
         // scale to the field size
-        setScaleX(6000/sizeX);
-        setScaleZ(4000/sizeY);
+
+        setTranslateZ(-sizeY*0.5*STEP_SIZE_Y);
+        setTranslateX(-sizeX*0.5*STEP_SIZE_X);
     }
 
     /**
@@ -48,21 +56,21 @@ public class SurfaceChart extends MeshView {
         // create points for x/z
         float amplification = 400; // amplification of noise
 
-        // create a 3d point based on given array
         for (int x = 0; x < sizeX; x++) {
-            for (int z = 0; z < sizeY; z++) {
-                mesh.getPoints().addAll(x, noiseArray[x][z] * amplification, z);
+            for (int y = 0; y < sizeY; y++) {
+                mesh.getPoints().addAll(x*STEP_SIZE_X, noiseArray[x][y] * amplification, y*STEP_SIZE_Y);
             }
         }
 
-        // give texture coordinates
+
+        // texture
         for (float x = 0; x < sizeX - 1; x++) {
             for (float y = 0; y < sizeY - 1; y++) {
 
                 float x0 = x / sizeX;
-                float y0 = y / sizeX;
+                float y0 = y / sizeY;
                 float x1 = (x + 1) / sizeX;
-                float y1 = (y + 1) / sizeX;
+                float y1 = (y + 1) / sizeY;
 
                 mesh.getTexCoords().addAll( //
                         x0, y0, // 0, top-left
@@ -75,21 +83,22 @@ public class SurfaceChart extends MeshView {
             }
         }
 
+        int length = sizeX;
+
         // faces
         for (int x = 0; x < sizeX - 1; x++) {
-            for (int z = 0; z < sizeY - 1; z++) {
+            for (int y = 0; y < sizeY - 1; y++) {
 
-                int tl = x * sizeX + z; // top-left
-                int bl = x * sizeY + z + 1; // bottom-left
-                int tr = (x + 1) * sizeX + z; // top-right
-                int br = (x + 1) * sizeY + z + 1; // bottom-right
+                int tl = x * sizeY + y; // top-left
+                int bl = x * sizeY + y + 1; // bottom-left
+                int tr = (x + 1) * sizeY + y; // top-right
+                int br = (x + 1) * sizeY + y + 1; // bottom-right
 
-                int offsetX = (x * (sizeX - 1) + z) * 8 / 2; // div 2 because we have u AND v in the list
+                int offset = (x * (sizeY-1) + y)* 8/2; // div 2 because we have u AND v in the list
 
                 // working
-                mesh.getFaces().addAll(bl, offsetX + 1, tl, offsetX + 0, tr, offsetX + 2);
-                mesh.getFaces().addAll(tr, offsetX + 2, br, offsetX + 3, bl, offsetX + 1);
-
+                mesh.getFaces().addAll(bl, offset + 1, tl, offset + 0, tr, offset + 2);
+                mesh.getFaces().addAll(tr, offset + 2, br, offset + 3, bl, offset + 1);
             }
         }
 
@@ -130,13 +139,18 @@ public class SurfaceChart extends MeshView {
                 float value = noise[x][y];
 
                 // get a gray value based on the normalized value
-                double gray = normalizeValue(value, -.5, .5, 0., 1.);
+                double gray = normalizeValue(value, -.5, 0, 0., 1);
 
                 // make sure it is between 0 an 1
                 gray = clamp(gray, 0, 1);
+                // get a gray value based on the normalized value
+                double gray2 = normalizeValue(value, 0, .5, 0, 1.);
+
+                // make sure it is between 0 an 1
+                gray2 = clamp(gray2, 0, 1);
 
                 // interpolate BLUE and RED based on the gray value
-                Color color = Color.BLUE.interpolate(Color.RED, gray);
+                Color color = Color.BLUE.interpolate(Color.ORANGE.darker(), gray).interpolate(Color.RED.darker(), gray2);
 
                 //set the new pixel
                 pw.setColor(x, y, color);
@@ -160,16 +174,14 @@ public class SurfaceChart extends MeshView {
     public float[][] createNoise( int sizeX, int sizeY) {
         long startTime = System.currentTimeMillis();
 
-        float[][] noiseArray = new float[(int) sizeX][(int) sizeY];
+        float[][] noiseArray = new float[sizeX][sizeY];
 
-        double rdmY = Math.random();
-        double rdmX = Math.random();
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
 
                 double frequency = 10.0 / (double) sizeX;
 
-                double noise = ImprovedNoise.noise(x * frequency * rdmX, y * frequency * rdmY, 0);
+                double noise = ImprovedNoise.noise(x * frequency, y * frequency, 0);
 
                 noiseArray[x][y] = (float) noise;
             }
