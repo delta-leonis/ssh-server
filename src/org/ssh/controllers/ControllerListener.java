@@ -64,7 +64,7 @@ public class ControllerListener extends AbstractService {
      * @param controller controller to check
      * @return whether a controller is available
      */
-    private boolean availableController(final Controller controller) {
+    public boolean availableController(final Controller controller) {
         return !this.handlers.containsValue(controller);
     }
 

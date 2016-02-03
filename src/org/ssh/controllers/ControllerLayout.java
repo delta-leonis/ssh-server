@@ -29,7 +29,7 @@ public class ControllerLayout extends AbstractModel {
      * Map containing all {@link Component} as found on the {@link #controller} and the bound
      * {@link ButtonFunction functions}
      */
-    public final Multimap<Component, ButtonFunction> bindings = ArrayListMultimap.create();
+    private Multimap<Component, ButtonFunction> bindings = ArrayListMultimap.create();
 
     /**
      * Instantiates a layout linked  to given {@link Controller}
@@ -149,6 +149,14 @@ public class ControllerLayout extends AbstractModel {
      */
     public Multimap<Component, ButtonFunction> getBindings() {
         return this.bindings;
+    }
+
+    /**
+     * Sets the bindings for the {@link ControllerLayout}
+     * @param bindings the bindings to set
+     */
+    public void setBindings(Multimap<Component, ButtonFunction> bindings){
+        this.bindings = bindings;
     }
 
     /**

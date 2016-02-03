@@ -7,6 +7,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 import javafx.beans.property.*;
 import org.ssh.controllers.ControllerLayout;
+import org.ssh.controllers.ControllerLayoutDeserializer;
 import org.ssh.controllers.ControllerLayoutSerializer;
 import org.ssh.managers.AbstractManageable;
 import org.ssh.managers.AbstractManagerController;
@@ -14,9 +15,7 @@ import org.ssh.managers.manager.Models;
 import org.ssh.models.AbstractModel;
 import org.ssh.models.PropertyTypeAdapter;
 import org.ssh.models.Settings;
-import org.ssh.models.enums.ManagerEvent;
 import org.ssh.util.Logger;
-import org.ssh.util.Reflect;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,6 +52,7 @@ public class ModelController extends AbstractManagerController<AbstractModel> {
     public ModelController() {
         this.gson = new GsonBuilder()
                 .registerTypeAdapter(ControllerLayout.class, new ControllerLayoutSerializer())
+                .registerTypeAdapter(ControllerLayout.class, new ControllerLayoutDeserializer())
                 .registerTypeAdapter(BooleanProperty.class, new PropertyTypeAdapter<>())
                 .registerTypeAdapter(IntegerProperty.class, new PropertyTypeAdapter<>())
                 .registerTypeAdapter(LongProperty.class, new PropertyTypeAdapter<>())
@@ -115,7 +115,7 @@ public class ModelController extends AbstractManagerController<AbstractModel> {
      * @return success value
      */
     public boolean initializeAll() {
-        return this.manageables.values().stream().map(model -> this.load(model)).reduce(true,
+        return this.manageables.values().stream().map(this::load).reduce(true,
                 (accumulator, success) -> success && accumulator);
     }
 
@@ -183,7 +183,7 @@ public class ModelController extends AbstractManagerController<AbstractModel> {
      * @return success value
      */
     public boolean reinitializeAll() {
-        return this.manageables.values().stream().map(model -> Models.reinitialize(model)).reduce(true,
+        return this.manageables.values().stream().map(Models::reinitialize).reduce(true,
                 (accumulator, success) -> success && accumulator);
     }
 

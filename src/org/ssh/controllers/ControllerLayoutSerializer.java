@@ -24,7 +24,7 @@ public class ControllerLayoutSerializer implements JsonSerializer<ControllerLayo
         // Convert the name to Json
         object.add("name", gson.toJsonTree(src.getController().getName()));
         Multimap<String, ButtonFunction> multimapString = ArrayListMultimap.create();
-        src.bindings.entries().stream().forEach(entry -> multimapString.put(entry.getKey().getIdentifier().toString(), entry.getValue()));
+        src.getBindings().entries().stream().forEach(entry -> multimapString.put(entry.getKey().getIdentifier().toString(), entry.getValue()));
         // Convert the bindings to Json as a map.
         object.add("bindings", gson.toJsonTree(multimapString.asMap()));
         return object;
