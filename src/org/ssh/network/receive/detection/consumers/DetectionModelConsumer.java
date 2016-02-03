@@ -55,15 +55,17 @@ public class DetectionModelConsumer extends AbstractConsumer<DetectionPacket> {
                             ).update(robot)
         );
 
+        // get all balls to update them
         List<Ball> balls = Models.<Ball> getAll("ball");
 
+        // compare the balls available in the frame
         for(int i = 0; i < frame.getBallsCount(); ++i){
             if(i == balls.size())
                 balls.add(Models.create(Ball.class));
-
+            // update the balls
             balls.get(i).update(frame.getBalls(i));
         }
-        
+
         // loop all robots that haven't been processed
         Models.<Robot>getAll("robot").forEach(robot ->
             robot.setVisible((frame.getTSent() - robot.lastUpdated() < 500))

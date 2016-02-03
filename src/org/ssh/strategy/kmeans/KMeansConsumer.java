@@ -21,7 +21,9 @@ import java.util.stream.Collectors;
  * @author Thomas Hakkers
  */
 public class KMeansConsumer extends AbstractConsumer<DetectionPacket> {
+    /** Class used to cluster the robots */
     private RobotFuzzyKMeans fuzzler;
+    /** Decides whether you're clustering the ally or the enemy team */
     private Allegiance allegiance;
 
     /**

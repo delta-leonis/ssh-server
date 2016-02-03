@@ -8,6 +8,7 @@ import org.ssh.pipelines.packets.ProtoPacket;
 import org.ssh.pipelines.packets.RefereePacket;
 import org.ssh.pipelines.packets.WrapperPacket;
 import org.ssh.services.AbstractService;
+import org.ssh.util.Logger;
 import protobuf.RefereeOuterClass;
 import protobuf.Wrapper;
 
@@ -23,15 +24,21 @@ import java.util.stream.Collectors;
  */
 public class LogReader extends AbstractService<ProtoPacket<?>> {
 
+    /** The {@link FileInputStream} used to read the *.log files */
     private FileInputStream fileStream;
+    /** {@link TreeMap} containing all detection messages and timestamps in milliseconds. */
     private TreeMap<Long, byte[]> detectionMessages;
+    /** {@link TreeMap} containing all referee messages and timestamps in milliseconds. */
     private TreeMap<Long, byte[]> refereeMessages;
+    /** List with timeout timestamps in milliseconds */
     private List<Long> timeouts;
+    /** List with timestamps when the blue team scored */
     private List<Long> blueGoals;
+    /** List with timestamps when the yellow team scored */
     private List<Long> yellowGoals;
-
+    /** Duration of the current log in milliseconds */
     private long duration = 0;
-    // Variables that keep track of the last packet sent. They're used to avoid duplicate package being sent.
+    /** Variables that keep track of the last packet sent. They're used to avoid duplicate package being sent. */
     private Long lastDetection;
     private Long lastReferee;
 
@@ -84,11 +91,14 @@ public class LogReader extends AbstractService<ProtoPacket<?>> {
             if(!detectionTime.equals(lastDetection)) {
                 // Retrieve the detection message
                 byte[] decto = detectionMessages.get(detectionTime);
-                // Parse the message
-                GeneratedMessage message = parseMessage(decto);
                 // And put it on the pipeline
-                Pipelines.getOfDataType(WrapperPacket.class).forEach(pipe ->
-                        pipe.addPacket(new WrapperPacket((Wrapper.WrapperPacket) message)).processPacket()
+                Pipelines.getOfDataType(WrapperPacket.class).forEach(pipe -> {
+                            try {
+                                pipe.addPacket(new WrapperPacket(Wrapper.WrapperPacket.parseFrom(decto))).processPacket();
+                            } catch (InvalidProtocolBufferException exception) {
+                                LogReader.LOG.exception(exception);
+                            }
+                        }
                 );
                 // Update the last time we updated detection.
                 lastDetection = detectionTime;
@@ -96,12 +106,30 @@ public class LogReader extends AbstractService<ProtoPacket<?>> {
         });
     }
 
+    /**
+     * @param index A long representing a time in milliseconds from the current match log
+     * @return a {@link protobuf.Wrapper.WrapperPacket WrapperPacket} at the given timestamp in the map
+     */
     public Wrapper.WrapperPacket getWrapperPacket(long index){
-        return (Wrapper.WrapperPacket)parseMessage(detectionMessages.get(index));
+        try {
+            return Wrapper.WrapperPacket.parseFrom(detectionMessages.get(index));
+        } catch (InvalidProtocolBufferException exception) {
+            LogReader.LOG.exception(exception);
+            return null;
+        }
     }
 
+    /**
+     * @param index A long representing a time in milliseconds from the current match log
+     * @return a {@link protobuf.RefereeOuterClass.Referee Referee} at the given timestamp in the map
+     */
     public RefereeOuterClass.Referee getRefereePacket(long index){
-        return (RefereeOuterClass.Referee)parseMessage(refereeMessages.get(index));
+        try {
+            return RefereeOuterClass.Referee.parseFrom(refereeMessages.get(index));
+        } catch (InvalidProtocolBufferException exception) {
+            LogReader.LOG.exception(exception);
+            return null;
+        }
     }
 
     /**
@@ -115,12 +143,14 @@ public class LogReader extends AbstractService<ProtoPacket<?>> {
             if(!refereeTime.equals(lastReferee)) {
                 // Retrieve the referee message
                 byte[] referee = refereeMessages.get(refereeTime);
-                // Parse it to a to a GeneratedMessage
-                GeneratedMessage message = parseMessage(referee);
                 // Put it on the pipeline
-                Pipelines.getOfDataType(RefereePacket.class).forEach(pipe ->
-                        pipe.addPacket(new RefereePacket((RefereeOuterClass.Referee) message)).processPacket()
-                );
+                Pipelines.getOfDataType(RefereePacket.class).forEach(pipe -> {
+                    try {
+                        pipe.addPacket(new RefereePacket(RefereeOuterClass.Referee.parseFrom(referee))).processPacket();
+                    } catch (InvalidProtocolBufferException exception) {
+                        LogReader.LOG.exception(exception);
+                    }
+                });
                 // Update the last time this frame was used, so frames don't get used twice.
                 lastReferee = refereeTime;
             }
@@ -191,65 +221,31 @@ public class LogReader extends AbstractService<ProtoPacket<?>> {
             byte[] message = new byte[lengthProtoBuf];
             fileStream.read(message);
 
-            ByteBuffer result = ByteBuffer.wrap(new byte[type.length + message.length]);
-            result.put(type);
-            result.put(message);
-
-            GeneratedMessage parsedMessage = parseMessage(result.array());
-
             long timeDiff = (time - startTime)/1000000;
 
-            if (parsedMessage != null) {
-                // If the current message is a wrapper
-                if (parsedMessage instanceof Wrapper.WrapperPacket)
-                    // Just add it to the detection messages
-                    detectionMessages.put(timeDiff, result.array());
-                else if(parsedMessage instanceof RefereeOuterClass.Referee){
-                    // If not, it's a referee message
-                    RefereeOuterClass.Referee refereeMessage = (RefereeOuterClass.Referee) parsedMessage;
-                    // Save when blue scored
-                    if (refereeMessage.getBlue().getScore() > blueGoals.size()) {
-                        blueGoals.add(timeDiff);
-                    }
-                    // Save when yellow scored
-                    if (refereeMessage.getYellow().getScore() > yellowGoals.size()) {
-                        yellowGoals.add(timeDiff);
-                    }
-                    // Save when timeouts happened
-                    if(refereeMessage.getYellow().getTimeouts() + refereeMessage.getBlue().getTimeouts() > timeouts.size())
-                        timeouts.add(timeDiff);
-                    // Save the referee message
-                    refereeMessages.put(timeDiff, result.array());
+            // If the current message is a wrapper
+            if (ByteBuffer.wrap(type).getInt() == MESSAGE_SSL_VISION_2010)
+                // Just add it to the detection messages
+                detectionMessages.put(timeDiff, message);
+            else if(ByteBuffer.wrap(type).getInt() == MESSAGE_SSL_REFBOX_2013){
+                // If not, it's a referee message
+                RefereeOuterClass.Referee refereeMessage = RefereeOuterClass.Referee.parseFrom(message);
+                // Save when blue scored
+                if (refereeMessage.getBlue().getScore() > blueGoals.size()) {
+                    blueGoals.add(timeDiff);
                 }
+                // Save when yellow scored
+                if (refereeMessage.getYellow().getScore() > yellowGoals.size()) {
+                    yellowGoals.add(timeDiff);
+                }
+                // Save when timeouts happened
+                if(refereeMessage.getYellow().getTimeouts() + refereeMessage.getBlue().getTimeouts() > timeouts.size())
+                    timeouts.add(timeDiff);
+                // Save the referee message
+                refereeMessages.put(timeDiff, message);
             }
         }
         duration = detectionMessages.lastKey();
-    }
-
-    /**
-     * Parses the given byte array to a {@link GeneratedMessage}.
-     * This message can be either a {@link protobuf.Wrapper.WrapperPacket} or a {@link protobuf.RefereeOuterClass.Referee}
-     * @param rawData Data in a byte array form. Generated by {@link #load()}
-     * @return The {@link GeneratedMessage} parse from the raw byte data
-     */
-    public GeneratedMessage parseMessage(byte[] rawData) {
-        try {
-            int messageType = ByteBuffer.wrap(Arrays.copyOfRange(rawData, 0, 4)).getInt();
-            byte[] array = Arrays.copyOfRange(rawData, 4, rawData.length);
-
-            switch (messageType) {
-                case MESSAGE_SSL_VISION_2010:
-                    //update bytes that describe a frame
-                    return Wrapper.WrapperPacket.parseFrom(array);
-
-                case MESSAGE_SSL_REFBOX_2013:
-                    //update bytes that describe referee
-                    return RefereeOuterClass.Referee.parseFrom(array);
-            }
-        } catch(InvalidProtocolBufferException exception){
-            LOG.exception(exception);
-        }
-        return null;
     }
 
     /**
@@ -288,7 +284,7 @@ public class LogReader extends AbstractService<ProtoPacket<?>> {
     public int getBlueScoreAtTimeMillis(long millis){
         if(fileStream != null)
             return blueGoals.stream().filter(time -> time <= millis).collect(Collectors.toList()).size();
-        LOG.fine("Filestream not initialized.");
+        LogReader.LOG.fine("Filestream not initialized.");
         return 0;
     }
 
@@ -300,7 +296,7 @@ public class LogReader extends AbstractService<ProtoPacket<?>> {
     public int getYellowScoreAtTimeMillis(long millis){
         if(fileStream != null)
             return yellowGoals.stream().filter(time -> time <= millis).collect(Collectors.toList()).size();
-        LOG.fine("Filestream not initialized.");
+        LogReader.LOG.fine("Filestream not initialized.");
         return 0;
     }
 }

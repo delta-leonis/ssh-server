@@ -25,6 +25,8 @@ import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * {@link UIComponent} located at the bottom of the UI, used to play and record log files.
+ *
  * @author Thomas Hakkers
  * @author Joost Overeem
  *
@@ -56,17 +58,27 @@ public class Timeslider extends UIComponent {
     @FXML
     private Insets      sliderpadding;
 
-    private boolean     started      = false;
+    /** Timeline used to increase and decrease the time */
     private Timeline    timeline;
-
+    /** Increase to speed up the time. Decrease to slow down the time */
     private double      speedPerTick = 1.0;
-    private boolean     reverse = false;
 
+    /**
+     * Used to put {@link org.ssh.pipelines.packets.DetectionPacket DetectionPackets}
+     * and {@link org.ssh.pipelines.packets.RefereePacket RefereePackets} on the {@link org.ssh.managers.manager.Pipelines}
+     */
     private LogReader logReader;
+    /** Used to record the matches */
     private LogWriter logWriter;
+    /** Used to choose which log to play. */
     private FileChooser fileChooser;
+    /** Used to stop and start the recording */
     private boolean recording = false;
-
+    /** True if running in reverse. False otherwise */
+    private boolean     reverse = false;
+    /** True if timeline is running, false otherwise */
+    private boolean     started      = false;
+    /** The amount of milliseconds tick */
     private static final int STEP_SIZE = 50;
 
     /**
@@ -155,17 +167,17 @@ public class Timeslider extends UIComponent {
     }
 
     @FXML
-    private void openDialog(ActionEvent event){
+    private void openDialog(){
         loadGameLog(fileChooser.showOpenDialog(this.getStage().getScene().getWindow()).getPath());
     }
 
     @FXML
-    private void fastForward(ActionEvent event){
+    private void fastForward(){
         this.speedPerTick = this.speedPerTick * 2;
     }
 
     @FXML
-    private void slowDown(ActionEvent event){
+    private void slowDown(){
         this.speedPerTick = this.speedPerTick / 2;
     }
 
@@ -173,7 +185,7 @@ public class Timeslider extends UIComponent {
      * Reverses the direction of the slider.
      */
     @FXML
-    private void reverse(ActionEvent event){
+    private void reverse(){
         reverse = !reverse;
     }
 
