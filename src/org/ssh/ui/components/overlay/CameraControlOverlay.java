@@ -67,66 +67,85 @@ public class CameraControlOverlay extends UIComponent<GridPane> {
     public CameraControlOverlay() {
         super("cameraControlOverlay", "overlay/cameracontroloverlay.fxml");
         Platform.runLater(() ->
-                controller = ((GameScene)((Pane)UI.getHighestParent(this.getComponent()).lookup("#fieldBase")).getChildren().get(0))
+                //retrieve the controller
+                controller = ((GameScene)((Pane)UI.getHighestParent(this.getComponent())
+                        // look for the 3d field
+                        .lookup("#fieldBase")).getChildren().get(0))
+                        // get his
                         .getCameraController());
 
+        // add all buttons of this scene to the update list
         getComponent().getChildren().stream()
                 .filter(child -> child instanceof Button)
                 .forEach(child -> updateList.put(ButtonAction.valueOf(child.getId()), false));
 
+        /**
+         * Timer which handles the buttons that should be processed while they're pressed
+         */
         new AnimationTimer() {
             long last = 0;
             @Override
             public void handle(long now) {
                 long timeDiv = last - now;
                 last = now;
+                //calculate rotation amount and zoom amount based on time difference between now and previous frame
                 rotationAmount = ROTATION_SENSITIVITY * (timeDiv / NANO_SEC_PER_SEC);
                  zoomAmount = ZOOM_SENSITIVITY * (timeDiv / NANO_SEC_PER_SEC);
 
                 updateList.entrySet().forEach( pair -> {
-                    handleButtons(pair.getKey(), pair.getValue());
+                    //if primary button is down
+                    if(pair.getValue())
+                        handleButtons(pair.getKey());
                 });
             }
         }.start();
     }
 
-    private void handleButtons(ButtonAction action, Boolean isPrimaryButtonDown) {
+    /**
+     * Handles camera translations and rotation
+     * @param action                action to process
+     */
+    private void handleButtons(ButtonAction action) {
         switch(action){
             case ROTATE_RIGHT:
-                if(isPrimaryButtonDown)
                     controller.setRotateZ(controller.getRotateZ().getAngle() - rotationAmount);
                 break;
             case ROTATE_LEFT:
-                if(isPrimaryButtonDown)
                     controller.setRotateZ(controller.getRotateZ().getAngle() + rotationAmount);
                 break;
             case ROTATE_UP:
-                if(isPrimaryButtonDown)
                     controller.setRotateX(controller.getRotateX().getAngle() - rotationAmount);
                 break;
             case ROTATE_DOWN:
-                if(isPrimaryButtonDown)
                     controller.setRotateX(controller.getRotateX().getAngle() + rotationAmount);
                 break;
             case ZOOM_IN:
-                if(isPrimaryButtonDown)
                     controller.setZoom(controller.getZoom() - zoomAmount);
                 break;
             case ZOOM_OUT:
-                if(isPrimaryButtonDown)
                     controller.setZoom(controller.getZoom() + zoomAmount);
                 break;
         }
 
     }
 
+    /**
+     * enum describing each possible button combination<br />
+     * <em>Note: </em> {@link Node#getId()} of a button should equal to a enum constant
+     */
     private enum ButtonAction{
         TOP_VIEW, SKEW_VIEW, ROTATE_LEFT, ROTATE_RIGHT, ROTATE_UP, ROTATE_DOWN, ZOOM_IN, ZOOM_OUT, HOP_LEFT, HOP_RIGHT;
     }
 
+    /**
+     * onReleased and onPressed event for buttons that should be handled every tick when pressed
+     * @param event the {@link MouseEvent} as provided by the source
+     */
     @FXML
     private void onButtonPressed(MouseEvent event){
-        updateList.put(ButtonAction.valueOf(((Node)event.getSource()).getId()), event.isPrimaryButtonDown());
+        updateList.put(
+                ButtonAction.valueOf(((Node)event.getSource()).getId()), // convert to enum
+                event.isPrimaryButtonDown()); // save primary button state as the value
     }
 
     /**
