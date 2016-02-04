@@ -39,20 +39,21 @@ public class MatchlogSelector extends UIComponent {
     @FXML
     private TableView<LogRow> tableView;
 
+    /** Column that displays the match name */
     @FXML
     private TableColumn<LogRow, String> matchColumn;
-
+    /** Column that displays the date the match took place on */
     @FXML
     private TableColumn<LogRow, String> dateColumn;
-
+    /** Column that displays the time the match started */
     @FXML
     private TableColumn<LogRow, String> timeColumn;
-
+    /** Column with the raw path to the file */
     @FXML
     private TableColumn<LogRow, String> rawColumn;
-
+    /** List with all log entries */
     private ObservableList<LogRow> items;
-
+    /** Path to where to look for logs */
     private String logFolderPath = "";
 
     /**
@@ -67,9 +68,9 @@ public class MatchlogSelector extends UIComponent {
         selectLog.maxWidthProperty().bind(rootPane.widthProperty());
 
         items = FXCollections.observableArrayList ();
-
+        // Look for where the logs are situated
         Models.<Settings>get("settings").ifPresent(settings -> logFolderPath = settings.getLogFolder());
-
+        // Load the files, using logFolderPath
         loadFiles();
 
         dateColumn.setCellValueFactory(
@@ -147,30 +148,54 @@ public class MatchlogSelector extends UIComponent {
             }
         }
 
+        /**
+         * @return the date of this entry in the form YYYY-MM-DD
+         */
         public String getDate() {
             return date.get();
         }
 
+        /**
+         * Set the date of this entry
+         * @param date The date to set in String format YYYY-MM-DD
+         */
         public void setDate(String date) {
             this.date.set(date);
         }
 
+        /**
+         * @return the time in the form HH:MM:SS
+         */
         public String getTime() {
             return time.get();
         }
 
+        /**
+         * Set the time of this entry
+         * @param time The time in the form HH:MM:SS
+         */
         public void setTime(String time) {
             this.time.set(time);
         }
 
+        /**
+         * @return the match name, usually in the form of "team1 vs team2"
+         */
         public String getMatch() {
             return match.get();
         }
 
+        /**
+         * Sets the name of the match of this entry
+         * @param match The name of the match, usually in the form of "team1 vs team2"
+         */
         public void setMatch(String match) {
             this.match.set(match);
         }
 
+        /**
+         * @return The absolute path of the entry.
+         */
         public String getRaw() {
             return raw.get();
         }
