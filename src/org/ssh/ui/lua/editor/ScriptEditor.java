@@ -74,9 +74,12 @@ public class ScriptEditor extends UIComponent {
         openItem.setOnAction(actionEvent -> this.openFile());
 
         final MenuItem runItem = new MenuItem("Run\t\t\t");
-        saveItem.setOnAction(actionEvent -> this.codeArea.runScript(this.codeArea.getText()));
+        runItem.setOnAction(actionEvent -> this.codeArea.runScript(this.codeArea.getText()));
 
-        fileMenu.getItems().addAll(runItem, saveItem, saveAsItem, openItem);
+        final MenuItem cancelItem = new MenuItem("Cancel\t\t\t");
+        cancelItem.setOnAction(actionEvent -> this.codeArea.cancelTask());
+
+        fileMenu.getItems().addAll(runItem, saveItem, saveAsItem, openItem, cancelItem);
         menubar.getMenus().addAll(fileMenu);
         this.root.getChildren().add(menubar);
     }

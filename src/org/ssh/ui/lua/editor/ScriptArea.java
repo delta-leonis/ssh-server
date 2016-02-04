@@ -1,16 +1,20 @@
 package org.ssh.ui.lua.editor;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import javafx.scene.input.KeyCode;
 import org.fxmisc.wellbehaved.event.EventHandlerHelper;
 import org.fxmisc.wellbehaved.event.EventPattern;
 import org.luaj.vm2.Globals;
+import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 import org.luaj.vm2.lib.jse.JsePlatform;
 import org.ssh.managers.manager.Models;
+import org.ssh.managers.manager.Services;
 import org.ssh.models.AbstractModel;
 import org.ssh.models.Settings;
 import org.ssh.ui.lua.console.AvailableInLua;
 import org.ssh.ui.lua.console.ColoredCodeArea;
+import org.ssh.ui.lua.console.CustomDebugLib;
 import org.ssh.util.Logger;
 import org.ssh.util.LuaUtils;
 
@@ -25,7 +29,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Created by Thomas on 7-12-2015.
+ * Used to write scripts in. Also extends {@link ColoredCodeArea} for color coding.
+ * @author Thomas Hakkers
  */
 public class ScriptArea extends ColoredCodeArea {
 
@@ -38,9 +43,22 @@ public class ScriptArea extends ColoredCodeArea {
 
     private Globals globals;
 
+    /**
+     * Get created whenever a command is executed. Can be cancelled by calling close()
+     */
+    private ListenableFuture<?> currentFuture;
+    /**
+     * Magic debuglibrary that is used to interrupt functions
+     */
+    private CustomDebugLib customDebug;
+
+    /**
+     * Constructs and initializes the {@link ScriptArea}
+     */
     public ScriptArea() {
         // Use reflection to obtain all classes annotated with AvailableInLua
         this.functionClasses = LuaUtils.getAllAvailableInLua();
+        setupScriptEngine();
 
         super.setupColoredCodeArea(LuaUtils.getLuaClasses(), LuaUtils.getLuaFunctions());
         // Keypress TAB for autocomplete
@@ -54,7 +72,21 @@ public class ScriptArea extends ColoredCodeArea {
      * @param command The script to run
      */
     public void runScript(final String command) {
-        this.globals.load(command).call();
+        if(currentFuture == null || currentFuture.isDone()) {
+            currentFuture = Services.submitTask("script-area", () -> this.globals.load(command).call());
+        }
+    }
+
+    /**
+     * Cancels the {@link ListenableFuture} obtained from {@link #runScript(String)}
+     *
+     * @return true on success
+     */
+    public boolean cancelTask() {
+        customDebug.setInterrupt(true);
+        requestFocus();
+
+        return currentFuture != null && currentFuture.cancel(true);
     }
 
     /**
@@ -152,6 +184,9 @@ public class ScriptArea extends ColoredCodeArea {
                 for (final Object o : this.functionClasses)
                     globals.set(LuaUtils.getSimpleName(o), CoerceJavaToLua.coerce(o));
 
+            customDebug = new CustomDebugLib();
+            this.globals.load(customDebug);
+
             initialize();
         } catch (final Exception exception) {
             ScriptArea.LOG.exception(exception);
@@ -180,6 +215,7 @@ public class ScriptArea extends ColoredCodeArea {
                             // Call the lua files one by one
                             .forEach(lua -> {
                                 String path = lua.toAbsolutePath().toString();
+                                this.globals.get("dofile").call(LuaValue.valueOf(path));
                             });
                 } catch (IOException exception) {
                     ScriptArea.LOG.exception(exception);
