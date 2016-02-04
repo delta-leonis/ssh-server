@@ -15,6 +15,7 @@ import javafx.scene.text.Font;
 import org.reactfx.EventStreams;
 import org.ssh.ui.UIComponent;
 import org.ssh.ui.components.Enroller;
+import org.ssh.ui.components.overlay.CameraControlOverlay;
 
 /**
  * @author Jeroen de Jong
@@ -52,22 +53,14 @@ public class CenterSection extends UIComponent<StackPane> {
                 .map(d -> String.format("FPS: %.0f", d))
                 .feedTo(FPSLabel.textProperty());
 
-        Slider heightSlider = new Slider(100, 1500, 500);
-        heightSlider.setMinorTickCount(10);
-        heightSlider.setMajorTickUnit(50);
-        heightSlider.setShowTickLabels(true);
-        heightSlider.setShowTickMarks(true);
-
-        heightSlider.setOrientation(Orientation.VERTICAL);
-
-        gameScene.chartTranslateY().bind(heightSlider.valueProperty());
-
-        StackPane.setAlignment(heightSlider, Pos.CENTER_RIGHT);
-        getComponent().getChildren().add(heightSlider);
 
         MatchlogSelector matchlogSelector = new MatchlogSelector();
         // MatchlogSelector wrapped in an Enroller for fancy up and down sliding
         this.matchlogWrapper.getChildren().add(new Enroller(matchlogSelector.getComponent(), Enroller.ExtendDirection.RIGHT, matchlogWrapper.heightProperty(),
                 matchlogButtonSizer.widthProperty(), matchlogWrapper.widthProperty(), true));
+
+
+        // add overlay for controlling the camera
+        this.getComponent().getChildren().add(new CameraControlOverlay().getComponent());
     }
 }

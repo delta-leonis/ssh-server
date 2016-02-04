@@ -9,6 +9,8 @@ import javafx.scene.SubScene;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
+import org.ssh.ui.components.centersection.GameScene;
+import org.ssh.ui.components.centersection.gamescene.shapes.SurfaceChart;
 
 /**
  * @author Jeroen
@@ -25,6 +27,16 @@ public class GameSceneCameraController extends Group {
      */
     private static final float MIN_ZOOM = -1000;
 
+    /**
+     * Minimum possible height of the {@link SurfaceChart}
+     */
+    private static final float MIN_CHART_HEIGHT = 100;
+
+    /**
+     * Maximum possible height of the {@link SurfaceChart}
+     */
+    private static final float MAX_CHART_HEIGHT = 1500;
+
 
     private double mouseOldX, mouseOldY,    // previous x and y
             mousePosX, mousePosY,   // new x and y position
@@ -39,6 +51,11 @@ public class GameSceneCameraController extends Group {
      * Current zoom level
      */
     private FloatProperty zoomLevel;
+
+    /**
+     * Height of the {@link SurfaceChart}
+     */
+    private FloatProperty chartHeight;
 
     /**
      * Current pitch
@@ -91,7 +108,7 @@ public class GameSceneCameraController extends Group {
      *
      * @param scene Scene to bind mouse events to and get camera from
      */
-    public GameSceneCameraController(SubScene scene) {
+    public GameSceneCameraController(GameScene scene) {
         super();
         getTransforms().addAll(t, p, rx, rz, ry, s, ip);
 
@@ -103,6 +120,8 @@ public class GameSceneCameraController extends Group {
         camera.translateZProperty().bind(zoomLevel);
         camera.setRotate(180f);
 
+        chartHeight = new SimpleFloatProperty(400f);
+        scene.chartTranslateY().bind(chartHeight);
         bindEvents(scene);
     }
 
@@ -115,7 +134,10 @@ public class GameSceneCameraController extends Group {
 
         // scrolling should scale the camera
         scene.setOnScroll(se -> {
-            zoomLevel.setValue(clamp(zoomLevel.getValue() + se.getDeltaY()*25, MIN_ZOOM, MAX_ZOOM));
+            if(se.isControlDown())
+                chartHeight.setValue(clamp(chartHeight.getValue() + se.getDeltaY(), MAX_CHART_HEIGHT, MIN_CHART_HEIGHT));
+            else
+                zoomLevel.setValue(clamp(zoomLevel.getValue() + se.getDeltaY()*25, MIN_ZOOM, MAX_ZOOM));
         });
 
         // whenever the scene is clicked, the current mouse position should be set
@@ -140,33 +162,35 @@ public class GameSceneCameraController extends Group {
             //calculate delta distance
             mouseDeltaX = mousePosX - mouseOldX;
             mouseDeltaY = mousePosY - mouseOldY;
-
-            //limit the pitch between -90 and 0 deg
-            this.pitch = clamp(getPitch(), 0, -Math.PI/2);
-
-            // yaw should reset past 360 or 0 deg
-            if (getYaw() >= 2*Math.PI) {
-                this.yaw = 0;
-            }
-            else if (getYaw() < 0) {
-                this.yaw = 2*Math.PI;
-            }
-            else {
-                this.yaw = getYaw();
-            }
-
             //if control is down,
             //the pivot point should be changed
             if (me.isControlDown()) {
-                setPivot(this.scale * Math.cos(this.pitch) * Math.cos(this.yaw),
-                         this.scale * Math.cos(this.pitch) * Math.sin(this.yaw),
-                         this.scale * Math.sin(this.pitch));
+                p.setX(p.getX() - mouseDeltaX);
+                p.setZ(p.getZ() - mouseDeltaY);
             } else {
+
+                //limit the pitch between -90 and 0 deg
+                this.pitch = clamp(getPitch(), 0, -Math.PI/2);
+
+                // yaw should reset past 360 or 0 deg
+                if (getYaw() >= 2*Math.PI) {
+                    this.yaw = 0;
+                }
+                else if (getYaw() < 0) {
+                    this.yaw = 2*Math.PI;
+                }
+                else {
+                    this.yaw = getYaw();
+                }
                 // otherwise just change the camera position
                 setEuler(pitch, yaw, 0);
             }
 
         });
+    }
+
+    public void setZoom(double zoomValue){
+        zoomLevel.setValue(zoomValue);
     }
 
     private double getYaw(){
@@ -218,5 +242,35 @@ public class GameSceneCameraController extends Group {
             rz.setAngle(-Math.toDegrees(-pitch * Math.sin(yaw + Math.PI)));
             rx.setAngle(-Math.toDegrees(-pitch * Math.cos(-yaw + Math.PI)));
         });
+    }
+
+    public void setRotate(double rx , double ry , double rz){
+        this.ry.setAngle(ry);
+        this.rx.setAngle(rx);
+        this.rz.setAngle(rz);
+    }
+
+    public Rotate getRotateY(){
+        return ry;
+    }
+    public Rotate getRotateX(){
+        return rx;
+    }
+    public Rotate getRotateZ(){
+        return rz;
+    }
+
+    public void setRotateY(double value){
+        ry.setAngle(value);
+    }
+    public void setRotateX(double value){
+        rx.setAngle(value);
+    }
+    public void setRotateZ(double value){
+        rz.setAngle(value);
+    }
+
+    public double getZoom() {
+        return zoomLevel.get();
     }
 }

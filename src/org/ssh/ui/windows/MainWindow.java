@@ -10,6 +10,7 @@ import org.ssh.ui.UIComponent;
 import org.ssh.ui.UIController;
 import org.ssh.ui.components.bottomsection.BottomSection;
 import org.ssh.ui.components.centersection.CenterSection;
+import org.ssh.ui.components.overlay.CameraControlOverlay;
 import org.ssh.ui.components.overlay.LoggerConsoleOverlay;
 import org.ssh.ui.components.overlay.ProfilemenuOverlay;
 import org.ssh.ui.components.topsection.TopSection;

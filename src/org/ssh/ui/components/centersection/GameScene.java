@@ -51,6 +51,11 @@ public class GameScene extends SubScene {
                 gameGroup.getChildren().add(fieldObject.getNode());
         });
 
+    /**
+     * Controller for camera based on mouse movements
+     */
+    private GameSceneCameraController cameraController;
+
 
     /**
      * Create a new 3D representation of the game. This method retrieves all FieldObjects, and adds a listener to the creation and deletion of FieldObjects.
@@ -119,8 +124,18 @@ public class GameScene extends SubScene {
     private void createCamera(){
         // set the new camera
         this.setCamera(new GameSceneCamera());
-        //create the new controller and add it to the world
+
+        //create the new controller
+        cameraController = new GameSceneCameraController(this);
+        // and add it to the world
         Platform.runLater(() ->
-            world.getChildren().add(new GameSceneCameraController(this)));
+            world.getChildren().add(getCameraController()));
+    }
+
+    /**
+     * @return Controller for the camera
+     */
+    public GameSceneCameraController getCameraController(){
+        return cameraController;
     }
 }
