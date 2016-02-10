@@ -32,6 +32,9 @@ import org.ssh.util.Logger;
 import protobuf.Detection;
 
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.stream.IntStream;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.ssh.ui.components.widget.TestWidget;
