@@ -96,7 +96,7 @@ public class ModelController extends AbstractManagerController<AbstractModel> {
 
         // check for a custom file
         config = new File(this.settings.getCurrentWorkspacePath() + filename);
-        System.out.println(config);
+
         if (config.exists() && !config.isDirectory())
             return Optional.of(config.toPath());
 

@@ -273,7 +273,7 @@ public abstract class AbstractModel extends AbstractManageable {
         fields.forEach(field -> {
             try {
                 if (Reflect.getField(field, this.getClass()).get().get(this) instanceof WritableValue) {
-                    System.out.println("Did not reset");
+                    AbstractModel.LOG.info("Did not reset");
                     return;
                 }
             } catch(Exception ignored){}

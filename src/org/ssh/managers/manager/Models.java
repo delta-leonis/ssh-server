@@ -172,7 +172,6 @@ public final class Models implements ManagerInterface<AbstractModel> {
      */
     public static boolean reinitialize(final AbstractModel model) {
         model.reset(Reflect.fieldList(model.getClass()));
-        System.out.println(controller.findValidPath(model.getConfigName()));
         return Models.initialize(model);
     }
 

@@ -150,7 +150,7 @@ public class Main extends Application {
         ControllerListener listener = new ControllerListener();
 
         Services.scheduleTask("USB watcher", () -> {
-            System.out.println("Searching for new USB controllers");
+            LOG.info("Searching for new USB controllers");
             final Optional<Controller> controller = listener.findAvailableController("360");
 
             // check if we found one
